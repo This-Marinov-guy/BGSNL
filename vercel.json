@@ -5,6 +5,5 @@
 			"destination": "/"
 		}
 	],
-	"installCommand": "npm install --force",
 	"version": 2
 }
