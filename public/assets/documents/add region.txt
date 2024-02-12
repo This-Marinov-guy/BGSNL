@@ -1,0 +1,8 @@
+1) add logo in logos folder and paralax in bg/paralax folder
+
+2) create folder with the name in:
+- events, portfolio, team, tickets
+
+3) add data in all REGION constants
+
+4) add server url to .env

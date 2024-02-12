@@ -1,0 +1,17 @@
+{
+	"rewrites": [
+		{
+			"source": "/(.*)",
+			"destination": "/"
+		}
+	],
+	"build": {
+		"env": {
+			"NODE_ENV": "production"
+		},
+		"cmd": "npm run build",
+		"output": "build"
+	},
+	"installCommand": "npm install --force",
+	"version": 2
+}

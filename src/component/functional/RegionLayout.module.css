@@ -1,0 +1,72 @@
+/* Groningen */
+
+.groningen p,
+.groningen h3,
+.groningen a:hover,
+.groningen li:hover,
+.groningen h4 a:hover {
+  color: #017363 !important;
+}
+
+.groningen button {
+  background-color: #017363 !important;
+  border: #017363 !important;
+}
+
+.groningen .thumbnail-inner-2::before {
+  background-color: #017363 !important;
+  background-image: linear-gradient(#017363 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #017363 !important;
+}
+
+/* Rotterdam */
+
+.rotterdam p,
+.rotterdam h3,
+.rotterdam li:hover,
+.rotterdam a:hover,
+.rotterdam h4 a:hover {
+  color: #004ab0 !important;
+}
+
+.rotterdam button,
+.rotterdam button {
+  background-color: #004ab0 !important;
+  border: #004ab0 !important;
+}
+
+.rotterdam .thumbnail-inner-2::before {
+  background-color: #004ab0 !important;
+  background-image: linear-gradient(#004ab0 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #004ab0 !important;
+}
+
+/* leeuwarden */
+
+.leeuwarden p,
+.leeuwarden h3,
+.leeuwarden a:hover,
+.leeuwarden li:hover,
+.leeuwarden h4 a:hover {
+  color: #ff914d !important;
+}
+
+.leeuwarden button {
+  background-color: #ff914d !important;
+  border: #ff914d !important;
+}
+
+.leeuwarden .thumbnail-inner-2::before {
+  background-color: #ff914d !important;
+  background-image: linear-gradient(#ff914d 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ff914d !important;
+}
