@@ -5,12 +5,6 @@
 			"destination": "/"
 		}
 	],
-	"build": {
-		"env": {
-			"NODE_ENV": "production"
-		},
-		"output": "build"
-	},
 	"installCommand": "npm install --force",
 	"version": 2
 }
