@@ -29,7 +29,6 @@ export const useHttpClient = () => {
       } catch (err) {
         dispatch(showError(err.response.data.message));
         setTimeout(() => dispatch(removeError()), 6000);
-        throw err;
       } finally {
         dispatch(stopLoading());
       }
