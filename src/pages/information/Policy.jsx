@@ -16,18 +16,18 @@ const Policy = React.memo(() => {
       />
       <div className="container mt--200">
         <h2 className="center_text">
-          Bulgarian Society Groningen Rules and Regulations
+          Bulgarian Society Netherlands Rules and Regulations
         </h2>
       </div>
       <div className="container mt--80 mb--80">
         <h3>Article 1. Structure of the organization and the roles within
         </h3>
         <p className="mt--40 ml--10">
-          1. The Bulgarian Society Groningen (BGSG) provides a form for member registration. Completion of the registration form will provide the individual with a WhatsApp payment request including the yearly membership fee of €5. Once the payment has been received, the new member will then be added to the two WhatsApp groups: one for discussion of events, and one for communication between members of the association. Once individuals have gained membership, they will have the ability to join internal events and receive discounts from sponsors, receive discounts for open events, and attend all organised events.
+          1. The Bulgarian Society Netherlands (BGSNL) provides a form for member registration. Completion of the registration form will provide the individual with a WhatsApp payment request including the yearly membership fee of €5. Once the payment has been received, the new member will then be added to the two WhatsApp groups: one for discussion of events, and one for communication between members of the association. Once individuals have gained membership, they will have the ability to join internal events and receive discounts from sponsors, receive discounts for open events, and attend all organised events.
 
         </p>
         <p className="mt--40 ml--10">
-          2. The BGSG is structurally made up of the Board and the various committees. The Board is responsible for the execution of all tasks and events and formulates a plan of action for the upcoming academic year. The Board is fully informed about and has access to all activities that take place within the organisation. These must be clearly defined at all times.
+          2. The BGSNL is structurally made up of the Board and the various committees. The Board is responsible for the execution of all tasks and events and formulates a plan of action for the upcoming academic year. The Board is fully informed about and has access to all activities that take place within the organisation. These must be clearly defined at all times.
 
 
         </p>
@@ -55,7 +55,7 @@ const Policy = React.memo(() => {
 
         </p>
         <p className="mt--40 ml--20">
-          e. The role of the Creative Director is to create the general idea and direction of how Bulgarian Society Groningen is going to present itself to the public.
+          e. The role of the Creative Director is to create the general idea and direction of how Bulgarian Society Netherlands is going to present itself to the public.
 
         </p>
         <p className="mt--40 ml--20">
@@ -93,10 +93,10 @@ const Policy = React.memo(() => {
 
         </p>
         <h3 className="mt--80">Article 3. Goals for the organisation </h3>
-        <p className="mt--40">Hereby the goals and intentions of the student association Bulgarian Society Groningen are stated.
+        <p className="mt--40">Hereby the goals and intentions of the student association Bulgarian Society Netherlands are stated.
         </p>
         <p className="mt--40 ml--10">
-          1. First and foremost we aim to bring the Bulgarian students in the city of Groningen together.
+          1. First and foremost we aim to bring the Bulgarian students in the city of Netherlands together.
           This goal will be achieved by actively promoting the organization through social media, posters, word-of-mouth, and other media.
 
 
@@ -117,7 +117,7 @@ const Policy = React.memo(() => {
 
         </p>
         <p className="mt--40 mb--80 ml--10">
-          5. We want to represent the Bulgarian culture in the city of Groningen.
+          5. We want to represent the Bulgarian culture in the city of Netherlands.
           We are going to achieve this goal by collaborating with fellow student organizations in the creation of mixed events
 
         </p>
