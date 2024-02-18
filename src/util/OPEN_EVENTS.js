@@ -1,6 +1,40 @@
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
 groningen : [
+  {
+    membersOnly: false,
+    visible: true,
+    title: "Bulgarian & Greek Night",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Get familiar with Greek and Bulgarian Culture",
+    bgImage: "22",
+    date: "26th February",
+    time: "18:00",
+    ticketTimer: '2024-02-14T18:00:00',
+    ticketLimit: 0,
+    //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    correctedDate: "",
+    correctedTime: "",
+    where: `Griekse Taverna Doris`,
+    entry: 6,
+    memberEntry: 4,
+    // including: ['(includes a beer or non-alcoholic drink)', '(includes a beer or non-alcoholic drink)'],
+    ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+    // price_id: 'price_1OgKdXIOw5UGbAo1xu2ic0ja',
+    // memberPrice_id: 'price_1OgKe3IOw5UGbAo1aQhiMrxG',
+    // activeMemberPrice_id: 'price_1OgKrIIOw5UGbAo1FlbrNHYZ',
+    freePass: ['vlady1002@abv.bg'],
+    extraInputs: false,
+    text: [
+      `An evening of cultural enrichment and exchange at our 'Get Familiar with Greek and Bulgarian Culture' event. `,
+      `We invite you to join us and learn more about the difference and similarities of the two cultures through a variety of authentic snacks, drinks and traditional dances.`,
+      `Disclaimer: Member tickets are only issued to members of BGSG and HSAG. Invalid tickets will be cancelled with no refund! 
+       `,
+    ],
+    ticket_img: '/assets/images/tickets/ticket-20.png',
+    images: ["/assets/images/portfolio/portfolio-30"],
+    thumbnail: "/assets/images/portfolio/portfolio-30",
+  },
     // {
   //   membersOnly: false,
   //   visible: true,
