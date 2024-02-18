@@ -10,7 +10,7 @@ groningen : [
     bgImage: "22",
     date: "26th February",
     time: "18:00",
-    ticketTimer: '2024-02-14T18:00:00',
+    // ticketTimer: '2024-02-14T18:00:00',
     ticketLimit: 0,
     //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
     correctedDate: "",
@@ -32,8 +32,8 @@ groningen : [
        `,
     ],
     ticket_img: '/assets/images/tickets/ticket-20.png',
-    images: ["/assets/images/portfolio/portfolio-30"],
-    thumbnail: "/assets/images/portfolio/portfolio-30",
+    images: ["/assets/images/portfolio/groningen/portfolio-30"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
   },
     // {
   //   membersOnly: false,
