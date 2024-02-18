@@ -202,7 +202,7 @@ Mainmenu Area
     color: #1d1d24 !important;
   }
   ul.mainmenu > li > ul.submenu {
-    min-height: auto !important;
+    max-height: auto !important;
   }
 }
 
@@ -211,6 +211,6 @@ Mainmenu Area
     color: #1d1d24 !important;
   }
   ul.mainmenu > li > ul.submenu {
-    min-height: auto !important;
+    max-height: auto !important;
   }
 }
