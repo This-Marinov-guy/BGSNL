@@ -201,10 +201,16 @@ Mainmenu Area
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
   }
+  .submenu {
+    min-width: auto;
+  }
 }
 
 @media #{$sm-layout} {
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
+  }
+  .submenu {
+    min-width: auto;
   }
 }
