@@ -17,18 +17,6 @@ import { createCustomerTicket } from "../../util/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
 import { useHistory, useParams, Link } from "react-router-dom";
 
-const schema = yup.object().shape({
-  name: yup.string().required(),
-  surname: yup.string().required(),
-  phone: yup.string().required(),
-  email: yup.string().email("Please enter a valid email").required(),
-  // menuType: yup.string().required("Please select a menu"),
-  drink: yup.string().required('Please select your drink'),
-  policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-});
-
-
 const NonMemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
 
@@ -39,6 +27,18 @@ const NonMemberPurchase = () => {
   const { region } = useParams()
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
+
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    surname: yup.string().required(),
+    phone: yup.string().required(),
+    email: yup.string().email("Please enter a valid email").required(),
+    menu: target.extraInputs ? yup.string().required("Please select a menu") : yup.string(),
+    type: yup.string(),
+    policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+    payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+  });
+
   const history = useHistory()
 
   function calculateTimeRemaining(timer) {
@@ -183,14 +183,14 @@ const NonMemberPurchase = () => {
                       formData.append("eventDate", target.date);
                       formData.append("guestEmail", values.email);
                       if (target.extraInputs) {
-                        formData.append('preferences', JSON.stringify({ team: values.team, drink: values.drink }))
+                        formData.append('preferences', JSON.stringify({ menu: values.menu, type: values.type }))
                       }
                       formData.append(
                         "guestName",
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname)) {
+                      if (target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname) (target.discountPass && target.discountPass.includes(values.email))) {
                         const responseData = await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
@@ -216,8 +216,8 @@ const NonMemberPurchase = () => {
                     surname: "",
                     email: "",
                     phone: "",
-                    team: target.extraInputs ? "" : 'none',
-                    drink: target.extraInputs ? "" : 'none',
+                    menu: '',
+                    type: '',
                     policyTerms: false,
                     payTerms: false,
                   }}

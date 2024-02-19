@@ -18,11 +18,6 @@ import PageLoading from "../../elements/ui/PageLoading";
 import FormExtras from "../../elements/ui/FormExtras";
 import { REGIONS } from "../../util/REGIONS_DESIGN";
 
-const schema = yup.object().shape({
-  menuType: yup.string().required("Please select a menu"),
-  drink: yup.string().required('Please select your drink'),
-});
-
 const MemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
 
@@ -36,6 +31,11 @@ const MemberPurchase = () => {
   const history = useHistory()
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
+
+  const schema = yup.object().shape({
+    menu: target.extraInputs ? yup.string().required("Please select a menu") : yup.string(),
+    type: yup.string(),
+  });
 
   function calculateTimeRemaining(timer) {
     const now = new Date().getTime();
@@ -142,7 +142,7 @@ const MemberPurchase = () => {
                     ticket,
                     target.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
                   );
-                  if (target.activeMemberPrice_id && (currentUser.expireDate === "Board Member" || currentUser.expireDate === "Committee Member" || currentUser.expireDate === "VIP" || currentUser.expireDate === "VIP Member")) {
+                  if (target.activeMemberPrice_id && (currentUser.expireDate === "Board Member" || currentUser.expireDate === "Committee Member" || currentUser.expireDate === "VIP" || currentUser.expireDate === "VIP Member" || (target.discountPass && target.discountPass.includes(currentUser.email)))) {
                     formData.append("itemId", target.activeMemberPrice_id);
                   } else {
                     formData.append("itemId", target.memberPrice_id);
@@ -154,7 +154,7 @@ const MemberPurchase = () => {
                   formData.append("eventDate", target.date);
                   formData.append("userId", userId);
                   if (target.extraInputs) {
-                    formData.append('preferences', JSON.stringify({ menuType: values.menuType, drink: values.drink }))
+                    formData.append('preferences', JSON.stringify({ menu: values.menu, type: values.type }))
                   }
                   if (target.freePass.includes(currentUser.email) || target.freePass.includes(currentUser.name + ' ' + currentUser.surname)) {
                     const responseData = await sendRequest(
@@ -177,8 +177,8 @@ const MemberPurchase = () => {
                 } catch (err) { }
               }}
               initialValues={{
-                menuType: target.extraInputs ? "" : 'none',
-                drink: target.extraInputs ? "" : 'none',
+                menu: '',
+                type: '',
               }}>
               {() => (
                 <Form id='form' encType="multipart/form-data"

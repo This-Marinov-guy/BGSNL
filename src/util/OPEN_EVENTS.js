@@ -258,70 +258,123 @@ rotterdam: [
   // },
 ],
 leeuwarden : [
-  // {
-  //   disclaimer: 'Tickets for Belot',
-  //   visible: true,
-  //   subEvent: {
-  //     description: 'You can either play Belot or Uno (both run simultaneously) - Link for the Uno game below',
-  //     link: '/event-details/Game Night (Uno)'
-  //   },
-  //   title: "Game Night (Belot)",
-  //   description: "🌟 Kickstart the new year with a bang! 🌟 ",
-  //   bgImage: "23",
-  //   date: "20th January",
-  //   time: "19:30",
-  //   ticketTimer: '2024-01-20T19:00:00',
-  //   ticketLimit: 64,
-  //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-  //   correctedDate: "",
-  //   correctedTime: "",
-  //   where: `Grote Keizer Bowling`,
-  //   entry: 6,
-  //   memberEntry: 5,
-  //   including: ['+ drink by choice', '+ drink by choice'],
-  //   price_id: 'price_1OVyivIOw5UGbAo1Yuob9lhb',
-  //   memberPrice_id: 'price_1OVyivIOw5UGbAo1Yuob9lhb',
-  //   activeMemberPrice_id: 'price_1OWBaCIOw5UGbAo1fi6OwKrL',
-  //   discountPass: [
-  //     'simonatodorova2216@gmail.com',
-  //     'ivandikliev1@abv.bg',
-  //     'nikoltoneva88@gmail.com',
-  //     'dfawal@gmail.bg',
-  //     'deamira.st23@gmail.com',
-  //     'dimitrova04v@abv.bg',
-  //     'melisa_hristova@abv.bg',
-  //     'tonovivailo@gmail.com',
-  //     'alistaneva@gmail.com',
-  //     'danailova97@gmail.com',
-  //     'miryana.b.ivanova@gmail.com',
-  //     'vesi_it@abv.bg',
-  //     'alex_ivanov2002@gmail.com',
-  //     'bulgariansociety.lwd@gmail.com'
-  //   ],
-  //   freePass: ["vlady1002@abv.bg"],
-  //   extraInputs: true,
-  //   text: [
-  //     `Hope you get a good rest during the holidays because BGSL starts strong with the first event for the year.  
-  //     `,
-  //     `👫 Belot Tournament:
-  //     `,
-  //     '- Limited Spaces: 32 people (16 teams of 2)',
-  //     `- Sign up alone? No worries! We'll find you a teammate.
-  //     `,
-  //     `- Cash Prize: €30 for the winning team!
-  //     `,
-  //     ` Don't miss the chance to kick off the year with some friendly competition, exciting games, and awesome prizes!
-  //     `,
-  //     `Let the games begin! 🏆🃏
-  //     `,
-
-  //     `* Sign up period: 08.01.2024 until  spots are full 
-  //     `,
-  //   ],
-  //   ticket_img: '/assets/images/tickets/ticket-3.jpg',
-  //   images: ["/assets/images/portfolio/portfolio-2"],
-  //   thumbnail: "/assets/images/portfolio/portfolio-2",
-  // },
+  {
+    visible: true,
+    subEvent: {
+      description: 'You can purchase ticket ONLY for the party - Link below',
+      link: '/event-details/Bulgarian Party'
+    },
+    title: "Bulgarian Dinner",
+    description: "For the national glory",
+    bgImage: "22",
+    date: "2nd March",
+    time: "19:00",
+    ticketTimer: '2024-03-02T19:00:00',
+    ticketLimit: 100,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    correctedDate: "",
+    correctedTime: "",
+    where: `Fizz`,
+    entry: 10,
+    memberEntry: 10,
+    including: ['+ free shot and drink', '+ free shot and drink'],
+    price_id: 'price_1OlejBIOw5UGbAo1JBDpdV4q',
+    memberPrice_id: 'price_1OlejBIOw5UGbAo1JBDpdV4q',
+    activeMemberPrice_id: 'price_1OlejQIOw5UGbAo1R76ENtGI',
+    discountPass: [
+      'simonatodorova2216@gmail.com',
+      'ivandikliev1@abv.bg',
+      'nikoltoneva88@gmail.com',
+      'dfawal@gmail.bg',
+      'deamira.st23@gmail.com',
+      'dimitrova04v@abv.bg',
+      'melisa_hristova@abv.bg',
+      'tonovivailo@gmail.com',
+      'alistaneva@gmail.com',
+      'danailova97@gmail.com',
+      'miryana.b.ivanova@gmail.com',
+      'vesi_it@abv.bg',
+      'alex_ivanov2002@gmail.com',
+      'bulgariansociety.lwd@gmail.com'
+    ],
+    freePass: ["vlady1002@abv.bg"],
+    extraInputs: true,
+    text: [
+      `Celebrate the Bulgarian Independence Day with an iconic and memorable dinner and party here in Leeuwarden.🎉 
+      `,
+      `Ditch the boring Saturday evening and join us to welcome the Independence Day ✨and dwell into the Bulgarian spirit 
+      `,
+      'We will be welcoming you at Fizz at 19:00 with a shot of Rakiya 🥃 , piece of Pitka 🍞 with honey or mixed spices (sharena sol).🧂',
+      `What to expect? 
+      `,
+      `•delicious appetizers 🍢
+      `,
+      `•heart-warming mea🍛
+      `,
+      `•soft and chewy dessert 🥧
+      `,
+      `To set the atmosphere DjZander will be playing your favourite hits with occasional horo breaks 💃
+      `,
+      `After the delicious meals, fun games and dances, the evening will continue at @lixx starting at 23:30 where the Dj will make you feel at home with Bulgarian hits 🎵`,
+      `Not only that but a free shot 🥃 will be waiting for you when you enter the club’s doors 🎉`,
+      `Bring your patriotism and party mood and be ready for a memorable night! 🌙 🎉 `,
+    ],
+    ticket_img: '/assets/images/tickets/leeuwarden/ticket-5.jpg',
+    images: ["/assets/images/events/leeuwarden/freedom1/1", "/assets/images/events/leeuwarden/freedom1/2"],
+    thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-5",
+  },
+  {
+    visible: false,
+    subEvent: {
+      description: 'You can purchase combined ticket for dinner and party - Link below',
+      link: '/event-details/Bulgarian Dinner'
+    },
+    title: "Bulgarian Party",
+    description: "Liberation party",
+    bgImage: "24",
+    date: "2nd March",
+    time: "23:30",
+    ticketTimer: '2024-03-02T23:00:00',
+    ticketLimit: 100,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    correctedDate: "",
+    correctedTime: "",
+    where: `Club Lixx`,
+    entry: 5,
+    memberEntry: 5,
+    including: ['+ free shot', '+ free shot'],
+    price_id: 'price_1OlelKIOw5UGbAo1WXW9a1tC',
+    memberPrice_id: 'price_1OlelKIOw5UGbAo1WXW9a1tC',
+    activeMemberPrice_id: 'price_1OlelnIOw5UGbAo18Jz8wczU',
+    discountPass: [
+      'simonatodorova2216@gmail.com',
+      'ivandikliev1@abv.bg',
+      'nikoltoneva88@gmail.com',
+      'dfawal@gmail.bg',
+      'deamira.st23@gmail.com',
+      'dimitrova04v@abv.bg',
+      'melisa_hristova@abv.bg',
+      'tonovivailo@gmail.com',
+      'alistaneva@gmail.com',
+      'danailova97@gmail.com',
+      'miryana.b.ivanova@gmail.com',
+      'vesi_it@abv.bg',
+      'alex_ivanov2002@gmail.com',
+      'bulgariansociety.lwd@gmail.com'
+    ],
+    freePass: ["vlady1002@abv.bg"],
+    extraInputs: false,
+    text: [
+      `Celebrate the Bulgarian Independence Day with an iconic and memorable party here in Leeuwarden.🎉 
+      `,
+      `The evening continues after a great meal at @lixx starting at 23:30 where the Dj will make you feel at home with Bulgarian hits 🎵`,
+      `Not only that but a free shot 🥃 will be waiting for you when you enter the club’s doors 🎉`,
+      `Bring your patriotism and party mood and be ready for a memorable night! 🌙 🎉 `,
+    ],
+    ticket_img: '/assets/images/tickets/leeuwarden/ticket-1.jpg',
+    images: [],
+    thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-5",
+  },
   // {
   //   disclaimer: 'Tickets For Uno',
   //   visible: true,

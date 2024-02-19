@@ -7,34 +7,31 @@ const FormExtras = () => {
             <div className="col-lg-12 col-md-12 col-12">
                 <h3>Preferences</h3>
                 <div className="rnform-group">
-                    <Field type='text' placeholder='Team Name' name="team">
-                
+                <Field as="select" name="menu">
+                        <option value="" disabled>
+                            Select your menu
+                        </option>
+                        <option value="meat">With meat</option>
+                        <option value="vegetarian">Vegetarian</option>
+                    
                     </Field>
-                    <small>*Your teammate must also have a ticket and enter the same name</small>
-                    <small>*Applies only if you already have a teammate</small>
-                    {/* <ErrorMessage
+                    <ErrorMessage
                         className="error"
-                        name="team"
+                        name="menu"
                         component="div"
-                    /> */}
+                    />
                 </div>
             </div>
             <div className="col-lg-12 col-md-12 col-12">
                 <div className="rnform-group">
-                    <Field as="select" name="drink">
+                    <Field as="select" name="type">
                         <option value="" disabled>
-                            Select your drink
+                            Select your type
                         </option>
-                        <option value="soft drink">soft drink</option>
-                        <option value="beer">beer</option>
-                        <option value="white wine">white wine</option>
-                        <option value="red wine">red wine</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
                     </Field>
-                    <ErrorMessage
-                        className="error"
-                        name="drink"
-                        component="div"
-                    />
+                    <small>*Only for vegetarians</small>
                 </div>
             </div>
         </div>
