@@ -167,9 +167,6 @@ const MemberPurchase = () => {
                       "payment/checkout/member",
                       "POST",
                       formData,
-                      {
-                        'Content-Type': 'multipart/form-data'
-                      }
                     );
                     if (responseData.url) {
                       window.location.assign(responseData.url);

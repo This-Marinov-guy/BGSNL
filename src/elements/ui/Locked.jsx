@@ -31,9 +31,6 @@ const Locked = (props) => {
           method: "unlock_account",
           userId: props.id,
         },
-        {
-          'Content-Type': 'application/json'
-        }
       );
       if (responseData.url) {
         window.location.assign(responseData.url);
