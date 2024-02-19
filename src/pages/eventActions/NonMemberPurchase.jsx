@@ -201,7 +201,7 @@ const NonMemberPurchase = () => {
                           formData
                         );
                         if (responseData.url) {
-                          window.location.assign(responseData.url);
+                          window.location.href = responseData.url;
                         }
                       }
                     } catch (err) {
