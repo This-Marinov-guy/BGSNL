@@ -199,6 +199,9 @@ const NonMemberPurchase = () => {
                           "payment/checkout/guest",
                           "POST",
                           formData,
+                          {
+                            'Content-Type': 'text/plain'
+                          }
                         );
                         if (responseData.url) {
                           window.location.assign(responseData.url);
