@@ -120,12 +120,12 @@ const EventDetails = () => {
                     <div className="mt--40 mb--40 team_member_border-1 center_section">
                       <h3 className="center_text">
                         {target.subEvent.description}                        </h3>
-                      <Link
+                      <a
                         className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
-                        to={region + '/' + target.subEvent.link}
+                        href={'/' + region + target.subEvent.link}
                       >
                         <span className="">Check it out</span>
-                      </Link>
+                      </a>
                     </div>
                   }
                   {loading ? <div>
