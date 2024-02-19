@@ -200,9 +200,7 @@ const NonMemberPurchase = () => {
                           "POST",
                           formData,
                           {
-                            headers: {
-                              'Content-Type': 'multipart/form-data'
-                            }
+                            'Content-Type': 'multipart/form-data'
                           }
                         );
                         if (responseData.url) {

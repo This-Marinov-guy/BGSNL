@@ -295,7 +295,10 @@ const SignUp = (props) => {
 
                       "payment/checkout/signup",
                       "POST",
-                      formData
+                      formData,
+                      {
+                        'Content-Type': 'multipart/form-data'
+                      }
                     );
                     if (responseData.url) {
                       window.location.assign(responseData.url);
