@@ -198,7 +198,12 @@ const NonMemberPurchase = () => {
                         const responseData = await sendRequest(
                           "payment/checkout/guest",
                           "POST",
-                          formData
+                          formData,
+                          {
+                            headers: {
+                              'Content-Type': 'application/json'
+                            }
+                          }
                         );
                         if (responseData.url) {
                           window.location.assign(responseData.url);
