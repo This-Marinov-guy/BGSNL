@@ -37,7 +37,7 @@ const NonSocietyEvent = (props) => {
 
   const { loading, sendRequest } = useHttpClient();
 
-  const {region} = useParams();
+  const { region } = useParams();
 
   const target = useObjectGrabUrl(OTHER_EVENTS[region]);
 
@@ -62,7 +62,7 @@ const NonSocietyEvent = (props) => {
       const responseData = await sendRequest(
         "event/register/non-society-event",
         "POST",
-       {
+        {
           event: target.title,
           date: target.when,
           user: "member",
@@ -129,8 +129,8 @@ const NonSocietyEvent = (props) => {
               onClick={submitMemberForm}
               className="rn-button-style--2 btn-solid mt--30"
             >
-              {loading ? <Loader/> : <span>Register</span>}
-            </button></div> : <Loader center/>) : <Formik
+              {loading ? <Loader /> : <span>Register</span>}
+            </button></div> : <Loader center />) : <Formik
               className="inner"
               validationSchema={schema}
               onSubmit={async (values) => {
@@ -138,7 +138,7 @@ const NonSocietyEvent = (props) => {
                   const responseData = await sendRequest(
                     "event/register/non-society-event",
                     "POST",
-                    JSON.stringify({
+                    {
                       event: target.title,
                       date: target.when,
                       user: "normal",
@@ -146,9 +146,6 @@ const NonSocietyEvent = (props) => {
                       phone: values.phone,
                       email: values.email,
                       notificationTypeTerms: values.notificationTypeTerms,
-                    }),
-                    {
-                      "Content-Type": "application/json",
                     }
                   );
                   props.setNotification(

@@ -70,11 +70,8 @@ const Login = (props) => {
       const responseData = await sendRequest(
         "user/send-password-token",
         "POST",
-        JSON.stringify({
-          email: loginFormValues.email,
-        }),
         {
-          "Content-Type": "application/json",
+          email: loginFormValues.email,
         }
       );
       setUserEmail(responseData.email);
@@ -177,13 +174,10 @@ const Login = (props) => {
                   const responseData = await sendRequest(
                     `user/change-password`,
                     "PATCH",
-                    JSON.stringify({
+                    {
                       userToken: values.token,
                       email: userEmail,
                       password: values.password,
-                    }),
-                    {
-                      "Content-Type": "application/json",
                     }
                   );
                   props.setNotification(

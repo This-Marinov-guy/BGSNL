@@ -222,7 +222,7 @@ const SignUp = (props) => {
                     {
                       email: values.email,
                     },
-                    
+
                   );
                 } catch (err) {
                   return;
@@ -235,12 +235,9 @@ const SignUp = (props) => {
 
                       "user/check-member-key",
                       "POST",
-                      JSON.stringify({
+                      {
                         email: values.email,
                         key: values.memberKey,
-                      }),
-                      {
-                        "Content-Type": "application/json",
                       }
                     );
                     if (responseData.message === "verifiedKey") {
