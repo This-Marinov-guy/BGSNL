@@ -122,7 +122,7 @@ const EventDetails = () => {
                         {target.subEvent.description}                        </h3>
                       <Link
                         className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
-                        to={'/' + region + '/' + target.subEvent.link}
+                        to={region + '/' + target.subEvent.link}
                       >
                         <span className="">Check it out</span>
                       </Link>
