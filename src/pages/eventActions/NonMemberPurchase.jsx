@@ -53,12 +53,9 @@ const NonMemberPurchase = () => {
     if (target.ticketLimit) {
       const checkRemainingTicketQuantity = async () => {
         try {
-          const responseData = await sendRequest(`event/sold-ticket-count`, "POST", JSON.stringify({
+          const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
             eventName: target.title,
-          }),
-            {
-              "Content-Type": "application/json",
-            });
+          })
           setRemainingTickets(target.ticketLimit - responseData.ticketsSold);
           if (remainingTickets <= 0) {
             setEventClosed(true)
@@ -86,7 +83,7 @@ const NonMemberPurchase = () => {
         <ImageFb
           className="logo mb--40"
           src={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.webp`}
-      fallback={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.jpg`}
+          fallback={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.jpg`}
           alt="Logo"
         />
         <h3 className="">Opps ... it is all SOLD OUT! Please check the event description for tickets on-the-door or contact us through our email! Hope we see you soon!</h3>

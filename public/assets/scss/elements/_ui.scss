@@ -146,6 +146,10 @@ h3 {
   }
 }
 
+small {
+  font-size: 16px;
+}
+
 @keyframes slide-down {
   from {
     opacity: 0;
@@ -156,3 +160,4 @@ h3 {
     transform: translateY(0);
   }
 }
+
