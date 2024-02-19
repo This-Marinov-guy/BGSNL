@@ -187,7 +187,7 @@ const NonMemberPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname) (target.discountPass && target.discountPass.includes(values.email))) {
+                      if (target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname) || (target.discountPass && target.discountPass.includes(values.email))) {
                         const responseData = await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
@@ -201,7 +201,7 @@ const NonMemberPurchase = () => {
                           formData
                         );
                         if (responseData.url) {
-                          window.location.href = responseData.url;
+                          window.location.assign(responseData.url);
                         }
                       }
                     } catch (err) {
