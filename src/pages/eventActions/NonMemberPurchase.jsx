@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHttpClient } from "../../hooks/http-hook";
-import { useHttpFetchClient } from "../../hooks/fetch-hook";
 import PageHelmet from "../../component/common/Helmet";
 import Header from "../../component/header/Header";
 import ScrollToTop from "react-scroll-up";
@@ -20,7 +19,6 @@ import { useHistory, useParams, Link } from "react-router-dom";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
-  const {sendFetchRequest} = useHttpFetchClient();
 
   const [loadingPage, setLoadingPage] = useState(true);
   const [remainingTickets, setRemainingTickets] = useState()
@@ -197,7 +195,7 @@ const NonMemberPurchase = () => {
                         );
                         history.push('/success');
                       } else {
-                        const responseData = await sendFetchRequest(
+                        const responseData = await sendRequest(
                           "payment/checkout/guest",
                           "POST",
                           formData,
