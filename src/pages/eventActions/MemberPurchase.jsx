@@ -5,6 +5,7 @@ import PageHelmet from "../../component/common/Helmet";
 import Header from "../../component/header/Header";
 import { useHistory, useParams, Link } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
+import { useHttpFetchClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
 import Locked from "../../elements/ui/Locked";
 import ScrollToTop from "react-scroll-up";
@@ -20,6 +21,7 @@ import { REGIONS } from "../../util/REGIONS_DESIGN";
 
 const MemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
+  const {sendFetchRequest} = useHttpFetchClient();
 
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(true);
@@ -163,7 +165,7 @@ const MemberPurchase = () => {
                     history.push('/success');
                   }
                   else {
-                    const responseData = await sendRequest(
+                    const responseData = await sendFetchRequest(
                       "payment/checkout/member",
                       "POST",
                       formData,

@@ -121,7 +121,7 @@ const Login = (props) => {
           </Link>
         </Alert>
       );
-      history.push(`/${responseData.region}`);
+      history.push('/' + responseData.region);
       setTimeout(() => closeHandler(), 5000);
     } catch (err) { }
   };

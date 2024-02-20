@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "./Loader";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
 import { showError } from "../../redux/error";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
+import { useHttFetchClient } from "../../hooks/fetch-hook";
 
 const Locked = (props) => {
-  const { loading, sendRequest } = useHttpClient();
+  const { loading, sendFetchRequest } = useHttFetchClient();
 
   const [membershipIndex, setMembershipIndex] = useState(0)
 
@@ -21,7 +21,7 @@ const Locked = (props) => {
     }
     setMembershipIndex(index)
     try {
-      const responseData = await sendRequest(
+      const responseData = await sendFetchRequest(
         "payment/checkout-no-file",
         "POST",
         {

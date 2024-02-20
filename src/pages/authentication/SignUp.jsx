@@ -20,6 +20,7 @@ import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP, REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
+import { useHttFetchClient } from "../../hooks/fetch-hook";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -79,6 +80,7 @@ const options = [
 
 const SignUp = (props) => {
   const { loading, sendRequest } = useHttpClient();
+  const {sendFetchRequest} = useHttFetchClient();
 
   const { region } = useParams();
 
@@ -290,9 +292,8 @@ const SignUp = (props) => {
                   }
                 } else {
                   try {
-                    const responseData = await sendRequest(
+                    const responseData = await sendFetchRequest(
                       region,
-
                       "payment/checkout/signup",
                       "POST",
                       formData,
