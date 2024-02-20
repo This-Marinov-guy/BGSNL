@@ -372,7 +372,7 @@ leeuwarden : [
       `Bring your patriotism and party mood and be ready for a memorable night! 🌙 🎉 `,
     ],
     ticket_img: '/assets/images/tickets/leeuwarden/ticket-1.jpg',
-    images: [],
+    images: ["/assets/images/events/leeuwarden/freedom1/1"],
     thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-5",
   },
   // {
