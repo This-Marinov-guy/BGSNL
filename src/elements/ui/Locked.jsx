@@ -5,10 +5,10 @@ import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
 import { showError } from "../../redux/error";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
-import { useHttFetchClient } from "../../hooks/fetch-hook";
+import { useHttpFetchClient } from "../../hooks/fetch-hook";
 
 const Locked = (props) => {
-  const { loading, sendFetchRequest } = useHttFetchClient();
+  const { loading, sendFetchRequest } = useHttpFetchClient();
 
   const [membershipIndex, setMembershipIndex] = useState(0)
 

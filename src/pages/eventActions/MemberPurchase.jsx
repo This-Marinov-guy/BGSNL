@@ -5,7 +5,7 @@ import PageHelmet from "../../component/common/Helmet";
 import Header from "../../component/header/Header";
 import { useHistory, useParams, Link } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
-import { useHttpFetchClient } from "../../hooks/http-hook";
+import { useHttpFetchClient } from "../../hooks/fetch-hook"; 
 import Loader from "../../elements/ui/Loader";
 import Locked from "../../elements/ui/Locked";
 import ScrollToTop from "react-scroll-up";

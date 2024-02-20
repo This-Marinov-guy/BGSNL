@@ -5,7 +5,7 @@ import { removeError, showError } from "../redux/error";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 
 //used for request with payments 
-export const useHttFetchClient = () => {
+export const useHttpFetchClient = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
 
