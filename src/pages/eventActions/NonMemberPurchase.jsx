@@ -33,8 +33,9 @@ const NonMemberPurchase = () => {
     surname: yup.string().required(),
     phone: yup.string().required(),
     email: yup.string().email("Please enter a valid email").required(),
-    menu: target.extraInputs ? yup.string().required("Please select a menu") : yup.string(),
-    type: yup.string(),
+    extraOne: (target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
+    extraTwo:  (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
+    extraThree:   (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
     policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
     payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
@@ -180,7 +181,7 @@ const NonMemberPurchase = () => {
                       formData.append("eventDate", target.date);
                       formData.append("guestEmail", values.email);
                       if (target.extraInputs) {
-                        formData.append('preferences', JSON.stringify({ menu: values.menu, type: values.type }))
+                        formData.append('preferences', JSON.stringify({inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                       }
                       formData.append(
                         "guestName",
@@ -213,8 +214,9 @@ const NonMemberPurchase = () => {
                     surname: "",
                     email: "",
                     phone: "",
-                    menu: '',
-                    type: '',
+                    extraOne: '',
+                    extraTwo: '',
+                    extraThree: '',
                     policyTerms: false,
                     payTerms: false,
                   }}
@@ -279,7 +281,7 @@ const NonMemberPurchase = () => {
                             />
                           </div>
                         </div>
-                        {target.extraInputs && <FormExtras />}
+                        {target.extraInputs && <FormExtras target={target.extraInputs} />}
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">
                             <Field

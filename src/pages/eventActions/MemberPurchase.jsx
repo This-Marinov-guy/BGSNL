@@ -33,8 +33,9 @@ const MemberPurchase = () => {
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
   const schema = yup.object().shape({
-    menu: target.extraInputs ? yup.string().required("Please select a menu") : yup.string(),
-    type: yup.string(),
+    extraOne: (target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
+    extraTwo:  (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
+    extraThree:   (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
   });
 
   function calculateTimeRemaining(timer) {
@@ -152,7 +153,7 @@ const MemberPurchase = () => {
                   formData.append("eventDate", target.date);
                   formData.append("userId", userId);
                   if (target.extraInputs) {
-                    formData.append('preferences', JSON.stringify({ menu: values.menu, type: values.type }))
+                    formData.append('preferences', JSON.stringify({inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                   }
                   if (target.freePass.includes(currentUser.email) || target.freePass.includes(currentUser.name + ' ' + currentUser.surname)) {
                     const responseData = await sendRequest(
@@ -175,8 +176,9 @@ const MemberPurchase = () => {
                 } catch (err) { }
               }}
               initialValues={{
-                menu: '',
-                type: '',
+                extraOne: '',
+                extraTwo: '',
+                extraThree: '',
               }}>
               {() => (
                 <Form id='form' encType="multipart/form-data"
@@ -201,7 +203,7 @@ const MemberPurchase = () => {
                       <p>Price: {target.memberEntry ? `${target.memberEntry} euro (discounted)` : `${target.entry} (no MEMBER discount)`}</p>
                     </div>
                   </div>
-                  {target.extraInputs && <FormExtras />}
+                  {target.extraInputs && <FormExtras target={target.extraInputs}/>}
                   <button
                     disabled={loading}
                     type="submit"
