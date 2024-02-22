@@ -35,7 +35,8 @@ export const SOCIETY_EVENTS = {
       `,
         `Whether you're Bulgarian or just love the Balkan vibe, this is a night you don’t want to miss! 
        `,
-        `Tickets are flying off the shelves like confetti, so grab yours now before it's too late!`
+        `Tickets are flying off the shelves like confetti, so grab yours now before it's too late!`,
+        `Let's get this party started!`
       ],
       ticket_img: '/assets/images/tickets/groningen/ticket-31.jpg',
       images: ["/assets/images/portfolio/groningen/portfolio-31"],
