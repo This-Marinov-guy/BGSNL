@@ -24,9 +24,9 @@ groningen : [
     memberPrice_id: 'price_1OmZVmIOw5UGbAo19UJ43aNo',
     activeMemberPrice_id: 'price_1OmZW0IOw5UGbAo1sYulo8JA',
     freePass: ['vlady1002@abv.bg'],
-    extraInputs: [],
+    extraInputs: false,
     text: [
-      `Feeling the urge to party like you're back in Bulgaria?  Then mark your calendar for the ultimate student party on the 7th  of March!
+      `Feeling the urge to party like you're back in Bulgaria?  Then mark your calendars for the ultimate student party on the 7th  of March!
       `,
       `Get ready to dance to the hottest tunes!
       `,
@@ -61,7 +61,7 @@ groningen : [
     // memberPrice_id: 'price_1OgKe3IOw5UGbAo1aQhiMrxG',
     // activeMemberPrice_id: 'price_1OgKrIIOw5UGbAo1FlbrNHYZ',
     freePass: ['vlady1002@abv.bg'],
-    extraInputs: [],
+    extraInputs: false,
     text: [
       `An evening of cultural enrichment and exchange at our 'Get Familiar with Greek and Bulgarian Culture' event. `,
       `We invite you to join us and learn more about the difference and similarities of the two cultures through a variety of authentic snacks, drinks and traditional dances.`,
@@ -117,12 +117,7 @@ leeuwarden : [
       'bulgariansociety.lwd@gmail.com'
     ],
     freePass: ["vlady1002@abv.bg"],
-    extraInputs: [
-      {
-        name: '',
-        content
-      }
-    ],
+    extraInputs: true,
     text: [
       `Celebrate the Bulgarian Independence Day with an iconic and memorable dinner and party here in Leeuwarden.🎉 
       `,
@@ -187,7 +182,7 @@ leeuwarden : [
       'bulgariansociety.lwd@gmail.com'
     ],
     freePass: ["vlady1002@abv.bg"],
-    extraInputs: [],
+    extraInputs: false,
     text: [
       `Celebrate the Bulgarian Independence Day with an iconic and memorable party here in Leeuwarden.🎉 
       `,
