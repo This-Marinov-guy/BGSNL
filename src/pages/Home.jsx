@@ -15,6 +15,7 @@ import {
 import ImageFb from "../elements/ui/ImageFb";
 import { Link, useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { REGIONS } from "../util/REGIONS_DESIGN";
+import RegionLogos from "../elements/RegionLogos";
 
 const Home = () => {
   const user = useSelector(selectUser);
@@ -23,10 +24,10 @@ const Home = () => {
 
   const history = useHistory()
 
-   useEffect(() => {
-     if (region && !REGIONS.includes(region)) {
-       history.push('/404')
-     }
+  useEffect(() => {
+    if (region && !REGIONS.includes(region)) {
+      history.push('/404')
+    }
   }, [region])
 
   const SlideList = [
@@ -72,6 +73,7 @@ const Home = () => {
                     ) : (
                       ""
                     )}
+                    {/* {<RegionLogos />} */}
                     {value.buttonText && (
                       <div className="slide-btn">
                         <Link

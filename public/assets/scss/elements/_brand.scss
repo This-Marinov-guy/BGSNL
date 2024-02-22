@@ -143,3 +143,43 @@ ul {
     padding-bottom: 60px;
   }
 }
+
+.brand_logos {
+  display: flex-wrap;
+  gap: 10px;
+
+  background-color: transparent !important;
+  img {
+    opacity: 1 !important;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  ul {
+    &.brand-style-3 {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      @media #{$large-mobile} {
+        margin: 0 -15px;
+      }
+      li {
+        padding: 5px;
+        flex-basis: 10%;
+        text-align: center;
+        @media #{$sm-layout} {
+          flex-basis: 20%;
+          padding: 5px;
+        }
+        @media #{$large-mobile} {
+          flex-basis: 20%;
+          padding: 5px;
+        }
+      }
+    }
+  }
+}

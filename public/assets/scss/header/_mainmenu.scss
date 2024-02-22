@@ -32,7 +32,6 @@ Mainmenu Area
             @extend %liststyle;
             min-width: 240px;
             height: auto;
-            max-height: 6em;
             overflow-y: scroll;
             position: absolute;
             top: 100%;
@@ -71,7 +70,6 @@ Mainmenu Area
                 @extend %liststyle;
                 min-width: 240px;
                 height: auto;
-                max-height: 6em;
                 overflow-y: scroll;
                 position: absolute;
                 top: 0;
@@ -201,16 +199,12 @@ Mainmenu Area
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
   }
-  .submenu {
-    max-height: auto !important;
-  }
+
 }
 
 @media #{$sm-layout} {
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
   }
-  .submenu {
-    max-height: auto !important;
-  }
+
 }
