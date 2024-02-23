@@ -29,7 +29,7 @@ export const REGION_EMAIL = {
     groningen: 'bulgariansociety.gro@gmail.com',
     rotterdam: 'bulgariansociety.rtm@gmail.com',
     leeuwarden: 'bulgariansociety.lwd@gmail.com',
-    breda : 'bulgariansociety.bred@gmail.com',
+    breda : 'bulgariansociety.bre@gmail.com',
     amsterdam: 'bulgariansociety.ams@gmail.com',
     maastricht: 'bulgariansociety.maas@gmail.com'
 }

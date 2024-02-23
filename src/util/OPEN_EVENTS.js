@@ -258,7 +258,7 @@ export const SOCIETY_EVENTS = {
       where: ` Easystreet (Vijfhagen, 4812 XT Breda)`,
       entry: 10,
       memberEntry: 10,
-      including: ['+ menu|drink|gift', '+ menu|drink|gift'],
+      including: ['', ''],
       price_id: 'price_1OmrEUIOw5UGbAo1zQmfkHRd',
       memberPrice_id: 'price_1OmrEUIOw5UGbAo1zQmfkHRd',
       activeMemberPrice_id: 'price_1OmrEUIOw5UGbAo1zQmfkHRd',
@@ -297,7 +297,7 @@ export const SOCIETY_EVENTS = {
                 </option>
                 <option value="beer">Beer</option>
                 <option value="wine">Wine</option>
-                <option value="fanta">Fanra</option>
+                <option value="fanta">Fanta</option>
                 <option value="cola">Cola</option>
                 <option value="ice tea">Ice Tea</option>
 
@@ -350,7 +350,7 @@ export const SOCIETY_EVENTS = {
       where: ` Easystreet (Vijfhagen, 4812 XT Breda)`,
       entry: 7,
       memberEntry: 7,
-      including: ['+ menu|drink|gift', '+ menu|drink|gift'],
+      including: ['', ''],
       price_id: 'price_1OmrF5IOw5UGbAo1iuzvw5rC',
       memberPrice_id: 'price_1OmrF5IOw5UGbAo1iuzvw5rC',
       activeMemberPrice_id: 'price_1OmrF5IOw5UGbAo1iuzvw5rC',
@@ -389,7 +389,7 @@ export const SOCIETY_EVENTS = {
                 </option>
                 <option value="beer">Beer</option>
                 <option value="wine">Wine</option>
-                <option value="fanta">Fanra</option>
+                <option value="fanta">Fanta</option>
                 <option value="cola">Cola</option>
                 <option value="ice tea">Ice Tea</option>
               </Field>
@@ -438,7 +438,7 @@ export const SOCIETY_EVENTS = {
       where: `Proost club`,
       entry: 5,
       memberEntry: 5,
-      including: ['+ menu|drink|gift', '+ menu|drink|gift'],
+      including: ['', ''],
       price_id: 'price_1OmrErIOw5UGbAo1qh8jHtnp',
       memberPrice_id: 'price_1OmrErIOw5UGbAo1qh8jHtnp',
       activeMemberPrice_id: 'price_1OmrErIOw5UGbAo1qh8jHtnp',
