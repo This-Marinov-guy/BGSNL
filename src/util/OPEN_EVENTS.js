@@ -302,6 +302,11 @@ export const SOCIETY_EVENTS = {
                 <option value="ice tea">Ice Tea</option>
 
               </Field>
+              <ErrorMessage
+                className="error"
+                name="extraTwo"
+                component="div"
+              />
             </div>
           </div>
         }
@@ -387,8 +392,12 @@ export const SOCIETY_EVENTS = {
                 <option value="fanta">Fanra</option>
                 <option value="cola">Cola</option>
                 <option value="ice tea">Ice Tea</option>
-
               </Field>
+              <ErrorMessage
+                className="error"
+                name="extraOne"
+                component="div"
+              />
             </div>
           </div>
         }

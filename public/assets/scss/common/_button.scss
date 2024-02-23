@@ -260,6 +260,7 @@ button {
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  gap: 10px !important;
   max-width: 600px;
   @media #{$sm-layout} {
     flex-direction: column;
