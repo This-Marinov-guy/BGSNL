@@ -85,7 +85,7 @@ export const SOCIETY_EVENTS = {
       visible: true,
       subEvent: {
         description: 'You can purchase ticket ONLY for the party - Link below',
-        link: '/event-details/Bulgarian Party'
+        link: [{ name: 'Click here', href: '/event-details/Bulgarian Party' }]
       },
       title: "Bulgarian Dinner",
       description: "For the national glory",
@@ -187,7 +187,9 @@ export const SOCIETY_EVENTS = {
       visible: false,
       subEvent: {
         description: 'You can purchase combined ticket for dinner and party - Link below',
-        link: '/event-details/Bulgarian Dinner'
+        links: [
+          { name: 'Click Here', href: '/event-details/Bulgarian Dinner' }
+        ]
       },
       title: "Bulgarian Party",
       description: "Liberation party",
@@ -235,68 +237,222 @@ export const SOCIETY_EVENTS = {
       images: ["/assets/images/events/leeuwarden/freedom1/1"],
       thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-5",
     },
-    // {
-    //   disclaimer: 'Tickets For Uno',
-    //   visible: true,
-    //   subEvent: {
-    //     description: 'You can either play Uno or Belot (both run simultaneously) - Link for the Belot game below',
-    //     link: '/event-details/Game Night (Belot)'
-    //   },
-    //   title: "Game Night (Uno)",
-    //   description: "🌟 Kickstart the new year with a bang! 🌟 ",
-    //   bgImage: "23",
-    //   date: "20th January",
-    //   time: "19:30",
-    //   ticketTimer: '2024-01-20T21:00:00',
-    //   ticketLimit: 100,
-    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    //   correctedDate: "",
-    //   correctedTime: "",
-    //   where: `Grote Keizer Bowling`,
-    //   entry: 6,
-    //   memberEntry: 5,
-    //   including: ['+ drink by choice', '+ drink by choice'],
-    //   price_id: 'price_1OVyivIOw5UGbAo1Yuob9lhb',
-    //   memberPrice_id: 'price_1OVyivIOw5UGbAo1Yuob9lhb',
-    //   activeMemberPrice_id: 'price_1OWBaCIOw5UGbAo1fi6OwKrL',
-    //   discountPass: [
-    //     'simonatodorova2216@gmail.com',
-    //     'ivandikliev1@abv.bg',
-    //     'nikoltoneva88@gmail.com',
-    //     'dfawal@gmail.bg',
-    //     'deamira.st23@gmail.com',
-    //     'dimitrova04v@abv.bg',
-    //     'melisa_hristova@abv.bg',
-    //     'tonovivailo@gmail.com',
-    //     'alistaneva@gmail.com',
-    //     'danailova97@gmail.com',
-    //     'miryana.b.ivanova@gmail.com',
-    //     'vesi_it@abv.bg',
-    //     'alex_ivanov2002@gmail.com',
-    //     'bulgariansociety.lwd@gmail.com'
-    //   ],
-    //   freePass: ["vlady1002@abv.bg"],
-    //   extraInputs: true,
-    //   text: [
-    //     `Hope you get a good rest during the holidays because BGSL starts strong with the first event for the year.  
-    //     `,
-    //     `👫 Uno Tournament:
-    //     `,
-    //     '- Unlimited Spaces!',
-    //     `- Cash Prize: €15 for the ultimate Uno champion!
-    //     `,
-    //     ` Don't miss the chance to kick off the year with some friendly competition, exciting games, and awesome prizes!
-    //     `,
-    //     `Let the games begin! 🏆🃏
-    //     `,
+  ],
+  breda: [
+    {
+      visible: true,
+      subEvent: {
+        description: 'You can purchase ticket ONLY for either the dinner or the party - Link below',
+        link: [{ name: 'Dinner Only', href: '/event-details/Bulgarian Dinner' }, { name: 'Party Only', href: '/event-details/Bulgarian Party' }]
+      },
+      title: "Bulgarian Dinner & Party",
+      description: `Let’s celebrate 1st of March (Baba Marta) together!🤍❤`,
+      bgImage: "12",
+      date: "1st March",
+      time: "18:00",
+      ticketTimer: '2024-03-01T18:00:00',
+      ticketLimit: 100,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      correctedDate: "",
+      correctedTime: "",
+      where: ` Easystreet (Vijfhagen, 4812 XT Breda)`,
+      entry: 10,
+      memberEntry: 10,
+      including: ['+ menu|drink|gift', '+ menu|drink|gift'],
+      price_id: 'price_1OmrEUIOw5UGbAo1zQmfkHRd',
+      memberPrice_id: 'price_1OmrEUIOw5UGbAo1zQmfkHRd',
+      activeMemberPrice_id: 'price_1OmrEUIOw5UGbAo1zQmfkHRd',
+      discountPass: [
+      ],
+      freePass: ["vlady1002@abv.bg"],
+      extraInputs: [
+        {
+          required: true,
+          element: <div className="col-lg-12 col-md-12 col-12">
+            <h3>Preferences</h3>
+            <div className="rnform-group">
+              <Field as="select" name="extraOne">
+                <option value="" disabled>
+                  Select your main course
+                </option>
+                <option value="musaka">Musaka</option>
+                <option value="pepers">Stuffed peppers</option>
 
-    //     `* Sign up period: 08.01.2024 until game begins 
-    //     `,
-    //   ],
-    //   ticket_img: '/assets/images/tickets/ticket-4.jpg',
-    //   images: ["/assets/images/portfolio/portfolio-2"],
-    //   thumbnail: "/assets/images/portfolio/portfolio-2",
-    // },
+              </Field>
+              <ErrorMessage
+                className="error"
+                name="extraOne"
+                component="div"
+              />
+            </div>
+          </div>
+        },
+        {
+          required: true,
+          element: <div className="col-lg-12 col-md-12 col-12">
+            <div className="rnform-group">
+              <Field as="select" name="extraTwo">
+                <option value="" disabled>
+                  Select your drink
+                </option>
+                <option value="beer">Beer</option>
+                <option value="wine">Wine</option>
+                <option value="fanta">Fanra</option>
+                <option value="cola">Cola</option>
+                <option value="ice tea">Ice Tea</option>
+
+              </Field>
+            </div>
+          </div>
+        }
+      ],
+      text: [
+        `We are delighted to invite you to our very first event — a dinner and party to celebrate Baba Marta, the cherished Bulgarian holiday marking the arrival of spring!🌸
+      `,
+        `Indulge in the flavors of Bulgaria with a traditional dinner including 3-course meal starting with a piece of banitsa, continuing with moussaka (or stuffed peppers 🫑 ) and finishing with buscuit cake 🍰 . Let's gather together to savor these delicious tastes and celebrate the warmth of springtime!
+        We’ll be welcoming you with a shot of Rakiya and martenitsa!🥃
+        
+      `,
+        `Following dinner, the festivities will continue at Proost starting at 22:30 with the best Bulgarian hits secured by DjZander. 🪩
+        Get ready to immerse yourself in Bulgarian culture as we dance the night away and create unforgettable memories together.
+      `,
+        `Come dressed in your best red and white outfits to honor the spirit of Baba Marta and embrace our traditions.
+        We can't wait to share this special evening with you and kick off a year filled with joy, friendship, and Bulgarian culture        
+      `,
+        `❗TICKETS ARE VERY LIMITED SO MAKE SURE TO SECURE YOURS BEFORE THEY SELL OUT❗
+      `,
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-3.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-1"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-1",
+    },
+    {
+      visible: false,
+      subEvent: {
+        description: 'You can purchase ticket for the Party and Dinner',
+        link: [{ name: 'Click Here', href: '/event-details/Bulgarian Dinner & Party' }]
+      },
+      title: "Bulgarian Dinner",
+      description: `Let’s celebrate 1st of March (Baba Marta) together!🤍❤`,
+      bgImage: "22",
+      date: "1st March",
+      time: "18:00",
+      ticketTimer: '2024-03-01T18:00:00',
+      ticketLimit: 30,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      correctedDate: "",
+      correctedTime: "",
+      where: ` Easystreet (Vijfhagen, 4812 XT Breda)`,
+      entry: 7,
+      memberEntry: 7,
+      including: ['+ menu|drink|gift', '+ menu|drink|gift'],
+      price_id: 'price_1OmrF5IOw5UGbAo1iuzvw5rC',
+      memberPrice_id: 'price_1OmrF5IOw5UGbAo1iuzvw5rC',
+      activeMemberPrice_id: 'price_1OmrF5IOw5UGbAo1iuzvw5rC',
+      discountPass: [
+      ],
+      freePass: ["vlady1002@abv.bg"],
+      extraInputs: [
+        {
+          required: true,
+          element: <div className="col-lg-12 col-md-12 col-12">
+            <h3>Preferences</h3>
+            <div className="rnform-group">
+              <Field as="select" name="extraOne">
+                <option value="" disabled>
+                  Select your main course
+                </option>
+                <option value="musaka">Musaka</option>
+                <option value="pepers">Stuffed peppers</option>
+
+              </Field>
+              <ErrorMessage
+                className="error"
+                name="extraOne"
+                component="div"
+              />
+            </div>
+          </div>
+        },
+        {
+          required: true,
+          element: <div className="col-lg-12 col-md-12 col-12">
+            <div className="rnform-group">
+              <Field as="select" name="extraTwo">
+                <option value="" disabled>
+                  Select your drink
+                </option>
+                <option value="beer">Beer</option>
+                <option value="wine">Wine</option>
+                <option value="fanta">Fanra</option>
+                <option value="cola">Cola</option>
+                <option value="ice tea">Ice Tea</option>
+
+              </Field>
+            </div>
+          </div>
+        }
+      ],
+      text: [
+        `We are delighted to invite you to our very first event — a dinner and party to celebrate Baba Marta, the cherished Bulgarian holiday marking the arrival of spring!🌸
+      `,
+        `Indulge in the flavors of Bulgaria with a traditional dinner including 3-course meal starting with a piece of banitsa, continuing with moussaka (or stuffed peppers 🫑 ) and finishing with buscuit cake 🍰 . Let's gather together to savor these delicious tastes and celebrate the warmth of springtime!
+        We’ll be welcoming you with a shot of Rakiya and martenitsa!🥃
+        
+      `,
+        `Come dressed in your best red and white outfits to honor the spirit of Baba Marta and embrace our traditions.
+        We can't wait to share this special evening with you and kick off a year filled with joy, friendship, and Bulgarian culture        
+      `,
+        `❗TICKETS ARE VERY LIMITED SO MAKE SURE TO SECURE YOURS BEFORE THEY SELL OUT❗
+      `,
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-1.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-1"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-1",
+    },
+    {
+      visible: false,
+      subEvent: {
+        description: 'You can purchase ticket for the Party and Dinner',
+        link: [{ name: 'Click Here', href: '/event-details/Bulgarian Dinner & Party' }]
+      },
+      title: "Bulgarian Party",
+      description: `Let’s celebrate 1st of March (Baba Marta) together!🤍❤`,
+      bgImage: "24",
+      date: "1st March",
+      time: "22:30",
+      ticketTimer: '2024-03-01T18:00:00',
+      ticketLimit: 80,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      correctedDate: "",
+      correctedTime: "",
+      where: `Proost club`,
+      entry: 5,
+      memberEntry: 5,
+      including: ['+ menu|drink|gift', '+ menu|drink|gift'],
+      price_id: 'price_1OmrErIOw5UGbAo1qh8jHtnp',
+      memberPrice_id: 'price_1OmrErIOw5UGbAo1qh8jHtnp',
+      activeMemberPrice_id: 'price_1OmrErIOw5UGbAo1qh8jHtnp',
+      discountPass: [
+      ],
+      freePass: ["vlady1002@abv.bg"],
+      extraInputs: [
+      ],
+      text: [
+        `We are delighted to invite you to our very first event — a dinner and party to celebrate Baba Marta, the cherished Bulgarian holiday marking the arrival of spring!🌸
+      `,
+      ,
+        `Starting at 22:30 in Proost with the best Bulgarian hits secured by DjZander. 🪩
+        Get ready to immerse yourself in Bulgarian culture as we dance the night away and create unforgettable memories together.
+      `,
+        `Come dressed in your best red and white outfits to honor the spirit of Baba Marta and embrace our traditions.
+        We can't wait to share this special evening with you and kick off a year filled with joy, friendship, and Bulgarian culture        
+      `,
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-2.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-1"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-1",
+    },
   ]
 }
 

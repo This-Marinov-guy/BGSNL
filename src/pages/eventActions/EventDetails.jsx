@@ -13,13 +13,14 @@ import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
 import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
+import { link } from "fs-extra";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false)
   const [remainingTickets, setRemainingTickets] = useState()
   const user = useSelector(selectUser);
 
-  const {region} = useParams();
+  const { region } = useParams();
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
@@ -119,13 +120,20 @@ const EventDetails = () => {
                     target.subEvent &&
                     <div className="mt--40 mb--40 team_member_border-1 center_section">
                       <h3 className="center_text">
-                        {target.subEvent.description}                        </h3>
-                      <a
-                        className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
-                        href={'/' + region + target.subEvent.link}
-                      >
-                        <span className="">Check it out</span>
-                      </a>
+                        {target.subEvent.description}
+                      </h3>
+                      <div className="options-btns-div">
+                        {
+                          target.subEvent.link.map((link) => {
+                            return <a
+                              className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
+                              href={'/' + region + link.href}
+                            >
+                              <span className="">{link.name}</span>
+                            </a>
+                          })
+                        }
+                      </div>
                     </div>
                   }
                   {loading ? <div>
