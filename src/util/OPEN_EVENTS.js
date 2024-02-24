@@ -250,7 +250,7 @@ export const SOCIETY_EVENTS = {
       bgImage: "12",
       date: "1st March",
       time: "18:00",
-      ticketTimer: '2024-03-01T18:00:00',
+      ticketTimer: '2024-02-01T18:00:00',
       ticketLimit: 0,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       correctedDate: "",
@@ -342,7 +342,7 @@ export const SOCIETY_EVENTS = {
       bgImage: "22",
       date: "1st March",
       time: "18:00",
-      ticketTimer: '2024-03-01T18:00:00',
+      ticketTimer: '2024-02-01T18:00:00',
       ticketLimit: 0,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       correctedDate: "",
