@@ -4,7 +4,7 @@ import { REGIONS } from "../util/REGIONS_DESIGN";
 
 const RegionLogos = () => {
     return (
-        <div className="rn-brand-area brand_logos">
+        <div className="rn-brand-area brand_logos" style={{marginBottom:'-20px'}}>
             <ul className="brand-style-3">
                 {REGIONS.map((r, i) => {
                     return <li key={i}>

@@ -264,7 +264,6 @@ button {
   max-width: 600px;
   @media #{$sm-layout} {
     flex-direction: column;
-    height: 250px;
   }
 }
 

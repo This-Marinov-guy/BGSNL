@@ -4,6 +4,44 @@ import { Field, ErrorMessage } from "formik";
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
   groningen: [
+    // {
+    //   membersOnly: false,
+    //   visible: true,
+    //   title: "Entrepreneurship Series III",
+    //   // newTitle: 'Bulgarian Dinner',
+    //   description: "The awaited return",
+    //   bgImage: "4",
+    //   date: "9th March",
+    //   time: "14:00",
+    //   ticketTimer: '2024-03-09T10:00:00',
+    //   ticketLimit: 25,
+    //   //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    //   correctedDate: "",
+    //   correctedTime: "",
+    //   where: `Cafe Lust / 2nd floor`,
+    //   entry: 5,
+    //   memberEntry: 4,
+    //   // including: ['(includes a beer or non-alcoholic drink)', '(includes a beer or non-alcoholic drink)'],
+    //   // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+    //   price_id: 'price_1OmZVWIOw5UGbAo17Hn9aXxA',
+    //   memberPrice_id: 'price_1OmZVmIOw5UGbAo19UJ43aNo',
+    //   activeMemberPrice_id: 'price_1OmZW0IOw5UGbAo1sYulo8JA',
+    //   freePass: ['vlady1002@abv.bg'],
+    //   extraInputs: false,
+    //   text: [
+    //     `Feeling the urge to party like you're back in Bulgaria?  Then mark your calendars for the ultimate student party on the 7th  of March!
+    //   `,
+    //     `Get ready to dance to the hottest tunes!
+    //   `,
+    //     `Whether you're Bulgarian or just love the Balkan vibe, this is a night you don’t want to miss! 
+    //    `,
+    //     `Tickets are flying off the shelves like confetti, so grab yours now before it's too late!`,
+    //     `Let's get this party started!`
+    //   ],
+    //   ticket_img: '/assets/images/tickets/groningen/ticket-32.jpg',
+    //   images: ["/assets/images/portfolio/groningen/portfolio-32"],
+    //   thumbnail: "/assets/images/portfolio/groningen/portfolio-32",
+    // },
     {
       membersOnly: false,
       visible: true,
@@ -85,7 +123,7 @@ export const SOCIETY_EVENTS = {
       visible: true,
       subEvent: {
         description: 'You can purchase ticket ONLY for the party - Link below',
-        link: [{ name: 'Click here', href: '/event-details/Bulgarian Party' }]
+        links: [{ name: 'Click here', href: '/event-details/Bulgarian Party' }]
       },
       title: "Bulgarian Dinner",
       description: "For the national glory",
@@ -243,7 +281,7 @@ export const SOCIETY_EVENTS = {
       visible: true,
       subEvent: {
         description: 'You can purchase ticket ONLY for either the dinner or the party - Link below',
-        link: [{ name: 'Dinner Only', href: '/event-details/Bulgarian Dinner' }, { name: 'Party Only', href: '/event-details/Bulgarian Party' }]
+        links: [{ name: 'Dinner Only', href: '/event-details/Bulgarian Dinner' }, { name: 'Party Only', href: '/event-details/Bulgarian Party' }]
       },
       title: "Bulgarian Dinner & Party",
       description: `Let’s celebrate 1st of March (Baba Marta) together!🤍❤`,
@@ -335,7 +373,7 @@ export const SOCIETY_EVENTS = {
       visible: false,
       subEvent: {
         description: 'You can purchase ticket for the Party and Dinner',
-        link: [{ name: 'Click Here', href: '/event-details/Bulgarian Dinner & Party' }]
+        links: [{ name: 'Click Here', href: '/event-details/Bulgarian Dinner & Party' }]
       },
       title: "Bulgarian Dinner",
       description: `Let’s celebrate 1st of March (Baba Marta) together!🤍❤`,
@@ -423,7 +461,7 @@ export const SOCIETY_EVENTS = {
       visible: false,
       subEvent: {
         description: 'You can purchase ticket for the Party and Dinner',
-        link: [{ name: 'Click Here', href: '/event-details/Bulgarian Dinner & Party' }]
+        links: [{ name: 'Click Here', href: '/event-details/Bulgarian Dinner & Party' }]
       },
       title: "Bulgarian Party",
       description: `Let’s celebrate 1st of March (Baba Marta) together!🤍❤`,

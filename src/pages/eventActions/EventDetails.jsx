@@ -124,7 +124,7 @@ const EventDetails = () => {
                       </h3>
                       <div className="options-btns-div">
                         {
-                          target.subEvent.link.map((link) => {
+                          target.subEvent.links.map((link) => {
                             return <a
                               className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
                               href={'/' + region + link.href}
