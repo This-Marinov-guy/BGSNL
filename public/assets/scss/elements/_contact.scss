@@ -127,8 +127,8 @@ textarea {
     @extend %transition;
 }
 
-.blog-comment-form .inner .rnform-group input:focus ,
-.blog-comment-form .inner .rnform-group textarea:focus {
+.blog-comment-form .inner .rn-form-group input:focus ,
+.blog-comment-form .inner .rn-form-group textarea:focus {
     border-color: $theme-color ;
 }
 

@@ -133,7 +133,7 @@ const ContestRegister = (props) => {
                                 <h3>Register</h3>
                                 <div className="row">
                                     <div className="col-lg-6 col-md-12 col-12">
-                                        <div className="rnform-group">
+                                        <div className="rn-form-group">
                                             <Field
                                                 type="text"
                                                 placeholder="Name"
@@ -147,7 +147,7 @@ const ContestRegister = (props) => {
                                         </div>
                                     </div>
                                     <div className="col-lg-6 col-md-12 col-12">
-                                        <div className="rnform-group">
+                                        <div className="rn-form-group">
                                             <Field
                                                 type="text"
                                                 placeholder="Surname"
@@ -163,7 +163,7 @@ const ContestRegister = (props) => {
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-6 col-md-12 col-12">
-                                        <div className="rnform-group">
+                                        <div className="rn-form-group">
                                             <Field
                                                 type="email"
                                                 placeholder="Email"
@@ -179,7 +179,7 @@ const ContestRegister = (props) => {
                                 </div>
                                 <div className="row mt--40">
                                     <div className="col-lg-12 col-md-12 col-12">
-                                        <div className="rnform-group">
+                                        <div className="rn-form-group">
                                             <Field
                                                 style={{ padding: '1% 0 0 3%' }}
                                                 as='textarea'

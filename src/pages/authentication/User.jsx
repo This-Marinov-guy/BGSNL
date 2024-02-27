@@ -209,7 +209,7 @@ const User = () => {
                 </div>
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field type="text" placeholder="Name" name="name" />
                       <ErrorMessage
                         className="error"
@@ -219,7 +219,7 @@ const User = () => {
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field
                         type="text"
                         placeholder="Surname"
@@ -234,7 +234,7 @@ const User = () => {
                   </div>
 
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field
                         type="tel"
                         placeholder="WhatsApp Phone "
@@ -252,7 +252,7 @@ const User = () => {
                   </div>
 
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field type="email" placeholder="Email" name="email" />
                       <ErrorMessage
                         className="error"
@@ -279,7 +279,7 @@ const User = () => {
                   </div>
                   {values.university === "other" && (
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           type="text"
                           placeholder="State the university"
@@ -310,7 +310,7 @@ const User = () => {
                         />
                       </div>
                       <div className="col-lg-6 col-md-12 col-12">
-                        <div className="rnform-group">
+                        <div className="rn-form-group">
                           <Field
                             type="text"
                             placeholder="Study Program"
@@ -324,7 +324,7 @@ const User = () => {
                         </div>
                       </div>
                       <div className="col-lg-6 col-md-12 col-12">
-                        <div className="rnform-group">
+                        <div className="rn-form-group">
                           <Field
                             type="text"
                             placeholder="Student Number"

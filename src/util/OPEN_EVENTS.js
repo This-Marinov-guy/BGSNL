@@ -130,7 +130,7 @@ export const SOCIETY_EVENTS = {
           required: true,
           element: <div className="col-lg-12 col-md-12 col-12">
             <h3>Preferences</h3>
-            <div className="rnform-group">
+            <div className="rn-form-group">
               <Field as="select" name="extraOne">
                 <option value="" disabled>
                   Select your menu
@@ -148,9 +148,9 @@ export const SOCIETY_EVENTS = {
           </div>
         },
         {
-          required: true,
+          required: false,
           element: <div className="col-lg-12 col-md-12 col-12">
-            <div className="rnform-group">
+            <div className="rn-form-group">
               <Field as="select" name="extraTwo">
                 <option value="" disabled>
                   Select your type
@@ -274,7 +274,7 @@ export const SOCIETY_EVENTS = {
           required: true,
           element: <div className="col-lg-12 col-md-12 col-12">
             <h3>Preferences</h3>
-            <div className="rnform-group">
+            <div className="rn-form-group">
               <Field as="select" name="extraOne">
                 <option value="" disabled>
                   Select your main course
@@ -294,7 +294,7 @@ export const SOCIETY_EVENTS = {
         {
           required: true,
           element: <div className="col-lg-12 col-md-12 col-12">
-            <div className="rnform-group">
+            <div className="rn-form-group">
               <Field as="select" name="extraTwo">
                 <option value="" disabled>
                   Select your drink
@@ -366,7 +366,7 @@ export const SOCIETY_EVENTS = {
           required: true,
           element: <div className="col-lg-12 col-md-12 col-12">
             <h3>Preferences</h3>
-            <div className="rnform-group">
+            <div className="rn-form-group">
               <Field as="select" name="extraOne">
                 <option value="" disabled>
                   Select your main course
@@ -386,7 +386,7 @@ export const SOCIETY_EVENTS = {
         {
           required: true,
           element: <div className="col-lg-12 col-md-12 col-12">
-            <div className="rnform-group">
+            <div className="rn-form-group">
               <Field as="select" name="extraTwo">
                 <option value="" disabled>
                   Select your drink
