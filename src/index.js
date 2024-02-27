@@ -34,6 +34,9 @@ const LogIn = lazy(() => import("./pages/authentication/LogIn"));
 const SignUp = lazy(() => import("./pages/authentication/SignUp"));
 const ActiveMember = lazy(() => import("./pages/authentication/ActiveMember"));
 const User = lazy(() => import("./pages/authentication/User"));
+const EventsPanel = lazy(() => import("./pages/userActions/EventsPanel"));
+const ModifyEvent = lazy(() => import("./pages/userActions/ModifyEvent"));
+const CreateEvent = lazy(() => import("./pages/userActions/CreateEvent"));
 const Events = lazy(() => import("./pages/information/Events"));
 const FutureEvents = lazy(() =>
   import("./pages/information/FutureEvents").then((module) => ({
@@ -161,6 +164,9 @@ const Root = () => {
               {user.token ? (
                 <Switch>
                   <Route exact path={`/user`} component={User} />
+                  <Route exact path={`/user/events-panel`} component={EventsPanel} />
+                  <Route exact path={`/user/create-event`} component={CreateEvent} />
+                  <Route exact path={`/user/modify-event/:id`} component={ModifyEvent} />
                   <RegionParamRoute
                     exact
                     path={"/:region/purchase-ticket/:eventId/:userId"}

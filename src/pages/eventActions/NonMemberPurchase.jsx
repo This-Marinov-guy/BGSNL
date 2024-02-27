@@ -245,7 +245,7 @@ const NonMemberPurchase = () => {
                       <h3>Fill your details and buy a ticket</h3>
                       <div className="row">
                         <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rnform-group">
+                          <div className="rn-form-group">
                             <Field type="text" placeholder="Name" name="name" />
                             <ErrorMessage
                               className="error"
@@ -255,7 +255,7 @@ const NonMemberPurchase = () => {
                           </div>
                         </div>
                         <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rnform-group">
+                          <div className="rn-form-group">
                             <Field
                               type="text"
                               placeholder="Surname"
@@ -269,7 +269,7 @@ const NonMemberPurchase = () => {
                           </div>
                         </div>
                         <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rnform-group">
+                          <div className="rn-form-group">
                             <Field
                               type="email"
                               placeholder="Email"
@@ -286,7 +286,7 @@ const NonMemberPurchase = () => {
                           </div>
                         </div>
                         <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rnform-group">
+                          <div className="rn-form-group">
                             <Field type="tel" placeholder="Phone" name="phone" />
                             <p className="information">
                               Please enter your real number as it might be used to

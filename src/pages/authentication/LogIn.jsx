@@ -208,7 +208,7 @@ const Login = (props) => {
                   </div>
                   <div className="row">
                     <div className="col-lg-12 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           autoComplete="off"
                           type="number"
@@ -223,7 +223,7 @@ const Login = (props) => {
                       </div>
                     </div>
                     <div className="col-lg-12 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           autoComplete="off"
                           type="password"
@@ -238,7 +238,7 @@ const Login = (props) => {
                       </div>
                     </div>
                     <div className="col-lg-12 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           autoComplete="off"
                           type="password"
@@ -278,7 +278,7 @@ const Login = (props) => {
               onSubmit={(event) => loginHandler(event)}
             >
               <div className="col-lg-6 col-md-12 col-12">
-                <div className="rnform-group">
+                <div className="rn-form-group">
                   <input
                     type="text"
                     name="email"
@@ -288,7 +288,7 @@ const Login = (props) => {
                 </div>
               </div>
               <div className="col-lg-6 col-md-12 col-12">
-                <div className="rnform-group">
+                <div className="rn-form-group">
                   <input
                     type="password"
                     name="password"

@@ -112,7 +112,7 @@ const Christmas = (props) => {
                             </div>
                             <GifSearch value={gif} setValue={(value) => setGif(value)} />
                             <div className="col-lg-6 col-md-12 col-12">
-                                <div className="rnform-group">
+                                <div className="rn-form-group">
                                     <Field type="text" placeholder="Your Name" name="sender" />
                                     <ErrorMessage className="error" name='sender' component='div' />
                                 </div>
@@ -131,7 +131,7 @@ const Christmas = (props) => {
                             </div>
 
                             <div className="col-lg-6 col-md-12 col-12">
-                                <div className="rnform-group">
+                                <div className="rn-form-group">
                                     <Field type="text" placeholder="Receiver Full Name" name="receiver" />
                                     <ErrorMessage
                                         className="error"
