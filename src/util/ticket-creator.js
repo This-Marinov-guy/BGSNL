@@ -1,4 +1,4 @@
-export const createCustomerTicket = async (ticketImage, name, surname) => {
+export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6") => {
     // Create a canvas element, add the image and text, covert to blob
     //for 1500 x 485 images
     var canvas = document.createElement("canvas");
@@ -24,13 +24,13 @@ export const createCustomerTicket = async (ticketImage, name, surname) => {
     // text
     layout.rotate(4.71);
     layout.font = "52px Archive";
-    layout.fillStyle = "#faf9f6";
+    layout.fillStyle = color;
     layout.textAlign = "center";
     layout.strokeText(name, -255, 1170);
     layout.fillText(name, -255, 1170);
 
     layout.font = "52px Archive";
-    layout.fillStyle = "#faf9f6";
+    layout.fillStyle = color;
     layout.textAlign = "center";
     layout.strokeText(surname, -255, 1230);
     layout.fillText(surname, -255, 1230);

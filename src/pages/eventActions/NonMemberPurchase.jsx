@@ -179,7 +179,7 @@ const NonMemberPurchase = () => {
                   validationSchema={schema}
                   onSubmit={async (values) => {
                     try {
-                      const ticket = await createCustomerTicket(target.ticket_img, values.name, values.surname);
+                      const ticket = await createCustomerTicket(target.ticket_img, values.name, values.surname, target.ticket_color);
                       // formData
                       const formData = new FormData();
                       formData.append(
