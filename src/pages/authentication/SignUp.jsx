@@ -346,7 +346,7 @@ const SignUp = (props) => {
                   <h3 className="mt--30 label">Personal details</h3>
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field type="text" placeholder="Name" name="name" />
                         <ErrorMessage
                           className="error"
@@ -356,7 +356,7 @@ const SignUp = (props) => {
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           type="text"
                           placeholder="Surname"
@@ -372,7 +372,7 @@ const SignUp = (props) => {
                   </div>
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           type="date"
                           min="1900-01-01"
@@ -390,7 +390,7 @@ const SignUp = (props) => {
                       </div>
                     </div>
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           type="tel"
                           placeholder="WhatsApp Phone "
@@ -426,7 +426,7 @@ const SignUp = (props) => {
                     </div>
                     {values.university === "other" && (
                       <div className="col-lg-6 col-md-12 col-12">
-                        <div className="rnform-group">
+                        <div className="rn-form-group">
                           <Field
                             type="text"
                             placeholder="State the university"
@@ -457,7 +457,7 @@ const SignUp = (props) => {
                           />
                         </div>
                         <div className="col-lg-6 col-md-12 col-12">
-                          <div className="rnform-group">
+                          <div className="rn-form-group">
                             <Field
                               type="text"
                               placeholder="Study Program"
@@ -471,7 +471,7 @@ const SignUp = (props) => {
                           </div>
                         </div>
                         <div className="col-lg-6 col-md-12 col-12">
-                          <div className="rnform-group">
+                          <div className="rn-form-group">
                             <Field
                               type="text"
                               placeholder="Student Number"
@@ -490,7 +490,7 @@ const SignUp = (props) => {
                   <h3 className="mt--30 label">Login details</h3>
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field type="email" placeholder="Email" name="email" />
                         <ErrorMessage
                           className="error"
@@ -502,7 +502,7 @@ const SignUp = (props) => {
                   </div>
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           autoComplete="off"
                           type="password"
@@ -518,7 +518,7 @@ const SignUp = (props) => {
                     </div>
 
                     <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <Field
                           autoComplete="off"
                           type="password"
@@ -616,7 +616,7 @@ const SignUp = (props) => {
                       style={{ borderWidth: "30px" }}
                       className="col-lg-6 col-md-6 col-12 mt--60 mb--60 center_div team_member_border-1"
                     >
-                      <div className="rnform-group">
+                      <div className="rn-form-group">
                         <h3 className="center_text">
                           For users with already paid membership
                         </h3>

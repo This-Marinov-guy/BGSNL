@@ -188,7 +188,7 @@ const NonSocietyEvent = (props) => {
 
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field type="text" placeholder="Name" name="name" />
                       <ErrorMessage
                         className="error"
@@ -198,7 +198,7 @@ const NonSocietyEvent = (props) => {
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field
                         type="text"
                         placeholder="Surname"
@@ -212,7 +212,7 @@ const NonSocietyEvent = (props) => {
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field
                         type="tel"
                         placeholder="WhatsApp Phone "
@@ -229,7 +229,7 @@ const NonSocietyEvent = (props) => {
                     </div>
                   </div>
                   <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rnform-group">
+                    <div className="rn-form-group">
                       <Field type="email" placeholder="Email" name="email" />
                       <ErrorMessage
                         className="error"

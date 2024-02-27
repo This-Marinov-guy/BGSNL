@@ -199,12 +199,16 @@ BLog Details Styles
   }
 }
 
+.rn-form-group input, .rn-form-group textarea {
+  border-radius: 2%;
+}
+
 /*------------------------
     BLog Contact Form  
 --------------------------*/
 .blog-comment-form {
   .inner {
-    .rnform-group {
+    .rn-form-group {
       margin-bottom: 20px;
       input {
         border: 2px solid #e9e9e9;
