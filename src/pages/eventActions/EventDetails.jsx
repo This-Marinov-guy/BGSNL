@@ -112,7 +112,7 @@ const EventDetails = () => {
                         {(user.token && target.memberEntry)
                           ? target.memberEntry + ' euro ' + (target.including ? target.including[0] : '')
                           : target.entry + ' euro ' + (target.including ? target.including[1] : '')}
-                      </h4> : <h4 >Check ticket portal</h4>}
+                      </h4> : <h4 >{target.isFree ? 'FREE' : 'Check ticket portal'}</h4>}
                     </div>
                   </div>
                   {
