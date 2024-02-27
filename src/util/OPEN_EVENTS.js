@@ -158,6 +158,11 @@ export const SOCIETY_EVENTS = {
                 <option value="vegetarian">Vegetarian</option>
                 <option value="vegan">Vegan</option>
               </Field>
+              <ErrorMessage
+                className="error"
+                name="extraTwo"
+                component="div"
+              />
               <small>*Only for vegetarians</small>
             </div>
           </div>
