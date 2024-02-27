@@ -148,7 +148,7 @@ export const SOCIETY_EVENTS = {
           </div>
         },
         {
-          required: true,
+          required: false,
           element: <div className="col-lg-12 col-md-12 col-12">
             <div className="rn-form-group">
               <Field as="select" name="extraTwo">
