@@ -16,6 +16,7 @@ import { REGIONS } from "../../util/REGIONS_DESIGN";
 import { createCustomerTicket } from "../../util/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
 import { useHistory, useParams, Link } from "react-router-dom";
+import { REGIONS_MEMBERSHIP } from "../../util/REGIONS_AUTH_CONFIG";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -34,8 +35,8 @@ const NonMemberPurchase = () => {
     phone: yup.string().required(),
     email: yup.string().email("Please enter a valid email").required(),
     extraOne: (target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
-    extraTwo:  (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
-    extraThree:   (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
+    extraTwo: (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
+    extraThree: (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
     policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
     payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
@@ -76,6 +77,23 @@ const NonMemberPurchase = () => {
     setLoadingPage(false)
   }, [target])
 
+  if (target.ticket_link) {
+    return (<div className="container center_text mt--100">
+      <ImageFb
+        className="logo mb--40"
+        src={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.webp`}
+        fallback={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.jpg`}
+        alt="Logo"
+      />
+      <h3 className="">This event is sold through an external platform - click below to see it!</h3>
+      <a href={target.ticket_link}
+        className="rn-button-style--2 btn-solid mt--20"
+      >
+        Go to event
+      </a>
+    </div>)
+  }
+
   if (loadingPage) {
     return <PageLoading />
   } else if (eventClosed) {
@@ -110,7 +128,7 @@ const NonMemberPurchase = () => {
             {target.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
               <h2 className="center_text mb--80">Purchase a Ticket</h2>}
 
-            <div className="team_member_border-3 center_section" style={{ maxWidth: '500px', margin: '60px auto' }} >
+            {REGIONS_MEMBERSHIP.includes(region) &&<div className="team_member_border-3 center_section" style={{ maxWidth: '500px', margin: '60px auto' }} >
               <p className="information center_text">
                 By becoming a member the cost of the ticket will be reduced
                 and the information will be prefilled for ticket purchasing
@@ -127,7 +145,7 @@ const NonMemberPurchase = () => {
               >
                 <span className="">Become a Member</span>
               </Link>
-            </div>
+            </div>}
           </div>
           {!target.membersOnly && <div className="row">
             <div className="col-lg-4 col-md-12 col-12">
@@ -181,7 +199,7 @@ const NonMemberPurchase = () => {
                       formData.append("eventDate", target.date);
                       formData.append("guestEmail", values.email);
                       if (target.extraInputs) {
-                        formData.append('preferences', JSON.stringify({inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
+                        formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                       }
                       formData.append(
                         "guestName",

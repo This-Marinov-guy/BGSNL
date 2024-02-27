@@ -80,40 +80,6 @@ export const SOCIETY_EVENTS = {
       images: ["/assets/images/portfolio/groningen/portfolio-31"],
       thumbnail: "/assets/images/portfolio/groningen/portfolio-31",
     },
-    {
-      membersOnly: false,
-      visible: true,
-      title: "Bulgarian & Greek Night",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Get familiar with Greek and Bulgarian Culture",
-      bgImage: "22",
-      date: "26th February",
-      time: "18:00",
-      // ticketTimer: '2024-02-14T18:00:00',
-      ticketLimit: 0,
-      //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      correctedDate: "",
-      correctedTime: "",
-      where: `Griekse Taverna Doris`,
-      entry: 6,
-      memberEntry: 4,
-      // including: ['(includes a beer or non-alcoholic drink)', '(includes a beer or non-alcoholic drink)'],
-      ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-      // price_id: 'price_1OgKdXIOw5UGbAo1xu2ic0ja',
-      // memberPrice_id: 'price_1OgKe3IOw5UGbAo1aQhiMrxG',
-      // activeMemberPrice_id: 'price_1OgKrIIOw5UGbAo1FlbrNHYZ',
-      freePass: ['vlady1002@abv.bg'],
-      extraInputs: false,
-      text: [
-        `An evening of cultural enrichment and exchange at our 'Get Familiar with Greek and Bulgarian Culture' event. `,
-        `We invite you to join us and learn more about the difference and similarities of the two cultures through a variety of authentic snacks, drinks and traditional dances.`,
-        `Disclaimer: Member tickets are only issued to members of BGSG and HSAG. Invalid tickets will be cancelled with no refund! 
-       `,
-      ],
-      ticket_img: '/assets/images/tickets/ticket-20.png',
-      images: ["/assets/images/portfolio/groningen/portfolio-30"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
-    },
   ],
   rotterdam: [
 
@@ -499,6 +465,43 @@ export const SOCIETY_EVENTS = {
       ticket_img: '/assets/images/tickets/breda/ticket-2.jpg',
       images: ["/assets/images/portfolio/breda/portfolio-1"],
       thumbnail: "/assets/images/portfolio/breda/portfolio-1",
+    },
+  ],
+  maastricht: [
+    {
+      visible: true,
+      title: "Bulgarian Party",
+      description: `Celebrate the Freedom`,
+      bgImage: "24",
+      date: "2nd March",
+      time: "21:30",
+      ticketTimer: '2024-03-02T23:00:00',
+      ticketLimit: 0,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      correctedDate: "",
+      correctedTime: "",
+      where: `Rendezvous `,
+      entry: '8 | 10 | 13',
+      memberEntry: '8 | 10 | 13',
+      including: ['', ''],
+      ticket_link: 'https://eventix.shop/8qquqxef',
+      price_id: '',
+      memberPrice_id: '',
+      activeMemberPrice_id: '',
+      discountPass: [
+      ],
+      freePass: ["vlady1002@abv.bg"],
+      extraInputs: false,
+      text: [
+        `On the second of March (02.03) at 📍Rendezvous we invite you to celebrate our National Holiday 🇧🇬 with banitsa and a free shot at the entrance!`,
+        `The party will start at 21.30 and at 23.00 we will be closing the doors! We have prepared fun games to entertain you in the beginning of the party ,we will listen and dance to bulgarian music and so much more that you will only know if you come!🎉
+      `,
+        `You can find tickets through the eventix platform, by clicking the button below
+      `,
+      ],
+      ticket_img: '',
+      images: ["/assets/images/portfolio/maastricht/portfolio-1"],
+      thumbnail: "/assets/images/portfolio/maastricht/portfolio-1",
     },
   ]
 }

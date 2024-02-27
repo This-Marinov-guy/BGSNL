@@ -3,7 +3,7 @@ import { FaInstagram, FaFlickr, FaLinkedinIn, FaLinkedin, FaFacebookF } from "re
 
 
 export const REGIONS = [
-    'groningen', 'rotterdam', 'leeuwarden', 'breda', 'amsterdam', 'maastricht'
+    'amsterdam', 'breda', 'groningen', 'leeuwarden', 'maastricht', 'rotterdam'
 ]
 
 export const REGION_MAIN_COLOR = {

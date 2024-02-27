@@ -49,13 +49,15 @@
   background-repeat: repeat-y;
   @media #{$md-layout} {
     margin: auto;
-    height: 700px;
+    height: 200px;
+    transform: scale(3);
     width: 60px;
     rotate: 90deg;
   }
   @media #{$sm-layout} {
     margin: auto;
-    height: 700px;
+    height: 200px;
+    transform: scale(3);
     width: 60px;
     rotate: 90deg;
   }

@@ -89,6 +89,23 @@ const MemberPurchase = () => {
     setLoadingPage(false)
   }, [target])
 
+  if (target.ticket_link) {
+    return (<div className="container center_text mt--100">
+      <ImageFb
+        className="logo mb--40"
+        src={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.webp`}
+        fallback={`/assets/images/logo/${region && REGIONS.includes(region) ? region : 'logo'}.jpg`}
+        alt="Logo"
+      />
+      <h3 className="">This event is sold through an external platform - click below to see it!</h3>
+      <a href={target.ticket_link}
+        className="rn-button-style--2 btn-solid mt--20"
+      >
+        Go to event
+      </a>
+    </div>)
+  }
+
   if (loadingPage || !currentUser) {
     return <PageLoading />
   } else if (eventClosed) {

@@ -73,7 +73,6 @@ const Home = () => {
                     ) : (
                       ""
                     )}
-                    {!region && <RegionLogos />}
                     {value.buttonText && (
                       <div className="slide-btn">
                         <Link
