@@ -104,11 +104,8 @@ const Home = () => {
       {/* <Greeting /> */}
       {/* Start News Area */}
       <div className="container mt--110 mb--80">
-
         <h2 className="title">News</h2>
         <ul>
-
-
           <li className="mt--40">
             <p> Membership 2023-2024 open. <Link to='/signup'>
               Sign up!
