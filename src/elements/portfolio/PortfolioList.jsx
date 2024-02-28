@@ -8,32 +8,36 @@ const PortfolioList = (props) => {
   const { region } = useParams();
 
   return (
-    <div className="row">
-      <div className="col-lg-12">
-        <div className="slick-space-gutter--15 slickdot--100">
-          {props.target.map((value, index) => (
-            <div className="portfolio portfolio-slider" key={index}>
-              <Link
-                to={
-                  props.style === "society"
-                    ? `/${region}/event-details/${value.title}`
-                    : `/${region}/other-event-details/${value.title}`
-                }
-                className={
-                  props.style === "society"
-                    ? "thumbnail-inner"
-                    : "thumbnail-inner-2"
-                }
-              >
-                <ImageFb
-                  className="thumbnail portfolio-img"
-                  src={`${value.thumbnail}.webp`}
-                  fallback={`${value.thumbnail}.jpg`}
-                  alt="Event Images"
-                />
-              </Link>
+    <div className="portfolio-area pt--80 pb--140 bg_color--5">
+      <div className="rn-slick-dot">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="slick-space-gutter--15 slickdot--100">
+              {props.target.map((value, index) => (
+                <div className="portfolio portfolio-slider" key={index}>
+                  <Link
+                    to={
+                      props.style === "society"
+                        ? `/${region}/event-details/${value.title}`
+                        : `/${region}/other-event-details/${value.title}`
+                    }
+                    className={
+                      props.style === "society"
+                        ? "thumbnail-inner"
+                        : "thumbnail-inner-2"
+                    }
+                  >
+                    <ImageFb
+                      className="thumbnail portfolio-img"
+                      src={`${value.thumbnail}.webp`}
+                      fallback={`${value.thumbnail}.jpg`}
+                      alt="Event Images"
+                    />
+                  </Link>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
