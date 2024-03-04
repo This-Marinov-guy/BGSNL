@@ -216,7 +216,6 @@ const SignUp = (props) => {
                 );
                 try {
                   const responseData = await sendRequest(
-                    region,
                     "user/check-email",
                     "POST",
                     {
@@ -230,9 +229,6 @@ const SignUp = (props) => {
                 if (values.memberKey) {
                   try {
                     const responseData = await sendRequest(
-                      region,
-                      region,
-
                       "user/check-member-key",
                       "POST",
                       {
@@ -244,7 +240,6 @@ const SignUp = (props) => {
                       try {
                         const responseData = await sendRequest(
                           region,
-
                           `user/signup`,
                           "POST",
                           formData
