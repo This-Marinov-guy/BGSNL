@@ -239,7 +239,6 @@ const SignUp = (props) => {
                     if (responseData.message === "verifiedKey") {
                       try {
                         const responseData = await sendRequest(
-                          region,
                           `user/signup`,
                           "POST",
                           formData
@@ -286,7 +285,6 @@ const SignUp = (props) => {
                 } else {
                   try {
                     const responseData = await sendRequest(
-                      region,
                       "payment/checkout/signup",
                       "POST",
                       formData
