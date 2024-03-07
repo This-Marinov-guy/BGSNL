@@ -43,56 +43,13 @@ export const SOCIETY_EVENTS = {
     {
       membersOnly: false,
       visible: true,
-      title: "To Shipka and Back",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Bulgaria's Liberation Day!",
-      bgImage: "11",
-      date: "3rd March",
-      time: "12:00",
-      ticketTimer: '2024-03-03T12:00:00',
-      ticketLimit: 100,
-      //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      correctedDate: "",
-      correctedTime: "",
-      where: `Noorderplantsoen`,
-      isFree: true,
-      // entry: 'FREE',
-      // memberEntry: 'FREE',
-      // including: ['(includes a beer or non-alcoholic drink)', '(includes a beer or non-alcoholic drink)'],
-      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-      price_id: '',
-      memberPrice_id: '',
-      activeMemberPrice_id: '',
-      freePass: ['vlady1002@abv.bg'],
-      extraInputs: false,
-      text: [
-        `Join us for a special run on March 3rd to celebrate Bulgaria's Liberation Day! 🇧🇬🏃‍♂
-      `,
-        `The event is open to everyone and completely FREE of charge! You’ll find the exact gathering point on the ticket after registration. 
-
-      `,
-        `Whether you're a seasoned runner or just starting out, come join us as we mark the day with positive energy and team spirit.
-
-       `,
-        `Spread the word and invite your friends to join! See you there! 
-        `,
-        `
-        Защото спортът е здраве ;)`
-      ],
-      ticket_img: '/assets/images/tickets/groningen/ticket-33.jpg',
-      images: ["/assets/images/portfolio/groningen/portfolio-33"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-33",
-    },
-    {
-      membersOnly: false,
-      visible: true,
       title: "Bulgarian Student Party",
       // newTitle: 'Bulgarian Dinner',
       description: "Dance the night away",
       bgImage: "24",
       date: "7th March",
       time: "22:00",
-      ticketTimer: '2024-03-07T22:00:00',
+      ticketTimer: '2024-03-07T20:00:00',
       ticketLimit: 100,
       //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       correctedDate: "",
