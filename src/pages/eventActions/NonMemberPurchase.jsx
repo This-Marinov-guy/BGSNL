@@ -210,7 +210,7 @@ const NonMemberPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname) || (target.discountPass && target.discountPass.includes(values.email))) {
+                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname)) {
                         const responseData = await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
