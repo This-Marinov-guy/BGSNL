@@ -192,7 +192,11 @@ const NonMemberPurchase = () => {
                         "_GUEST"
                       );
                       formData.append("region", region);
-                      formData.append("itemId", target.price_id);
+                      if (target.discountPass && target.discountPass.includes(values.email)) {
+                        formData.append("itemId", target.activeMemberPrice_id);
+                      } else {
+                        formData.append("itemId", target.price_id);
+                      }
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
                       formData.append("eventName", target.title);
@@ -206,7 +210,7 @@ const NonMemberPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname) || (target.discountPass && target.discountPass.includes(values.email))) {
+                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname)) {
                         const responseData = await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
