@@ -90,8 +90,6 @@ const Login = (props) => {
           password: loginFormValues.password,
         },
       );
-      // check for service worker and unregister it 
-      serviceWorker.unregister();
 
       dispatch(
         login({

@@ -192,7 +192,7 @@ const NonMemberPurchase = () => {
                         "_GUEST"
                       );
                       formData.append("region", region);
-                      if (target.discountPass && target.discountPass.includes(values.email)) {
+                      if (target.discountPass && (target.discountPass.includes(values.email) || target.discountPass.includes(values.name + ' ' + values.surname))) {
                         formData.append("itemId", target.activeMemberPrice_id);
                       } else {
                         formData.append("itemId", target.price_id);

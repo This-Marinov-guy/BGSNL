@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
-import * as serviceWorker from "./util/serviceWorker";
 
 // Style
 import './index.scss'
@@ -192,5 +191,4 @@ root.render(
   </Provider>
 );
 
-serviceWorker.unregister();
 
