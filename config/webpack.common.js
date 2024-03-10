@@ -7,6 +7,8 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
+
 
 // Common configuration files
 const paths = require('./paths');
@@ -21,6 +23,12 @@ module.exports = {
    * Plugins used by Webpack.
    */
   plugins: [
+    /**
+   * Plugins for env 
+   */
+    new Dotenv({
+      path: '.env',
+    }),
     /**
      * Plugin to clean the output directory before each build.
      *

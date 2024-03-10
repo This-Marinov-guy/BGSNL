@@ -167,7 +167,7 @@ const Root = () => {
               ) : (
                 <Fragment>
                   <Route exact path={`/login`} element={<LogIn setNotification={setNotification} />} />
-                  <Route exact path={`/:region?/signup`} element={<RegionLayout><SignUp setNotification={setNotification} /></RegionLayout>} />
+                  <Route exact path={`/:region?/signup`} element={<SignUp setNotification={setNotification} />} />
                   <Route
                     exact
                     path={"/:region/purchase-ticket/:eventId"}

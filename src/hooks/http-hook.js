@@ -17,7 +17,7 @@ export const useHttpClient = () => {
         //for production --> process.env.REACT_APP_SERVER_URL
         //for testing -----> process.env.REACT_APP_TEST_SERVER_URL
         const response = await axios.request({
-          url: process.env.REACT_APP_SERVER_URL + url,
+          url: process.env.REACT_APP_TEST_SERVER_URL + url,
           method,
           data,
           config: {
