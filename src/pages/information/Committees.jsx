@@ -7,7 +7,7 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import WindowShift from "../../elements/ui/WindowShift";
 import TeamTwo from "../../elements/TeamTwo";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 import { REGION_COMMITTEE_MEMBERS } from "../../util/REGIONS_STRUCTURE";
 
 

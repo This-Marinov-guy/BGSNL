@@ -8,7 +8,7 @@ import { FutureOtherEventsContent } from "./FutureEvents";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { PastEventsContent, PastEventsListed } from "./PastEvents";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 import { PAST_EVENTS } from "../../util/PAST_EVENTS";
 
 const Events = () => {

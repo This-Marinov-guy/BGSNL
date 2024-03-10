@@ -14,10 +14,10 @@ import ImageInput from "../../elements/ui/ImageInput";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
-import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP, REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 
@@ -84,7 +84,7 @@ const SignUp = (props) => {
 
   const [selectedMembershipIndex, setSelectedMembershipIndex] = useState(null);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -216,6 +216,7 @@ const SignUp = (props) => {
                 );
                 try {
                   const responseData = await sendRequest(
+                    region,
                     "user/check-email",
                     "POST",
                     {
@@ -229,6 +230,9 @@ const SignUp = (props) => {
                 if (values.memberKey) {
                   try {
                     const responseData = await sendRequest(
+                      region,
+                      region,
+
                       "user/check-member-key",
                       "POST",
                       {
@@ -239,6 +243,8 @@ const SignUp = (props) => {
                     if (responseData.message === "verifiedKey") {
                       try {
                         const responseData = await sendRequest(
+                          region,
+
                           `user/signup`,
                           "POST",
                           formData
@@ -272,7 +278,7 @@ const SignUp = (props) => {
                             </Link>
                           </Alert>
                         );
-                        history.push(`/${responseData.region}`);
+                        navigate(`/${responseData.region}`);
                         setTimeout(() => closeHandler(), 5000);
                         return;
                       } catch (err) {
@@ -285,6 +291,7 @@ const SignUp = (props) => {
                 } else {
                   try {
                     const responseData = await sendRequest(
+                      region,
                       "payment/checkout/signup",
                       "POST",
                       formData

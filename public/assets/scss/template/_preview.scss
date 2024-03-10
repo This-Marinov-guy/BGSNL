@@ -821,7 +821,8 @@ gt matrik score area
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
-    background-image: url(/assets/images/bg/bg-image-35.png) !important;
+    // background-image: url(/public/assets/images/bg/bg-image-35.png) !important; // original
+    background-image: url(/public/assets/images/bg/bg-image-25.jpg) !important; // changed dur to unavailable image
 }
 
 

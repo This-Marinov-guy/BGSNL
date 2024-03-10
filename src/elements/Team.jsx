@@ -1,6 +1,6 @@
 import React from "react";
 import ImageFb from "./ui/ImageFb";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 import { REGION_BOARD_MEMBERS } from "../util/REGIONS_STRUCTURE";
 
 const Team = () => {

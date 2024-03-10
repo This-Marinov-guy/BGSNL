@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { Formik, Form } from "formik";
 import PageHelmet from "../../component/common/Helmet";
 import Header from "../../component/header/Header";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
 import Locked from "../../elements/ui/Locked";
@@ -28,7 +28,7 @@ const MemberPurchase = () => {
 
   const { userId, region } = useParams();
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
@@ -49,7 +49,7 @@ const MemberPurchase = () => {
     const fetchCurrentUser = async () => {
       try {
         if (!userId) {
-          history.push('/404');
+          navigate('/404');
         }
         const responseData = await sendRequest(`user/${userId}`);
         setCurrentUser(responseData.user);
@@ -178,7 +178,7 @@ const MemberPurchase = () => {
                       "POST",
                       formData
                     );
-                    history.push('/success');
+                    navigate('/success');
                   }
                   else {
                     const responseData = await sendRequest(

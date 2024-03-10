@@ -1,28 +1,27 @@
-import React from "react";
+import React, { Fragment } from "react";
 import packageJson from "../../../package.json";
-import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useParams } from "react-router-dom";
 import Donation from "../../elements/Donation";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDonation, showDonation } from "../../redux/donation";
 import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/REGIONS_DESIGN";
 
-
 const Footer = () => {
 
-  const {region} = useParams();
+  const { region } = useParams();
 
   const donation = useSelector(selectDonation)
   const dispatch = useDispatch();
 
   return (
-    <React.Fragment>
+    <Fragment>
       {/* {donation && <Donation />} */}
       <footer className="footer-area">
         {donation && <Donation />}
         <div className="footer-wrapper">
           <div className="row align-items-end row--0">
             <div className="col-lg-6">
-              <div className="footer-left" style={{background: `linear-gradient(145deg, ${REGION_MAIN_COLOR[region] || '#f81f01'} 0%, #ab1c02 100%)`}}>
+              <div className="footer-left" style={{ background: `linear-gradient(145deg, ${REGION_MAIN_COLOR[region] || '#f81f01'} 0%, #ab1c02 100%)` }}>
                 <div className="inner">
                   <span>Have a Question?</span>
                   <h2>
@@ -35,7 +34,7 @@ const Footer = () => {
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="footer-right" data-black-overlay="6" style={{backgroundColor:`${REGION_SECOND_COLOR[region] || '#25632d'}`}}>
+              <div className="footer-right" data-black-overlay="6" style={{ backgroundColor: `${REGION_SECOND_COLOR[region] || '#25632d'}` }}>
                 <div className="row">
                   {/* Start Single Widget  */}
                   <div className="col-lg-6 col-sm-6 col-12">
@@ -67,7 +66,7 @@ const Footer = () => {
                       <ul className="ft-link">
                         <li>
                           <a href={`mailto:${REGION_EMAIL[region]}`}>
-                           {REGION_EMAIL[region]}
+                            {REGION_EMAIL[region]}
                           </a>
                         </li>
                       </ul>
@@ -101,7 +100,7 @@ const Footer = () => {
           </div>
         </div>
       </footer>
-    </React.Fragment>
+    </Fragment>
   );
 }
 

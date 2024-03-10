@@ -1,5 +1,5 @@
 import React, { Component ,Fragment } from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 import BlogContent from "./BlogContent";
 
 class BLogList extends Component{

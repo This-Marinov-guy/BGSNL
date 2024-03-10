@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from '../../component/functional/RegionLayout.module.css'
-import { Link, useParams } from 'react-router-dom/cjs/react-router-dom.min'
+import { Link, useParams } from 'react-router-dom'
 import capitalizeFirstLetter from '../../util/capitalize'
 import { REGIONS_MEMBERSHIP } from '../../util/REGIONS_AUTH_CONFIG'
 

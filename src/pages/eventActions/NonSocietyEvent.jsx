@@ -11,7 +11,7 @@ import ModalWindow from "../../elements/ui/ModalWindow";
 import Locked from "../../elements/ui/Locked";
 import Alert from "react-bootstrap/Alert";
 import Loader from "../../elements/ui/Loader";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
@@ -46,7 +46,7 @@ const NonSocietyEvent = (props) => {
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const closeHandler = () => {
     dispatch(removeModal());
@@ -86,7 +86,7 @@ const NonSocietyEvent = (props) => {
           </p>
         </Alert>
       );
-      history.push("/");
+      navigate("/");
       setTimeout(() => closeNotificationHandler(), 7000);
     } catch (err) { }
   };
@@ -163,7 +163,7 @@ const NonSocietyEvent = (props) => {
                       </p>
                     </Alert>
                   );
-                  history.push("/");
+                  navigate("/");
                   setTimeout(() => closeNotificationHandler(), 7000);
                 } catch (err) { }
               }}

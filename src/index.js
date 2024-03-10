@@ -1,5 +1,5 @@
 // React and Redux Required
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState, lazy, Suspense, Fragment } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -13,12 +13,11 @@ import * as serviceWorker from "./util/serviceWorker";
 import './index.scss'
 
 // Blocks Layout
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import PageGoTop from "./elements/common/PageGoTop";
 import PageLoading from "./elements/ui/PageLoading";
 import Articles from "./pages/information/Articles";
-import RegionParamRoute from "./component/functional/RegionParamRoute";
+import RegionLayout from "./component/functional/RegionLayout";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -117,78 +116,71 @@ const Root = () => {
   else {
     return (
       <BrowserRouter basename={"/"}>
-        <PageGoTop>
           <Suspense fallback={<PageLoading />}>
             {notification}
             {error && <Error errorMessage={errorMessage} />}
-            <Switch>
-            {/* The '/' route can be found in the seperate switches in order to work the current functionality */}
-              <Route exact path="/404" component={Error404} />
-              <Route exact path={`/about`} component={About} />
-              <Route exact path={`/rules-and-regulations`} component={Policy} />
-              <Route exact path={`/articles`} component={Articles} />
+            <Routes>
+              {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
+              <Route exact path="/404" element={<Error404 />} />
+              <Route exact path={`/about`} element={<About />} />
+              <Route exact path={`/rules-and-regulations`} element={<Policy />} />
+              <Route exact path={`/articles`} element={<Articles />} />
               {/* <Route exact path={`/active-member`} >
                 <ActiveMember setNotification={setNotification} />
               </Route> */}
-              {/* <Route exact path={`/contest/promo-video`} component={Contest} /> */}
+              {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
               {/* <Route exact path={`/contest/register`}>
               <ContestRegister setNotification={setNotification} />
             </Route> */}
 
-              <RegionParamRoute exact path={`/:region/board`} component={Board} />
-              <RegionParamRoute exact path={`/:region/contact`} component={Contact} />
-              <RegionParamRoute exact path={`/:region/committees`} component={Committees} />
-              <RegionParamRoute exact path={`/:region/events`} component={Events} />
-              <RegionParamRoute exact path={`/:region/future-events`} component={FutureEvents} />
-              <RegionParamRoute exact path={`/:region/past-events`} component={PastEvents} />
-              <RegionParamRoute path={`/:region/event-details/:eventId`} component={EventDetails} />
-              <RegionParamRoute exact path={"/:region/other-event-details/:eventId"}>
-                <NonSocietyEvent setNotification={setNotification} />
-              </RegionParamRoute>
-              <RegionParamRoute
+              <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
+              <Route exact path={`/:region/contact`} element={<RegionLayout><Contact /></RegionLayout>} />
+              <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} />
+              <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
+              <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
+              <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
+              <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
+              <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent setNotification={setNotification} /></RegionLayout>}>
+
+              </Route>
+              <Route
                 path={`/:region/event-reflection/:eventId`}
-                component={EventReflection}
+                element={<RegionLayout><EventReflection /></RegionLayout>}
               />
-            
+
 
               {/* Redirect pages */}
 
-              <Route exact path={`/success`} component={Success} />
-              <Route exact path={`/donation/success`} component={SuccessDonation} />
-              <Route exact path={`/fail`} component={Fail} />
+              <Route exact path={`/success`} element={<Success />} />
+              <Route exact path={`/donation/success`} element={<SuccessDonation />} />
+              <Route exact path={`/fail`} element={<Fail />} />
 
               {/* Auth pages */}
               {user.token ? (
-                <Switch>
-                  <Route exact path={`/user`} component={User} />
-                  <RegionParamRoute
+                <Fragment>
+                  <Route exact path={`/user`} element={<User />} />
+                  <Route
                     exact
                     path={"/:region/purchase-ticket/:eventId/:userId"}
-                    component={MemberPurchase}
+                    element={<RegionLayout><MemberPurchase /></RegionLayout>}
                   />
-                  <Route exact path="/:region?" component={Home} />
-                  <Route path="*" component={Error404} />
-                </Switch>
+                </Fragment>
               ) : (
-                <Switch>
-                  <Route exact path={`/login`}>
-                    <LogIn setNotification={setNotification} />
-                  </Route>
-                  <Route exact path={`/:region?/signup`}>
-                    <SignUp setNotification={setNotification} />
-                  </Route>
-                  <RegionParamRoute
+                <Fragment>
+                  <Route exact path={`/login`} element={<LogIn setNotification={setNotification} />} />
+                  <Route exact path={`/:region?/signup`} element={<RegionLayout><SignUp setNotification={setNotification} /></RegionLayout>} />
+                  <Route
                     exact
                     path={"/:region/purchase-ticket/:eventId"}
-                    component={NonMemberPurchase}
+                    element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
                   />
-                  <Route exact path="/:region?" component={Home} />
-                  <Route path="*" component={Error404} />
-                </Switch>
+
+                </Fragment>
               )}
-            </Switch>
+              <Route exact path="/:region?" element={<Home />} />
+              <Route path="*" element={<Error404 />} />
+            </Routes>
           </Suspense>
-        </PageGoTop>
       </BrowserRouter>
     );
   };

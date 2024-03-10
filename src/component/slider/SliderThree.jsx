@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Parallax } from "react-parallax";
 
 const image1 =
-  "/assets/images/bg/bg-image-11.jpg";
+  "../../images/bg/bg-image-11.jpg";
 
 
 

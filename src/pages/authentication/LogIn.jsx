@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHttpClient } from "../../hooks/http-hook";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectUser } from "../../redux/user";
 import PageHelmet from "../../component/common/Helmet";
@@ -16,7 +16,7 @@ import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import * as serviceWorker from "../../util/serviceWorker";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 
 const schema = yup.object().shape({
   token: yup.string().required("Please provide the token send to you by email"),
@@ -50,7 +50,7 @@ const Login = (props) => {
 
   const modal = useSelector(selectModal);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const changeFormInputHandler = (event) => {
     setLoginFormValues((prevState) => {
@@ -121,7 +121,7 @@ const Login = (props) => {
           </Link>
         </Alert>
       );
-      history.push('/' + responseData.region);
+      navigate('/' + responseData.region);
       setTimeout(() => closeHandler(), 5000);
     } catch (err) { }
   };
@@ -190,7 +190,7 @@ const Login = (props) => {
                     </Alert>
                   );
                   dispatch(removeModal());
-                  history.push("/login");
+                  navigate("/login");
                   setTimeout(() => closeHandler(), 5000);
                 } catch (err) { }
               }}

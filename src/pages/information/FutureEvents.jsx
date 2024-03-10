@@ -5,7 +5,7 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 import PortfolioList from "../../elements/portfolio/PortfolioList";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
 import {OTHER_EVENTS} from "../../util/OTHER_EVENTS";

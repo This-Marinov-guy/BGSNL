@@ -13,7 +13,7 @@ import {
   FutureOtherEventsContent,
 } from "./information/FutureEvents";
 import ImageFb from "../elements/ui/ImageFb";
-import { Link, useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { REGIONS } from "../util/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
 
@@ -22,11 +22,11 @@ const Home = () => {
 
   const { region } = useParams();
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (region && !REGIONS.includes(region)) {
-      history.push('/404')
+      navigate('/404')
     }
   }, [region])
 

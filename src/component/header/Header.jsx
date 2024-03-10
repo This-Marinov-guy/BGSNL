@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../redux/user";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/ImageFb";
 import { REGIONS } from "../../util/REGIONS_DESIGN";
-import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useParams } from "react-router-dom";
 import capitalizeFirstLetter from "../../util/capitalize";
 
 const Header = (props) => {
@@ -19,7 +19,7 @@ const Header = (props) => {
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   var elements = document.querySelectorAll(".has-dropdown > a");
   for (var i in elements) {
@@ -50,7 +50,7 @@ const Header = (props) => {
             onClick={() => {
               dispatch(logout());
               setLogoutAlert(false);
-              history.push("/");
+              navigate("/");
             }}
           >
             Log out

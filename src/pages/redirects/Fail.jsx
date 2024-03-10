@@ -1,6 +1,6 @@
 import React from "react";
 import Alert from "react-bootstrap/Alert";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 
 const Fail = () => {
   return (

@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 // Check if Dark Theme extensions are active
 const backgroundColor = window
   .getComputedStyle(document.body)
@@ -38,4 +40,10 @@ window.onload = function () {
   }
 }
 
+$(document).ready(() => {
+  console.log('wow');
+  for (let i = 1; i <= 50; i++) {
+    $(`.bg_image--${i}`).css('background-image', 'url(' + `/assets/images/bg/bg-image--${i}.webp` + ')' );
+  };
+});
 

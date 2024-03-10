@@ -1,8 +1,8 @@
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 // takes the eventId which is a title from the url and returns the event 
 export const useObjectGrabUrl = (array) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const eventId = useParams().eventId;
 
   let target;
@@ -14,7 +14,7 @@ export const useObjectGrabUrl = (array) => {
   }
 
   if (!target) {
-    history.push("/404");
+    navigate("/404");
   }
 
   return target;

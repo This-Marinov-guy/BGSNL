@@ -15,7 +15,7 @@ import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
 import { REGIONS } from "../../util/REGIONS_DESIGN";
 import { createCustomerTicket } from "../../util/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { REGIONS_MEMBERSHIP } from "../../util/REGIONS_AUTH_CONFIG";
 
 const NonMemberPurchase = () => {
@@ -41,7 +41,7 @@ const NonMemberPurchase = () => {
     payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   function calculateTimeRemaining(timer) {
     const now = new Date().getTime();
@@ -192,11 +192,7 @@ const NonMemberPurchase = () => {
                         "_GUEST"
                       );
                       formData.append("region", region);
-                      if (target.activeMemberPrice_id && (target.discountPass && target.discountPass.includes(values.email))) {
-                        formData.append("itemId", target.activeMemberPrice_id);
-                      } else {
-                        formData.append("itemId", target.price_id);
-                      }
+                      formData.append("itemId", target.price_id);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
                       formData.append("eventName", target.title);
@@ -210,13 +206,13 @@ const NonMemberPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname)) {
+                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname) || (target.discountPass && target.discountPass.includes(values.email))) {
                         const responseData = await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
                           formData
                         );
-                        history.push('/success');
+                        navigate('/success');
                       } else {
                         const responseData = await sendRequest(
                           "payment/checkout/guest",

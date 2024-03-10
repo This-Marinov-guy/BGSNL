@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import Header from "../component/header/Header";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 
 const Error404 = () => {
   return (

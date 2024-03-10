@@ -10,7 +10,7 @@ import Loader from "../../elements/ui/Loader";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
     prSC: yup.boolean(),
@@ -71,7 +71,7 @@ const schema = yup.object().shape({
 const ActiveMember = (props) => {
     const { loading, sendRequest } = useHttpClient();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const closeHandler = () => {
         props.setNotification(null);
@@ -157,7 +157,7 @@ const ActiveMember = (props) => {
                                         </p>
                                     </Alert>
                                 );
-                                history.push("/");
+                                navigate("/");
                                 setTimeout(() => closeHandler(), 5000);
                             } catch (err) {
                             }

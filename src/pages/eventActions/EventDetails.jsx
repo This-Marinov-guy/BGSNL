@@ -11,7 +11,7 @@ import ImageFb from "../../elements/ui/ImageFb";
 import Countdown from "../../elements/ui/Countdown";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
-import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useParams } from "react-router-dom";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
 import { link } from "fs-extra";
 
@@ -23,6 +23,8 @@ const EventDetails = () => {
   const { region } = useParams();
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
+
+  const imageUrl = `/assets/images/bg/bg-image-${target.bgImage}.jpg`;
 
   const { loading, sendRequest } = useHttpClient();
 
@@ -37,9 +39,7 @@ const EventDetails = () => {
           if (remainingTickets <= 0) {
             setEventClosed(true)
           }
-        } catch (err) {
-          console.log(err);
-        }
+        } catch (err) {}
       };
       checkRemainingTicketQuantity();
     }
@@ -57,7 +57,8 @@ const EventDetails = () => {
 
       {/* Start Breadcrump Area */}
       <div
-        className={`rn-page-title-area pt--120 pb--190 bg_image bg_image--${target.bgImage}`}
+        className={`rn-page-title-area pt--120 pb--190 bg_image`}
+        style={{backgroundImage: `url(${imageUrl})`}}
         data-black-overlay="7"
       >
         <div className="container">

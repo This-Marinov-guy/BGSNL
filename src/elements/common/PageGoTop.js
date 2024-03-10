@@ -1,13 +1,14 @@
 import { useEffect } from "react";
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const PageGoTop = (props) => {
+const PageGoTop = ({ children }) => {
+    const navigate = useNavigate();
 
     useEffect(() => {
-    
-        window.scrollTo(0, 0);
-      }, []);
+        
+    }, [history]);
 
-    return props.children;
+    return children;
 };
-export default withRouter(PageGoTop);
+
+export default PageGoTop;

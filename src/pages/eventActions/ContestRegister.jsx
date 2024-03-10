@@ -2,7 +2,7 @@ import React from "react";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHttpClient } from "../../hooks/http-hook";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageHelmet from "../../component/common/Helmet";
 import Header from "../../component/header/Header";
 import Loader from "../../elements/ui/Loader";
@@ -11,7 +11,7 @@ import { FiX } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 
 const schema = yup.object().shape({
     name: yup.string().required("Name is required"),
@@ -23,7 +23,7 @@ const schema = yup.object().shape({
 const ContestRegister = (props) => {
     const { loading, sendRequest } = useHttpClient();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const closeHandler = () => {
         props.setNotification(null);
@@ -112,7 +112,7 @@ const ContestRegister = (props) => {
 
                                     </Alert>
                                 );
-                                history.push("/");
+                                navigate("/");
                                 setTimeout(() => closeHandler(), 5000);
                                 return;
                             } catch (err) {

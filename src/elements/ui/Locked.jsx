@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "./Loader";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
 import { showError } from "../../redux/error";

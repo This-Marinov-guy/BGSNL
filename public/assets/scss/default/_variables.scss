@@ -12,13 +12,13 @@ $white: #faf9f6;
 =================================*/
 @font-face {
   font-family: Roboto;
-  src: url(/assets/fonts/Roboto.woff2) format("woff2"),
-    url(/assets/fonts/Roboto.otf) format("opentype");
+  src: url(/public/assets/fonts/Roboto.woff2) format("woff2"),
+    url(/public/assets/fonts/Roboto.otf) format("opentype");
 }
 
 @font-face {
   font-family: Archive;
-  src: url(/assets/fonts/Archive-Regular.ttf) format("truetype");
+  src: url(/public/assets/fonts/Archive-Regular.ttf) format("truetype");
 }
 
 $body-font: "Roboto";
