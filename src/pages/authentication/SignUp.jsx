@@ -247,7 +247,6 @@ const SignUp = (props) => {
                           login({
                             userId: responseData.userId,
                             token: responseData.token,
-                            region: responseData.region,
                             expirationDate: new Date(
                               new Date().getTime() + 36000000
                             ).toISOString(),
