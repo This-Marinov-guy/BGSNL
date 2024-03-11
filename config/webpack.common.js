@@ -157,21 +157,21 @@ module.exports = {
         test: /\.(woff(2)|ttf|eot)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         type: 'asset/resource',
       },
-      {
-        /**
-         * Rule for handling image files.
-         */
-        test: /\.(svg|png|jpg|jpeg|gif|ico|webp)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[hash].[ext]',
-              outputPath: 'static/media',
-            },
-          },
-        ],
-      },
+      // {
+      //   /**
+      //    * Rule for handling image files.
+      //    */
+      //   test: /\.(svg|png|jpg|jpeg|gif|ico|webp)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[name].[ext]',
+      //         outputPath: 'assets/images',
+      //       },
+      //     },
+      //   ],
+      // },
     ],
   },
 };
