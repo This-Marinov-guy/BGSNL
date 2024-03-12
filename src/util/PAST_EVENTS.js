@@ -52,7 +52,10 @@ export const PAST_EVENTS = {
   leeuwarden: [{
     url: "Bulgarian Dinner",
     image: "1",
-  }]
+  }],
+  breda: [],
+  maastricht: [],
+  amsterdam: []
 }
 
 export const EVENT_REFLECTIONS = {
@@ -253,5 +256,8 @@ export const EVENT_REFLECTIONS = {
     },
 
 
-  ]
+  ],
+  breda: [],
+  maastricht: [],
+  amsterdam: []
 }
