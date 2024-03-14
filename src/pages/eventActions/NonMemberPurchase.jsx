@@ -17,6 +17,7 @@ import { createCustomerTicket } from "../../util/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { REGIONS_MEMBERSHIP } from "../../util/REGIONS_AUTH_CONFIG";
+import MarketingForm from "../../elements/ui/MarketingForm";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -24,6 +25,7 @@ const NonMemberPurchase = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [remainingTickets, setRemainingTickets] = useState()
   const [eventClosed, setEventClosed] = useState(false)
+  const [marketingData, setMarketingData] = useState({})
 
   const { region } = useParams()
 
@@ -205,6 +207,9 @@ const NonMemberPurchase = () => {
                       if (target.extraInputs) {
                         formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                       }
+                      if (target.marketingInputs && marketingData) {
+                        formData.append('marketing', JSON.stringify(marketingData))
+                      }
                       formData.append(
                         "guestName",
                         values.name + " " + values.surname
@@ -303,6 +308,7 @@ const NonMemberPurchase = () => {
                             />
                           </div>
                         </div>
+                        {target.marketingInputs && <MarketingForm setMarketingData={setMarketingData}/>}
                         {target.extraInputs && <FormExtras target={target.extraInputs} />}
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">

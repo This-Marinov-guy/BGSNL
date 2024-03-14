@@ -158,7 +158,7 @@ const SignUp = (props) => {
                           </li>
                         </ul>
                       </div>
-                      <p style={{ fontSize: '15px' }}>*The expiration date is 31st of August (year differs based on subscription period)
+                      <p style={{ fontSize: '15px' }}>*You will automatically be billed on the end of the period, except if you cancel the subscription from your profile or the funds in your bank account are insufficient
                       </p>
                     </div>
                   </button>
@@ -574,7 +574,7 @@ const SignUp = (props) => {
                           name="notificationTerms"
                         ></Field>
                         <p className="information">
-                          I consent to being notified by BGSG about events and
+                          I consent to being notified by BGSNL about events and
                           discounts from us and our sponsors
                         </p>
                       </div>
@@ -595,7 +595,7 @@ const SignUp = (props) => {
                         ></Field>
                         <p className="information">
                           I understand that my registration is complete after
-                          paying the link I will receive on my email.
+                          making the subscribing payment (cancel anytime).
                         </p>
                       </div>
                       <ErrorMessage

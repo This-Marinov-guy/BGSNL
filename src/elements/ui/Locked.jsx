@@ -48,8 +48,8 @@ const Locked = (props) => {
         </h2>
         <p className="center_text">
           {props.case === "locked"
-            ? "To continue using the benefits of a member please pay the fee subscription for the following term! Otherwise, log out of your account."
-            : "We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: bulgariansociety.gro@gmail.com"}
+            ? "To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account."
+            : "We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: bgsn.tech.nl@gmail.com"}
         </p>
         {props.case === "locked" && (REGIONS_MEMBERSHIP_SPECIFICS[props.region].length > 1 ?
           <ul className="brand-style-2">
@@ -57,7 +57,7 @@ const Locked = (props) => {
               return <li key={index} >
                 <button disabled={loading}
                   onClick={() => handleUnlock(index)}
-                  className={'rn-button-style--2 btn-solid'}>Extend with {option.period} year/s</button>
+                  className={'rn-button-style--2 btn-solid'}>Extend with {option.period} months</button>
               </li>
             })}
           </ul> : <button

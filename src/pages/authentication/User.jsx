@@ -144,10 +144,10 @@ const User = () => {
                   const responseData = await sendRequest(
                     "user/check-email",
                     "POST",
-                   {
+                    {
                       email: values.email,
                     },
-                   
+
                   );
                 } catch (err) {
                   return;
@@ -187,7 +187,7 @@ const User = () => {
                 style={{ padding: "2%" }}
               >
                 <div className="hor_section">
-                  <h3>Update your details</h3>
+                  <h3 style={{ margin: 'auto' }}>Update your details</h3>
                   <FiX className="x_icon" onClick={closeHandler} />
                 </div>
                 <div className="row mb--40 mt--40">
@@ -264,11 +264,11 @@ const User = () => {
                   <div className="col-lg-6 col-md-12 col-12">
                     <Field as="select" name="university">
                       <option value="" disabled>
-                        Select your univerisity
+                        Select your university
                       </option>
                       <option value="RUG">RUG</option>
                       <option value="Hanze">Hanze</option>
-                      <option value="other">Other univerisity</option>
+                      <option value="other">Other university</option>
                       <option value="working">Working</option>
                     </Field>
                     <ErrorMessage
@@ -363,13 +363,27 @@ const User = () => {
                     </Field>
                   </div>
                 </div>
-                <button
-                  disabled={loading}
-                  type="submit"
-                  className="rn-button-style--2 btn-solid mt--80"
-                >
-                  {loading ? <Loader /> : <span>Update information</span>}
-                </button>
+                <div className="options-btns-div mt--60">
+                  <button
+                    disabled={loading}
+                    type="submit"
+                    className="rn-button-style--2 btn-solid"
+                  >
+                    {loading ? <Loader /> : <span>Update information</span>}
+                  </button>
+                  <button
+                    className="rn-button-style--2 btn-solid-border"
+                  >
+                    Cancel Subscription
+                  </button>
+                </div>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="hor_section_nospace">
+                      <small style={{ fontSize: '20px' }}>*To change your payment method you need to cancel your membership and update it when your expire date comes - you will receive a message upon login</small>
+                    </div>
+                  </div>
+                </div>
               </Form>
             )}
           </Formik>
