@@ -1,55 +1,42 @@
-import React from "react";
-import * as yup from "yup";
-import { Formik, Form, Field } from "formik";
+import React, { useState } from "react";
 
-const schema = yup.object().shape({
-    university: yup.string(),
-    stage: yup.string(),
-    course: yup.string(),
-    age: yup.string(),
-    gender: yup.string(),
-});
+const MarketingForm = (props) => {
+    const [formData, setFormData] = useState({
+        university: '',
+        stage: '',
+        course: '',
+        age: '',
+        gender: '',
+    });
 
-const MarketingForm = ({ setMarketingData }) => {
-    return (<Formik
-        className="inner"
-        validationSchema={schema}
-        onSubmit={(values) => {
-            setMarketingData(values)
-        }}
-        initialValues={{
-            university: '',
-            stage: '',
-            course: '',
-            age: '',
-            gender: '',
-        }}
-    >
-        {() => (
-            <Form
-                id="form"
-                style={{ padding: "2%" }}
-            >
+    const handleChange = (event) => {
+        setFormData((prevState) => {
+            return { ...prevState, [event.target.name]: event.target.value };
+        });
+        props.setMarketingData(formData);
+    };
+
+    return (
+        <div className="inner" style={{ padding: "2%" }}>
+            <form id="form">
                 <div className="row container team_member_border-3 mt--40">
                     <h3 className="center_text">
                         Please fill the form for marketing purposes
                     </h3>
                     <div className="col-lg-12 col-md-12 col-12">
                         <div className="rn-form-group">
-                            <Field as="select" name="university">
-                                <option value="" disabled>
-                                    Select your university
-                                </option>
+                            <select name="university" value={formData.university} onChange={handleChange}>
+                                <option value="" disabled>Select your university</option>
                                 <option value="BUas">Buas</option>
                                 <option value="Avans">Avans</option>
                                 <option value="Graduated">Graduated</option>
                                 <option value="working">Working</option>
-                            </Field>
+                            </select>
                         </div>
                     </div>
                     <div className="col-lg-12 col-md-12 col-12">
                         <div className="rn-form-group">
-                            <Field as="select" name="stage">
+                            <select name="stage" value={formData.stage} onChange={handleChange}>
                                 <option value="" disabled>
                                     Select your stage
                                 </option>
@@ -57,31 +44,31 @@ const MarketingForm = ({ setMarketingData }) => {
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4+">4 or further</option>
-                            </Field>
+                            </select>
                         </div>
                     </div>
                     <div className="col-lg-12 col-md-12 col-12">
                         <div className="rn-form-group">
-                            <Field as="select" name="course">
+                            <select name="course" value={formData.course} onChange={handleChange}>
                                 <option value="" disabled>
                                     Select your course
                                 </option>
                                 <option value="RUG">Bachelors</option>
                                 <option value="Hanze">Masters</option>
                                 <option value="other">Other</option>
-                            </Field>
+                            </select>
                         </div>
                     </div>
                     <div className="col-lg-12 col-md-12 col-12">
                         <div className="rn-form-group">
-                            <Field type='text' name="age" placeholder='Age'>
+                            <input type='text' name="age" placeholder='Age' value={formData.age} onChange={handleChange}>
 
-                            </Field>
+                            </input>
                         </div>
                     </div>
                     <div className="col-lg-12 col-md-12 col-12">
                         <div className="rn-form-group">
-                            <Field as="select" name="gender">
+                            <select name="gender" value={formData.gender} onChange={handleChange}>
                                 <option value="" disabled>
                                     Select your gender
                                 </option>
@@ -89,14 +76,13 @@ const MarketingForm = ({ setMarketingData }) => {
                                 <option value="Female">Female</option>
                                 <option value="other">Other</option>
                                 <option value="None">Prefer not to say</option>
-                            </Field>
+                            </select>
                         </div>
                     </div>
                 </div>
-            </Form>
-        )}
-    </Formik>
-    )
-}
+            </form>
+        </div>
+    );
+};
 
-export default MarketingForm
+export default MarketingForm;
