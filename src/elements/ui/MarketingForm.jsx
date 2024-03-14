@@ -30,7 +30,7 @@ const MarketingForm = ({ setMarketingData }) => {
                 id="form"
                 style={{ padding: "2%" }}
             >
-                <div className="row container team_member_border-1 mt--40">
+                <div className="row container team_member_border-3 mt--40">
                     <h3 className="center_text">
                         Please fill the form for marketing purposes
                     </h3>
