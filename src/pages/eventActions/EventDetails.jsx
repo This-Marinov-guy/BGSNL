@@ -39,7 +39,7 @@ const EventDetails = () => {
           if (remainingTickets <= 0) {
             setEventClosed(true)
           }
-        } catch (err) {}
+        } catch (err) { }
       };
       checkRemainingTicketQuantity();
     }
@@ -58,7 +58,7 @@ const EventDetails = () => {
       {/* Start Breadcrump Area */}
       <div
         className={`rn-page-title-area pt--120 pb--190 bg_image`}
-        style={{backgroundImage: `url(${imageUrl})`}}
+        style={{ backgroundImage: `url(${imageUrl})` }}
         data-black-overlay="7"
       >
         <div className="container">
@@ -111,8 +111,8 @@ const EventDetails = () => {
                       <span>Entry fee</span>
                       {target.entry || target.memberEntry ? <h4>
                         {(user.token && target.memberEntry)
-                          ? target.memberEntry + ' euro ' + (target.including ? target.including[0] : '')
-                          : target.entry + ' euro ' + (target.including ? target.including[1] : '')}
+                          ? target.memberEntry + ' euro ' + ((target.including && target.including.length > 0) ? target.including[0] : '')
+                          : target.entry + ' euro ' + ((target.including && target.including.length > 0) ? target.including[1] : '')}
                       </h4> : <h4 >{target.isFree ? 'FREE' : 'Check ticket portal'}</h4>}
                     </div>
                   </div>

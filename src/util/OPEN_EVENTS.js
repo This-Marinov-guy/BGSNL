@@ -42,9 +42,9 @@ export const SOCIETY_EVENTS = {
         `Join us for our special event - Speedfriending & bonding games night! Break the ice with engaging questions and topics and make new friends, then play in teams Cards against Bulgarshtinata, associations, and character traits bingo. Get ready for an unforgettable evening of connection and fun!
       `,
       ],
-      ticket_img: '/assets/images/tickets/amsterdam/ticket-4.jpg',
-      images: ["/assets/images/portfolio/amsterdam/portfolio-4"],
-      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-4",
+      ticket_img: '/assets/images/tickets/breda/ticket-4.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-4"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-4",
     },
   ],
   maastricht: [
