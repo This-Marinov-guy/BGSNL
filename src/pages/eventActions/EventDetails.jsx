@@ -34,6 +34,8 @@ const EventDetails = () => {
         try {
           const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
             eventName: target.title,
+            region,
+            date: target.date
           });
           setRemainingTickets(target.ticketLimit - responseData.ticketsSold);
           if (remainingTickets <= 0) {
