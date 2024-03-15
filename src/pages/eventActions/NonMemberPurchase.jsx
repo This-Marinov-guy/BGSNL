@@ -23,7 +23,6 @@ const NonMemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
 
   const [loadingPage, setLoadingPage] = useState(true);
-  const [remainingTickets, setRemainingTickets] = useState()
   const [eventClosed, setEventClosed] = useState(false)
   const [marketingData, setMarketingData] = useState({})
 
@@ -59,14 +58,14 @@ const NonMemberPurchase = () => {
         try {
           const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
             eventName: target.title,
-          })
-          setRemainingTickets(target.ticketLimit - responseData.ticketsSold);
-          if (remainingTickets <= 0) {
+            region,
+            date: target.date
+          });
+          const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
+          if (isTicketsSold) {
             setEventClosed(true)
           }
-        } catch (err) {
-          console.log(err);
-        }
+        } catch (err) { }
       };
       checkRemainingTicketQuantity();
     }

@@ -23,7 +23,6 @@ const MemberPurchase = () => {
 
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(true);
-  const [remainingTickets, setRemainingTickets] = useState()
   const [eventClosed, setEventClosed] = useState(false)
 
   const { userId, region } = useParams();
@@ -34,8 +33,8 @@ const MemberPurchase = () => {
 
   const schema = yup.object().shape({
     extraOne: (target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
-    extraTwo:  (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
-    extraThree:   (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
+    extraTwo: (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
+    extraThree: (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
   });
 
   function calculateTimeRemaining(timer) {
@@ -68,15 +67,14 @@ const MemberPurchase = () => {
         try {
           const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
             eventName: target.title,
-          }
-          );
-          setRemainingTickets(target.ticketLimit - responseData.ticketsSold);
-          if (remainingTickets <= 0) {
+            region,
+            date: target.date
+          });
+          const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
+          if (isTicketsSold) {
             setEventClosed(true)
           }
-        } catch (err) {
-          console.log(err);
-        }
+        } catch (err) { }
       };
       checkRemainingTicketQuantity();
     }
@@ -170,7 +168,7 @@ const MemberPurchase = () => {
                   formData.append("eventDate", target.date);
                   formData.append("userId", userId);
                   if (target.extraInputs) {
-                    formData.append('preferences', JSON.stringify({inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
+                    formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                   }
                   if (target.isFree || target.freePass.includes(currentUser.email) || target.freePass.includes(currentUser.name + ' ' + currentUser.surname)) {
                     const responseData = await sendRequest(
@@ -217,10 +215,10 @@ const MemberPurchase = () => {
                           : target.time}
                       </p>
                       <p>Address: {target.where}</p>
-                      <p>Price: {target.isFree ? ' FREE' :  target.memberEntry ? `${target.memberEntry} euro (discounted)` : `${target.entry} (no MEMBER discount)`}</p>
+                      <p>Price: {target.isFree ? ' FREE' : target.memberEntry ? `${target.memberEntry} euro (discounted)` : `${target.entry} (no MEMBER discount)`}</p>
                     </div>
                   </div>
-                  {target.extraInputs && <FormExtras target={target.extraInputs}/>}
+                  {target.extraInputs && <FormExtras target={target.extraInputs} />}
                   <button
                     disabled={loading}
                     type="submit"

@@ -17,7 +17,6 @@ import { link } from "fs-extra";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false)
-  const [remainingTickets, setRemainingTickets] = useState()
   const user = useSelector(selectUser);
 
   const { region } = useParams();
@@ -37,8 +36,8 @@ const EventDetails = () => {
             region,
             date: target.date
           });
-          setRemainingTickets(target.ticketLimit - responseData.ticketsSold);
-          if (remainingTickets <= 0) {
+          const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
+          if (isTicketsSold) {
             setEventClosed(true)
           }
         } catch (err) { }
