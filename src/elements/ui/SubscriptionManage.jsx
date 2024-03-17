@@ -9,7 +9,7 @@ const SubscriptionManage = (props) => {
 
     const { user } = useSelector(selectUser)
 
-    const handleManage = async () => {
+    async function handleManage() {
         try {
             const responseData = await sendRequest(
                 "payment/customer-portal",
