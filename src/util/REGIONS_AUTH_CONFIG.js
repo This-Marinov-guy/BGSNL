@@ -10,7 +10,7 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
         description: '',
         price: 6,
         itemId: 'price_1OuqmtIOw5UGbAo1V4TqMet4',
-        renewItemId: 'price_1Otbd6IOw5UGbAo1rdJ7wXp3',
+        renewItemId: 'price_1OuqmtIOw5UGbAo1V4TqMet4',
         period: 6
     },
     {
@@ -18,7 +18,7 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
         icon: <FiUserPlus />,
         description: 'Be part of the society. Pay yearly for the journey with benefits such as:',
         price: 10,
-        itemId: 'price_1OdzVCIOw5UGbAo1AUlL7CZ1',
+        itemId: 'price_1Otbd6IOw5UGbAo1rdJ7wXp3',
         renewItemId: 'price_1Otbd6IOw5UGbAo1rdJ7wXp3',
         period: 12
     }
