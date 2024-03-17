@@ -7,7 +7,6 @@ import Alert from "react-bootstrap/Alert";
 import { FiCheck } from "react-icons/fi";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { FiUserPlus } from "react-icons/fi";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
 import ImageInput from "../../elements/ui/ImageInput";
@@ -68,15 +67,6 @@ const schema = yup.object().shape({
   memberKey: yup.string(),
 });
 
-const options = [
-  {
-    icon: <FiUserPlus />,
-    title: "Member",
-    description: "Be part of the society. With this membership you get:  ",
-    price: 10,
-  },
-];
-
 const SignUp = (props) => {
   const { loading, sendRequest } = useHttpClient();
 
@@ -88,9 +78,11 @@ const SignUp = (props) => {
 
   const dispatch = useDispatch();
 
-  const closeHandler = () => {
-
-  };
+  const handleErrorMsg = (errors, isValid, dirty) => {
+    if (errors && !isValid && dirty) {
+      props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
+    }
+  }
 
   useEffect(() => {
     setSelectedMembershipIndex(null)
@@ -250,7 +242,7 @@ const SignUp = (props) => {
                                 ).toISOString(),
                               })
                             );
-                            props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hope in the User section to see your tickets, news and your information' });
+                            props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hope in the User section to see your tickets, news and your information', life: 7000 });
                             navigate(`/${responseData.region}`);
                             return;
                           } catch (err) {
@@ -298,7 +290,7 @@ const SignUp = (props) => {
                 memberKey: '',
               }}
             >
-              {({ values, setFieldValue }) => (
+              {({ values, setFieldValue, errors, isValid, dirty }) => (
                 <Form
                   encType="multipart/form-data"
                   id="form"
@@ -603,6 +595,7 @@ const SignUp = (props) => {
                   <button
                     disabled={loading}
                     type="submit"
+                    onClick={() => handleErrorMsg(errors, isValid, dirty)}
                     className="rn-button-style--2 btn-solid mt--80"
                   >
                     {loading ? <Loader /> : <span>Finish Registration</span>}

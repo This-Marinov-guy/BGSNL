@@ -158,7 +158,7 @@ const Login = (props) => {
                       password: values.password,
                     }
                   );
-                  props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password' });
+                  props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 });
 
                   dispatch(removeModal());
                   navigate("/login");
