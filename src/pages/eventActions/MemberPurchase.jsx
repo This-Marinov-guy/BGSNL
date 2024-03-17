@@ -62,29 +62,33 @@ const MemberPurchase = () => {
 
   useEffect(() => {
     setLoadingPage(true);
-    if (target.ticketLimit) {
-      const checkRemainingTicketQuantity = async () => {
-        try {
-          const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
-            eventName: target.title,
-            region,
-            date: target.date
-          });
-          const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
-          if (isTicketsSold) {
-            setEventClosed(true)
-          }
-        } catch (err) { }
-      };
-      checkRemainingTicketQuantity();
-    }
-    if (target.ticketTimer) {
-      const timeRemaining = calculateTimeRemaining(target.ticketTimer);
-      if (timeRemaining <= 0) {
-        setEventClosed(true)
+    try {
+      if (target.ticketLimit) {
+        const checkRemainingTicketQuantity = async () => {
+          try {
+            const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
+              eventName: target.title,
+              region,
+              date: target.date
+            });
+            const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
+            if (isTicketsSold) {
+              setEventClosed(true)
+            }
+          } catch (err) { }
+        };
+        checkRemainingTicketQuantity();
       }
+      if (target.ticketTimer) {
+        const timeRemaining = calculateTimeRemaining(target.ticketTimer);
+        if (timeRemaining <= 0) {
+          setEventClosed(true)
+        }
+      }
+    } catch (err) {
+    } finally {
+      setLoadingPage(false)
     }
-    setLoadingPage(false)
   }, [target])
 
   if (target.ticket_link) {

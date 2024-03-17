@@ -1,5 +1,5 @@
 // React and Redux Required
-import React, { useEffect, useState, lazy, Suspense, Fragment } from "react";
+import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -7,9 +7,11 @@ import { useSelector } from "react-redux";
 import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
+import { PrimeReactProvider } from 'primereact/api';
 
 // Style
 import './index.scss'
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 // Blocks Layout
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -17,6 +19,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageLoading from "./elements/ui/PageLoading";
 import Articles from "./pages/information/Articles";
 import RegionLayout from "./component/functional/RegionLayout";
+import { Toast } from 'primereact/toast';
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -67,7 +70,7 @@ const Fail = lazy(() => import("./pages/redirects/Fail"));
 const Root = () => {
   const maintenanceBreak = false;
 
-  const [notification, setNotification] = useState();
+  const toast = useRef(null)
 
   const dispatch = useDispatch();
 
@@ -109,77 +112,82 @@ const Root = () => {
     }
   }, [dispatch]);
 
+  useEffect(() => {
+    if (errorMessage) {
+      toast.current.show({ severity: 'error', summary: 'You got an error :(', detail: errorMessage, life: 8000 });
+    }
+  }, [error])
+
   if (maintenanceBreak) {
     return <Maintenance />
   }
   else {
     return (
       <BrowserRouter basename={"/"}>
-          <Suspense fallback={<PageLoading />}>
-            {notification}
-            {error && <Error errorMessage={errorMessage} />}
-            <Routes>
-              {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
-              <Route exact path="/404" element={<Error404 />} />
-              <Route exact path={`/about`} element={<About />} />
-              <Route exact path={`/rules-and-regulations`} element={<Policy />} />
-              <Route exact path={`/articles`} element={<Articles />} />
-              {/* <Route exact path={`/active-member`} >
-                <ActiveMember setNotification={setNotification} />
+        <Suspense fallback={<PageLoading />}>
+          <Toast ref={toast} />
+          <Routes>
+            {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
+            <Route exact path="/404" element={<Error404 />} />
+            <Route exact path={`/about`} element={<About />} />
+            <Route exact path={`/rules-and-regulations`} element={<Policy />} />
+            <Route exact path={`/articles`} element={<Articles />} />
+            {/* <Route exact path={`/active-member`} >
+                <ActiveMember toast={toast} />
               </Route> */}
-              {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
-              {/* <Route exact path={`/contest/register`}>
-              <ContestRegister setNotification={setNotification} />
+            {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
+            {/* <Route exact path={`/contest/register`}>
+              <ContestRegister toast={toast} />
             </Route> */}
 
-              <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
-              <Route exact path={`/:region/contact`} element={<RegionLayout><Contact /></RegionLayout>} />
-              <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} />
-              <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
-              <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
-              <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
-              <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
-              <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent setNotification={setNotification} /></RegionLayout>}>
+            <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
+            <Route exact path={`/:region/contact`} element={<RegionLayout><Contact /></RegionLayout>} />
+            <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} />
+            <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
+            <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
+            <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
+            <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
+            <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent toast={toast} /></RegionLayout>}>
 
-              </Route>
-              <Route
-                path={`/:region/event-reflection/:eventId`}
-                element={<RegionLayout><EventReflection /></RegionLayout>}
-              />
+            </Route>
+            <Route
+              path={`/:region/event-reflection/:eventId`}
+              element={<RegionLayout><EventReflection /></RegionLayout>}
+            />
 
 
-              {/* Redirect pages */}
+            {/* Redirect pages */}
 
-              <Route exact path={`/success`} element={<Success />} />
-              <Route exact path={`/donation/success`} element={<SuccessDonation />} />
-              <Route exact path={`/fail`} element={<Fail />} />
+            <Route exact path={`/success`} element={<Success />} />
+            <Route exact path={`/donation/success`} element={<SuccessDonation />} />
+            <Route exact path={`/fail`} element={<Fail />} />
 
-              {/* Auth pages */}
-              {user.token ? (
-                <Fragment>
-                  <Route exact path={`/user`} element={<User />} />
-                  <Route
-                    exact
-                    path={"/:region/purchase-ticket/:eventId/:userId"}
-                    element={<RegionLayout><MemberPurchase /></RegionLayout>}
-                  />
-                </Fragment>
-              ) : (
-                <Fragment>
-                  <Route exact path={`/login`} element={<LogIn setNotification={setNotification} />} />
-                  <Route exact path={`/:region?/signup`} element={<SignUp setNotification={setNotification} />} />
-                  <Route
-                    exact
-                    path={"/:region/purchase-ticket/:eventId"}
-                    element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
-                  />
+            {/* Auth pages */}
+            {user.token ? (
+              <Fragment>
+                <Route exact path={`/user`} element={<User toast={toast} />} />
+                <Route
+                  exact
+                  path={"/:region/purchase-ticket/:eventId/:userId"}
+                  element={<RegionLayout><MemberPurchase /></RegionLayout>}
+                />
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Route exact path={`/login`} element={<LogIn toast={toast} />} />
+                <Route exact path={`/:region?/signup`} element={<SignUp toast={toast}/>} />
+                <Route
+                  exact
+                  path={"/:region/purchase-ticket/:eventId"}
+                  element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
+                />
 
-                </Fragment>
-              )}
-              <Route exact path="/:region?" element={<Home />} />
-              <Route path="*" element={<Error404 />} />
-            </Routes>
-          </Suspense>
+              </Fragment>
+            )}
+            <Route exact path="/:region?" element={<Home />} />
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     );
   };
@@ -187,7 +195,9 @@ const Root = () => {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <Root />
+    <PrimeReactProvider>
+      <Root />
+    </PrimeReactProvider>
   </Provider>
 );
 

@@ -26,7 +26,7 @@ const ContestRegister = (props) => {
     const navigate = useNavigate();
 
     const closeHandler = () => {
-        props.setNotification(null);
+
     };
 
     return (
@@ -100,20 +100,8 @@ const ContestRegister = (props) => {
                                         comments: values.comments
                                     }
                                 );
-                                props.setNotification(
-                                    <Alert className="error_panel" variant="success">
-                                        <div className="action_btns">
-                                            <h3>Thank you for your interest!</h3>
-                                            <FiX className="x_icon" onClick={closeHandler} />
-                                        </div>
-                                        <p>
-                                            Please check your email for materials and hope you will have fun creating something for the society! Good luck!
-                                        </p>
-
-                                    </Alert>
-                                );
+                                props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password' });
                                 navigate("/");
-                                setTimeout(() => closeHandler(), 5000);
                                 return;
                             } catch (err) {
                             }

@@ -24,6 +24,7 @@ import Christmas from "../../elements/special/Christmas";
 import { selectUser } from "../../redux/user";
 import capitalizeFirstLetter from "../../util/capitalize";
 import { REGION_WHATSAPP } from "../../util/REGIONS_DESIGN";
+import SubscriptionManage from "../../elements/ui/SubscriptionManage";
 
 const schema = yup.object().shape({
   image: yup.string(),
@@ -55,7 +56,7 @@ const schema = yup.object().shape({
   }),
 });
 
-const User = () => {
+const User = (props) => {
   const [currentUser, setCurrentUser] = useState();
   const [expand, setExpand] = useState(false);
 
@@ -104,7 +105,7 @@ const User = () => {
       />
       {/* <Christmas currentUser={currentUser} /> */}
       {currentUser.status !== "active" && (
-        <Locked region={currentUser.region} id={currentUser.id} case="locked" show={currentUser.status} />
+        <Locked user={currentUser} case="locked" show={currentUser.status} toast={props.toast}/>
       )}
       {modal && (
         <ModalWindow show={modal}>
@@ -173,11 +174,6 @@ const User = () => {
               graduationDate: currentUser.otherUniversityName || '',
               course: currentUser.course,
               studentNumber: currentUser.studentNumber,
-              policyTerms: false,
-              dataTerms: false,
-              notificationTerms: false,
-              notificationTypeTerms: currentUser.notificationTypeTerms,
-              payTerms: false,
             }}
           >
             {({ values, setFieldValue }) => (
@@ -340,30 +336,7 @@ const User = () => {
                     </Fragment>
                   )}
                 </div>
-                <div className="row">
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="hor_section_nospace mt--40">
-                      <Field
-                        style={{ maxWidth: "30px", margin: "10px" }}
-                        type="checkbox"
-                        name="notificationTerms"
-                      ></Field>
-                      <p className="information">
-                        I consent to being notified by BGSG about events and
-                        discounts from us and our sponsors
-                      </p>
-                    </div>
-                    <Field as="select" name="notificationTypeTerms">
-                      <option value="" disabled>
-                        Contact By
-                      </option>
-                      <option value="Email">Email</option>
-                      <option value="WhatsApp">WhatsApp</option>
-                      <option value="Email & WhatsApp">Both</option>
-                    </Field>
-                  </div>
-                </div>
-                <div className="options-btns-div mt--60">
+                <div className="mt--40">
                   <button
                     disabled={loading}
                     type="submit"
@@ -371,18 +344,6 @@ const User = () => {
                   >
                     {loading ? <Loader /> : <span>Update information</span>}
                   </button>
-                  <button
-                    className="rn-button-style--2 btn-solid-border"
-                  >
-                    Cancel Subscription
-                  </button>
-                </div>
-                <div className="row">
-                  <div className="col-12">
-                    <div className="hor_section_nospace">
-                      <small style={{ fontSize: '20px' }}>*To change your payment method you need to cancel your membership and update it when your expire date comes - you will receive a message upon login</small>
-                    </div>
-                  </div>
                 </div>
               </Form>
             )}
@@ -396,6 +357,7 @@ const User = () => {
             <div className="col-lg-6 col-md-12 col-12 ">
               <div className="service service__style--2">
                 <div className="content center_div">
+                  {user.subscription && <SubscriptionManage toast={props.toast}/>}
                   <LazyLoadImage src={currentUser.image} alt="profile" />
                 </div>
               </div>

@@ -74,7 +74,7 @@ const ActiveMember = (props) => {
     const navigate = useNavigate();
 
     const closeHandler = () => {
-        props.setNotification(null);
+
     };
 
     return (
@@ -146,19 +146,8 @@ const ActiveMember = (props) => {
                                     "POST",
                                     formData
                                 );
-                                props.setNotification(
-                                    <Alert className="error_panel" variant="success">
-                                        <div className="action_btns">
-                                            <h3>Благодарим за интереса!</h3>
-                                            <FiX className="x_icon" onClick={closeHandler} />
-                                        </div>
-                                        <p>
-                                            Вашата заявка беше успешно изпълнента и нямаме търпение да се свържем с вас. Очаквайте ни!
-                                        </p>
-                                    </Alert>
-                                );
+                                props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'Thank you for your interest - expect from us soon' });
                                 navigate("/");
-                                setTimeout(() => closeHandler(), 5000);
                             } catch (err) {
                             }
 

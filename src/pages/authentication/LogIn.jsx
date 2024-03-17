@@ -60,7 +60,6 @@ const Login = (props) => {
 
   const closeHandler = () => {
     dispatch(removeModal());
-    props.setNotification(null);
     setConfirmChanging(false);
   };
 
@@ -100,27 +99,8 @@ const Login = (props) => {
           ).toISOString(),
         })
       );
-      props.setNotification(
-        <Alert className="error_panel" variant="success">
-          <div className="action_btns">
-            <h3>Welcome Back!</h3>
-            <FiX className="x_icon" onClick={closeHandler} />
-          </div>
-          <p>
-            Nice seeing you again! Please check the news section so you are up
-            to date!
-          </p>
-          <Link
-            to={`/user`}
-            onClick={closeHandler}
-            className="rn-button-style--2 rn-btn-green mt--40"
-          >
-            Go to Profile
-          </Link>
-        </Alert>
-      );
-      navigate('/' + responseData.region);
-      setTimeout(() => closeHandler(), 5000);
+      props.toast.current.show({ severity: 'success', summary: 'Welcome Back', detail: 'Hope in the User section to see your tickets, news and your information' });
+      navigate(`/${responseData.region}`);
     } catch (err) { }
   };
 
@@ -178,19 +158,11 @@ const Login = (props) => {
                       password: values.password,
                     }
                   );
-                  props.setNotification(
-                    <Alert className="error_panel" variant="success">
-                      <div className="action_btns">
-                        <h3>Success!</h3>
-                        <FiX className="x_icon" onClick={closeHandler} />
-                      </div>
-                      <p>You successesfully changed your password!</p>
-                    </Alert>
-                  );
+                  props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password' });
+
                   dispatch(removeModal());
                   navigate("/login");
-                  setTimeout(() => closeHandler(), 5000);
-                } catch (err) { }
+                            } catch (err) { }
               }}
               initialValues={{
                 token: "",

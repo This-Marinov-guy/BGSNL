@@ -53,29 +53,33 @@ const NonMemberPurchase = () => {
 
   useEffect(() => {
     setLoadingPage(true);
-    if (target.ticketLimit) {
-      const checkRemainingTicketQuantity = async () => {
-        try {
-          const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
-            eventName: target.title,
-            region,
-            date: target.date
-          });
-          const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
-          if (isTicketsSold) {
-            setEventClosed(true)
-          }
-        } catch (err) { }
-      };
-      checkRemainingTicketQuantity();
-    }
-    if (target.ticketTimer) {
-      const timeRemaining = calculateTimeRemaining(target.ticketTimer);
-      if (timeRemaining <= 0) {
-        setEventClosed(true)
+    try {
+      if (target.ticketLimit) {
+        const checkRemainingTicketQuantity = async () => {
+          try {
+            const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
+              eventName: target.title,
+              region,
+              date: target.date
+            });
+            const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
+            if (isTicketsSold) {
+              setEventClosed(true)
+            }
+          } catch (err) { }
+        };
+        checkRemainingTicketQuantity();
       }
+      if (target.ticketTimer) {
+        const timeRemaining = calculateTimeRemaining(target.ticketTimer);
+        if (timeRemaining <= 0) {
+          setEventClosed(true)
+        }
+      }
+    } catch (err) { }
+    finally {
+      setLoadingPage(false)
     }
-    setLoadingPage(false)
   }, [target])
 
   if (target.ticket_link) {
@@ -307,7 +311,7 @@ const NonMemberPurchase = () => {
                             />
                           </div>
                         </div>
-                        {target.marketingInputs && <MarketingForm setMarketingData={setMarketingData}/>}
+                        {target.marketingInputs && <MarketingForm setMarketingData={setMarketingData} />}
                         {target.extraInputs && <FormExtras target={target.extraInputs} />}
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">

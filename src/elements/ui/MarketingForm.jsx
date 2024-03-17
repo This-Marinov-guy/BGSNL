@@ -53,8 +53,8 @@ const MarketingForm = (props) => {
                                 <option value="" disabled>
                                     Select your course
                                 </option>
-                                <option value="RUG">Bachelors</option>
-                                <option value="Hanze">Masters</option>
+                                <option value="Bachelors">Bachelors</option>
+                                <option value="Masters">Masters</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>

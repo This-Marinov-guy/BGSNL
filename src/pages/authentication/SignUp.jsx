@@ -89,7 +89,7 @@ const SignUp = (props) => {
   const dispatch = useDispatch();
 
   const closeHandler = () => {
-    props.setNotification(null);
+
   };
 
   useEffect(() => {
@@ -113,14 +113,14 @@ const SignUp = (props) => {
         <div className="service-area ptb--120 bg_color--1">
           <div className="container">
             <div className="center_div mb--20">
-              {selectedMembershipIndex !== null ? <p>You have selected: {REGIONS_MEMBERSHIP_SPECIFICS[region][selectedMembershipIndex].title} </p> : <p>Select one of the options by clicking it</p>}
+              {selectedMembershipIndex !== null ? <p>You have selected: {REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title} </p> : <p>Select one of the options by clicking it</p>}
             </div>
             <div className="row service-one-wrapper center_div" style={{ gap: '20px' }}>
-              {REGIONS_MEMBERSHIP_SPECIFICS[region].map((val, i) => (
+              {REGIONS_MEMBERSHIP_SPECIFICS.map((val, i) => (
                 <div key={i}>
                   <button
                     style={
-                      (selectedMembershipIndex !== null && val.title === REGIONS_MEMBERSHIP_SPECIFICS[region][selectedMembershipIndex].title)
+                      (selectedMembershipIndex !== null && val.title === REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title)
                         ? { backgroundColor: "#017363" }
                         : {}
                     }
@@ -191,8 +191,8 @@ const SignUp = (props) => {
                 } else {
                   formData.append("image", null);
                 }
-                formData.append("period", REGIONS_MEMBERSHIP_SPECIFICS[region][selectedMembershipIndex].period);
-                formData.append("itemId", REGIONS_MEMBERSHIP_SPECIFICS[region][selectedMembershipIndex].itemId);
+                formData.append("period", REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].period);
+                formData.append("itemId", REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].itemId);
                 formData.append("origin_url", window.location.origin);
                 formData.append("method", "signup");
                 formData.append("region", region);
@@ -252,27 +252,8 @@ const SignUp = (props) => {
                             ).toISOString(),
                           })
                         );
-                        props.setNotification(
-                          <Alert className="error_panel" variant="success">
-                            <div className="action_btns">
-                              <h3>Welcome User!</h3>
-                              <FiX className="x_icon" onClick={closeHandler} />
-                            </div>
-                            <p>
-                              You successfully created your account! Please check
-                              the news section in your profile for any updates!
-                            </p>
-                            <Link
-                              onClick={closeHandler}
-                              to={`/user`}
-                              className="rn-button-style--2 rn-btn-green mt--40"
-                            >
-                              Go to Profile
-                            </Link>
-                          </Alert>
-                        );
+                        props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hope in the User section to see your tickets, news and your information' });
                         navigate(`/${responseData.region}`);
-                        setTimeout(() => closeHandler(), 5000);
                         return;
                       } catch (err) {
                         return;
@@ -594,8 +575,7 @@ const SignUp = (props) => {
                           name="payTerms"
                         ></Field>
                         <p className="information">
-                          I understand that my registration is complete after
-                          making the subscribing payment (cancel anytime).
+                          I consent BGSNL to deduct the membership fee at the agreed period in order to keep my benefits as a member and I keep my rights to cancel or update my payment methods.
                         </p>
                       </div>
                       <ErrorMessage
