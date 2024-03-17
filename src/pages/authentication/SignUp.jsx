@@ -137,7 +137,7 @@ const SignUp = (props) => {
                   >
                     <div className="hor_section">
                       <div className="icon">{val.icon}</div>
-                      <h3 style={{ width: "40%" }}>{val.price} euro</h3>
+                      <h3 style={{ width: "40%" }}>{val.price}&#8364; every {val.period} months</h3>
                     </div>
                     <div className="content">
                       <h3>{val.title}</h3>
