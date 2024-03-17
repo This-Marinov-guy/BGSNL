@@ -15,7 +15,7 @@ const SubscriptionManage = (props) => {
                 "payment/customer-portal",
                 "POST",
                 {
-                    customerId: user.subscription.customerId,
+                    customerId: props.subscription.customerId,
                     url: window.location.href,
                     userId: user.id
                 },
@@ -42,21 +42,21 @@ const SubscriptionManage = (props) => {
     }
 
     return (
-        loading ? <Loader /> :
+        loading ? <div className='center_div mt--40'><Loader /></div> :
             <div className="options-btns-div mt--60">
                 <button
                     disabled={loading}
                     onClick={handleManage}
                     className="rn-button-style--2 btn-solid"
                 >
-                    <span>Payment methods</span>
+                    Payment methods
                 </button>
                 <button
                     disabled={loading}
                     onClick={handleCancel}
                     className="rn-button-style--2 btn-solid"
                 >
-                    <span>Cancel subscription</span>
+                    Cancel subscription
                 </button>
             </div>
     )

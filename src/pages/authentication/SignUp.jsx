@@ -223,56 +223,58 @@ const SignUp = (props) => {
                     },
 
                   );
-                } catch (err) {
-                  return;
-                }
-                if (values.memberKey) {
-                  try {
-                    const responseData = await sendRequest(
-                      "user/check-member-key",
-                      "POST",
-                      {
-                        email: values.email,
-                        key: values.memberKey,
-                      }
-                    );
-                    if (responseData.message === "verifiedKey") {
+                  if (responseData.message === 'verified') {
+                    if (values.memberKey) {
                       try {
                         const responseData = await sendRequest(
-                          `user/signup`,
+                          "user/check-member-key",
                           "POST",
-                          formData
+                          {
+                            email: values.email,
+                            key: values.memberKey,
+                          }
                         );
-                        dispatch(
-                          login({
-                            userId: responseData.userId,
-                            token: responseData.token,
-                            expirationDate: new Date(
-                              new Date().getTime() + 36000000
-                            ).toISOString(),
-                          })
-                        );
-                        props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hope in the User section to see your tickets, news and your information' });
-                        navigate(`/${responseData.region}`);
-                        return;
+                        if (responseData.message === "verifiedKey") {
+                          try {
+                            const responseData = await sendRequest(
+                              `user/signup`,
+                              "POST",
+                              formData
+                            );
+                            dispatch(
+                              login({
+                                userId: responseData.userId,
+                                token: responseData.token,
+                                expirationDate: new Date(
+                                  new Date().getTime() + 36000000
+                                ).toISOString(),
+                              })
+                            );
+                            props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hope in the User section to see your tickets, news and your information' });
+                            navigate(`/${responseData.region}`);
+                            return;
+                          } catch (err) {
+                            return;
+                          }
+                        }
                       } catch (err) {
                         return;
                       }
+                    } else {
+                      try {
+                        const responseData = await sendRequest(
+                          "payment/checkout/signup",
+                          "POST",
+                          formData
+                        );
+                        if (responseData.url) {
+                          window.location.assign(responseData.url);
+                        }
+                      } catch (err) { }
                     }
-                  } catch (err) {
-                    return;
                   }
-                } else {
-                  try {
-                    const responseData = await sendRequest(
-                      "payment/checkout/signup",
-                      "POST",
-                      formData
-                    );
-                    if (responseData.url) {
-                      window.location.assign(responseData.url);
-                    }
-                  } catch (err) { }
+                } catch (err) {
+                  return;
                 }
               }}
               initialValues={{
@@ -382,14 +384,7 @@ const SignUp = (props) => {
                   </div>
                   <div className="row mt--40">
                     <div className="col-lg-6 col-md-12 col-12">
-                      <Field as="select" name="university">
-                        <option value="" disabled>
-                          Select your university
-                        </option>
-                        <option value="RUG">RUG</option>
-                        <option value="Hanze">Hanze</option>
-                        <option value="other">Other univerisity</option>
-                        <option value="working">Working</option>
+                      <Field type='text' name="university" placeholder='State your University'>
                       </Field>
                       <ErrorMessage
                         className="error"

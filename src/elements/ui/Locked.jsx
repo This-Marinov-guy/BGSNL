@@ -74,7 +74,7 @@ const Locked = (props) => {
             ? "To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account."
             : "We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: bgsn.tech.nl@gmail.com"}
         </p>
-        {props.user.subscription && <SubscriptionManage toast={props.toast}/>}
+        {props.user.subscription && <SubscriptionManage subscription={props.user.subscription} toast={props.toast}/>}
         {props.case === "locked" && (REGIONS_MEMBERSHIP_SPECIFICS.length > 1 ?
           <ul className="brand-style-2">
             {REGIONS_MEMBERSHIP_SPECIFICS.map((option, index) => {

@@ -105,7 +105,7 @@ const User = (props) => {
       />
       {/* <Christmas currentUser={currentUser} /> */}
       {currentUser.status !== "active" && (
-        <Locked user={currentUser} case="locked" show={currentUser.status} toast={props.toast}/>
+        <Locked user={currentUser} case="locked" show={currentUser.status} toast={props.toast} />
       )}
       {modal && (
         <ModalWindow show={modal}>
@@ -356,8 +356,8 @@ const User = (props) => {
           <div className="row service-one-wrapper center_div">
             <div className="col-lg-6 col-md-12 col-12 ">
               <div className="service service__style--2">
+                {currentUser.subscription && <SubscriptionManage subscription={currentUser.subscription} toast={props.toast} />}
                 <div className="content center_div">
-                  {user.subscription && <SubscriptionManage toast={props.toast}/>}
                   <LazyLoadImage src={currentUser.image} alt="profile" />
                 </div>
               </div>
