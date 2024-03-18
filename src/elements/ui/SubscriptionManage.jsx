@@ -9,6 +9,11 @@ const SubscriptionManage = (props) => {
 
     const { user } = useSelector(selectUser)
 
+    console.log( {
+        customerId: props.subscription.customerId,
+        url: window.location.href,
+        user: props.userId
+    },);
     async function handleManage() {
         try {
             const responseData = await sendRequest(
@@ -17,7 +22,7 @@ const SubscriptionManage = (props) => {
                 {
                     customerId: props.subscription.customerId,
                     url: window.location.href,
-                    userId: user.id
+                    userId: props.userId
                 },
             );
             if (responseData.url) {
@@ -32,7 +37,7 @@ const SubscriptionManage = (props) => {
                 "user/cancel-membership",
                 "POST",
                 {
-                    userId: user.id
+                    userId: props.userId
                 },
             );
             if (responseData.message) {
