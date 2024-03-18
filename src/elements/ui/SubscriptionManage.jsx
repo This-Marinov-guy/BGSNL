@@ -58,12 +58,12 @@ const SubscriptionManage = (props) => {
                     onClick={handleManage}
                     className="rn-button-style--2 btn-solid"
                 >
-                    Payment methods
+                    Payment details
                 </button>
                 <button
                     disabled={loading}
                     onClick={confirm1}
-                    className="rn-button-style--2 btn-solid"
+                    className="rn-btn"
                 >
                     Cancel subscription
                 </button>
