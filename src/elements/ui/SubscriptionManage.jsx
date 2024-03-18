@@ -1,19 +1,22 @@
 import React from 'react'
 import Loader from './Loader'
 import { useHttpClient } from '../../hooks/http-hook'
-import { useSelector } from 'react-redux'
-import { selectUser } from '../../redux/user'
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 
 const SubscriptionManage = (props) => {
     const { loading, sendRequest } = useHttpClient()
 
-    const { user } = useSelector(selectUser)
+    const confirm1 = (event) => {
+        confirmPopup({
+            target: event.currentTarget,
+            message: 'Are you sure you want to cancel your membership at end of billing cycle?',
+            icon: 'pi pi-exclamation-triangle',
+            defaultFocus: 'reject',
+            accept: handleManage,
+            reject
+        });
+    };
 
-    console.log( {
-        customerId: props.subscription.customerId,
-        url: window.location.href,
-        user: props.userId
-    },);
     async function handleManage() {
         try {
             const responseData = await sendRequest(
@@ -49,6 +52,7 @@ const SubscriptionManage = (props) => {
     return (
         loading ? <div className='center_div mt--40'><Loader /></div> :
             <div className="options-btns-div mt--60">
+                <ConfirmPopup />
                 <button
                     disabled={loading}
                     onClick={handleManage}
@@ -58,7 +62,7 @@ const SubscriptionManage = (props) => {
                 </button>
                 <button
                     disabled={loading}
-                    onClick={handleCancel}
+                    onClick={confirm1}
                     className="rn-button-style--2 btn-solid"
                 >
                     Cancel subscription
