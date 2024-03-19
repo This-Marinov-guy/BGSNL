@@ -242,7 +242,7 @@ const SignUp = (props) => {
                                 ).toISOString(),
                               })
                             );
-                            props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hope in the User section to see your tickets, news and your information', life: 7000 });
+                            props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 });
                             navigate(`/${responseData.region}`);
                             return;
                           } catch (err) {
