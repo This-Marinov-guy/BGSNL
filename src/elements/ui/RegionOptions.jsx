@@ -9,7 +9,7 @@ const RegionOptions = (props) => {
     const {region} = useParams();
     
   return (
-    <div className="mt--200">
+    <div className="mt--200" style={{height: '45vh'}}>
                 <h3 style={{ textAlign: 'center', fontFamily: 'Archive' }}>{region ? `Welcome to ${capitalizeFirstLetter(region)}` : 'Choose your Region'}</h3>
                 <ul className="brand-style-2">
                 {REGIONS.map((region, index) => {

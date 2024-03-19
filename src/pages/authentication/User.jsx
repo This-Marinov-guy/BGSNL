@@ -403,10 +403,10 @@ const User = (props) => {
                           : currentUser.university}
                       </li>
 
-                      <li style={{ fontWeight: "bold" }}>
+                      {/* <li style={{ fontWeight: "bold" }}>
                         <FiCircle style={{ fontSize: "14px" }} /> Membership
                         Expires: {currentUser.expireDate}
-                      </li>
+                      </li> */}
                       {REGION_WHATSAPP[currentUser.region] && <li>
                         <FiCheckCircle style={{ fontSize: "14px" }} /><a style={{ color: "#017363" }} href={REGION_WHATSAPP[currentUser.region]} target='_blank'>Click here to join the Member Chat</a>
                       </li>}

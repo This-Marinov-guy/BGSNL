@@ -97,7 +97,7 @@ const SignUp = (props) => {
         logoname="logo.png"
       />
       <RegionOptions to='signup' />
-      {(region && REGIONS_MEMBERSHIP.includes(region)) ? <Fragment><div className="container mt--50">
+      {region  && <Fragment><div className="container mt--50">
         <h2 className="center_text">Become a Member</h2>
       </div>
         {/* Start Options Area */}
@@ -612,10 +612,10 @@ const SignUp = (props) => {
               )}
             </Formik>
           </div>}
-        </div></Fragment> : <div className="mt--40 mb--80 center_text"><h3>Please select a region (some cities may not offer memberships yet)</h3></div>}
+        </div></Fragment>}
       {/* End Form Area */}
       {/* Start Footer Style  */}
-      <FooterTwo />
+      {region && <FooterTwo />}
       {/* End Footer Style  */}
       {/* Start Back To Top */}
       <div className="backto-top">

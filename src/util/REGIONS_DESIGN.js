@@ -39,7 +39,7 @@ export const REGION_WHATSAPP = {
     rotterdam: 'https://chat.whatsapp.com/GDjhKTE6tVaEbbkXw35A1M',
     leeuwarden: '',
     breda : '',
-    amsterdam: '',
+    amsterdam: 'https://chat.whatsapp.com/JVSM61uSkBB61oysBvABUm',
     maastricht: ''
 }
 
