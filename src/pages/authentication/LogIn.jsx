@@ -100,7 +100,7 @@ const Login = (props) => {
         })
       );
       props.toast.current.show({ severity: 'success', summary: 'Welcome Back', detail: 'Hope in the User section to see your tickets, news and your information' });
-      navigate(`/`);
+      navigate(`/${responseData.region}`);
     } catch (err) { }
   };
 

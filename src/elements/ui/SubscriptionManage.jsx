@@ -12,7 +12,7 @@ const SubscriptionManage = (props) => {
             message: 'Are you sure you want to cancel your membership at end of billing cycle?',
             icon: 'pi pi-exclamation-triangle',
             defaultFocus: 'reject',
-            accept: handleManage,
+            accept: handleCancel,
             reject: () => { }
         });
     };
@@ -63,7 +63,7 @@ const SubscriptionManage = (props) => {
                 <button
                     disabled={loading}
                     onClick={confirm1}
-                    className="rn-button-style--2 btn-primary-color"
+                    className="rn-button-style--2 rn-btn-reverse"
                 >
                     Cancel subscription
                 </button>
