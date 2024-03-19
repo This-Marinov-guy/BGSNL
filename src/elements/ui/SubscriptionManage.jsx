@@ -13,7 +13,7 @@ const SubscriptionManage = (props) => {
             icon: 'pi pi-exclamation-triangle',
             defaultFocus: 'reject',
             accept: handleManage,
-            reject
+            reject: () => { }
         });
     };
 
@@ -63,7 +63,7 @@ const SubscriptionManage = (props) => {
                 <button
                     disabled={loading}
                     onClick={confirm1}
-                    className="rn-btn"
+                    className="rn-button-style--2 btn-primary-color"
                 >
                     Cancel subscription
                 </button>
