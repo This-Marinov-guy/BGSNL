@@ -133,10 +133,9 @@ const NonMemberPurchase = () => {
             {target.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
               <h2 className="center_text mb--80">Purchase a Ticket</h2>}
 
-            {(REGIONS_MEMBERSHIP.includes(region) && !target.isFree && target.entry != target.memberEntry) && <div className="team_member_border-3 center_section" style={{ maxWidth: '500px', margin: '60px auto' }} >
+            {(REGIONS_MEMBERSHIP.includes(region) && !target.ticket_link) && <div className="team_member_border-3 center_section" style={{ maxWidth: '500px', margin: '60px auto' }} >
               <p className="information center_text">
-                By becoming a member the cost of the ticket will be reduced
-                and the information will be prefilled for ticket purchasing
+                You do not want to miss a discount, fill the info manually or miss a ticket for your collection - become a member to enjoy these benefits!
               </p>
               <Link
                 className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
