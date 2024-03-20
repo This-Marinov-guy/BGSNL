@@ -1,28 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../../component/functional/RegionLayout.module.css'
 import { Link, useParams } from 'react-router-dom'
 import capitalizeFirstLetter from '../../util/capitalize'
 import { REGIONS } from '../../util/REGIONS_DESIGN'
 
 const RegionOptions = (props) => {
+    const { region } = useParams();
+    const [select, setSelected] = useState(region || null)
 
-    const {region} = useParams();
-    
-  return (
-    <div className="mt--200" style={{height: '45vh'}}>
-                <h3 style={{ textAlign: 'center', fontFamily: 'Archive' }}>{region ? `Welcome to ${capitalizeFirstLetter(region)}` : 'Choose your Region'}</h3>
-                <ul className="brand-style-2">
-                {REGIONS.map((region, index) => {
-                    return <li key={index} className={styles[region]}>
-                        <Link to={`/${region}/${props.to}`}>
-                            <button  className={' rn-button-style--2 btn-solid'}>{region}</button>
+    return (
+        <div className="mt--200" style={{ height: '45vh' }}>
+            <h3 style={{ textAlign: 'center', fontFamily: 'Archive' }}>{region ? `Welcome to ${capitalizeFirstLetter(region)}` : 'Choose your Region'}</h3>
+            <ul className="brand-style-2">
+                {REGIONS.map((r, index) => {
+                    return <li key={index} className={r != select ? styles['disable'] : styles[r]}>
+                        <Link to={`/${r}/${props.to}`}>
+                            <button
+                            //  style={r != select ? {opacity: '50%'} : {}}
+                                className={' rn-button-style--2 btn-solid'}
+                                onClick={() => setSelected(r)}>{r}</button>
                         </Link>
                     </li>
                 })}
-                   
-                </ul>
-            </div>
-  )
+
+            </ul>
+        </div>
+    )
 }
 
 export default RegionOptions

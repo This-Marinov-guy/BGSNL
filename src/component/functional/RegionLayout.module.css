@@ -1,3 +1,10 @@
+/* Common */
+
+.disable button {
+  background-color: #ccc !important;
+  border-color: white !important;
+}
+
 /* Groningen */
 
 .groningen p,
@@ -69,4 +76,76 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: #ff914d !important;
+}
+
+/* amsterdam */
+
+.amsterdam p,
+.amsterdam h3,
+.amsterdam a:hover,
+.amsterdam li:hover,
+.amsterdam h4 a:hover {
+  color: #007862 !important;
+}
+
+.amsterdam button {
+  background-color: #007862 !important;
+  border: #007862 !important;
+}
+
+.amsterdam .thumbnail-inner-2::before {
+  background-color: #007862 !important;
+  background-image: linear-gradient(#007862 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #007862 !important;
+}
+
+/* .breda  */
+
+.breda p,
+.breda h3,
+.breda a:hover,
+.breda li:hover,
+.breda h4 a:hover {
+  color: #f64535 !important;
+}
+
+.breda button {
+  background-color: #f64535 !important;
+  border: #f64535 !important;
+}
+
+.breda .thumbnail-inner-2::before {
+  background-color: #f64535 !important;
+  background-image: linear-gradient(#f64535 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f64535 !important;
+}
+
+/* maastricht */
+
+.maastricht p,
+.maastricht h3,
+.maastricht a:hover,
+.maastricht li:hover,
+.maastricht h4 a:hover {
+  color: #381096 !important;
+}
+
+.maastricht button {
+  background-color: #381096 !important;
+  border: #381096 !important;
+}
+
+.maastricht .thumbnail-inner-2::before {
+  background-color: #381096 !important;
+  background-image: linear-gradient(#381096 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #381096 !important;
 }
