@@ -5,7 +5,7 @@ export const REGIONS_MEMBERSHIP = ['groningen', 'rotterdam', 'amsterdam']
 
 export const REGIONS_MEMBERSHIP_SPECIFICS = [
     {
-        title: 'Semi-Annual Member',
+        title: '6-months Member',
         icon: <FiUser />,
         description: '',
         price: 6,

@@ -1,9 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { format } from "date-fns";
 import * as yup from "yup";
+import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FiX } from "react-icons/fi";
-import Alert from "react-bootstrap/Alert";
 import { FiCheck } from "react-icons/fi";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
@@ -18,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
-import { REGIONS_MEMBERSHIP, REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
+import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -97,7 +95,7 @@ const SignUp = (props) => {
         logoname="logo.png"
       />
       <RegionOptions to='signup' />
-      {region  && <Fragment><div className="container mt--50">
+      {region && <Fragment><div className="container mt--50">
         <h2 className="center_text">Become a Member</h2>
       </div>
         {/* Start Options Area */}
@@ -171,14 +169,10 @@ const SignUp = (props) => {
               onSubmit={async (values) => {
                 const formData = new FormData();
                 if (values.image) {
-                  // modify the name of image with the birth that will be later saved in the database (I know it's not perfect but nothing is...)
-                  const [y, m, d] = values.birth.split("-");
-                  const modDate = new Date(y, parseInt(m, 10) - 1, d);
-                  let b = format(modDate, "dd MMM yyyy");
                   formData.append(
                     "image",
                     values.image,
-                    values.name + values.surname + b
+                    values.name + values.surname + moment(values.birth).format("D MMM YYYY")
                   );
                 } else {
                   formData.append("image", null);

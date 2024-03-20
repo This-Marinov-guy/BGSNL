@@ -144,7 +144,7 @@ const EventDetails = () => {
                   </div> :
                     <div className="purchase-btn">
                       {target.ticket_link ? <div><a
-                        style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc' } : {}}
+                        style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
                         href={target.ticket_link}
                         target="_blank"
                         className="rn-button-style--2 btn-solid mt--80"
@@ -152,7 +152,7 @@ const EventDetails = () => {
                         {eventClosed ? "Sold out" : 'Buy Ticket'}
                       </a>
                         <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <Link
-                          style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc' } : {}}
+                          style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
                           to={
                             user.token
                               ? `/${region}/purchase-ticket/${target.title}/${user.userId}`
