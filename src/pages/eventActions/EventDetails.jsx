@@ -153,11 +153,7 @@ const EventDetails = () => {
                       </a>
                         <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <Link
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                          to={
-                            user.token
-                              ? `/${region}/purchase-ticket/${target.title}/${user.userId}`
-                              : `/${region}/purchase-ticket/${target.title}`
-                          }
+                          to={`/${region}/purchase-ticket/${target.title}`}
                           className="rn-button-style--2 btn-solid"
                         >
                         {eventClosed ? "Sold out" : 'Buy Ticket'}
