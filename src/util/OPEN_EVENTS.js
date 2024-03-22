@@ -10,7 +10,47 @@ export const SOCIETY_EVENTS = {
 
   ],
   leeuwarden: [
-
+    {
+      membersOnly: false,
+      visible: true,
+      title: "BG Retro Movie Night",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Celebrate the National Movie Day",
+      bgImage: "30",
+      date: "28th March",
+      time: "18:30",
+      ticketTimer: '2024-03-28T20:00:00',
+      ticketLimit: 250,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Auditorium Building 10`,
+      entry: 3.50,
+      memberEntry: 2,
+      including: [],
+      ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+      price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
+      memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
+      activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Don't worry if you don't speak Bulgarian - English subtitles will be provided! 🌟 
+        `,
+        `🎥✨ Join us for a special Movie Night celebration!
+`,
+        ` 🎉 BGSL is proud to honor National Bulgarian Cinema Day with a screening of the heartwarming film "С деца на море" ("With Children at the Seaside") 🌊👨👩👧👦
+`,
+        ` Get ready for an evening of laughter, drama and unforgettable moments!  
+`,
+        `🎟 Tickets are only 2 euros for members of BGSL and 3,50 euros for non-members. The ticket includes a refreshing drink 🥤 and tasty popcorn/nachos and M&M! 🍿 Grab your friends for a cinematic experience you won't forget`,
+        `See you there! 🎬 `,
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-6.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-6"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-6",
+    },
   ],
   breda: [
     // {

@@ -163,12 +163,12 @@ const Root = () => {
             <Route exact path={`/fail`} element={<Fail />} />
 
             {/* Auth pages */}
-            {user.token ? (
+            {(user && user.token) ? (
               <Fragment>
                 <Route exact path={`/user`} element={<User toast={toast} />} />
                 <Route
                   exact
-                  path={"/:region/purchase-ticket/:eventId/:userId"}
+                  path={"/:region/purchase-ticket/:eventId"}
                   element={<RegionLayout><MemberPurchase /></RegionLayout>}
                 />
               </Fragment>

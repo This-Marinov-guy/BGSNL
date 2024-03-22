@@ -17,6 +17,8 @@ import { createCustomerTicket } from "../../util/ticket-creator";
 import PageLoading from "../../elements/ui/PageLoading";
 import FormExtras from "../../elements/ui/FormExtras";
 import { REGIONS } from "../../util/REGIONS_DESIGN";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/user";
 
 const MemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -25,7 +27,9 @@ const MemberPurchase = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [eventClosed, setEventClosed] = useState(false)
 
-  const { userId, region } = useParams();
+  const { region } = useParams();
+
+  const { user } = useSelector(selectUser);
 
   const navigate = useNavigate()
 
@@ -47,17 +51,14 @@ const MemberPurchase = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        if (!userId) {
-          navigate('/404');
-        }
-        const responseData = await sendRequest(`user/${userId}`);
+        const responseData = await sendRequest(`user/${user.userId}`);
         setCurrentUser(responseData.user);
       } catch (err) {
         console.log(err);
       }
     };
     fetchCurrentUser();
-  }, [userId]);
+  }, [user.userId]);
 
 
   useEffect(() => {
@@ -170,7 +171,7 @@ const MemberPurchase = () => {
                   formData.append("method", "buy_member_ticket");
                   formData.append("eventName", target.title);
                   formData.append("eventDate", target.date);
-                  formData.append("userId", userId);
+                  formData.append("userId", user.userId);
                   if (target.extraInputs) {
                     formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                   }
