@@ -13,7 +13,7 @@ const RegionOptions = (props) => {
             <h3 style={{ textAlign: 'center', fontFamily: 'Archive' }}>{region ? `Welcome to ${capitalizeFirstLetter(region)}` : 'Choose your Region'}</h3>
             <ul className="brand-style-2">
                 {REGIONS.map((r, index) => {
-                    return <li key={index} className={r != select ? styles['disable'] : styles[r]}>
+                    return <li key={index} className={(region && r != select) ? styles['disable'] : styles[r]}>
                         <Link to={`/${r}/${props.to}`}>
                             <button
                             //  style={r != select ? {opacity: '50%'} : {}}
