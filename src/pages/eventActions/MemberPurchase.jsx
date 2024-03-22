@@ -58,8 +58,7 @@ const MemberPurchase = () => {
       }
     };
     fetchCurrentUser();
-  }, [user.userId]);
-
+  }, []);
 
   useEffect(() => {
     setLoadingPage(true);
@@ -171,7 +170,7 @@ const MemberPurchase = () => {
                   formData.append("method", "buy_member_ticket");
                   formData.append("eventName", target.title);
                   formData.append("eventDate", target.date);
-                  formData.append("userId", user.userId);
+                  formData.append("userId", currentUser.id);
                   if (target.extraInputs) {
                     formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
                   }
