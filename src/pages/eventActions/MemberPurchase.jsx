@@ -29,7 +29,7 @@ const MemberPurchase = () => {
 
   const { region } = useParams();
 
-  const { user } = useSelector(selectUser);
+  const user = useSelector(selectUser);
 
   const navigate = useNavigate()
 
