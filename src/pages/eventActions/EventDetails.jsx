@@ -112,8 +112,8 @@ const EventDetails = () => {
                       <span>Entry fee</span>
                       {target.entry || target.memberEntry ? <h4>
                         {(user.token && target.memberEntry)
-                          ? target.memberEntry + ' euro ' + ((target.including && target.including.length > 0) ? target.including[0] : '')
-                          : target.entry + ' euro ' + ((target.including && target.including.length > 0) ? target.including[1] : '')}
+                          ? target.memberEntry + (!isNaN(target.memberEntry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[0] : '')
+                          : target.entry + (!isNaN(target.entry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[1] : '')}
                       </h4> : <h4 >{target.isFree ? 'FREE' : 'Check ticket portal'}</h4>}
                     </div>
                   </div>
