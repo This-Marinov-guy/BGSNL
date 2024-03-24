@@ -4,7 +4,50 @@ import { Field, ErrorMessage } from "formik";
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
   groningen: [
+    {
+      is_tickets_closed: true,
+      membersOnly: false,
+      visible: true,
+      title: "Spring Gala",
+      // newTitle: 'Bulgarian Dinner',
+      description: "The biggest event ever",
+      bgImage: "31",
+      date: "24th May",
+      time: "17:00",
+      ticketTimer: '2024-05-24T20:00:00',
+      ticketLimit: 0,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `StadsLab Groningen`,
+      entry: "TBD",
+      memberEntry: "TBD",
+      including: [],
+      // ticket_link: '',
+      price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
+      memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
+      activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
+        `,
+        `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
 
+`,
+        ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
+`,
+        `More info coming soon! ⏳
+
+`,
+        `Ticket sale opens in April so stay tuned!
+        `,
+      ],
+      ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
+      images: ["/assets/images/portfolio/groningen/portfolio-30"],
+      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+    },
   ],
   rotterdam: [
 
@@ -50,6 +93,50 @@ export const SOCIETY_EVENTS = {
       ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
       images: ["/assets/images/portfolio/leeuwarden/portfolio-6"],
       thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-6",
+    },
+    {
+      is_tickets_closed: true,
+      membersOnly: false,
+      visible: true,
+      title: "Spring Gala",
+      // newTitle: 'Bulgarian Dinner',
+      description: "The biggest event ever",
+      bgImage: "31",
+      date: "24th May",
+      time: "17:00",
+      ticketTimer: '2024-05-24T20:00:00',
+      ticketLimit: 0,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `StadsLab Groningen`,
+      entry: "TBD",
+      memberEntry: "TBD",
+      including: [],
+      // ticket_link: '',
+      price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
+      memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
+      activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
+        `,
+        `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
+
+`,
+        ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
+`,
+        `More info coming soon! ⏳
+
+`,
+        `Ticket sale opens in April so stay tuned!
+        `,
+      ],
+      ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
+      images: ["/assets/images/portfolio/groningen/portfolio-30"],
+      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
     },
   ],
   breda: [

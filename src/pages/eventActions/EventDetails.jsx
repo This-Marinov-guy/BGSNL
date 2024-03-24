@@ -138,7 +138,7 @@ const EventDetails = () => {
                       </div>
                     </div>
                   }
-                  {loading ? <div>
+                  {!target.is_tickets_closed && (loading ? <div>
                     <h3 className="mt--20">Checking Ticket Availability - please be patient!</h3>
                     <Loader />
                   </div> :
@@ -159,7 +159,7 @@ const EventDetails = () => {
                         {eventClosed ? "Sold out" : 'Buy Ticket'}
                       </Link>}
                       {target.ticketTimer && <Countdown targetTime={target.ticketTimer} setEventClosed={setEventClosed} />}
-                    </div>}
+                    </div>)}
                 </div>
                 <br />
                 {/* Start Contact Map  */}
@@ -195,7 +195,7 @@ const EventDetails = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
       {/* End Portfolio Details */}
 
       {/* Start Back To Top */}
@@ -207,7 +207,7 @@ const EventDetails = () => {
       {/* End Back To Top */}
 
       <Footer />
-    </React.Fragment>
+    </React.Fragment >
   );
 };
 export default EventDetails;
