@@ -3,6 +3,7 @@ import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FiCheck } from "react-icons/fi";
+import { Calendar } from 'primereact/calendar';
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/http-hook";
@@ -334,15 +335,14 @@ const SignUp = (props) => {
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
                       <div className="rn-form-group">
-                        <Field
-                          type="date"
-                          min="1900-01-01"
-                          max="2100-12-30"
-                          name="birth"
-                        />
-                        <p className="information">
-                          *Month is first and after that the day
-                        </p>
+                        <Calendar id="date" name="date"
+                          value={values.birth}
+                          onChange={(event) => values.birth = event.target.value}
+                          dateFormat="dd/mm/yy"
+                          mask="99/99/9999"
+                          placeholder="Select Birth Date"
+                          style={{ width: '100%' }}
+                          showIcon />
                         <ErrorMessage
                           className="error"
                           name="birth"

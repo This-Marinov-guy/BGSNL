@@ -62,10 +62,10 @@ const AddEvent = lazy(() =>
   import("./pages/userActions/AddEvent")
 );
 const EditEvent = lazy(() =>
-import("./pages/userActions/EditEvent")
+  import("./pages/userActions/EditEvent")
 );
 const ListEvents = lazy(() =>
-import("./pages/userActions/ListEvents")
+  import("./pages/userActions/ListEvents")
 );
 
 const NonMemberPurchase = lazy(() =>
@@ -180,16 +180,16 @@ const Root = () => {
                   path={"/:region/purchase-ticket/:eventId"}
                   element={<RegionLayout><MemberPurchase /></RegionLayout>}
                 />
-                {/* <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
+                <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
                 <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
-                <Route exact path={`/user/all-events`} element={<ListEvents toast={toast} />} /> */}
+                <Route exact path={`/user/all-events`} element={<ListEvents toast={toast} />} />
               </Fragment>
             ) : (
               <Fragment>
-              {/* <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} /> */}
+                {/* <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} /> */}
 
                 <Route exact path={`/login`} element={<LogIn toast={toast} />} />
-                <Route exact path={`/:region?/signup`} element={<SignUp toast={toast}/>} />
+                <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                 <Route
                   exact
                   path={"/:region/purchase-ticket/:eventId"}
