@@ -3,7 +3,7 @@ import { useHttpClient } from "../../hooks/http-hook";
 import { useSelector, useDispatch } from "react-redux";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import Loader from "../../elements/ui/Loader";
-import ImageInput from "../../elements/ui/ImageInput";
+import ImageInput from "../../elements/inputs/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FiCircle, FiCheckCircle, FiEdit, FiChevronUp, FiX } from "react-icons/fi";

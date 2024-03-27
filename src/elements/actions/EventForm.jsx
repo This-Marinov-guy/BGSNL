@@ -9,7 +9,7 @@ import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
-import ImageInput from "../../elements/ui/ImageInput";
+import ImageInput from "../inputs/ImageInput";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
@@ -20,9 +20,24 @@ import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 import { REGIONS } from "../../util/REGIONS_DESIGN";
+import BackBtn from "../ui/BackBtn";
 
 const EventForm = () => {
     const { sendRequest, loading } = useHttpClient()
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            event.preventDefault();
+            event.returnValue = ''; // This is needed for older browsers
+        };
+
+        if (process.env.NODE_ENV === 'development') {
+            window.addEventListener('beforeunload', handleBeforeUnload);
+            return () => {
+                window.removeEventListener('beforeunload', handleBeforeUnload);
+            };
+        }
+    }, []);
 
     const schema = {}
 
@@ -51,21 +66,24 @@ const EventForm = () => {
                 bgImage: '',
                 date: '',
                 time: '',
+                where: '',
                 ticketTimer: '',
                 ticketLimit: 0,
-                where: '',
                 entry: null,
                 memberEntry: null,
+                activeMemberEntry: null,
+                entryIncluding: '',
+                memberIncluding: '',
                 including: [],
                 ticket_link: '',
                 price_id: '',
                 memberPrice_id: '',
                 activeMemberPrice_id: "",
-                text: [],
+                text: '',
                 title: '',
-                ticket_img: '',
                 images: [],
-                thumbnail: '',
+                ticket_img: null,
+                thumbnail: null,
             }}
         >
             {({ values, setFieldValue, errors, isValid, dirty }) => (
@@ -74,19 +92,7 @@ const EventForm = () => {
                     id="form"
                     style={{ padding: "2%" }}
                 >
-                    <div className="row mb--40 mt--40">
-                        <div className="col-lg-12 col-md-6 col-12">
-                            <h3 className="center_text label">Profile picture</h3>
-                            <ImageInput
-                                onChange={(event) => {
-                                    setFieldValue("image", event.target.files[0]);
-                                }}
-                            />
-                            <p className="mt--10 information center_text">
-                                *optional - we will assign you a cool avatar
-                            </p>
-                        </div>
-                    </div>
+                    <h3 className="label">Basic Information</h3>
                     <div className="row">
                         <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
@@ -105,6 +111,18 @@ const EventForm = () => {
                                     component="div"
                                 />
                             </div>
+                        </div>
+                        <div className="col-lg-6 col-md-12 col-12">
+                            <Field
+                                type="text"
+                                placeholder="Location of event"
+                                name="where"
+                            ></Field>
+                            <ErrorMessage
+                                className="error"
+                                name="where"
+                                component="div"
+                            />
                         </div>
                     </div>
                     <div className="row">
@@ -137,19 +155,18 @@ const EventForm = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="row mt--40">
+                    <div className="row">
                         <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
                                 <Calendar id="date" name="date"
                                     value={values.date}
                                     onChange={(event) => values.date = event.target.value}
                                     dateFormat="dd/mm/yy"
+                                    minDate={new Date()}
                                     mask="99/99/9999"
                                     style={{ width: '100%' }}
+                                    placeholder="Date of Event"
                                     showIcon />
-                                <p className="information">
-                                    *Event must be uploaded at least the day after
-                                </p>
                                 <ErrorMessage
                                     className="error"
                                     name="date"
@@ -159,10 +176,11 @@ const EventForm = () => {
                         </div>
                         <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
-                                <Field
-                                    type="time"
-                                    name="time"
-                                />
+                                <Calendar value={values.time}
+                                    onChange={(event) => values.time = event.target.value}
+                                    style={{ width: '100%' }}
+                                    placeholder="Time of Event"
+                                    timeOnly />
                                 <ErrorMessage
                                     className="error"
                                     name="time"
@@ -170,213 +188,136 @@ const EventForm = () => {
                                 />
                             </div>
                         </div>
-                        {values.university !== "working" && (
-                            <Fragment>
-                                <div className="col-lg-6 col-md-12 col-12">
-                                    <Field
-                                        type="number"
-                                        min="2020"
-                                        max="2050"
-                                        placeholder="Graduation Year"
-                                        name="graduationDate"
-                                    ></Field>
-                                    <ErrorMessage
-                                        className="error"
-                                        name="graduationDate"
-                                        component="div"
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-md-12 col-12">
-                                    <div className="rn-form-group">
-                                        <Field
-                                            type="text"
-                                            placeholder="Study Program"
-                                            name="course"
-                                        ></Field>
-                                        <ErrorMessage
-                                            className="error"
-                                            name="course"
-                                            component="div"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-lg-6 col-md-12 col-12">
-                                    <div className="rn-form-group">
-                                        <Field
-                                            type="text"
-                                            placeholder="Student Number"
-                                            name="studentNumber"
-                                        ></Field>
-                                        <ErrorMessage
-                                            className="error"
-                                            name="studentNumber"
-                                            component="div"
-                                        />
-                                    </div>
-                                </div>
-                            </Fragment>
-                        )}
                     </div>
-                    <h3 className="mt--30 label">Login details</h3>
+                    <div className="row mt--20">
+                        <div className="col-lg-12 col-md-12 col-12">
+                            <Field as='textarea' placeholder="Full Description" name="text" rows={6} />
+                            <ErrorMessage
+                                className="error"
+                                name="text"
+                                component="div"
+                            />
+                        </div>
+                    </div>
+                    <h3 className="mt--30 label">Price Details</h3>
                     <div className="row">
-                        <div className="col-lg-6 col-md-12 col-12">
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h5 className="mt--10">Basic Price</h5>
                             <div className="rn-form-group">
-                                <Field type="email" placeholder="Email" name="email" />
+                                <Field type="number" placeholder="Price" name="entry" />
                                 <ErrorMessage
                                     className="error"
-                                    name="email"
+                                    name="entry"
+                                    component="div"
+                                />
+                            </div>
+                            <div className="rn-form-group">
+                                <Field type="text" placeholder="Including" name="entryIncluding" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="entryIncluding"
+                                    component="div"
+                                />
+                            </div>
+                            <div className="rn-form-group">
+                                <Field type="text" placeholder="Price ID" name="price_id" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="price_id"
+                                    component="div"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h5 className="mt--10">Member Price</h5>
+                            <div className="rn-form-group">
+                                <Field type="number" placeholder="Member Price" name="memberEntry" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="memberEntry"
+                                    component="div"
+                                />
+                            </div>
+                            <div className="rn-form-group">
+                                <Field type="text" placeholder="Including" name="memberIncluding" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="memberIncluding"
+                                    component="div"
+                                />
+                            </div>
+                            <div className="rn-form-group">
+                                <Field type="text" placeholder="Price ID" name="memberPrice_id" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="memberPrice_id"
+                                    component="div"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h5 className="mt--10">Active Member Price</h5>
+                            <div className="rn-form-group">
+                                <Field type="number" placeholder="Active Member Price" name="activeMemberEntry" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="activeMemberEntry"
+                                    component="div"
+                                />
+                            </div>
+                            <div className="rn-form-group">
+                                <Field type="text" placeholder="Price ID" name="activeMemberPrice_id" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="activeMemberPrice_id"
                                     component="div"
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-lg-6 col-md-12 col-12">
-                            <div className="rn-form-group">
-                                <Field
-                                    autoComplete="off"
-                                    type="password"
-                                    placeholder="Password"
-                                    name="password"
-                                ></Field>
-                                <ErrorMessage
-                                    className="error"
-                                    name="password"
-                                    component="div"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-lg-6 col-md-12 col-12">
-                            <div className="rn-form-group">
-                                <Field
-                                    autoComplete="off"
-                                    type="password"
-                                    placeholder="Confirm Password"
-                                    name="confirmPassword"
-                                ></Field>
-                                <ErrorMessage
-                                    className="error"
-                                    name="confirmPassword"
-                                    component="div"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <h3 className="mt--30 label">Images</h3>
                     <div className="row">
                         <div className="col-lg-6 col-md-6 col-12">
-                            <div className="hor_section_nospace mt--40">
-                                <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
-                                    type="checkbox"
-                                    name="policyTerms"
-                                ></Field>
-                                <p className="information">
-                                    I have read and accept the&nbsp;
-                                    <a
-                                        style={{ color: "#017363" }}
-                                        href="/rules-and-regulations"
-                                        target="_blank"
-                                    >
-                                        society's rules and regulations
-                                    </a>
-                                </p>
-                            </div>
-                            <ErrorMessage
-                                className="error"
-                                name="policyTerms"
-                                component="div"
+                            <h5 className="center_text">Poster Image</h5>
+                            <ImageInput
+                                onChange={(event) => {
+                                    setFieldValue("thumbnail", event.target.files[0]);
+                                }}
                             />
-
-                            <div className="hor_section_nospace mt--40">
-                                <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
-                                    type="checkbox"
-                                    name="dataTerms"
-                                ></Field>
-                                <p className="information">
-                                    I consent to my data being processed confidentially for
-                                    the purposes of the organization
-                                </p>
-                            </div>
                             <ErrorMessage
                                 className="error"
-                                name="dataTerms"
-                                component="div"
-                            />
-
-                            <div className="hor_section_nospace mt--40">
-                                <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
-                                    type="checkbox"
-                                    name="notificationTerms"
-                                ></Field>
-                                <p className="information">
-                                    I consent to being notified by BGSNL about events and
-                                    discounts from us and our sponsors
-                                </p>
-                            </div>
-                            <Field as="select" name="notificationTypeTerms">
-                                <option value="" disabled>
-                                    Contact By
-                                </option>
-                                <option value="Email">Email</option>
-                                <option value="WhatsApp">WhatsApp</option>
-                                <option value="Email & WhatsApp">Both</option>
-                            </Field>
-
-                            <div className="hor_section_nospace mt--40">
-                                <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
-                                    type="checkbox"
-                                    name="payTerms"
-                                ></Field>
-                                <p className="information">
-                                    I consent BGSNL to deduct the membership fee at the agreed period in order to keep my benefits as a member and I keep my rights to cancel or update my payment methods.
-                                </p>
-                            </div>
-                            <ErrorMessage
-                                className="error"
-                                name="payTerms"
+                                name="thumbnail"
                                 component="div"
                             />
                         </div>
-                        <div
-                            style={{ borderWidth: "30px" }}
-                            className="col-lg-6 col-md-6 col-12 mt--60 mb--60 center_div team_member_border-1"
-                        >
-                            <div className="rn-form-group">
-                                <h3 className="center_text">
-                                    For users with already paid membership
-                                </h3>
-                                <Field
-                                    autoComplete="off"
-                                    type="password"
-                                    placeholder="Access Key"
-                                    name="memberKey"
-                                ></Field>
-                                <p className="information">
-                                    This is an access key field for users, provided with a key for their email from the board. Please ignore it if you do not have an access
-                                    key. If you use key that does not belong to you, your account will be suspended!
-                                </p>
-                            </div>
+                        <div className="col-lg-6 col-md-6 col-12">
+                            <h5 className="center_text">Ticket Image</h5>
+                            <ImageInput
+                                onChange={(event) => {
+                                    setFieldValue("ticket_img", event.target.files[0]);
+                                }}
+                            />
+                            <p className="mt--10 information center_text">
+                                *ticket must be jpg or png in resolution 300:97 (like 1500 x 485)
+                            </p>
+                            <ErrorMessage
+                                className="error"
+                                name="ticket_img"
+                                component="div"
+                            />
                         </div>
                     </div>
-                    <button
-                        disabled={loading}
-                        type="submit"
-                        onClick={() => handleErrorMsg(errors, isValid, dirty)}
-                        className="rn-button-style--2 btn-solid mt--80"
-                    >
-                        {loading ? <Loader /> : <span>Finish Registration</span>}
-                    </button>
-                    <div
-                        style={{ alignItems: "flex-start" }}
-                        className="action_btns"
-                    >
-                        <Link className="rn-button-style--1" to="/login">
-                            I already have a member account
-                        </Link>
+
+                    <div className="small_flex mt--80">
+                        <button
+                            disabled={loading}
+                            type="submit"
+                            onClick={() => handleErrorMsg(errors, isValid, dirty)}
+                            className="rn-button-style--2 btn-solid"
+                        >
+                            {loading ? <Loader /> : <span>Submit Event</span>}
+                        </button>
+                        <BackBtn />
                     </div>
                 </Form>
             )}

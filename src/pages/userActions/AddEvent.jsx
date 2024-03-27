@@ -4,7 +4,7 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import EventForm from '../../elements/actions/EventForm';
 
-const AddEvent = ()  => {
+const AddEvent = () => {
   return (
     <React.Fragment>
       <HeaderTwo
