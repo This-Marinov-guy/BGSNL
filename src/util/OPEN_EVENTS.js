@@ -72,7 +72,7 @@ export const SOCIETY_EVENTS = {
       memberEntry: 2,
       including: [],
       // ticket_link: '',
-      price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
+      price_id: 'price_1OyznWIOw5UGbAo1iE4xmWWD',
       memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
       activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
       freePass: ['vlady1002@abv.bg'],
