@@ -105,7 +105,19 @@ const Home = () => {
       {/* Start News Area */}
       <div className="container mt--110 mb--80">
         <h2 className="title">News</h2>
-        <ul>
+        <ul style={{ margin: '0', padding: '0' }}>
+          <li className="mt--40">
+            <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please check the links below</p>
+            <div className="options-btns-div">
+              <div>
+                <h4>More information <a href='https://docs.google.com/document/d/1VPf4TLdVCMjA8WEWs9ItxODd760MAf8x/edit' target="_blank">Here</a></h4>
+                <h4>Link for the form: <a href='/assets/images/news/gala.docx' target="_blank">Click to download</a></h4>
+                <h4>Link for the event: <a href='https://bulgariansociety.nl/groningen/event-details/Spring%20Gala' target="_blank">Click to see</a></h4>
+              </div>
+              <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
+            </div>
+          </li>
+
           <li className="mt--40">
             <p> Membership 2023-2024 open. <Link to='/signup'>
               Sign up!
