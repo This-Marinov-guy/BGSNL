@@ -51,38 +51,40 @@ const EventForm = () => {
     };
 
     const removeImg = (index) => {
-        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+        if (files.length > 1) {
+            setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+        }
     };
 
-	useEffect(() => {
-		const images = [], fileReaders = [];
-		let isCancel = false;
+    useEffect(() => {
+        const images = [], fileReaders = [];
+        let isCancel = false;
 
-		if (files.length) {
-			files.forEach((file) => {
-			const fileReader = new FileReader();
-			fileReaders.push(fileReader);
-			fileReader.onload = (e) => {
-			  const { result } = e.target;
-			  if (result) {
-				images.push(result)
-			  }
-			  if (images.length === files.length && !isCancel) {
-				setPreviewUrls(images);
-			  }
-			}
-			fileReader.readAsDataURL(file);
-		  })
-		};
-		return () => {
-		  isCancel = true;
-		  fileReaders.forEach(fileReader => {
-			if (fileReader.readyState === 1) {
-			  fileReader.abort()
-			}
-		  })
-		}
-	  }, [files]);
+        if (files.length) {
+            files.forEach((file) => {
+                const fileReader = new FileReader();
+                fileReaders.push(fileReader);
+                fileReader.onload = (e) => {
+                    const { result } = e.target;
+                    if (result) {
+                        images.push(result)
+                    }
+                    if (images.length === files.length && !isCancel) {
+                        setPreviewUrls(images);
+                    }
+                }
+                fileReader.readAsDataURL(file);
+            })
+        };
+        return () => {
+            isCancel = true;
+            fileReaders.forEach(fileReader => {
+                if (fileReader.readyState === 1) {
+                    fileReader.abort()
+                }
+            })
+        }
+    }, [files]);
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -165,8 +167,8 @@ const EventForm = () => {
                                     <option value="" disabled>
                                         Select Region
                                     </option>
-                                    {REGIONS.map((val) => {
-                                        return <option value={val}>{capitalizeFirstLetter(val)}</option>
+                                    {REGIONS.map((val, index) => {
+                                        return <option value={val} key={index}>{capitalizeFirstLetter(val)}</option>
                                     })}
 
                                 </Field>
@@ -402,8 +404,8 @@ const EventForm = () => {
                         <div className='input-pictures col-lg-6 col-sm-12 col-sm-12'>
                             <div className='row'>
                                 {previewUrls.map((url, index) => (
-                                    <div key={index} className='preview-container col-lg-3 col-md-3 col-4'>
-                                        <i onClick={() => removeImg(index)} style={{ position: 'absolute' }}>X</i>
+                                    <div key={index} className='preview-container center_div_no_gap col-lg-3 col-md-3 col-4'>
+                                        {/* <i onClick={() => removeImg(index)} className="x_icon">X</i> */}
                                         <img className='preview-small' src={url} alt="Preview" />
                                     </div>
                                 ))}

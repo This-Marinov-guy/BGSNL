@@ -460,6 +460,12 @@
   justify-content: center;
 }
 
+.center_div_no_gap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .center_section {
   display: flex;
   flex-direction: column;
