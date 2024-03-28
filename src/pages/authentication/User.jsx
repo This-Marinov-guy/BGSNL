@@ -438,7 +438,7 @@ const User = (props) => {
                         <div className="options-btns-div">
                           <div>
                             <h4>More information <a href='https://docs.google.com/document/d/1VPf4TLdVCMjA8WEWs9ItxODd760MAf8x/edit' target="_blank">Here</a></h4>
-                            <h4>Link for the form: <a href='/assets/images/news/gala.docx' target="_blank">Click to download</a></h4>
+                            <h4>Link for the form: <a href='/assets/images/files/gala.docx' target="_blank">Click to download</a></h4>
                             <h4>Link for the event: <a href='https://bulgariansociety.nl/groningen/event-details/Spring%20Gala' target="_blank">Click to see</a></h4>
                           </div>
                           <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
