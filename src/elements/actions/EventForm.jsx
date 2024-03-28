@@ -28,20 +28,11 @@ const EventForm = () => {
     const [previewUrls, setPreviewUrls] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
 
-    useEffect(() => {
-        const fileReaders = [];
-        files.forEach((file) => {
-            const fileReader = new FileReader();
-            fileReader.onload = () => {
-                setPreviewUrls((prevUrls) => [...prevUrls, fileReader.result]);
-            };
-            fileReaders.push(fileReader);
-        });
-
-        files.forEach((file, index) => {
-            fileReaders[index].readAsDataURL(file);
-        });
-    }, [files]);
+    const handleErrorMsg = (errors, isValid, dirty) => {
+        if (errors && !isValid && dirty) {
+            props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
+        }
+    }
 
     const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
 
@@ -60,17 +51,38 @@ const EventForm = () => {
     };
 
     const removeImg = (index) => {
-        setFiles([
-            ...files.slice(0, index),
-            ...files.slice(index + 1, files.length)
-        ])
-    }
+        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    };
 
-    const handleErrorMsg = (errors, isValid, dirty) => {
-        if (errors && !isValid && dirty) {
-            props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
-        }
-    }
+	useEffect(() => {
+		const images = [], fileReaders = [];
+		let isCancel = false;
+
+		if (files.length) {
+			files.forEach((file) => {
+			const fileReader = new FileReader();
+			fileReaders.push(fileReader);
+			fileReader.onload = (e) => {
+			  const { result } = e.target;
+			  if (result) {
+				images.push(result)
+			  }
+			  if (images.length === files.length && !isCancel) {
+				setPreviewUrls(images);
+			  }
+			}
+			fileReader.readAsDataURL(file);
+		  })
+		};
+		return () => {
+		  isCancel = true;
+		  fileReaders.forEach(fileReader => {
+			if (fileReader.readyState === 1) {
+			  fileReader.abort()
+			}
+		  })
+		}
+	  }, [files]);
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -391,7 +403,7 @@ const EventForm = () => {
                             <div className='row'>
                                 {previewUrls.map((url, index) => (
                                     <div key={index} className='preview-container col-lg-3 col-md-3 col-4'>
-                                        <i onClick={(index) => removeImg(index)} style={{ position: 'absolute' }}>X</i>
+                                        <i onClick={() => removeImg(index)} style={{ position: 'absolute' }}>X</i>
                                         <img className='preview-small' src={url} alt="Preview" />
                                     </div>
                                 ))}
