@@ -72,6 +72,20 @@ h3 {
   }
 }
 
+input[type="radio"] {
+  width: 20px;
+}
+
+.preview-small {
+  height: 80px;
+  margin-bottom: 15px;
+}
+@media only screen and (max-width: 1000px) {
+  .preview-small {
+    height: 60px;
+  }
+}
+
 .error_panel {
   top: 5%;
   transform: translateX(-50%);

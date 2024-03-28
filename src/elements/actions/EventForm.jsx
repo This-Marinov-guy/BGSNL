@@ -24,6 +24,53 @@ import BackBtn from "../ui/BackBtn";
 
 const EventForm = () => {
     const { sendRequest, loading } = useHttpClient()
+    const [files, setFiles] = useState([]);
+    const [previewUrls, setPreviewUrls] = useState([]);
+    const [isValidFiles, setIsValidFiles] = useState(true);
+
+    useEffect(() => {
+        const fileReaders = [];
+        files.forEach((file) => {
+            const fileReader = new FileReader();
+            fileReader.onload = () => {
+                setPreviewUrls((prevUrls) => [...prevUrls, fileReader.result]);
+            };
+            fileReaders.push(fileReader);
+        });
+
+        files.forEach((file, index) => {
+            fileReaders[index].readAsDataURL(file);
+        });
+    }, [files]);
+
+    const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
+
+    const inputHandler = (event) => {
+        const pickedFiles = Array.from(event.target.files);
+        const filteredFiles = pickedFiles.filter((file) =>
+            validFileTypes.includes(file.type)
+        );
+
+        if (filteredFiles.length > 0) {
+            setFiles(filteredFiles);
+            setIsValidFiles(true);
+        } else {
+            setIsValidFiles(false);
+        }
+    };
+
+    const removeImg = (index) => {
+        setFiles([
+            ...files.slice(0, index),
+            ...files.slice(index + 1, files.length)
+        ])
+    }
+
+    const handleErrorMsg = (errors, isValid, dirty) => {
+        if (errors && !isValid && dirty) {
+            props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
+        }
+    }
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -47,6 +94,11 @@ const EventForm = () => {
             validationSchema={null}
             onSubmit={async (values) => {
                 const formData = new FormData();
+
+                files.forEach((file, index) => {
+                    let fileName = 'image_' + index
+                    formData.append(`images`, file, fileName);
+                });
             }}
             initialValues={{
                 is_tickets_closed: false,
@@ -83,6 +135,7 @@ const EventForm = () => {
                 title: '',
                 images: [],
                 ticket_img: null,
+                ticket_color: '#faf9f6',
                 thumbnail: null,
             }}
         >
@@ -305,6 +358,44 @@ const EventForm = () => {
                                 name="ticket_img"
                                 component="div"
                             />
+                            <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
+                                <h5 className="center_text">Name on ticket color</h5>
+                                <div className="center_div" style={{ gap: '50px' }}>
+                                    <h5 className="center_div">
+                                        <Field type="radio" name="ticket_color" value="#faf9f6" />
+                                        Light
+                                    </h5>
+                                    <h5 className="center_div">
+                                        <Field type="radio" name="ticket_color" value="#272528" />
+                                        Dark
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-12'>
+                            <h3 className="mt--30 label">Description Images (The poster is automatically assigned)</h3>
+                            <input type="file" id="myFile" name="filename" multiple onInput={inputHandler}
+                                className="btn theme-btn-3 mb-10" /><br />
+                            <p>
+                                <small>* Submit no more than 3</small><br />
+                                <small>* Extra images will not be received</small><br />
+                            </p>
+                            {!isValidFiles && (
+                                <p style={{ color: "red" }}>The file is not supported, please try again</p>
+                            )}
+                        </div>
+                        <div className='input-pictures col-lg-6 col-sm-12 col-sm-12'>
+                            <div className='row'>
+                                {previewUrls.map((url, index) => (
+                                    <div key={index} className='preview-container col-lg-3 col-md-3 col-4'>
+                                        <i onClick={(index) => removeImg(index)} style={{ position: 'absolute' }}>X</i>
+                                        <img className='preview-small' src={url} alt="Preview" />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
