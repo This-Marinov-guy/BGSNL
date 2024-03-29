@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaInstagram, FaFlickr, FaLinkedinIn, FaLinkedin, FaFacebookF } from "react-icons/fa";
 
+export const BG_INDEX = 19
 
 export const REGIONS = [
     'amsterdam', 'breda', 'groningen', 'leeuwarden', 'maastricht', 'rotterdam'

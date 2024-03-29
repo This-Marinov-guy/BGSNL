@@ -816,16 +816,6 @@ gt matrik score area
     }
 }
 
-
-.bg_image--35 {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    // background-image: url(/public/assets/images/bg/bg-image-35.png) !important; // original
-    background-image: url(/public/assets/images/bg/bg-image-25.jpg) !important; // changed dur to unavailable image
-}
-
-
 .pv-feaq-area,
 .rn-gallery-area,
 .testimonial-area,
@@ -833,9 +823,6 @@ gt matrik score area
     position: relative;
     z-index: 1;
 }
-
-
-
 
 /*------------------------
     Testimonial Area  

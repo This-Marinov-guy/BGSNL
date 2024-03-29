@@ -4,7 +4,8 @@ import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Calendar } from 'primereact/calendar';
-import { FiCheck } from "react-icons/fi";
+import { Tooltip } from 'primereact/tooltip';
+import { FileUpload } from 'primereact/fileupload';
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/http-hook";
@@ -19,13 +20,12 @@ import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
-import { REGIONS } from "../../util/REGIONS_DESIGN";
+import { BG_INDEX, REGIONS } from "../../util/REGIONS_DESIGN";
 import BackBtn from "../ui/BackBtn";
 
 const EventForm = () => {
     const { sendRequest, loading } = useHttpClient()
     const [files, setFiles] = useState([]);
-    const [previewUrls, setPreviewUrls] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
 
     const handleErrorMsg = (errors, isValid, dirty) => {
@@ -50,41 +50,7 @@ const EventForm = () => {
         }
     };
 
-    const removeImg = (index) => {
-        if (files.length > 1) {
-            setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-        }
-    };
-
-    useEffect(() => {
-        const images = [], fileReaders = [];
-        let isCancel = false;
-
-        if (files.length) {
-            files.forEach((file) => {
-                const fileReader = new FileReader();
-                fileReaders.push(fileReader);
-                fileReader.onload = (e) => {
-                    const { result } = e.target;
-                    if (result) {
-                        images.push(result)
-                    }
-                    if (images.length === files.length && !isCancel) {
-                        setPreviewUrls(images);
-                    }
-                }
-                fileReader.readAsDataURL(file);
-            })
-        };
-        return () => {
-            isCancel = true;
-            fileReaders.forEach(fileReader => {
-                if (fileReader.readyState === 1) {
-                    fileReader.abort()
-                }
-            })
-        }
-    }, [files]);
+    const bgs = Array.from({ length: BG_INDEX }, (_, i) => i + 1)
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
@@ -111,8 +77,11 @@ const EventForm = () => {
 
                 files.forEach((file, index) => {
                     let fileName = 'image_' + index
-                    formData.append(`images`, file, fileName);
+
+                    let readyFile = new File([file], fileName);
+                    formData.append(`images`, readyFile, fileName);
                 });
+
             }}
             initialValues={{
                 is_tickets_closed: false,
@@ -129,7 +98,6 @@ const EventForm = () => {
                 region: '',
                 title: '',
                 description: '',
-                bgImage: '',
                 date: '',
                 time: '',
                 where: '',
@@ -151,6 +119,8 @@ const EventForm = () => {
                 ticket_img: null,
                 ticket_color: '#faf9f6',
                 thumbnail: null,
+                bgImage: 1,
+                bgImageExtra: null,
             }}
         >
             {({ values, setFieldValue, errors, isValid, dirty }) => (
@@ -344,7 +314,8 @@ const EventForm = () => {
                     </div>
                     <h3 className="mt--30 label">Images</h3>
                     <div className="row">
-                        <div className="col-lg-6 col-md-6 col-12">
+                        <div className="col-lg-6 col-md-6 col-12 mt--20">
+                            <hr />
                             <h5 className="center_text">Poster Image</h5>
                             <ImageInput
                                 onChange={(event) => {
@@ -357,7 +328,8 @@ const EventForm = () => {
                                 component="div"
                             />
                         </div>
-                        <div className="col-lg-6 col-md-6 col-12">
+                        <div className="col-lg-6 col-md-6 col-12 mt--20">
+                            <hr />
                             <h5 className="center_text">Ticket Image</h5>
                             <ImageInput
                                 onChange={(event) => {
@@ -388,11 +360,11 @@ const EventForm = () => {
                         </div>
                     </div>
 
-                    <div className='row'>
-                        <div className='col-12'>
-                            <h3 className="mt--30 label">Description Images (The poster is automatically assigned)</h3>
-                            <input type="file" id="myFile" name="filename" multiple onInput={inputHandler}
-                                className="btn theme-btn-3 mb-10" /><br />
+                    <div className='row center_text'>
+                        <div className='col-lg-6 col-12 mt--20'>
+                            <hr />
+                            <h5 className="mt--30">Description Images (The poster is automatically assigned)</h5>
+                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={1000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
                             <p>
                                 <small>* Submit no more than 3</small><br />
                                 <small>* Extra images will not be received</small><br />
@@ -401,14 +373,37 @@ const EventForm = () => {
                                 <p style={{ color: "red" }}>The file is not supported, please try again</p>
                             )}
                         </div>
-                        <div className='input-pictures col-lg-6 col-sm-12 col-sm-12'>
-                            <div className='row'>
-                                {previewUrls.map((url, index) => (
-                                    <div key={index} className='preview-container center_div_no_gap col-lg-3 col-md-3 col-4'>
-                                        {/* <i onClick={() => removeImg(index)} className="x_icon">X</i> */}
-                                        <img className='preview-small' src={url} alt="Preview" />
-                                    </div>
-                                ))}
+                        <div className='col-lg-6 col-12 mt--20'>
+                            <hr />
+                            <h5 className="mt--30" tooltip="Enter your username" tooltipOptions={{ position: 'top' }}>Background Image</h5>
+                            <div className="rn-form-group" style={{ margin: 'auto', width: '250px' }}>
+                                <Field as="select" name="bgImage">
+                                    <option value="" disabled>
+                                        Our Selection
+                                    </option>
+                                    {bgs.map((value) => {
+                                        {
+                                            return <Fragment>
+                                                <Tooltip target={`#option-${value}`} content={`dsada`} />
+                                                <option key={value} value={`${value}`} id={`#option-${value}`}>Background {value}</option>
+                                            </Fragment>
+                                        }
+                                    })}
+                                </Field>
+                                <h5>or choose your own</h5>
+                                <ImageInput
+                                    onChange={(event) => {
+                                        setFieldValue("bgImageExtra", event.target.files[0]);
+                                    }}
+                                />
+                                <p className="mt--10 information center_text">
+                                    *choose a wide one
+                                </p>
+                                <ErrorMessage
+                                    className="error"
+                                    name="bgImage"
+                                    component="div"
+                                />
                             </div>
                         </div>
                     </div>
