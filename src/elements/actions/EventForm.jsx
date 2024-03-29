@@ -392,6 +392,7 @@ const EventForm = () => {
                                 </Field>
                                 <h5>or choose your own</h5>
                                 <ImageInput
+                                    style={{ height: '150px' }}
                                     onChange={(event) => {
                                         setFieldValue("bgImageExtra", event.target.files[0]);
                                     }}

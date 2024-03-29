@@ -44,7 +44,7 @@ const ImageInput = (props) => {
 
   return (
     <div className="rn-form-group center_section">
-      <div className="image_input_window" onClick={imageClickHandler}>
+      <div className="image_input_window" onClick={imageClickHandler} style={props.style} >
         <input
           className="image_input_field"
           onInput={inputHandler}
