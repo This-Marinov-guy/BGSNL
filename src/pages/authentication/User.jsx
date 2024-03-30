@@ -354,66 +354,64 @@ const User = (props) => {
       {/* Start Info Area */}
       <div className="service-area ptb--120 bg_color--1 mt--120">
         <div className="container">
-          <div className="center_div">
-            <div className="row service-one-wrapper">
-              <div className="col-lg-6 col-md-12 col-12 ">
-                <div className="service service__style--2">
-                  {currentUser.subscription && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
-                  <div className="content center_div">
-                    <LazyLoadImage src={currentUser.image} alt="profile" />
-                  </div>
+          <div className="row service-one-wrapper">
+            <div className="col-lg-6 col-md-12 col-12 ">
+              <div className="service service__style--2">
+                {currentUser.subscription && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
+                <div className="content center_div">
+                  <LazyLoadImage src={currentUser.image} alt="profile" />
                 </div>
               </div>
-              <div className="col-lg-6 col-md-12 col-12">
-                <div className="service service__style--2 team_member_border-5">
-                  <div className="content">
-                    <h2>Hello again, {currentUser.name}!</h2>
-                    <div className="hor_section mb--40">
-                      <p className="mt--20" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(currentUser.region)} Member</p>
-                      <FiEdit
-                        className="edit_btn"
-                        onClick={() => {
-                          dispatch(showModal());
-                        }}
-                      />
-                    </div>
-                    <div className="pricing-body">
-                      <ul
-                        style={{ textAlign: "start" }}
-                        className="list-style--1"
-                      >
-                        <li>
-                          <FiCircle style={{ fontSize: "14px" }} /> Full Name:{" "}
-                          {currentUser.name + " " + currentUser.surname}
-                        </li>
-                        <li>
-                          <FiCircle style={{ fontSize: "14px" }} /> Date of Birth:{" "}
-                          {currentUser.birth}
-                        </li>
-                        <li>
-                          <FiCircle style={{ fontSize: "14px" }} /> Email:{" "}
-                          {currentUser.email}
-                        </li>
-                        <li>
-                          <FiCircle style={{ fontSize: "14px" }} /> Phone:{" "}
-                          {currentUser.phone}
-                        </li>
-                        <li>
-                          <FiCircle style={{ fontSize: "14px" }} /> University:{" "}
-                          {currentUser.university === "other"
-                            ? currentUser.otherUniversityName
-                            : currentUser.university}
-                        </li>
+            </div>
+            <div className="col-lg-6 col-md-12 col-12">
+              <div className="service service__style--2 team_member_border-5">
+                <div className="content">
+                  <h2>Hello again, {currentUser.name}!</h2>
+                  <div className="hor_section mb--40">
+                    <p className="mt--20" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(currentUser.region)} Member</p>
+                    <FiEdit
+                      className="edit_btn"
+                      onClick={() => {
+                        dispatch(showModal());
+                      }}
+                    />
+                  </div>
+                  <div className="pricing-body">
+                    <ul
+                      style={{ textAlign: "start" }}
+                      className="list-style--1"
+                    >
+                      <li>
+                        <FiCircle style={{ fontSize: "14px" }} /> Full Name:{" "}
+                        {currentUser.name + " " + currentUser.surname}
+                      </li>
+                      <li>
+                        <FiCircle style={{ fontSize: "14px" }} /> Date of Birth:{" "}
+                        {currentUser.birth}
+                      </li>
+                      <li>
+                        <FiCircle style={{ fontSize: "14px" }} /> Email:{" "}
+                        {currentUser.email}
+                      </li>
+                      <li>
+                        <FiCircle style={{ fontSize: "14px" }} /> Phone:{" "}
+                        {currentUser.phone}
+                      </li>
+                      <li>
+                        <FiCircle style={{ fontSize: "14px" }} /> University:{" "}
+                        {currentUser.university === "other"
+                          ? currentUser.otherUniversityName
+                          : currentUser.university}
+                      </li>
 
-                        {/* <li style={{ fontWeight: "bold" }}>
+                      {/* <li style={{ fontWeight: "bold" }}>
                         <FiCircle style={{ fontSize: "14px" }} /> Membership
                         Expires: {currentUser.expireDate}
                       </li> */}
-                        {REGION_WHATSAPP[currentUser.region] && <li>
-                          <FiCheckCircle style={{ fontSize: "14px" }} /><a style={{ color: "#017363" }} href={REGION_WHATSAPP[currentUser.region]} target='_blank'>Click here to join the Member Chat</a>
-                        </li>}
-                      </ul>
-                    </div>
+                      {REGION_WHATSAPP[currentUser.region] && <li>
+                        <FiCheckCircle style={{ fontSize: "14px" }} /><a style={{ color: "#017363" }} href={REGION_WHATSAPP[currentUser.region]} target='_blank'>Click here to join the Member Chat</a>
+                      </li>}
+                    </ul>
                   </div>
                 </div>
               </div>
