@@ -434,15 +434,8 @@ const User = (props) => {
                     <h2 className="title">News</h2>
                     <ul>
                       <li className="mt--40">
-                        <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please check the links below</p>
-                        <div className="options-btns-div">
-                          <div>
-                            <h4>More information <a href='https://docs.google.com/document/d/1VPf4TLdVCMjA8WEWs9ItxODd760MAf8x/edit' target="_blank">Here</a></h4>
-                            <h4>Link for the form: <a href='/assets/images/files/gala.docx' target="_blank">Click to download</a></h4>
-                            <h4>Link for the event: <a href='https://bulgariansociety.nl/groningen/event-details/Spring%20Gala' target="_blank">Click to see</a></h4>
-                          </div>
-                          <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
-                        </div>
+                        <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please <Link to='/gala'>click this for more info</Link></p>
+                        <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
                       </li>
                     </ul>
                   </div>

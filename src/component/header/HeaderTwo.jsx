@@ -126,13 +126,16 @@ const HeaderTwo = (props) => {
                     <li>
                       <Link to="/articles">Articles</Link>
                     </li>
+                    <li>
+                      <Link to="/gala">Open call for Artists</Link>
+                    </li>
                   </ul>
                 </li>
 
                 {region && <li>
                   <Link to={`/${region}/contact`}>Contact</Link>
                 </li>}
-                {user.token  && (
+                {user.token && (
                   <li>
                     <Link to={`/user`}>Profile</Link>
                   </li>

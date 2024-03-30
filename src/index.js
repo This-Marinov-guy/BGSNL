@@ -30,6 +30,7 @@ const Error404 = lazy(() => import("./pages/Error404"));
 const Maintenance = lazy(() => import("./pages/Maintenance"));
 const Board = lazy(() => import("./pages/information/Board"));
 const Contest = lazy(() => import("./pages/information/Contest"));
+const Gala = lazy(() => import("./pages/information/Gala"));
 const Committees = lazy(() => import("./pages/information/Committees"));
 const LogIn = lazy(() => import("./pages/authentication/LogIn"));
 const SignUp = lazy(() => import("./pages/authentication/SignUp"));
@@ -141,6 +142,7 @@ const Root = () => {
             <Route exact path={`/about`} element={<About />} />
             <Route exact path={`/rules-and-regulations`} element={<Policy />} />
             <Route exact path={`/articles`} element={<Articles />} />
+            <Route exact path={`/gala`} element={<Gala />} />
             {/* <Route exact path={`/active-member`} >
                 <ActiveMember toast={toast} />
               </Route> */}
