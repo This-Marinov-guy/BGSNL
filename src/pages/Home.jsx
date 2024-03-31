@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/user";
 import Header from "../component/header/Header";
@@ -13,7 +13,7 @@ import {
   FutureOtherEventsContent,
 } from "./information/FutureEvents";
 import ImageFb from "../elements/ui/ImageFb";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { REGIONS } from "../util/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
 
@@ -21,14 +21,6 @@ const Home = () => {
   const user = useSelector(selectUser);
 
   const { region } = useParams();
-
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (region && !REGIONS.includes(region)) {
-      navigate('/404')
-    }
-  }, [region])
 
   const SlideList = [
     {

@@ -100,7 +100,7 @@ const Login = (props) => {
         })
       );
       props.toast.current.show({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' });
-      navigate('/user');
+      navigate(`/${responseData.region}`);
     } catch (err) { }
   };
 
@@ -162,7 +162,7 @@ const Login = (props) => {
 
                   dispatch(removeModal());
                   navigate("/login");
-                            } catch (err) { }
+                } catch (err) { }
               }}
               initialValues={{
                 token: "",
