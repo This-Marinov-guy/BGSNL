@@ -42,7 +42,7 @@ export const SOCIETY_EVENTS = {
       `See you all on the 15th!
       `,
     ],
-    ticket_img: '/assets/images/tickets/leeuwarden/ticket-35.jpg',
+    ticket_img: '/assets/images/tickets/groningen/ticket-35.jpg',
     images: ["/assets/images/portfolio/groningen/portfolio-35"],
     thumbnail: "/assets/images/portfolio/groningen/portfolio-35",
   },
