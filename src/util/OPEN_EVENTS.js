@@ -205,7 +205,7 @@ export const SOCIETY_EVENTS = {
       memberPrice_id: 'price_1P1B77IOw5UGbAo1VKFbyfit',
       activeMemberPrice_id: 'price_1P1B7LIOw5UGbAo1cnzTtNcO',
       freePass: ['vlady1002@abv.bg'],
-      marketingInputs: true,
+      marketingInputs: false,
       extraInputs: false,
       text: [
 `Calling all music lovers to Galena, Krisko, Lili Ivanova, Azis, Molec and many more to our BULGARIAN KARAOKE: The Voice of Breda!🎶 Choose your favourite Bulgarian or Balkan songs and let your voice shine!`,
@@ -214,9 +214,9 @@ export const SOCIETY_EVENTS = {
 `Let the show begin! 🎤 !
 `
       ],
-      ticket_img: '/assets/images/tickets/breda/ticket-5.jpg',
-      images: ["/assets/images/portfolio/breda/portfolio-5"],
-      thumbnail: "/assets/images/portfolio/breda/portfolio-5",
+      ticket_img: '/assets/images/tickets/breda/ticket-6.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-6"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-6",
     },
   ],
   maastricht: [
