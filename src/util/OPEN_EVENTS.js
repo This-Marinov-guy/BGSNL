@@ -3,7 +3,49 @@ import { Field, ErrorMessage } from "formik";
 
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
-  groningen: [
+  groningen: [    {
+    membersOnly: false,
+    visible: true,
+    title: "A hungry bear doesn't dance",
+    // newTitle: 'Bulgarian Dinner',
+    description: "(no bears included)",
+    bgImage: "21",
+    date: "15th April",
+    time: "18:30",
+    ticketTimer: '2024-04-14T13:00:00',
+    ticketLimit: 40,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `Tavern Doris`,
+    entry: "7",
+    memberEntry: "5",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P1BA6IOw5UGbAo1Ew9mMR2w',
+    memberPrice_id: 'price_1P1BAIIOw5UGbAo1fTUjy2pQ',
+    activeMemberPrice_id: 'price_1P1BAWIOw5UGbAo1GKocdqdj',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: [
+      `Come dance with us on April 15th starting 18:30 at Tavern Doris! 
+      `,
+      `We have prepared an evening full of Bulgarian dances for you. As you know, a hungry bear doesn’t dance so, we will have your favorite food like banitsa, snezhanka, sweets and more to keep you going through the night. Of course, drinks will also be sold at the venue to keep up the mood!
+
+`,
+      ` This event is the first of a series in which we will keep mastering our horo skills in a fun atmosphere!
+`,
+      `Spots are limited so buy your ticket now! €5 for members and €7 for non-members. 
+
+`,
+      `See you all on the 15th!
+      `,
+    ],
+    ticket_img: '/assets/images/tickets/leeuwarden/ticket-35.jpg',
+    images: ["/assets/images/portfolio/groningen/portfolio-35"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-35",
+  },
     {
       is_tickets_closed: true,
       membersOnly: false,
@@ -140,39 +182,42 @@ export const SOCIETY_EVENTS = {
     },
   ],
   breda: [
-    // {
-    //   membersOnly: false,
-    //   visible: true,
-    //   title: "Speedfriending & Bonding games night",
-    //   newTitle: 'Bulgarian Dinner',
-    //   description: "Show up your game",
-    //   bgImage: "3",
-    //   date: "20th March",
-    //   time: "19:00",
-    //   ticketTimer: '2024-03-20T19:00:00',
-    //   ticketLimit: 33,
-    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    //   correctedDate: "",
-    //   correctedTime: "",
-    //   where: `Café Public Works, Sint Annastraat 12`,
-    //   entry: 3,
-    //   memberEntry: 3,
-    //   including: [],
-    //   ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-    //   price_id: 'price_1Ou6ifIOw5UGbAo10kG6Zfku',
-    //   memberPrice_id: 'price_1Ou6ifIOw5UGbAo10kG6Zfku',
-    //   activeMemberPrice_id: 'price_1Ou6j3IOw5UGbAo1qen4ExqI',
-    //   freePass: ['vlady1002@abv.bg'],
-    //   marketingInputs: true,
-    //   extraInputs: false,
-    //   text: [
-    //     `Join us for our special event - Speedfriending & bonding games night! Break the ice with engaging questions and topics and make new friends, then play in teams Cards against Bulgarshtinata, associations, and character traits bingo. Get ready for an unforgettable evening of connection and fun!
-    //   `,
-    //   ],
-    //   ticket_img: '/assets/images/tickets/breda/ticket-4.jpg',
-    //   images: ["/assets/images/portfolio/breda/portfolio-4"],
-    //   thumbnail: "/assets/images/portfolio/breda/portfolio-4",
-    // },
+    {
+      membersOnly: false,
+      visible: true,
+      title: "Karaoke Night",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Show up your voice",
+      bgImage: "20",
+      date: "10th April",
+      time: "20:00",
+      ticketTimer: '2024-04-10T21:00:00',
+      ticketLimit: 60,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Café Public Works, Sint Annastraat 12`,
+      entry: 5,
+      memberEntry: 5,
+      including: [],
+      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+      price_id: 'price_1P1B77IOw5UGbAo1VKFbyfit',
+      memberPrice_id: 'price_1P1B77IOw5UGbAo1VKFbyfit',
+      activeMemberPrice_id: 'price_1P1B7LIOw5UGbAo1cnzTtNcO',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: true,
+      extraInputs: false,
+      text: [
+`Calling all music lovers to Galena, Krisko, Lili Ivanova, Azis, Molec and many more to our BULGARIAN KARAOKE: The Voice of Breda!🎶 Choose your favourite Bulgarian or Balkan songs and let your voice shine!`,
+`🙈That's not even all - Gather your friends for our exciting group singing contest, where teamwork could score you a special prize!🌟 
+`,
+`Let the show begin! 🎤 !
+`
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-5.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-5"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-5",
+    },
   ],
   maastricht: [
 
