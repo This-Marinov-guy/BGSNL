@@ -200,7 +200,7 @@ const Root = () => {
 
               </Fragment>
             )}
-            <Route exact path="/:region?" element={<RegionLayout redirect='/' optionalRegion><Home /></RegionLayout>} />
+            <Route exact path="/:region?" element={<Home />} />
             <Route path="*" element={<Error404 />} />
           </Routes>
         </Suspense>
