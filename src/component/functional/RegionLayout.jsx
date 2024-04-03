@@ -5,24 +5,15 @@ import styles from './RegionLayout.module.css'
 
 const RegionLayout = (props) => {
     const region = useLocation().pathname.split('/')[1]
-    const isRegionIncluded = REGIONS.includes(region)
-    const redirectComp = <Navigate to={props.redirect} replace />
 
-    if (props.optionalRegion && !region) {
-        return !isRegionIncluded ? <Fragment>
+    return REGIONS.includes(region) ?
+        <div className={styles[region] || ''}>
             {props.children}
-        </Fragment> : redirectComp
-    } else {
-        return isRegionIncluded ?
-            <div className={styles[region] || ''}>
-                {props.children}
-            </div> : redirectComp
-    }
+        </div> : <Navigate to={props.redirect} replace />
 }
 
 RegionLayout.defaultProps = {
     redirect: '/404',
-    optionalRegion: false
 }
 
 export default RegionLayout
