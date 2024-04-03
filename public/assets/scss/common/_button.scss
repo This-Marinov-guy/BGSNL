@@ -63,6 +63,14 @@ button {
       }
     }
   }
+  &.rn-btn-green {
+    border: 2px solid #017363 !important;
+    color: #017363 !important;
+    &:hover {
+      background: #017363 !important;
+      color: #fff !important;
+    }
+  }
 }
 
 button,
@@ -84,11 +92,11 @@ a {
     }
 
     &.rn-btn-green {
-      border: 2px solid #017363;
-      color: #017363;
+      border: 2px solid #017363 !important;
+      color: #017363 !important;
       &:hover {
-        background: #017363;
-        color: #fff;
+        background: #017363 !important;
+        color: #fff !important;
       }
     }
 

@@ -1,51 +1,47 @@
 import React, { useState } from 'react';
 
-const DynamicInputComponent = () => {
-  const [inputs, setInputs] = useState(['']); 
+const StringDynamicInputs = (props) => {
+  const [inputs, setInputs] = useState(props.intValues.length > 0 ? props.intValues : ['']);
 
   const addInput = () => {
-    setInputs([...inputs, '']);
+    if (props.max && props.max > inputs.length) {
+      setInputs([...inputs, '']);
+    }
   };
 
   const removeInput = (index) => {
     const newInputs = [...inputs];
     newInputs.splice(index, 1);
     setInputs(newInputs);
+    props.onChange(newInputs);
   };
 
   const handleInputChange = (index, value) => {
     const newInputs = [...inputs];
     newInputs[index] = value;
     setInputs(newInputs);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Submitted values:', inputs);
+    props.onChange(newInputs);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       {inputs.map((value, index) => (
-        <div key={index}>
+        <div className='hor_section_nospace mt--10' key={index}>
           <input
             type="text"
             value={value}
             onChange={(e) => handleInputChange(index, e.target.value)}
           />
-          <button className='rn-btn'  onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
+          <button type='button' className='rn-btn' onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
             X
           </button>
         </div>
       ))}
-      <button className='rn-btn-reverse-green' onClick={addInput}>
+      <button type='button' className='rn-btn rn-btn-green' style={{ fontSize: '22px' }} onClick={addInput}>
         +
       </button>
-      <button type="submit">
-        Submit
-      </button>
-    </form>
+    </>
   );
 };
 
-export default DynamicInputComponent;
+export default StringDynamicInputs;

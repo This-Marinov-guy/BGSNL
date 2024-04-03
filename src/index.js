@@ -188,7 +188,7 @@ const Root = () => {
               </Fragment>
             ) : (
               <Fragment>
-                {/* <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} /> */}
+                <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
 
                 <Route exact path={`/login`} element={<LogIn toast={toast} />} />
                 <Route exact path={`/:region?/signup`} element={<RegionLayout redirect='/signup' optionalRegion><SignUp toast={toast} /></RegionLayout>} />
@@ -208,6 +208,12 @@ const Root = () => {
     );
   };
 }
+
+if (process.env.NODE_ENV === 'production') {
+  console.error = () => { }
+  console.debug = () => { }
+}
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>

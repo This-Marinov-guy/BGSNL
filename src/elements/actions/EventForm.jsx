@@ -22,6 +22,7 @@ import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 import { BG_INDEX, REGIONS } from "../../util/REGIONS_DESIGN";
 import BackBtn from "../ui/BackBtn";
+import StringDynamicInputs from "../inputs/StringDynamicInputs";
 
 const EventForm = () => {
     const { sendRequest, loading } = useHttpClient()
@@ -75,11 +76,13 @@ const EventForm = () => {
             onSubmit={async (values) => {
                 const formData = new FormData();
 
+                console.log(values)
                 files.forEach((file, index) => {
                     let fileName = 'image_' + index
 
                     let readyFile = new File([file], fileName);
                     formData.append(`images`, readyFile, fileName);
+
                 });
 
             }}
@@ -91,10 +94,8 @@ const EventForm = () => {
                 extraInputs: false,
                 freePass: [],
                 discountPass: [],
-                subEvent: {
-                    description: '',
-                    links: []
-                },
+                subEventDescription: '',
+                subEventLinks: [],
                 region: '',
                 title: '',
                 description: '',
@@ -102,7 +103,7 @@ const EventForm = () => {
                 time: '',
                 where: '',
                 ticketTimer: '',
-                ticketLimit: 0,
+                ticketLimit: null,
                 entry: null,
                 memberEntry: null,
                 activeMemberEntry: null,
@@ -381,9 +382,9 @@ const EventForm = () => {
                                     <option value="" disabled>
                                         Our Selection
                                     </option>
-                                    {bgs.map((value) => {
+                                    {bgs.map((value, index) => {
                                         {
-                                            return <Fragment>
+                                            return <Fragment key={index}>
                                                 <Tooltip target={`#option-${value}`} content={`dsada`} />
                                                 <option key={value} value={`${value}`} id={`#option-${value}`}>Background {value}</option>
                                             </Fragment>
@@ -406,6 +407,111 @@ const EventForm = () => {
                                     component="div"
                                 />
                             </div>
+                        </div>
+                    </div>
+                    <h3 className="label">Additional Settings</h3>
+                    <div className="row mt--40">
+                        <div className="col-lg-6 col-12">
+                            <div className="hor_section_nospace mt--20">
+                                <Field
+                                    style={{ maxWidth: "30px", margin: "10px" }}
+                                    type="checkbox"
+                                    name="is_tickets_closed"
+                                ></Field>
+                                <p className="information">
+                                    Close Sale of Tickets (only display event)
+                                </p>
+                            </div>
+                            <ErrorMessage
+                                className="error"
+                                name="is_tickets_closed"
+                                component="div"
+                            />
+                        </div>
+                        <div className="col-lg-6 col-12">
+                            <div className="hor_section_nospace mt--20">
+                                <Field
+                                    style={{ maxWidth: "30px", margin: "10px" }}
+                                    type="checkbox"
+                                    name="membersOnly"
+                                ></Field>
+                                <p className="information">
+                                    Make event only purchasable by members (Still visible for non-members)
+                                </p>
+                            </div>
+                            <ErrorMessage
+                                className="error"
+                                name="membersOnly"
+                                component="div"
+                            />
+                        </div>
+                        <div className="col-lg-6 col-12">
+                            <div className="hor_section_nospace mt--20">
+                                <Field
+                                    style={{ maxWidth: "30px", margin: "10px" }}
+                                    type="checkbox"
+                                    name="visible"
+                                ></Field>
+                                <p className="information">
+                                    Hide event from News section (only accessible from url)
+                                </p>
+                            </div>
+                            <ErrorMessage
+                                className="error"
+                                name="visible"
+                                component="div"
+                            />
+                        </div>
+                    </div>
+
+
+                    <div className="row">
+                        <div className="col-lg-6 col-12">
+                            <div className="rn-form-group">
+                                <Field type="number" placeholder="Ticket Limit" name="ticketLimit" />
+                                <ErrorMessage
+                                    className="error"
+                                    name="ticketLimit"
+                                    component="div"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-lg-6 col-12">
+                            <div className="rn-form-group">
+                                <Calendar id="ticket-date" name="ticketTimer"
+                                    value={values.ticketTimer}
+                                    onChange={(event) => values.ticketTimer = event.target.value}
+                                    dateFormat="dd/mm/yy"
+                                    minDate={new Date()}
+                                    mask="99/99/9999"
+                                    style={{ width: '100%' }}
+                                    placeholder="Ticket Sale End"
+                                    showIcon />
+                                <ErrorMessage
+                                    className="error"
+                                    name="ticketTimer"
+                                    component="div"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-lg-6 col-12 mt--20">
+                            <h5>Discount emails (extra from the active members)</h5>
+                            <StringDynamicInputs name='discountPass' onChange={(inputs) => values.discountPass = inputs} intValues={values.discountPass} />
+                        </div>
+                        <div className="col-lg-6 col-12 mt--20">
+                            <h5>Free Pass emails (for those who need a free ticket)</h5>
+                            <StringDynamicInputs name='freePass' onChange={(inputs) => values.freePass = inputs} intValues={values.freePass} />
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className="col-12 mt--20">
+                            <h5>Link a sub-event</h5>
+                            <Field as='textarea' placeholder="Sub-event description" name="subEventDescription" rows={2} />
+                            <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} intValues={values.subEventLinks} max={2} />
                         </div>
                     </div>
 
