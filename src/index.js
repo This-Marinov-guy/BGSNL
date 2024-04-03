@@ -191,7 +191,7 @@ const Root = () => {
                 <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
 
                 <Route exact path={`/login`} element={<LogIn toast={toast} />} />
-                <Route exact path={`/:region?/signup`} element={<RegionLayout redirect='/signup' optionalRegion><SignUp toast={toast} /></RegionLayout>} />
+                <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                 <Route
                   exact
                   path={"/:region/purchase-ticket/:eventId"}
