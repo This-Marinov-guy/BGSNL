@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/user";
 import Header from "../component/header/Header";
@@ -21,6 +21,12 @@ const Home = () => {
   const user = useSelector(selectUser);
 
   const { region } = useParams();
+
+  useEffect(() => {
+    if (REGIONS.includes(region)) {
+      //navigate to '/'
+    }
+  }, [region])
 
   const SlideList = [
     {
