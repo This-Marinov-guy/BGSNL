@@ -23,6 +23,18 @@ const StringDynamicInputs = (props) => {
     props.onChange(newInputs);
   };
 
+  const placeholder = (index) => {
+    if (index == 0) {
+      if (props.placeholder) {
+        return props.placeholder
+      } else {
+        return 'Initial value'
+      }
+    } else {
+      return 'Additional field'
+    }
+  }
+
   return (
     <>
       {inputs.map((value, index) => (
@@ -30,6 +42,7 @@ const StringDynamicInputs = (props) => {
           <input
             type="text"
             value={value}
+            placeholder={placeholder(index)}
             onChange={(e) => handleInputChange(index, e.target.value)}
           />
           <button type='button' className='rn-btn' onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
