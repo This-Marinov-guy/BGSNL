@@ -13,18 +13,20 @@ import {
   FutureOtherEventsContent,
 } from "./information/FutureEvents";
 import ImageFb from "../elements/ui/ImageFb";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
 
 const Home = () => {
   const user = useSelector(selectUser);
 
+  const navigate = useNavigate();
+
   const { region } = useParams();
 
   useEffect(() => {
-    if (REGIONS.includes(region)) {
-      //navigate to '/'
+    if (region && !REGIONS.includes(region)) {
+      navigate('/');
     }
   }, [region])
 
