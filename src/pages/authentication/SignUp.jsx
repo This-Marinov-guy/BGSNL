@@ -89,6 +89,10 @@ const SignUp = (props) => {
   }, []);
 
   useEffect(() => {
+    if (region && !REGIONS.includes(region)) {
+      navigate('/signup')
+    }
+    
     setSelectedMembershipIndex(null)
   }, [region])
 
