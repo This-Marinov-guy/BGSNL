@@ -23,6 +23,8 @@ import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 import { BG_INDEX, REGIONS } from "../../util/REGIONS_DESIGN";
 import BackBtn from "../ui/BackBtn";
 import StringDynamicInputs from "../inputs/StringDynamicInputs";
+import InputsBuilder from "../inputs/InputsBuilder";
+import { askBeforeRedirect, isProd } from "../../util/global";
 
 const EventForm = () => {
     const { sendRequest, loading } = useHttpClient()
@@ -54,17 +56,7 @@ const EventForm = () => {
     const bgs = Array.from({ length: BG_INDEX }, (_, i) => i + 1)
 
     useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            event.preventDefault();
-            event.returnValue = ''; // This is needed for older browsers
-        };
-
-        if (process.env.NODE_ENV === 'development') {
-            window.addEventListener('beforeunload', handleBeforeUnload);
-            return () => {
-                window.removeEventListener('beforeunload', handleBeforeUnload);
-            };
-        }
+        askBeforeRedirect();
     }, []);
 
     const schema = {}
@@ -90,8 +82,7 @@ const EventForm = () => {
                 is_tickets_closed: false,
                 membersOnly: false,
                 visible: true,
-                marketingInputs: false,
-                extraInputs: false,
+                extraInputsForm: [{ type: '', placeholder: '', required: false, options: [] }],
                 freePass: [],
                 discountPass: [],
                 subEventDescription: '',
@@ -376,18 +367,18 @@ const EventForm = () => {
                         </div>
                         <div className='col-lg-6 col-12 mt--20'>
                             <hr />
-                            <h5 className="mt--30" tooltip="Enter your username" tooltipOptions={{ position: 'top' }}>Background Image</h5>
+                            <h5 className="mt--30">Background Image (hover for preview)</h5>
                             <div className="rn-form-group" style={{ margin: 'auto', width: '250px' }}>
-                                <Field as="select" name="bgImage">
-                                    <option value="" disabled>
+                                {values.bgImage && <Tooltip target='.bg-input' position="top" style={{ maxWidth: '200px' }}>
+                                    <img src={`/assets/images/bg/bg-image-${values.bgImage}.webp`} alt='bg preview' />
+                                </Tooltip>}
+                                <Field as="select" name="bgImage" className='bg-input'>
+                                    <option value="" disabled >
                                         Our Selection
                                     </option>
-                                    {bgs.map((value, index) => {
+                                    {bgs.map((value) => {
                                         {
-                                            return <Fragment key={index}>
-                                                <Tooltip target={`#option-${value}`} content={`dsada`} />
-                                                <option key={value} value={`${value}`} id={`#option-${value}`}>Background {value}</option>
-                                            </Fragment>
+                                            return <option key={value} value={`${value}`} className='bg-input'>Background {value}</option>
                                         }
                                     })}
                                 </Field>
@@ -453,7 +444,7 @@ const EventForm = () => {
                                     name="visible"
                                 ></Field>
                                 <p className="information">
-                                    Hide event from News section (only accessible from url)
+                                    Hide event from News section (only accessible from url or subevent link)
                                 </p>
                             </div>
                             <ErrorMessage
@@ -464,6 +455,13 @@ const EventForm = () => {
                         </div>
                     </div>
 
+                    <div className='row'>
+                        <div className="col-12 mt--20">
+                            <h5>Link a sub-event</h5>
+                            <Field as='textarea' placeholder="Sub-event description" name="subEventDescription" rows={2} />
+                            <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} intValues={values.subEventLinks} max={2} placeholder='Add first link' />
+                        </div>
+                    </div>
 
                     <div className="row">
                         <div className="col-lg-6 col-12">
@@ -499,21 +497,16 @@ const EventForm = () => {
                     <div className="row">
                         <div className="col-lg-6 col-12 mt--20">
                             <h5>Discount emails (extra from the active members)</h5>
-                            <StringDynamicInputs name='discountPass' onChange={(inputs) => values.discountPass = inputs} intValues={values.discountPass} />
+                            <StringDynamicInputs name='discountPass' onChange={(inputs) => values.discountPass = inputs} intValues={values.discountPass} placeholder='Add email' />
                         </div>
                         <div className="col-lg-6 col-12 mt--20">
                             <h5>Free Pass emails (for those who need a free ticket)</h5>
-                            <StringDynamicInputs name='freePass' onChange={(inputs) => values.freePass = inputs} intValues={values.freePass} />
+                            <StringDynamicInputs name='freePass' onChange={(inputs) => values.freePass = inputs} intValues={values.freePass} placeholder='Add email' />
                         </div>
                     </div>
 
-                    <div className='row'>
-                        <div className="col-12 mt--20">
-                            <h5>Link a sub-event</h5>
-                            <Field as='textarea' placeholder="Sub-event description" name="subEventDescription" rows={2} />
-                            <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} intValues={values.subEventLinks} max={2} />
-                        </div>
-                    </div>
+                    <h3 className="label mt--40">Add extra inputs by your choice</h3>
+                    <InputsBuilder onChange={(inputs) => values.extraInputsForm = inputs} />
 
                     <div className="small_flex mt--80">
                         <button

@@ -18,6 +18,7 @@ import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
+import { askBeforeRedirect } from "../../util/global";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -84,17 +85,7 @@ const SignUp = (props) => {
   }
 
   useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = ''; // This is needed for older browsers
-    };
-
-    if (process.env.NODE_ENV === 'development') {
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }
+    askBeforeRedirect();
   }, []);
 
   useEffect(() => {

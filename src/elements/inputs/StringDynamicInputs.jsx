@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 const StringDynamicInputs = (props) => {
-  const [inputs, setInputs] = useState(props.intValues.length > 0 ? props.intValues : ['']);
+  const [inputs, setInputs] = useState(props.intValues?.length > 0 ? props.intValues : ['']);
 
   const addInput = () => {
-    if (props.max && props.max > inputs.length) {
+    if (props.max > inputs.length) {
       setInputs([...inputs, '']);
     }
   };
@@ -56,5 +56,9 @@ const StringDynamicInputs = (props) => {
     </>
   );
 };
+
+StringDynamicInputs.defaultProps = {
+  max: 100
+}
 
 export default StringDynamicInputs;

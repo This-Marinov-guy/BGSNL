@@ -20,6 +20,7 @@ import PageLoading from "./elements/ui/PageLoading";
 import Articles from "./pages/information/Articles";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
+import { removeLogsOnProd } from "./util/global";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -209,10 +210,7 @@ const Root = () => {
   };
 }
 
-if (process.env.NODE_ENV === 'production') {
-  console.error = () => { }
-  console.debug = () => { }
-}
+removeLogsOnProd();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
