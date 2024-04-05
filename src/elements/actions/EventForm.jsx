@@ -405,7 +405,7 @@ const EventForm = () => {
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
                                 <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
+                                    style={{ maxWidth: "30px" }}
                                     type="checkbox"
                                     name="is_tickets_closed"
                                 ></Field>
@@ -422,7 +422,7 @@ const EventForm = () => {
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
                                 <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
+                                    style={{ maxWidth: "30px" }}
                                     type="checkbox"
                                     name="membersOnly"
                                 ></Field>
@@ -439,7 +439,7 @@ const EventForm = () => {
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
                                 <Field
-                                    style={{ maxWidth: "30px", margin: "10px" }}
+                                    style={{ maxWidth: "30px" }}
                                     type="checkbox"
                                     name="visible"
                                 ></Field>
