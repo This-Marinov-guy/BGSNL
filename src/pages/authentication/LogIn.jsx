@@ -268,7 +268,7 @@ const Login = (props) => {
                 </div>
               </div>
               <button
-                disabled={loading}
+                disabled={loading && !loginFormValues.email && !loginFormValues.password}
                 type="submit"
                 className="rn-button-style--2 btn-solid mt--40"
               >
