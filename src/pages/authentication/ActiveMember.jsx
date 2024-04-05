@@ -146,7 +146,13 @@ const ActiveMember = (props) => {
                                     "POST",
                                     formData
                                 );
-                                props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'Thank you for your interest - expect from us soon' });
+                                props.toast({
+                                    title: 'Thank you for your interest - expect from us soon',
+                                    status: 'success',
+                                    position: 'top-left',
+                                    duration: 8000,
+                                    isClosable: true,
+                                })
                                 navigate("/");
                             } catch (err) {
                             }

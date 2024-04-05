@@ -74,7 +74,13 @@ const NonSocietyEvent = (props) => {
             : "Any",
         }
       );
-      props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!' });
+      props.toast({
+        title: 'Your registration for the event is complete! The organizer will soon contact you!',
+        status: 'success',
+        position: 'top-left',
+        duration: 8000,
+        isClosable: true,
+      })
       navigate("/");
       setTimeout(() => closeNotificationHandler(), 7000);
     } catch (err) { }
@@ -120,217 +126,222 @@ const NonSocietyEvent = (props) => {
             >
               {loading ? <Loader /> : <span>Register</span>}
             </button></div> : <Loader center />) : <Formik
-            className="inner"
-            validationSchema={schema}
-            onSubmit={async (values) => {
-              try {
-                const responseData = await sendRequest(
-                  "event/register/non-society-event",
-                  "POST",
-                  {
-                    event: target.title,
-                    date: target.when,
-                    user: "normal",
-                    name: values.name + " " + values.surname,
-                    phone: values.phone,
-                    email: values.email,
-                    notificationTypeTerms: values.notificationTypeTerms,
-                  }
-                );
-                props.toast.current.show({
-                  severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!' });
+              className="inner"
+              validationSchema={schema}
+              onSubmit={async (values) => {
+                try {
+                  const responseData = await sendRequest(
+                    "event/register/non-society-event",
+                    "POST",
+                    {
+                      event: target.title,
+                      date: target.when,
+                      user: "normal",
+                      name: values.name + " " + values.surname,
+                      phone: values.phone,
+                      email: values.email,
+                      notificationTypeTerms: values.notificationTypeTerms,
+                    }
+                  );
+                  props.toast({
+                    title: 'Your registration for the event is complete! The organizer will soon contact you!',
+                    status: 'success',
+                    position: 'top-left',
+                    duration: 8000,
+                    isClosable: true,
+                  })
                   navigate("/");
                   setTimeout(() => closeNotificationHandler(), 7000);
                 } catch (err) { }
               }}
-          initialValues={{
-            name: "",
-            surname: "",
-            phone: "",
-            email: "",
-            notificationTerms: false,
-            notificationTypeTerms: "",
-          }}
+              initialValues={{
+                name: "",
+                surname: "",
+                phone: "",
+                email: "",
+                notificationTerms: false,
+                notificationTypeTerms: "",
+              }}
             >
-          {() => (
-            <Form
-              encType="multipart/form-data"
-              className="center_section"
-              id="form"
-              style={{ padding: "2%" }}
-            >
-              <h3>Fill your details and register</h3>
-              <FiX className="x_icon" onClick={closeHandler} />
-
-              <div className="row">
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field type="text" placeholder="Name" name="name" />
-                    <ErrorMessage
-                      className="error"
-                      name="name"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field
-                      type="text"
-                      placeholder="Surname"
-                      name="surname"
-                    ></Field>
-                    <ErrorMessage
-                      className="error"
-                      name="surname"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field
-                      type="tel"
-                      placeholder="WhatsApp Phone "
-                      name="phone"
-                    ></Field>
-                    <p className="information">
-                      Please type your number with + and country code
-                    </p>
-                    <ErrorMessage
-                      className="error"
-                      name="phone"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field type="email" placeholder="Email" name="email" />
-                    <ErrorMessage
-                      className="error"
-                      name="email"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="hor_section_nospace mt--40">
-                    <Field
-                      style={{ maxWidth: "30px", margin: "10px" }}
-                      type="checkbox"
-                      name="notificationTerms"
-                    ></Field>
-                    <p className="information">
-                      I consent to being notified by the organizer through the
-                      below contact/s
-                    </p>
-                  </div>
-                  <ErrorMessage
-                    className="error"
-                    name="notificationTerms"
-                    component="div"
-                  />
-                  <Field as="select" name="notificationTypeTerms">
-                    <option value="" disabled>
-                      Contact By
-                    </option>
-                    <option value="Email">Email</option>
-                    <option value="WhatsApp">WhatsApp</option>
-                    <option value="Email & WhatsApp">Both</option>
-                  </Field>
-                  <ErrorMessage
-                    className="error"
-                    name="notificationTypeTerms"
-                    component="div"
-                  />
-                </div>
-              </div>
-
-              <button
-                disabled={loading}
-                type="submit"
-                className="rn-button-style--2 btn-solid mt--80"
+            {() => (
+              <Form
+                encType="multipart/form-data"
+                className="center_section"
+                id="form"
+                style={{ padding: "2%" }}
               >
-                {loading ? <Loader /> : <span>Update information</span>}
-              </button>
-            </Form>
-          )}
-        </Formik>}
-    </ModalWindow>
-  )
-}
+                <h3>Fill your details and register</h3>
+                <FiX className="x_icon" onClick={closeHandler} />
 
-{/* Start Breadcrump Area */ }
-<div
-  className={`rn-page-title-area pt--120 pb--190 bg_image bg_image--${target.bgImage}`}
-  data-black-overlay="7"
->
-  <div className="container">
-    <div className="row">
-      <div className="col-lg-12">
-        <div className="rn-page-title text-center pt--100">
-          <h2 className="title theme-gradient">{target.title}</h2>
-          <p>{target.description}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{/* End Breadcrump Area */ }
+                <div className="row">
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field type="text" placeholder="Name" name="name" />
+                      <ErrorMessage
+                        className="error"
+                        name="name"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        type="text"
+                        placeholder="Surname"
+                        name="surname"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="surname"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        type="tel"
+                        placeholder="WhatsApp Phone "
+                        name="phone"
+                      ></Field>
+                      <p className="information">
+                        Please type your number with + and country code
+                      </p>
+                      <ErrorMessage
+                        className="error"
+                        name="phone"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field type="email" placeholder="Email" name="email" />
+                      <ErrorMessage
+                        className="error"
+                        name="email"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="hor_section_nospace mt--40">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="notificationTerms"
+                      ></Field>
+                      <p className="information">
+                        I consent to being notified by the organizer through the
+                        below contact/s
+                      </p>
+                    </div>
+                    <ErrorMessage
+                      className="error"
+                      name="notificationTerms"
+                      component="div"
+                    />
+                    <Field as="select" name="notificationTypeTerms">
+                      <option value="" disabled>
+                        Contact By
+                      </option>
+                      <option value="Email">Email</option>
+                      <option value="WhatsApp">WhatsApp</option>
+                      <option value="Email & WhatsApp">Both</option>
+                    </Field>
+                    <ErrorMessage
+                      className="error"
+                      name="notificationTypeTerms"
+                      component="div"
+                    />
+                  </div>
+                </div>
 
-{/* Start Portfolio Details */ }
-<div className="rn-portfolio-details ptb--120 bg_color--1">
-  <div className="container">
-    <div className="row">
-      <div className="col-lg-12">
-        <div className="portfolio-details">
-          <div className="inner">
-            <h2>About</h2>
-            <p className="subtitle">{target.text[0]}</p>
-            <p>{target.text[1]}</p>
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className="rn-button-style--2 btn-solid mt--80"
+                >
+                  {loading ? <Loader /> : <span>Update information</span>}
+                </button>
+              </Form>
+            )}
+          </Formik>}
+        </ModalWindow>
+      )
+      }
 
-            <div className="portfolio-view-list d-flex flex-wrap">
-              <div className="port-view">
-                <span>When</span>
-                <h4>{target.when}</h4>
-              </div>
-
-              <div className="port-view">
-                <span>Where</span>
-                <h4>{target.where}</h4>
-              </div>
-
-              <div className="port-view">
-                <span>Fee</span>
-                <h4>
-                  {user.token
-                    ? target.memberEntry + " euro (discounted)"
-                    : target.entry + " euro"}
-                </h4>
+      {/* Start Breadcrump Area */}
+      <div
+        className={`rn-page-title-area pt--120 pb--190 bg_image bg_image--${target.bgImage}`}
+        data-black-overlay="7"
+      >
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="rn-page-title text-center pt--100">
+                <h2 className="title theme-gradient">{target.title}</h2>
+                <p>{target.description}</p>
               </div>
             </div>
-            <button
-              onClick={
-                () => {
-                  dispatch(showModal());
-                }
-              }
-              className="rn-button-style--2 btn-solid"
-            >
-              Register
-            </button>
-            <p className="information mt--20">
-              {user.token
-                ? "*As a member, your information will be taken directly from your profile"
-                : "Press the button and fill your details"}
-            </p>
           </div>
-          <br />
-          {/* Start Contact Map  */}
-          <div className="container">
-            <div className="rn-contact-map-area position-relative">
-              {/* <div style={{ height: "450px", width: "100%" }}>
+        </div>
+      </div>
+      {/* End Breadcrump Area */}
+
+      {/* Start Portfolio Details */}
+      <div className="rn-portfolio-details ptb--120 bg_color--1">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="portfolio-details">
+                <div className="inner">
+                  <h2>About</h2>
+                  <p className="subtitle">{target.text[0]}</p>
+                  <p>{target.text[1]}</p>
+
+                  <div className="portfolio-view-list d-flex flex-wrap">
+                    <div className="port-view">
+                      <span>When</span>
+                      <h4>{target.when}</h4>
+                    </div>
+
+                    <div className="port-view">
+                      <span>Where</span>
+                      <h4>{target.where}</h4>
+                    </div>
+
+                    <div className="port-view">
+                      <span>Fee</span>
+                      <h4>
+                        {user.token
+                          ? target.memberEntry + " euro (discounted)"
+                          : target.entry + " euro"}
+                      </h4>
+                    </div>
+                  </div>
+                  <button
+                    onClick={
+                      () => {
+                        dispatch(showModal());
+                      }
+                    }
+                    className="rn-button-style--2 btn-solid"
+                  >
+                    Register
+                  </button>
+                  <p className="information mt--20">
+                    {user.token
+                      ? "*As a member, your information will be taken directly from your profile"
+                      : "Press the button and fill your details"}
+                  </p>
+                </div>
+                <br />
+                {/* Start Contact Map  */}
+                <div className="container">
+                  <div className="rn-contact-map-area position-relative">
+                    {/* <div style={{ height: "450px", width: "100%" }}>
                       <GoogleMapReact
                         defaultCenter={eventDetails[0].center}
                         defaultZoom={eventDetails[0].zoom}
@@ -342,34 +353,34 @@ const NonSocietyEvent = (props) => {
                         />
                       </GoogleMapReact>
                     </div> */}
-            </div>
-          </div>
-          {/* End Contact Map  */}
-          <br />
-          <div className="portfolio-thumb-inner">
-            <div className="thumb position-relative mb--30">
-              <img
-                src={`${target.images[0]}.jpg`}
-                alt="Portfolio Images"
-              />
+                  </div>
+                </div>
+                {/* End Contact Map  */}
+                <br />
+                <div className="portfolio-thumb-inner">
+                  <div className="thumb position-relative mb--30">
+                    <img
+                      src={`${target.images[0]}.jpg`}
+                      alt="Portfolio Images"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-{/* End Portfolio Details */ }
+      {/* End Portfolio Details */}
 
-{/* Start Back To Top */ }
-<div className="backto-top">
-  <ScrollToTop showUnder={160}>
-    <FiChevronUp />
-  </ScrollToTop>
-</div>
-{/* End Back To Top */ }
+      {/* Start Back To Top */}
+      <div className="backto-top">
+        <ScrollToTop showUnder={160}>
+          <FiChevronUp />
+        </ScrollToTop>
+      </div>
+      {/* End Back To Top */}
 
-<Footer />
+      <Footer />
     </React.Fragment >
   );
 };

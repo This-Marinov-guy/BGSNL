@@ -99,7 +99,14 @@ const Login = (props) => {
           ).toISOString(),
         })
       );
-      props.toast.current.show({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' });
+      props.toast({
+        title: 'Welcome Back!',
+        description: 'Hop in the User section to see your tickets, news and your information',
+        status: 'success',
+        position: 'top-left',
+        duration: 8000,
+        isClosable: true,
+      })
       navigate(`/${responseData.region}`);
     } catch (err) { }
   };
