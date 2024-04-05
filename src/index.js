@@ -7,10 +7,11 @@ import { useSelector } from "react-redux";
 import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
-import { ChakraProvider } from '@chakra-ui/react'
+import { PrimeReactProvider } from 'primereact/api';
 
 // Style
 import './index.scss'
+import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 // Blocks Layout
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -18,7 +19,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageLoading from "./elements/ui/PageLoading";
 import Articles from "./pages/information/Articles";
 import RegionLayout from "./component/functional/RegionLayout";
-import { useToast } from '@chakra-ui/react'
+import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/global";
 
 // Pages
@@ -80,7 +81,7 @@ const Fail = lazy(() => import("./pages/redirects/Fail"));
 const Root = () => {
   const maintenanceBreak = false;
 
-  const toast = useToast()
+  const toast = useRef(null)
 
   const dispatch = useDispatch();
 
@@ -124,13 +125,7 @@ const Root = () => {
 
   useEffect(() => {
     if (errorMessage) {
-      toast({
-        title: errorMessage,
-        status: 'error',
-        position: 'top-left',
-        duration: 8000,
-        isClosable: true,
-      })
+      toast.current.show({ severity: 'error', summary: 'You got an error :(', detail: errorMessage, life: 8000 });
     }
   }, [error])
 
@@ -220,9 +215,9 @@ removeLogsOnProd();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <ChakraProvider>
+    <PrimeReactProvider>
       <Root />
-    </ChakraProvider>
+    </PrimeReactProvider>
   </Provider>
 );
 

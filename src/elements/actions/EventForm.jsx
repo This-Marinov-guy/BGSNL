@@ -33,13 +33,7 @@ const EventForm = () => {
 
     const handleErrorMsg = (errors, isValid, dirty) => {
         if (errors && !isValid && dirty) {
-            props.toast({
-                title: 'Please check the form again and fill the missing or incorrect data!',
-                status: 'error',
-                position: 'top-left',
-                duration: 8000,
-                isClosable: true,
-              })
+            props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
         }
     }
 

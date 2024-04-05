@@ -81,13 +81,7 @@ const SignUp = (props) => {
 
   const handleErrorMsg = (errors, isValid, dirty) => {
     if (errors && !isValid && dirty) {
-      props.toast({
-        title: 'Please check the form again and fill the missing or incorrect data!',
-        status: 'error',
-        position: 'top-left',
-        duration: 8000,
-        isClosable: true,
-      })
+      props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
     }
   }
 
@@ -99,7 +93,7 @@ const SignUp = (props) => {
     if (region && !REGIONS.includes(region)) {
       navigate('/signup')
     }
-
+    
     setSelectedMembershipIndex(null)
   }, [region])
 
@@ -253,14 +247,7 @@ const SignUp = (props) => {
                                 ).toISOString(),
                               })
                             );
-                            props.toast({
-                              title: 'Welcome to the Society!',
-                              description: 'Hop in the User section to see your tickets, news and your information',
-                              status: 'success',
-                              position: 'top-left',
-                              duration: 8000,
-                              isClosable: true,
-                            })
+                            props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 });
                             navigate(`/${responseData.region}`);
                             return;
                           } catch (err) {
