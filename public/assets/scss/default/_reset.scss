@@ -241,6 +241,7 @@ input[disabled] {
 
 input[type="checkbox"],
 input[type="radio"] {
+  max-width: 1.5em;
   padding: 0;
 }
 

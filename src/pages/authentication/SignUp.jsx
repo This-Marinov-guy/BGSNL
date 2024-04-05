@@ -501,7 +501,6 @@ const SignUp = (props) => {
                     <div className="col-lg-6 col-md-6 col-12">
                       <div className="hor_section_nospace mt--40">
                         <Field
-                          style={{ maxWidth: "30px" }}
                           type="checkbox"
                           name="policyTerms"
                         ></Field>
@@ -524,7 +523,6 @@ const SignUp = (props) => {
 
                       <div className="hor_section_nospace mt--40">
                         <Field
-                          style={{ maxWidth: "30px" }}
                           type="checkbox"
                           name="dataTerms"
                         ></Field>
@@ -541,7 +539,6 @@ const SignUp = (props) => {
 
                       <div className="hor_section_nospace mt--40">
                         <Field
-                          style={{ maxWidth: "30px" }}
                           type="checkbox"
                           name="notificationTerms"
                         ></Field>
@@ -561,7 +558,6 @@ const SignUp = (props) => {
 
                       <div className="hor_section_nospace mt--40">
                         <Field
-                          style={{ maxWidth: "30px" }}
                           type="checkbox"
                           name="payTerms"
                         ></Field>
