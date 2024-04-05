@@ -242,6 +242,9 @@ input[disabled] {
 input[type="checkbox"],
 input[type="radio"] {
   padding: 0;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
 }
 
 input[type="search"] {
