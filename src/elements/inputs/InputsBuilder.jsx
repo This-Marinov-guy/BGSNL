@@ -33,7 +33,7 @@ const InputsBuilder = (props) => {
         <>
             {inputs.map((value, index) => (
                 <Fragment key={index}>
-                    <div className='row mt--10' style={{ gap: '1%' }} key={index}>
+                    <div className='row mt--10' key={index}>
                         <select
                             value={value.type}
                             onChange={(e) => value.type = e.target.value}
@@ -43,10 +43,10 @@ const InputsBuilder = (props) => {
                             <option value='text'>Text</option>
                             <option value='select'>Select</option>
                         </select>
-                        <button type='button' className='col-2 rn-btn rn-btn-green' style={{ fontSize: '22px' }} onClick={() => addInput(value.type)}>
+                        <button type='button' className='col-1 rn-btn rn-btn-green' style={{ fontSize: '22px' }} onClick={() => addInput(value.type)}>
                             +
                         </button>
-                        <button type='button' className='col-2 rn-btn' onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
+                        <button type='button' className='col-1 rn-btn' onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
                             X
                         </button>
                     </div>
