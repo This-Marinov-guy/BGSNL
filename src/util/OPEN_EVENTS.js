@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from "formik";
 
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
-  groningen: [    {
+  groningen: [{
     membersOnly: false,
     visible: true,
     title: "A hungry bear doesn't dance",
@@ -46,96 +46,137 @@ export const SOCIETY_EVENTS = {
     images: ["/assets/images/portfolio/groningen/portfolio-35"],
     thumbnail: "/assets/images/portfolio/groningen/portfolio-35",
   },
+  {
+    is_tickets_closed: true,
+    membersOnly: false,
+    visible: true,
+    title: "Spring Gala",
+    // newTitle: 'Bulgarian Dinner',
+    description: "event for the stars",
+    bgImage: "19",
+    date: "24th May",
+    time: "17:00",
+    ticketTimer: '2024-05-24T20:00:00',
+    ticketLimit: 0,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `StadsLab Groningen`,
+    entry: "TBD",
+    memberEntry: "TBD",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
+    memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
+    activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: [
+      `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
+        `,
+      `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
+
+`,
+      ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
+`,
+      `More info coming soon! ⏳
+
+`,
+      `Ticket sale opens in April so stay tuned!
+        `,
+    ],
+    ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
+    images: ["/assets/images/portfolio/groningen/portfolio-30"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+  },
+  ],
+  rotterdam: [
     {
-      is_tickets_closed: true,
       membersOnly: false,
       visible: true,
-      title: "Spring Gala",
+      title: "International Quiz Night",
       // newTitle: 'Bulgarian Dinner',
-      description: "event for the stars",
-      bgImage: "19",
-      date: "24th May",
-      time: "17:00",
-      ticketTimer: '2024-05-24T20:00:00',
-      ticketLimit: 0,
+      description: "Let's see who paid attention in school",
+      bgImage: "22",
+      date: "12th April",
+      time: "20:00",
+      ticketTimer: '2024-04-13T00:59:00',
+      ticketLimit: 60,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",
-      where: `StadsLab Groningen`,
-      entry: "TBD",
-      memberEntry: "TBD",
-      including: [],
-      // ticket_link: '',
-      price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
-      memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
-      activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+      where: `Huiskantine`,
+      entry: 6,
+      memberEntry: 5,
+      including: ['+ drink', '+ drink'],
+      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+      price_id: 'price_1P24QcIOw5UGbAo1VKyg3doi',
+      memberPrice_id: 'price_1P24RsIOw5UGbAo1fUGLw6oG',
+      activeMemberPrice_id: 'price_1P24S5IOw5UGbAo1Vm1oaadh',
       freePass: ['vlady1002@abv.bg'],
       marketingInputs: false,
       extraInputs: false,
       text: [
-        `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
-        `,
-        `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
-
+`Get ready for a global trivia showdown like no other at our International Quiz Night! 🌟
 `,
-        ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
+`Join us on April 12th starting at 20:00 at Huiskantine! 
 `,
-        `More info coming soon! ⏳
-
+`Bring your international friends, gather your dream team, and prepare to win the grand prize! After all, many hands make light work. This night of friendly competition will test your knowledge of diverse cultures, history, geography, and more! Keep an eye out for our Instagram stories for a sneak peek at the question themes you might encounter during the Quiz Night. 😉 
 `,
-        `Ticket sale opens in April so stay tuned!
-        `,
+`
+There are limited seats available, so buy your ticket now! €5 for members and €6 for non-members.
+`,
+`It's your chance to let your brain shine! 🧠
+`
       ],
-      ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
-      images: ["/assets/images/portfolio/groningen/portfolio-30"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+      ticket_img: '/assets/images/tickets/rotterdam/ticket-2.jpg',
+      images: ["/assets/images/portfolio/rotterdam/portfolio-2"],
+      thumbnail: "/assets/images/portfolio/rotterdam/portfolio-2",
     },
   ],
-  rotterdam: [
-
-  ],
   leeuwarden: [
-//     {
-//       membersOnly: false,
-//       visible: true,
-//       title: "BG Retro Movie Night",
-//       newTitle: 'Bulgarian Dinner',
-//       description: "Celebrate the National Movie Day",
-//       bgImage: "30",
-//       date: "28th March",
-//       time: "18:30",
-//       ticketTimer: '2024-03-28T20:00:00',
-//       ticketLimit: 250,
-//       Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-//       correctedDate: "",
-//       correctedTime: "",
-//       where: `Auditorium Building 10`,
-//       entry: 3.50,
-//       memberEntry: 2,
-//       including: [],
-//       ticket_link: '',
-//       price_id: 'price_1OyznWIOw5UGbAo1iE4xmWWD',
-//       memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
-//       activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
-//       freePass: ['vlady1002@abv.bg'],
-//       marketingInputs: false,
-//       extraInputs: false,
-//       text: [
-//         `Don't worry if you don't speak Bulgarian - English subtitles will be provided! 🌟 
-//         `,
-//         `🎥✨ Join us for a special Movie Night celebration!
-// `,
-//         ` 🎉 BGSL is proud to honor National Bulgarian Cinema Day with a screening of the heartwarming film "С деца на море" ("With Children at the Seaside") 🌊👨👩👧👦
-// `,
-//         ` Get ready for an evening of laughter, drama and unforgettable moments!  
-// `,
-//         `🎟 Tickets are only 2 euros for members of BGSL and 3,50 euros for non-members. The ticket includes a refreshing drink 🥤 and tasty popcorn/nachos and M&M! 🍿 Grab your friends for a cinematic experience you won't forget`,
-//         `See you there! 🎬 `,
-//       ],
-//       ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
-//       images: ["/assets/images/portfolio/leeuwarden/portfolio-6"],
-//       thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-6",
-//     },
+    //     {
+    //       membersOnly: false,
+    //       visible: true,
+    //       title: "BG Retro Movie Night",
+    //       newTitle: 'Bulgarian Dinner',
+    //       description: "Celebrate the National Movie Day",
+    //       bgImage: "30",
+    //       date: "28th March",
+    //       time: "18:30",
+    //       ticketTimer: '2024-03-28T20:00:00',
+    //       ticketLimit: 250,
+    //       Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    //       correctedDate: "",
+    //       correctedTime: "",
+    //       where: `Auditorium Building 10`,
+    //       entry: 3.50,
+    //       memberEntry: 2,
+    //       including: [],
+    //       ticket_link: '',
+    //       price_id: 'price_1OyznWIOw5UGbAo1iE4xmWWD',
+    //       memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
+    //       activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+    //       freePass: ['vlady1002@abv.bg'],
+    //       marketingInputs: false,
+    //       extraInputs: false,
+    //       text: [
+    //         `Don't worry if you don't speak Bulgarian - English subtitles will be provided! 🌟 
+    //         `,
+    //         `🎥✨ Join us for a special Movie Night celebration!
+    // `,
+    //         ` 🎉 BGSL is proud to honor National Bulgarian Cinema Day with a screening of the heartwarming film "С деца на море" ("With Children at the Seaside") 🌊👨👩👧👦
+    // `,
+    //         ` Get ready for an evening of laughter, drama and unforgettable moments!  
+    // `,
+    //         `🎟 Tickets are only 2 euros for members of BGSL and 3,50 euros for non-members. The ticket includes a refreshing drink 🥤 and tasty popcorn/nachos and M&M! 🍿 Grab your friends for a cinematic experience you won't forget`,
+    //         `See you there! 🎬 `,
+    //       ],
+    //       ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
+    //       images: ["/assets/images/portfolio/leeuwarden/portfolio-6"],
+    //       thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-6",
+    //     },
     {
       is_tickets_closed: true,
       membersOnly: false,
@@ -208,10 +249,10 @@ export const SOCIETY_EVENTS = {
       marketingInputs: false,
       extraInputs: false,
       text: [
-`Calling all music lovers to Galena, Krisko, Lili Ivanova, Azis, Molec and many more to our BULGARIAN KARAOKE: The Voice of Breda!🎶 Choose your favourite Bulgarian or Balkan songs and let your voice shine!`,
-`🙈That's not even all - Gather your friends for our exciting group singing contest, where teamwork could score you a special prize!🌟 
+        `Calling all music lovers to Galena, Krisko, Lili Ivanova, Azis, Molec and many more to our BULGARIAN KARAOKE: The Voice of Breda!🎶 Choose your favourite Bulgarian or Balkan songs and let your voice shine!`,
+        `🙈That's not even all - Gather your friends for our exciting group singing contest, where teamwork could score you a special prize!🌟 
 `,
-`Let the show begin! 🎤 !
+        `Let the show begin! 🎤 !
 `
       ],
       ticket_img: '/assets/images/tickets/breda/ticket-6.jpg',
