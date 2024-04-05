@@ -8,6 +8,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack')
 
 
 // Common configuration files
@@ -23,6 +24,9 @@ module.exports = {
    * Plugins used by Webpack.
    */
   plugins: [
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
     /**
    * Plugins for env 
    */
