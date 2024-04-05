@@ -404,10 +404,12 @@ const EventForm = () => {
                     <div className="row mt--40">
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
-                                <Field
+                                <input
                                     type="checkbox"
                                     name="is_tickets_closed"
-                                ></Field>
+                                    value={values.is_tickets_closed}
+                                    onChange={(event) => values.is_tickets_closed = event.target.value}
+                                ></input>
                                 <p className="information">
                                     Close Sale of Tickets (only display event)
                                 </p>
@@ -420,10 +422,12 @@ const EventForm = () => {
                         </div>
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
-                                <Field
+                                <input
                                     type="checkbox"
                                     name="membersOnly"
-                                ></Field>
+                                    value={values.membersOnly}
+                                    onChange={(event) => values.membersOnly = event.target.value}
+                                ></input>
                                 <p className="information">
                                     Make event only purchasable by members (Still visible for non-members)
                                 </p>
@@ -436,10 +440,12 @@ const EventForm = () => {
                         </div>
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
-                                <Field
+                                <input
                                     type="checkbox"
                                     name="visible"
-                                ></Field>
+                                    value={values.visible}
+                                    onChange={(event) => values.visible = event.target.value}
+                                ></input>
                                 <p className="information">
                                     Hide event from News section (only accessible from url or subevent link)
                                 </p>
