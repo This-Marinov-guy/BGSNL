@@ -21,6 +21,7 @@ import Articles from "./pages/information/Articles";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/global";
+import { decodeJWT } from "./util/jwt";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -113,7 +114,6 @@ const Root = () => {
     ) {
       dispatch(
         login({
-          userId: storedData.userId,
           token: storedData.token,
           expirationDate: new Date(
             new Date().getTime() + 36000000

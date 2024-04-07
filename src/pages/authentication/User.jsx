@@ -19,6 +19,7 @@ import Locked from "../../elements/ui/Locked";
 import PageLoading from '../../elements/ui/PageLoading'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import WindowShift from "../../elements/ui/WindowShift";
+import { decodeJWT } from "../../util/jwt";
 import ImageFb from "../../elements/ui/ImageFb";
 import Greeting from "../../elements/Greeting";
 import Christmas from "../../elements/special/Christmas";
@@ -86,15 +87,16 @@ const User = (props) => {
   };
 
   useEffect(() => {
+    const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/${user.userId}`);
+        const responseData = await sendRequest(`user/${userId}`);
         setCurrentUser(responseData.user);
       } catch (err) {
       }
     };
     fetchCurrentUser();
-  }, [user, sendRequest]);
+  }, []);
 
   return currentUser ? (
     <React.Fragment>
@@ -157,7 +159,7 @@ const User = (props) => {
               }
               try {
                 const responseData = await sendRequest(
-                  `user/edit-info/${user.userId}`,
+                  `user/edit-info/${currentUser.id}`,
                   "PATCH",
                   formData
                 );

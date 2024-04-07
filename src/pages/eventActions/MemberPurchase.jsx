@@ -19,6 +19,7 @@ import FormExtras from "../../elements/ui/FormExtras";
 import { REGIONS } from "../../util/REGIONS_DESIGN";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
+import { decodeJWT } from "../../util/jwt";
 
 const MemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -49,9 +50,10 @@ const MemberPurchase = () => {
   }
 
   useEffect(() => {
+    const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/${user.userId}`);
+        const responseData = await sendRequest(`user/${userId}`);
         setCurrentUser(responseData.user);
       } catch (err) {
         console.log(err);

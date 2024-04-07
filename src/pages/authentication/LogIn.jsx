@@ -92,7 +92,6 @@ const Login = (props) => {
 
       dispatch(
         login({
-          userId: responseData.userId,
           token: responseData.token,
           expirationDate: new Date(
             new Date().getTime() + 36000000
