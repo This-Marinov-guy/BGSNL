@@ -27,7 +27,7 @@ import InputsBuilder from "../inputs/InputsBuilder";
 import { askBeforeRedirect, isProd } from "../../util/global";
 
 const EventForm = () => {
-    const { sendRequest, loading } = useHttpClient()
+    const { sendRequest, loading } = useHttpClient();
     const [files, setFiles] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
 
@@ -95,6 +95,7 @@ const EventForm = () => {
                 where: '',
                 ticketTimer: '',
                 ticketLimit: null,
+                isFree: false,
                 entry: null,
                 memberEntry: null,
                 activeMemberEntry: null,
@@ -173,7 +174,7 @@ const EventForm = () => {
                             <div className="rn-form-group">
                                 <Field
                                     type="text"
-                                    placeholder="Small Description"
+                                    placeholder="Sub-Title"
                                     name="description"
                                 ></Field>
                                 <ErrorMessage
@@ -230,6 +231,20 @@ const EventForm = () => {
                     </div>
                     <h3 className="mt--30 label">Price Details</h3>
                     <div className="row">
+                        <div className="col-lg-6 col-12">
+                            <div className="hor_section_nospace mt--20">
+                                <Field
+                                    style={{ maxWidth: "30px" }}
+                                    type="checkbox"
+                                    name="isFree"
+                                ></Field>
+                                <p className="information">
+                                    Make event FREE for all
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {!values.isFree && <div className="row">
                         <div className="col-lg-4 col-md-6 col-12">
                             <h5 className="mt--10">Basic Price</h5>
                             <div className="rn-form-group">
@@ -303,7 +318,7 @@ const EventForm = () => {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div>}
                     <h3 className="mt--30 label">Images</h3>
                     <div className="row">
                         <div className="col-lg-6 col-md-6 col-12 mt--20">

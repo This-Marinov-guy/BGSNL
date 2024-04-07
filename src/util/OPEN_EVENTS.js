@@ -118,16 +118,16 @@ export const SOCIETY_EVENTS = {
       marketingInputs: false,
       extraInputs: false,
       text: [
-`Get ready for a global trivia showdown like no other at our International Quiz Night! 🌟
+        `Get ready for a global trivia showdown like no other at our International Quiz Night! 🌟
 `,
-`Join us on April 12th starting at 20:00 at Huiskantine! 
+        `Join us on April 12th starting at 20:00 at Huiskantine! 
 `,
-`Bring your international friends, gather your dream team, and prepare to win the grand prize! After all, many hands make light work. This night of friendly competition will test your knowledge of diverse cultures, history, geography, and more! Keep an eye out for our Instagram stories for a sneak peek at the question themes you might encounter during the Quiz Night. 😉 
+        `Bring your international friends, gather your dream team, and prepare to win the grand prize! After all, many hands make light work. This night of friendly competition will test your knowledge of diverse cultures, history, geography, and more! Keep an eye out for our Instagram stories for a sneak peek at the question themes you might encounter during the Quiz Night. 😉 
 `,
-`
+        `
 There are limited seats available, so buy your ticket now! €5 for members and €6 for non-members.
 `,
-`It's your chance to let your brain shine! 🧠
+        `It's your chance to let your brain shine! 🧠
 `
       ],
       ticket_img: '/assets/images/tickets/rotterdam/ticket-2.jpg',
@@ -264,39 +264,42 @@ There are limited seats available, so buy your ticket now! €5 for members and 
 
   ],
   amsterdam: [
-    // {
-    //   membersOnly: false,
-    //   visible: true,
-    //   title: "Board Game Night",
-    //   // newTitle: 'Bulgarian Dinner',
-    //   description: "Show up your game",
-    //   bgImage: "3",
-    //   date: "15th March",
-    //   time: "19:00",
-    //   ticketTimer: '2024-03-15T15:00:00',
-    //   ticketLimit: 25,
-    //   //Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    //   correctedDate: "",
-    //   correctedTime: "",
-    //   where: `The POKE Lab`,
-    //   entry: 5,
-    //   memberEntry: 5,
-    //   including: ['(including free drink)', '(including free drink)'],
-    //   // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-    //   price_id: 'price_1OsBLpIOw5UGbAo1Cddu79PH',
-    //   memberPrice_id: 'price_1OsBLpIOw5UGbAo1Cddu79PH',
-    //   activeMemberPrice_id: 'price_1OsBLpIOw5UGbAo1Cddu79PH',
-    //   freePass: ['vlady1002@abv.bg'],
-    //   extraInputs: false,
-    //   text: [
-    //     `Join us for an exciting board games night at THE POKÉ LAB Amsterdam! Whether you’re into more serious games like chess or the well-known entertaining Monopoly, you’ll certainly find something to your taste. With every ticket purchased, you get a beer or a glass of wine of your choice. There’s only 25 tickets available, so don’t hesitate and follow the link in our bio to get yours! You’re welcome from 19:00 onwards. Can’t wait to see you there! 
-    //   `,
-    //     `Присъединете се към нас за вълнуваща вечер на бордните игри в THE POKÉ LAB Amsterdam. Няма значение дали си падате по сериозните игри като шах или предпочитате забавното Монополи, със сигурност ще откриете нещо по Ваш вкус. С всеки закупен билет получавате бира или чаша вино по Ваш избор. Има само 25 налични билета, така че не се колебайте и последвайте линка в биото ни, за да закупите Вашия. Добре дошли сте от 19:00ч. Очакваме Ви!
-    //   `,
-    //   ],
-    //   ticket_img: '/assets/images/tickets/amsterdam/ticket-1.jpg',
-    //   images: ["/assets/images/portfolio/amsterdam/portfolio-1"],
-    //   thumbnail: "/assets/images/portfolio/amsterdam/portfolio-1",
-    // },
+    {
+      membersOnly: false,
+      visible: true,
+      title: "Treasure Hunt",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Awaken your adventure spirit",
+      bgImage: "23",
+      date: "19th April",
+      time: "17:00",
+      ticketTimer: '2024-04-19T13:00:00',
+      ticketLimit: 30,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Vondelpark`,
+      isFree: true,
+      entry: 6,
+      memberEntry: 5,
+      including: [],
+      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+      price_id: 'price_1P24QcIOw5UGbAo1VKyg3doi',
+      memberPrice_id: 'price_1P24RsIOw5UGbAo1fUGLw6oG',
+      activeMemberPrice_id: 'price_1P24S5IOw5UGbAo1Vm1oaadh',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Calling all adventurers! Grab your maps and join us in Amsterdam for the ultimate treasure hunt, starting on April 19th at 17:00 in Vondelpark! Solve clues, crack codes, and outsmart the competition as you journey through the city's hidden secrets. But wait, there's a twist! The victorious team will be rewarded with FREE drinks at our borrel at Café Fest at 20:00 (Wibauthof 1, 1091 DD)! Get ready to toast to your triumph and celebrate in style! Get your FREE ticket in our bio, so that you don’t miss out on the thrill!
+`,
+        `...
+`,
+        `Призоваваме всички приключенци! Грабвайте картите и се присъединете към нас за най-голямото търсене на съкровища в Амстердам, което започва на 19-ти април от 17:00 във Вонделпарк! Открийте улики, разгадайте кодове и надхитрете конкуренцията, докато се разхождате из скритите улички на града. Но това не е всичко! Отборът победител ще получи БЕЗПЛАТНИ напитки на нашия борел в Café Fest от 20:00ч. (Wibauthof 1, 1091 DD)! Пригответе се да вдигнете тост за своя триумф и да празнувате със стил! Вземете своя БЕЗПЛАТЕН билет в нашето био, за да не пропуснете тръпката!`
+      ],
+      ticket_img: '/assets/images/tickets/amsterdam/ticket-2.jpg',
+      images: ["/assets/images/portfolio/amsterdam/portfolio-2"],
+      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-2",
+    },
   ]
 }
