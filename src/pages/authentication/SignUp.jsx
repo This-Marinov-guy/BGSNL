@@ -93,7 +93,7 @@ const SignUp = (props) => {
     if (region && !REGIONS.includes(region)) {
       navigate('/signup')
     }
-    
+
     setSelectedMembershipIndex(null)
   }, [region])
 
@@ -248,7 +248,10 @@ const SignUp = (props) => {
                               })
                             );
                             props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 });
-                            navigate(`/${responseData.region}`);
+                         
+                            navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
+                            sessionStorage.removeItem('prevUrl');
+                            
                             return;
                           } catch (err) {
                             return;

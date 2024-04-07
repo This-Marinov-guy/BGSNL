@@ -3,6 +3,8 @@ import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
 
 const Fail = () => {
+  const prevUrl = sessionStorage.getItem('prevUrl')
+
   return (
     <Alert
       className="center_section"
@@ -14,9 +16,15 @@ const Fail = () => {
         Unfortunately, your payment was unsuccessful and you were NOT charged!
         If you need any help with the payment, please contact us!
       </p>
-      <Link className="rn-button-style--2 btn-solid mt--40" to="/">
-        Home
-      </Link>
+      <div className="options-btns-div">
+        <Link className="rn-button-style--2 rn-btn-green mt--30" to="/">
+          Home
+        </Link>
+        {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
+        } className="rn-button-style--2 rn-btn-green mt--30" to={prevUrl}>
+          Back To Event
+        </Link>}
+      </div>
     </Alert>
   );
 };
