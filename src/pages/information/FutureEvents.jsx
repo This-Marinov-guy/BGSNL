@@ -8,14 +8,14 @@ import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";
 import PortfolioList from "../../elements/portfolio/PortfolioList";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
-import {OTHER_EVENTS} from "../../util/OTHER_EVENTS";
+import { OTHER_EVENTS } from "../../util/OTHER_EVENTS";
 
 
 const FutureEventsContent = () => {
 
-  const {region} = useParams();
+  const { region } = useParams();
 
-  
+
   return (
     <div className="portfolio-area pt--120 pb--120 bg_color--5">
       <div className="rn-slick-dot">
@@ -48,8 +48,6 @@ const FutureEventsContent = () => {
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );
@@ -57,7 +55,7 @@ const FutureEventsContent = () => {
 
 const FutureOtherEventsContent = () => {
 
-  const {region} = useParams();
+  const { region } = useParams();
 
 
   return (

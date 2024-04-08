@@ -6,7 +6,7 @@
   position: relative;
   @extend %transition;
   min-height: 600px;
-  width: 100%;
+  width: 80%;
 
   @media #{$laptop-device} {
     min-height: 350px;
