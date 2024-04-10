@@ -5,7 +5,7 @@ class Breadcrumb extends Component {
 
     render() {
         const { title, parent } = this.props;
-        const imageUrl = `/assets/images/bg/bg-image-1.jpg`;
+        const imageUrl = `/assets/images/bg/bg-image-1.webp`;
 
         return (
             <React.Fragment>

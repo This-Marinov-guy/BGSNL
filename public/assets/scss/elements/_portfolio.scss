@@ -247,13 +247,13 @@
       position: absolute;
       top: 0;
       left: 0;
-      min-height: 100%;
-      width: 100%;
+      min-height: 80%;
+      width: 80%;
       background-size: cover;
       background-position: center;
       border-radius: 5px;
       background-color: #0a0a0a;
-      transform: scale(1.13) translateZ(0);
+      transform: scale(0.8) translateZ(0);
       backface-visibility: hidden;
       transition: transform 0.28s ease;
       z-index: 4;
@@ -301,13 +301,13 @@
         opacity: 1;
       }
       .thumbnail-inner {
-        transform: scale(1) translateZ(0);
+        transform: scale(0.8) translateZ(0);
         &::before {
           opacity: 0.85;
         }
       }
       .thumbnail {
-        transform: scale(1) translateZ(0);
+        transform: scale(0.8) translateZ(0);
         &::after {
           background-color: rgba(25, 25, 25, 0.24);
         }
@@ -695,7 +695,7 @@ Portfolio Style Three
     .thumbnail {
       a {
         img {
-          transform: scale(1.1);
+          transform: scale(0.8);
         }
         &::before {
           opacity: 0;

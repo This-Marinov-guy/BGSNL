@@ -20,6 +20,7 @@ import { REGIONS } from "../../util/REGIONS_DESIGN";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { decodeJWT } from "../../util/jwt";
+import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const MemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -225,13 +226,15 @@ const MemberPurchase = () => {
                     </div>
                   </div>
                   {target.extraInputs && <FormExtras target={target.extraInputs} />}
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    className="rn-button-style--2 btn-solid mt--80"
-                  >
-                    {loading ? <Loader /> : <span>Proceed to paying</span>}
-                  </button>
+                  <WithBackBtn>
+                    <button
+                      disabled={loading}
+                      type="submit"
+                      className="rn-button-style--2 btn-solid mt--80"
+                    >
+                      {loading ? <Loader /> : <span>Proceed to paying</span>}
+                    </button>
+                  </WithBackBtn>
                   <p className="information mt--20">
                     The information for purchasing this ticket will be taken from your
                     account. Be sure it is accurate as it can be used as a proof of

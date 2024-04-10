@@ -19,6 +19,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { REGIONS_MEMBERSHIP } from "../../util/REGIONS_AUTH_CONFIG";
 import MarketingForm from "../../elements/ui/MarketingForm";
 import MembershipBanner from "../../elements/ui/MembershipBanner";
+import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -341,13 +342,15 @@ const NonMemberPurchase = () => {
                           />
                         </div>
                       </div>
-                      <button
-                        disabled={loading}
-                        type="submit"
-                        className="rn-button-style--2 btn-solid mt--80"
-                      >
-                        {loading ? <Loader /> : <span>Proceed to paying</span>}
-                      </button>
+                      <WithBackBtn>
+                        <button
+                          disabled={loading}
+                          type="submit"
+                          className="rn-button-style--2 btn-solid mt--80"
+                        >
+                          {loading ? <Loader /> : <span>Proceed to paying</span>}
+                        </button>
+                      </WithBackBtn>
                     </Form>
                   )}
                 </Formik>

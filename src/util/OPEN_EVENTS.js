@@ -4,6 +4,74 @@ import { Field, ErrorMessage } from "formik";
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
   groningen: [{
+    is_tickets_closed: true,
+    subEvent: {
+      description: 'Choose your workshop. All can be purchased at one and if you are a member - you pay 3 and get 1 for FREE',
+      links: [
+        {
+          name: 'All',
+          href: '/Dancing Bears Workshop Full Access'
+        },
+        {
+          name: 'I',
+          href: '/Dancing Bears Workshop I'
+        },
+        {
+          name: 'II',
+          href: '/Dancing Bears Workshop II'
+        },
+        {
+          name: 'III',
+          href: '/Dancing Bears Workshop III'
+        },
+        {
+          name: 'IV',
+          href: '/Dancing Bears Workshop IV'
+        }
+      ]
+    },
+    membersOnly: false,
+    visible: true,
+    title: "Dancing Bears Workshop",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Level up your dancing and your spirit",
+    bgImage: "24",
+    date: "20 April - 18 May",
+    time: "Check poster",
+    ticketTimer: '2025-04-19T19:00:00',
+    ticketLimit: 25,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `ACLO`,
+    entry: "3 (12 for all)",
+    memberEntry: "3 (9 for all)",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3LppIOw5UGbAo1JUEg2cGH',
+    memberPrice_id: 'price_1P3Lq2IOw5UGbAo1XhNsXDSL',
+    activeMemberPrice_id: 'price_1P3LqIIOw5UGbAo1TMYm5nVR',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: ['Come learn traditional Bulgarian dances with us throughout this workshop series!',
+      `These events are for everyone, whether you have never joined the horo or you lead it. Our teachers will guide the workshops and ensure a good atmosphere for everyone!
+  `,
+      `We will start from the classics like byala roza and work our way up the skill ladder. `,
+      `All the workshops will be hosted at the ACLO in the late afternoon:`,
+      `20.04 at 17:00-19:00`,
+`28.04 at 16:00-18:00`,
+`11.05 at 17:00-18:00`,
+`18.05 at 17:00-18:00`,
+      `Tickets are €3 and number of participants is limited so make sure you secure your spot on time!
+Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
+`,
+      `We cannot wait to dance with you!`],
+    ticket_img: '/assets/images/tickets/groningen/ticket-37.png',
+    images: ["/assets/images/events/groningen/dancing-bears/1"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
+  },
+  {
     membersOnly: false,
     visible: true,
     title: "Board Games Part 2",
@@ -122,6 +190,329 @@ export const SOCIETY_EVENTS = {
     ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
     images: ["/assets/images/portfolio/groningen/portfolio-30"],
     thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+  },
+  {
+    subEvent: {
+      description: 'You can purchase a workshop independently as well',
+      links: [
+        // {
+        //   name: 'All',
+        //   href: '/Dancing Bears Workshop Full Access'
+        // },
+        {
+          name: 'I',
+          href: '/Dancing Bears Workshop I'
+        },
+        {
+          name: 'II',
+          href: '/Dancing Bears Workshop II'
+        },
+        {
+          name: 'III',
+          href: '/Dancing Bears Workshop III'
+        },
+        {
+          name: 'IV',
+          href: '/Dancing Bears Workshop IV'
+        }
+      ]
+    },
+    membersOnly: false,
+    visible: false,
+    title: "Dancing Bears Workshop Full Access",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Level up your dancing and your spirit",
+    bgImage: "24",
+    date: "20 April - 18 May",
+    time: "Check poster",
+    ticketTimer: '2025-04-19T19:00:00',
+    ticketLimit: 25,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `ACLO`,
+    entry: "12",
+    memberEntry: "9",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3rxnIOw5UGbAo1RHIb6kll',
+    memberPrice_id: 'price_1P3ry2IOw5UGbAo1eDsRKQGE',
+    activeMemberPrice_id: 'price_1P3ry2IOw5UGbAo1eDsRKQGE',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: ['Come learn traditional Bulgarian dances with us throughout this workshop series!',
+      `These events are for everyone, whether you have never joined the horo or you lead it. Our teachers will guide the workshops and ensure a good atmosphere for everyone!
+  `,
+      `We will start from the classics like byala roza and work our way up the skill ladder. `,
+      `All the workshops will be hosted at the ACLO in the late afternoon:`,
+      `20.04 at 17:00-19:00`,
+`28.04 at 16:00-18:00`,
+`11.05 at 17:00-18:00`,
+`18.05 at 17:00-18:00`,
+      `Tickets are €3 and number of participants is limited so make sure you secure your spot on time by choosing from the selection below!
+Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
+`,
+      `We cannot wait to dance with you!`],
+    ticket_img: '/assets/images/tickets/groningen/ticket-37.png',
+    images: ["/assets/images/events/groningen/dancing-bears/1"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
+  },
+  {
+    subEvent: {
+      description: 'You can purchase a workshop independently as well',
+      links: [
+        {
+          name: 'All',
+          href: '/Dancing Bears Workshop Full Access'
+        },
+        // {
+        //   name: 'I',
+        //   href: '/Dancing Bears Workshop I'
+        // },
+        {
+          name: 'II',
+          href: '/Dancing Bears Workshop II'
+        },
+        {
+          name: 'III',
+          href: '/Dancing Bears Workshop III'
+        },
+        {
+          name: 'IV',
+          href: '/Dancing Bears Workshop IV'
+        }
+      ]
+    },
+    membersOnly: false,
+    visible: false,
+    title: "Dancing Bears Workshop I",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Level up your dancing and your spirit",
+    bgImage: "24",
+    date: "20 April",
+    time: "17:00",
+    ticketTimer: '2025-04-19T19:00:00',
+    ticketLimit: 25,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `ACLO`,
+    entry: "3",
+    memberEntry: "3",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    memberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    activeMemberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: ['Come learn traditional Bulgarian dances with us throughout this workshop series!',
+      `These events are for everyone, whether you have never joined the horo or you lead it. Our teachers will guide the workshops and ensure a good atmosphere for everyone!
+  `,
+      `We will start from the classics like byala roza and work our way up the skill ladder. `,
+      `All the workshops will be hosted at the ACLO in the late afternoon:`,
+      `20.04 at 17:00-19:00`,
+     `Tickets are €3 and number of participants is limited so make sure you secure your spot on time!
+Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
+`,
+      `We cannot wait to dance with you!`],
+    ticket_img: '/assets/images/tickets/groningen/ticket-37-1.png',
+    images: ["/assets/images/events/groningen/dancing-bears/1"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
+  },
+  {
+    subEvent: {
+      description: 'You can purchase a workshop independently as well',
+      links: [
+        {
+          name: 'All',
+          href: '/Dancing Bears Workshop Full Access'
+        },
+        {
+          name: 'I',
+          href: '/Dancing Bears Workshop I'
+        },
+        // {
+        //   name: 'II',
+        //   href: '/Dancing Bears Workshop II'
+        // },
+        {
+          name: 'III',
+          href: '/Dancing Bears Workshop III'
+        },
+        {
+          name: 'IV',
+          href: '/Dancing Bears Workshop IV'
+        }
+      ]
+    },
+    membersOnly: false,
+    visible: false,
+    title: "Dancing Bears Workshop II",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Level up your dancing and your spirit",
+    bgImage: "24",
+    date: "28 April",
+    time: "16:00",
+    ticketTimer: '2025-04-19T19:00:00',
+    ticketLimit: 25,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `ACLO`,
+    entry: "3",
+    memberEntry: "3",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    memberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    activeMemberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: ['Come learn traditional Bulgarian dances with us throughout this workshop series!',
+      `These events are for everyone, whether you have never joined the horo or you lead it. Our teachers will guide the workshops and ensure a good atmosphere for everyone!
+  `,
+      `We will start from the classics like byala roza and work our way up the skill ladder. `,
+      `All the workshops will be hosted at the ACLO in the late afternoon:`,
+`28.04 at 16:00-18:00`,
+    `Tickets are €3 and number of participants is limited so make sure you secure your spot on time!
+Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
+`,
+      `We cannot wait to dance with you!`],
+    ticket_img: '/assets/images/tickets/groningen/ticket-37-2.png',
+    images: ["/assets/images/events/groningen/dancing-bears/1"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
+  },
+  {
+    subEvent: {
+      description: 'You can purchase a workshop independently as well',
+      links: [
+        {
+          name: 'All',
+          href: '/Dancing Bears Workshop Full Access'
+        },
+        {
+          name: 'I',
+          href: '/Dancing Bears Workshop I'
+        },
+        {
+          name: 'II',
+          href: '/Dancing Bears Workshop II'
+        },
+        // {
+        //   name: 'III',
+        //   href: '/Dancing Bears Workshop III'
+        // },
+        {
+          name: 'IV',
+          href: '/Dancing Bears Workshop IV'
+        }
+      ]
+    },
+    membersOnly: false,
+    visible: false,
+    title: "Dancing Bears Workshop III",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Level up your dancing and your spirit",
+    bgImage: "24",
+    date: "11 May",
+    time: "17:00",
+    ticketTimer: '2025-04-19T19:00:00',
+    ticketLimit: 25,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `ACLO`,
+    entry: "3",
+    memberEntry: "3",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    memberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    activeMemberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: ['Come learn traditional Bulgarian dances with us throughout this workshop series!',
+      `These events are for everyone, whether you have never joined the horo or you lead it. Our teachers will guide the workshops and ensure a good atmosphere for everyone!
+  `,
+      `We will start from the classics like byala roza and work our way up the skill ladder. `,
+      `All the workshops will be hosted at the ACLO in the late afternoon:`,
+`11.05 at 17:00-18:00`,
+      `Tickets are €3 and number of participants is limited so make sure you secure your spot on time!
+Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
+`,
+      `We cannot wait to dance with you!`],
+    ticket_img: '/assets/images/tickets/groningen/ticket-37-3.png',
+    images: ["/assets/images/events/groningen/dancing-bears/1"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
+  },
+  {
+    subEvent: {
+      description: 'You can purchase a workshop independently as well',
+      links: [
+        {
+          name: 'All',
+          href: '/Dancing Bears Workshop Full Access'
+        },
+        {
+          name: 'I',
+          href: '/Dancing Bears Workshop I'
+        },
+        {
+          name: 'II',
+          href: '/Dancing Bears Workshop II'
+        },
+        {
+          name: 'III',
+          href: '/Dancing Bears Workshop III'
+        },
+        // {
+        //   name: 'IV',
+        //   href: '/Dancing Bears Workshop IV'
+        // }
+      ]
+    },
+    membersOnly: false,
+    visible: false,
+    title: "Dancing Bears Workshop IV",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Level up your dancing and your spirit",
+    bgImage: "24",
+    date: "18 May",
+    time: "17:00",
+    ticketTimer: '2025-04-19T19:00:00',
+    ticketLimit: 25,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `ACLO`,
+    entry: "3",
+    memberEntry: "3",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    memberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    activeMemberPrice_id: 'price_1P3rxVIOw5UGbAo1lIGdbJSE',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: ['Come learn traditional Bulgarian dances with us throughout this workshop series!',
+      `These events are for everyone, whether you have never joined the horo or you lead it. Our teachers will guide the workshops and ensure a good atmosphere for everyone!
+  `,
+      `We will start from the classics like byala roza and work our way up the skill ladder. `,
+      `All the workshops will be hosted at the ACLO in the late afternoon:`,
+`18.05 at 17:00-18:00`,
+      `Tickets are €3 and number of participants is limited so make sure you secure your spot on time!
+Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
+`,
+      `We cannot wait to dance with you!`],
+    ticket_img: '/assets/images/tickets/groningen/ticket-37-4.png',
+    images: ["/assets/images/events/groningen/dancing-bears/1"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
   },
   ],
   rotterdam: [

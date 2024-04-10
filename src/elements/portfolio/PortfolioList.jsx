@@ -10,7 +10,7 @@ const PortfolioList = (props) => {
   return (
     <React.Fragment>
       {props.target.map((value, index) => (
-        <div style={{margin: '80px 10px'}} className={`portfolio ${props.column} ${props.stylevariation}`} key={index}>
+        <div style={{margin: '80px 0'}} className={`portfolio ${props.column} ${props.stylevariation}`} key={index}>
           <Link
             to={
               props.style === "society"

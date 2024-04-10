@@ -14,6 +14,7 @@ import Loader from "../../elements/ui/Loader";
 import { Link, useParams } from "react-router-dom";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
 import { link } from "fs-extra";
+import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false)
@@ -23,7 +24,7 @@ const EventDetails = () => {
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
-  const imageUrl = `/assets/images/bg/bg-image-${target.bgImage}.jpg`;
+  const imageUrl = `/assets/images/bg/bg-image-${target.bgImage}.webp`;
 
   const { loading, sendRequest } = useHttpClient();
 
@@ -124,12 +125,12 @@ const EventDetails = () => {
                       <h3 className="center_text">
                         {target.subEvent.description}
                       </h3>
-                      <div className="options-btns-div">
+                      <div className="row">
                         {
                           target.subEvent.links.map((link) => {
                             return <a
-                              className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
-                              href={'/' + region + link.href}
+                              className="rn-button-style--2 rn-btn-reverse-green center_text m--5"
+                              href={'/' + region + '/event-details' + link.href}
                             >
                               <span className="">{link.name}</span>
                             </a>
@@ -143,21 +144,22 @@ const EventDetails = () => {
                     <Loader />
                   </div> :
                     <div className="purchase-btn">
-                      {target.ticket_link ? <div><a
-                        style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                        href={target.ticket_link}
-                        target="_blank"
-                        className="rn-button-style--2 btn-solid mt--80"
-                      >
-                        {eventClosed ? "Sold out" : 'Buy Ticket'}
-                      </a>
-                        <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <Link
+                      {target.ticket_link ? <div>
+                        <WithBackBtn><a
+                          style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
+                          href={target.ticket_link}
+                          target="_blank"
+                          className="rn-button-style--2 btn-solid mt--80"
+                        >
+                          {eventClosed ? "Sold out" : 'Buy Ticket'}
+                        </a></WithBackBtn>
+                        <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <WithBackBtn><Link
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
                           to={`/${region}/purchase-ticket/${target.title}`}
                           className="rn-button-style--2 btn-solid"
                         >
-                        {eventClosed ? "Sold out" : 'Buy Ticket'}
-                      </Link>}
+                          {eventClosed ? "Sold out" : 'Buy Ticket'}
+                        </Link></WithBackBtn>}
                       {target.ticketTimer && <Countdown targetTime={target.ticketTimer} setEventClosed={setEventClosed} />}
                     </div>)}
                 </div>

@@ -21,7 +21,7 @@ import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 import { BG_INDEX, REGIONS } from "../../util/REGIONS_DESIGN";
-import BackBtn from "../ui/BackBtn";
+import WithBackBtn from "../ui/WithBackBtn";
 import StringDynamicInputs from "../inputs/StringDynamicInputs";
 import InputsBuilder from "../inputs/InputsBuilder";
 import { askBeforeRedirect, isProd } from "../../util/global";
@@ -523,7 +523,7 @@ const EventForm = () => {
                     <h3 className="label mt--40">Add extra inputs by your choice</h3>
                     <InputsBuilder onChange={(inputs) => values.extraInputsForm = inputs} />
 
-                    <div className="small_flex mt--80">
+                    <WithBackBtn >
                         <button
                             disabled={loading}
                             type="submit"
@@ -532,8 +532,7 @@ const EventForm = () => {
                         >
                             {loading ? <Loader /> : <span>Submit Event</span>}
                         </button>
-                        <BackBtn />
-                    </div>
+                    </WithBackBtn>
                 </Form>
             )}
         </Formik>
