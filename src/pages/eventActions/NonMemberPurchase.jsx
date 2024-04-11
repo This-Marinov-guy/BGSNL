@@ -34,6 +34,7 @@ const NonMemberPurchase = () => {
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
   const schema = yup.object().shape({
+    quantity: yup.number(),
     name: yup.string().required(),
     surname: yup.string().required(),
     phone: yup.string().required(),
@@ -352,7 +353,7 @@ const NonMemberPurchase = () => {
                           <h3>
                             Quantity
                           </h3>
-                          <InputNumber value={values.quantity || 1} onValueChange={(e) => values.quantity = e.target.value} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
+                          <InputNumber value={values.quantity} onValueChange={(e) => values.quantity = e.target.value} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
                             decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" min={1} max={10}
                           />
                         </div>
