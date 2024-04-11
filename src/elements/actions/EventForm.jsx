@@ -196,6 +196,8 @@ const EventForm = () => {
                                     mask="99/99/9999"
                                     style={{ width: '100%' }}
                                     placeholder="Date of Event"
+                                    touchUI
+                                    showButtonBar 
                                     showIcon />
                                 <ErrorMessage
                                     className="error"
@@ -499,6 +501,8 @@ const EventForm = () => {
                                     mask="99/99/9999"
                                     style={{ width: '100%' }}
                                     placeholder="Ticket Sale End"
+                                    touchUI
+                                    showButtonBar 
                                     showIcon />
                                 <ErrorMessage
                                     className="error"

@@ -354,6 +354,7 @@ const SignUp = (props) => {
                           mask="99/99/9999"
                           placeholder="Select Birth Date"
                           style={{ width: '100%' }}
+                          touchUI
                           showIcon />
                         <ErrorMessage
                           className="error"
