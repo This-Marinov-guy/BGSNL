@@ -9,6 +9,7 @@ import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/ImageFb";
 import Loader from "../../elements/ui/Loader";
+import { InputNumber } from 'primereact/inputnumber';
 import PageLoading from "../../elements/ui/PageLoading";
 import { useObjectGrabUrl } from "../../hooks/object-hook";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
@@ -187,6 +188,11 @@ const NonMemberPurchase = () => {
                       } else {
                         formData.append("itemId", target.price_id);
                       }
+                      if (values.quantity > 1) {
+                        formData.append('quantity', values.quantity);
+                      } else {
+                        formData.append('quantity', 1);
+                      }
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
                       formData.append("eventName", target.title);
@@ -229,6 +235,7 @@ const NonMemberPurchase = () => {
                     surname: "",
                     email: "",
                     phone: "",
+                    quantity: 1,
                     extraOne: '',
                     extraTwo: '',
                     extraThree: '',
@@ -236,7 +243,7 @@ const NonMemberPurchase = () => {
                     payTerms: false,
                   }}
                 >
-                  {() => (
+                  {(values) => (
                     <Form id="form" encType="multipart/form-data"
                       className="mb--120">
                       <h3>Fill your details and buy a ticket</h3>
@@ -341,12 +348,20 @@ const NonMemberPurchase = () => {
                             component="div"
                           />
                         </div>
+                        <div className="col-lg-12 col-md-12 col-12 mt--20" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <h3>
+                            Quantity
+                          </h3>
+                          <InputNumber value={values.quantity || 1} onValueChange={(e) => values.quantity = e.target.value} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
+                            decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" min={1} max={10}
+                          />
+                        </div>
                       </div>
                       <WithBackBtn>
                         <button
                           disabled={loading}
                           type="submit"
-                          className="rn-button-style--2 btn-solid mt--80"
+                          className="rn-button-style--2 btn-solid mt--20"
                         >
                           {loading ? <Loader /> : <span>Proceed to paying</span>}
                         </button>
