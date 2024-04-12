@@ -129,7 +129,7 @@ const EventDetails = () => {
                         {
                           target.subEvent.links.map((link) => {
                             return <a
-                              className="rn-button-style--2 rn-btn-reverse-green center_text m--5"
+                              className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5" 
                               href={'/' + region + '/event-details' + link.href}
                             >
                               <span className="">{link.name}</span>
