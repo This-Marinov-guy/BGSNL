@@ -353,7 +353,7 @@ const NonMemberPurchase = () => {
                           <h3>
                             Quantity
                           </h3>
-                          <InputNumber placeholder="1" value={values.quantity} onValueChange={(e) => values.quantity = e.target.value} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
+                          <InputNumber value={values.quantity} onValueChange={(e) => values.quantity = e.value} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
                             decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" min={1} max={10}
                           />
                         </div>
