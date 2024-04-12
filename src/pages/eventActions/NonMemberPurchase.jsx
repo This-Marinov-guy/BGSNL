@@ -28,13 +28,13 @@ const NonMemberPurchase = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [eventClosed, setEventClosed] = useState(false)
   const [marketingData, setMarketingData] = useState({})
+  const [quantity, setQuantity] = useState(1);
 
   const { region } = useParams()
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
   const schema = yup.object().shape({
-    quantity: yup.number(),
     name: yup.string().required(),
     surname: yup.string().required(),
     phone: yup.string().required(),
@@ -190,7 +190,7 @@ const NonMemberPurchase = () => {
                         formData.append("itemId", target.price_id);
                       }
                       if (values.quantity > 1) {
-                        formData.append('quantity', values.quantity);
+                        formData.append('quantity', quantity);
                       } else {
                         formData.append('quantity', 1);
                       }
@@ -236,7 +236,6 @@ const NonMemberPurchase = () => {
                     surname: "",
                     email: "",
                     phone: "",
-                    quantity: 1,
                     extraOne: '',
                     extraTwo: '',
                     extraThree: '',
@@ -353,7 +352,7 @@ const NonMemberPurchase = () => {
                           <h3>
                             Quantity
                           </h3>
-                          <InputNumber value={values.quantity} onValueChange={(e) => values.quantity = e.value} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
+                          <InputNumber value={quantity} onValueChange={(e) => setQuantity(e.value)} showButtons buttonLayout="horizontal" style={{ width: '150px' }}
                             decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" min={1} max={10}
                           />
                         </div>
