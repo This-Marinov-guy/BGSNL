@@ -189,11 +189,7 @@ const NonMemberPurchase = () => {
                       } else {
                         formData.append("itemId", target.price_id);
                       }
-                      if (values.quantity > 1) {
-                        formData.append('quantity', quantity);
-                      } else {
-                        formData.append('quantity', 1);
-                      }
+                      formData.append("quantity", quantity);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
                       formData.append("eventName", target.title);
