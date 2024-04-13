@@ -128,11 +128,9 @@ input[type="radio"] {
 
 .x_icon {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 2%;
+  left: 2%;
   cursor: pointer;
-  color: red !important;
 }
 
 .card_panel {
@@ -179,8 +177,8 @@ hr {
   }
 }
 
-
-.p-button-success, .p-button-danger {
+.p-button-success,
+.p-button-danger {
   color: black !important;
   font-size: large !important;
 }
