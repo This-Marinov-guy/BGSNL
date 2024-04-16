@@ -358,11 +358,9 @@ const User = (props) => {
         <div className="container">
           <div className="row service-one-wrapper">
             <div className="col-lg-6 col-md-12 col-12 ">
-              <div className="service service__style--2 center_div">
-                {currentUser.subscription && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
-                <div className="content">
-                  <LazyLoadImage src={currentUser.image} alt="profile" />
-                </div>
+              {currentUser.subscription && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
+              <div className="service service__style--2">
+                <LazyLoadImage src={currentUser.image} alt="profile" />
               </div>
             </div>
             <div className="col-lg-6 col-md-12 col-12">

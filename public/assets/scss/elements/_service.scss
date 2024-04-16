@@ -3,7 +3,7 @@
 ===========================*/
 
 .service {
-  height: 100%;
+  max-height: 100%;
   // Service Style One
   &.service__style--1 {
     padding: 40px 0;
@@ -23,11 +23,11 @@
         margin-bottom: 34px;
         @media #{$sm-layout} {
           margin-bottom: 14px;
-          height: 53px;
+          max-height: 53px;
         }
         @media #{$large-mobile} {
           margin-bottom: 13px;
-          height: 45px;
+          max-height: 45px;
         }
       }
     }
@@ -58,7 +58,7 @@
   }
 
   &.service__style--2 {
-    padding: 30px 35px;
+    padding: 20px;
     @extend %transition;
     @extend %posrelative;
     z-index: 2;
