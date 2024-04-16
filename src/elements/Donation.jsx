@@ -66,7 +66,7 @@ const Donation = () => {
                                 setClientSecret(clientSecret);
                             });
                         } catch (err) {
-                            setError(err.response.data.message);
+                            setError(err.message);
                         } finally {
                             setLoading(false)
                         }
@@ -132,8 +132,8 @@ const Donation = () => {
                                         />
                                     </div>
                                 </div>
-
                             </div>
+                            {error && <p className="error" style={{ margin: '10px auto' }}>{error}</p>}
                             <button
                                 disabled={loading}
                                 type="submit"
@@ -141,12 +141,11 @@ const Donation = () => {
                             >
                                 {loading ? <Loader /> : <span>Continue the payment</span>}
                             </button>
-                            {error && <p className="error" style={{margin: '10px auto'}}>{error}</p>}
-                </Form>
+                        </Form>
+                    )}
+                </Formik>
                 )}
-            </Formik>
-                )}
-        </div>
+            </div>
         </Modal >
     )
 }
