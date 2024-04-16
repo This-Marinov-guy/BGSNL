@@ -56,6 +56,27 @@ const schema = yup.object().shape({
       yup.string().required("Your student number is a required filed"),
     otherwise: () => yup.string(),
   }),
+  password: yup.string()
+    .nullable()
+    .when([], { 
+      is: (val) => val !== null && val !== undefined && val !== '', 
+      then: yup.string()
+        .required('Password is required')
+        .min(8, "Password must be at least 8 characters long")
+        .matches(
+          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/,
+          "Please create a stronger password with capital and small letters, number and a special symbol"
+        ),
+      otherwise: yup.string(), 
+    }),
+  confirmPassword: yup.string()
+    .when('password', {
+      is: (val) => val !== null && val !== undefined && val !== '', 
+      then: yup.string()
+        .required('Password confirmation is required')
+        .oneOf([yup.ref('password')], 'Passwords must match'), 
+      otherwise: yup.string(), 
+    }),
 });
 
 const User = (props) => {
@@ -132,6 +153,10 @@ const User = (props) => {
               formData.append("phone", values.phone);
               formData.append("email", values.email);
               formData.append("university", values.university);
+              if (values.password) {
+                formData.append("password", values.password);
+                formData.append("confirmPassword", values.confirmPassword);
+              }
               formData.append(
                 "otherUniversityName",
                 values.otherUniversityName
@@ -177,6 +202,8 @@ const User = (props) => {
               graduationDate: currentUser.otherUniversityName || '',
               course: currentUser.course,
               studentNumber: currentUser.studentNumber,
+              password: '',
+              confirmPassword: ''
             }}
           >
             {({ values, setFieldValue }) => (
@@ -332,6 +359,34 @@ const User = (props) => {
                           <ErrorMessage
                             className="error"
                             name="studentNumber"
+                            component="div"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-12 col-12">
+                        <div className="rn-form-group">
+                          <Field
+                            type="password"
+                            placeholder="Change Password"
+                            name="password"
+                          ></Field>
+                          <ErrorMessage
+                            className="error"
+                            name="password"
+                            component="div"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-lg-6 col-md-12 col-12">
+                        <div className="rn-form-group">
+                          <Field
+                            type="password"
+                            placeholder="Confirm Password"
+                            name="confirmPassword"
+                          ></Field>
+                          <ErrorMessage
+                            className="error"
+                            name="confirmPassword"
                             component="div"
                           />
                         </div>
