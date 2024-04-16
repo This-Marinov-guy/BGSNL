@@ -66,7 +66,7 @@ const Donation = () => {
                                 setClientSecret(clientSecret);
                             });
                         } catch (err) {
-                            setError(err.message);
+                            setError(err.response.data.message);
                         } finally {
                             setLoading(false)
                         }
