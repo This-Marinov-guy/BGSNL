@@ -296,8 +296,9 @@ const User = (props) => {
                       component="div"
                     />
                   </div>
-                  {values.university === "other" && (
-                    <div className="col-lg-6 col-md-12 col-12">
+
+                  <div className="col-lg-6 col-md-12 col-12">
+                    {values.university === "other" &&
                       <div className="rn-form-group">
                         <Field
                           type="text"
@@ -310,8 +311,8 @@ const User = (props) => {
                           component="div"
                         />
                       </div>
-                    </div>
-                  )}
+                    }
+                  </div>
                   {values.university !== "working" && (
                     <Fragment>
                       <div className="col-lg-6 col-md-12 col-12">
