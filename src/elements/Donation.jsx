@@ -68,7 +68,7 @@ const Donation = () => {
                     const { clientSecret } = await paymentIntentResponse.json();
                     setClientSecret(clientSecret);
                     } catch (err) {
-                    setError(err.message);
+                    setError(err?.message || paymentIntentResponse.message);
                     } finally {
                     setLoading(false);
                     }
