@@ -40,11 +40,7 @@ const schema = yup.object().shape({
     then: () => yup.string().required("Please state which university"),
     otherwise: () => yup.string(),
   }),
-  graduationDate: yup.number().when("university", {
-    is: true,
-    then: () => yup.number().required("Graduation year is required"),
-    otherwise: () => yup.number(),
-  }),
+  graduationDate: yup.number(),
   course: yup.string().when("university", {
     is: true,
     then: () => yup.string().required("Your course is a required filed"),
