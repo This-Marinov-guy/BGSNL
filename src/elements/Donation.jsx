@@ -64,7 +64,7 @@ const Donation = () => {
                             }).then(async (result) => {
                                 var { clientSecret } = await result.json();
                                 setClientSecret(clientSecret);
-                            });
+                            }).catch((err) => setError(err.message));
                         } catch (err) {
                             setError(err.message);
                         } finally {
