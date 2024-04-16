@@ -42,36 +42,36 @@ const Donation = () => {
                     className="inner"
                     style={{ display: 'flex' }}
                     validationSchema={schema}
-                   onSubmit={async (values) => {
-                    try {
-                    setLoading(true);
-                    setError('');
-                    
-                    // Fetch publishableKey
-                    const response = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/config");
-                    const { publishableKey } = await response.json();
-                    setStripePromise(loadStripe(publishableKey));
-                    
-                    // Create payment intent
-                    const paymentIntentResponse = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/create-payment-intent", {
-                    method: "POST",
-                    headers: {
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                    name: values.name,
-                    amount: values.amount,
-                    comments: values.comments
-                    }),
-                    });
-                    
-                    const { clientSecret } = await paymentIntentResponse.json();
-                    setClientSecret(clientSecret);
-                    } catch (err) {
-                    setError(err?.message || paymentIntentResponse.message);
-                    } finally {
-                    setLoading(false);
-                    }
+                    onSubmit={async (values) => {
+                        try {
+                            setLoading(true);
+                            setError('');
+
+                            // Fetch publishableKey
+                            const response = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/config");
+                            const { publishableKey } = await response.json();
+                            setStripePromise(loadStripe(publishableKey));
+
+                            // Create payment intent
+                            const paymentIntentResponse = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/create-payment-intent", {
+                                method: "POST",
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    name: values.name,
+                                    amount: values.amount,
+                                    comments: values.comments
+                                }),
+                            });
+
+                            const { clientSecret } = await paymentIntentResponse.json();
+                            setClientSecret(clientSecret);
+                        } catch (err) {
+                            setError(err?.message || paymentIntentResponse.message);
+                        } finally {
+                            setLoading(false);
+                        }
                     }}
                     initialValues={{
                         name: '',

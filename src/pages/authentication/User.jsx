@@ -319,11 +319,6 @@ const User = (props) => {
                           placeholder="Graduation Year"
                           name="graduationDate"
                         ></Field>
-                        <ErrorMessage
-                          className="error"
-                          name="graduationDate"
-                          component="div"
-                        />
                       </div>
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
@@ -353,36 +348,36 @@ const User = (props) => {
                           />
                         </div>
                       </div>
+                      <div className="col-lg-6 col-md-12 col-12">
+                      </div>
                     </Fragment>
                   )}
-                  <div className="row">
-                    <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rn-form-group">
-                        <Field
-                          type="password"
-                          placeholder="Change Password"
-                          name="password"
-                        ></Field>
-                        <ErrorMessage
-                          className="error"
-                          name="password"
-                          component="div"
-                        />
-                      </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        type="password"
+                        placeholder="Change Password"
+                        name="password"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="password"
+                        component="div"
+                      />
                     </div>
-                    <div className="col-lg-6 col-md-12 col-12">
-                      <div className="rn-form-group">
-                        <Field
-                          type="password"
-                          placeholder="Confirm Password"
-                          name="confirmPassword"
-                        ></Field>
-                        <ErrorMessage
-                          className="error"
-                          name="confirmPassword"
-                          component="div"
-                        />
-                      </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        type="password"
+                        placeholder="Confirm Password"
+                        name="confirmPassword"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="confirmPassword"
+                        component="div"
+                      />
                     </div>
                   </div>
                 </div>
