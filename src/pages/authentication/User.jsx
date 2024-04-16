@@ -56,27 +56,20 @@ const schema = yup.object().shape({
       yup.string().required("Your student number is a required filed"),
     otherwise: () => yup.string(),
   }),
-  password: yup.string()
+  password: yup
+    .string()
     .nullable()
-    .when([], { 
-      is: (val) => val !== null && val !== undefined && val !== '', 
-      then: yup.string()
-        .required('Password is required')
-        .min(8, "Password must be at least 8 characters long")
-        .matches(
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/,
-          "Please create a stronger password with capital and small letters, number and a special symbol"
-        ),
-      otherwise: yup.string(), 
-    }),
-  confirmPassword: yup.string()
-    .when('password', {
-      is: (val) => val !== null && val !== undefined && val !== '', 
-      then: yup.string()
-        .required('Password confirmation is required')
-        .oneOf([yup.ref('password')], 'Passwords must match'), 
-      otherwise: yup.string(), 
-    }),
+    .min(8, "Password must be at least 8 characters long")
+    .matches(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/,
+      "Please create a stronger password with capital and small letters, number and a special symbol"
+    )
+    .required(),
+  confirmPassword: yup
+    .string()
+    .nullable()
+    .oneOf([yup.ref("password"), null], "Passwords do not match")
+    .required("Passwords do not match"),
 });
 
 const User = (props) => {
