@@ -133,7 +133,7 @@ const Donation = () => {
                                     </div>
                                 </div>
                             </div>
-                            {error && <p className="error" style={{ margin: '10px auto' }}>{error}</p>}
+                            <p className="error" style={{ margin: '10px auto' }}>{error}</p>
                             <button
                                 disabled={loading}
                                 type="submit"
