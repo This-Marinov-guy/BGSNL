@@ -4,6 +4,39 @@ import { Field, ErrorMessage } from "formik";
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
   groningen: [{
+    membersOnly: false,
+    visible: true,
+    title: "Board Games Part 2",
+    // newTitle: 'Bulgarian Dinner',
+    description: "Show your gamb... your tactical skills",
+    bgImage: "3",
+    date: "19th April",
+    time: "18:00",
+    ticketTimer: '2024-04-19T14:00:00',
+    ticketLimit: 40,
+    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // correctedDate: "",
+    // correctedTime: "",
+    where: `Xior Oosterhamrikkade`,
+    entry: "5",
+    memberEntry: "3",
+    including: [],
+    // ticket_link: '',
+    price_id: 'price_1P3LppIOw5UGbAo1JUEg2cGH',
+    memberPrice_id: 'price_1P3Lq2IOw5UGbAo1XhNsXDSL',
+    activeMemberPrice_id: 'price_1P3LqIIOw5UGbAo1TMYm5nVR',
+    freePass: ['vlady1002@abv.bg'],
+    marketingInputs: false,
+    extraInputs: false,
+    text: [
+      `Exciting News! Our highly anticipated Board Games Night is back for round two!  
+      Get ready for an evening filled with laughter, competition, and endless fun as we gather once again to roll the dice and make some new memories!`,
+      `Join us for another epic game night, whether you're a seasoned strategist or a casual player, there's something for everyone at our board games event.`
+    ],
+    ticket_img: '/assets/images/tickets/groningen/ticket-36.jpg',
+    images: ["/assets/images/portfolio/groningen/portfolio-36"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-36",
+  }, {
     is_tickets_closed: true,
     subEvent: {
       description: 'Choose your workshop. All can be purchased at one and if you are a member - you pay 3 and get 1 for FREE',
@@ -472,12 +505,12 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
         ` 🎉 Rewind with  "Голата истина за група Жигули" 🥁 🎵 
 Get ready for an evening of laughter, drama and unforgettable moments!  
 `,
-`Don't worry if you don't speak Bulgarian - English subtitles will be provided! 🌟 
+        `Don't worry if you don't speak Bulgarian - English subtitles will be provided! 🌟 
 `,
-`
+        `
 🎟 Tickets are only 2 euros for members of BGSL and 4 euros for non-members. The ticket includes a refreshing drink 🥤 and tasty popcorn/nachos and sweet snack🍿 Grab your friends for a cinematic experience you won't forget! 
 `,
-`See you there!`
+        `See you there!`
       ],
       ticket_img: '/assets/images/tickets/leeuwarden/ticket-7.jpg',
       images: ["/assets/images/portfolio/leeuwarden/portfolio-7"],
