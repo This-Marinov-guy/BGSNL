@@ -23,6 +23,7 @@ const Donation = () => {
     const [loading, setLoading] = useState(false)
     const [stripePromise, setStripePromise] = useState(null);
     const [clientSecret, setClientSecret] = useState("");
+    const [error, setError] = useState('');
 
     return (
         <Modal
@@ -43,6 +44,8 @@ const Donation = () => {
                     validationSchema={schema}
                     onSubmit={async (values) => {
                         try {
+                            setLoading(true)
+                            setError('');
                             fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/config").then(async (r) => {
                                 const { publishableKey } = await r.json();
                                 setStripePromise(loadStripe(publishableKey));
@@ -62,8 +65,10 @@ const Donation = () => {
                                 var { clientSecret } = await result.json();
                                 setClientSecret(clientSecret);
                             });
-                            setLoading(true)
                         } catch (err) {
+                            setError(err.message);
+                        } finally {
+                            setLoading(false)
                         }
                     }}
                     initialValues={{
@@ -136,12 +141,12 @@ const Donation = () => {
                             >
                                 {loading ? <Loader /> : <span>Continue the payment</span>}
                             </button>
-
-                        </Form>
-                    )}
-                </Formik>
+                            {error && <p className="error" style={{margin: '10px auto'}}>{error}</p>}
+                </Form>
                 )}
-            </div>
+            </Formik>
+                )}
+        </div>
         </Modal >
     )
 }
