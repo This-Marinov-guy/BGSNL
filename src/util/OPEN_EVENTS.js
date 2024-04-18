@@ -113,7 +113,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     description: "event for the stars",
     bgImage: "19",
     date: "24th May",
-    time: "17:00",
+    time: "17:30",
     ticketTimer: '2024-05-24T20:00:00',
     ticketLimit: 0,
     // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
@@ -525,7 +525,7 @@ Get ready for an evening of laughter, drama and unforgettable moments!
       description: "event for the stars",
       bgImage: "19",
       date: "24th May",
-      time: "17:00",
+      time: "17:30",
       ticketTimer: '2024-05-24T20:00:00',
       ticketLimit: 0,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
