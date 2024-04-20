@@ -53,7 +53,7 @@ const Donation = () => {
                             setStripePromise(loadStripe(publishableKey));
 
                             // Create payment intent
-                            const paymentIntentResponse = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/create-payment-intent", {
+                            let paymentIntentResponse = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/create-payment-intent", {
                                 method: "POST",
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -65,12 +65,14 @@ const Donation = () => {
                                 }),
                             });
 
+                            paymentIntentResponse = await paymentIntentResponse.json();
+
                             if (paymentIntentResponse.status === false && paymentIntentResponse.message) {
                                 setError(paymentIntentResponse.message);
                                 return
                             }
 
-                            const { clientSecret } = await paymentIntentResponse.json();
+                            const { clientSecret } = paymentIntentResponse;
                             setClientSecret(clientSecret);
                         } catch (err) {
                             setError(err.message || paymentIntentResponse.message);
