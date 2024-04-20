@@ -65,10 +65,15 @@ const Donation = () => {
                                 }),
                             });
 
+                            if (paymentIntentResponse.status === false && paymentIntentResponse.message) {
+                                setError(paymentIntentResponse.message);
+                                return
+                            }
+
                             const { clientSecret } = await paymentIntentResponse.json();
                             setClientSecret(clientSecret);
                         } catch (err) {
-                            setError(err?.message || paymentIntentResponse.message);
+                            setError(err.message || paymentIntentResponse.message);
                         } finally {
                             setLoading(false);
                         }
