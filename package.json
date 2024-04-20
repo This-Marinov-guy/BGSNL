@@ -54,7 +54,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config config/webpack.dev.js --open",
-    "build": "npm version patch && webpack --config config/webpack.prod.js",
+    "build": "webpack --config config/webpack.prod.js",
     "lint": "eslint src --ext .jsx --ext .js",
     "deploy": "npm run build && netlify deploy --prod"
   },
