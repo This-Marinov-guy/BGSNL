@@ -49,6 +49,7 @@ const Header = (props) => {
           <p>Continue logging out?</p>
           <button
             className="rn-btn mr--10"
+            style={{color: 'white'}}
             onClick={() => {
               dispatch(logout());
               setLogoutAlert(false);
@@ -59,6 +60,7 @@ const Header = (props) => {
           </button>
           <button
             className="rn-btn"
+            style={{color: 'white'}}
             onClick={() => {
               setLogoutAlert(false);
             }}
@@ -149,11 +151,12 @@ const Header = (props) => {
                   <div className="header-btn">
                     {!user.token ? (
                       <Link to="/login" onClick={() => sessionStorage.setItem('prevUrl', routePath)} className="rn-btn">
-                        <span>Log In</span>
+                        <span style={{color: 'white'}}>Log In</span>
                       </Link>
                     ) : (
                       <button
                         onClick={() => setLogoutAlert(true)}
+                        style={{color: 'white'}}
                         className="rn-btn"
                       >
                         <span>Log Out</span>
