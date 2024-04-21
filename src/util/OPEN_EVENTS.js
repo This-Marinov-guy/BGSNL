@@ -495,7 +495,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       title: "Movie Night",
       // newTitle: 'Bulgarian Dinner',
       description: "let's enjoy some Bulgarian culture",
-      bgImage: "30",
+      bgImage: "18",
       date: "25th April",
       time: "18:30",
       ticketTimer: '2024-04-25T19:30:00',
