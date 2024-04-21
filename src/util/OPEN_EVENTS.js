@@ -4,39 +4,6 @@ import { Field, ErrorMessage } from "formik";
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 export const SOCIETY_EVENTS = {
   groningen: [{
-    membersOnly: false,
-    visible: true,
-    title: "Board Games Part 2",
-    // newTitle: 'Bulgarian Dinner',
-    description: "Show your gamb... your tactical skills",
-    bgImage: "3",
-    date: "19th April",
-    time: "18:00",
-    ticketTimer: '2024-04-19T23:00:00',
-    ticketLimit: 40,
-    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    // correctedDate: "",
-    // correctedTime: "",
-    where: `Xior Oosterhamrikkade`,
-    entry: "5",
-    memberEntry: "3",
-    including: [],
-    // ticket_link: '',
-    price_id: 'price_1P3LppIOw5UGbAo1JUEg2cGH',
-    memberPrice_id: 'price_1P3Lq2IOw5UGbAo1XhNsXDSL',
-    activeMemberPrice_id: 'price_1P3LqIIOw5UGbAo1TMYm5nVR',
-    freePass: ['vlady1002@abv.bg'],
-    marketingInputs: false,
-    extraInputs: false,
-    text: [
-      `Exciting News! Our highly anticipated Board Games Night is back for round two!  
-      Get ready for an evening filled with laughter, competition, and endless fun as we gather once again to roll the dice and make some new memories!`,
-      `Join us for another epic game night, whether you're a seasoned strategist or a casual player, there's something for everyone at our board games event.`
-    ],
-    ticket_img: '/assets/images/tickets/groningen/ticket-36.jpg',
-    images: ["/assets/images/portfolio/groningen/portfolio-36"],
-    thumbnail: "/assets/images/portfolio/groningen/portfolio-36",
-  }, {
     is_tickets_closed: true,
     subEvent: {
       description: 'Choose your workshop. All can be purchased at one and if you are a member - you pay 3 and get 1 for FREE',
@@ -477,46 +444,6 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
   ],
   leeuwarden: [
     {
-      membersOnly: false,
-      visible: true,
-      title: "BG Retro Movie Night II",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Another Bulgarian gem",
-      bgImage: "30",
-      date: "18th April",
-      time: "18:45",
-      ticketTimer: '2024-04-18T19:00:00',
-      ticketLimit: 250,
-      // Use the corrected date and time for changes in the date or time.Do not change the initial ones as it will make a new event in the DB
-      //     correctedDate: "",
-      // correctedTime: "",
-      where: `Auditorium Building 10`,
-      entry: 4,
-      memberEntry: 2,
-      including: [],
-      // ticket_link: '',
-      price_id: 'price_1P62nBIOw5UGbAo1jSlGhSbj',
-      memberPrice_id: 'price_1P62nWIOw5UGbAo1lUSwWgHy',
-      activeMemberPrice_id: 'price_1P62nWIOw5UGbAo1lUSwWgHy',
-      freePass: ['vlady1002@abv.bg'],
-      marketingInputs: false,
-      extraInputs: false,
-      text: [
-        ` 🎉 Rewind with  "Голата истина за група Жигули" 🥁 🎵 
-Get ready for an evening of laughter, drama and unforgettable moments!  
-`,
-        `Don't worry if you don't speak Bulgarian - English subtitles will be provided! 🌟 
-`,
-        `
-🎟 Tickets are only 2 euros for members of BGSL and 4 euros for non-members. The ticket includes a refreshing drink 🥤 and tasty popcorn/nachos and sweet snack🍿 Grab your friends for a cinematic experience you won't forget! 
-`,
-        `See you there!`
-      ],
-      ticket_img: '/assets/images/tickets/leeuwarden/ticket-7.jpg',
-      images: ["/assets/images/portfolio/leeuwarden/portfolio-7"],
-      thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-7",
-    },
-    {
       is_tickets_closed: true,
       membersOnly: false,
       visible: true,
@@ -562,48 +489,49 @@ Get ready for an evening of laughter, drama and unforgettable moments!
     },
   ],
   breda: [
-
+    {
+      membersOnly: false,
+      visible: true,
+      title: "Movie Night",
+      // newTitle: 'Bulgarian Dinner',
+      description: "let's enjoy some Bulgarian culture",
+      bgImage: "30",
+      date: "25th April",
+      time: "18:30",
+      ticketTimer: '2024-04-25T19:30:00',
+      ticketLimit: 250,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `BUas, Frontier 1.016`,
+      isMemberFree: true,
+      entry: 2.50,
+      memberEntry: 'Free',
+      including: ['drink and popcorns', 'drink and popcorns'],
+      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+      price_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
+      memberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
+      activeMemberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Dive into Bulgarian cinema with us for a special movie night featuring 'Attraction' - a romantic comedy movie with one of the most popular Bulgarian actors!🎞️
+        `,
+        `❗️English subtitles provided, so everyone is welcome to join us for an evening of cinematic experience and cultural exploration.
+        `,
+        `The price includes drink and popcorns🍿!
+        `
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-7.png',
+      images: ["/assets/images/portfolio/breda/portfolio-7"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-7",
+    },
   ],
   maastricht: [
 
   ],
   amsterdam: [
-    {
-      membersOnly: false,
-      visible: true,
-      title: "Treasure Hunt",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Awaken your adventure spirit",
-      bgImage: "23",
-      date: "19th April",
-      time: "17:00",
-      ticketTimer: '2024-04-19T13:00:00',
-      ticketLimit: 30,
-      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      // correctedDate: "",
-      // correctedTime: "",
-      where: `Vondelpark`,
-      isFree: true,
-      entry: 6,
-      memberEntry: 5,
-      including: [],
-      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-      price_id: 'price_1P24QcIOw5UGbAo1VKyg3doi',
-      memberPrice_id: 'price_1P24RsIOw5UGbAo1fUGLw6oG',
-      activeMemberPrice_id: 'price_1P24S5IOw5UGbAo1Vm1oaadh',
-      freePass: ['vlady1002@abv.bg'],
-      marketingInputs: false,
-      extraInputs: false,
-      text: [
-        `Calling all adventurers! Grab your maps and join us in Amsterdam for the ultimate treasure hunt, starting on April 19th at 17:00 in Vondelpark! Solve clues, crack codes, and outsmart the competition as you journey through the city's hidden secrets. But wait, there's a twist! The victorious team will be rewarded with FREE drinks at our borrel at Café Fest at 20:00 (Wibauthof 1, 1091 DD)! Get ready to toast to your triumph and celebrate in style! Get your FREE ticket in our bio, so that you don’t miss out on the thrill!
-`,
-        `...
-`,
-        `Призоваваме всички приключенци! Грабвайте картите и се присъединете към нас за най-голямото търсене на съкровища в Амстердам, което започва на 19-ти април от 17:00 във Вонделпарк! Открийте улики, разгадайте кодове и надхитрете конкуренцията, докато се разхождате из скритите улички на града. Но това не е всичко! Отборът победител ще получи БЕЗПЛАТНИ напитки на нашия борел в Café Fest от 20:00ч. (Wibauthof 1, 1091 DD)! Пригответе се да вдигнете тост за своя триумф и да празнувате със стил! Вземете своя БЕЗПЛАТЕН билет в нашето био, за да не пропуснете тръпката!`
-      ],
-      ticket_img: '/assets/images/tickets/amsterdam/ticket-2.jpg',
-      images: ["/assets/images/portfolio/amsterdam/portfolio-2"],
-      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-2",
-    },
+
   ]
 }
