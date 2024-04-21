@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../redux/user";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiX, FiMenu } from "react-icons/fi";
 import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/ImageFb";
@@ -20,6 +20,8 @@ const HeaderTwo = (props) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const routePath = location.pathname;
 
   //droupdown
   var elements = document.querySelectorAll(".has-dropdown > a");
@@ -144,7 +146,7 @@ const HeaderTwo = (props) => {
                 <li>
                   <div className="header-btn">
                     {!user.token ? (
-                      <Link to="/login" className="rn-btn">
+                      <Link to="/login" onClick={() => sessionStorage.setItem('prevUrl', routePath)} className="rn-btn">
                         <span>Log In</span>
                       </Link>
                     ) : (

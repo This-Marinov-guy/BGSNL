@@ -507,7 +507,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       isMemberFree: true,
       entry: 2.50,
       memberEntry: 'Free',
-      including: ['drink and popcorns', 'drink and popcorns'],
+      including: ['(+ drink and popcorns)', '(+ drink and popcorns)'],
       // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
       price_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
       memberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
