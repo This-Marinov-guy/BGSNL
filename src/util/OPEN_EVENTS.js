@@ -72,28 +72,28 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
   },
   {
-    is_tickets_closed: true,
+    is_tickets_closed: false,
     membersOnly: false,
     visible: true,
     title: "Spring Gala",
     // newTitle: 'Bulgarian Dinner',
-    description: "event for the stars",
+    description: "Event for the stars",
     bgImage: "19",
     date: "24th May",
     time: "17:30",
     ticketTimer: '2024-05-24T20:00:00',
-    ticketLimit: 0,
+    ticketLimit: 1000,
     // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
     // correctedDate: "",
     // correctedTime: "",
     where: `StadsLab Groningen`,
-    entry: "TBD",
-    memberEntry: "TBD",
-    including: [],
+    entry: "12",
+    memberEntry: "10",
+    including: ['(Early Bird)', '(Early Bird)'],
     // ticket_link: '',
-    price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
-    memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
-    activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+    price_id: 'price_1P8xAJIOw5UGbAo1dfXlCO2y',
+    memberPrice_id: 'price_1P8xAYIOw5UGbAo1FXTxKuim',
+    activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
     freePass: ['vlady1002@abv.bg'],
     marketingInputs: false,
     extraInputs: false,
@@ -101,19 +101,18 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
         `,
       `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
-
 `,
       ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
 `,
-      `More info coming soon! ⏳
+      `Tickets will be sold in 3 types:`,
+      `- Early Bird sale 10 euro for members | 12 euro for non-members `,
+      `- Regular Bird sale 13 euro for members | 15 euro for non-members `,
+      `- Late Bird sale 17 euro for members | 19 euro for non-members `
 
-`,
-      `Ticket sale opens in April so stay tuned!
-        `,
     ],
-    ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
-    images: ["/assets/images/portfolio/groningen/portfolio-30"],
-    thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+    ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
+    images: ["/assets/images/portfolio/groningen/portfolio-38"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-38",
   },
   {
     subEvent: {
@@ -444,48 +443,47 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
   ],
   leeuwarden: [
     {
-      is_tickets_closed: true,
+      is_tickets_closed: false,
       membersOnly: false,
       visible: true,
       title: "Spring Gala",
       // newTitle: 'Bulgarian Dinner',
-      description: "event for the stars",
+      description: "Event for the stars",
       bgImage: "19",
       date: "24th May",
       time: "17:30",
       ticketTimer: '2024-05-24T20:00:00',
-      ticketLimit: 0,
+      ticketLimit: 1000,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",
       where: `StadsLab Groningen`,
-      entry: "TBD",
-      memberEntry: "TBD",
-      including: [],
+      entry: "12",
+      memberEntry: "10",
+      including: ['(Early Bird)', '(Early Bird)'],
       // ticket_link: '',
-      price_id: 'price_1OxDKaIOw5UGbAo11AgKHaOn',
-      memberPrice_id: 'price_1OxDKoIOw5UGbAo1rGeyskw9',
-      activeMemberPrice_id: 'price_1OxDLCIOw5UGbAo1rfshOiJZ',
+      price_id: 'price_1P8xAJIOw5UGbAo1dfXlCO2y',
+      memberPrice_id: 'price_1P8xAYIOw5UGbAo1FXTxKuim',
+      activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
       freePass: ['vlady1002@abv.bg'],
       marketingInputs: false,
       extraInputs: false,
       text: [
         `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
-        `,
+          `,
         `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
-
-`,
+  `,
         ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
-`,
-        `More info coming soon! ⏳
+  `,
+        `Tickets will be sold in 3 types:`,
+        `- Early Bird sale 10 euro for members | 12 euro for non-members `,
+        `- Regular Bird sale 13 euro for members | 15 euro for non-members `,
+        `- Late Bird sale 17 euro for members | 19 euro for non-members `
 
-`,
-        `Ticket sale opens in April so stay tuned!
-        `,
       ],
-      ticket_img: '/assets/images/tickets/leeuwarden/ticket-6.jpg',
-      images: ["/assets/images/portfolio/groningen/portfolio-30"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+      ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
+      images: ["/assets/images/portfolio/groningen/portfolio-38"],
+      thumbnail: "/assets/images/portfolio/groningen/portfolio-38",
     },
   ],
   breda: [
