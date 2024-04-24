@@ -16,6 +16,7 @@ import ImageFb from "../elements/ui/ImageFb";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
+import Recruit from "../elements/special/Recruite";
 
 const Home = () => {
   const user = useSelector(selectUser);
@@ -110,6 +111,8 @@ const Home = () => {
             <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please <Link to='/gala'>click this for more info</Link></p>
             <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
           </li>
+
+          <Recruit />
 
           <li className="mt--40">
             <p> Membership 2023-2024 open. <Link to='/signup'>

@@ -8,7 +8,7 @@ const Result = () => {
     </p>
   );
 };
-function ContactForm({ props }) {
+function ContactForm(props) {
   const [result, showresult] = useState(false);
 
   const sendEmail = (e) => {
@@ -34,7 +34,7 @@ function ContactForm({ props }) {
 
   setTimeout(() => {
     showresult(false);
-  }, 5000);
+  }, 10000);
 
   return (
     <form action="" onSubmit={sendEmail}>
@@ -47,11 +47,11 @@ function ContactForm({ props }) {
       </div>
 
       <div className="rn-form-group">
-        <input type="text" name="subject" placeholder="Subject" required />
+        <input readOnly={!!props.subject} type="text" name="subject" value={props.subject} placeholder="Subject" required />
       </div>
 
       <div className="rn-form-group">
-        <textarea name="message" placeholder="Your Message" required></textarea>
+        <textarea name="message" placeholder={props.placeholderMessage || "Your Message"} required></textarea>
       </div>
 
       <div className="rn-form-group">
