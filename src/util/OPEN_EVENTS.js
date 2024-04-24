@@ -111,8 +111,8 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
 
     ],
     ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
-    images: ["/assets/images/portfolio/groningen/portfolio-38"],
-    thumbnail: "/assets/images/portfolio/groningen/portfolio-38",
+    images: ["/assets/images/portfolio/groningen/portfolio-30"],
+    thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
   },
   {
     subEvent: {
@@ -482,8 +482,8 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
 
       ],
       ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
-      images: ["/assets/images/portfolio/groningen/portfolio-38"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-38",
+      images: ["/assets/images/portfolio/groningen/portfolio-30"],
+      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
     },
   ],
   breda: [
