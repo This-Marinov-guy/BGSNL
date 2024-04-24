@@ -16,10 +16,8 @@ const Recruit = () => {
                     </div>
                 </div>
             </Dialog>
-            <li className="mt--40">
-                <p className="mb--20">BGSNL is looking for a web designer - if you have some experience with html and css and want to contribute to this amazing platform, join our team and get amazing benefits as event discount, great network of people and best of feeling of contributing to a society. <br /> <Link to='#' onClick={() => setVisible(true)}>Click here to sign for the position</Link></p>
-                <img style={{ width: '300px' }} onClick={() => setVisible(true)} src='/assets/images/news/designer.png' />
-            </li>
+            <p className="mb--20">BGSNL is looking for a web designer - if you have some experience with html and css and want to contribute to this amazing platform, join our team and get amazing benefits as event discount, great network of people and best of feeling of contributing to a society. <br /> <Link to='#' onClick={() => setVisible(true)}>Click here to sign for the position</Link></p>
+            <img style={{ width: '300px' }} onClick={() => setVisible(true)} src='/assets/images/news/designer.png' />
         </Fragment>
     )
 }

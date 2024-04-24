@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../redux/user";
 import Header from "../component/header/Header";
@@ -30,6 +30,18 @@ const Home = () => {
       navigate('/');
     }
   }, [region])
+
+  const recruitRef = useRef(null);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const campaignQuery = searchParams.get('campaign');
+
+    if (campaignQuery === 'designer') {
+      recruitRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
 
   const SlideList = [
     {
@@ -112,9 +124,11 @@ const Home = () => {
             <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
           </li>
 
-          <Recruit />
+          <li className="mt--40" ref={recruitRef}>
+            <Recruit />
+          </li>
 
-          <li className="mt--40">
+          <li className="mt--40" ref={recruitRef} >
             <p> Membership 2023-2024 open. <Link to='/signup'>
               Sign up!
             </Link>
