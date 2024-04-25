@@ -446,6 +446,43 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       is_tickets_closed: false,
       membersOnly: false,
       visible: true,
+      title: "Easter Egg Dye",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Colorful Weekend",
+      bgImage: "12",
+      date: "4th May",
+      time: "17:00",
+      ticketTimer: '2024-05-04T18:00:00',
+      ticketLimit: 20,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `StudentStay Basement`,
+      entry: "5",
+      memberEntry: "3",
+      including: [],
+      // ticket_link: '',
+      price_id: 'price_1P9JkpIOw5UGbAo1dzyMGaZt',
+      memberPrice_id: 'price_1P9Jl9IOw5UGbAo1FnMgMPAd',
+      activeMemberPrice_id: 'price_1P9Jl9IOw5UGbAo1FnMgMPAd',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `🙌🏻 It is Orthodox Easter, you are not in Bulgaria 🇧🇬 but still want to spend it having fun while keeping traditions alive? Do not worry, we got you! 😉
+        `,
+        `You can welcome this precious Christian holiday with BGSL🤩
+        We have prepared a cozy activity which will make you feel closer to your home 🏠- dying eggs🪺 , eating kozunak 😋and drinking the most refreshing drink you could think of - ayran🥛! 
+        `
+      ],
+      ticket_img: '/assets/images/tickets/leeuwarden/ticket-8.jpg',
+      images: ["/assets/images/events/leeuwarden/easter1/1", "/assets/images/portfolio/leeuwarden/portfolio-8"],
+      thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-8",
+    },
+    {
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
       title: "Spring Gala",
       // newTitle: 'Bulgarian Dinner',
       description: "Event for the stars",
