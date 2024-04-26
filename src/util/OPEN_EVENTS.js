@@ -643,4 +643,5 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
   ]
 }
 
-const isEarly = new Date() < new Date(currentDate.getFullYear(), 4, 13)
+const currentDate = new Date()
+const isEarly = currentDate < new Date(currentDate.getFullYear(), 4, 13)
