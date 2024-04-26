@@ -603,6 +603,44 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
 
   ],
   amsterdam: [
-
+    {
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
+      title: "International Chalgari",
+      // newTitle: 'Bulgarian Dinner',
+      description: `The most 'Bulgarian' party possible`,
+      bgImage: "10",
+      date: "16th May",
+      time: "23:00",
+      ticketTimer: '2024-05-16T23:59:59',
+      ticketLimit: 120,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `club Akhnaton`,
+      entry: isEarly ? 14.95 : 16.95,
+      memberEntry: "12",
+      including: [`${isEarly ? '(Early Bird)' : '(Late Bird)'}`, ''],
+      // ticket_link: '',
+      price_id: isEarly ? 'price_1P9sxaIOw5UGbAo1FdIilrsJ' : 'price_1P9syKIOw5UGbAo1C3qRjEH7',
+      memberPrice_id: 'price_1P9sxsIOw5UGbAo1nZrCaDx3',
+      activeMemberPrice_id: 'price_1P9syAIOw5UGbAo1648U1ApQ',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Awaken your pop- folk diva and join us on the 16th of May from 11 PM to 4 AM at club Akhnaton. Bring your friends, dress like your favorite retro pop-folk artist and be ready for a fun night in Amsterdam!`,
+        `Be fast - Early Bird tickets are limited!!!`,
+        `...`,
+        `Събуди поп-филк дивата в себе си и ела с нас на 16ти май от 11 вечерта до 4 сутринта в клуб Ахнатон. Вземи приятелите си, облечи се като любимия ти поп-фолк изпълнител и бъди готов за забавна нощ в Амстердам`,
+        'Бъди бърз - ранните билети са ограничени!!!'
+      ],
+      ticket_img: '/assets/images/tickets/amsterdam/ticket-3.jpg',
+      images: ["/assets/images/portfolio/amsterdam/portfolio-3"],
+      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-3",
+    },
   ]
 }
+
+const isEarly = new Date() < new Date(currentDate.getFullYear(), 4, 6)
