@@ -619,11 +619,11 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       // correctedDate: "",
       // correctedTime: "",
       where: `club Akhnaton`,
-      entry: isEarly ? 14.95 : 16.95,
+      entry: new Date() < new Date(2024, 5, 13) ? 14.95 : 16.95,
       memberEntry: "12",
-      including: [`${isEarly ? '(Early Bird)' : '(Late Bird)'}`, ''],
+      including: [`${new Date() < new Date(2024, 5, 13) ? '(Early Bird)' : '(Late Bird)'}`, ''],
       // ticket_link: '',
-      price_id: isEarly ? 'price_1P9sxaIOw5UGbAo1FdIilrsJ' : 'price_1P9syKIOw5UGbAo1C3qRjEH7',
+      price_id: new Date() < new Date(2024, 5, 13) ? 'price_1P9sxaIOw5UGbAo1FdIilrsJ' : 'price_1P9syKIOw5UGbAo1C3qRjEH7',
       memberPrice_id: 'price_1P9sxsIOw5UGbAo1nZrCaDx3',
       activeMemberPrice_id: 'price_1P9syAIOw5UGbAo1648U1ApQ',
       freePass: ['vlady1002@abv.bg'],
@@ -642,5 +642,3 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     },
   ]
 }
-
-const isEarly = new Date() < new Date(2024, 5, 13)
