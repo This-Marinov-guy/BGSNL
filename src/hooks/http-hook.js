@@ -20,9 +20,7 @@ export const useHttpClient = () => {
           url: process.env.REACT_APP_SERVER_URL + url,
           method,
           data,
-          config: {
-            ...headers
-          }
+          headers,
         });
 
         return response.data;
