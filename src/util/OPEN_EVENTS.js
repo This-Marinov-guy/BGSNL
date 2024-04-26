@@ -633,7 +633,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
         `Awaken your pop- folk diva and join us on the 16th of May from 11 PM to 4 AM at club Akhnaton. Bring your friends, dress like your favorite retro pop-folk artist and be ready for a fun night in Amsterdam!`,
         `Be fast - Early Bird tickets are limited!!!`,
         `...`,
-        `Събуди поп-филк дивата в себе си и ела с нас на 16ти май от 11 вечерта до 4 сутринта в клуб Ахнатон. Вземи приятелите си, облечи се като любимия ти поп-фолк изпълнител и бъди готов за забавна нощ в Амстердам`,
+        `Събуди поп-фолк дивата в себе си и ела с нас на 16ти май от 11 вечерта до 4 сутринта в клуб Ахнатон. Вземи приятелите си, облечи се като любимия ти поп-фолк изпълнител и бъди готов за забавна нощ в Амстердам`,
         'Бъди бърз - ранните билети са ограничени!!!'
       ],
       ticket_img: '/assets/images/tickets/amsterdam/ticket-3.jpg',
@@ -643,5 +643,4 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
   ]
 }
 
-const currentDate = new Date()
-const isEarly = currentDate < new Date(currentDate.getFullYear(), 4, 13)
+const isEarly = new Date() < new Date(2024, 5, 13)
