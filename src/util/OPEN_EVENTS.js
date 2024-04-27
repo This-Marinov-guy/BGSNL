@@ -2,6 +2,31 @@ import React from "react";
 import { Field, ErrorMessage } from "formik";
 
 // add ticket_link : '*link for the tickets' for outside ticket purchase
+
+let galaPrice, galaMemberPrice, galaPriceId, galaMemberPriceId, galaTicketType;
+const currentData = new Date();
+
+if (currentData < new Date(2024, 5, 6)) {
+  galaPrice = 12
+  galaMemberPrice = 10
+  galaPriceId = 'price_1P8xAJIOw5UGbAo1dfXlCO2y'
+  galaMemberPriceId = 'price_1P8xAYIOw5UGbAo1FXTxKuim'
+  galaTicketType = '(Early Bird)'
+} else if (currentData < new Date(2024, 5, 17)) {
+  galaPrice = 15
+  galaMemberPrice = 13
+  galaPriceId = 'price_1PA4JeIOw5UGbAo1iXPDNujq'
+  galaMemberPriceId = 'price_1PA4JTIOw5UGbAo1K8zje28r'
+  galaTicketType = '(Regular Bird)'
+} else {
+  galaPrice = 19
+  galaMemberPrice = 17
+  galaPriceId = 'price_1PA4JzIOw5UGbAo1jxJLS12h'
+  galaMemberPriceId = 'price_1PA4JrIOw5UGbAo1M3bfUfry'
+  galaTicketType = '(Late Bird)'
+}
+
+
 export const SOCIETY_EVENTS = {
   groningen: [{
     is_tickets_closed: true,
@@ -87,12 +112,12 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     // correctedDate: "",
     // correctedTime: "",
     where: `StadsLab Groningen`,
-    entry: "12",
-    memberEntry: "10",
-    including: ['(Early Bird)', '(Early Bird)'],
+    entry: galaPrice,
+    memberEntry: galaMemberPrice,
+    including: [galaTicketType, galaTicketType],
     // ticket_link: '',
-    price_id: 'price_1P8xAJIOw5UGbAo1dfXlCO2y',
-    memberPrice_id: 'price_1P8xAYIOw5UGbAo1FXTxKuim',
+    price_id: galaPriceId,
+    memberPrice_id: galaMemberPriceId,
     activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
     freePass: ['vlady1002@abv.bg'],
     marketingInputs: false,
@@ -495,12 +520,12 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       // correctedDate: "",
       // correctedTime: "",
       where: `StadsLab Groningen`,
-      entry: "12",
-      memberEntry: "10",
-      including: ['(Early Bird)', '(Early Bird)'],
+      entry: galaPrice,
+      memberEntry: galaMemberPrice,
+      including: [galaTicketType, galaTicketType],
       // ticket_link: '',
-      price_id: 'price_1P8xAJIOw5UGbAo1dfXlCO2y',
-      memberPrice_id: 'price_1P8xAYIOw5UGbAo1FXTxKuim',
+      price_id: galaPriceId,
+      memberPrice_id: galaMemberPriceId,
       activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
       freePass: ['vlady1002@abv.bg'],
       marketingInputs: false,
@@ -513,9 +538,9 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
         ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
   `,
         `Tickets will be sold in 3 types:`,
-        `- Early Bird sale 10 euro for members | 12 euro for non-members `,
-        `- Regular Bird sale 13 euro for members | 15 euro for non-members `,
-        `- Late Bird sale 17 euro for members | 19 euro for non-members `
+        `- Early Bird sale 10 euro for members | 12 euro for non-members until 6th of May`,
+        `- Regular Bird sale 13 euro for members | 15 euro for non-members until 17th of May`,
+        `- Late Bird sale 17 euro for members | 19 euro for non-members until the event`
 
       ],
       ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
@@ -614,7 +639,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       date: "16th May",
       time: "23:00",
       ticketTimer: '2024-05-16T23:59:59',
-      ticketLimit: 120,
+      ticketLimit: 100,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",
