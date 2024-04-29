@@ -549,80 +549,80 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     },
   ],
   breda: [
-    {
-      membersOnly: false,
-      visible: true,
-      title: "Movie Night",
-      // newTitle: 'Bulgarian Dinner',
-      description: "let's enjoy some Bulgarian culture",
-      bgImage: "18",
-      date: "25th April",
-      time: "18:30",
-      ticketTimer: '2024-04-25T19:30:00',
-      ticketLimit: 250,
-      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      // correctedDate: "",
-      // correctedTime: "",
-      where: `BUas, Frontier 1.016`,
-      isMemberFree: true,
-      entry: 2.50,
-      memberEntry: 'Free',
-      including: ['(+ drink and snack)', '(+ drink and snack)'],
-      // ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-      price_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
-      memberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
-      activeMemberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
-      freePass: ['vlady1002@abv.bg'],
-      marketingInputs: false,
-      extraInputs: [
-        {
-          element: <div div className="col-12" >
-            <Field as="select" name="extraOne">
-              <option value="" disabled>
-                Select your drink
-              </option>
-              <option value="water">water</option>
-              <option value="cola">cola</option>
-              <option value="ice tea">ice tea</option>
-            </Field>
-            <ErrorMessage
-              className="error"
-              name="extraOne"
-              component="div"
-            />
-          </div>,
-          required: true
-        },
-        {
-          element: <div div className="col-12" >
-            <Field as="select" name="extraTwo">
-              <option value="" disabled>
-                Select your snack
-              </option>
-              <option value="popcorns">popcorns</option>
-              <option value="nachos">nachos</option>
-            </Field>
-            <ErrorMessage
-              className="error"
-              name="extraTwo"
-              component="div"
-            />
-          </div>,
-          required: true
-        }
-      ],
-      text: [
-        `Dive into Bulgarian cinema with us for a special movie night featuring 'Attraction' - a romantic comedy movie with one of the most popular Bulgarian actors!🎞️
-        `,
-        `❗️English subtitles provided, so everyone is welcome to join us for an evening of cinematic experience and cultural exploration.
-        `,
-        `The price includes drink and popcorns🍿!
-        `
-      ],
-      ticket_img: '/assets/images/tickets/breda/ticket-7.png',
-      images: ["/assets/images/portfolio/breda/portfolio-7"],
-      thumbnail: "/assets/images/portfolio/breda/portfolio-7",
-    },
+    // {
+    //   membersOnly: false,
+    //   visible: true,
+    //   title: "Movie Night",
+    //   newTitle: 'Bulgarian Dinner',
+    //   description: "let's enjoy some Bulgarian culture",
+    //   bgImage: "18",
+    //   date: "25th April",
+    //   time: "18:30",
+    //   ticketTimer: '2024-04-25T19:30:00',
+    //   ticketLimit: 250,
+    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    //   correctedDate: "",
+    //   correctedTime: "",
+    //   where: `BUas, Frontier 1.016`,
+    //   isMemberFree: true,
+    //   entry: 2.50,
+    //   memberEntry: 'Free',
+    //   including: ['(+ drink and snack)', '(+ drink and snack)'],
+    //   ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+    //   price_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
+    //   memberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
+    //   activeMemberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
+    //   freePass: ['vlady1002@abv.bg'],
+    //   marketingInputs: false,
+    //   extraInputs: [
+    //     {
+    //       element: <div div className="col-12" >
+    //         <Field as="select" name="extraOne">
+    //           <option value="" disabled>
+    //             Select your drink
+    //           </option>
+    //           <option value="water">water</option>
+    //           <option value="cola">cola</option>
+    //           <option value="ice tea">ice tea</option>
+    //         </Field>
+    //         <ErrorMessage
+    //           className="error"
+    //           name="extraOne"
+    //           component="div"
+    //         />
+    //       </div>,
+    //       required: true
+    //     },
+    //     {
+    //       element: <div div className="col-12" >
+    //         <Field as="select" name="extraTwo">
+    //           <option value="" disabled>
+    //             Select your snack
+    //           </option>
+    //           <option value="popcorns">popcorns</option>
+    //           <option value="nachos">nachos</option>
+    //         </Field>
+    //         <ErrorMessage
+    //           className="error"
+    //           name="extraTwo"
+    //           component="div"
+    //         />
+    //       </div>,
+    //       required: true
+    //     }
+    //   ],
+    //   text: [
+    //     `Dive into Bulgarian cinema with us for a special movie night featuring 'Attraction' - a romantic comedy movie with one of the most popular Bulgarian actors!🎞️
+    //     `,
+    //     `❗️English subtitles provided, so everyone is welcome to join us for an evening of cinematic experience and cultural exploration.
+    //     `,
+    //     `The price includes drink and popcorns🍿!
+    //     `
+    //   ],
+    //   ticket_img: '/assets/images/tickets/breda/ticket-7.png',
+    //   images: ["/assets/images/portfolio/breda/portfolio-7"],
+    //   thumbnail: "/assets/images/portfolio/breda/portfolio-7",
+    // },
   ],
   maastricht: [
 
@@ -664,6 +664,40 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       ticket_img: '/assets/images/tickets/amsterdam/ticket-3.jpg',
       images: ["/assets/images/portfolio/amsterdam/portfolio-3"],
       thumbnail: "/assets/images/portfolio/amsterdam/portfolio-3",
+    },
+    {
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
+      title: "Easter Picnic",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Colorful Weekend",
+      bgImage: "12",
+      date: "5th May",
+      time: "15:00",
+      ticketTimer: '2024-05-05T00:59:00',
+      ticketLimit: 100,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Oosterpark`,
+      isFree: true,
+      including: [],
+      // ticket_link: '',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+       `По случай наближаването на най-цветния празник, Ви каним на нашия Великденски пикник! Носете хубаво настроение и по нещо любимо за хапване, което да споделите с останалите! Ще Ви очакваме на 5-ти май от 15:00ч. в Oosterpark! 
+       Очаквайте подробности относно точната локация!
+       `,
+       '...',
+       `As the most colorful holiday is approaching, we invite you to our Easter picnic! Bring your good mood and favourite snack to share with the rest! We will see you on the 5th of May at 15:00 in Oosterpark! 
+       Stay tuned for the exact location!`
+      ],
+      ticket_img: '/assets/images/tickets/amsterdam/ticket-4.jpg',
+      images: ["/assets/images/portfolio/amsterdam/portfolio-4"],
+      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-4",
     },
   ]
 }
