@@ -584,9 +584,9 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
        topka󰺖, Ludo (не се сърди човече), volleyball!`,
         `😋The price includes eggs to dye, piece of kozunak and ayran!`
       ],
-      ticket_img: '/assets/images/tickets/amsterdam/ticket-4.jpg',
-      images: ["/assets/images/portfolio/amsterdam/portfolio-4"],
-      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-4",
+      ticket_img: '/assets/images/tickets/breda/ticket-5.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-5"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-5",
     },
     // {
     //   membersOnly: false,
