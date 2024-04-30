@@ -97,6 +97,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     thumbnail: "/assets/images/portfolio/groningen/portfolio-37",
   },
   {
+    isGala: true,
     is_tickets_closed: false,
     membersOnly: false,
     visible: true,
@@ -505,6 +506,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       thumbnail: "/assets/images/portfolio/leeuwarden/portfolio-8",
     },
     {
+      isGala: true,
       is_tickets_closed: false,
       membersOnly: false,
       visible: true,
@@ -560,7 +562,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       date: "4th May",
       time: "14:30",
       ticketTimer: '2024-05-05T14:59:00',
-      ticketLimit: 100,
+      ticketLimit: 40,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",

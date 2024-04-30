@@ -15,6 +15,7 @@ import { Link, useParams } from "react-router-dom";
 import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
 import { link } from "fs-extra";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
+import GalaMembers from "../information/GalaMembers";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false)
@@ -183,6 +184,7 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
+                {target.isGala && <GalaMembers/>}
                 <div className="portfolio-thumb-inner row">
 
                   {target.images.map((value, index) => {
