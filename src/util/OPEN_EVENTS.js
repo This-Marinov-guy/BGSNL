@@ -549,6 +549,45 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     },
   ],
   breda: [
+    {
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
+      title: "Easter Gathering",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Colorful Weekend",
+      bgImage: "12",
+      date: "4th May",
+      time: "14:30",
+      ticketTimer: '2024-05-05T14:59:00',
+      ticketLimit: 100,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Easystreet student building`,
+      entry: 5,
+      memberEntry: 3,
+      including: [],
+      // ticket_link: '',
+      price_id: 'price_1PBKuoIOw5UGbAo1tRxkSbV7',
+      memberPrice_id: 'price_1PBKv0IOw5UGbAo1nht70raP',
+      activeMemberPrice_id: 'price_1PBKv0IOw5UGbAo1nht70raP',
+      // ticket_link: '',
+      freePass: ['vlady1002@abv.bg'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Not in Bulgaria for Easter🐣? We got you! Join us for a special Easter celebration in the
+       company of ✨kozunak, ayran and eggs✨!`,
+        `We are going to dye eggs, beat with eggs and keep
+       the traditions alive! Last but not least you can enjoy the games from your childhood - narodna
+       topka󰺖, Ludo (не се сърди човече), volleyball!`,
+        `😋The price includes eggs to dye, piece of kozunak and ayran!`
+      ],
+      ticket_img: '/assets/images/tickets/amsterdam/ticket-4.jpg',
+      images: ["/assets/images/portfolio/amsterdam/portfolio-4"],
+      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-4",
+    },
     // {
     //   membersOnly: false,
     //   visible: true,
@@ -688,11 +727,11 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       marketingInputs: false,
       extraInputs: false,
       text: [
-       `По случай наближаването на най-цветния празник, Ви каним на нашия Великденски пикник! Носете хубаво настроение и по нещо любимо за хапване, което да споделите с останалите! Ще Ви очакваме на 5-ти май от 15:00ч. в Oosterpark! 
+        `По случай наближаването на най-цветния празник, Ви каним на нашия Великденски пикник! Носете хубаво настроение и по нещо любимо за хапване, което да споделите с останалите! Ще Ви очакваме на 5-ти май от 15:00ч. в Oosterpark! 
        Очаквайте подробности относно точната локация!
        `,
-       '...',
-       `As the most colorful holiday is approaching, we invite you to our Easter picnic! Bring your good mood and favourite snack to share with the rest! We will see you on the 5th of May at 15:00 in Oosterpark! 
+        '...',
+        `As the most colorful holiday is approaching, we invite you to our Easter picnic! Bring your good mood and favourite snack to share with the rest! We will see you on the 5th of May at 15:00 in Oosterpark! 
        Stay tuned for the exact location!`
       ],
       ticket_img: '/assets/images/tickets/amsterdam/ticket-4.jpg',
