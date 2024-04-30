@@ -246,11 +246,11 @@ export const ARTISTS = [
             },
             {
                 question: 'How do you think music has evolved so far?',
-                answer: 'Music have many different paths and every path leads to different audiences so as a musician you choose which musical way to catch. Every genre have his own development.',
+                answer: 'Music has many different paths and every path leads to different audiences so as a musician you choose which musical way to catch. Every genre have his own development.',
             },
             {
                 question: 'What advice would you give to young musicians who want to pursue music as a career?',
-                answer: 'I you really want to something that you love, just be passionate about it and work work hard to achieve it. Happiness is the final result, promise!',
+                answer: 'I you really want to do something that you love, just be passionate about it and work work hard to achieve it. Happiness is the final result, promise!',
             },
             {
                 question: 'Can you share any upcoming projects you’re excited about? ',
@@ -271,7 +271,7 @@ export const ARTISTS = [
             },
             {
                 question: 'Who is your favourite artist/composer? ',
-                answer: 'I’d say I have a lot of favourite artists, but one that dearest to my heart would be Ella Fitzgerald, Betty Carter, Ray Bryant and Nina Simone.',
+                answer: 'I’d say I have a lot of favourite artists, but one that is dearest to my heart would be Ella Fitzgerald, Betty Carter, Ray Bryant and Nina Simone.',
             },
             {
                 question: 'What is your favourite music genre?',
