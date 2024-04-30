@@ -3,6 +3,7 @@ import ImageFb from '../../elements/ui/ImageFb';
 import { Dialog } from 'primereact/dialog';
 import { Link } from 'react-router-dom';
 import { ARTISTS } from '../../util/ARTISTS.js';
+import { FiMic, FiMusic } from 'react-icons/fi';
 
 const GalaMembers = () => {
     const [display, setDisplay] = useState(false)
@@ -51,7 +52,7 @@ const GalaMembers = () => {
                             <h3 className='mr--5'>{value.name} |</h3>
                             <h4>{value.title}</h4>
                         </div>
-                        <Link style={{ fontSize: '20px' }} onClick={() => setDisplay(value)} to='#'>Click me <i className="fa-solid fa-music"></i></Link>
+                        <Link style={{ fontSize: '20px' }} onClick={() => setDisplay(value)} to='#'>Click me <FiMusic/></Link>
                     </div>
                 </div>)
             })}
