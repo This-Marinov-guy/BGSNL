@@ -378,16 +378,16 @@ ul {
     flex-direction: row;
   }
 
-  img {
-    object-fit: contain;
-    border-radius: 80%;
-    width: 140px;
-    height: 185px;
-  }
-
   @media #{$sm-layout} {
     margin-top: 80px;
   }
+}
+
+.committee_img img {
+  object-fit: contain;
+  border-radius: 80%;
+  width: 140px;
+  height: 185px;
 }
 
 .committee_member_left {

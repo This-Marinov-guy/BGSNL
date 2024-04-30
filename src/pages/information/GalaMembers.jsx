@@ -43,16 +43,16 @@ const GalaMembers = () => {
             </div>
         </Dialog>
         <h2 ref={campaignRef} className='center_text'>Meet the artists</h2>
-        <div className='container committee_container'>
+        <div className='container committee_container mb--20'>
             {ARTISTS.map((value) => {
                 return (<div key={value.id} className={`${value.id % 2 === 0 ? 'committee_member_left' : 'committee_member_right'}`}>
-                    <ImageFb onClick={() => setDisplay(value)} src={`/assets/images/team/gala/${value.id}.jpg`} fallback={`/assets/images/team/gala/${value.id}.jpg`} alt='Artist' />
+                    <ImageFb style={{ borderRadius: '50%', width: '150px', height: '150px' }} onClick={() => setDisplay(value)} src={`/assets/images/team/gala/${value.id}.jpg`} fallback={`/assets/images/team/gala/${value.id}.jpg`} alt='Artist' />
                     <div className='text'>
                         <div className='name'>
                             <h3 className='mr--5'>{value.name} |</h3>
                             <h4>{value.title}</h4>
                         </div>
-                        <Link style={{ fontSize: '20px' }} onClick={() => setDisplay(value)} to='#'>Click me <FiMusic/></Link>
+                        <Link style={{ fontSize: '20px' }} onClick={() => setDisplay(value)} to='#'>Click me <FiMusic /></Link>
                     </div>
                 </div>)
             })}

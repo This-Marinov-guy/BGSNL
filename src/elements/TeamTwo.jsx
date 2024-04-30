@@ -14,7 +14,7 @@ const TeamTwo = (props) => {
             </div>}
             <div className='container committee_container'>
                 {REGION_COMMITTEE_MEMBERS[region] ? props.target.map((value) => {
-                    return (<div key={value.id} className={`${value.id % 2 === 0 ? 'committee_member_left' : 'committee_member_right'}`}>
+                    return (<div key={value.id} className={`${value.id % 2 === 0 ? 'committee_member_left' : 'committee_member_right'} committee_img`}>
                         <ImageFb src={`/assets/images/team/${region}/${props.folder}/${value.id}.webp`} fallback={`/assets/images/team/${props.folder}/${value.id}.jpg`} alt='Committee Member' />
                         <div className='text'>
                             <div className='name'>
