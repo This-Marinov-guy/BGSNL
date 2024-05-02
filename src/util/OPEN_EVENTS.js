@@ -131,9 +131,9 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
 `,
       `Tickets will be sold in 3 types:`,
-      `- Early Bird sale 10 euro for members | 12 euro for non-members until 6th of May`,
-      `- Regular Bird sale 13 euro for members | 15 euro for non-members until 17th of May`,
-      `- Late Bird sale 17 euro for members | 19 euro for non-members until the event`
+      `- Early Bird sale 10 euro for members | 12 euro for non-members`,
+      `- Regular Bird sale 13 euro for members | 15 euro for non-members`,
+      `- Late Bird sale 17 euro for members | 19 euro for non-members`
 
     ],
     ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
@@ -540,9 +540,9 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
         ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
   `,
         `Tickets will be sold in 3 types:`,
-        `- Early Bird sale 10 euro for members | 12 euro for non-members until 6th of May`,
-        `- Regular Bird sale 13 euro for members | 15 euro for non-members until 17th of May`,
-        `- Late Bird sale 17 euro for members | 19 euro for non-members until the event`
+        `- Early Bird sale 10 euro for members | 12 euro for non-members`,
+        `- Regular Bird sale 13 euro for members | 15 euro for non-members`,
+        `- Late Bird sale 17 euro for members | 19 euro for non-members`
 
       ],
       ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
