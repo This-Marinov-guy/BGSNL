@@ -15,7 +15,7 @@ export const askBeforeRedirect = (basedOnEnv = true) => {
         event.returnValue = ''; // This is needed for older browsers
     };
 
-    if (basedOnEnv || isProd()) {
+    if (basedOnEnv && isProd()) {
         window.addEventListener('beforeunload', handleBeforeUnload);
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);

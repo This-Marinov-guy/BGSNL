@@ -96,6 +96,7 @@ const EventForm = () => {
                 ticketTimer: '',
                 ticketLimit: null,
                 isFree: false,
+                isMemberFree: false,
                 entry: null,
                 memberEntry: null,
                 activeMemberEntry: null,
@@ -197,7 +198,7 @@ const EventForm = () => {
                                     style={{ width: '100%' }}
                                     placeholder="Date of Event"
                                     touchUI
-                                    showButtonBar 
+                                    showButtonBar
                                     showIcon />
                                 <ErrorMessage
                                     className="error"
@@ -233,7 +234,7 @@ const EventForm = () => {
                     </div>
                     <h3 className="mt--30 label">Price Details</h3>
                     <div className="row">
-                        <div className="col-lg-6 col-12">
+                        <div className="col-12">
                             <div className="hor_section_nospace mt--20">
                                 <Field
                                     style={{ maxWidth: "30px" }}
@@ -242,6 +243,18 @@ const EventForm = () => {
                                 ></Field>
                                 <p className="information">
                                     Make event FREE for all
+                                </p>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <div className="hor_section_nospace mt--20 mb--20">
+                                <Field
+                                    style={{ maxWidth: "30px" }}
+                                    type="checkbox"
+                                    name="isMemberFree"
+                                ></Field>
+                                <p className="information">
+                                    Make event FREE for members only
                                 </p>
                             </div>
                         </div>
@@ -274,7 +287,7 @@ const EventForm = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-lg-4 col-md-6 col-12">
+                        {!values.isMemberFree && <><div className="col-lg-4 col-md-6 col-12">
                             <h5 className="mt--10">Member Price</h5>
                             <div className="rn-form-group">
                                 <Field type="number" placeholder="Member Price" name="memberEntry" />
@@ -301,25 +314,25 @@ const EventForm = () => {
                                 />
                             </div>
                         </div>
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h5 className="mt--10">Active Member Price</h5>
-                            <div className="rn-form-group">
-                                <Field type="number" placeholder="Active Member Price" name="activeMemberEntry" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="activeMemberEntry"
-                                    component="div"
-                                />
-                            </div>
-                            <div className="rn-form-group">
-                                <Field type="text" placeholder="Price ID" name="activeMemberPrice_id" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="activeMemberPrice_id"
-                                    component="div"
-                                />
-                            </div>
-                        </div>
+                            <div className="col-lg-4 col-md-6 col-12">
+                                <h5 className="mt--10">Active Member Price</h5>
+                                <div className="rn-form-group">
+                                    <Field type="number" placeholder="Active Member Price" name="activeMemberEntry" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="activeMemberEntry"
+                                        component="div"
+                                    />
+                                </div>
+                                <div className="rn-form-group">
+                                    <Field type="text" placeholder="Price ID" name="activeMemberPrice_id" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="activeMemberPrice_id"
+                                        component="div"
+                                    />
+                                </div>
+                            </div></>}
                     </div>}
                     <h3 className="mt--30 label">Images</h3>
                     <div className="row">
@@ -476,7 +489,7 @@ const EventForm = () => {
                         <div className="col-12 mt--20">
                             <h5>Link a sub-event</h5>
                             <Field as='textarea' placeholder="Sub-event description" name="subEventDescription" rows={2} />
-                            <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} intValues={values.subEventLinks} max={2} placeholder='Add first link' />
+                            <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} intValues={values.subEventLinks} max={6} placeholder='Add first link' />
                         </div>
                     </div>
 
@@ -502,7 +515,7 @@ const EventForm = () => {
                                     style={{ width: '100%' }}
                                     placeholder="Ticket Sale End"
                                     touchUI
-                                    showButtonBar 
+                                    showButtonBar
                                     showIcon />
                                 <ErrorMessage
                                     className="error"

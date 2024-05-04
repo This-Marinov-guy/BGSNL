@@ -50,7 +50,7 @@ const StringDynamicInputs = (props) => {
           </button>
         </div>
       ))}
-      <button type='button' className='rn-btn rn-btn-green' style={{ fontSize: '22px' }} onClick={addInput}>
+      <button type='button' className='rn-btn rn-btn-green mt--10' style={{ fontSize: '22px' }} onClick={addInput}>
         +
       </button>
     </>

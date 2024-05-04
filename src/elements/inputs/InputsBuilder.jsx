@@ -19,24 +19,26 @@ const InputsBuilder = (props) => {
         const newInputs = [...inputs];
         newInputs.splice(index, 1);
         setInputs(newInputs);
-        // props.onChange(newInputs);
+        props.onChange(newInputs);
     };
 
-    const handleInputChange = (index, value) => {
+    const handleInputChange = (index, name, value) => {
         const newInputs = [...inputs];
-        newInputs[index] = value;
+        newInputs[index][name] = value;
         setInputs(newInputs);
-        // props.onChange(newInputs);
+        props.onChange(newInputs);
     };
 
     return (
         <>
             {inputs.map((value, index) => (
                 <Fragment key={index}>
+                    <h3 className='mt--20'>Input {index + 1}</h3>
                     <div className='row mt--10' key={index}>
                         <select
                             value={value.type}
-                            onChange={(e) => value.type = e.target.value}
+                            onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
+                            name='type'
                             className='col-7'
                         >
                             <option disabled selected value=''>Select type of input</option>
@@ -54,31 +56,40 @@ const InputsBuilder = (props) => {
                         <div className='row mt--10'>
                             <select
                                 value={value.type}
-                                onChange={(e) => handleInputChange(index, e.target.value)}
-                                className='col-lg-6 col-12'
+                                onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
+                                name='required'
+                                className='col-12'
                             >
-                                <option disabled selected value=''>Required</option>
+                                <option disabled value=''>Is it Required</option>
                                 <option value={true}>Yes</option>
                                 <option value={false}>No</option>
                             </select>
-                            <input type='text' className='col-lg-6 col-12' onClick={() => addInput(value.type)} ></input>
+                            <input type='text'
+                                placeholder='Placeholder of the input'
+                                className='col-12'
+                                onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
+                                name='placeholder' ></input>
                         </div>
                         :
                         <div className='row mt--10'>
-                            <div className='row mt--10'>
-                                <select
-                                    value={value.type}
-                                    onChange={(e) => handleInputChange(index, e.target.value)}
-                                    className='col-lg-6 col-12'
-                                >
-                                    <option disabled selected value=''>Required</option>
-                                    <option value={true}>Yes</option>
-                                    <option value={false}>No</option>
-                                </select>
-                                <StringDynamicInputs onChange={(inputs) => value.options = inputs} placeholder='Add option' />
-                            </div>
-                        </div>)}
-
+                            <select
+                                value={value.type}
+                                onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
+                                name='required'
+                                className='col-lg-6 col-12'
+                            >
+                                <option disabled value=''>Is it Required</option>
+                                <option value={true}>Yes</option>
+                                <option value={false}>No</option>
+                            </select>
+                            <input type='text'
+                                placeholder='Placeholder of the input'
+                                className='col-12'
+                                onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
+                                name='placeholder' ></input>
+                            <StringDynamicInputs onChange={(inputs) => handleInputChange(index, 'options', inputs)} placeholder='Add option' />
+                        </div>
+                    )}
                 </Fragment>
             ))}
 
