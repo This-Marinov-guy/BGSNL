@@ -6,28 +6,17 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Calendar } from 'primereact/calendar';
 import { Tooltip } from 'primereact/tooltip';
 import { FileUpload } from 'primereact/fileupload';
-import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
 import ImageInput from "../inputs/ImageInput";
-import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "../../redux/user";
-import { Link, useParams } from "react-router-dom";
-import RegionOptions from "../../elements/ui/RegionOptions";
-import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
 import { BG_INDEX, REGIONS } from "../../util/REGIONS_DESIGN";
 import WithBackBtn from "../ui/WithBackBtn";
 import StringDynamicInputs from "../inputs/StringDynamicInputs";
 import InputsBuilder from "../inputs/InputsBuilder";
-import { askBeforeRedirect, isProd } from "../../util/global";
+import { askBeforeRedirect } from "../../util/global";
 
 const EventForm = () => {
-    const { sendRequest, loading } = useHttpClient();
+    const { loading, sendRequest, forceStartLoading } = useHttpClient();
     const [files, setFiles] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
 
@@ -66,17 +55,28 @@ const EventForm = () => {
             className="container"
             validationSchema={null}
             onSubmit={async (values) => {
-                const formData = new FormData();
+                try {
+                    forceStartLoading();
 
-                console.log(values)
-                files.forEach((file, index) => {
-                    let fileName = 'image_' + index
+                    const formData = new FormData();
 
-                    let readyFile = new File([file], fileName);
-                    formData.append(`images`, readyFile, fileName);
+                    files.forEach((file, index) => {
+                        let fileName = 'image_' + index
 
-                });
+                        let readyFile = new File([file], fileName);
+                        formData.append(`images`, readyFile, fileName);
 
+                    });
+
+                    Object.entries(values).forEach(([key, val]) => {
+                        formData.append(key, val);
+                        console.log(key, val)
+                    });
+
+                    const responseData = await sendRequest('event/add-event', 'POST', formData)
+                } catch (err) {
+                    console.log(err)
+                }
             }}
             initialValues={{
                 is_tickets_closed: false,
@@ -95,6 +95,7 @@ const EventForm = () => {
                 where: '',
                 ticketTimer: '',
                 ticketLimit: null,
+                isSaleClosed: true,
                 isFree: false,
                 isMemberFree: false,
                 entry: null,
@@ -234,7 +235,19 @@ const EventForm = () => {
                     </div>
                     <h3 className="mt--30 label">Price Details</h3>
                     <div className="row">
-                        <div className="col-12">
+                        <div className="col-lg-4 col-12">
+                            <div className="hor_section_nospace mt--20">
+                                <Field
+                                    style={{ maxWidth: "30px" }}
+                                    type="checkbox"
+                                    name="isSaleClosed"
+                                ></Field>
+                                <p className="information">
+                                    Close Ticket Sale
+                                </p>
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-12">
                             <div className="hor_section_nospace mt--20">
                                 <Field
                                     style={{ maxWidth: "30px" }}
@@ -246,7 +259,7 @@ const EventForm = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="col-12">
+                        <div className="col-lg-4 col-12">
                             <div className="hor_section_nospace mt--20 mb--20">
                                 <Field
                                     style={{ maxWidth: "30px" }}
@@ -259,7 +272,7 @@ const EventForm = () => {
                             </div>
                         </div>
                     </div>
-                    {!values.isFree && <div className="row">
+                    {(!values.isFree || !values.isSaleClosed) && <div className="row">
                         <div className="col-lg-4 col-md-6 col-12">
                             <h5 className="mt--10">Basic Price</h5>
                             <div className="rn-form-group">

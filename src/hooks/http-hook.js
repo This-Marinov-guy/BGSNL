@@ -9,15 +9,17 @@ export const useHttpClient = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
 
+  const forceStartLoading = () => dispatch(startLoading())
+
   const sendRequest = useCallback(
     async (url, method = "GET", data = null, headers = {}) => {
-      dispatch(startLoading());
+      if (!loading) forceStartLoading;
 
       try {
         //for production --> process.env.REACT_APP_SERVER_URL
         //for testing -----> process.env.REACT_APP_TEST_SERVER_URL
         const response = await axios.request({
-          url: process.env.REACT_APP_SERVER_URL + url,
+          url: process.env.REACT_APP_TEST_SERVER_URL + url,
           method,
           data,
           headers,
@@ -34,5 +36,5 @@ export const useHttpClient = () => {
     []
   );
 
-  return { loading, sendRequest };
+  return { loading, sendRequest, forceStartLoading };
 };

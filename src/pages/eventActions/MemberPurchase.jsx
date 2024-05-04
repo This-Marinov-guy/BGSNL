@@ -23,7 +23,7 @@ import { decodeJWT } from "../../util/jwt";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const MemberPurchase = () => {
-  const { loading, sendRequest } = useHttpClient();
+  const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(true);
@@ -154,6 +154,8 @@ const MemberPurchase = () => {
               validationSchema={schema}
               onSubmit={async (values) => {
                 try {
+                  forceStartLoading();
+
                   const ticket = await createCustomerTicket(target.ticket_img, currentUser.name, currentUser.surname, target.ticket_color);
 
                   // formData

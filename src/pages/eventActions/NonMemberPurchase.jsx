@@ -23,7 +23,7 @@ import MembershipBanner from "../../elements/ui/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const NonMemberPurchase = () => {
-  const { loading, sendRequest } = useHttpClient();
+  const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
   const [loadingPage, setLoadingPage] = useState(true);
   const [eventClosed, setEventClosed] = useState(false)
@@ -171,6 +171,8 @@ const NonMemberPurchase = () => {
                   validationSchema={schema}
                   onSubmit={async (values) => {
                     try {
+                      forceStartLoading();
+
                       const ticket = await createCustomerTicket(target.ticket_img, values.name, values.surname, target.ticket_color);
                       // formData
                       const formData = new FormData();
