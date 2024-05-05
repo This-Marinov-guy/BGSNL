@@ -15,7 +15,7 @@ import StringDynamicInputs from "../inputs/StringDynamicInputs";
 import InputsBuilder from "../inputs/InputsBuilder";
 import { askBeforeRedirect } from "../../util/global";
 
-const EventForm = () => {
+const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
     const [files, setFiles] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
@@ -69,17 +69,24 @@ const EventForm = () => {
                     });
 
                     Object.entries(values).forEach(([key, val]) => {
-                        formData.append(key, val);
-                        console.log(key, val)
+                        if (key === 'extraInputsForm') {
+                            formData.append(key, JSON.stringify(val));
+                        } else {
+                            formData.append(key, val);
+                        }
                     });
 
-                    const responseData = await sendRequest('event/add-event', 'POST', formData)
+                    const responseData = await sendRequest('event/actions/add-event', 'POST', formData)
+
+                    if (responseData.status) {
+                        props.toast.current.show({ severity: 'success', summary: 'Event added' });
+                        navigate('/user/events');
+                    }
+
                 } catch (err) {
-                    console.log(err)
                 }
             }}
             initialValues={{
-                is_tickets_closed: false,
                 membersOnly: false,
                 visible: true,
                 extraInputsForm: [{ type: '', placeholder: '', required: false, options: [] }],
@@ -95,7 +102,7 @@ const EventForm = () => {
                 where: '',
                 ticketTimer: '',
                 ticketLimit: null,
-                isSaleClosed: true,
+                isSaleClosed: false,
                 isFree: false,
                 isMemberFree: false,
                 entry: null,
@@ -104,16 +111,16 @@ const EventForm = () => {
                 entryIncluding: '',
                 memberIncluding: '',
                 including: [],
-                ticket_link: '',
-                price_id: '',
-                memberPrice_id: '',
-                activeMemberPrice_id: "",
+                ticketLink: '',
+                priceId: '',
+                memberPriceId: '',
+                activeMemberPriceId: "",
                 text: '',
                 title: '',
                 images: [],
-                ticket_img: null,
-                ticket_color: '#faf9f6',
-                thumbnail: null,
+                ticketImg: null,
+                ticketColor: '#faf9f6',
+                poster: null,
                 bgImage: 1,
                 bgImageExtra: null,
             }}
@@ -272,7 +279,7 @@ const EventForm = () => {
                             </div>
                         </div>
                     </div>
-                    {(!values.isFree || !values.isSaleClosed) && <div className="row">
+                    {(values.isSaleClosed || !values.isFree) && <div className="row">
                         <div className="col-lg-4 col-md-6 col-12">
                             <h5 className="mt--10">Basic Price</h5>
                             <div className="rn-form-group">
@@ -292,10 +299,10 @@ const EventForm = () => {
                                 />
                             </div>
                             <div className="rn-form-group">
-                                <Field type="text" placeholder="Price ID" name="price_id" />
+                                <Field type="text" placeholder="Price ID" name="priceId" />
                                 <ErrorMessage
                                     className="error"
-                                    name="price_id"
+                                    name="priceId"
                                     component="div"
                                 />
                             </div>
@@ -319,10 +326,10 @@ const EventForm = () => {
                                 />
                             </div>
                             <div className="rn-form-group">
-                                <Field type="text" placeholder="Price ID" name="memberPrice_id" />
+                                <Field type="text" placeholder="Price ID" name="memberPriceId" />
                                 <ErrorMessage
                                     className="error"
-                                    name="memberPrice_id"
+                                    name="memberPriceId"
                                     component="div"
                                 />
                             </div>
@@ -338,10 +345,10 @@ const EventForm = () => {
                                     />
                                 </div>
                                 <div className="rn-form-group">
-                                    <Field type="text" placeholder="Price ID" name="activeMemberPrice_id" />
+                                    <Field type="text" placeholder="Price ID" name="activeMemberPriceId" />
                                     <ErrorMessage
                                         className="error"
-                                        name="activeMemberPrice_id"
+                                        name="activeMemberPriceId"
                                         component="div"
                                     />
                                 </div>
@@ -354,12 +361,12 @@ const EventForm = () => {
                             <h5 className="center_text">Poster Image</h5>
                             <ImageInput
                                 onChange={(event) => {
-                                    setFieldValue("thumbnail", event.target.files[0]);
+                                    setFieldValue("poster", event.target.files[0]);
                                 }}
                             />
                             <ErrorMessage
                                 className="error"
-                                name="thumbnail"
+                                name="poster"
                                 component="div"
                             />
                         </div>
@@ -368,7 +375,7 @@ const EventForm = () => {
                             <h5 className="center_text">Ticket Image</h5>
                             <ImageInput
                                 onChange={(event) => {
-                                    setFieldValue("ticket_img", event.target.files[0]);
+                                    setFieldValue("ticketImg", event.target.files[0]);
                                 }}
                             />
                             <p className="mt--10 information center_text">
@@ -376,18 +383,18 @@ const EventForm = () => {
                             </p>
                             <ErrorMessage
                                 className="error"
-                                name="ticket_img"
+                                name="ticketImg"
                                 component="div"
                             />
                             <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
                                 <h5 className="center_text">Name on ticket color</h5>
                                 <div className="center_div" style={{ gap: '50px' }}>
                                     <h5 className="center_div">
-                                        <Field type="radio" name="ticket_color" value="#faf9f6" />
+                                        <Field type="radio" name="ticketColor" value="#faf9f6" />
                                         Light
                                     </h5>
                                     <h5 className="center_div">
-                                        <Field type="radio" name="ticket_color" value="#272528" />
+                                        <Field type="radio" name="ticketColor" value="#272528" />
                                         Dark
                                     </h5>
                                 </div>
@@ -450,7 +457,7 @@ const EventForm = () => {
                                 <Field
                                     style={{ maxWidth: "30px" }}
                                     type="checkbox"
-                                    name="is_tickets_closed"
+                                    name="isSaleClosed"
                                 ></Field>
                                 <p className="information">
                                     Close Sale of Tickets (only display event)
@@ -458,7 +465,7 @@ const EventForm = () => {
                             </div>
                             <ErrorMessage
                                 className="error"
-                                name="is_tickets_closed"
+                                name="isSaleClosed"
                                 component="div"
                             />
                         </div>
@@ -529,7 +536,10 @@ const EventForm = () => {
                                     placeholder="Ticket Sale End"
                                     touchUI
                                     showButtonBar
-                                    showIcon />
+                                    showIcon
+                                    showTime
+                                    hourFormat="24"
+                                />
                                 <ErrorMessage
                                     className="error"
                                     name="ticketTimer"

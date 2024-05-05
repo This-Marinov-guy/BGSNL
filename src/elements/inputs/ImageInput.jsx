@@ -30,6 +30,7 @@ const ImageInput = (props) => {
     //set image
     let pickedFile = event.target.files[0];
     if (!validFileTypes.find((type) => type === pickedFile.type)) {
+      setFile(null)
       setIsValid(false);
       return;
     }
