@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const StringDynamicInputs = (props) => {
-  const [inputs, setInputs] = useState(props.intValues?.length > 0 ? props.intValues : ['']);
+  const [inputs, setInputs] = useState(props.intValues?.length > 0 ? props.intValues : []);
 
   const addInput = () => {
     if (props.max > inputs.length) {

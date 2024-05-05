@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
 const DynamicInputComponent = () => {
-    const [inputs, setInputs] = useState([{ name: '', value: '' }]); 
+    const [inputs, setInputs] = useState([
+        // { name: '', value: '' }
+    ]); 
 
     // Function to handle adding a new input pair
     const addInputPair = () => {

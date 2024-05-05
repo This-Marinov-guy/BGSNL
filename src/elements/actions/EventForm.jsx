@@ -48,12 +48,32 @@ const EventForm = (props) => {
         askBeforeRedirect();
     }, []);
 
-    const schema = {}
+    const schema = yup.object().shape({
+        region: yup.string().required("Region is required"),
+        title: yup.string().required("Title is required"),
+        description: yup.string().required("Description is required"),
+        date: yup.string().required("Date is required"),
+        time: yup.string().required("Time is required"),
+        where: yup.string().required("Location is required"),
+        date: yup.string().required("Date is required"),
+        ticketTimer: yup.string().required("Ticket Timer is required"),
+        ticketLimit: yup.number().required("Ticket Limit is required"),
+        entry: yup.number().required("Normal Price is required"),
+        memberEntry: yup.number().required("Member Price is required"),
+        ticketLink: yup.string().required("Ticket Link is required"),
+        priceId: yup.string().required("Provide Stripe id for guest price"),
+        memberPriceId: yup.string().required("Provide Stripe id for member price"),
+        activeMemberPriceId: yup.string().required("Provide Stripe id for active member price"),
+        text: yup.string().required("Add some content to the event"),
+        title: yup.string().required("Title is required"),
+        ticketImg: yup.mixed().required('A ticket image is required'),
+        poster: yup.mixed().required('A poster is required'),
+    });
 
     return (
         <Formik
             className="container"
-            validationSchema={null}
+            validationSchema={schema}
             onSubmit={async (values) => {
                 try {
                     forceStartLoading();
@@ -89,7 +109,9 @@ const EventForm = (props) => {
             initialValues={{
                 membersOnly: false,
                 visible: true,
-                extraInputsForm: [{ type: '', placeholder: '', required: false, options: [] }],
+                extraInputsForm: [
+                    // { type: '', placeholder: '', required: false, options: [] }
+                ],
                 freePass: [],
                 discountPass: [],
                 subEventDescription: '',
@@ -101,7 +123,8 @@ const EventForm = (props) => {
                 time: '',
                 where: '',
                 ticketTimer: '',
-                ticketLimit: null,
+                ticketLimit: 1000,
+                isTicketLink: false,
                 isSaleClosed: false,
                 isFree: false,
                 isMemberFree: false,
@@ -110,7 +133,6 @@ const EventForm = (props) => {
                 activeMemberEntry: null,
                 entryIncluding: '',
                 memberIncluding: '',
-                including: [],
                 ticketLink: '',
                 priceId: '',
                 memberPriceId: '',
@@ -247,18 +269,6 @@ const EventForm = (props) => {
                                 <Field
                                     style={{ maxWidth: "30px" }}
                                     type="checkbox"
-                                    name="isSaleClosed"
-                                ></Field>
-                                <p className="information">
-                                    Close Ticket Sale
-                                </p>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-12">
-                            <div className="hor_section_nospace mt--20">
-                                <Field
-                                    style={{ maxWidth: "30px" }}
-                                    type="checkbox"
                                     name="isFree"
                                 ></Field>
                                 <p className="information">
@@ -278,82 +288,109 @@ const EventForm = (props) => {
                                 </p>
                             </div>
                         </div>
+                        <div className="col-lg-4 col-12">
+                            <div className="hor_section_nospace mt--20 mb--20">
+                                <Field
+                                    style={{ maxWidth: "30px" }}
+                                    type="checkbox"
+                                    name="isTicketLink"
+                                ></Field>
+                                <p className="information">
+                                    Buy tickets from external platform
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    {(values.isSaleClosed || !values.isFree) && <div className="row">
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h5 className="mt--10">Basic Price</h5>
-                            <div className="rn-form-group">
-                                <Field type="number" placeholder="Price" name="entry" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="entry"
-                                    component="div"
-                                />
+                    {!(values.isSaleClosed || values.isFree) && (values.isTicketLink ?
+                        <div className="row">
+                            <div className="col-12">
+                                <h5 className="mt--10"></h5>
+                                <div className="rn-form-group">
+                                    <Field type="text" placeholder="External Platform Ticket Link" name="ticketLink" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="ticketLink"
+                                        component="div"
+                                    />
+                                </div>
                             </div>
-                            <div className="rn-form-group">
-                                <Field type="text" placeholder="Including" name="entryIncluding" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="entryIncluding"
-                                    component="div"
-                                />
-                            </div>
-                            <div className="rn-form-group">
-                                <Field type="text" placeholder="Price ID" name="priceId" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="priceId"
-                                    component="div"
-                                />
-                            </div>
-                        </div>
-                        {!values.isMemberFree && <><div className="col-lg-4 col-md-6 col-12">
-                            <h5 className="mt--10">Member Price</h5>
-                            <div className="rn-form-group">
-                                <Field type="number" placeholder="Member Price" name="memberEntry" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="memberEntry"
-                                    component="div"
-                                />
-                            </div>
-                            <div className="rn-form-group">
-                                <Field type="text" placeholder="Including" name="memberIncluding" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="memberIncluding"
-                                    component="div"
-                                />
-                            </div>
-                            <div className="rn-form-group">
-                                <Field type="text" placeholder="Price ID" name="memberPriceId" />
-                                <ErrorMessage
-                                    className="error"
-                                    name="memberPriceId"
-                                    component="div"
-                                />
-                            </div>
-                        </div>
+                        </div> :
+                        <div className="row">
                             <div className="col-lg-4 col-md-6 col-12">
-                                <h5 className="mt--10">Active Member Price</h5>
+                                <h5 className="mt--10">Basic Price</h5>
                                 <div className="rn-form-group">
-                                    <Field type="number" placeholder="Active Member Price" name="activeMemberEntry" />
+                                    <Field type="number" placeholder="Price" name="entry" />
                                     <ErrorMessage
                                         className="error"
-                                        name="activeMemberEntry"
+                                        name="entry"
                                         component="div"
                                     />
                                 </div>
                                 <div className="rn-form-group">
-                                    <Field type="text" placeholder="Price ID" name="activeMemberPriceId" />
+                                    <Field type="text" placeholder="Including" name="entryIncluding" />
                                     <ErrorMessage
                                         className="error"
-                                        name="activeMemberPriceId"
+                                        name="entryIncluding"
                                         component="div"
                                     />
                                 </div>
-                            </div></>}
-                    </div>}
+                                <div className="rn-form-group">
+                                    <Field type="text" placeholder="Price ID" name="priceId" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="priceId"
+                                        component="div"
+                                    />
+                                </div>
+                            </div>
+                            {!values.isMemberFree && <><div className="col-lg-4 col-md-6 col-12">
+                                <h5 className="mt--10">Member Price</h5>
+                                <div className="rn-form-group">
+                                    <Field type="number" placeholder="Member Price" name="memberEntry" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="memberEntry"
+                                        component="div"
+                                    />
+                                </div>
+                                <div className="rn-form-group">
+                                    <Field type="text" placeholder="Including" name="memberIncluding" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="memberIncluding"
+                                        component="div"
+                                    />
+                                </div>
+                                <div className="rn-form-group">
+                                    <Field type="text" placeholder="Price ID" name="memberPriceId" />
+                                    <ErrorMessage
+                                        className="error"
+                                        name="memberPriceId"
+                                        component="div"
+                                    />
+                                </div>
+                            </div>
+                                <div className="col-lg-4 col-md-6 col-12">
+                                    <h5 className="mt--10">Active Member Price</h5>
+                                    <div className="rn-form-group">
+                                        <Field type="number" placeholder="Active Member Price" name="activeMemberEntry" />
+                                        <ErrorMessage
+                                            className="error"
+                                            name="activeMemberEntry"
+                                            component="div"
+                                        />
+                                    </div>
+                                    <div className="rn-form-group">
+                                        <Field type="text" placeholder="Price ID" name="activeMemberPriceId" />
+                                        <ErrorMessage
+                                            className="error"
+                                            name="activeMemberPriceId"
+                                            component="div"
+                                        />
+                                    </div>
+                                </div>
+                            </>}
+                        </div>)}
                     <h3 className="mt--30 label">Images</h3>
                     <div className="row">
                         <div className="col-lg-6 col-md-6 col-12 mt--20">
@@ -406,7 +443,7 @@ const EventForm = (props) => {
                         <div className='col-lg-6 col-12 mt--20'>
                             <hr />
                             <h5 className="mt--30">Description Images (The poster is automatically assigned)</h5>
-                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={1000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
+                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={100000000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
                             <p>
                                 <small>* Submit no more than 3</small><br />
                                 <small>* Extra images will not be received</small><br />
@@ -463,11 +500,6 @@ const EventForm = (props) => {
                                     Close Sale of Tickets (only display event)
                                 </p>
                             </div>
-                            <ErrorMessage
-                                className="error"
-                                name="isSaleClosed"
-                                component="div"
-                            />
                         </div>
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
@@ -531,7 +563,6 @@ const EventForm = (props) => {
                                     onChange={(event) => values.ticketTimer = event.target.value}
                                     dateFormat="dd/mm/yy"
                                     minDate={new Date()}
-                                    mask="99/99/9999"
                                     style={{ width: '100%' }}
                                     placeholder="Ticket Sale End"
                                     touchUI
