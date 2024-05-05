@@ -247,18 +247,6 @@ const EventForm = (props) => {
                                 <Field
                                     style={{ maxWidth: "30px" }}
                                     type="checkbox"
-                                    name="isSaleClosed"
-                                ></Field>
-                                <p className="information">
-                                    Close Ticket Sale
-                                </p>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-12">
-                            <div className="hor_section_nospace mt--20">
-                                <Field
-                                    style={{ maxWidth: "30px" }}
-                                    type="checkbox"
                                     name="isFree"
                                 ></Field>
                                 <p className="information">
@@ -279,7 +267,7 @@ const EventForm = (props) => {
                             </div>
                         </div>
                     </div>
-                    {(values.isSaleClosed || !values.isFree) && <div className="row">
+                    {(!values.isSaleClosed || !values.isFree) && <div className="row">
                         <div className="col-lg-4 col-md-6 col-12">
                             <h5 className="mt--10">Basic Price</h5>
                             <div className="rn-form-group">
@@ -406,7 +394,7 @@ const EventForm = (props) => {
                         <div className='col-lg-6 col-12 mt--20'>
                             <hr />
                             <h5 className="mt--30">Description Images (The poster is automatically assigned)</h5>
-                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={1000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
+                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={100000000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
                             <p>
                                 <small>* Submit no more than 3</small><br />
                                 <small>* Extra images will not be received</small><br />
@@ -463,11 +451,6 @@ const EventForm = (props) => {
                                     Close Sale of Tickets (only display event)
                                 </p>
                             </div>
-                            <ErrorMessage
-                                className="error"
-                                name="isSaleClosed"
-                                component="div"
-                            />
                         </div>
                         <div className="col-lg-6 col-12">
                             <div className="hor_section_nospace mt--20">
@@ -531,7 +514,6 @@ const EventForm = (props) => {
                                     onChange={(event) => values.ticketTimer = event.target.value}
                                     dateFormat="dd/mm/yy"
                                     minDate={new Date()}
-                                    mask="99/99/9999"
                                     style={{ width: '100%' }}
                                     placeholder="Ticket Sale End"
                                     touchUI
