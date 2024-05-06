@@ -123,7 +123,7 @@ const EventForm = (props) => {
                 time: '',
                 where: '',
                 ticketTimer: '',
-                ticketLimit: 1000,
+                ticketLimit: null,
                 isTicketLink: false,
                 isSaleClosed: false,
                 isFree: false,
@@ -443,7 +443,6 @@ const EventForm = (props) => {
                         <div className='col-lg-6 col-12 mt--20'>
                             <hr />
                             <h5 className="mt--30">Description Images (The poster is automatically assigned)</h5>
-                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={100000000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
                             <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={100000000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
                             <p>
                                 <small>* Submit no more than 3</small><br />

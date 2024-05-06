@@ -1,6 +1,12 @@
 /*===================
 Button Area 
 ====================*/
+.common-border-1 {
+  padding: 2%;
+  border-radius: 10px;
+  border: 2px dashed $theme-color-2;
+}
+
 a {
   &.btn-transparent {
     color: #1f1f25;

@@ -62,10 +62,18 @@
 
   &.header--transparent {
     position: absolute;
-    top: 0;
+    top: -40px;
     left: 0;
     right: 0;
     width: auto;
+
+    @media #{$lg-layout, $md-layout} {
+      top: -30px;
+    }
+
+    @media #{$sm-layout} {
+      top: -10px;
+    }
   }
   .header-wrapper {
     display: flex;
@@ -363,7 +371,7 @@
   }
   &.header-red {
     @media only screen and (min-width: 991px) {
-      padding: 20px;
+      padding: 5px 20px;
       background-color: $theme-color-2;
     }
   }

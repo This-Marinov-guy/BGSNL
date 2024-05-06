@@ -67,8 +67,8 @@ const AddEvent = lazy(() =>
 const EditEvent = lazy(() =>
   import("./pages/userActions/EditEvent")
 );
-const ListEvents = lazy(() =>
-  import("./pages/userActions/ListEvents")
+const EventDashboard = lazy(() =>
+  import("./pages/userActions/EventDashboard")
 );
 
 const NonMemberPurchase = lazy(() =>
@@ -185,7 +185,7 @@ const Root = () => {
                 />
                 <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
                 <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
-                <Route exact path={`/user/all-events`} element={<ListEvents toast={toast} />} />
+                <Route exact path={`/user/dashboard`} element={<EventDashboard toast={toast} />} />
               </Fragment>
             ) : (
               <Fragment>
