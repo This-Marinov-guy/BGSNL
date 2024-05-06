@@ -114,8 +114,8 @@ const EventDetails = () => {
                       <span>Entry fee</span>
                       {!target.isFree ? <h4>
                         {(user.token && target.memberEntry)
-                          ? target.memberEntry + (!isNaN(target.memberEntry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[0] : '')
-                          : target.entry + (!isNaN(target.entry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[1] : '')}
+                          ? (target.isMemberFree ? 'FREE' : target.memberEntry + (!isNaN(target.memberEntry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[0] : ''))
+                          : target.entry + (!isNaN(target.entry) ? ' euro ' : ' ') + ((target.including && target.including.length > 1) ? target.including[1] : '')}
                       </h4> : <h4 >{target.ticket_link ? 'Check ticket portal' : 'FREE'}</h4>}
                     </div>
                   </div>
@@ -130,7 +130,7 @@ const EventDetails = () => {
                         {
                           target.subEvent.links.map((link) => {
                             return <a
-                              className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5" 
+                              className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
                               href={'/' + region + '/event-details' + link.href}
                             >
                               <span className="">{link.name}</span>
@@ -184,7 +184,7 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-                {target.isGala && <GalaMembers/>}
+                {target.isGala && <GalaMembers />}
                 <div className="portfolio-thumb-inner row">
 
                   {target.images.map((value, index) => {
