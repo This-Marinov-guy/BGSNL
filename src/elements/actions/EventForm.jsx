@@ -444,6 +444,7 @@ const EventForm = (props) => {
                             <hr />
                             <h5 className="mt--30">Description Images (The poster is automatically assigned)</h5>
                             <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={100000000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
+                            <FileUpload name="extraImages" onInput={inputHandler} multiple accept="image/*" maxFileSize={100000000000} emptyTemplate={<h4 className="m-0">Drag and drop files to here to upload.</h4>} />
                             <p>
                                 <small>* Submit no more than 3</small><br />
                                 <small>* Extra images will not be received</small><br />
