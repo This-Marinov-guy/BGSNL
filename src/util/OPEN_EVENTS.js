@@ -4,15 +4,15 @@ import { Field, ErrorMessage } from "formik";
 // add ticket_link : '*link for the tickets' for outside ticket purchase
 
 let galaPrice, galaMemberPrice, galaPriceId, galaMemberPriceId, galaTicketType;
-const currentData = new Date();
+const currentData = new Date().valueOf();
 
-if (currentData < new Date(2024, 5, 6)) {
+if (currentData < new Date('2024/05/08').valueOf()) {
   galaPrice = 12
   galaMemberPrice = 10
   galaPriceId = 'price_1P8xAJIOw5UGbAo1dfXlCO2y'
   galaMemberPriceId = 'price_1P8xAYIOw5UGbAo1FXTxKuim'
   galaTicketType = '(Early Bird)'
-} else if (currentData < new Date(2024, 5, 17)) {
+} else if (currentData < new Date('2024/05/17').valueOf()) {
   galaPrice = 15
   galaMemberPrice = 13
   galaPriceId = 'price_1PA4JeIOw5UGbAo1iXPDNujq'
@@ -26,6 +26,7 @@ if (currentData < new Date(2024, 5, 6)) {
   galaTicketType = '(Late Bird)'
 }
 
+const isEightMay = new Date().valueOf() < new Date('2024/05/08').valueOf();
 
 export const SOCIETY_EVENTS = {
   groningen: [{
@@ -682,11 +683,11 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       // correctedDate: "",
       // correctedTime: "",
       where: `club Akhnaton`,
-      entry: new Date() < new Date(2024, 5, 8) ? 14.95 : 16.95,
+      entry: isEightMay ? 14.95 : 16.95,
       memberEntry: "12",
-      including: [`${new Date() < new Date(2024, 5, 8) ? '(Early Bird)' : '(Late Bird)'}`, ''],
+      including: [`${isEightMay ? '(Early Bird)' : '(Late Bird)'}`, ''],
       // ticket_link: '',
-      price_id: new Date() < new Date(2024, 5, 8) ? 'price_1P9sxaIOw5UGbAo1FdIilrsJ' : 'price_1P9syKIOw5UGbAo1C3qRjEH7',
+      price_id: isEightMay ? 'price_1P9sxaIOw5UGbAo1FdIilrsJ' : 'price_1P9syKIOw5UGbAo1C3qRjEH7',
       memberPrice_id: 'price_1P9sxsIOw5UGbAo1nZrCaDx3',
       activeMemberPrice_id: 'price_1P9syAIOw5UGbAo1648U1ApQ',
       freePass: ['vladislavmarinov3142@gmail.com'],
