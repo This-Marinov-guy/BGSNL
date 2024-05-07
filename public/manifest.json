@@ -8,8 +8,8 @@
   "scope": "/",
   "start_url": ".",
   "icons": [
-    { "src": "/mobile-192.png", "type": "image/png", "sizes": "192x192" },
-    { "src": "/mobile-256.png", "type": "image/png", "sizes": "256x256" },
-    { "src": "/mobile-512.png", "type": "image/png", "sizes": "512x512" }
+    { "src": "./icons/mobile-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icons/mobile-256.png", "type": "image/png", "sizes": "256x256" },
+    { "src": "/icons/mobile-512.png", "type": "image/png", "sizes": "512x512" }
   ]
 }
