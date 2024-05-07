@@ -48,6 +48,21 @@ const EventDetails = () => {
     }
   }, [])
 
+  let price;
+
+  if (target.isFree) {
+    price = 'FREE'
+  } else if (target.ticket_link) {
+    price = 'Check ticket portal'
+  } else if (user.token && (target.memberEntry || target.isMemberFree)) {
+    price = target.isMemberFree ? 'FREE'
+      : target.memberEntry + (!isNaN(target.memberEntry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[0] : '')
+  } else if (target.entry) {
+    price = target.entry + (!isNaN(target.entry) ? ' euro ' : ' ') + ((target.including && target.including.length > 1) ? target.including[1] : '')
+  } else {
+    price = 'TBA'
+  }
+
   return (
     <React.Fragment>
       <PageHelmet pageTitle="Event Details" />
@@ -112,11 +127,7 @@ const EventDetails = () => {
 
                     <div className="port-view">
                       <span>Entry fee</span>
-                      {!target.isFree ? <h4>
-                        {(user.token && (target.memberEntry || target.isMemberFree))
-                          ? (target.isMemberFree ? 'FREE' : target.memberEntry + (!isNaN(target.memberEntry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[0] : ''))
-                          : target.entry + (!isNaN(target.entry) ? ' euro ' : ' ') + ((target.including && target.including.length > 1) ? target.including[1] : '')}
-                      </h4> : <h4 >{target.ticket_link ? 'Check ticket portal' : 'FREE'}</h4>}
+                      <h4>{price}</h4>
                     </div>
                   </div>
                   {

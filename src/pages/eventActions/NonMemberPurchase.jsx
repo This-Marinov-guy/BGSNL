@@ -158,7 +158,7 @@ const NonMemberPurchase = () => {
                     : target.time}
                 </p>
                 <p>Address:{" "}{target.where}</p>
-                <p>Price:{" "}{target.isFree ? ' FREE' : target.entry + 'euro'}</p>
+                <p>Price:{" "}{target.isFree ? ' FREE' : target.entry + ' euro'}</p>
 
               </div>
             </div>
