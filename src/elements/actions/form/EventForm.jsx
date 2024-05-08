@@ -54,7 +54,7 @@ const EventForm = (props) => {
         description: yup.string().required("Description is required"),
         date: yup.string().required("Date is required"),
         time: yup.string().required("Time is required"),
-        where: yup.string().required("Location is required"),
+        location: yup.string().required("Location is required"),
         date: yup.string().required("Date is required"),
         ticketTimer: yup.string().required("Ticket Timer is required"),
         ticketLimit: yup.number().required("Ticket Limit is required"),
@@ -121,7 +121,7 @@ const EventForm = (props) => {
                 description: '',
                 date: '',
                 time: '',
-                where: '',
+                location: '',
                 ticketTimer: '',
                 ticketLimit: null,
                 isTicketLink: false,
@@ -177,11 +177,11 @@ const EventForm = (props) => {
                             <Field
                                 type="text"
                                 placeholder="Location of event"
-                                name="where"
+                                name="location"
                             ></Field>
                             <ErrorMessage
                                 className="error"
-                                name="where"
+                                name="location"
                                 component="div"
                             />
                         </div>
