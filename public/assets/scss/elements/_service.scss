@@ -58,6 +58,7 @@
   }
 
   &.service__style--2 {
+    color: #1f1f25 !important;
     padding: 20px;
     @extend %transition;
     @extend %posrelative;
@@ -142,6 +143,7 @@
     }
 
     &:hover {
+      color: #ffffff !important;
       box-shadow: 0 10px 25px 10px rgba(0, 0, 0, 0.1);
       transform: translateY(-5px);
       &::before {

@@ -78,7 +78,7 @@ const {region} = useParams()
               </div>
             </div>
           </div>
-          <div className="grid">
+          <div className="past_events grid">
             {PAST_EVENTS[region] ? PAST_EVENTS[region].map((value, index) => (
               <div className="portfolio portfolio-slider grid_item" key={index}>
                 <Link

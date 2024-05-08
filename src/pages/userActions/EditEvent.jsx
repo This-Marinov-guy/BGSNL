@@ -2,7 +2,7 @@ import React from 'react'
 import HeaderTwo from "../../component/header/HeaderTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import EventForm from '../../elements/actions/EventForm';
+import EventForm from '../../elements/actions/form/EventForm';
 
 const EditEvent = (props) => {
   return (
