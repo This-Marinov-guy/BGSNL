@@ -1,27 +1,12 @@
 import React, { useState } from 'react'
-import { Dialog } from 'primereact/dialog';
-import { Link } from 'react-router-dom';
+import EventModal from './EventModal';
 
 const Event = () => {
     const [show, setShow] = useState(false);
 
     return (
         <>
-            <Dialog header="Rotterdam | Beach Party | 10th May 10:00" visible={show} style={{ maxWidth: '90%' }} onHide={() => setShow(false)}>
-                <div className="options-btns-div">
-                    <Link
-                        to='/'
-                        className="rn-button-style--2 btn-solid"
-                    >
-                        Edit
-                    </Link>
-                    <button
-                        className="rn-button-style--2 rn-btn-reverse"
-                    >
-                        Delete
-                    </button>
-                </div>
-            </Dialog>
+            <EventModal show={show} setShow={setShow} event={{}} />
             <div onClick={() => setShow(true)} className='service service__style--2 common-border-2 flex'>
                 <div className=''>
                     <p>Title: Beach Party</p>

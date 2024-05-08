@@ -67,12 +67,16 @@
     right: 0;
     width: auto;
 
-    @media #{$lg-layout, $md-layout} {
-      top: -30px;
+    @media #{$lg-layout} {
+      top: -25px;
+    }
+
+    @media #{$md-layout} {
+      top: -20px;
     }
 
     @media #{$sm-layout} {
-      top: -10px;
+      top: 0;
     }
   }
   .header-wrapper {

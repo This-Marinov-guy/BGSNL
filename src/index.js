@@ -189,8 +189,6 @@ const Root = () => {
               </Fragment>
             ) : (
               <Fragment>
-                <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
-
                 <Route exact path={`/login`} element={<LogIn toast={toast} />} />
                 <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                 <Route
