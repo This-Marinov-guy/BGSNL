@@ -1,23 +1,56 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { REGIONS } from '../../../../util/REGIONS_DESIGN'
 import Event from './Event'
+import { useHttpClient } from '../../../../hooks/http-hook';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadEvents, selectEvents } from '../../../../redux/events';
+import { Spinner } from 'react-bootstrap';
+import Filter from '../Filter';
+import { useSearchParams } from 'react-router-dom';
 
 const EventList = () => {
-    return (
-        <div className='mt--10'>
-            {REGIONS.map((region, index) => {
-                return <div className='row' key={index}>
-                    <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
-                    <div className='col-12 grid'>
-                        <Event />
-                        <Event />
-                        <Event />
-                    </div>
-                    <hr />
-                </div>
+    const [isEventsLoading, setIsEventsLoading] = useState(false);
+    const { sendRequest } = useHttpClient();
 
-            })}
-        </div >
+    const [searchParams, setSearchParams] = useSearchParams();
+    const regionParam = REGIONS.includes(searchParams.get("region")) ? searchParams.get("region") : '';
+    const regionList = regionParam ? REGIONS.filter((r) => r === regionParam) : REGIONS;
+
+    const events = useSelector(selectEvents);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchEventsFromApi = async () => {
+            try {
+                setIsEventsLoading(true);
+                const responseData = await sendRequest(`event/actions/events?region=${regionParam}`);
+                dispatch(loadEvents(responseData.events));
+            } catch (err) { } finally {
+                setIsEventsLoading(false);
+            }
+        }
+
+        fetchEventsFromApi();
+    }, [])
+
+    return (
+        <>
+            <Filter />
+            {isEventsLoading ? <Spinner /> : <div className='mt--10'>
+                {regionList.map((region, index) => {
+                    return <div className='row' key={index}>
+                        <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
+                        <div className='col-12 grid'>
+                            {events[region].length ? events[region].map((e, i) => {
+                                return <Event key={i} event={e} />
+                            }) : <p>No current events for the region</p>}
+                        </div>
+                        <hr />
+                    </div>
+
+                })}
+            </div>}
+        </>
     )
 }
 

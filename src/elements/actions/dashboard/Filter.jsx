@@ -1,16 +1,26 @@
 import React from 'react'
 import { REGIONS } from '../../../util/REGIONS_DESIGN'
 import capitalizeFirstLetter from '../../../util/capitalize'
+import { useSearchParams } from 'react-router-dom';
 
 const Filter = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const handleChange = (event) => {
+        setSearchParams({ region: event.target.value });
+    }
+
     return (
         <div className="common-border-1">
             <h4>Filter</h4>
             <form className="row">
                 <div className="col-lg-6 col-12">
-                    <select>
+                    <select defaultValue={searchParams.get("region") || ''} onChange={(event) => handleChange(event)}>
                         <option value="" disabled>
                             Select Region
+                        </option>
+                        <option value="">
+                            All
                         </option>
                         {REGIONS.map((val, index) => {
                             return <option value={val} key={index}>{capitalizeFirstLetter(val)}</option>
