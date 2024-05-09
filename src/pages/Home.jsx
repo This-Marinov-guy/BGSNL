@@ -120,8 +120,8 @@ const Home = () => {
         <h2 className="title">News</h2>
         <ul style={{ margin: '0', padding: '0' }}>
           <li className="mt--40">
-            <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please <Link to='/gala'>click this for more info</Link></p>
-            <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
+            <p className="mb--20">Spring Gala Groningen - reserve your tickets for our biggest and most prestigious event yet <a href='https://bulgariansociety.nl/groningen/event-details/Spring%20Gala'>Check event</a></p>
+            <img style={{ width: '300px' }} src='/assets/images/portfolio/groningen/portfolio-30.jpg' />
           </li>
 
           <li className="mt--40" ref={recruitRef}>
