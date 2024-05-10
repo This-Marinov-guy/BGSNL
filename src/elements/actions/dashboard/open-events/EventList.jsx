@@ -4,7 +4,7 @@ import Event from './Event'
 import { useHttpClient } from '../../../../hooks/http-hook';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadEvents, selectEvents } from '../../../../redux/events';
-import { Spinner } from 'react-bootstrap';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import Filter from '../Filter';
 import { useSearchParams } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const EventList = () => {
         const fetchEventsFromApi = async () => {
             try {
                 setIsEventsLoading(true);
-                const responseData = await sendRequest(`event/actions/events?region=${regionParam}`);
+                const responseData = await sendRequest(`event/actions/events`);
                 dispatch(loadEvents(responseData.events));
             } catch (err) { } finally {
                 setIsEventsLoading(false);
@@ -36,13 +36,13 @@ const EventList = () => {
     return (
         <>
             <Filter />
-            {isEventsLoading ? <Spinner /> : <div className='mt--10'>
+            {isEventsLoading ? <ProgressSpinner /> : <div className='mt--10'>
                 {regionList.map((region, index) => {
                     return <div className='row' key={index}>
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
                         <div className='col-12 grid'>
-                            {events[region].length ? events[region].map((e, i) => {
-                                return <Event key={i} event={e} />
+                            {events[region].length ? events[region].map((event, i) => {
+                                return <Event key={i} event={event} />
                             }) : <p>No current events for the region</p>}
                         </div>
                         <hr />

@@ -109,7 +109,7 @@ const EventForm = (props) => {
                 }
             }}
             initialValues={{
-                membersOnly: false,
+                memberOnly: false,
                 hidden: false,
                 extraInputsForm: [
                     // { type: '', placeholder: '', required: false, options: [] }
@@ -508,7 +508,7 @@ const EventForm = (props) => {
                                 <Field
                                     style={{ maxWidth: "30px" }}
                                     type="checkbox"
-                                    name="membersOnly"
+                                    name="memberOnly"
                                 ></Field>
                                 <p className="information">
                                     Make event only purchasable by members (Still visible for non-members)
@@ -516,7 +516,7 @@ const EventForm = (props) => {
                             </div>
                             <ErrorMessage
                                 className="error"
-                                name="membersOnly"
+                                name="memberOnly"
                                 component="div"
                             />
                         </div>
