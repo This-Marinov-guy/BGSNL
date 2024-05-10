@@ -1,8 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { Link } from 'react-router-dom';
+import { FiInfo } from 'react-icons/fi';
 
 const EventModal = (props) => {
+    const [expandImage, setExpandImage] = useState(null);
+    const [expandBg, setExpandBg] = useState(false)
+
+    const tooltip = <FiInfo className='price_info tooltip_info'
+        data-pr-tooltip="Click on image to expand"
+        data-pr-position="top" />
+
     return (
         <Dialog header="Rotterdam | Beach Party | 10th May 10:00" visible={props.show} style={{ maxWidth: '90%' }} onHide={() => props.setShow(false)} dismissableMask>
             <div className="options-btns-div">
@@ -18,6 +27,7 @@ const EventModal = (props) => {
                     Delete
                 </button>
             </div>
+            <Tooltip target=".price_info" />
             <div>
                 <h3>Main Info</h3>
                 <hr />
@@ -35,26 +45,45 @@ const EventModal = (props) => {
                 <p>Sub-event: {props.event.subEventDescription || 'None'}</p>
                 <p>Text for the event: {props.event.text}</p>
 
-                <h3>Price Info</h3>
-                <hr />
-                <p>Is the sale closed: {props.event.isSaleClosed}</p>
-                <p>Is the Event Free: {props.event.isFree}</p>
-                <p>Is the Event Member Free:{props.event.isMemberFree} </p>
-                <p>Price for guests: </p>
-                <p>Price for members: </p>
-                <p>Price for active members: </p>
-                <p>Price for guests: </p>
-                <p>Free Pass List: </p>
-                <p>Discount Pass List: </p>
+                {!props.event.isFree && <>
+                    <h3>Price Info</h3>
+                    <hr />
+                    <p>Is the sale closed: {props.event.isSaleClosed ? 'Yes' : 'No'}</p>
+                    <p>Is the Event Free: {props.event.isFree ? 'Yes' : 'No'}</p>
+                    <p>Is the Event Member Free: {props.event.isMemberFree ? 'Yes' : 'No'} </p>
+                    <br />
+                    <p>Price for guests: {props.event.entry}</p>
+                    <p>Guest Ticket Including: {props.event.entryIncluding || 'None'}</p>
+                    <p>Guest Price Id: {props.event.priceId}</p>
+                    <br />
 
+                    {!props.event.isMemberFree && <>
+                        <p>Price for members: {props.event.memberEntry}</p>
+                        <p>Member Ticket Including: {props.event.memberIncluding || 'None'}</p>
+                        <p>Member Price Id: {props.event.memberPriceId}</p>
+                        <br />
+                        <p>Price for active members: {props.event.activeMemberEntry}</p>
+                        <p>Active Member Price Id: {props.event.activeMemberPriceId}</p>
+                        <br />
+                    </>}
+                    <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join(', ') : 'None'}</p>
+                    <p>Discount Pass List: {props.event.discountPass.length ? props.event.discountPass.join(', ') : 'None'}</p>
+                </>}
                 <h3>Images</h3>
                 <hr />
-                <p>Images: </p>
-                <p>Ticket: </p>
-                <p>Poster: </p>
-                <p>Background: </p>
-
-
+                <p>Images {tooltip}: {props.event.images.length ?
+                    props.event.images.map((img, index) =>
+                        <img key={index}
+                            onClick={() => setExpandImage(expandImage == null ? index : null)}
+                            className={'small_preview ' + (expandImage === index && 'center_expand')}
+                            src={img}
+                            alt='preview' />) : 'Only poster will be displayed'}</p>
+                <p>Ticket: </p> <img src={props.event.ticketImg} className='normal_preview' alt='ticket' />
+                <p>Poster: </p> <img src={props.event.ticketImg} className='normal_preview' alt='poster' />
+                <p>Background {tooltip}: </p>
+                {props.event.bgImageExtra ?
+                    <img onClick={() => setExpandBg(!expandBg)} src={props.event.bgImageExtra} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />
+                    : <img onClick={() => setExpandBg(!expandBg)} src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />}
             </div>
         </Dialog>
     )
