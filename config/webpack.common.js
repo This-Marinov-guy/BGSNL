@@ -30,7 +30,9 @@ module.exports = {
     /**
    * Plugins for env 
    */
-    new Dotenv(),
+    new Dotenv({
+      path: '.env',
+    }),
     /**
      * Plugin to clean the output directory before each build.
      *
