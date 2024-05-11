@@ -17,8 +17,6 @@ const AddEvent = (props) => {
       </div>
       <EventForm toast={props.toast}/>
 
-      {/* End Footer Style  */}
-      {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
           <FiChevronUp />
