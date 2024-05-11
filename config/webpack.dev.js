@@ -5,6 +5,8 @@
 
 const path = require('path');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const Dotenv = require('dotenv-webpack');
+
 const { merge } = require('webpack-merge');
 
 // Common configuration files
@@ -96,5 +98,8 @@ module.exports = merge(common, {
   /**
    * Set the plugins for the development configuration.
    */
-  plugins: [new InterpolateHtmlPlugin({ PUBLIC_URL: 'static' })],
+  plugins: [
+    new InterpolateHtmlPlugin({ PUBLIC_URL: 'static' }),
+    new Dotenv({path: '.env'}),
+  ],
 });

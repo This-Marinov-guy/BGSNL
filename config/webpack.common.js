@@ -7,9 +7,9 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack')
 
+// Env needs to be set by provider platform or use  new Dotenv({path: '.env'}),
 
 // Common configuration files
 const paths = require('./paths');
@@ -26,12 +26,6 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       process: 'process/browser',
-    }),
-    /**
-   * Plugins for env 
-   */
-    new Dotenv({
-      path: '.env',
     }),
     /**
      * Plugin to clean the output directory before each build.
