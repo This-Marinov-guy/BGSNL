@@ -1,7 +1,7 @@
 import React from "react";
 import ImageFb from "./ui/ImageFb";
 import { useParams } from "react-router-dom";
-import { REGION_FLICKER } from "../util/REGIONS_DESIGN";
+import { REGION_FLICKER } from "../util/defines/REGIONS_DESIGN";
 
 
 //works only with webp and jpg pair images

@@ -8,7 +8,7 @@ import Footer from "../../component/footer/Footer";
 import WindowShift from "../../elements/ui/WindowShift";
 import TeamTwo from "../../elements/TeamTwo";
 import { useParams } from "react-router-dom";
-import { REGION_COMMITTEE_MEMBERS } from "../../util/REGIONS_STRUCTURE";
+import { REGION_COMMITTEE_MEMBERS } from "../../util/defines/REGIONS_STRUCTURE";
 
 
 const Committees = React.memo(() => {

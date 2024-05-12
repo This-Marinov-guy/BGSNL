@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Donation from "../../elements/Donation";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDonation, showDonation } from "../../redux/donation";
-import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/REGIONS_DESIGN";
+import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/defines/REGIONS_DESIGN";
 
 const Footer = () => {
 

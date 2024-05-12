@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import Donation from "../../elements/Donation";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDonation, showDonation } from "../../redux/donation";
-import { REGIONS, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/REGIONS_DESIGN";
+import { REGIONS, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/defines/REGIONS_DESIGN";
 
 const FooterTwo = () => {
 

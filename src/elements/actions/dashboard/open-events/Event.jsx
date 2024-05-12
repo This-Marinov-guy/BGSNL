@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import EventModal from './EventModal';
 import { Tooltip } from 'primereact/tooltip';
 import { FiInfo } from 'react-icons/fi';
-import { dateConvertor } from '../../../../util/date';
+import { dateConvertor } from '../../../../util/functions/date';
 
 const Event = (props) => {
     const [show, setShow] = useState(false);

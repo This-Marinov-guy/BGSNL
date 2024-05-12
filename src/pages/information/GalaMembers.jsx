@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import ImageFb from '../../elements/ui/ImageFb';
 import { Dialog } from 'primereact/dialog';
 import { Link } from 'react-router-dom';
-import { ARTISTS } from '../../util/ARTISTS.js';
+import { ARTISTS } from '../../util/defines/ARTISTS.js';
 import { FiMic, FiMusic } from 'react-icons/fi';
 
 const GalaMembers = () => {

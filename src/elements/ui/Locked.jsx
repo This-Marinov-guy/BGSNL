@@ -6,7 +6,7 @@ import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
 import SubscriptionManage from "./SubscriptionManage";
 import { showError } from "../../redux/error";
-import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
+import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
 
 const Locked = (props) => {
   const { loading, sendRequest } = useHttpClient();

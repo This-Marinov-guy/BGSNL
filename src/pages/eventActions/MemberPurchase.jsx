@@ -12,14 +12,14 @@ import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/ImageFb";
 import { useObjectGrabUrl } from "../../hooks/object-hook";
-import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
-import { createCustomerTicket } from "../../util/ticket-creator";
+import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
+import { createCustomerTicket } from "../../util/functions/ticket-creator";
 import PageLoading from "../../elements/ui/PageLoading";
 import FormExtras from "../../elements/ui/FormExtras";
-import { REGIONS } from "../../util/REGIONS_DESIGN";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { decodeJWT } from "../../util/jwt";
+import { decodeJWT } from "../../util/functions/jwt";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const MemberPurchase = () => {

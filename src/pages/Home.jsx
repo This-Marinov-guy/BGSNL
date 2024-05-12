@@ -14,7 +14,7 @@ import {
 } from "./information/FutureEvents";
 import ImageFb from "../elements/ui/ImageFb";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { REGIONS } from "../util/REGIONS_DESIGN";
+import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
 import Recruit from "../elements/special/Recruite";
 

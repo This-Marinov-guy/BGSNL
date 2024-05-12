@@ -16,8 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { useObjectGrabUrl } from "../../hooks/object-hook";
-import { OTHER_EVENTS } from "../../util/OTHER_EVENTS";
-import { decodeJWT } from "../../util/jwt";
+import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
+import { decodeJWT } from "../../util/functions/jwt";
 
 const schema = yup.object().shape({
   name: yup.string().required(),

@@ -7,8 +7,8 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";
 import PortfolioList from "../../elements/portfolio/PortfolioList";
-import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
-import { OTHER_EVENTS } from "../../util/OTHER_EVENTS";
+import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
+import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 
 
 const FutureEventsContent = () => {

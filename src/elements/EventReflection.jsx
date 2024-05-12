@@ -8,8 +8,8 @@ import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
 import PhotoGallery from "./PhotoGallery";
 import { useObjectGrabUrl } from "../hooks/object-hook";
-import { EVENT_REFLECTION_DETAILS } from "../util/OPEN_EVENTS";
-import { EVENT_REFLECTIONS } from "../util/PAST_EVENTS";
+import { EVENT_REFLECTION_DETAILS } from "../util/defines/OPEN_EVENTS";
+import { EVENT_REFLECTIONS } from "../util/defines/PAST_EVENTS";
 
 const EventReflection = React.memo(() => {
   const {region} = useParams()

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { REGIONS } from "../util/REGIONS_DESIGN";
+import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 
 let regionObject = {};
 

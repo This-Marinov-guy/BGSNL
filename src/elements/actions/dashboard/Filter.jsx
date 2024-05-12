@@ -1,6 +1,6 @@
 import React from 'react'
-import { REGIONS } from '../../../util/REGIONS_DESIGN'
-import capitalizeFirstLetter from '../../../util/capitalize'
+import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
+import capitalizeFirstLetter from '../../../util/functions/capitalize'
 import { useSearchParams } from 'react-router-dom';
 
 const Filter = () => {

@@ -5,9 +5,9 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/ImageFb";
-import { REGIONS } from "../../util/REGIONS_DESIGN";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
-import capitalizeFirstLetter from "../../util/capitalize";
+import capitalizeFirstLetter from "../../util/functions/capitalize";
 
 const Header = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();

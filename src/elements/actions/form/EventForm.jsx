@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import capitalizeFirstLetter from "../../../util/capitalize";
+import capitalizeFirstLetter from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -9,10 +9,10 @@ import { FileUpload } from 'primereact/fileupload';
 import { useHttpClient } from "../../../hooks/http-hook";
 import Loader from "../../ui/Loader";
 import ImageInput from "../../inputs/ImageInput";
-import { BG_INDEX, REGIONS } from "../../../util/REGIONS_DESIGN";
+import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";
 import InputsBuilder from "../../inputs/InputsBuilder";
-import { askBeforeRedirect } from "../../../util/global";
+import { askBeforeRedirect } from "../../../util/functions/global";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 

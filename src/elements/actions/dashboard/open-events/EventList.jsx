@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { REGIONS } from '../../../../util/REGIONS_DESIGN'
+import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN'
 import Event from './Event'
 import { useHttpClient } from '../../../../hooks/http-hook';
 import { useDispatch, useSelector } from 'react-redux';

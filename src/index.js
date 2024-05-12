@@ -20,8 +20,8 @@ import PageLoading from "./elements/ui/PageLoading";
 import Articles from "./pages/information/Articles";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
-import { removeLogsOnProd } from "./util/global";
-import { decodeJWT } from "./util/jwt";
+import { removeLogsOnProd } from "./util/functions/global";
+import { decodeJWT } from "./util/functions/jwt";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
