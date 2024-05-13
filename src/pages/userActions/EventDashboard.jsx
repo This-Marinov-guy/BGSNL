@@ -4,7 +4,7 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import EventList from "../../elements/actions/dashboard/open-events/EventList";
 
-const EventDashboard = (props) => {
+const EventDashboard = () => {
   return (
     <React.Fragment>
       <HeaderTwo

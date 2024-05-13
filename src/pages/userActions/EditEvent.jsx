@@ -6,25 +6,25 @@ import EventForm from '../../elements/actions/form/EventForm';
 import { useHttpClient } from '../../hooks/http-hook';
 import PageLoading from '../../elements/ui/PageLoading';
 import { loadSingleEvent, selectSingleEvent } from '../../redux/events';
-import { useDispatch } from 'react-redux';
-import { useNavigation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const EditEvent = (props) => {
   const [pageLoading, setPageLoading] = useState(false);
 
   const { loading, sendRequest } = useHttpClient();
 
-  const navigate = useNavigation();
+  const navigate = useNavigate();
 
   const event = useSelector(selectSingleEvent);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchCurrentEvent = async () => {
+    const reloadEvent = async () => {
       try {
         setPageLoading(true);
-        const responseData = await sendRequest(`event/actions/event/${userId}`);
+        const responseData = await sendRequest(`event/actions/event/${event.id}`);
         dispatch(loadSingleEvent(responseData.user));
 
         if (!event) {
@@ -35,7 +35,7 @@ const EditEvent = (props) => {
         setPageLoading(false);
       }
     };
-    fetchCurrentEvent();
+    reloadEvent();
   }, [])
 
   if (pageLoading) return <PageLoading />
