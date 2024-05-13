@@ -10,15 +10,20 @@ REGIONS.forEach(region => {
 export const eventsSlice = createSlice({
     name: "events",
     initialState: {
-        value: regionObject,
+        all: regionObject,
+        selected: null,
     },
     reducers: {
+        loadSingleEvent: (state, action) => {
+            state.selected = action.payload;
+        },
         loadEvents: (state, action) => {
-            action.payload.forEach(event => state.value[event.region].push(event));
+            action.payload.forEach(event => state.all[event.region].push(event));
         },
     },
 });
 
-export const selectEvents = (state) => state.events.value;
-export const { loadEvents } = eventsSlice.actions;
+export const selectEvents = (state) => state.events.all;
+export const selectSingleEvent = (state) => state.events.selected;
+export const { loadSingleEvent, loadEvents } = eventsSlice.actions;
 export default eventsSlice.reducer;

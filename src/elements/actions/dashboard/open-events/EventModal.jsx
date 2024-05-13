@@ -3,6 +3,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { Link } from 'react-router-dom';
 import { FiInfo } from 'react-icons/fi';
+import capitalizeFirstLetter from '../../../../util/functions/capitalize';
 
 const EventModal = (props) => {
     const [expandImage, setExpandImage] = useState(null);
@@ -13,10 +14,13 @@ const EventModal = (props) => {
         data-pr-position="top" />
 
     return (
-        <Dialog header="Rotterdam | Beach Party | 10th May 10:00" visible={props.show} style={{ maxWidth: '90%' }} onHide={() => props.setShow(false)} dismissableMask>
+        <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${props.event.date}, ${props.event.time}`}
+            visible={props.show} style={{ maxWidth: '90%' }}
+            onHide={() => props.setShow(false)}
+            dismissableMask>
             <div className="options-btns-div">
                 <Link
-                    to={`/user/edit-event/{1}`}
+                    to={`/user/edit-event`}
                     className="rn-button-style--2 btn-solid"
                 >
                     Edit

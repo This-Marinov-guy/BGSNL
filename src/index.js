@@ -184,7 +184,7 @@ const Root = () => {
                   element={<RegionLayout><MemberPurchase /></RegionLayout>}
                 />
                 <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
-                <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
+                <Route exact path={`/user/edit-event`} element={<EditEvent toast={toast} />} />
                 <Route exact path={`/user/dashboard`} element={<EventDashboard toast={toast} />} />
               </Fragment>
             ) : (
