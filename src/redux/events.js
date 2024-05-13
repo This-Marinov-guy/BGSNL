@@ -18,6 +18,7 @@ export const eventsSlice = createSlice({
             state.selected = action.payload;
         },
         loadEvents: (state, action) => {
+            state.all = regionObject;
             action.payload.forEach(event => state.all[event.region].push(event));
         },
     },
