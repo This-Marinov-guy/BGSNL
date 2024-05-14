@@ -121,7 +121,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     price_id: galaPriceId,
     memberPrice_id: galaMemberPriceId,
     activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
-    freePass: ['vladislavmarinov3142@gmail.com', 'Arian Adeli Koodehi', 'Elizaveta Vinogradova'],
+    freePass: ['vladislavmarinov3142@gmail.com', 'Arian Adeli Koodehi', 'Elizaveta Vinogradova', 'bulgariansocietynetherlands@gmail.com'],
     marketingInputs: false,
     extraInputs: false,
     text: [
