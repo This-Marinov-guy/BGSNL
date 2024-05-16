@@ -677,8 +677,8 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       bgImage: "10",
       date: "16th May",
       time: "23:00",
-      ticketTimer: '2024-05-16T23:59:59',
-      ticketLimit: 100,
+      ticketTimer: '2024-05-17T03:00:00',
+      ticketLimit: 120,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",
