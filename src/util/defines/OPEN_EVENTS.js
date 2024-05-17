@@ -466,7 +466,41 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
   },
   ],
   rotterdam: [
-
+    {
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
+      title: "Horoteka - Horo Workshop",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Master the traditional Bulgarian dance, horo, with our beginner-level class",
+      bgImage: "24",
+      date: "22nd May",
+      time: "19:00",
+      ticketTimer: '2024-05-22T20:00:00',
+      ticketLimit: 50,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Erasmus Sport, Hall 4`,
+      including: [],
+      // ticket_link: '',
+      price_id: 'price_1PHHWuIOw5UGbAo10DDNIIas',
+      memberPrice_id: 'price_1PHHXFIOw5UGbAo1w4KGZREU',
+      activeMemberPrice_id: 'price_1PHHbgIOw5UGbAo181SJnKbg',
+      freePass: ['vladislavmarinov3142@gmail.com'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Step into the rhythm of Bulgaria with our Horo Workshop! Join us for an immersive experience where you'll master the traditional Bulgarian dance, horo, guided by a professional instructor from the Rotterdam Bulgarian Folklore Dance group, Sborenka. Regardless of your dance experience, everyone is welcome to enjoy the lively atmosphere and have fun with us.
+        `,
+        `Don't miss this opportunity to embrace Bulgarian culture, connect with fellow enthusiasts, and learn a thing or two you didn’t know about hero. This is also the perfect opportunity to teach your foreign friends some moves for your future wedding ;)
+        `,
+        `Bring your most comfortable shoes and let’s dance together!`
+      ],
+      ticket_img: '/assets/images/tickets/rotterdam/ticket-3.jpg',
+      images: ["/assets/images/portfolio/rotterdam/portfolio-3"],
+      thumbnail: "/assets/images/portfolio/rotterdam/portfolio-3",
+    },
   ],
   leeuwarden: [
     {
@@ -549,45 +583,7 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
     },
   ],
   breda: [
-    {
-      is_tickets_closed: false,
-      membersOnly: false,
-      visible: true,
-      title: "Easter Gathering",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Colorful Weekend",
-      bgImage: "12",
-      date: "4th May",
-      time: "14:30",
-      ticketTimer: '2024-05-05T14:59:00',
-      ticketLimit: 40,
-      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      // correctedDate: "",
-      // correctedTime: "",
-      where: `Easystreet student building`,
-      entry: 5,
-      memberEntry: 3,
-      including: [],
-      // ticket_link: '',
-      price_id: 'price_1PBKuoIOw5UGbAo1tRxkSbV7',
-      memberPrice_id: 'price_1PBKv0IOw5UGbAo1nht70raP',
-      activeMemberPrice_id: 'price_1PBKv0IOw5UGbAo1nht70raP',
-      // ticket_link: '',
-      freePass: ['vladislavmarinov3142@gmail.com'],
-      marketingInputs: false,
-      extraInputs: false,
-      text: [
-        `Not in Bulgaria for Easter🐣? We got you! Join us for a special Easter celebration in the
-       company of ✨kozunak, ayran and eggs✨!`,
-        `We are going to dye eggs, beat with eggs and keep
-       the traditions alive! Last but not least you can enjoy the games from your childhood - narodna
-       topka󰺖, Ludo (не се сърди човече), volleyball!`,
-        `😋The price includes eggs to dye, piece of kozunak and ayran!`
-      ],
-      ticket_img: '/assets/images/tickets/breda/ticket-5.jpg',
-      images: ["/assets/images/portfolio/breda/portfolio-5"],
-      thumbnail: "/assets/images/portfolio/breda/portfolio-5",
-    },
+
     // {
     //   membersOnly: false,
     //   visible: true,
@@ -667,76 +663,6 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
 
   ],
   amsterdam: [
-    {
-      is_tickets_closed: false,
-      membersOnly: false,
-      visible: true,
-      title: "International Chalgari",
-      // newTitle: 'Bulgarian Dinner',
-      description: `The most 'Bulgarian' party possible`,
-      bgImage: "10",
-      date: "16th May",
-      time: "23:00",
-      ticketTimer: '2024-05-16T23:59:59',
-      ticketLimit: 100,
-      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      // correctedDate: "",
-      // correctedTime: "",
-      where: `club Akhnaton`,
-      entry: isEightMay ? 14.95 : 16.95,
-      memberEntry: "12",
-      including: [`${isEightMay ? '(Early Bird)' : '(Late Bird)'}`, ''],
-      // ticket_link: '',
-      price_id: isEightMay ? 'price_1P9sxaIOw5UGbAo1FdIilrsJ' : 'price_1P9syKIOw5UGbAo1C3qRjEH7',
-      memberPrice_id: 'price_1P9sxsIOw5UGbAo1nZrCaDx3',
-      activeMemberPrice_id: 'price_1P9syAIOw5UGbAo1648U1ApQ',
-      freePass: ['vladislavmarinov3142@gmail.com'],
-      marketingInputs: false,
-      extraInputs: false,
-      text: [
-        `Awaken your pop- folk diva and join us on the 16th of May from 11 PM to 4 AM at club Akhnaton. Bring your friends, dress like your favorite retro pop-folk artist and be ready for a fun night in Amsterdam!`,
-        `Be fast - Early Bird tickets are limited!!!`,
-        `...`,
-        `Събуди поп-фолк дивата в себе си и ела с нас на 16ти май от 11 вечерта до 4 сутринта в клуб Ахнатон. Вземи приятелите си, облечи се като любимия ти поп-фолк изпълнител и бъди готов за забавна нощ в Амстердам`,
-        'Бъди бърз - ранните билети са ограничени!!!'
-      ],
-      ticket_img: '/assets/images/tickets/amsterdam/ticket-3.jpg',
-      images: ["/assets/images/portfolio/amsterdam/portfolio-3"],
-      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-3",
-    },
-    {
-      is_tickets_closed: false,
-      membersOnly: false,
-      visible: true,
-      title: "Easter Picnic",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Colorful Weekend",
-      bgImage: "12",
-      date: "5th May",
-      time: "15:00",
-      ticketTimer: '2024-05-05T00:59:00',
-      ticketLimit: 100,
-      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      // correctedDate: "",
-      // correctedTime: "",
-      where: `Oosterpark`,
-      isFree: true,
-      including: [],
-      // ticket_link: '',
-      freePass: ['vladislavmarinov3142@gmail.com'],
-      marketingInputs: false,
-      extraInputs: false,
-      text: [
-        `По случай наближаването на най-цветния празник, Ви каним на нашия Великденски пикник! Носете хубаво настроение и по нещо любимо за хапване, което да споделите с останалите! Ще Ви очакваме на 5-ти май от 15:00ч. в Oosterpark! 
-       Очаквайте подробности относно точната локация!
-       `,
-        '...',
-        `As the most colorful holiday is approaching, we invite you to our Easter picnic! Bring your good mood and favourite snack to share with the rest! We will see you on the 5th of May at 15:00 in Oosterpark! 
-       Stay tuned for the exact location!`
-      ],
-      ticket_img: '/assets/images/tickets/amsterdam/ticket-4.jpg',
-      images: ["/assets/images/portfolio/amsterdam/portfolio-4"],
-      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-4",
-    },
+
   ]
 }
