@@ -484,6 +484,8 @@ Special offer for members 3+1. Buy your 4 horo workshop tickets for €9.
       where: `Erasmus Sport, Hall 4`,
       including: [],
       // ticket_link: '',
+      entry: "5",
+      memberEntry: "3",
       price_id: 'price_1PHHWuIOw5UGbAo10DDNIIas',
       memberPrice_id: 'price_1PHHXFIOw5UGbAo1w4KGZREU',
       activeMemberPrice_id: 'price_1PHHbgIOw5UGbAo181SJnKbg',
