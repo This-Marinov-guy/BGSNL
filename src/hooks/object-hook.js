@@ -14,7 +14,7 @@ export const useObjectGrabUrl = (array) => {
   }
 
   if (!target) {
-    window.location.replace(process.env.REACT_PUBLIC_URL + '/404');
+    window.location.replace(process.env.REACT_PUBLIC_URL + '/page-not-found');
   }
 
   return target;
