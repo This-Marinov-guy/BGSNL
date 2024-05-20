@@ -79,8 +79,8 @@ const SignUp = (props) => {
 
   const dispatch = useDispatch();
 
-  const handleErrorMsg = (errors, isValid, dirty) => {
-    if (errors && !isValid && dirty) {
+  const handleErrorMsg = (errors, isValid) => {
+    if (errors && !isValid) {
       props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
     }
   }
@@ -602,7 +602,7 @@ const SignUp = (props) => {
                   <button
                     disabled={loading}
                     type="submit"
-                    onClick={() => handleErrorMsg(errors, isValid, dirty)}
+                    onClick={() => handleErrorMsg(errors, isValid)}
                     className="rn-button-style--2 btn-solid mt--80"
                   >
                     {loading ? <Loader /> : <span>Finish Registration</span>}

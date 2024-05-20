@@ -20,7 +20,7 @@ const EventForm = (props) => {
     const [files, setFiles] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
 
-    const handleErrorMsg = (errors, isValid, dirty) => {
+    const handleErrorMsg = (errors, isValid) => {
         if (errors && !isValid && dirty) {
             props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
         }
@@ -598,7 +598,7 @@ const EventForm = (props) => {
                         <button
                             disabled={loading}
                             type="submit"
-                            onClick={() => handleErrorMsg(errors, isValid, dirty)}
+                            onClick={() => handleErrorMsg(errors, isValid)}
                             className="rn-button-style--2 btn-solid"
                         >
                             {loading ? <Loader /> : <span>Submit Event</span>}
