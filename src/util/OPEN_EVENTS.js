@@ -30,50 +30,89 @@ const isEightMay = new Date().valueOf() < new Date('2024/05/08').valueOf();
 
 export const SOCIETY_EVENTS = {
   groningen: [
-  {
-    isGala: true,
-    is_tickets_closed: false,
-    membersOnly: false,
-    visible: true,
-    title: "Spring Gala",
-    // newTitle: 'Bulgarian Dinner',
-    description: "Event for the stars",
-    bgImage: "19",
-    date: "24th May",
-    time: "17:30",
-    ticketTimer: '2024-05-24T20:00:00',
-    ticketLimit: 1000,
-    // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    // correctedDate: "",
-    // correctedTime: "",
-    where: `StadsLab Groningen`,
-    entry: galaPrice,
-    memberEntry: galaMemberPrice,
-    including: [galaTicketType, galaTicketType],
-    // ticket_link: '',
-    price_id: galaPriceId,
-    memberPrice_id: galaMemberPriceId,
-    activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
-    freePass: ['vladislavmarinov3142@gmail.com', 'Arian Adeli Koodehi', 'Elizaveta Vinogradova', 'bulgariansocietynetherlands@gmail.com'],
-    marketingInputs: false,
-    extraInputs: false,
-    text: [
-      `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
+    {
+      isGala: true,
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
+      title: "Spring Gala",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Event for the stars",
+      bgImage: "19",
+      date: "24th May",
+      time: "17:30",
+      ticketTimer: '2024-05-24T20:00:00',
+      ticketLimit: 1000,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `StadsLab Groningen`,
+      entry: galaPrice,
+      memberEntry: galaMemberPrice,
+      including: [galaTicketType, galaTicketType],
+      // ticket_link: '',
+      price_id: galaPriceId,
+      memberPrice_id: galaMemberPriceId,
+      activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
+      freePass: ['vladislavmarinov3142@gmail.com', 'Arian Adeli Koodehi', 'Elizaveta Vinogradova', 'bulgariansocietynetherlands@gmail.com'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
         `,
-      `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
+        `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
 `,
-      ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
+        ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
 `,
-      `Tickets will be sold in 3 types:`,
-      `- Early Bird sale 10 euro for members | 12 euro for non-members`,
-      `- Regular Bird sale 13 euro for members | 15 euro for non-members`,
-      `- Late Bird sale 17 euro for members | 19 euro for non-members`
+        `Tickets will be sold in 3 types:`,
+        `- Early Bird sale 10 euro for members | 12 euro for non-members`,
+        `- Regular Bird sale 13 euro for members | 15 euro for non-members`,
+        `- Late Bird sale 17 euro for members | 19 euro for non-members`
 
-    ],
-    ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
-    images: ["/assets/images/portfolio/groningen/portfolio-30"],
-    thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
-  },
+      ],
+      ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
+      images: ["/assets/images/portfolio/groningen/portfolio-30"],
+      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+    },
+  ],
+  rotterdam: [
+    {
+      is_tickets_closed: false,
+      membersOnly: false,
+      visible: true,
+      title: "Horoteka - Horo Workshop",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Master the traditional Bulgarian dance, horo, with our beginner-level class",
+      bgImage: "24",
+      date: "22nd May",
+      time: "19:00",
+      ticketTimer: '2024-05-22T20:00:00',
+      ticketLimit: 50,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Erasmus Sport, Hall 4`,
+      including: [],
+      // ticket_link: '',
+      entry: "5",
+      memberEntry: "3",
+      price_id: 'price_1PHHWuIOw5UGbAo10DDNIIas',
+      memberPrice_id: 'price_1PHHXFIOw5UGbAo1w4KGZREU',
+      activeMemberPrice_id: 'price_1PHHbgIOw5UGbAo181SJnKbg',
+      freePass: ['vladislavmarinov3142@gmail.com'],
+      marketingInputs: false,
+      extraInputs: false,
+      text: [
+        `Step into the rhythm of Bulgaria with our Horo Workshop! Join us for an immersive experience where you'll master the traditional Bulgarian dance, horo, guided by a professional instructor from the Rotterdam Bulgarian Folklore Dance group, Sborenka. Regardless of your dance experience, everyone is welcome to enjoy the lively atmosphere and have fun with us.
+        `,
+        `Don't miss this opportunity to embrace Bulgarian culture, connect with fellow enthusiasts, and learn a thing or two you didn’t know about hero. This is also the perfect opportunity to teach your foreign friends some moves for your future wedding ;)
+        `,
+        `Bring your most comfortable shoes and let’s dance together!`
+      ],
+      ticket_img: '/assets/images/tickets/rotterdam/ticket-3.jpg',
+      images: ["/assets/images/portfolio/rotterdam/portfolio-3"],
+      thumbnail: "/assets/images/portfolio/rotterdam/portfolio-3",
+    },
   ],
   leeuwarden: [
     {
