@@ -41,7 +41,7 @@ export const SOCIETY_EVENTS = {
       bgImage: "19",
       date: "24th May",
       time: "17:30",
-      ticketTimer: '2024-05-24T20:00:00',
+      ticketTimer: '2024-05-24T00:59:00',
       ticketLimit: 1000,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
