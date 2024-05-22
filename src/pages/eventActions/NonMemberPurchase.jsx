@@ -19,7 +19,7 @@ import FormExtras from "../../elements/ui/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { REGIONS_MEMBERSHIP } from "../../util/REGIONS_AUTH_CONFIG";
 import MarketingForm from "../../elements/ui/MarketingForm";
-import MembershipBanner from "../../elements/ui/MembershipBanner";
+import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 
 const NonMemberPurchase = () => {

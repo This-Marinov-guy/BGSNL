@@ -22,6 +22,11 @@ body {
   color: $body-color;
   font-weight: 800;
 }
+
+.reading span {
+  font-weight: 80 !important;
+}
+
 a {
   transition: all 0.4s ease-in-out 0s;
 }

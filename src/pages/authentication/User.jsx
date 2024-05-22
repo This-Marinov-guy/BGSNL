@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, Fragment, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
 import { useSelector, useDispatch } from "react-redux";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
@@ -7,7 +7,7 @@ import Loader from "../../elements/ui/Loader";
 import ImageInput from "../../elements/inputs/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FiCircle, FiCheckCircle, FiEdit, FiChevronUp, FiX } from "react-icons/fi";
+import { FiCircle, FiCheckCircle, FiEdit, FiChevronUp, FiX, FiArrowRight } from "react-icons/fi";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -28,6 +28,7 @@ import capitalizeFirstLetter from "../../util/capitalize";
 import { REGION_WHATSAPP } from "../../util/REGIONS_DESIGN";
 import SubscriptionManage from "../../elements/ui/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
+import { INTERNSHIPS } from "../../util/INTERNSHIPS";
 
 const schema = yup.object().shape({
   image: yup.string(),
@@ -81,6 +82,14 @@ const User = (props) => {
 
   const user = useSelector(selectUser);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const routePath = location.pathname + location.hash;
+  const tab = window.location.hash.substring(1).split('?')[0];
+
+  const scrollRef = useRef(null);
+
   const closeHandler = () => {
     dispatch(removeModal());
   };
@@ -98,6 +107,11 @@ const User = (props) => {
   };
 
   useEffect(() => {
+    if (!user.token) {
+      sessionStorage.setItem('prevUrl', routePath);
+      return navigate('/login');
+    }
+
     const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
@@ -108,6 +122,126 @@ const User = (props) => {
     };
     fetchCurrentUser();
   }, []);
+
+  // fix optional url params someday ??!
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.href.split('?')[1]);
+    const scrollQuery = searchParams.get('scroll');
+
+    if (scrollRef.current && scrollQuery === 'news') {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [currentUser])
+
+  let menuContent = null;
+
+  switch (tab) {
+    case 'news':
+    case '':
+      menuContent = <Fragment>
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="mb--30 mb_sm--0">
+                <h2 className="title">News</h2>
+                <ul>
+                  <li className="mt--40">
+                    <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please <Link to='/gala'>click this for more info</Link></p>
+                    <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
+                  </li>
+                  <li className="mt--40">
+                    <Recruit />
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+      break;
+    case 'tickets':
+      menuContent = <div className="container">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="mb--30 mb_sm--0">
+              <h2 className="title mb--40">Ticket Collection</h2>
+              {currentUser.tickets.length > 0 ? (
+                <div className="row">
+                  {currentUser.tickets.map((ticket, i) => (
+                    <div className="col-lg-4 col-md-6 col-12" key={i}>
+                      <OverlayTrigger
+                        overlay={
+                          <Tooltip id="tooltip-disabled">
+                            {expand ? "Click to Shrink" : "Click to Expand"}
+                          </Tooltip>
+                        }
+                      >
+                        <img
+                          id={`ticket${i}`}
+                          className="mb--40"
+                          src={ticket.image}
+                          alt="ticket"
+                          onClick={(event) => {
+                            expandHandler(event.target.id);
+                          }}
+                        />
+                      </OverlayTrigger>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No tickets purchased</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      break;
+    case 'internships':
+      menuContent = <Fragment>
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="mb--30 mb_sm--0">
+                <h2 className="title">Internships</h2>
+                <p>As a BGSNL member you get special access to our recommended positions. Although public, you get some special credit coming from the organization. Check the section frequently as we aim to add exclusive internships for our members only!</p>
+                {INTERNSHIPS.map((i, index) => {
+                  return <div key={index} className="row mt--20">
+                    <div className="col-lg-6 col-12 reading">
+                      <h3>Company: <span>{i.company}</span></h3>
+                      <h3>Specialty: <span>{i.specialty}</span></h3>
+                      <h3>Location: <span>{i.location}</span></h3>
+                      <h3>Duration: <span>{i.duration}</span></h3>
+                      {i.bonuses.length > 0 &&
+                        <h3>Bonuses: {i.bonuses.map((b, index) => {
+                          return <span key={index}> {b} |</span>
+                        })}</h3>}
+                      {i.requirements.length > 0 &&
+                        <h3>Requirements: {i.requirements.map((r, index) => {
+                          return <span key={index}> {r} |</span>
+                        })}</h3>}
+                      <h3>Description: <span>{i.description}</span></h3>
+                    </div>
+                    <div className="col-lg-6 col-12" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <img src={i.logo} style={{ maxWidth: '300px' }} alt='Company Logo'></img>
+                      <a href={i.link} target="_blank" className="mt--20" style={{ fontSize: '30px' }}>
+                        <span>Link to internship</span>
+                        <FiArrowRight />
+                      </a>
+                    </div>
+                    <hr />
+                  </div>
+                })}
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+      break
+    default:
+      menuContent = null
+  }
 
   return currentUser ? (
     <React.Fragment>
@@ -465,71 +599,13 @@ const User = (props) => {
       {/* End Info Area */}
       {/* <Greeting /> */}
       {/* Start User Collection */}
-      <WindowShift
-        className="mt--80 mb--80"
-        main="News"
-        secondary="Ticket Collection"
-        mainContent={
-          <Fragment>
-            <div className="container">
-              <div className="row">
-                <div className="col-lg-12">
-                  <div className="mb--30 mb_sm--0">
-                    <h2 className="title">News</h2>
-                    <ul>
-                      <li className="mt--40">
-                        <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please <Link to='/gala'>click this for more info</Link></p>
-                        <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
-                      </li>
-                      <li className="mt--40">
-                        <Recruit />
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Fragment>
-        }
-        secondaryContent={
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="mb--30 mb_sm--0">
-                  <h2 className="title mb--40">Ticket Collection</h2>
-                  {currentUser.tickets.length > 0 ? (
-                    <div className="row">
-                      {currentUser.tickets.map((ticket, i) => (
-                        <div className="col-lg-4 col-md-6 col-12" key={i}>
-                          <OverlayTrigger
-                            overlay={
-                              <Tooltip id="tooltip-disabled">
-                                {expand ? "Click to Shrink" : "Click to Expand"}
-                              </Tooltip>
-                            }
-                          >
-                            <img
-                              id={`ticket${i}`}
-                              className="mb--40"
-                              src={ticket.image}
-                              alt="ticket"
-                              onClick={(event) => {
-                                expandHandler(event.target.id);
-                              }}
-                            />
-                          </OverlayTrigger>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p>No tickets purchased</p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-      />
+      <div ref={scrollRef} className="options-btns-div mt--60">
+        <Link to='#news' className={`rn-button-style--2 ${['', 'news'].includes(tab) ? 'btn-solid' : 'rn-btn-reverse'}`}>News</Link>
+        <Link to='#tickets' className={`rn-button-style--2 ${tab === 'tickets' ? 'btn-solid' : 'rn-btn-reverse'}`}>Tickets</Link>
+        <Link to='#internships' className={`rn-button-style--2 ${tab === 'internships' ? 'btn-solid' : 'rn-btn-reverse'}`}>Internships</Link>
+      </div>
+
+      {menuContent !== null && menuContent}
       {/* End User Collection */}
 
       {/* Start Footer Style  */}

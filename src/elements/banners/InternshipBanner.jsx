@@ -1,0 +1,28 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+const InternshipBanner = () => {
+    return (
+        <div className="team_member_border-3 center_section" style={{ maxWidth: '500px', margin: '0 auto' }} >
+            <p className="information center_text">
+                You do not want to miss a discount, fill the info manually or miss a ticket for your collection - become a member to enjoy these benefits!
+            </p>
+            <Link
+                className="rn-button-style--2 rn-btn-reverse-green center_text mb--10"
+                onClick={() => sessionStorage.setItem('prevUrl', '')}
+                to="/login"
+            >
+                <span className="">Log in</span>
+            </Link>
+            <Link
+                className="rn-button-style--2 btn-solid center_text"
+                onClick={() => sessionStorage.setItem('prevUrl', '')}
+                to="/signup"
+            >
+                <span className="">Become a Member</span>
+            </Link>
+        </div>
+    )
+}
+
+export default InternshipBanner
