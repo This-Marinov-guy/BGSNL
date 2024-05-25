@@ -146,10 +146,6 @@ const User = (props) => {
                 <h2 className="title">News</h2>
                 <ul>
                   <li className="mt--40">
-                    <p className="mb--20">Open call for artists: if you are an artist and want to participate in our special gala night, please <Link to='/gala'>click this for more info</Link></p>
-                    <img style={{ width: '300px' }} src='/assets/images/news/gala.jpg' />
-                  </li>
-                  <li className="mt--40">
                     <Recruit />
                   </li>
                 </ul>
