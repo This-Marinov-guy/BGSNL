@@ -1,130 +1,52 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 
-// add ticket_link : '*link for the tickets' for outside ticket purchase
-
-let galaPrice, galaMemberPrice, galaPriceId, galaMemberPriceId, galaTicketType;
-const currentData = new Date().valueOf();
-
-if (currentData < new Date('2024/05/08').valueOf()) {
-  galaPrice = 12
-  galaMemberPrice = 10
-  galaPriceId = 'price_1P8xAJIOw5UGbAo1dfXlCO2y'
-  galaMemberPriceId = 'price_1P8xAYIOw5UGbAo1FXTxKuim'
-  galaTicketType = '(Early Bird)'
-} else if (currentData < new Date('2024/05/17').valueOf()) {
-  galaPrice = 15
-  galaMemberPrice = 13
-  galaPriceId = 'price_1PA4JeIOw5UGbAo1iXPDNujq'
-  galaMemberPriceId = 'price_1PA4JTIOw5UGbAo1K8zje28r'
-  galaTicketType = '(Regular Bird)'
-} else {
-  galaPrice = 19
-  galaMemberPrice = 17
-  galaPriceId = 'price_1PA4JzIOw5UGbAo1jxJLS12h'
-  galaMemberPriceId = 'price_1PA4JrIOw5UGbAo1M3bfUfry'
-  galaTicketType = '(Late Bird)'
-}
-
-const isEightMay = new Date().valueOf() < new Date('2024/05/08').valueOf();
-
 export const SOCIETY_EVENTS = {
   groningen: [
-    {
-      isGala: true,
-      is_tickets_closed: false,
-      membersOnly: false,
-      visible: true,
-      title: "Spring Gala",
-      // newTitle: 'Bulgarian Dinner',
-      description: "Event for the stars",
-      bgImage: "19",
-      date: "24th May",
-      time: "17:30",
-      ticketTimer: '2024-05-24T00:59:00',
-      ticketLimit: 1000,
-      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-      // correctedDate: "",
-      // correctedTime: "",
-      where: `StadsLab Groningen`,
-      entry: galaPrice,
-      memberEntry: galaMemberPrice,
-      including: [galaTicketType, galaTicketType],
-      // ticket_link: '',
-      price_id: galaPriceId,
-      memberPrice_id: galaMemberPriceId,
-      activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
-      freePass: [
 
-      ],
-      marketingInputs: false,
-      extraInputs: false,
-      text: [
-        `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
-        `,
-        `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
-`,
-        ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
-`,
-        `Tickets will be sold in 3 types:`,
-        `- Early Bird sale 10 euro for members | 12 euro for non-members`,
-        `- Regular Bird sale 13 euro for members | 15 euro for non-members`,
-        `- Late Bird sale 17 euro for members | 19 euro for non-members`
-
-      ],
-      ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
-      images: ["/assets/images/portfolio/groningen/portfolio-30"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
-    },
   ],
   rotterdam: [
-
-  ],
-  leeuwarden: [
     {
-      isGala: true,
       is_tickets_closed: false,
       membersOnly: false,
       visible: true,
-      title: "Spring Gala",
+      title: "Picnic",
       // newTitle: 'Bulgarian Dinner',
-      description: "Event for the stars",
-      bgImage: "19",
-      date: "24th May",
-      time: "17:30",
-      ticketTimer: '2024-05-24T20:00:00',
-      ticketLimit: 1000,
+      description: "Join Us for a picnic and BBQ by the lake!",
+      bgImage: "27",
+      date: "2nd June",
+      time: "14:00",
+      ticketTimer: '2024-06-02T14:00:00',
+      ticketLimit: 100,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",
-      where: `StadsLab Groningen`,
-      entry: galaPrice,
-      memberEntry: galaMemberPrice,
-      including: [galaTicketType, galaTicketType],
+      where: `Kralingse Bos`,
+      entry: 6,
+      memberEntry: 5,
+      including: [],
       // ticket_link: '',
-      price_id: galaPriceId,
-      memberPrice_id: galaMemberPriceId,
-      activeMemberPrice_id: 'price_1P8xAhIOw5UGbAo1qFGP5uCN',
-      freePass: ['vladislavmarinov3142@gmail.com', 'Arian Adeli Koodehi', 'Elizaveta Vinogradova'],
+      price_id: 'price_1PKEmRIOw5UGbAo1zH2agXGl',
+      memberPrice_id: 'price_1PKEmdIOw5UGbAo1karBC9jr',
+      activeMemberPrice_id: 'price_1PKEmnIOw5UGbAo1GP1WLmUI',
+      freePass: ['vladislavmarinov3142@gmail.com'],
       marketingInputs: false,
       extraInputs: false,
       text: [
-        `The long awaited moment approaches. We are thrilled to announce the first Spring Gala of BGSG!
-          `,
-        `Save the date because this year the 24th of May is not only the national holiday of Bulgarian literacy, but a local holiday celebrating the achievements of Bulgarian Society Groningen and Leeuwarden and its growing network and promoting Bulgarian artists and musicians in the Netherlands.
-  `,
-        ` The program consists of 3 key focuses: Art, Music and Networking. We are also preparing some exciting surprises!
-  `,
-        `Tickets will be sold in 3 types:`,
-        `- Early Bird sale 10 euro for members | 12 euro for non-members`,
-        `- Regular Bird sale 13 euro for members | 15 euro for non-members`,
-        `- Late Bird sale 17 euro for members | 19 euro for non-members`
-
+        `Relax and unwind with us at our picnic by the lake at Kralingse Bos. Enjoy Bulgarian BBQ, partake in fun activities, and connect with great company. Whether you're looking to make new friends or just enjoy a lovely day outdoors, this picnic is the perfect opportunity!
+        `,
+        `
+        Bring your friends, drinks (BYOB), and good vibes for a perfect picnic day! You can also expect some surprises from us 😉
+        `,
+        `See you there!`
       ],
-      ticket_img: '/assets/images/tickets/groningen/ticket-38.png',
-      images: ["/assets/images/portfolio/groningen/portfolio-30"],
-      thumbnail: "/assets/images/portfolio/groningen/portfolio-30",
+      ticket_img: '/assets/images/tickets/rotterdam/ticket-4.jpg',
+      images: ["/assets/images/portfolio/rotterdam/portfolio-4"],
+      thumbnail: "/assets/images/portfolio/rotterdam/portfolio-4",
     },
+  ],
+  leeuwarden: [
+
   ],
   breda: [
 
