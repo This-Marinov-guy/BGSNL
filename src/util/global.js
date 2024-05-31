@@ -1,3 +1,5 @@
+import { clarity } from 'react-microsoft-clarity';
+
 export const isProd = () => {
     return process.env.NODE_ENV === 'production'
 }
@@ -20,5 +22,15 @@ export const askBeforeRedirect = (basedOnEnv = true) => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
+    }
+}
+
+export const clarityTrack = () => {
+    clarity.init(process.env.REACT_APP_CLARITY_ID);
+    clarity.consent();
+
+    if (clarity.hasStarted()) {
+        console.log('Track with Clarity');
+        // clarity.identify('USER_ID', { userProperty: 'value' });
     }
 }

@@ -8,6 +8,7 @@ import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
+import { clarityTrack } from "./util/global";
 
 // Style
 import './index.scss'
@@ -106,6 +107,7 @@ const Root = () => {
   }, [user.token, logout, user.expirationDate]);
 
   useEffect(() => {
+    clarityTrack();
     let storedData = JSON.parse(localStorage.getItem("userData"));
     if (
       storedData &&
@@ -121,7 +123,7 @@ const Root = () => {
         })
       );
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (errorMessage) {
