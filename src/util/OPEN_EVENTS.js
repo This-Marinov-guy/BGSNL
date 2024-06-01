@@ -38,7 +38,7 @@ export const SOCIETY_EVENTS = {
         `
         Bring your friends, drinks (BYOB), and good vibes for a perfect picnic day! You can also expect some surprises from us 😉
         `,
-        `See you there!`
+        `You are welcome to join the picnic for free. However, if you would like to enjoy our BBQ, you must purchase a ticket. Each ticket includes one kebapche, one kyufte, one additional piece of meat of your choice, and a serving of Snezhanka salad. Please note, we cannot sell alcohol at the park, so feel free to bring your own drinks.`
       ],
       ticket_img: '/assets/images/tickets/rotterdam/ticket-4.jpg',
       images: ["/assets/images/portfolio/rotterdam/portfolio-4"],
