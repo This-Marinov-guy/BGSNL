@@ -17,7 +17,7 @@ export const SOCIETY_EVENTS = {
       date: "2nd June",
       time: "14:00",
       ticketTimer: '2024-06-02T14:00:00',
-      ticketLimit: 100,
+      ticketLimit: 25,
       // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
       // correctedDate: "",
       // correctedTime: "",
