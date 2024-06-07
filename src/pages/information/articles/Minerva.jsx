@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../../../elements/common/Breadcrumb";
 import PageHelmet from "../../../component/common/Helmet";
 import ScrollToTop from "react-scroll-up";
@@ -6,9 +6,12 @@ import ImageFb from "../../../elements/ui/ImageFb";
 import { FiChevronUp } from "react-icons/fi";
 import Header from "../../../component/header/Header";
 import FooterTwo from "../../../component/footer/FooterTwo";
-import { Image } from 'primereact/image';
+import { Dialog } from 'primereact/dialog';
+import VideoPlayer from "../../../elements/ui/VideoPLayer";
 
 const Minerva = () => {
+    const [modal, setModal] = useState();
+
     return <React.Fragment>
         <PageHelmet pageTitle="Articles" />
         <Header
@@ -50,36 +53,162 @@ const Minerva = () => {
                     <p className="mb--40">
                         Our first Spring Gala is a fact. the event was held on the 24th of May - the national day of literacy and culture. To celebrate the occasion, our team introduced a small gallery on the venue, on which artist from Academie Minerva presented their works prior the graduation exebition happeing 10th to 15th of June.
                     </p>
-                    {/* <div className="blog-single-list-wrapper d-flex flex-wrap">
-                        <div className="thumb position-relative">
-                            <Image src="/assets/images/profile/minerva/1Edi.mp4" alt="Image" width="250" preview />
-                            <button
-                                className="video-popup position-top-center black-color"
-                                onClick={() => { }}
-                            >
-                                <span className="play-icon"></span>
-                            </button>
+
+                    <h3 style={{fontFamily: 'Archive', textAlign: 'center'}}>Pick an artist - get inspired</h3>
+
+                    <main className="page-wrapper">
+
+                        <div className="rn-section ptb--60 bg_color--1">
+                            <div className="container">
+                                <div className="row sercice-details-content align-items-center">
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Antonio Todorov</h3>
+
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Antonio Todorov" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='91pmQa4nlvw' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('1')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Edi Baramov</h3>
+
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Edi Baramov" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='hQ3LP0Sjtp4' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('2')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Margarita Spasova</h3>
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Margarita Spasova" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='CW4LhDfP7D0' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('3')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Marina Vasileva</h3>
+
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Marina Vasileva" visible={modal === '4'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='RnsCHgPli70' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('4')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Naomi Arnaudova</h3>
+
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Naomi Arnaudova" visible={modal === '5'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='cbEQoLut3Dw' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('5')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Zlatelina Tsokova</h3>
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Zlatelina Tsokova" visible={modal === '6'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='Mrq9JJ6PvMA' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('6')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 mt--20">
+                                        <h3 style={{ color: "#ab1c02" }}>Yordan Mominski</h3>
+                                        <div className="thumb position-relative">
+                                            <img
+                                                className="w-80"
+                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                alt="Service Images"
+                                            />
+                                            <Dialog header="Yordan Mominski" visible={modal === '7'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                                <VideoPlayer src='bw_UaGCqNU8' />
+                                            </Dialog>
+                                            <button
+                                                className="video-popup position-top-center theme-color md-size"
+                                                onClick={() => setModal('7')}
+                                            >
+                                                <span className="play-icon"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="content">
-                            <p>
-                                minerva is a Bachelor student in Journalism from University
-                                of Sofia in Bulgaria. His education is not in any way
-                                related to business or entrepreneurship, yet he was able
-                                to start a business, showing that this can be achieved
-                                by anyone who has enough passion, patience and support.
-                                minerva claims that this can be done by anyone with no
-                                business knowledge and all that it is needed are “small
-                                and gradual steps”.
-                            </p>
-                        </div>
-                    </div> */}
+                    </main>
+
                     <h2 className="mt--80">
                         Exhibition Map
                     </h2>
                     <div className="row">
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h4 className="mt--20">Oosterpoort concert building</h4>
-                            <hr/>
+                        <div className="col-12 center_text">
+                            <h3 className="mt--20">Oosterpoort concert building</h3>
                             <p>
                                 Daniel Damev
                                 <br />
@@ -93,11 +222,13 @@ const Minerva = () => {
 
                             </p>
                         </div>
+                        <h3 className="mt--20 col-12 center_text">Academie Minerva</h3>
+
                         <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">
                                 ZD0 | Ground floor, Central hall
                             </h4>
-                            <hr/>
+                            <hr />
 
                             <p>
                                 Valentina Zheleva
@@ -105,7 +236,7 @@ const Minerva = () => {
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">ZD2 | 2nd floor, A-wing</h4>
-                            <hr/>
+                            <hr />
 
                             <p>
                                 Denisa Lukanova
@@ -118,7 +249,7 @@ const Minerva = () => {
                         <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">STICHTING SIGN
                             </h4>
-                            <hr/>
+                            <hr />
 
                             <p>
                                 Antonio Todorov
@@ -126,7 +257,7 @@ const Minerva = () => {
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">MUSEUM AAN DER A | MadA-3</h4>
-                            <hr/>
+                            <hr />
 
                             <p>
                                 Alexandra Georgieva
@@ -134,7 +265,7 @@ const Minerva = () => {
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">Graphic Museum GRID</h4>
-                            <hr/>
+                            <hr />
 
                             <p>
                                 Ivena Srebecheva
@@ -142,7 +273,7 @@ const Minerva = () => {
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">KUNSTPUNT</h4>
-                            <hr/>
+                            <hr />
 
                             <p>
                                 Naomi Arnaudova
