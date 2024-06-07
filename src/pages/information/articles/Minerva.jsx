@@ -42,7 +42,7 @@ const Minerva = () => {
                         Exhibitions you don't want to miss
                     </h2>
                     <p style={{ textAlign: "end", fontSize: '26px' }} className="mb--10">
-                        Introducing the prestige of Groningen's artisits
+                        Bulgarian student exhibitions in Groningen
                     </p>
                     <ImageFb
                         className="mt--20 mb--40"
@@ -54,7 +54,7 @@ const Minerva = () => {
                         We had our very first Spring Gala on May 24th, which also happens to be the National Day of Literacy and Culture. Our team put together a cool gallery featuring artists from Academie Minerva. They’re gearing up for their big graduation exhibition happening from June 10th to 15th.
                     </p>
 
-                    <h3 style={{ fontFamily: 'Archive', textAlign: 'center' }}>Pick an artist - get inspired</h3>
+                    <h3 style={{ textAlign: 'center' }}>Pick an artist - get inspired</h3>
 
                     <main className="page-wrapper">
 
@@ -67,13 +67,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/Antonio.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Antonio Todorov" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='91pmQa4nlvw' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('1')}
                                             >
@@ -87,13 +89,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/edi.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Edi Baramov" visible={modal === '2'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='hQ3LP0Sjtp4' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('2')}
                                             >
@@ -106,13 +110,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/margarita.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Margarita Spasova" visible={modal === '3'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='CW4LhDfP7D0' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('3')}
                                             >
@@ -126,13 +132,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/marina.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Marina Vasileva" visible={modal === '4'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='RnsCHgPli70' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('4')}
                                             >
@@ -146,13 +154,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/naomi.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Naomi Arnaudova" visible={modal === '5'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='cbEQoLut3Dw' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('5')}
                                             >
@@ -165,13 +175,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/zlatelina.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Zlatelina Tsokova" visible={modal === '6'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='Mrq9JJ6PvMA' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('6')}
                                             >
@@ -184,13 +196,15 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/1.jpg'}
+                                                src={'/assets/images/profile/minerva/yordan.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Yordan Mominski" visible={modal === '7'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='bw_UaGCqNU8' />
                                             </Dialog>
                                             <button
+                                                style={{ scale: '0.7' }}
+
                                                 className="video-popup position-top-center theme-color md-size"
                                                 onClick={() => setModal('7')}
                                             >
@@ -207,8 +221,9 @@ const Minerva = () => {
                         Exhibition Map
                     </h2>
                     <div className="row">
-                        <div className="col-12 center_text">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h3 className="mt--20">Oosterpoort concert building</h3>
+                            <hr />
                             <p>
                                 Daniel Damev
                                 <br />
@@ -222,21 +237,19 @@ const Minerva = () => {
 
                             </p>
                         </div>
-                        <h3 className="mt--20 col-12 center_text">Academie Minerva</h3>
 
                         <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20 col-12">Academie Minerva</h3>
+                            <hr />
+
                             <h4 className="mt--20">
                                 ZD0 | Ground floor, Central hall
                             </h4>
-                            <hr />
 
                             <p>
                                 Valentina Zheleva
                             </p>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">ZD2 | 2nd floor, A-wing</h4>
-                            <hr />
 
                             <p>
                                 Denisa Lukanova
@@ -246,9 +259,10 @@ const Minerva = () => {
                                 Margarita Spasova
                             </p>
                         </div>
+
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h4 className="mt--20">STICHTING SIGN
-                            </h4>
+                            <h3 className="mt--20">STICHTING SIGN
+                            </h3>
                             <hr />
 
                             <p>
@@ -256,7 +270,7 @@ const Minerva = () => {
                             </p>
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h4 className="mt--20">MUSEUM AAN DER A | MadA-3</h4>
+                            <h3 className="mt--20">MUSEUM AAN DER A | MadA-3</h3>
                             <hr />
 
                             <p>
@@ -264,7 +278,7 @@ const Minerva = () => {
                             </p>
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h4 className="mt--20">Graphic Museum GRID</h4>
+                            <h3 className="mt--20">Graphic Museum GRID</h3>
                             <hr />
 
                             <p>
@@ -272,7 +286,7 @@ const Minerva = () => {
                             </p>
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h4 className="mt--20">KUNSTPUNT</h4>
+                            <h3 className="mt--20">KUNSTPUNT</h3>
                             <hr />
 
                             <p>
