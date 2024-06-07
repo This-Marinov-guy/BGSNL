@@ -16,7 +16,7 @@ const Toni = () => {
             logoname="logo.png"
         />
         {/* Start Breadcrump Area */}
-        <Breadcrumb title={"Toni's Villa"} />
+        <Breadcrumb title={"Toni's Villa"} category='Articles' />
         {/* End Breadcrump Area */}
         {/* <div className="container mt--80 mb--80">
 

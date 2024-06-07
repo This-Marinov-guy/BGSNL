@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 class Breadcrumb extends Component {
 
     render() {
-        const { title, parent } = this.props;
+        const { title, category, parent } = this.props;
         const imageUrl = `/assets/images/bg/bg-image-1.webp`;
 
         return (
@@ -19,7 +19,7 @@ class Breadcrumb extends Component {
                                     <ul className="page-list">
                                         <li className="breadcrumb-item"><Link to={`/`}>Home</Link></li>
                                         {parent ? <li className="breadcrumb-item">{parent}</li> : ''}
-                                        <li className="breadcrumb-item active">{title}</li>
+                                        <li className="breadcrumb-item active">{category ?? title}</li>
                                     </ul>
                                 </div>
                             </div>

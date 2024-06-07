@@ -20,7 +20,7 @@ const Minerva = () => {
             logoname="logo.png"
         />
         {/* Start Breadcrump Area */}
-        <Breadcrumb title={"Academie Minerva"} />
+        <Breadcrumb title={"Academie Minerva"} category='Articles' />
         {/* End Breadcrump Area */}
         {/* <div className="container mt--80 mb--80">
 
@@ -268,7 +268,7 @@ const Minerva = () => {
                             <hr />
 
                             <p>
-                                Ivena Srebecheva
+                                Ivena Srebcheva
                             </p>
                         </div>
                         <div className="col-lg-4 col-md-6 col-12">
