@@ -55,7 +55,7 @@ export const SOCIETY_EVENTS = {
       title: "Picnic",
       // newTitle: 'Bulgarian Dinner',
       description: "Join Us for a picnic and BBQ!",
-      bgImage: "27",
+      bgImage: "7",
       date: "15th June",
       time: "16:00",
       ticketTimer: '2024-06-15T16:00:00',
@@ -90,88 +90,52 @@ export const SOCIETY_EVENTS = {
     // {
     //   membersOnly: false,
     //   visible: true,
-    //   title: "Football Match",
-    //   label: 'Football Match',
-    //   // newTitle: 'Bulgarian Dinner',
-    //   description: "let's show some lion spirit",
-    //   bgImage: "25",
-    //   date: "1st June",
+    //   title: "Picnic",
+    //   newTitle: 'Bulgarian Dinner',
+    //   description: "Join Us for a picnic and BBQ!",
+    //   bgImage: "7",
+    //   date: "15th June",
     //   time: "14:00",
-    //   ticketTimer: '2024-05-31T23:59:00',
-    //   ticketLimit: 20,
-    //   // Use the corrected date and time for changes in the date or time.Do not change the initial ones as it will make a new event in the DB
-    //   // correctedDate: "",
-    //   // correctedTime: "",
-    //   where: `SC Overamstel (Radioweg 96, 1098 NJ)`,
-    //   isFree: true,
+    //   ticketTimer: '2024-06-15T14:00:00',
+    //   ticketLimit: 40,
+    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    //   correctedDate: "",
+    //   correctedTime: "",
+    //   where: `Westerpark Park`,
     //   isMemberFree: false,
+    //   entry: 10,
+    //   memberEntry: 8,
+    //   including: [],
+    //   price_id: 'price_1PP8vlIOw5UGbAo1GBLeepV1',
+    //   memberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
+    //   activeMemberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
     //   freePass: ['vladislavmarinov3142@gmail.com'],
     //   marketingInputs: false,
-    //   extraInputs: false,
-    //   subEvent: {
-    //     description: 'Join is for the UEFA Champions League Final',
-    //     links: [
-    //       { name: 'Buy your spot', href: '/UEFA%20Champions%20League%20Finale' }
-    //     ]
-    //   },
+    //   extraInputs: [{
+    //     element: <div div className="col-12" >
+    //       <Field as="select" name="extraOne">
+    //         <option value="" disabled>
+    //           Select menu
+    //         </option>
+    //         <option value="Meat">Meat</option>
+    //         <option value="vegetarian">Vegetarian</option>
+    //       </Field>
+    //       <ErrorMessage
+    //         className="error"
+    //         name="extraOne"
+    //         component="div"
+    //       />
+    //     </div>,
+    //     required: true
+    //   },],
     //   text: [
-    //     `Join us for an unforgettable day of football and celebration on June 1st at our Kick off & Finale Event! We're kicking things off with a friendly match at SC Overamstel, where players of all levels are welcome to show their skills and enjoy the game. Whether you're playing or cheering from the sidelines, it's going to be a fantastic time! 
-    //     `,
-    //     `If you wish to join us for the UEFA Finale as well, make sure to buy your ticket from the other link. See you there!
-    //     `,
-    //     `...
-    //     `,
-    //     `Присъединете се към нас за един незабравим ден, изпълнен с футбол и празненства на нашето Kick off & Finale събитие на 1-ви юни! Ще започнем с приятелски мач в SC Overamstel, където всеки е добре дошъл да покаже уменията си и да се наслади на играта. Независимо дали ще играете или ще бъдете там за подкрепа, обещаваме, че ще си прекарате супер! 
-    //     `,
-    //     `Ако искате да се присъедините и към финала на Шампионска Лига, не забравяйте да купите своя билет от другия линк. Очакваме Ви!`,
-    //   ],
-    //   ticket_img: '/assets/images/tickets/amsterdam/ticket-5.jpg',
-    //   images: ["/assets/images/portfolio/amsterdam/portfolio-5"],
-    //   thumbnail: "/assets/images/portfolio/amsterdam/portfolio-5",
-    // },
-    // {
-    //   membersOnly: false,
-    //   visible: false,
-    //   title: "UEFA Champions League Finale",
-    //   label: 'Champions League',
-    //   // newTitle: 'Bulgarian Dinner',
-    //   description: "support your team",
-    //   bgImage: "25",
-    //   date: "1st June",
-    //   time: "20:30",
-    //   ticketTimer: '2024-06-01T20:30:00',
-    //   ticketLimit: 25,
-    //   // Use the corrected date and time for changes in the date or time.Do not change the initial ones as it will make a new event in the DB
-    //   // correctedDate: "",
-    //   // correctedTime: "",
-    //   where: `THE POKÉ LAB (Albert Cuypstraat 136)`,
-    //   entry: 5,
-    //   including: ['(+ drink)', '(+ drink)'],
-    //   price_id: 'price_1PJrZUIOw5UGbAo1lUbyYgAQ',
-    //   memberPrice_id: 'price_1PJrZUIOw5UGbAo1lUbyYgAQ',
-    //   activeMemberPrice_id: 'price_1PJrZUIOw5UGbAo1lUbyYgAQ',
-    //   freePass: ['vladislavmarinov3142@gmail.com'],
-    //   marketingInputs: false,
-    //   extraInputs: false,
-    //   subEvent: {
-    //     description: 'Join is for our friendly match at 14:00',
-    //     links: [
-    //       { name: 'Reserve your spot', href: '/Football%20Match' }
-    //     ]
-    //   },
-    //   text: [
-    //     `After the friendly match at SC Overamstel, we're heading over to THE POKÉ LAB to watch the UEFA Champions League finale together. Get ready for an evening of intense football action great company. Let's witness the crowning of the European champions in style! 
-    //     `,
-    //     `If you wish to join us for the football match as well, make sure to get your free ticket from the other link. See you there!
-    //     `,
+    //     `Присъеди се към нас за вкусно барбекю в парка на 15.06 от 14.00 в Westerpark! Ние ти предлагаме скара, напитка и добра компания, а от теб очакваме да вземеш само доброто си настроение! С това събитие ще закрием сезона за тази учебна година и ще се видим отново с пълна сила от септември! Очакваме те!`,
     //     `...`,
-    //     `След мача в SC Overamstel се отправяме към THE POKÉ LAB, за да гледаме заедно финала на Шампионската лига на УЕФА. Пригответе се за вечер на интензивен футболен екшън и страхотна компания. Нека станем свидетели на коронясването на европейските шампиони със стил!
-    //     `,
-    //     `Ако искате да се присъедините и към футболния мач, не забравяйте да вземете своя безплатен билет и другия линк. Очакваме Ви!`
+    //     `Join us for a delicious barbecue in the park on 15.06 from 14.00 at Westerpark! We offer you a bite, a drink and good company, and we expect you to take your best mood! With this event, we will close the season for this school year and will see you again in for new exiting events from September! We are waiting for you!`
     //   ],
     //   ticket_img: '/assets/images/tickets/amsterdam/ticket-6.jpg',
-    //   images: ["/assets/images/portfolio/amsterdam/portfolio-5"],
-    //   thumbnail: "/assets/images/portfolio/amsterdam/portfolio-5",
+    //   images: ["/assets/images/portfolio/amsterdam/portfolio-6"],
+    //   thumbnail: "/assets/images/portfolio/amsterdam/portfolio-6",
     // },
   ]
 }
