@@ -51,10 +51,10 @@ const Minerva = () => {
                         alt="Article Images"
                     />
                     <p className="mb--40">
-                        Our first Spring Gala is a fact. the event was held on the 24th of May - the national day of literacy and culture. To celebrate the occasion, our team introduced a small gallery on the venue, on which artist from Academie Minerva presented their works prior the graduation exebition happeing 10th to 15th of June.
+                        We had our very first Spring Gala on May 24th, which also happens to be the National Day of Literacy and Culture. Our team put together a cool gallery featuring artists from Academie Minerva. They’re gearing up for their big graduation exhibition happening from June 10th to 15th.
                     </p>
 
-                    <h3 style={{fontFamily: 'Archive', textAlign: 'center'}}>Pick an artist - get inspired</h3>
+                    <h3 style={{ fontFamily: 'Archive', textAlign: 'center' }}>Pick an artist - get inspired</h3>
 
                     <main className="page-wrapper">
 
