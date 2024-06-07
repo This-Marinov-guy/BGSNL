@@ -148,7 +148,7 @@ const Minerva = () => {
                                         <div className="thumb position-relative">
                                             <img
                                                 className="w-80"
-                                                src={'/assets/images/profile/minerva/Antonio.jpg'}
+                                                src={'/assets/images/profile/minerva/antonio.jpg'}
                                                 alt="Service Images"
                                             />
                                             <Dialog header="Antonio Todorov" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
