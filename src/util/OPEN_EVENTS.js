@@ -49,81 +49,39 @@ export const SOCIETY_EVENTS = {
 
   ],
   breda: [
-
-    // {
-    //   membersOnly: false,
-    //   visible: true,
-    //   title: "Movie Night",
-    //   newTitle: 'Bulgarian Dinner',
-    //   description: "let's enjoy some Bulgarian culture",
-    //   bgImage: "18",
-    //   date: "25th April",
-    //   time: "18:30",
-    //   ticketTimer: '2024-04-25T19:30:00',
-    //   ticketLimit: 250,
-    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    //   correctedDate: "",
-    //   correctedTime: "",
-    //   where: `BUas, Frontier 1.016`,
-    //   isMemberFree: true,
-    //   entry: 2.50,
-    //   memberEntry: 'Free',
-    //   including: ['(+ drink and snack)', '(+ drink and snack)'],
-    //   ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
-    //   price_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
-    //   memberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
-    //   activeMemberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
-    //   freePass: ['vladislavmarinov3142@gmail.com'],
-    //   marketingInputs: false,
-    //   extraInputs: [
-    //     {
-    //       element: <div div className="col-12" >
-    //         <Field as="select" name="extraOne">
-    //           <option value="" disabled>
-    //             Select your drink
-    //           </option>
-    //           <option value="water">water</option>
-    //           <option value="cola">cola</option>
-    //           <option value="ice tea">ice tea</option>
-    //         </Field>
-    //         <ErrorMessage
-    //           className="error"
-    //           name="extraOne"
-    //           component="div"
-    //         />
-    //       </div>,
-    //       required: true
-    //     },
-    //     {
-    //       element: <div div className="col-12" >
-    //         <Field as="select" name="extraTwo">
-    //           <option value="" disabled>
-    //             Select your snack
-    //           </option>
-    //           <option value="popcorns">popcorns</option>
-    //           <option value="nachos">nachos</option>
-    //         </Field>
-    //         <ErrorMessage
-    //           className="error"
-    //           name="extraTwo"
-    //           component="div"
-    //         />
-    //       </div>,
-    //       required: true
-    //     }
-    //   ],
-    //   text: [
-    //     `Dive into Bulgarian cinema with us for a special movie night featuring 'Attraction' - a romantic comedy movie with one of the most popular Bulgarian actors!🎞️
-    //     `,
-    //     `❗️English subtitles provided, so everyone is welcome to join us for an evening of cinematic experience and cultural exploration.
-    //     `,
-    //     `The price includes drink and popcorns🍿!
-    //     `
-    //   ],
-    //   ticket_img: '/assets/images/tickets/breda/ticket-7.png',
-    //   images: ["/assets/images/portfolio/breda/portfolio-7"],
-    //   thumbnail: "/assets/images/portfolio/breda/portfolio-7",
-    // },
+    {
+      membersOnly: false,
+      visible: true,
+      title: "Picnic",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Join Us for a picnic and BBQ!",
+      bgImage: "27",
+      date: "15th June",
+      time: "16:00",
+      ticketTimer: '2024-06-15T16:00:00',
+      ticketLimit: 40,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Park Valkenberg`,
+      isMemberFree: false,
+      entry: 6,
+      memberEntry: 5,
+      including: [],
+      price_id: 'price_1PP8xyIOw5UGbAo1ZPg0a8rG',
+      memberPrice_id: 'price_1PP8y8IOw5UGbAo1NCG7TpIU',
+      activeMemberPrice_id: 'price_1PP8y8IOw5UGbAo1NCG7TpIU',
+      freePass: ['vladislavmarinov3142@gmail.com'],
+      marketingInputs: false,
+      text: [
+        `Гладна мечка хоро не играе, както е казал народът! `,
+        `Join our Saturday BBQ enjoying your favorite Bulgarian songs and traditional Bulgarian food! Our menu features kebapche or kyufte, lyutenitsa, pitka, and ayran to feel the true Bulgarian spirit!`,
+        ` After the feast, you can play childhood games like народна топка, Ludo (не се сърди човече), and volleyball.`
+      ],
+      ticket_img: '/assets/images/tickets/breda/ticket-8.jpg',
+      images: ["/assets/images/portfolio/breda/portfolio-8"],
+      thumbnail: "/assets/images/portfolio/breda/portfolio-8",
+    },
   ],
   maastricht: [
 
