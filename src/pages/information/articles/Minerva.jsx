@@ -54,8 +54,89 @@ const Minerva = () => {
                         We had our very first Spring Gala on May 24th, which also happens to be the National Day of Literacy and Culture. Our team put together a cool gallery featuring artists from Academie Minerva. They’re gearing up for their big graduation exhibition happening from June 10th to 15th.
                     </p>
 
-                    <h3 style={{ textAlign: 'center' }}>Pick an artist - get inspired</h3>
+                    <h2 className="mt--40">
+                        Exhibition Map
+                    </h2>
+                    <div className="row">
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20">Oosterpoort concert building</h3>
+                            <hr />
+                            <p>
+                                Daniel Damev
+                                <br />
+                                Plamen Zlatanov
+                                <br />
+                                Simona Teneva
+                                <br />
+                                Theresa Konova
+                                <br />
+                                Yordan Mominski
 
+                            </p>
+                        </div>
+
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20 col-12">Academie Minerva</h3>
+                            <hr />
+
+                            <h4 className="mt--20">
+                                ZD0 | Ground floor, Central hall
+                            </h4>
+
+                            <p>
+                                Valentina Zheleva
+                            </p>
+                            <h4 className="mt--20">ZD2 | 2nd floor, A-wing</h4>
+
+                            <p>
+                                Denisa Lukanova
+                                <br />
+                                Plamen Zlatanov
+                                <br />
+                                Margarita Spasova
+                            </p>
+                        </div>
+
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20">STICHTING SIGN
+                            </h3>
+                            <hr />
+
+                            <p>
+                                Antonio Todorov
+                            </p>
+                        </div>
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20">MUSEUM AAN DER A | MadA-3</h3>
+                            <hr />
+
+                            <p>
+                                Alexandra Georgieva
+                            </p>
+                        </div>
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20">Graphic Museum GRID</h3>
+                            <hr />
+
+                            <p>
+                                Ivena Srebcheva
+                            </p>
+                        </div>
+                        <div className="col-lg-4 col-md-6 col-12">
+                            <h3 className="mt--20">KUNSTPUNT</h3>
+                            <hr />
+
+                            <p>
+                                Naomi Arnaudova
+                            </p>
+                        </div>
+                    </div>
+                    <a href="https://viewer.mapme.com/cb7dd22a-5629-491c-bcd8-f79a49876d26" target="_blank" className="rn-button-style--2 btn-solid mt--80"
+                    >To the map</a>
+                    <p>Be there <span style={{ color: "#ab1c02" }}>June 10 - 15</span></p>
+
+                    <h2 className="mt--40">
+                        Pick an artist - get inspired                    </h2>
                     <main className="page-wrapper">
 
                         <div className="rn-section ptb--60 bg_color--1">
@@ -217,86 +298,7 @@ const Minerva = () => {
                         </div>
                     </main>
 
-                    <h2 className="mt--80">
-                        Exhibition Map
-                    </h2>
-                    <div className="row">
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">Oosterpoort concert building</h3>
-                            <hr />
-                            <p>
-                                Daniel Damev
-                                <br />
-                                Plamen Zlatanov
-                                <br />
-                                Simona Teneva
-                                <br />
-                                Theresa Konova
-                                <br />
-                                Yordan Mominski
 
-                            </p>
-                        </div>
-
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20 col-12">Academie Minerva</h3>
-                            <hr />
-
-                            <h4 className="mt--20">
-                                ZD0 | Ground floor, Central hall
-                            </h4>
-
-                            <p>
-                                Valentina Zheleva
-                            </p>
-                            <h4 className="mt--20">ZD2 | 2nd floor, A-wing</h4>
-
-                            <p>
-                                Denisa Lukanova
-                                <br />
-                                Plamen Zlatanov
-                                <br />
-                                Margarita Spasova
-                            </p>
-                        </div>
-
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">STICHTING SIGN
-                            </h3>
-                            <hr />
-
-                            <p>
-                                Antonio Todorov
-                            </p>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">MUSEUM AAN DER A | MadA-3</h3>
-                            <hr />
-
-                            <p>
-                                Alexandra Georgieva
-                            </p>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">Graphic Museum GRID</h3>
-                            <hr />
-
-                            <p>
-                                Ivena Srebcheva
-                            </p>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">KUNSTPUNT</h3>
-                            <hr />
-
-                            <p>
-                                Naomi Arnaudova
-                            </p>
-                        </div>
-                    </div>
-                    <a href="https://viewer.mapme.com/cb7dd22a-5629-491c-bcd8-f79a49876d26" target="_blank" className="rn-button-style--2 btn-solid mt--80"
-                    >To the map</a>
-                    <p>Be there <span style={{ color: "#ab1c02" }}>June 10 - 15</span></p>
                 </div>
             </div>
         </div>
