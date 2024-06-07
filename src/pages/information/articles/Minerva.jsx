@@ -59,7 +59,7 @@ const Minerva = () => {
                     </h2>
                     <div className="row">
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">SPOT Oosterpoort concert building</h3>
+                            <h3 className="mt--20">SPOT - De Oosterport</h3>
                             <hr />
                             <p>
                                 Daniel Damev
