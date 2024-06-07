@@ -90,7 +90,7 @@ const Minerva = () => {
                                                 src={'/assets/images/profile/minerva/1.jpg'}
                                                 alt="Service Images"
                                             />
-                                            <Dialog header="Edi Baramov" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                            <Dialog header="Edi Baramov" visible={modal === '2'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='hQ3LP0Sjtp4' />
                                             </Dialog>
                                             <button
@@ -109,7 +109,7 @@ const Minerva = () => {
                                                 src={'/assets/images/profile/minerva/1.jpg'}
                                                 alt="Service Images"
                                             />
-                                            <Dialog header="Margarita Spasova" visible={modal === '1'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
+                                            <Dialog header="Margarita Spasova" visible={modal === '3'} style={{ width: 'auto', height: 'auto', maxWidth: '98%' }} onHide={() => setModal(null)}>
                                                 <VideoPlayer src='CW4LhDfP7D0' />
                                             </Dialog>
                                             <button
