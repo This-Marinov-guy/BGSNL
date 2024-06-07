@@ -41,7 +41,7 @@ const Minerva = () => {
                     <h2 style={{ textAlign: "start", fontSize: '44px' }}>
                         Exhibitions you don't want to miss
                     </h2>
-                    <p style={{ textAlign: "end", fontSize: '26px' }} className="mb--10">
+                    <p style={{ fontSize: '26px' }} className="mb--10">
                         Bulgarian student exhibitions in Groningen
                     </p>
                     <ImageFb
@@ -59,7 +59,7 @@ const Minerva = () => {
                     </h2>
                     <div className="row">
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20">Oosterpoort concert building</h3>
+                            <h3 className="mt--20">SPOT Oosterpoort concert building</h3>
                             <hr />
                             <p>
                                 Daniel Damev
@@ -76,7 +76,7 @@ const Minerva = () => {
                         </div>
 
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20 col-12">Academie Minerva</h3>
+                            <h3 className="mt--20 col-12">Academie Minerva ZUIDERDIEP</h3>
                             <hr />
 
                             <h4 className="mt--20">

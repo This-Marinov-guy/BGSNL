@@ -120,7 +120,7 @@ const Home = () => {
         <h2 className="title">News</h2>
         <ul style={{ margin: '0', padding: '0' }}>
           <li className="mt--40">
-            <p>Academie Minerva and their upcoming graduation exebition <Link to='/articles/acedemie-minerva'>
+            <p>Еxhibitions of Bulgarian students in Groningen <Link to='/articles/acedemie-minerva'>
               Check it out
             </Link>
             </p>

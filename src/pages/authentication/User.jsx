@@ -146,7 +146,7 @@ const User = (props) => {
                 <h2 className="title">News</h2>
                 <ul>
                   <li className="mt--40">
-                    <p>Academie Minerva and their upcoming graduation exebition <Link to='/articles/acedemie-minerva'>
+                    <p>Еxhibitions of Bulgarian students in Groningen <Link to='/articles/acedemie-minerva'>
                       Check it out
                     </Link>
                     </p>
