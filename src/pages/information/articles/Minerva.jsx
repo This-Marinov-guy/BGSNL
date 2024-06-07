@@ -76,7 +76,7 @@ const Minerva = () => {
                         </div>
 
                         <div className="col-lg-4 col-md-6 col-12">
-                            <h3 className="mt--20 col-12">Academie Minerva ZUIDERDIEP</h3>
+                            <h3 className="mt--20">Academie Minerva ZUIDERDIEP</h3>
                             <hr />
 
                             <h4 className="mt--20">
