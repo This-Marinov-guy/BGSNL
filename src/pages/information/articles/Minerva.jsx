@@ -77,7 +77,7 @@ const Minerva = () => {
                         Exhibition Map
                     </h2>
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">Oosterpoort concert building</h4>
                             <hr/>
                             <p>
@@ -93,7 +93,7 @@ const Minerva = () => {
 
                             </p>
                         </div>
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">
                                 ZD0 | Ground floor, Central hall
                             </h4>
@@ -103,7 +103,7 @@ const Minerva = () => {
                                 Valentina Zheleva
                             </p>
                         </div>
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">ZD2 | 2nd floor, A-wing</h4>
                             <hr/>
 
@@ -115,7 +115,7 @@ const Minerva = () => {
                                 Margarita Spasova
                             </p>
                         </div>
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">STICHTING SIGN
                             </h4>
                             <hr/>
@@ -124,7 +124,7 @@ const Minerva = () => {
                                 Antonio Todorov
                             </p>
                         </div>
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">MUSEUM AAN DER A | MadA-3</h4>
                             <hr/>
 
@@ -132,7 +132,7 @@ const Minerva = () => {
                                 Alexandra Georgieva
                             </p>
                         </div>
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">Graphic Museum GRID</h4>
                             <hr/>
 
@@ -140,7 +140,7 @@ const Minerva = () => {
                                 Ivena Srebecheva
                             </p>
                         </div>
-                        <div className="col-4">
+                        <div className="col-lg-4 col-md-6 col-12">
                             <h4 className="mt--20">KUNSTPUNT</h4>
                             <hr/>
 
