@@ -18,11 +18,12 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import PageLoading from "./elements/ui/PageLoading";
-import Articles from "./pages/information/Articles";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/global";
 import { decodeJWT } from "./util/jwt";
+import Toni from "./pages/information/articles/Toni";
+import Minerva from "./pages/information/articles/Minerva";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -32,12 +33,9 @@ const Policy = lazy(() => import("./pages/information/Policy"));
 const Error404 = lazy(() => import("./pages/Error404"));
 const Maintenance = lazy(() => import("./pages/Maintenance"));
 const Board = lazy(() => import("./pages/information/Board"));
-const Contest = lazy(() => import("./pages/information/Contest"));
-const Gala = lazy(() => import("./pages/information/Gala"));
 const Committees = lazy(() => import("./pages/information/Committees"));
 const LogIn = lazy(() => import("./pages/authentication/LogIn"));
 const SignUp = lazy(() => import("./pages/authentication/SignUp"));
-const ActiveMember = lazy(() => import("./pages/authentication/ActiveMember"));
 const User = lazy(() => import("./pages/authentication/User"));
 const Events = lazy(() => import("./pages/information/Events"));
 const FutureEvents = lazy(() =>
@@ -144,8 +142,8 @@ const Root = () => {
             <Route exact path="/404" element={<Error404 />} />
             <Route exact path={`/about`} element={<About />} />
             <Route exact path={`/rules-and-regulations`} element={<Policy />} />
-            <Route exact path={`/articles`} element={<Articles />} />
-            <Route exact path={`/gala`} element={<Gala />} />
+            <Route exact path={`/articles/toni-villa`} element={<Toni />} />
+            <Route exact path={`/articles/acedemie-minerva`} element={<Minerva />} />
             {/* <Route exact path={`/active-member`} >
                 <ActiveMember toast={toast} />
               </Route> */}

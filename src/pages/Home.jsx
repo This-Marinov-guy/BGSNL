@@ -119,6 +119,13 @@ const Home = () => {
       <div className="container mt--110 mb--80">
         <h2 className="title">News</h2>
         <ul style={{ margin: '0', padding: '0' }}>
+          <li className="mt--40">
+            <p>Academie Minerva and their upcoming graduation exebition <Link to='/articles/acedemie-minerva'>
+              Check it out
+            </Link>
+            </p>
+          </li>
+          
           <li className="mt--40" ref={recruitRef}>
             <Recruit />
           </li>

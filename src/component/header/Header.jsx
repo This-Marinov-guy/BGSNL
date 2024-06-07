@@ -127,13 +127,13 @@ const Header = (props) => {
 
 
                 <li className="has-dropdown">
-                  <a style={{ cursor: 'pointer' }}>Society</a>
+                  <a style={{ cursor: 'pointer' }}>Articles</a>
                   <ul className="submenu">
                     <li>
-                      <Link to="/articles">Articles</Link>
+                      <Link to="/articles/toni-villa">Toni's Villa</Link>
                     </li>
                     <li>
-                      <Link to="/gala">Open call for Artists</Link>
+                      <Link to="/articles/acedemie-minerva">Academie Minerva</Link>
                     </li>
                   </ul>
                 </li>
