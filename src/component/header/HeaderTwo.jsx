@@ -60,7 +60,7 @@ const HeaderTwo = (props) => {
           </button>
           <button
             className="rn-btn"
-            style={{color: 'white'}}
+            style={{background: 'transparent'}}
             onClick={() => {
               setLogoutAlert(false);
             }}
