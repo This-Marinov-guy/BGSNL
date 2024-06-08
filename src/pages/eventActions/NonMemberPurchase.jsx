@@ -39,9 +39,9 @@ const NonMemberPurchase = () => {
     surname: yup.string().required(),
     phone: yup.string().required(),
     email: yup.string().email("Please enter a valid email").required(),
-    extraOne: (target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
-    extraTwo: (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
-    extraThree: (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
+    extraOne: (target.extraInputs && target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
+    extraTwo: (target.extraInputs && target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
+    extraThree: (target.extraInputs && target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
     policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
     payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
