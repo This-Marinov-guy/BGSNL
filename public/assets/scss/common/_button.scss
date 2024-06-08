@@ -52,6 +52,7 @@ button {
     z-index: 2;
     // font-family: Montserrat;
     color: $theme-color;
+    background-color: $theme-color;
     letter-spacing: 0.2px;
     @extend %transition;
     text-transform: uppercase;

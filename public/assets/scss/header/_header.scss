@@ -99,6 +99,10 @@
     }
     a {
       &.rn-btn {
+        &.green {
+          border-color: $body-color;
+          background-color: $body-color;
+        }
         &.theme-color {
           border-color: $theme-color;
           color: $theme-color;
@@ -107,7 +111,6 @@
         height: 46px;
         display: inline-block;
         line-height: 42px;
-        border: 2px solid #fff;
         border-radius: 6px;
         color: #fff;
         text-align: center;
