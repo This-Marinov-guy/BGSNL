@@ -45,9 +45,7 @@ export const SOCIETY_EVENTS = {
     //   thumbnail: "/assets/images/portfolio/rotterdam/portfolio-4",
     // },
   ],
-  leeuwarden: [
-
-  ],
+  leeuwarden: [  ],
   breda: [
     {
       membersOnly: false,
