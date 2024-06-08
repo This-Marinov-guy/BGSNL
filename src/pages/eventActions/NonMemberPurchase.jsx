@@ -33,6 +33,7 @@ const NonMemberPurchase = () => {
 
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
+  
   const schema = yup.object().shape({
     name: yup.string().required(),
     surname: yup.string().required(),
