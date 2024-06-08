@@ -38,9 +38,9 @@ const MemberPurchase = () => {
   const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
 
   const schema = yup.object().shape({
-    extraOne: (target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
-    extraTwo: (target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
-    extraThree: (target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
+    extraOne: (target.extraInputs && target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
+    extraTwo: (target.extraInputs && target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
+    extraThree: (target.extraInputs && target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
   });
 
   function calculateTimeRemaining(timer) {
