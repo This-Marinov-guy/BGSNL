@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import * as yup from "yup";
 import { Formik, Form } from "formik";
 import PageHelmet from "../../component/common/Helmet";
-import Header from "../../component/header/Header";
+import HeaderTwo from "../../component/header/HeaderTwo";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
@@ -133,7 +133,7 @@ const MemberPurchase = () => {
     return (
       <Fragment>
         <PageHelmet pageTitle="Buy Ticket" />
-        <Header
+        <HeaderTwo
           headertransparent="header--transparent"
           colorblack="color--black"
           logoname="logo.png"
