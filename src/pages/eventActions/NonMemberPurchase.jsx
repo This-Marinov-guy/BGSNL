@@ -3,7 +3,7 @@ import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHttpClient } from "../../hooks/http-hook";
 import PageHelmet from "../../component/common/Helmet";
-import Header from "../../component/header/Header";
+import HeaderTwo from "../../component/header/HeaderTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
@@ -17,7 +17,6 @@ import { REGIONS } from "../../util/REGIONS_DESIGN";
 import { createCustomerTicket } from "../../util/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { REGIONS_MEMBERSHIP } from "../../util/REGIONS_AUTH_CONFIG";
 import MarketingForm from "../../elements/ui/MarketingForm";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
@@ -125,7 +124,7 @@ const NonMemberPurchase = () => {
     return (
       <Fragment>
         <PageHelmet pageTitle="Buy Ticket" />
-        <Header
+        <HeaderTwo
           headertransparent="header--transparent"
           colorblack="color--black"
           logoname="logo.png"
@@ -137,7 +136,7 @@ const NonMemberPurchase = () => {
             {target.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
               <h2 className="center_text mb--80">Purchase a Ticket</h2>}
 
-            {(REGIONS_MEMBERSHIP.includes(region) && !target.ticket_link) && <MembershipBanner />}
+            {!target.ticket_link && <MembershipBanner />}
           </div>
           {!target.membersOnly && <div className="row">
             <div className="col-lg-4 col-md-12 col-12">

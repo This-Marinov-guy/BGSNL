@@ -1,8 +1,6 @@
 import React from "react";
 import { FiUser, FiUserPlus } from "react-icons/fi";
 
-export const REGIONS_MEMBERSHIP = ['groningen', 'rotterdam', 'amsterdam']
-
 export const REGIONS_MEMBERSHIP_SPECIFICS = [
     {
         title: '6-months Member',
