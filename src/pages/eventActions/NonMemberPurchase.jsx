@@ -128,7 +128,6 @@ const NonMemberPurchase = () => {
           headertransparent="header--transparent"
           colorblack="color--black"
           logoname="logo.png"
-          dark
         />
 
         <div className="container">

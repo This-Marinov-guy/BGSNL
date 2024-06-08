@@ -137,7 +137,6 @@ const MemberPurchase = () => {
           headertransparent="header--transparent"
           colorblack="color--black"
           logoname="logo.png"
-          dark
         />
         {currentUser.status !== "active" && <Locked case='locked' show={currentUser.status} />}
         <div className="container mt--200 mb--120">
