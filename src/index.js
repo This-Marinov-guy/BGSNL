@@ -24,6 +24,7 @@ import { removeLogsOnProd } from "./util/global";
 import { decodeJWT } from "./util/jwt";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
+import GlobalError from "./component/common/GlobalError";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -136,74 +137,76 @@ const Root = () => {
     return (
       <BrowserRouter basename={"/"}>
         <Suspense fallback={<PageLoading />}>
-          <Toast ref={toast} />
-          <Routes>
-            {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
-            <Route exact path="/404" element={<Error404 />} />
-            <Route exact path={`/about`} element={<About />} />
-            <Route exact path={`/rules-and-regulations`} element={<Policy />} />
-            <Route exact path={`/articles/toni-villa`} element={<Toni />} />
-            <Route exact path={`/articles/acedemie-minerva`} element={<Minerva />} />
-            {/* <Route exact path={`/active-member`} >
+          <GlobalError>
+            <Toast ref={toast} />
+            <Routes>
+              {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
+              <Route exact path="/404" element={<Error404 />} />
+              <Route exact path={`/about`} element={<About />} />
+              <Route exact path={`/rules-and-regulations`} element={<Policy />} />
+              <Route exact path={`/articles/toni-villa`} element={<Toni />} />
+              <Route exact path={`/articles/acedemie-minerva`} element={<Minerva />} />
+              {/* <Route exact path={`/active-member`} >
                 <ActiveMember toast={toast} />
               </Route> */}
-            {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
-            {/* <Route exact path={`/contest/register`}>
+              {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
+              {/* <Route exact path={`/contest/register`}>
               <ContestRegister toast={toast} />
             </Route> */}
 
-            <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
-            <Route exact path={`/:region/contact`} element={<RegionLayout><Contact /></RegionLayout>} />
-            <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} />
-            <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
-            <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
-            <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
-            <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
-            <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent toast={toast} /></RegionLayout>}>
+              <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
+              <Route exact path={`/:region/contact`} element={<RegionLayout><Contact /></RegionLayout>} />
+              <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} />
+              <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
+              <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
+              <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
+              <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
+              <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent toast={toast} /></RegionLayout>}>
 
-            </Route>
-            <Route
-              path={`/:region/event-reflection/:eventId`}
-              element={<RegionLayout><EventReflection /></RegionLayout>}
-            />
+              </Route>
+              <Route
+                path={`/:region/event-reflection/:eventId`}
+                element={<RegionLayout><EventReflection /></RegionLayout>}
+              />
 
 
-            {/* Redirect pages */}
+              {/* Redirect pages */}
 
-            <Route exact path={`/success`} element={<Success />} />
-            <Route exact path={`/donation/success`} element={<SuccessDonation />} />
-            <Route exact path={`/fail`} element={<Fail />} />
+              <Route exact path={`/success`} element={<Success />} />
+              <Route exact path={`/donation/success`} element={<SuccessDonation />} />
+              <Route exact path={`/fail`} element={<Fail />} />
 
-            <Route exact path={`/user`} element={<User toast={toast} />} />
-            {/* Auth pages */}
-            {(user && user.token) ? (
-              <Fragment>
-                <Route
-                  exact
-                  path={"/:region/purchase-ticket/:eventId"}
-                  element={<RegionLayout><MemberPurchase /></RegionLayout>}
-                />
-                <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
-                <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
-                <Route exact path={`/user/dashboard`} element={<EventDashboard toast={toast} />} />
-              </Fragment>
-            ) : (
-              <Fragment>
-                <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
+              <Route exact path={`/user`} element={<User toast={toast} />} />
+              {/* Auth pages */}
+              {(user && user.token) ? (
+                <Fragment>
+                  <Route
+                    exact
+                    path={"/:region/purchase-ticket/:eventId"}
+                    element={<RegionLayout><MemberPurchase /></RegionLayout>}
+                  />
+                  <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
+                  <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
+                  <Route exact path={`/user/dashboard`} element={<EventDashboard toast={toast} />} />
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
 
-                <Route exact path={`/login`} element={<LogIn toast={toast} />} />
-                <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
-                <Route
-                  exact
-                  path={"/:region/purchase-ticket/:eventId"}
-                  element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
-                />
+                  <Route exact path={`/login`} element={<LogIn toast={toast} />} />
+                  <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
+                  <Route
+                    exact
+                    path={"/:region/purchase-ticket/:eventId"}
+                    element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
+                  />
 
-              </Fragment>
-            )}
-            <Route exact path="/:region?" element={<Home />} />
-            <Route path="*" element={<Error404 />} />
-          </Routes>
+                </Fragment>
+              )}
+              <Route exact path="/:region?" element={<Home />} />
+              <Route path="*" element={<Error404 />} />
+            </Routes>
+          </GlobalError>
         </Suspense>
       </BrowserRouter>
     );
