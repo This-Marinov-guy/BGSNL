@@ -36,11 +36,11 @@ const GlobalError = ({ children }) => {
 
     return (
         <>
-            <HeaderTwo
+            {/* <HeaderTwo
                 headertransparent="header--transparent"
                 colorblack="color--black"
                 logoname="logo.png"
-            />
+            /> */}
             <ErrorBoundary
                 FallbackComponent={ErrorFallback}
                 key={location.pathname} // Force remount on location change
