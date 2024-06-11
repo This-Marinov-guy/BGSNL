@@ -176,7 +176,7 @@ const MemberPurchase = () => {
                   formData.append("eventDate", target.date);
                   formData.append("userId", currentUser.id);
                   if (target.extraInputs) {
-                    formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
+                    formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
                   }
                   if (target.isFree || target.isMemberFree || target.freePass.includes(currentUser.email) || target.freePass.includes(currentUser.name + ' ' + currentUser.surname)) {
                     const responseData = await sendRequest(

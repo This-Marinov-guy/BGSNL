@@ -197,7 +197,7 @@ const NonMemberPurchase = () => {
                       formData.append("eventDate", target.date);
                       formData.append("guestEmail", values.email);
                       if (target.extraInputs) {
-                        formData.append('preferences', JSON.stringify({ inputOne: values.extraOne, inputTwo: values.extraTwo, inputThree: values.extraThree, }))
+                        formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
                       }
                       if (target.marketingInputs && marketingData) {
                         formData.append('marketing', JSON.stringify(marketingData))
