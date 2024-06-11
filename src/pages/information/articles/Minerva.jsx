@@ -51,7 +51,7 @@ const Minerva = () => {
                         alt="Article Images"
                     />
                     <p className="mb--40">
-                        We had our very first Spring Gala on May 24th, which also happens to be the National Day of Literacy and Culture. Our team put together a cool gallery featuring artists from Academie Minerva. They’re gearing up for their big graduation exhibition happening from June 10th to 15th.
+                        We had our very first Spring Gala on May 24th, which also happens to be the National Day of Literacy and Culture. Our team put together a cool gallery featuring artists from Academie Minerva. They’re gearing up for their big graduation exhibition happening from June 15th to 20th.
                     </p>
 
                     <h2 className="mt--40">

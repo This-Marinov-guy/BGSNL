@@ -104,7 +104,7 @@ export const SOCIETY_EVENTS = {
       entry: 10,
       memberEntry: 8,
       including: [],
-      price_id: 'price_1PP8vlIOw5UGbAo1GBLeepV1',
+      price_id: 'price_1PQURcIOw5UGbAo1k2uyF365',
       memberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
       activeMemberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
       freePass: ['vladislavmarinov3142@gmail.com'],
