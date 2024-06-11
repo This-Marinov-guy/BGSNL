@@ -85,55 +85,62 @@ export const SOCIETY_EVENTS = {
 
   ],
   amsterdam: [
-    // {
-    //   membersOnly: false,
-    //   visible: true,
-    //   title: "Picnic",
-    //   newTitle: 'Bulgarian Dinner',
-    //   description: "Join Us for a picnic and BBQ!",
-    //   bgImage: "7",
-    //   date: "15th June",
-    //   time: "14:00",
-    //   ticketTimer: '2024-06-15T14:00:00',
-    //   ticketLimit: 40,
-    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
-    //   correctedDate: "",
-    //   correctedTime: "",
-    //   where: `Westerpark Park`,
-    //   isMemberFree: false,
-    //   entry: 10,
-    //   memberEntry: 8,
-    //   including: [],
-    //   price_id: 'price_1PP8vlIOw5UGbAo1GBLeepV1',
-    //   memberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
-    //   activeMemberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
-    //   freePass: ['vladislavmarinov3142@gmail.com'],
-    //   marketingInputs: false,
-    //   extraInputs: [{
-    //     element: <div div className="col-12" >
-    //       <Field as="select" name="extraOne">
-    //         <option value="" disabled>
-    //           Select menu
-    //         </option>
-    //         <option value="Meat">Meat</option>
-    //         <option value="vegetarian">Vegetarian</option>
-    //       </Field>
-    //       <ErrorMessage
-    //         className="error"
-    //         name="extraOne"
-    //         component="div"
-    //       />
-    //     </div>,
-    //     required: true
-    //   },],
-    //   text: [
-    //     `Присъеди се към нас за вкусно барбекю в парка на 15.06 от 14.00 в Westerpark! Ние ти предлагаме скара, напитка и добра компания, а от теб очакваме да вземеш само доброто си настроение! С това събитие ще закрием сезона за тази учебна година и ще се видим отново с пълна сила от септември! Очакваме те!`,
-    //     `...`,
-    //     `Join us for a delicious barbecue in the park on 15.06 from 14.00 at Westerpark! We offer you a bite, a drink and good company, and we expect you to take your best mood! With this event, we will close the season for this school year and will see you again in for new exiting events from September! We are waiting for you!`
-    //   ],
-    //   ticket_img: '/assets/images/tickets/amsterdam/ticket-6.jpg',
-    //   images: ["/assets/images/portfolio/amsterdam/portfolio-6"],
-    //   thumbnail: "/assets/images/portfolio/amsterdam/portfolio-6",
-    // },
+    {
+      membersOnly: false,
+      visible: true,
+      title: "Bowling",
+      // newTitle: 'Bulgarian Dinner',
+      description: "Strike Out The Fun!",
+      bgImage: "28",
+      date: "15th June",
+      time: "18:30",
+      ticketTimer: '2024-06-15T18:30:00',
+      ticketLimit: 60,
+      // Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+      // correctedDate: "",
+      // correctedTime: "",
+      where: `Knijn Bowling`,
+      isMemberFree: false,
+      entry: 10,
+      memberEntry: 8,
+      including: [],
+      price_id: 'price_1PP8vlIOw5UGbAo1GBLeepV1',
+      memberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
+      activeMemberPrice_id: 'price_1PP8vyIOw5UGbAo1hj5jjiuD',
+      freePass: ['vladislavmarinov3142@gmail.com'],
+      marketingInputs: false,
+      extraInputs: [{
+        element: <div div className="col-12" >
+          <Field as="select" name="extraOne">
+            <option value="" disabled>
+              Coming to the bar?
+            </option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </Field>
+          <ErrorMessage
+            className="error"
+            name="extraOne"
+            component="div"
+          />
+        </div>,
+        required: false
+      },],
+      text: [
+       `Присъединете се към нас за едно епично боулинг събитие в събота, 15-ти юни, в Knijn Bowling! Без значение дали сте опитен професионалист или ще дойдете просто да се забавлявате, това е идеалният шанс да покажете уменията си и да си прекарате повече от добре.
+`,
+`Но почакайте - забавлението не приключва на боулинг пистата! След боулинга ще се отправим за няколко заслужени питиета и още повече смях. (Скоро ще кажем и точната локация!)
+Не пропускайте последното събитие за сезона - запазете датата и ще Ви очакваме с нетърпение! 
+`,
+`...`,
+`Join us for an epic bowling event on Saturday, June 15th at Knijn Bowling! Whether you're a seasoned pro or just in it for the laughs, this is the perfect chance to show off your skills and have a blast.
+`,
+`But wait, the fun doesn’t stop at the lanes! After the bowling, we'll head over for some well-deserved drinks and even more laughs. (Location to be revealed soon!)
+Don't miss out on the last event of the season - lock in the date and we can't wait to see you there!`
+      ],
+      ticket_img: '/assets/images/tickets/amsterdam/ticket-7.jpg',
+      images: ["/assets/images/portfolio/amsterdam/portfolio-6"],
+      thumbnail: "/assets/images/portfolio/amsterdam/portfolio-6",
+    },
   ]
 }
