@@ -26,11 +26,13 @@ export const askBeforeRedirect = (basedOnEnv = true) => {
 }
 
 export const clarityTrack = () => {
-    clarity.init(process.env.REACT_APP_CLARITY_ID);
-    clarity.consent();
+    if (isProd()) {
+        clarity.init(process.env.REACT_APP_CLARITY_ID);
+        clarity.consent();
 
-    if (clarity.hasStarted()) {
-        console.log('Track with Clarity');
-        // clarity.identify('USER_ID', { userProperty: 'value' });
+        if (clarity.hasStarted()) {
+            console.log('Track with Clarity');
+            // clarity.identify('USER_ID', { userProperty: 'value' });
+        }
     }
 }
