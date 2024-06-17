@@ -34,7 +34,7 @@ export const SOCIETY_EVENTS = {
 `,
 `Time to throw those textbooks, put on your best outfits and celebrate the end of the school year.❌📚
 `,
-`We’ve secured only the best for you. The amazing @djzander and @sashkoang@balkanify.nl will be playing from all time favourites to new summer hits.🎉
+`Tickets are limited for purchase on the platform - we will be selling at the door for 6 euro given that the capacity allows it!
 `,
 
       ],
