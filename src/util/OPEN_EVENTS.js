@@ -32,9 +32,9 @@ export const SOCIETY_EVENTS = {
       text: [
         `Come join us on the 27th of June at @sunnybeachgroningen to celebrate the end of exam season and warm up for the summer.🥳🏖
 `,
-`Time to throw those textbooks, put on your best outfits and celebrate the end of the school year.❌📚
+        `Time to throw those textbooks, put on your best outfits and celebrate the end of the school year.❌📚
 `,
-`Tickets are limited for purchase on the platform - we will be selling at the door for 6 euro given that the capacity allows it!
+        `Tickets are limited for purchase on the platform - we will be selling at the door for 6 euro given that the capacity allows it!
 `,
 
       ],
