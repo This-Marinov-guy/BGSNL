@@ -12,7 +12,9 @@ export const useHttpClient = () => {
 
   const forceStartLoading = () => dispatch(startLoading());
 
-  const serverEndpoint = isProd() ? process.env.REACT_APP_SERVER_URL : process.env.REACT_APP_TEST_SERVER_URL;
+  const serverEndpoint = isProd() ?
+    process.env.REACT_APP_SERVER_URL :
+    process.env.REACT_APP_TEST_SERVER_URL;
 
   const sendRequest = useCallback(
     async (url, method = "GET", data = null, headers = {}) => {
