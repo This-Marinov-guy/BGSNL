@@ -4,12 +4,15 @@ import { useDispatch } from "react-redux";
 import { removeError, showError } from "../redux/error";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 import axios from 'axios';
+import { isProd } from "../util/global";
 
 export const useHttpClient = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
 
-  const forceStartLoading = () => dispatch(startLoading())
+  const forceStartLoading = () => dispatch(startLoading());
+
+  const serverEndpoint = isProd() ? process.env.REACT_APP_SERVER_URL : process.env.REACT_APP_TEST_SERVER_URL;
 
   const sendRequest = useCallback(
     async (url, method = "GET", data = null, headers = {}) => {
@@ -19,7 +22,7 @@ export const useHttpClient = () => {
         //for production --> process.env.REACT_APP_SERVER_URL
         //for testing -----> process.env.REACT_APP_TEST_SERVER_URL
         const response = await axios.request({
-          url: process.env.REACT_APP_SERVER_URL + url,
+          url: serverEndpoint + url,
           method,
           data,
           headers,

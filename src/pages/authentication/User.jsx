@@ -258,6 +258,7 @@ const User = (props) => {
       {currentUser.status !== "active" && (
         <Locked user={currentUser} case="locked" show={currentUser.status} toast={props.toast} />
       )}
+      {/* <Christmas currentUser={currentUser} /> */}
       {modal && (
         <ModalWindow show={modal}>
           <Formik
