@@ -246,6 +246,11 @@ input[type="radio"] {
   padding: 0;
 }
 
+input,
+select {
+  border: 2px solid #aaa; /* Border color */
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -253,7 +258,6 @@ input[type="checkbox"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #aaa; /* Border color */
   border-radius: 30%; /* Rounded corners */
   background-color: #fff; /* Checkbox background color */
   cursor: pointer;
