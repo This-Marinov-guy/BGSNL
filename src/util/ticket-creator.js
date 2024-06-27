@@ -1,4 +1,6 @@
-export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6") => {
+import QRCode from "qrcode";
+
+export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '') => {
     // Create a canvas element, add the image and text, covert to blob
     //for 1500 x 485 images
     var canvas = document.createElement("canvas");
@@ -34,6 +36,15 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
     layout.textAlign = "center";
     layout.strokeText(surname, -255, 1230);
     layout.fillText(surname, -255, 1230);
+
+    if (qrLink) { 
+      const qrCodeCanvas = document.createElement("canvas");
+      await QRCode.toCanvas(qrCodeCanvas, qrLink, { width: 150, margin: 0 });
+
+      // Draw QR Code on the ticket
+      layout.rotate(-4.71);
+      layout.drawImage(qrCodeCanvas, 20, canvas.height - 170); 
+    }
     
     // blob
     const dataBlob = await new Promise((resolve) =>
