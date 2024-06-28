@@ -172,12 +172,12 @@ const NonMemberPurchase = () => {
                     try {
                       forceStartLoading();
 
-                      const ticket = await createCustomerTicket(target.ticket_img, values.name, values.surname, target.ticket_color);
+                      const {ticketBlob} = await createCustomerTicket(target.ticket_img, values.name, values.surname, target.ticket_color);
                       // formData
                       const formData = new FormData();
                       formData.append(
                         "image",
-                        ticket,
+                        ticketBlob,
                         target.title +
                         "_" +
                         values.name +

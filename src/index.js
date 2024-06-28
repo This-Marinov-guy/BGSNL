@@ -8,7 +8,7 @@ import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
-import { clarityTrack } from "./util/global";
+import { clarityTrack, isProd } from "./util/global";
 
 // Style
 import './index.scss'
@@ -78,6 +78,9 @@ const Error = lazy(() => import("./elements/ui/Error"));
 const Success = lazy(() => import("./pages/redirects/Success"));
 const SuccessDonation = lazy(() => import("./pages/redirects/SuccessDonation"));
 const Fail = lazy(() => import("./pages/redirects/Fail"));
+
+const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
+
 
 const Root = () => {
   const maintenanceBreak = false;
@@ -172,6 +175,7 @@ const Root = () => {
 
               {/* Redirect pages */}
 
+              {!isProd() && <Route exact path={`/ticket`} element={<TicketComponent />} />}
               <Route exact path={`/success`} element={<Success />} />
               <Route exact path={`/donation/success`} element={<SuccessDonation />} />
               <Route exact path={`/fail`} element={<Fail />} />

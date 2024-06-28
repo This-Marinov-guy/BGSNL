@@ -155,13 +155,13 @@ const MemberPurchase = () => {
                 try {
                   forceStartLoading();
 
-                  const ticket = await createCustomerTicket(target.ticket_img, currentUser.name, currentUser.surname, target.ticket_color);
+                  const {ticketBlob} = await createCustomerTicket(target.ticket_img, currentUser.name, currentUser.surname, target.ticket_color);
 
                   // formData
                   const formData = new FormData();
                   formData.append(
                     "image",
-                    ticket,
+                    ticketBlob,
                     target.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
                   );
                   if (target.activeMemberPrice_id && (currentUser.expireDate === "Board Member" || currentUser.expireDate === "Committee Member" || currentUser.expireDate === "VIP" || currentUser.expireDate === "VIP Member" || (target.discountPass && target.discountPass.includes(currentUser.email)))) {
