@@ -36,3 +36,22 @@ export const clarityTrack = () => {
         }
     }
 }
+
+export const stringToUrl = (str) => {
+    // Convert the string to lowercase
+    let urlString = str.toLowerCase();
+    // Replace spaces with underscores
+    urlString = urlString.replace(/ /g, '_');
+    // Encode special characters
+    urlString = encodeURIComponent(urlString);
+    return urlString;
+}
+
+export const urlToString = (urlString) => {
+    // Decode special characters
+    let originalString = decodeURIComponent(urlString);
+    // Replace underscores with spaces
+    originalString = originalString.replace(/_/g, ' ');
+    // Return the original string
+    return originalString;
+}

@@ -195,3 +195,7 @@ hr {
   margin-right: 1px !important;
   scale: 0.8 !important;
 }
+
+.p-toast-message {
+  backdrop-filter: blur(2000px) !important; /* Ensure the background is fully opaque */
+}

@@ -75,6 +75,7 @@ const NonMemberPurchase = lazy(() =>
   import("./pages/eventActions/NonMemberPurchase")
 );
 const Error = lazy(() => import("./elements/ui/Error"));
+const GuestCheck = lazy(() => import("./pages/redirects/GuestCheck"));
 const Success = lazy(() => import("./pages/redirects/Success"));
 const SuccessDonation = lazy(() => import("./pages/redirects/SuccessDonation"));
 const Fail = lazy(() => import("./pages/redirects/Fail"));
@@ -141,7 +142,7 @@ const Root = () => {
       <BrowserRouter basename={"/"}>
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
-            <Toast ref={toast} />
+            <Toast ref={toast} position="top-center"/>
             <Routes>
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
@@ -176,6 +177,8 @@ const Root = () => {
               {/* Redirect pages */}
 
               {!isProd() && <Route exact path={`/ticket`} element={<TicketComponent />} />}
+
+              <Route exact path={`/guest-check`} element={<GuestCheck />} />
               <Route exact path={`/success`} element={<Success />} />
               <Route exact path={`/donation/success`} element={<SuccessDonation />} />
               <Route exact path={`/fail`} element={<Fail />} />
