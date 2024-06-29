@@ -142,7 +142,7 @@ const Root = () => {
       <BrowserRouter basename={"/"}>
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
-            <Toast ref={toast} position="top-center"/>
+            <Toast ref={toast} position="top-center" />
             <Routes>
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
@@ -178,7 +178,6 @@ const Root = () => {
 
               {!isProd() && <Route exact path={`/ticket`} element={<TicketComponent />} />}
 
-              <Route exact path={`/guest-check`} element={<GuestCheck />} />
               <Route exact path={`/success`} element={<Success />} />
               <Route exact path={`/donation/success`} element={<SuccessDonation />} />
               <Route exact path={`/fail`} element={<Fail />} />
@@ -195,6 +194,7 @@ const Root = () => {
                   <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
                   <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
                   <Route exact path={`/user/dashboard`} element={<EventDashboard toast={toast} />} />
+                  <Route exact path={`/check-guest-list`} element={<GuestCheck />} />
                 </Fragment>
               ) : (
                 <Fragment>
