@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const GuestCheck = () => {
     const searchParams = new URLSearchParams(window.location.search);
 
-    const eventName = searchParams.get('event');
+    const event = searchParams.get('event');
     const name = searchParams.get('name') + ' ' + searchParams.get('surname');
     const email = decodeURIComponent(searchParams.get('email'));
     const count = searchParams.get('count');
@@ -25,18 +25,20 @@ const GuestCheck = () => {
             'event/check-guest-list',
             "PATCH",
             {
-                eventName,
+                event,
                 name,
                 email,
                 count: count || null
             }
         )
 
-        if (responseData && responseData.hasOwnProperty('status')) {
+        if (responseData !== undefined) {
             setStatus(responseData.status);
+        } else {
+            return
         }
 
-        switch (status) {
+        switch (responseData.status) {
             case 0:
                 setSeverity('info');
                 setMessage('Client is already checked in')
@@ -55,7 +57,7 @@ const GuestCheck = () => {
     }
 
     useEffect(() => {
-        if (!(email && name && eventName)) {
+        if (!(email && name && event)) {
             return navigate('/');
         }
 
@@ -67,7 +69,6 @@ const GuestCheck = () => {
     }
 
     const info = <div className="col-lg-12">
-        <p>Even: {eventName}</p>
         <p>Name: {name}</p>
         <p>Email: {email}</p>
         <p>Count of guests: {count || 'Not specified'}</p>
