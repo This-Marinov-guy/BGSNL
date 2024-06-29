@@ -155,7 +155,8 @@ const MemberPurchase = () => {
                 try {
                   forceStartLoading();
 
-                  const {ticketBlob} = await createCustomerTicket(target.ticket_img, currentUser.name, currentUser.surname, target.ticket_color);
+                  const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${eventName}&name=${currentUser.name}&surname=${currentUser.surname}&email=${encodeURIComponent(currentUser.email)}`
+                  const {ticketBlob} = await createCustomerTicket(target.ticket_img, currentUser.name, currentUser.surname, target.ticket_color, qrCode);
 
                   // formData
                   const formData = new FormData();
