@@ -172,9 +172,9 @@ const NonMemberPurchase = () => {
                     try {
                       forceStartLoading();
 
-                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${eventName}&name=${values.name}&surname=${values.surname}&email=${encodeURIComponent(values.email)}&count=${quantity}`
+                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${target.title}&name=${values.name}&surname=${values.surname}&email=${encodeURIComponent(values.email)}&count=${quantity}`
                       const {ticketBlob} = await createCustomerTicket(target.ticket_img, values.name, values.surname, target.ticket_color, qrCode);
-                      
+
                       // formData
                       const formData = new FormData();
                       formData.append(
