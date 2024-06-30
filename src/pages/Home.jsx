@@ -17,7 +17,6 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
 import Recruit from "../elements/special/Recruite";
-import HeaderPageLoading from "../elements/ui/loading/HeaderPageLoading";
 
 const Home = () => {
   const user = useSelector(selectUser);
@@ -55,8 +54,6 @@ const Home = () => {
       buttonLink: user.token ? `/user` : "/signup",
     },
   ];
-
-  return <HeaderPageLoading/>
 
   return (
     <Fragment>
