@@ -10,15 +10,17 @@ import { useObjectGrabUrl } from "../../hooks/object-hook";
 import ImageFb from "../../elements/ui/ImageFb";
 import Countdown from "../../elements/ui/Countdown";
 import { useHttpClient } from "../../hooks/http-hook";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../../elements/ui/loading/Loader";
 import { Link, useParams } from "react-router-dom";
 import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
 import { link } from "fs-extra";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";
+import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
 
 const EventDetails = () => {
-  const [eventClosed, setEventClosed] = useState(false)
+  const [eventClosed, setEventClosed] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const user = useSelector(selectUser);
 
   const { region } = useParams();

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dialog } from 'primereact/dialog';
 import { useHttpClient } from '../../../hooks/http-hook';
-import Loader from '../Loader';
+import Loader from '../loading/Loader';
 
 const ConfirmCenterModal = (props) => {
     const { loading } = useHttpClient

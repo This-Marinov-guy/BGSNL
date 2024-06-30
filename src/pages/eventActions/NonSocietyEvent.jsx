@@ -10,7 +10,7 @@ import Footer from "../../component/footer/Footer";
 import ModalWindow from "../../elements/ui/ModalWindow";
 import Locked from "../../elements/ui/Locked";
 import Alert from "react-bootstrap/Alert";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../../elements/ui/loading/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";

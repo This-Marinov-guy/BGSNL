@@ -5,7 +5,7 @@ import { useHttpClient } from "../../hooks/http-hook";
 import { useNavigate } from "react-router-dom";
 import PageHelmet from "../../component/common/Helmet";
 import Header from "../../component/header/Header";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../../elements/ui/loading/Loader";
 import Alert from "react-bootstrap/Alert";
 import { FiX } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";

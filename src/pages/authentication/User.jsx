@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
 import { useSelector, useDispatch } from "react-redux";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../../elements/ui/loading/Loader";
 import ImageInput from "../../elements/inputs/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -16,7 +16,7 @@ import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import ModalWindow from "../../elements/ui/ModalWindow";
 import Locked from "../../elements/ui/Locked";
-import PageLoading from '../../elements/ui/PageLoading'
+import PageLoading from '../../elements/ui/loading/PageLoading'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import WindowShift from "../../elements/ui/WindowShift";
 import { decodeJWT } from "../../util/functions/jwt";

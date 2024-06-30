@@ -3,7 +3,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Modal from "react-bootstrap/Modal";
-import Loader from "../elements/ui/Loader";
+import Loader from "./ui/loading/Loader";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import { useDispatch, useSelector } from "react-redux";

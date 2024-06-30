@@ -7,7 +7,7 @@ import { Calendar } from 'primereact/calendar';
 import { Tooltip } from 'primereact/tooltip';
 import { FileUpload } from 'primereact/fileupload';
 import { useHttpClient } from "../../../hooks/http-hook";
-import Loader from "../../ui/Loader";
+import Loader from "../../ui/loading/Loader";
 import ImageInput from "../../inputs/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";

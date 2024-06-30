@@ -1,5 +1,5 @@
 import React from 'react'
-import Loader from './Loader'
+import Loader from './loading/Loader'
 import { useHttpClient } from '../../hooks/http-hook'
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 

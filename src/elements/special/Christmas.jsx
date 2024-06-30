@@ -1,6 +1,6 @@
 import React, { useState, Fragment } from "react";
 import { useHttpClient } from "../../hooks/http-hook";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../ui/loading/Loader";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FiX } from "react-icons/fi";

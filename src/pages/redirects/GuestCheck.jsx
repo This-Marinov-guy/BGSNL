@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { InputNumber } from 'primereact/inputnumber';
 import { Message } from 'primereact/message';
 import { useHttpClient } from '../../hooks/http-hook'
-import PageLoading from '../../elements/ui/PageLoading';
+import PageLoading from '../../elements/ui/loading/PageLoading';
 import { useNavigate } from 'react-router-dom';
 import HeaderTwo from '../../component/header/HeaderTwo';
 

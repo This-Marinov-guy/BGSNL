@@ -4,7 +4,7 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import EventForm from '../../elements/actions/form/EventForm';
 import { useHttpClient } from '../../hooks/http-hook';
-import PageLoading from '../../elements/ui/PageLoading';
+import PageLoading from '../../elements/ui/loading/PageLoading';
 import { loadSingleEvent, selectSingleEvent } from '../../redux/events';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';

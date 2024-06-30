@@ -7,7 +7,7 @@ import { Calendar } from 'primereact/calendar';
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/http-hook";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../../elements/ui/loading/Loader";
 import ImageInput from "../../elements/inputs/ImageInput";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";

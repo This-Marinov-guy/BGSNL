@@ -485,6 +485,21 @@
   justify-content: center;
 }
 
+.ver_section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ver_section_nospace {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
 .hor_section {
   display: flex;
   flex-direction: row;

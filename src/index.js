@@ -17,7 +17,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 // Blocks Layout
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import PageLoading from "./elements/ui/PageLoading";
+import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/functions/global";

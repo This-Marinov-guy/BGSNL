@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, selectUser } from "../../redux/user";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import Loader from "../../elements/ui/Loader";
+import Loader from "../../elements/ui/loading/Loader";
 import Alert from "react-bootstrap/Alert";
 import ModalWindow from "../../elements/ui/ModalWindow";
 import { FiX } from "react-icons/fi";
