@@ -12,7 +12,7 @@ import Countdown from "../../elements/ui/Countdown";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/Loader";
 import { Link, useParams } from "react-router-dom";
-import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
+import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
 import { link } from "fs-extra";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";

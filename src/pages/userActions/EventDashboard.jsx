@@ -1,22 +1,10 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React from "react";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { useHttpClient } from "../../hooks/http-hook";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { Link, useParams } from "react-router-dom";
-import RegionOptions from "../../elements/ui/RegionOptions";
-import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/REGIONS_AUTH_CONFIG";
-import { REGIONS } from "../../util/REGIONS_DESIGN";
-import capitalizeFirstLetter from "../../util/capitalize";
+import EventList from "../../elements/actions/dashboard/open-events/EventList";
 
-const EventDashboard = (props) => {
-  const { loading, sendRequest } = useHttpClient();
-
-  const { region } = useParams();
-
-  const navigate = useNavigate();
-
+const EventDashboard = () => {
   return (
     <React.Fragment>
       <HeaderTwo
@@ -25,30 +13,7 @@ const EventDashboard = (props) => {
         logoname="logo.png"
       />
       <div className="container mt--200">
-        <div className="common-border-1">
-          <h4>Filter</h4>
-          <form className="row">
-            <div className="col-lg-6 col-12">
-              <select>
-                <option value="" disabled>
-                  Select Region
-                </option>
-                {REGIONS.map((val, index) => {
-                  return <option value={val} key={index}>{capitalizeFirstLetter(val)}</option>
-                })}
-              </select>
-            </div>
-            <div className="col-lg-6 col-12">
-              <select>
-                <option value="" disabled>
-                  What to display
-                </option>
-                <option value="current">Current Events</option>
-              </select>
-            </div>
-          </form>
-        </div>
-
+        <EventList />
       </div>
 
       {/* End Footer Style  */}

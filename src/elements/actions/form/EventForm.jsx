@@ -1,28 +1,31 @@
 import React, { Fragment, useEffect, useState } from "react";
-import capitalizeFirstLetter from "../../util/capitalize";
+import capitalizeFirstLetter from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Calendar } from 'primereact/calendar';
 import { Tooltip } from 'primereact/tooltip';
 import { FileUpload } from 'primereact/fileupload';
-import { useHttpClient } from "../../hooks/http-hook";
-import Loader from "../../elements/ui/Loader";
-import ImageInput from "../inputs/ImageInput";
-import { BG_INDEX, REGIONS } from "../../util/REGIONS_DESIGN";
-import WithBackBtn from "../ui/WithBackBtn";
-import StringDynamicInputs from "../inputs/StringDynamicInputs";
-import InputsBuilder from "../inputs/InputsBuilder";
-import { askBeforeRedirect } from "../../util/global";
+import { useHttpClient } from "../../../hooks/http-hook";
+import Loader from "../../ui/Loader";
+import ImageInput from "../../inputs/ImageInput";
+import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
+import StringDynamicInputs from "../../inputs/StringDynamicInputs";
+import InputsBuilder from "../../inputs/InputsBuilder";
+import { askBeforeRedirect } from "../../../util/functions/global";
+import { useNavigate } from "react-router-dom";
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
     const [files, setFiles] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
 
-    const handleErrorMsg = (errors, isValid) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = (errors, isValid, dirty) => {
         if (errors && !isValid && dirty) {
-            props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
+            return props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
         }
     }
 
@@ -54,13 +57,12 @@ const EventForm = (props) => {
         description: yup.string().required("Description is required"),
         date: yup.string().required("Date is required"),
         time: yup.string().required("Time is required"),
-        where: yup.string().required("Location is required"),
-        date: yup.string().required("Date is required"),
+        location: yup.string().required("Location is required"),
         ticketTimer: yup.string().required("Ticket Timer is required"),
         ticketLimit: yup.number().required("Ticket Limit is required"),
         entry: yup.number().required("Normal Price is required"),
         memberEntry: yup.number().required("Member Price is required"),
-        ticketLink: yup.string().required("Ticket Link is required"),
+        // ticketLink: yup.string().required("Ticket Link is required"),
         priceId: yup.string().required("Provide Stripe id for guest price"),
         memberPriceId: yup.string().required("Provide Stripe id for member price"),
         activeMemberPriceId: yup.string().required("Provide Stripe id for active member price"),
@@ -100,15 +102,15 @@ const EventForm = (props) => {
 
                     if (responseData.status) {
                         props.toast.current.show({ severity: 'success', summary: 'Event added' });
-                        navigate('/user/events');
+                        navigate('/user/dashboard');
                     }
 
                 } catch (err) {
                 }
             }}
             initialValues={{
-                membersOnly: false,
-                visible: true,
+                memberOnly: false,
+                hidden: false,
                 extraInputsForm: [
                     // { type: '', placeholder: '', required: false, options: [] }
                 ],
@@ -121,7 +123,7 @@ const EventForm = (props) => {
                 description: '',
                 date: '',
                 time: '',
-                where: '',
+                location: '',
                 ticketTimer: '',
                 ticketLimit: null,
                 isTicketLink: false,
@@ -177,11 +179,11 @@ const EventForm = (props) => {
                             <Field
                                 type="text"
                                 placeholder="Location of event"
-                                name="where"
+                                name="location"
                             ></Field>
                             <ErrorMessage
                                 className="error"
-                                name="where"
+                                name="location"
                                 component="div"
                             />
                         </div>
@@ -506,7 +508,7 @@ const EventForm = (props) => {
                                 <Field
                                     style={{ maxWidth: "30px" }}
                                     type="checkbox"
-                                    name="membersOnly"
+                                    name="memberOnly"
                                 ></Field>
                                 <p className="information">
                                     Make event only purchasable by members (Still visible for non-members)
@@ -514,7 +516,7 @@ const EventForm = (props) => {
                             </div>
                             <ErrorMessage
                                 className="error"
-                                name="membersOnly"
+                                name="memberOnly"
                                 component="div"
                             />
                         </div>
@@ -523,7 +525,7 @@ const EventForm = (props) => {
                                 <Field
                                     style={{ maxWidth: "30px" }}
                                     type="checkbox"
-                                    name="visible"
+                                    name="hidden"
                                 ></Field>
                                 <p className="information">
                                     Hide event from News section (only accessible from url or subevent link)
@@ -531,7 +533,7 @@ const EventForm = (props) => {
                             </div>
                             <ErrorMessage
                                 className="error"
-                                name="visible"
+                                name="hidden"
                                 component="div"
                             />
                         </div>
@@ -594,16 +596,20 @@ const EventForm = (props) => {
                     <h3 className="label mt--40">Add extra inputs by your choice</h3>
                     <InputsBuilder onChange={(inputs) => values.extraInputsForm = inputs} />
 
-                    <WithBackBtn >
+                    <ConfirmDialog />
+                    <div className="mt--40 mb--20 center_div">
+                        <button
+                            onClick={() => navigate('/user/dashboard')}
+                            className="rn-button-style--2 rn-btn-reverse mr--5">Dashboard</button>
                         <button
                             disabled={loading}
                             type="submit"
-                            onClick={() => handleErrorMsg(errors, isValid)}
+                            onClick={() => handleSubmit(errors, isValid, dirty)}
                             className="rn-button-style--2 btn-solid"
                         >
                             {loading ? <Loader /> : <span>Submit Event</span>}
                         </button>
-                    </WithBackBtn>
+                    </div>
                 </Form>
             )}
         </Formik>

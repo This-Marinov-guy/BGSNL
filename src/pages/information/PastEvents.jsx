@@ -9,7 +9,7 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/ImageFb";
 import { Link , useParams} from "react-router-dom";
-import {PAST_EVENTS} from '../../util/PAST_EVENTS'
+import {PAST_EVENTS} from '../../util/defines/PAST_EVENTS'
 
 
 const PastEventsContent = () => {
@@ -78,7 +78,7 @@ const {region} = useParams()
               </div>
             </div>
           </div>
-          <div className="grid">
+          <div className="past_events grid">
             {PAST_EVENTS[region] ? PAST_EVENTS[region].map((value, index) => (
               <div className="portfolio portfolio-slider grid_item" key={index}>
                 <Link

@@ -5,6 +5,11 @@
 * {
   box-sizing: border-box;
 }
+
+.archive {
+  font-family: $title-font;
+}
+
 img {
   max-width: 100%;
 }
@@ -168,6 +173,7 @@ select,
 textarea {
   font-family: $body-font;
   background: transparent;
+  border: 1px solid $border-color;
   transition: all 0.4s ease-out 0s;
   color: $body-color;
   &:focus,

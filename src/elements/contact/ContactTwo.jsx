@@ -2,7 +2,7 @@ import React from "react";
 import ContactForm from "./ContactForm";
 import ImageFb from "../ui/ImageFb";
 import { useParams } from "react-router-dom";
-import { REGIONS } from "../../util/REGIONS_DESIGN";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 
 const ContactTwo = () => {
   const { region } = useParams();

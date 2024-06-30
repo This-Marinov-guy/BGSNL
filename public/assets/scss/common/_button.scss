@@ -7,6 +7,12 @@ Button Area
   border: 2px dashed $theme-color-2;
 }
 
+.common-border-2 {
+  padding: 2%;
+  border-radius: 10px;
+  border: 2px solid #1f1f25;
+}
+
 a {
   &.btn-transparent {
     color: #1f1f25;
@@ -219,7 +225,7 @@ button {
   }
 }
 
-button {
+button,a {
   &.option-btn {
     height: 100px;
     width: 200px;
@@ -271,7 +277,7 @@ button {
 }
 
 .options-btns-div {
-  margin: 20px auto 80px;
+  margin: 20px auto 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;

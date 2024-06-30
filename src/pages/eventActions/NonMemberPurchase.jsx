@@ -12,11 +12,12 @@ import Loader from "../../elements/ui/Loader";
 import { InputNumber } from 'primereact/inputnumber';
 import PageLoading from "../../elements/ui/PageLoading";
 import { useObjectGrabUrl } from "../../hooks/object-hook";
-import { SOCIETY_EVENTS } from "../../util/OPEN_EVENTS";
-import { REGIONS } from "../../util/REGIONS_DESIGN";
-import { createCustomerTicket } from "../../util/ticket-creator"
+import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import { createCustomerTicket } from "../../util/functions/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { REGIONS_MEMBERSHIP } from "../../util/defines/REGIONS_AUTH_CONFIG";
 import MarketingForm from "../../elements/ui/MarketingForm";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";

@@ -14,6 +14,14 @@
   border-radius: 5px;
 }
 
+.tooltip_info {
+  scale: 0.8;
+}
+
+.disabled {
+  cursor: no-drop;
+}
+
 .holiday-special-btns {
   display: flex;
   gap: 5px;

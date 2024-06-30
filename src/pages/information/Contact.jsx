@@ -11,7 +11,7 @@ import { FiMail } from "react-icons/fi";
 
 import { FaLink } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { REGION_SOCIALS, REGION_EMAIL } from "../../util/REGIONS_DESIGN";
+import { REGION_SOCIALS, REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
 
 
 const Contact = () => {

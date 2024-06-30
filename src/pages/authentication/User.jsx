@@ -19,13 +19,13 @@ import Locked from "../../elements/ui/Locked";
 import PageLoading from '../../elements/ui/PageLoading'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import WindowShift from "../../elements/ui/WindowShift";
-import { decodeJWT } from "../../util/jwt";
+import { decodeJWT } from "../../util/functions/jwt";
 import ImageFb from "../../elements/ui/ImageFb";
 import Greeting from "../../elements/Greeting";
 import Christmas from "../../elements/special/Christmas";
 import { selectUser } from "../../redux/user";
-import capitalizeFirstLetter from "../../util/capitalize";
-import { REGION_WHATSAPP } from "../../util/REGIONS_DESIGN";
+import capitalizeFirstLetter from "../../util/functions/capitalize";
+import { REGION_WHATSAPP } from "../../util/defines/REGIONS_DESIGN";
 import SubscriptionManage from "../../elements/ui/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
 import { INTERNSHIPS } from "../../util/INTERNSHIPS";

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom'
-import { REGIONS } from "../util/REGIONS_DESIGN";
+import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 
 const RegionLogos = () => {
     return (
