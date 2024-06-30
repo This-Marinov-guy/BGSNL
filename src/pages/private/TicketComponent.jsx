@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createCustomerTicket } from '../../util/ticket-creator';
+import { createCustomerTicket } from '../../util/functions/ticket-creator';
 
 const TicketComponent = () => {
     const [ticketDataUrl, setTicketDataUrl] = useState(null);

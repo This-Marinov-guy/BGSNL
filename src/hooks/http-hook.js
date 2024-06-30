@@ -1,10 +1,9 @@
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { removeError, showError } from "../redux/error";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 import axios from 'axios';
-import { isProd } from "../util/global";
+import { isProd } from "../util/functions/global";
 
 export const useHttpClient = () => {
   const dispatch = useDispatch();

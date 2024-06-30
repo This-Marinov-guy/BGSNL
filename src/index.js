@@ -8,7 +8,7 @@ import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
-import { clarityTrack, isProd } from "./util/global";
+import { clarityTrack, isProd } from "./util/functions/global";
 
 // Style
 import './index.scss'
@@ -21,7 +21,6 @@ import PageLoading from "./elements/ui/PageLoading";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/functions/global";
-import { decodeJWT } from "./util/functions/jwt";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import GlobalError from "./component/common/GlobalError";

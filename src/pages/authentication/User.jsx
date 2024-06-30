@@ -28,7 +28,7 @@ import capitalizeFirstLetter from "../../util/functions/capitalize";
 import { REGION_WHATSAPP } from "../../util/defines/REGIONS_DESIGN";
 import SubscriptionManage from "../../elements/ui/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
-import { INTERNSHIPS } from "../../util/INTERNSHIPS";
+import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
 
 const schema = yup.object().shape({
   image: yup.string(),

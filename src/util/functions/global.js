@@ -9,6 +9,20 @@ export const removeLogsOnProd = () => {
     }
 }
 
+export const clarityTrack = () => {
+    if (!isProd()) {
+        return;
+    }
+
+    clarity.init(process.env.REACT_APP_CLARITY_ID);
+    clarity.consent();
+
+    if (clarity.hasStarted()) {
+        console.log('Track with Clarity');
+        // clarity.identify('USER_ID', { userProperty: 'value' });
+    }
+}
+
 export const askBeforeRedirect = (basedOnEnv = true) => {
     const handleBeforeUnload = (event) => {
         event.preventDefault();
