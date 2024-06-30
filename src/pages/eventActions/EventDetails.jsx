@@ -6,60 +6,44 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { useObjectGrabUrl } from "../../hooks/object-hook";
 import ImageFb from "../../elements/ui/ImageFb";
 import Countdown from "../../elements/ui/Countdown";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { Link, useParams } from "react-router-dom";
-import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
-import { link } from "fs-extra";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";
 import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
+import { estimatePriceByEvent } from "../../util/functions/helpers";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
   const user = useSelector(selectUser);
 
-  const { region } = useParams();
-
-  const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
-
-  const imageUrl = `/assets/images/bg/bg-image-${target.bgImage}.webp`;
+  const { region, eventName } = useParams();
 
   const { loading, sendRequest } = useHttpClient();
 
   useEffect(() => {
-    if (target.ticketLimit) {
-      const checkRemainingTicketQuantity = async () => {
-        try {
-          const responseData = await sendRequest(`event/sold-ticket-count?eventName=${target.title}&region=${region}&date=${target.date}`);
-          const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
-          if (isTicketsSold) {
-            setEventClosed(true)
-          }
-        } catch (err) { }
-      };
-      checkRemainingTicketQuantity();
-    }
+    const getEventDetails = async () => {
+      try {
+        const responseData = await sendRequest(`event/get-event-details?eventName=${eventName}&region=${region}`);
+        setSelectedEvent(responseData.event);
+        setEventClosed(!responseData.status);
+      } catch (err) { }
+    };
+
+    getEventDetails();
   }, [])
 
-  let price;
-
-  if (target.isFree) {
-    price = 'FREE'
-  } else if (target.ticket_link) {
-    price = 'Check ticket portal'
-  } else if (user.token && (target.memberEntry || target.isMemberFree)) {
-    price = target.isMemberFree ? 'FREE'
-      : target.memberEntry + (!isNaN(target.memberEntry) ? ' euro ' : ' ') + ((target.including && target.including.length > 0) ? target.including[0] : '')
-  } else if (target.entry) {
-    price = target.entry + (!isNaN(target.entry) ? ' euro ' : ' ') + ((target.including && target.including.length > 1) ? target.including[1] : '')
-  } else {
-    price = 'TBA'
+  if (loading || !selectedEvent) {
+    return <HeaderPageLoading/>
   }
+
+  const price = estimatePriceByEvent(selectedEvent, user);
+  const imageUrl = selectedEvent.bgImageExtra ? selectedEvent.bgImageExtra : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
 
   return (
     <React.Fragment>
@@ -81,8 +65,8 @@ const EventDetails = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">{target.newTitle || target.title}</h2>
-                <p>{target.description}</p>
+                <h2 className="title theme-gradient">{selectedEvent.newTitle || selectedEvent.title}</h2>
+                <p>{selectedEvent.description}</p>
               </div>
             </div>
           </div>
@@ -98,29 +82,27 @@ const EventDetails = () => {
               <div className="portfolio-details">
                 <div className="inner">
                   <h2>About</h2>
-                  <p className="subtitle">{target.title}</p>
-                  {target.text.map((value, index) => {
-                    return <p key={index}>{value}</p>
-                  })}
+                  <p className="subtitle">{selectedEvent.title}</p>
+                  <p>{selectedEvent.text}</p>
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
                       <span>When</span>
-                      <h4>{target.date + ", " + target.time}</h4>
-                      {target.correctedDate && (
+                      <h4>{selectedEvent.date + ", " + selectedEvent.time}</h4>
+                      {selectedEvent.correctedDate && (
                         <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Date -> " + target.correctedDate}
+                          {"Updated Date -> " + selectedEvent.correctedDate}
                         </p>
                       )}
-                      {target.correctedTime && (
+                      {selectedEvent.correctedTime && (
                         <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Time -> " + target.correctedTime}
+                          {"Updated Time -> " + selectedEvent.correctedTime}
                         </p>
                       )}
                     </div>
 
                     <div className="port-view">
                       <span>Where</span>
-                      <h4>{target.where}</h4>
+                      <h4>{selectedEvent.location}</h4>
                     </div>
 
                     <div className="port-view">
@@ -130,14 +112,14 @@ const EventDetails = () => {
                   </div>
                   {
                     //for links to subEvent
-                    target.subEvent &&
+                    selectedEvent.subEvent &&
                     <div className="mt--40 mb--40 team_member_border-1 center_section">
                       <h3 className="center_text">
-                        {target.subEvent.description}
+                        {selectedEvent.subEvent.description}
                       </h3>
                       <div className="row">
                         {
-                          target.subEvent.links.map((link) => {
+                          selectedEvent.subEvent.links.map((link) => {
                             return <a
                               className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
                               href={'/' + region + '/event-details' + link.href}
@@ -149,29 +131,29 @@ const EventDetails = () => {
                       </div>
                     </div>
                   }
-                  {!target.is_tickets_closed && (loading ? <div>
+                  {!selectedEvent.is_tickets_closed && (loading ? <div>
                     <h3 className="mt--20">Checking Ticket Availability - please be patient!</h3>
                     <Loader />
                   </div> :
                     <div className="purchase-btn">
-                      {target.ticket_link ? <div>
+                      {selectedEvent.ticket_link ? <div>
                         <WithBackBtn><a
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                          href={target.ticket_link}
-                          target="_blank"
+                          href={selectedEvent.ticket_link}
+                          selectedEvent="_blank"
                           className="rn-button-style--2 btn-solid mt--80"
                         >
                           {eventClosed ? "Sold out" : 'Buy Ticket'}
                         </a></WithBackBtn>
                         <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <WithBackBtn><Link
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                          to={`/${region}/purchase-ticket/${target.title}`}
+                          to={`/${region}/purchase-ticket/${selectedEvent.title}`}
                           className="rn-button-style--2 btn-solid"
                         >
                           {eventClosed ? "Sold out" : 'Buy Ticket'}
                         </Link></WithBackBtn>}
-                        {target.isGala && <h4>Ticket Sale closes on the 23th at 23:59</h4>}
-                      {target.ticketTimer && <Countdown targetTime={target.ticketTimer} setEventClosed={setEventClosed} />}
+                        {selectedEvent.isGala && <h4>Ticket Sale closes on the 23th at 23:59</h4>}
+                      {selectedEvent.ticketTimer && <Countdown selectedEventTime={selectedEvent.ticketTimer} setEventClosed={setEventClosed} />}
                     </div>)}
                 </div>
                 <br />
@@ -194,10 +176,10 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-                {target.isGala && <GalaMembers />}
+                {selectedEvent.isGala && <GalaMembers />}
                 <div className="portfolio-thumb-inner row">
 
-                  {target.images.map((value, index) => {
+                  {selectedEvent.images.map((value, index) => {
                     return <div key={index} className="col-lg-6 col-md-12 col-12 thumb center_div mb--30">
                       <ImageFb src={`${value}.webp`} fallback={`${value}.jpg`}
                         alt="Portfolio Images" />
@@ -209,7 +191,7 @@ const EventDetails = () => {
             </div>
           </div>
         </div>
-      </div >
+      </div>
       {/* End Portfolio Details */}
 
       {/* Start Back To Top */}
@@ -221,7 +203,7 @@ const EventDetails = () => {
       {/* End Back To Top */}
 
       <Footer />
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 export default EventDetails;

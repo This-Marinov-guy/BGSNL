@@ -8,7 +8,7 @@ import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
-import { clarityTrack, isProd } from "./util/functions/global";
+import { clarityTrack, isProd } from "./util/functions/helpers";
 
 // Style
 import './index.scss'
@@ -20,7 +20,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
-import { removeLogsOnProd } from "./util/functions/global";
+import { removeLogsOnProd } from "./util/functions/helpers";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import GlobalError from "./component/common/GlobalError";
@@ -163,7 +163,7 @@ const Root = () => {
               <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
               <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
               <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
-              <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
+              <Route exact path={`/:region/event-details/:eventName`} element={<RegionLayout><EventDetails /></RegionLayout>} />
               <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent toast={toast} /></RegionLayout>}>
 
               </Route>
@@ -187,7 +187,7 @@ const Root = () => {
                 <Fragment>
                   <Route
                     exact
-                    path={"/:region/purchase-ticket/:eventId"}
+                    path={"/:region/purchase-ticket/:eventName"}
                     element={<RegionLayout><MemberPurchase /></RegionLayout>}
                   />
                   <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
@@ -203,7 +203,7 @@ const Root = () => {
                   <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                   <Route
                     exact
-                    path={"/:region/purchase-ticket/:eventId"}
+                      path={"/:region/purchase-ticket/:eventName"}
                     element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
                   />
 

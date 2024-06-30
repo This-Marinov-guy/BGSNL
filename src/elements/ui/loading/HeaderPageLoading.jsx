@@ -9,7 +9,7 @@ const HeaderPageLoading = () => {
     const [showBtns, setShowBtns] = useState(false);
 
     useEffect(() => {
-        setTimeout(() => setShowBtns(true), 1000)
+        setTimeout(() => setShowBtns(true), 5000)
     }, [])
 
     return (

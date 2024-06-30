@@ -18,7 +18,7 @@ import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import RegionOptions from "../../elements/ui/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
-import { askBeforeRedirect } from "../../util/functions/global";
+import { askBeforeRedirect } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 
 const schema = yup.object().shape({

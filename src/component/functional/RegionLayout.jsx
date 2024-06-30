@@ -7,7 +7,8 @@ const RegionLayout = (props) => {
     const region = useLocation().pathname.split('/')[1]
 
     return REGIONS.includes(region) ?
-        <div className={styles[region] || ''}>
+        // <div className={styles[region] || ''}>
+        <div>
             {props.children}
         </div> : <Navigate to={props.redirect} replace />
 }

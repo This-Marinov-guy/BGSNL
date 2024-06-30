@@ -10,81 +10,61 @@ import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/ImageFb";
 import Loader from "../../elements/ui/loading/Loader";
 import { InputNumber } from 'primereact/inputnumber';
-import PageLoading from "../../elements/ui/loading/PageLoading";
-import { useObjectGrabUrl } from "../../hooks/object-hook";
-import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { createCustomerTicket } from "../../util/functions/ticket-creator"
 import FormExtras from "../../elements/ui/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { REGIONS_MEMBERSHIP } from "../../util/defines/REGIONS_AUTH_CONFIG";
 import MarketingForm from "../../elements/ui/MarketingForm";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
+import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
   const [loadingPage, setLoadingPage] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventClosed, setEventClosed] = useState(false)
   const [marketingData, setMarketingData] = useState({})
   const [quantity, setQuantity] = useState(1);
 
-  const { region } = useParams()
+  const { region, eventName } = useParams()
 
-  const target = useObjectGrabUrl(SOCIETY_EVENTS[region]);
-
-  
   const schema = yup.object().shape({
     name: yup.string().required(),
     surname: yup.string().required(),
     phone: yup.string().required(),
     email: yup.string().email("Please enter a valid email").required(),
-    extraOne: (target.extraInputs && target.extraInputs[0] && target.extraInputs[0].required) ? yup.string().required("Required field") : yup.string(),
-    extraTwo: (target.extraInputs && target.extraInputs[1] && target.extraInputs[1].required) ? yup.string().required("Required field") : yup.string(),
-    extraThree: (target.extraInputs && target.extraInputs[2] && target.extraInputs[2].required) ? yup.string().required("Required field") : yup.string(),
+    // extraOne: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[0] && selectedEvent.extraInputsForm[0].required) ? yup.string().required("Required field") : yup.string(),
+    // extraTwo: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[1] && selectedEvent.extraInputsForm[1].required) ? yup.string().required("Required field") : yup.string(),
+    // extraThree: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[2] && selectedEvent.extraInputsForm[2].required) ? yup.string().required("Required field") : yup.string(),
     policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
     payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   });
 
   const navigate = useNavigate()
 
-  function calculateTimeRemaining(timer) {
-    const now = new Date().getTime();
-    const targetTime = new Date(timer).getTime();
-    const timeDifference = targetTime - now;
-    return Math.max(0, timeDifference);
-  }
-
   useEffect(() => {
     setLoadingPage(true);
-    try {
-      if (target.ticketLimit) {
-        const checkRemainingTicketQuantity = async () => {
-          try {
-            const responseData = await sendRequest(`event/sold-ticket-count?eventName=${target.title}&region=${region}&date=${target.date}`);
-
-            const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
-            if (isTicketsSold) {
-              setEventClosed(true)
-            }
-          } catch (err) { }
-        };
-        checkRemainingTicketQuantity();
+    const getEventDetails = async () => {
+      try {
+        const responseData = await sendRequest(`event/get-event-details?eventName=${eventName}&region=${region}`);
+        setSelectedEvent(responseData.event);
+        setEventClosed(!responseData.status);
+      } catch (err) {
+      } finally {
+        setLoadingPage(false);
       }
-      if (target.ticketTimer) {
-        const timeRemaining = calculateTimeRemaining(target.ticketTimer);
-        if (timeRemaining <= 0) {
-          setEventClosed(true)
-        }
-      }
-    } catch (err) { }
-    finally {
-      setLoadingPage(false)
-    }
-  }, [target])
+    };
 
-  if (target.ticket_link) {
+    getEventDetails();
+  }, [])
+
+  if (loadingPage || !selectedEvent) {
+    return <HeaderPageLoading />
+  }
+
+  if (selectedEvent.ticket_link) {
     return (<div className="container center_text mt--100">
       <ImageFb
         className="logo mb--40"
@@ -93,7 +73,7 @@ const NonMemberPurchase = () => {
         alt="Logo"
       />
       <h3 className="">This event is sold through an external platform - click below to see it!</h3>
-      <a href={target.ticket_link}
+      <a href={selectedEvent.ticket_link}
         className="rn-button-style--2 btn-solid mt--20"
       >
         Go to event
@@ -101,9 +81,7 @@ const NonMemberPurchase = () => {
     </div>)
   }
 
-  if (loadingPage) {
-    return <PageLoading />
-  } else if (eventClosed) {
+  if (eventClosed) {
     return (
       <div className="container center_text mt--100">
         <ImageFb
@@ -131,31 +109,31 @@ const NonMemberPurchase = () => {
 
         <div className="container">
           <div className="mt--200">
-            {target.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
+            {selectedEvent.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
               <h2 className="center_text mb--80">Purchase a Ticket</h2>}
 
-            {!target.ticket_link && <MembershipBanner />}
+            {!selectedEvent.ticket_link && <MembershipBanner />}
           </div>
-          {!target.membersOnly && <div className="row">
+          {!selectedEvent.membersOnly && <div className="row">
             <div className="col-lg-4 col-md-12 col-12">
               <div className="mb--20">
-                <ImageFb src={`${target.images[0]}.webp`} fallback={`${target.images[0]}.jpg`} alt="Event" className="title_img" />
+                <ImageFb src={`${selectedEvent.images[0]}.webp`} fallback={`${selectedEvent.images[0]}.jpg`} alt="Event" className="title_img" />
                 <h2 className="mt--40">Event Details</h2>
-                <p>Name:{" "}{target.title}</p>
+                <p>Name:{" "}{selectedEvent.title}</p>
                 <p>
                   Date:{" "}
-                  {target.correctedDate
-                    ? target.correctedDate + " Updated!"
-                    : target.date}
+                  {selectedEvent.correctedDate
+                    ? selectedEvent.correctedDate + " Updated!"
+                    : selectedEvent.date}
                 </p>
                 <p>
                   Time:{" "}
-                  {target.correctedTime
-                    ? target.correctedTime + " Updated!"
-                    : target.time}
+                  {selectedEvent.correctedTime
+                    ? selectedEvent.correctedTime + " Updated!"
+                    : selectedEvent.time}
                 </p>
-                <p>Address:{" "}{target.where}</p>
-                <p>Price:{" "}{target.isFree ? ' FREE' : target.entry + ' euro'}</p>
+                <p>Address:{" "}{selectedEvent.location}</p>
+                <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.entry + ' euro'}</p>
 
               </div>
             </div>
@@ -170,36 +148,36 @@ const NonMemberPurchase = () => {
                     try {
                       forceStartLoading();
 
-                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${target.title}&name=${values.name}&surname=${values.surname}&email=${encodeURIComponent(values.email)}&count=${quantity}`
-                      const {ticketBlob} = await createCustomerTicket(target.ticket_img, values.name, values.surname, target.ticket_color, qrCode);
+                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${selectedEvent.title}&name=${values.name}&surname=${values.surname}&email=${encodeURIComponent(values.email)}&count=${quantity}`
+                      const { ticketBlob } = await createCustomerTicket(selectedEvent.ticket_img, values.name, values.surname, selectedEvent.ticket_color, qrCode);
 
                       // formData
                       const formData = new FormData();
                       formData.append(
                         "image",
                         ticketBlob,
-                        target.title +
+                        selectedEvent.title +
                         "_" +
                         values.name +
                         values.surname +
                         "_GUEST"
                       );
                       formData.append("region", region);
-                      if (target.discountPass && (target.discountPass.includes(values.email) || target.discountPass.includes(values.name + ' ' + values.surname))) {
-                        formData.append("itemId", target.activeMemberPrice_id);
+                      if (selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname))) {
+                        formData.append("itemId", selectedEvent.activeMemberPrice_id);
                       } else {
-                        formData.append("itemId", target.price_id);
+                        formData.append("itemId", selectedEvent.price_id);
                       }
                       formData.append("quantity", quantity);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
-                      formData.append("eventName", target.title);
-                      formData.append("eventDate", target.date);
+                      formData.append("eventName", selectedEvent.title);
+                      formData.append("eventDate", selectedEvent.date);
                       formData.append("guestEmail", values.email);
-                      if (target.extraInputs) {
+                      if (selectedEvent.extraInputsForm) {
                         formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
                       }
-                      if (target.marketingInputs && marketingData) {
+                      if (selectedEvent.marketingInputs && marketingData) {
                         formData.append('marketing', JSON.stringify(marketingData))
                       }
                       formData.append(
@@ -207,7 +185,7 @@ const NonMemberPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (target.isFree || target.freePass.includes(values.email) || target.freePass.includes(values.name + ' ' + values.surname)) {
+                      if (selectedEvent.isFree || selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname)) {
                         const responseData = await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
@@ -300,8 +278,8 @@ const NonMemberPurchase = () => {
                             />
                           </div>
                         </div>
-                        {target.marketingInputs && <MarketingForm setMarketingData={setMarketingData} />}
-                        {target.extraInputs && <FormExtras target={target.extraInputs} />}
+                        {selectedEvent.marketingInputs && <MarketingForm setMarketingData={setMarketingData} />}
+                        {selectedEvent.extraInputsForm.length && <FormExtras selectedEvent={selectedEvent.extraInputsForm} />}
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">
                             <Field
@@ -314,7 +292,7 @@ const NonMemberPurchase = () => {
                               <a
                                 style={{ color: "#017363" }}
                                 href="/assets/documents/Rules and regulations.pdf"
-                                target="_blank"
+                                selectedEvent="_blank"
                               >
                                 society's policy
                               </a>

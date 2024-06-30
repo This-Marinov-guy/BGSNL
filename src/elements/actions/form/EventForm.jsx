@@ -12,7 +12,7 @@ import ImageInput from "../../inputs/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";
 import InputsBuilder from "../../inputs/InputsBuilder";
-import { askBeforeRedirect } from "../../../util/functions/global";
+import { askBeforeRedirect } from "../../../util/functions/helpers";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
