@@ -40,20 +40,16 @@ const GuestCheck = () => {
     };
 
     const updateGuestList = async () => {
-        // const responseData = await sendRequest(
-        //     'event/check-guest-list',
-        //     "PATCH",
-        //     {
-        //         event,
-        //         name,
-        //         email,
-        //         count: count || null
-        //     }
-        // )
-        const responseData = {
-            status: 0,
-            event: 'Test'
-        }
+        const responseData = await sendRequest(
+            'event/check-guest-list',
+            "PATCH",
+            {
+                event,
+                name,
+                email,
+                count: count || null
+            }
+        )
 
         if (responseData !== undefined) {
             setStatus(responseData.status);

@@ -69,11 +69,7 @@ const MemberPurchase = () => {
       if (target.ticketLimit) {
         const checkRemainingTicketQuantity = async () => {
           try {
-            const responseData = await sendRequest(`event/sold-ticket-count`, "POST", {
-              eventName: target.title,
-              region,
-              date: target.date
-            });
+            const responseData = await sendRequest(`event/sold-ticket-count?eventName=${target.title}&region=${region}&date=${target.date}`);
             const isTicketsSold = target.ticketLimit - responseData.ticketsSold <= 0;
             if (isTicketsSold) {
               setEventClosed(true)
