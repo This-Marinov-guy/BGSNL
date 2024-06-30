@@ -1,3 +1,5 @@
+import { clarity } from 'react-microsoft-clarity';
+
 export const isProd = () => {
     return process.env.NODE_ENV === 'production'
 }
