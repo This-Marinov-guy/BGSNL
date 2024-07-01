@@ -4,10 +4,13 @@ import { removeError, showError } from "../redux/error";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 import axios from 'axios';
 import { isProd } from "../util/functions/helpers";
+import { selectUser } from "../redux/user";
 
 export const useHttpClient = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
+
+  const user = useSelector(selectUser);
 
   const forceStartLoading = () => dispatch(startLoading());
 
@@ -18,6 +21,10 @@ export const useHttpClient = () => {
   const sendRequest = useCallback(
     async (url, method = "GET", data = null, headers = {}) => {
       if (!loading) forceStartLoading();
+
+      if (user && user.token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+      }
 
       try {
         //for production --> process.env.REACT_APP_SERVER_URL

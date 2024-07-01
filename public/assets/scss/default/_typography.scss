@@ -173,14 +173,8 @@ select,
 textarea {
   font-family: $body-font;
   background: transparent;
-  border: 1px solid $border-color;
   transition: all 0.4s ease-out 0s;
   color: $body-color;
-  &:focus,
-  &:active {
-    outline: none;
-    border-color: $theme-color;
-  }
 }
 input,
 select,

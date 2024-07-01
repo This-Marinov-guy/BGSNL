@@ -29,6 +29,7 @@ import { REGION_WHATSAPP } from "../../util/defines/REGIONS_DESIGN";
 import SubscriptionManage from "../../elements/ui/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
 import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
+import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
 
 const schema = yup.object().shape({
   image: yup.string(),
@@ -246,8 +247,11 @@ const User = (props) => {
       menuContent = null
   }
 
-  return currentUser ? (
-    <React.Fragment>
+  if (!currentUser) {
+    return <HeaderPageLoading/>
+  } 
+
+  return <React.Fragment>
       <PageHelmet pageTitle="Profile" />
       <HeaderTwo
         headertransparent="header--transparent"
@@ -623,9 +627,6 @@ const User = (props) => {
       </div>
       {/* End Back To Top */}
     </React.Fragment>
-  ) : (
-    <PageLoading />
-  );
 }
 
 export default User;
