@@ -148,6 +148,7 @@ const NonMemberPurchase = () => {
                     try {
                       forceStartLoading();
 
+                                        // encrypt this 
                       const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${selectedEvent.title}&name=${values.name}&surname=${values.surname}&email=${encodeURIComponent(values.email)}&count=${quantity}`
                       const { ticketBlob } = await createCustomerTicket(selectedEvent.ticket_img, values.name, values.surname, selectedEvent.ticket_color, qrCode);
 
