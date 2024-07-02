@@ -8,14 +8,9 @@ import { login, selectUser } from "../../redux/user";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import Loader from "../../elements/ui/loading/Loader";
-import Alert from "react-bootstrap/Alert";
 import ModalWindow from "../../elements/ui/ModalWindow";
 import { FiX } from "react-icons/fi";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
-import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import * as serviceWorker from "../../util/configs/serviceWorker";
 import { Link } from "react-router-dom";
 
 const schema = yup.object().shape({
@@ -238,60 +233,53 @@ const Login = (props) => {
           )}
         </ModalWindow>
       )}
-      <div className="container mt--200">
+      <div className="container mt--200 mb--40 team_member_border-4" style={{maxWidth:"800px"}}>
         <h2 className="center_text">Log in your account</h2>
-      </div>
-      <div className="blog-comment-form pb--120 bg_color--1">
-        <div className="container">
-          <div className="inner">
-            <form
-              style={{ padding: "2%" }}
-              className="center_section"
-              onSubmit={(event) => loginHandler(event)}
-            >
-              <div className="col-lg-6 col-md-12 col-12">
-                <div className="rn-form-group">
-                  <input
-                    type="text"
-                    name="email"
-                    placeholder="Email"
-                    onChange={(event) => changeFormInputHandler(event)}
-                  />
-                </div>
-              </div>
-              <div className="col-lg-6 col-md-12 col-12">
-                <div className="rn-form-group">
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={(event) => changeFormInputHandler(event)}
-                  ></input>
-                </div>
-              </div>
-              <button
-                disabled={loading && !loginFormValues.email && !loginFormValues.password}
-                type="submit"
-                className="rn-button-style--2 btn-solid mt--40"
-              >
-                {loading ? <Loader /> : <span>Log In</span>}
-              </button>
-            </form>
-            <div className="action_btns">
-              <button
-                style={{ border: "none" }}
-                className="rn-button-style--1"
-                onClick={() => {
-                  dispatch(showModal());
-                }}
-              >
-                Forgot my pasword
-              </button>
-              <a className="rn-button-style--1" href="/signup">
-                Not a member? Register now!
-              </a>
+        <form
+          className="center_section"
+          onSubmit={(event) => loginHandler(event)}
+        >
+          <div className="col-lg-6 col-md-12 col-12">
+            <div className="rn-form-group">
+              <input
+                type="text"
+                name="email"
+                placeholder="Email"
+                onChange={(event) => changeFormInputHandler(event)}
+              />
             </div>
           </div>
+          <div className="col-lg-6 col-md-12 col-12">
+            <div className="rn-form-group">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                onChange={(event) => changeFormInputHandler(event)}
+              ></input>
+            </div>
+          </div>
+          <button
+            disabled={loading && !loginFormValues.email && !loginFormValues.password}
+            type="submit"
+            className="rn-button-style--2 btn-solid mt--40"
+          >
+            {loading ? <Loader /> : <span>Log In</span>}
+          </button>
+        </form>
+        <div className="action_btns">
+          <button
+            style={{ border: "none" }}
+            className="rn-button-style--1"
+            onClick={() => {
+              dispatch(showModal());
+            }}
+          >
+            Forgot my pasword
+          </button>
+          <Link className="rn-button-style--1" to="/signup">
+            Not a member? Register now!
+          </Link>
         </div>
       </div>
     </React.Fragment>
