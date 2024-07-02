@@ -1,4 +1,5 @@
 import { clarity } from 'react-microsoft-clarity';
+import CryptoJS from 'crypto-js';
 
 export const isProd = () => {
     return process.env.NODE_ENV === 'production'
@@ -51,6 +52,29 @@ export const decodeFromURL = (url) => {
     });
 
     return decodeURIComponent(decodedString);
+}
+
+export const encryptData = (data) => {
+    if (!data) {
+        return '';
+    }
+
+    const stringifiedData = JSON.stringify(data);
+    const encryptedData = CryptoJS.AES.encrypt(stringifiedData, process.env.REACT_APP_ENCRYPTION_KEY).toString();
+    const encodedData = encodeURIComponent(encryptedData);
+
+    return encodedData;
+}
+
+export const decryptData = (string) => {
+    if (!string) {
+        return {};
+    }
+
+    const decryptedBytes = CryptoJS.AES.decrypt(decodeURIComponent(string), process.env.REACT_APP_ENCRYPTION_KEY);
+    const decryptedData = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+
+    return decryptedData;
 }
 
 export const estimatePriceByEvent = (selectedEvent, user = {}) => {

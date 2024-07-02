@@ -18,6 +18,7 @@ import MarketingForm from "../../elements/ui/MarketingForm";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
+import { encryptData } from "../../util/functions/helpers";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -48,7 +49,7 @@ const NonMemberPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details?eventName=${eventName}&region=${region}`);
+        const responseData = await sendRequest(`event/get-event-details/${region}/${eventName}`);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {
@@ -148,8 +149,13 @@ const NonMemberPurchase = () => {
                     try {
                       forceStartLoading();
 
-                                        // encrypt this 
-                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${selectedEvent.title}&name=${values.name}&surname=${values.surname}&email=${encodeURIComponent(values.email)}&count=${quantity}`
+                      const data = encryptData({
+                        event: selectedEvent.title,
+                        name: values.name,
+                        surname: values.surname,
+                        email: values.email,
+                      });
+                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}&count=${quantity}`;
                       const { ticketBlob } = await createCustomerTicket(selectedEvent.ticket_img, values.name, values.surname, selectedEvent.ticket_color, qrCode);
 
                       // formData

@@ -59,7 +59,7 @@ const MemberPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details?eventName=${eventName}&region=${region}`);
+        const responseData = await sendRequest(`event/get-event-details/${region}/${eventName}`);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {
@@ -133,10 +133,14 @@ const MemberPurchase = () => {
               onSubmit={async (values) => {
                 try {
                   forceStartLoading();
-
                   
-                  // encrypt this
-                  const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?event=${selectedEvent.title}&name=${currentUser.name}&surname=${currentUser.surname}&email=${encodeURIComponent(currentUser.email)}`
+                  const data = encryptData({
+                    event: selectedEvent.title,
+                    name: currentUser.name,
+                    surname: currentUser.surname,
+                    email: currentUser.email,
+                  });
+                  const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}`;
                   const { ticketBlob } = await createCustomerTicket(selectedEvent.ticket_img, currentUser.name, currentUser.surname, selectedEvent.ticket_color, qrCode);
 
                   // formData

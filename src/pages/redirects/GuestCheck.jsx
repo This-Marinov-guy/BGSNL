@@ -3,15 +3,15 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Message } from 'primereact/message';
 import { useHttpClient } from '../../hooks/http-hook'
 import PageLoading from '../../elements/ui/loading/PageLoading';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import HeaderTwo from '../../component/header/HeaderTwo';
+import { decryptData } from '../../util/functions/helpers';
 
 const GuestCheck = () => {
+    const {data} = useParams();
     const searchParams = new URLSearchParams(window.location.search);
 
-    const event = searchParams.get('event');
-    const name = searchParams.get('name') + ' ' + searchParams.get('surname');
-    const email = decodeURIComponent(searchParams.get('email'));
+    const {event, name, surname, email} = decryptData(data);
     const count = searchParams.get('count');
 
     const { sendRequest, loading } = useHttpClient();
@@ -78,7 +78,7 @@ const GuestCheck = () => {
     }
 
     useEffect(() => {
-        if (!(email && name && event)) {
+        if (!(email && name && surname && event)) {
             return navigate('/');
         }
 

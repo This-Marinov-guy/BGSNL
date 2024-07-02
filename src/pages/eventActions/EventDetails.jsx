@@ -29,7 +29,7 @@ const EventDetails = () => {
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details?eventName=${eventName}&region=${region}`);
+        const responseData = await sendRequest(`event/get-event-details/${region}/${eventName}`);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) { }
