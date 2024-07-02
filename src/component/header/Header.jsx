@@ -8,12 +8,14 @@ import ImageFb from "../../elements/ui/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import {capitalizeFirstLetter} from "../../util/functions/capitalize";
+import { decodeJWT } from "../../util/functions/jwt";
 
 const Header = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
   const [logoutAlert, setLogoutAlert] = useState(false);
 
   const user = useSelector(selectUser);
+  const userRegion = decodeJWT(user.token).region;
 
   const { region } = useParams()
 
@@ -84,6 +86,9 @@ const Header = (props) => {
           <div className="header-right">
             <nav className={"mainmenunav d-lg-block"}>
               <ul className={props.dark ? "mainmenu dark_nav" : "mainmenu"}>
+                <li>
+                  <Link to={`/${region ?? userRegion}`}>Home</Link>
+                </li>
                 <li className="has-dropdown">
                   <a style={{ cursor: 'pointer' }}>Regions</a>
                   <ul className="submenu">

@@ -4,6 +4,7 @@ import { FiCircle, FiCheckCircle, FiEdit } from "react-icons/fi";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import { useDispatch } from 'react-redux';
+import { formatRole } from '../../../util/defines/defines';
 
 const UserCard = ({ user }) => {
     const dispatch = useDispatch();
@@ -11,9 +12,9 @@ const UserCard = ({ user }) => {
     return (
         <div className="service service__style--2 team_member_border-5">
             <div className="content">
-                <h2>Hello again, {user.name}!</h2>
+                <h2>Greetings, {user.name}!</h2>
                 <div className="hor_section mb--40">
-                    <p className="mt--20" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} Member</p>
+                    <p className="mt--20" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </p>
                     <FiEdit
                         className="edit_btn"
                         onClick={() => {

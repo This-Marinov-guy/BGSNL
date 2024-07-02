@@ -7,6 +7,6 @@ export const BOARD_MEMBER = 'board_member';
 export const COMMITTEE_MEMBER = 'committee_member';
 export const MEMBER = 'member';
 
-export const formatRole = (role) => {
-    return capitalizeAfterSpace(role.replace(/_/g, " "));
+export const formatRole = (roles) => {
+    return capitalizeAfterSpace(roles[roles.length - 1].replace(/_/g, " "));
 }

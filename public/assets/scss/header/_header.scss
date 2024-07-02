@@ -378,9 +378,12 @@
   }
   &.header-red {
     @media only screen and (min-width: 991px) {
+      position:fixed;
+      top: 0;
+      right: 0;
       padding: 5px 20px;
       background-color: $theme-color-2;
-      border-radius: 10px;
+      border-bottom-left-radius: 10px;
     }
   }
 }

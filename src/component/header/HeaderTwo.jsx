@@ -7,15 +7,17 @@ import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
-import {capitalizeFirstLetter} from "../../util/functions/capitalize";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
+import { decodeJWT } from "../../util/functions/jwt";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
   const [logoutAlert, setLogoutAlert] = useState(false);
 
   const user = useSelector(selectUser);
+  const userRegion = decodeJWT(user.token).region;
 
-  const { region } = useParams()
+  const { region } = useParams();
 
   const dispatch = useDispatch();
 
@@ -49,7 +51,7 @@ const HeaderTwo = (props) => {
           <p>Continue logging out?</p>
           <button
             className="rn-btn mr--10"
-            style={{color: 'white'}}
+            style={{ color: 'white' }}
             onClick={() => {
               dispatch(logout());
               setLogoutAlert(false);
@@ -60,7 +62,7 @@ const HeaderTwo = (props) => {
           </button>
           <button
             className="rn-btn"
-            style={{background: 'transparent'}}
+            style={{ background: 'transparent' }}
             onClick={() => {
               setLogoutAlert(false);
             }}
@@ -85,6 +87,9 @@ const HeaderTwo = (props) => {
           <div className="header-right header-red">
             <nav className={"mainmenunav d-lg-block"}>
               <ul className={props.dark ? "mainmenu dark_nav" : "mainmenu"}>
+                <li>
+                  <Link to={`/${region ?? userRegion}`}>Home</Link>
+                </li>
                 <li className="has-dropdown">
                   <a style={{ cursor: 'pointer' }}>Regions</a>
                   <ul className="submenu">
@@ -124,7 +129,7 @@ const HeaderTwo = (props) => {
                 </Fragment> : <li>
                   <Link to="/about">About</Link>
                 </li>}
-                
+
                 <li className="has-dropdown">
                   <a style={{ cursor: 'pointer' }}>Articles</a>
                   <ul className="submenu">
@@ -150,14 +155,14 @@ const HeaderTwo = (props) => {
                   <div className="header-btn">
                     {!user.token ? (
                       <Link to="/login" onClick={() => sessionStorage.setItem('prevUrl', routePath)} className="rn-btn">
-                        <span style={{color: 'white'}}>Log In</span>
+                        <span style={{ color: 'white' }}>Log In</span>
                       </Link>
                     ) : (
                       <button
                         onClick={() => setLogoutAlert(true)}
                         className="rn-btn"
                       >
-                        <span style={{color: 'white'}}>Log Out</span>
+                        <span style={{ color: 'white' }}>Log Out</span>
                       </button>
                     )}
                   </div>
