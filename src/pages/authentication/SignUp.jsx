@@ -247,10 +247,10 @@ const SignUp = (props) => {
                               })
                             );
                             props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 });
-                         
+
                             navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
                             sessionStorage.removeItem('prevUrl');
-                            
+
                             return;
                           } catch (err) {
                             return;
@@ -303,7 +303,7 @@ const SignUp = (props) => {
                   id="form"
                   style={{ padding: "2%" }}
                 >
-                  <h3>Fill your details and register</h3>
+                  <h3 className="center_text">Fill your details and register</h3>
                   <div className="row mb--40 mt--40">
                     <div className="col-lg-12 col-md-6 col-12">
                       <h3 className="center_text label">Profile picture</h3>
@@ -317,7 +317,7 @@ const SignUp = (props) => {
                       </p>
                     </div>
                   </div>
-                  <h3 className="mt--30 label">Personal details</h3>
+                  <h3 className="mt--30 label center_text">Personal details</h3>
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
                       <div className="rn-form-group">
@@ -454,7 +454,7 @@ const SignUp = (props) => {
                       </Fragment>
                     )}
                   </div>
-                  <h3 className="mt--30 label">Login details</h3>
+                  <h3 className="mt--30 label center_text">Login details</h3>
                   <div className="row">
                     <div className="col-lg-6 col-md-12 col-12">
                       <div className="rn-form-group">
@@ -541,7 +541,18 @@ const SignUp = (props) => {
                         name="dataTerms"
                         component="div"
                       />
-
+                      <div className="hor_section_nospace mt--40">
+                        <Field
+                          style={{ maxWidth: "30px" }}
+                          type="checkbox"
+                          name="payTerms"
+                        ></Field>
+                        <p className="information">
+                          I consent BGSNL to deduct the membership fee at the agreed period in order to keep my benefits as a member and I keep my rights to cancel or update my payment methods.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-lg-6 col-md-6 col-12">
                       <div className="hor_section_nospace mt--40">
                         <Field
                           style={{ maxWidth: "30px" }}
@@ -561,24 +572,13 @@ const SignUp = (props) => {
                         <option value="WhatsApp">WhatsApp</option>
                         <option value="Email & WhatsApp">Both</option>
                       </Field>
-
-                      <div className="hor_section_nospace mt--40">
-                        <Field
-                          style={{ maxWidth: "30px" }}
-                          type="checkbox"
-                          name="payTerms"
-                        ></Field>
-                        <p className="information">
-                          I consent BGSNL to deduct the membership fee at the agreed period in order to keep my benefits as a member and I keep my rights to cancel or update my payment methods.
-                        </p>
-                      </div>
                       <ErrorMessage
                         className="error"
                         name="payTerms"
                         component="div"
                       />
                     </div>
-                    <div
+                    {/* <div
                       style={{ borderWidth: "30px" }}
                       className="col-lg-6 col-md-6 col-12 mt--60 mb--60 center_div team_member_border-1"
                     >
@@ -597,21 +597,18 @@ const SignUp = (props) => {
                           key. If you use key that does not belong to you, your account will be suspended!
                         </p>
                       </div>
-                    </div>
+                    </div>  */}
                   </div>
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    onClick={() => handleErrorMsg(errors, isValid)}
-                    className="rn-button-style--2 btn-solid mt--80"
-                  >
-                    {loading ? <Loader /> : <span>Finish Registration</span>}
-                  </button>
-                  <div
-                    style={{ alignItems: "flex-start" }}
-                    className="action_btns"
-                  >
-                    <Link className="rn-button-style--1" to="/login">
+                  <div className="ver_section">
+                    <button
+                      disabled={loading}
+                      type="submit"
+                      onClick={() => handleErrorMsg(errors, isValid)}
+                      className="rn-button-style--2 btn-solid mt--80"
+                    >
+                      {loading ? <Loader /> : <span>Finish Registration</span>}
+                    </button>
+                    <Link to="/login" className="mt--10" style={{ fontSize: '0.5em' }}>
                       I already have a member account
                     </Link>
                   </div>
@@ -631,7 +628,7 @@ const SignUp = (props) => {
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 

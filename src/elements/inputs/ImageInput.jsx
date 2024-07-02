@@ -57,7 +57,7 @@ const ImageInput = (props) => {
           name="image"
           accept=".png,.jpg,.jpeg"
         />
-        {!previewUrl ? <FiImage /> : <img src={previewUrl} alt="Preview" />}
+        {!previewUrl ? <FiImage style={{scale: '1.8'}}/> : <img src={previewUrl} alt="Preview" />}
       </div>
       <div>
         {props.errorRequired}
