@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from '../../component/functional/RegionLayout.module.css'
 import { Link, useParams } from 'react-router-dom'
-import capitalizeFirstLetter from '../../util/functions/capitalize'
+import {capitalizeFirstLetter} from '../../util/functions/capitalize'
 import { REGIONS } from '../../util/defines/REGIONS_DESIGN'
 
 const RegionOptions = (props) => {

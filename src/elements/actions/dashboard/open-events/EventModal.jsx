@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { FiInfo } from 'react-icons/fi';
-import capitalizeFirstLetter from '../../../../util/functions/capitalize';
+import {capitalizeFirstLetter} from '../../../../util/functions/capitalize';
 import { useDispatch } from 'react-redux';
 import { loadSingleEvent } from '../../../../redux/events';
 import { useNavigate } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import capitalizeFirstLetter from "../../../util/functions/capitalize";
+import {capitalizeFirstLetter} from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";

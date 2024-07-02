@@ -7,7 +7,7 @@ import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
-import capitalizeFirstLetter from "../../util/functions/capitalize";
+import {capitalizeFirstLetter} from "../../util/functions/capitalize";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
