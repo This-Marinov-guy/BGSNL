@@ -15,7 +15,7 @@ const Header = (props) => {
   const [logoutAlert, setLogoutAlert] = useState(false);
 
   const user = useSelector(selectUser);
-  const userRegion = decodeJWT(user.token).region;
+  const userRegion = user.token ? decodeJWT(user.token).region : '';
 
   const { region } = useParams()
 
