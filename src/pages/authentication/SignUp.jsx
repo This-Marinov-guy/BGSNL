@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -69,6 +69,8 @@ const schema = yup.object().shape({
 });
 
 const SignUp = (props) => {
+  const formRef = useRef(null);
+
   const { loading, sendRequest } = useHttpClient();
 
   const { region } = useParams();
@@ -127,13 +129,10 @@ const SignUp = (props) => {
                     }
                     className="service service__style--2"
                     onClick={() => {
-                      setSelectedMembershipIndex(i)
+                      setSelectedMembershipIndex(i);
                       setTimeout(() => {
-                        window.scrollTo({
-                          top: document.getElementById("form").scrollHeight,
-                          behavior: "smooth",
-                        });
-                      }, 100);
+                        if (formRef.current) formRef.current.scrollIntoView({ behavior: 'smooth' });
+                      }, 50)
                     }}
                   >
                     <div className="hor_section">
@@ -303,7 +302,7 @@ const SignUp = (props) => {
                   id="form"
                   style={{ padding: "2%" }}
                 >
-                  <h3 className="center_text">Fill your details and register</h3>
+                  <h3 className="center_text" ref={formRef}>Fill your details and register</h3>
                   <div className="row mb--40 mt--40">
                     <div className="col-lg-12 col-md-6 col-12">
                       <h3 className="center_text label">Profile picture</h3>
