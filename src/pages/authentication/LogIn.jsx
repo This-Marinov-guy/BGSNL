@@ -233,13 +233,13 @@ const Login = (props) => {
           )}
         </ModalWindow>
       )}
-      <div className="container mt--200 mb--40 team_member_border-4" style={{maxWidth:"800px"}}>
-        <h2 className="center_text">Log in your account</h2>
+      <div className="container mt--200 mb--40 team_member_border-3" style={{maxWidth:"600px"}}>
+        <h3 style={{fontSize: '0.8em'}} className="center_text">Log in your account</h3>
         <form
           className="center_section"
           onSubmit={(event) => loginHandler(event)}
         >
-          <div className="col-lg-6 col-md-12 col-12">
+          <div className="col-lg-8 col-md-8 col-sm-10">
             <div className="rn-form-group">
               <input
                 type="text"
@@ -249,7 +249,7 @@ const Login = (props) => {
               />
             </div>
           </div>
-          <div className="col-lg-6 col-md-12 col-12">
+          <div className="col-lg-8 col-md-8 col-sm-10">
             <div className="rn-form-group">
               <input
                 type="password"
@@ -277,7 +277,7 @@ const Login = (props) => {
           >
             Forgot my pasword
           </button>
-          <Link className="rn-button-style--1" to="/signup">
+          <Link className="rn-button-style--1 center_text" to="/signup">
             Not a member? Register now!
           </Link>
         </div>

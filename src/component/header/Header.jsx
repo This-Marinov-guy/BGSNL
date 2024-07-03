@@ -7,7 +7,7 @@ import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
-import {capitalizeFirstLetter} from "../../util/functions/capitalize";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import { decodeJWT } from "../../util/functions/jwt";
 
 const Header = (props) => {
@@ -51,7 +51,7 @@ const Header = (props) => {
           <p>Continue logging out?</p>
           <button
             className="rn-btn mr--10"
-            style={{color: 'white'}}
+            style={{ color: 'white' }}
             onClick={() => {
               dispatch(logout());
               setLogoutAlert(false);
@@ -62,7 +62,7 @@ const Header = (props) => {
           </button>
           <button
             className="rn-btn"
-            style={{background: 'transparent'}}
+            style={{ background: 'transparent' }}
             onClick={() => {
               setLogoutAlert(false);
             }}
@@ -155,13 +155,16 @@ const Header = (props) => {
                 <li>
                   <div className="header-btn">
                     {!user.token ? (
-                      <Link to="/login" onClick={() => sessionStorage.setItem('prevUrl', routePath)} className="rn-btn">
-                        <span style={{color: 'white'}}>Log In</span>
-                      </Link>
+                      <button onClick={() => {
+                        navigate("/login");
+                        sessionStorage.setItem('prevUrl', routePath);
+                      }} className="rn-btn">
+                        <span style={{ color: 'white' }}>Log In</span>
+                      </button>
                     ) : (
                       <button
                         onClick={() => setLogoutAlert(true)}
-                        style={{color: 'white'}}
+                        style={{ color: 'white' }}
                         className="rn-btn"
                       >
                         <span>Log Out</span>

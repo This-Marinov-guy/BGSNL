@@ -154,9 +154,12 @@ const HeaderTwo = (props) => {
                 <li>
                   <div className="header-btn">
                     {!user.token ? (
-                      <Link to="/login" onClick={() => sessionStorage.setItem('prevUrl', routePath)} className="rn-btn">
+                      <button onClick={() => {
+                        navigate("/login");
+                        sessionStorage.setItem('prevUrl', routePath);
+                      }} className="rn-btn">
                         <span style={{ color: 'white' }}>Log In</span>
-                      </Link>
+                      </button>
                     ) : (
                       <button
                         onClick={() => setLogoutAlert(true)}
