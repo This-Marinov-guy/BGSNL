@@ -233,8 +233,8 @@ const Login = (props) => {
           )}
         </ModalWindow>
       )}
-      <div className="container mt--200 mb--40 team_member_border-3" style={{maxWidth:"600px"}}>
-        <h3 style={{fontSize: '0.8em'}} className="center_text">Log in your account</h3>
+      <div className="container mt--200 mb--40 team_member_border-3" style={{ maxWidth: "600px" }}>
+        <h3 style={{ fontSize: '0.8em' }} className="center_text">Log in your account</h3>
         <form
           className="center_section"
           onSubmit={(event) => loginHandler(event)}
@@ -277,7 +277,10 @@ const Login = (props) => {
           >
             Forgot my pasword
           </button>
-          <Link className="rn-button-style--1 center_text" to="/signup">
+          <Link
+            style={{ fontSize: '0.9em' }}
+            className="rn-button-style--1 center_text"
+            to="/signup">
             Not a member? Register now!
           </Link>
         </div>
