@@ -133,6 +133,12 @@ const MemberPurchase = () => {
               onSubmit={async (values) => {
                 try {
                   forceStartLoading();
+
+                  const checkMemberTicket = sendRequest(`event/check-member/${currentUser.id}/${selectedEvent.id}`);
+
+                  if (!checkMemberTicket.status) {
+                    return;
+                  }
                   
                   const data = encryptData({
                     event: selectedEvent.title,

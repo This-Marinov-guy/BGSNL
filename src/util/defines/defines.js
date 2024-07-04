@@ -17,3 +17,9 @@ export const EVENT_CANCELED = 'canceled';
 export const formatRole = (roles) => {
     return capitalizeAfterSpace(roles[roles.length - 1].replace(/_/g, " "));
 }
+
+// modals
+export const BIRTHDAY_MODAL = 'birthday_modal';
+export const USER_UPDATE_MODAL = 'user_update_modal';
+export const RESET_PASSWORD_MODAL = 'reset_password_modal';
+export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';

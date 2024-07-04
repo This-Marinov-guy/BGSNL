@@ -4,7 +4,7 @@ import { FiCircle, FiCheckCircle, FiEdit } from "react-icons/fi";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import { useDispatch } from 'react-redux';
-import { formatRole } from '../../../util/defines/defines';
+import { USER_UPDATE_MODAL, formatRole } from '../../../util/defines/defines';
 
 const UserCard = ({ user }) => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const UserCard = ({ user }) => {
                     <FiEdit
                         className="edit_btn"
                         onClick={() => {
-                            dispatch(showModal());
+                            dispatch(showModal(USER_UPDATE_MODAL));
                         }}
                     />
                 </div>

@@ -3,12 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 export const modalSlice = createSlice({
   name: "modal",
   initialState: {
-    modal: false,
+    modal: null,
     warning: false,
   },
   reducers: {
-    showModal: (state) => {
-      state.modal = true;
+    showModal: (state, action) => {
+      state.modal = action.payload;
     },
     removeModal: (state) => {
       state.modal = false;
@@ -17,7 +17,7 @@ export const modalSlice = createSlice({
       state.warning = true;
     },
     removeWarning: (state) => {
-      state.warning = false;
+      state.warning = null;
     },
   },
 });

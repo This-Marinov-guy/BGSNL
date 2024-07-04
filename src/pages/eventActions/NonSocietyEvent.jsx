@@ -18,6 +18,7 @@ import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { useObjectGrabUrl } from "../../hooks/object-hook";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { decodeJWT } from "../../util/functions/jwt";
+import { NSE_REGISTRATION_MODAL } from "../../util/defines/defines";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -107,8 +108,7 @@ const NonSocietyEvent = (props) => {
       {currentUser && currentUser.status !== "active" && (
         <Locked show={currentUser.status} />
       )}
-      {modal && (
-        <ModalWindow show={modal}>
+        <ModalWindow show={modal === NSE_REGISTRATION_MODAL}>
           {user.token ? (currentUser ? <div className="center_section pd--20">
             <FiX style={{ fontSize: '25px' }}
               className="x_icon"
@@ -261,8 +261,6 @@ const NonSocietyEvent = (props) => {
             )}
           </Formik>}
         </ModalWindow>
-      )
-      }
 
       {/* Start Breadcrump Area */}
       <div
@@ -316,7 +314,7 @@ const NonSocietyEvent = (props) => {
                   <button
                     onClick={
                       () => {
-                        dispatch(showModal());
+                        dispatch(showModal(NSE_REGISTRATION_MODAL));
                       }
                     }
                     className="rn-button-style--2 btn-solid"

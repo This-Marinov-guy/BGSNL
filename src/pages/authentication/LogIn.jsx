@@ -12,6 +12,7 @@ import ModalWindow from "../../elements/ui/ModalWindow";
 import { FiX } from "react-icons/fi";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { Link } from "react-router-dom";
+import { BIRTHDAY_MODAL, RESET_PASSWORD_MODAL } from "../../util/defines/defines";
 
 const schema = yup.object().shape({
   token: yup.string().required("Please provide the token send to you by email"),
@@ -95,6 +96,10 @@ const Login = (props) => {
       );
       props.toast.current.show({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' });
 
+      if (responseData.celebrate) {
+        dispatch(showModal(BIRTHDAY_MODAL));
+      }
+
       navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
       sessionStorage.removeItem('prevUrl');
 
@@ -109,8 +114,7 @@ const Login = (props) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      {modal && (
-        <ModalWindow show={modal}>
+        <ModalWindow show={modal === RESET_PASSWORD_MODAL}>
           {!confirmChanging ? (
             <form
               className="container pd--40"
@@ -232,7 +236,6 @@ const Login = (props) => {
             </Formik>
           )}
         </ModalWindow>
-      )}
       <div className="container mt--200 mb--40 team_member_border-3" style={{ maxWidth: "600px" }}>
         <h3 style={{ fontSize: '0.8em' }} className="center_text">Log in your account</h3>
         <form
@@ -272,10 +275,10 @@ const Login = (props) => {
             style={{ border: "none" }}
             className="rn-button-style--1"
             onClick={() => {
-              dispatch(showModal());
+              dispatch(showModal(RESET_PASSWORD_MODAL));
             }}
           >
-            Forgot my pasword
+            Forgot my password
           </button>
           <Link
             style={{ fontSize: '0.9em' }}

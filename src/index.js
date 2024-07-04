@@ -24,6 +24,9 @@ import { removeLogsOnProd } from "./util/functions/helpers";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import GlobalError from "./component/common/GlobalError";
+import { BIRTHDAY_MODAL } from "./util/defines/defines";
+import { selectModal } from "./redux/modal";
+import BirthdayModal from "./elements/ui/modals/BirthdayModal";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -141,6 +144,7 @@ const Root = () => {
       <BrowserRouter basename={"/"}>
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
+            <BirthdayModal />
             <Toast ref={toast} position="top-center" />
             <Routes>
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
@@ -203,7 +207,7 @@ const Root = () => {
                   <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                   <Route
                     exact
-                      path={"/:region/purchase-ticket/:eventName"}
+                    path={"/:region/purchase-ticket/:eventName"}
                     element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
                   />
 

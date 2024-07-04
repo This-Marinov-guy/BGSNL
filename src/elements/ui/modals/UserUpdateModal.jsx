@@ -8,6 +8,7 @@ import Loader from "../../../elements/ui/loading/Loader";
 import ImageInput from "../../../elements/inputs/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { USER_UPDATE_MODAL } from "../../../util/defines/defines";
 
 const schema = yup.object().shape({
     image: yup.string(),
@@ -61,7 +62,7 @@ const UserUpdateModal = ({currentUser}) => {
     };
 
     return (
-        <ModalWindow show={modal}>
+        <ModalWindow show={modal === USER_UPDATE_MODAL}>
             <Formik
                 className="inner"
                 validationSchema={schema}
