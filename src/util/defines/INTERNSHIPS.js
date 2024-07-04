@@ -1,5 +1,16 @@
 export const INTERNSHIPS = [
     {
+        logo: 'https://careers.silverstar.bg/wp-content/uploads/2024/03/channels4_profile.jpg.webp',
+        company: 'Silver Star',
+        specialty: 'Marketing, Sales, Mechanical Engineering',
+        location: 'On-site | Bulgaria, Plovdiv',
+        duration: 'variates',
+        description: 'Offered internships in different fields with different perspectives and the chance to earn the spot on the Silver Star team',
+        bonuses: ['Paid'],
+        requirements: [],
+        link: 'https://careers.silverstar.bg/all-positions/'
+    },
+    {
         logo: 'https://southwesternadvantage.com/wp-content/uploads/2022/08/SWA-logo.svg',
         company: 'Southwestern Advantage',
         specialty: 'Management, Communication, Sales',
