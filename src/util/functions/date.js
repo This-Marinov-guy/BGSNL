@@ -23,3 +23,19 @@ export const dateConvertor = (dateString, getAsValue = false) => {
     // Creating Date object
     return getAsValue ? new Date(year, month, day, hours, minutes).valueOf : new Date(year, month, day, hours, minutes);
 }
+
+export const yearsSinceBirthday = (birthDate) => {
+    const birth = new Date(birthDate);
+    const now = new Date();
+
+    let age = now.getFullYear() - birth.getFullYear();
+    const monthDiff = now.getMonth() - birth.getMonth();
+    const dayDiff = now.getDate() - birth.getDate();
+
+    // If birthday hasn't occurred this year yet, subtract a year
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    return age;
+}

@@ -2,6 +2,14 @@
   animation: slide-down 300ms ease-out forwards;
 }
 
+.birthday-hat {
+  position: absolute;
+  height: 150px;
+  top: -80px;
+  left: -35px;
+  transform: rotate(-30deg);
+}
+
 .holiday-special {
   position: fixed;
   text-align: center;

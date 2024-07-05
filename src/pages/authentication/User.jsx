@@ -21,9 +21,11 @@ import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
 import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserCard from "../../elements/ui/cards/UserCard";
+import BirthdayBanner from "../../elements/banners/BirthdayBanner";
 
 const User = (props) => {
   const [currentUser, setCurrentUser] = useState();
+  const [hasBirthday, setHasBirthday] = useState();
   const [expand, setExpand] = useState(false);
 
   const { loading, sendRequest } = useHttpClient();
@@ -61,6 +63,7 @@ const User = (props) => {
       try {
         const responseData = await sendRequest(`user/${userId}`);
         setCurrentUser(responseData.user);
+        setHasBirthday(responseData.celebrate);
       } catch (err) {
       }
     };
@@ -209,11 +212,13 @@ const User = (props) => {
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}
     <div className="service-area ptb--120 bg_color--1 mt--120">
+      {/* {hasBirthday && <BirthdayBanner birth={currentUser.birth} name={currentUser.name}/>} */}
       <div className="container">
         <div className="row service-one-wrapper">
           <div className="col-lg-6 col-md-12 col-12 ">
             {currentUser.subscription && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
             <div className="service service__style--2">
+              {hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
               <LazyLoadImage src={currentUser.image} alt="profile" />
             </div>
           </div>
