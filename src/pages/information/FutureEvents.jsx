@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import ScrollToTop from "react-scroll-up";
@@ -7,14 +7,33 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";
 import PortfolioList from "../../elements/portfolio/PortfolioList";
-import { SOCIETY_EVENTS } from "../../util/defines/OPEN_EVENTS";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
+import { useDispatch, useSelector } from "react-redux";
+import { selectEvents } from "../../redux/events";
+import EventsLoading from "../../elements/ui/loading/EventsLoading";
 
 
-const FutureEventsContent = () => {
+const FutureEventsContent = ({displayAll}) => {
+  const [isEventsLoading, setIsEventsLoading] = useState();
 
   const { region } = useParams();
 
+  const events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchEventsFromApi = async () => {
+      try {
+        setIsEventsLoading(true);
+        const responseData = await sendRequest(`event/actions/events`);
+        dispatch(loadEvents(responseData.events));
+      } catch (err) { } finally {
+        setIsEventsLoading(false);
+      }
+    }
+
+    fetchEventsFromApi();
+  }, []);
 
   return (
     <div className="portfolio-area pt--120 pb--120 bg_color--5">
@@ -32,10 +51,11 @@ const FutureEventsContent = () => {
             </div>
             <div className="col-lg-12">
               <div className="row slick-space-gutter--15 slickdot--20">
-                {SOCIETY_EVENTS[region] && SOCIETY_EVENTS[region].filter(event => event.visible === true).length > 0 ? (
+                {isEventsLoading ? <EventsLoading/> : 
+                events && events.filter(event => event.visible === true).length > 0 ? (
                   <PortfolioList
                     style="society"
-                    target={SOCIETY_EVENTS[region].filter(event => event.visible === true)}
+                    target={events.filter(event => event.visible === true)}
                     styevariation="text-center mt--40"
                     column="col-lg-4 col-md-5 col-sm-6"
                   />
