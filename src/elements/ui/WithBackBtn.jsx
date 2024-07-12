@@ -10,7 +10,7 @@ const WithBackBtn = (props) => {
             <p onClick={() => navigate(-1)} className='information mr--20' style={{ cursor: 'pointer', display: 'inline' }}>
                 <FiChevronLeft />
                 Back |
-            </p >
+            </p>
             {props.children}
         </div>
 

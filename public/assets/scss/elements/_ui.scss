@@ -215,3 +215,7 @@ hr {
 .p-toast-message {
   backdrop-filter: blur(2000px) !important; /* Ensure the background is fully opaque */
 }
+
+.p-steps .p-steps-item.p-highlight .p-steps-number {
+  background-color: $theme-color;
+}
