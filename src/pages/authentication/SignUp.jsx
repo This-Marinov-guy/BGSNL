@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiChevronLeft } from "react-icons/fi";
 import { Calendar } from 'primereact/calendar';
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
@@ -177,13 +177,10 @@ const SignUp = (props) => {
         </div>
       </div>
       stepButtons = <div className="center_div mb--20">
-        <button
-          disabled={activeStep === 0}
-          onClick={() => setActiveStep(prevProps => prevProps - 1)}
-          className="rn-button-style--2 rn-btn-reverse"
-        >
+        <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', margin: 'auto' }}>
+          <FiChevronLeft />
           Back
-        </button>
+        </p>
       </div>
       break;
     case 2:
@@ -369,7 +366,6 @@ const SignUp = (props) => {
                         mask="99/99/9999"
                         placeholder="Select Birth Date"
                         style={{ width: '100%' }}
-                        touchUI
                         showIcon />
                       <ErrorMessage
                         className="error"
@@ -616,13 +612,10 @@ const SignUp = (props) => {
                 </div>
                 <div className="ver_section mt--20">
                   {loading ? <Loader /> : <div className="options-btns-div">
-                    <button
-                      disabled={activeStep === 0}
-                      onClick={() => setActiveStep(prevProps => prevProps - 1)}
-                      className="rn-button-style--2 rn-btn-reverse"
-                    >
+                    <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', margin: 'auto 20px auto auto' }}>
+                      <FiChevronLeft />
                       Back
-                    </button>
+                    </p>
                     <button
                       disabled={loading}
                       type="submit"
