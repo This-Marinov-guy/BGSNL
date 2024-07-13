@@ -446,15 +446,15 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 250px;
+  max-width: 500px;
   height: 250px;
   border: 1px solid #d4d4d4;
   border-radius: 7%;
 
   img {
     border: 1px solid #d4d4d4;
+    object-fit: cover;
     height: 100%;
-    width: 100%;
   }
 }
 
