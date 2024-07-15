@@ -28,7 +28,7 @@ const User = (props) => {
   const [hasBirthday, setHasBirthday] = useState();
   const [expand, setExpand] = useState(false);
 
-  const { loading, sendRequest } = useHttpClient();
+  const { sendRequest } = useHttpClient();
 
   const user = useSelector(selectUser);
 
@@ -205,7 +205,6 @@ const User = (props) => {
       logoname="logo.png"
     />
     <UserUpdateModal currentUser={currentUser} />
-    {/* <Christmas currentUser={currentUser} /> */}
     {currentUser.status !== "active" && (
       <Locked user={currentUser} case="locked" show={currentUser.status} toast={props.toast} />
     )}
