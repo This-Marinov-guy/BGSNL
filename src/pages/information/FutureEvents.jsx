@@ -9,14 +9,17 @@ import { useParams } from "react-router-dom";
 import PortfolioList from "../../elements/portfolio/PortfolioList";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { useDispatch, useSelector } from "react-redux";
-import { selectEvents } from "../../redux/events";
+import { loadEvents, selectEvents } from "../../redux/events";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
+import { useHttpClient } from "../../hooks/http-hook";
 
 
 const FutureEventsContent = ({displayAll}) => {
   const [isEventsLoading, setIsEventsLoading] = useState();
 
   const { region } = useParams();
+
+  const {sendRequest} = useHttpClient();
 
   const events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
   const dispatch = useDispatch();
@@ -27,12 +30,14 @@ const FutureEventsContent = ({displayAll}) => {
         setIsEventsLoading(true);
         const responseData = await sendRequest(`event/actions/events`);
         dispatch(loadEvents(responseData.events));
-      } catch (err) { } finally {
+      } catch (err) { 
+      } finally {
         setIsEventsLoading(false);
       }
     }
 
     fetchEventsFromApi();
+    
   }, []);
 
   return (
@@ -52,10 +57,10 @@ const FutureEventsContent = ({displayAll}) => {
             <div className="col-lg-12">
               <div className="row slick-space-gutter--15 slickdot--20">
                 {isEventsLoading ? <EventsLoading/> : 
-                events && events.filter(event => event.visible === true).length > 0 ? (
+                events && events.filter(event => event.hidden === false).length > 0 ? (
                   <PortfolioList
                     style="society"
-                    target={events.filter(event => event.visible === true)}
+                    target={events.filter(event => event.hidden === false)}
                     styevariation="text-center mt--40"
                     column="col-lg-4 col-md-5 col-sm-6"
                   />
