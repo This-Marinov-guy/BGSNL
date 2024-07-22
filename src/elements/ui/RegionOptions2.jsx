@@ -6,9 +6,9 @@ import { capitalizeFirstLetter } from '../../util/functions/capitalize';
 
 const RegionOptions2 = (props) => {
     return (
-        <div className='row m--20'>
+        <div className='row center_div m--20'>
             {REGIONS.map((r, index) => {
-                return <Link key={index} className='col-lg-4 col-md-6 col-12 mb--20'>
+                return <div key={index} className='col-lg-4 col-md-6 col-12 mb--20' style={{maxWidth: '13em'}}>
                     <Card 
                         title={<div className='hor_section'>
                             {capitalizeFirstLetter(r)}
@@ -21,7 +21,7 @@ const RegionOptions2 = (props) => {
                     </div>} 
                     header={<img alt="Card" src={`/assets/images/bg/paralax/${r}.jpg`} style={{ height: '200px', objectFit: 'cover' }} />}>
                     </Card>
-                </Link>
+                </div>
             })}
         </div>
     )
