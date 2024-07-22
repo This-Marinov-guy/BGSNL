@@ -21,6 +21,7 @@ import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CO
 import { askBeforeRedirect } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
+import RegionOptions2 from "../../elements/ui/RegionOptions2";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -120,7 +121,7 @@ const SignUp = (props) => {
 
   switch (activeStep) {
     case 0:
-      stepComp = <RegionOptions to='signup' />
+      stepComp = <RegionOptions2 to='signup' />
       stepButtons = null;
       break;
     case 1:

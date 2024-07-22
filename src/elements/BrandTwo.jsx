@@ -3,7 +3,7 @@ import React, { Component } from "react";
 class BrandTwo extends Component {
     render() {
         return (
-            <div style={{ padding: '5px 40px', marginBottom: '20px' }} className="rn-brand-area brand-separation bg_color--5">
+            <div style={{ padding: '40px 40px 5px', marginBottom: '20px' }} className="rn-brand-area brand-separation bg_color--5">
                 <h3 style={{ textAlign: 'center', fontFamily: 'Archive' }}>Partners</h3>
                 <ul className="brand-style-2">
                     <li>
