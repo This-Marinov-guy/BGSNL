@@ -41,13 +41,13 @@ export const askBeforeRedirect = (basedOnEnv = true) => {
 }
 
 export const encodeForURL = (string) => {
-    let encodedString = inputString.toLowerCase().replace(/ /g, '_');
+    let encodedString = string.toLowerCase().replace(/ /g, '_');
 
     return encodeURIComponent(encodedString);
 }
 
 export const decodeFromURL = (url) => {
-    const decodedString = inputString.replace(/_/g, ' ').replace(/\b\w/g, function (char) {
+    const decodedString = url.replace(/_/g, ' ').replace(/\b\w/g, function (char) {
         return char.toUpperCase();
     });
 

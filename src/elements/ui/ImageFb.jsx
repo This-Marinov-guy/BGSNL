@@ -10,7 +10,7 @@ const ImageFb = (props) => {
         type={props.type ? props.type : "image/webp"}
       />
       <LazyLoadImage
-        src={props.fallback}
+        src={props.fallback ?? props.src}
         className={props.className}
         style={props.style}
         alt={props.alt ? props.alt : "Fallback image"}
