@@ -1,5 +1,6 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
+import ReactGA from 'react-ga';
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -84,6 +85,7 @@ const Fail = lazy(() => import("./pages/redirects/Fail"));
 
 const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
 
+let gaInit = false;
 
 const Root = () => {
   const maintenanceBreak = false;
@@ -113,6 +115,12 @@ const Root = () => {
 
   useEffect(() => {
     clarityTrack();
+
+    if (!gaInit) {
+      ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG, { debug: !isProd() });
+    }
+
+    ReactGA.pageview(window.location.pathname + window.location.search);
     let storedData = JSON.parse(localStorage.getItem("userData"));
     if (
       storedData &&
