@@ -14,14 +14,15 @@ import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useHttpClient } from "../../hooks/http-hook";
 
 
-const FutureEventsContent = ({displayAll}) => {
+const FutureEventsContent = ({ displayAll }) => {
   const [isEventsLoading, setIsEventsLoading] = useState();
 
   const { region } = useParams();
 
-  const {sendRequest} = useHttpClient();
+  const { sendRequest } = useHttpClient();
 
-  const events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
+  let events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
+  events = events.filter(event => event.hidden === false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,14 +31,13 @@ const FutureEventsContent = ({displayAll}) => {
         setIsEventsLoading(true);
         const responseData = await sendRequest(`event/actions/events`);
         dispatch(loadEvents(responseData.events));
-      } catch (err) { 
+      } catch (err) {
       } finally {
         setIsEventsLoading(false);
       }
     }
 
     fetchEventsFromApi();
-    
   }, []);
 
   return (
@@ -56,19 +56,19 @@ const FutureEventsContent = ({displayAll}) => {
             </div>
             <div className="col-lg-12">
               <div className="row slick-space-gutter--15 slickdot--20">
-                {isEventsLoading ? <EventsLoading/> : 
-                events && events.filter(event => event.hidden === false).length > 0 ? (
-                  <PortfolioList
-                    style="society"
-                    target={events.filter(event => event.hidden === false)}
-                    styevariation="text-center mt--40"
-                    column="col-lg-4 col-md-5 col-sm-6"
-                  />
-                ) : (
-                  <p className="col-lg-6 mt--20 mb--20">
-                    Currently there are no upcoming other events. Follow us for updates!
-                  </p>
-                )}
+                {isEventsLoading ? <EventsLoading /> :
+                  events && events.length > 0 ? (
+                    <PortfolioList
+                      style="society"
+                      target={events}
+                      styevariation="text-center mt--40"
+                      column="col-lg-4 col-md-5 col-sm-6"
+                    />
+                  ) : (
+                    <p className="col-lg-6 mt--20 mb--20">
+                      Currently there are no upcoming other events. Follow us for updates!
+                    </p>
+                  )}
               </div>
             </div>
           </div>

@@ -12,7 +12,6 @@ const PortfolioList = (props) => {
   return (
     <React.Fragment>
       {props.target
-        .filter((value) => value.date > moment().format("Do MMM YY") || value.hidden === true)
         .map((value, index) => (
           <div style={{ margin: '60px 10px' }} className={`portfolio ${props.column} ${props.stylevariation}`} key={index}>
             <Link
