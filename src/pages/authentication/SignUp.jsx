@@ -90,6 +90,14 @@ const SignUp = (props) => {
     }
   ];
 
+  const handleSelectStep = (e) => {
+    const newIndex = e.index;
+    
+    if (newIndex < activeStep || (region && (newIndex < 2 || selectedMembershipIndex))) {
+      setActiveStep(newIndex);
+    }
+  }
+
   const { loading, sendRequest } = useHttpClient();
 
   const [selectedMembershipIndex, setSelectedMembershipIndex] = useState(null);
@@ -103,10 +111,6 @@ const SignUp = (props) => {
       props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
     }
   }
-
-  useEffect(() => {
-    askBeforeRedirect();
-  }, []);
 
   useEffect(() => {
     if (region && !REGIONS.includes(region)) {
@@ -317,7 +321,7 @@ const SignUp = (props) => {
                 style={{ padding: "2%" }}
               >
                 <h3 className="center_text">Fill your details and register</h3>
-                <div className="row mb--40 mt--40">
+                <div className="center_div row mb--40 mt--40">
                   <div className="col-lg-12 col-md-6 col-12">
                     <h3 className="center_text label">Profile picture</h3>
                     <ImageInput
@@ -612,20 +616,20 @@ const SignUp = (props) => {
                     </div>  */}
                 </div>
                 <div className="ver_section mt--20">
-                  {loading ? <Loader /> : <div className="options-btns-div">
-                    <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', margin: 'auto 20px auto auto' }}>
+                  <div className="options-btns-div">
+                    {!loading && <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', margin: 'auto 20px auto auto' }}>
                       <FiChevronLeft />
                       Back
-                    </p>
+                    </p>}
                     <button
                       disabled={loading}
                       type="submit"
                       className="rn-button-style--2 btn-solid"
                       onClick={() => handleErrorMsg(errors, isValid)}
                     >
-                      To Payment
+                      {loading ? <Loader /> : 'Payment'}
                     </button>
-                  </div>}
+                  </div>
                   <Link to="/login" className="mt--10" style={{ fontSize: '0.5em' }}>
                     I already have a member account
                   </Link>
@@ -653,7 +657,7 @@ const SignUp = (props) => {
 
       <h3 className="center_text mt--150">Become a Member</h3>
 
-      <Steps model={stepConfig} activeIndex={activeStep} className="mt--20" />
+      <Steps model={stepConfig} activeIndex={activeStep} onSelect={handleSelectStep} readOnly={false} className="mt--20" />
       {stepComp}
       {stepButtons}
 
