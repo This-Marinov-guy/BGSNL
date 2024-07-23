@@ -33,7 +33,7 @@ const FooterTwo = () => {
                     </Link>
                   </div>
                 </div>
-                <button className="rn-button-style--2 btn-bul" onClick={() => dispatch(showDonation())}>Support us</button>
+              <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showDonation())}>Support us</button>
               </div>
             </div>
             <div className="col-lg-4 col-md-6 col-sm-6 col-12">

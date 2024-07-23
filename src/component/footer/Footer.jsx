@@ -28,7 +28,7 @@ const Footer = () => {
                     Do not <br />
                     hesitate to contact us
                   </h2>
-                  <button className="rn-button-style--2 btn-solid" onClick={() => dispatch(showDonation())}>Support us</button>
+                  <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showDonation())}>Support us</button>
 
                 </div>
               </div>
