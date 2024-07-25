@@ -22,6 +22,8 @@ import { askBeforeRedirect } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/RegionOptions2";
+import { showModal } from "../../redux/modal";
+import { BIRTHDAY_MODAL } from "../../util/defines/defines";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -264,6 +266,10 @@ const SignUp = (props) => {
                             })
                           );
                           props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 });
+
+                          if (responseData.celebrate) {
+                            dispatch(showModal(BIRTHDAY_MODAL));
+                          }
 
                           navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
                           sessionStorage.removeItem('prevUrl');
