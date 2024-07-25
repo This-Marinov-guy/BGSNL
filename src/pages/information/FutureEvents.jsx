@@ -22,7 +22,7 @@ const FutureEventsContent = ({ displayAll }) => {
   const { sendRequest } = useHttpClient();
 
   let events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
-  if (events.isArray([])) {
+  if (Array.isArray(events)) {
     events = events.filter(event => event.hidden === false);
   }
   const dispatch = useDispatch();
