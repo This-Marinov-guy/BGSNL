@@ -22,14 +22,14 @@ const EventDetails = () => {
 
   const user = useSelector(selectUser);
 
-  const { region, eventName } = useParams();
+  const { region, eventId } = useParams();
 
   const { loading, sendRequest } = useHttpClient();
 
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details/${region}/${eventName}`);
+        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) { }
