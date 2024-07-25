@@ -88,8 +88,6 @@ const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
 let gaInit = false;
 
 const Root = () => {
-  const maintenanceBreak = false;
-
   const toast = useRef(null)
 
   const dispatch = useDispatch();
@@ -144,9 +142,10 @@ const Root = () => {
     }
   }, [error])
 
-  if (maintenanceBreak) {
+  if (process.env.REACT_APP_MAINTENANCE) {
     return <Maintenance />
   }
+
   else {
     return (
       <BrowserRouter basename={"/"}>
