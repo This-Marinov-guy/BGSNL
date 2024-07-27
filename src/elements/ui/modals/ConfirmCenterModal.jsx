@@ -13,7 +13,7 @@ const ConfirmCenterModal = (props) => {
                 className="rn-button-style--2 rn-btn-reverse mr--5">No</button>
             <button
                 onClick={() => props.onConfirm()}
-                className="rn-button-style--2 btn-solid"
+                className="rn-button-style--2 rn-btn-reverse-green"
             >Yes</button>
         </div>);
 

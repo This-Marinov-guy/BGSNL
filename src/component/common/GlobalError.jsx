@@ -21,7 +21,7 @@ const ErrorFallback = ({ resetErrorBoundary }) => {
                     <div className="options-btns-div mt--60">
                         <button
                             onClick={resetErrorBoundary}
-                            className="rn-button-style--2 btn-solid"
+                            className="rn-button-style--2 rn-btn-reverse-green"
                         >
                             Try again
                         </button>

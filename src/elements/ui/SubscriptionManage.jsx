@@ -56,7 +56,7 @@ const SubscriptionManage = (props) => {
                 <button
                     disabled={loading}
                     onClick={handleManage}
-                    className="rn-button-style--2 btn-solid"
+                    className="rn-button-style--2 rn-btn-reverse-green"
                 >
                     Payment details
                 </button>

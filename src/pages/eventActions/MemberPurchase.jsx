@@ -84,7 +84,7 @@ const MemberPurchase = () => {
       />
       <h3 className="">This event is sold through an external platform - click below to see it!</h3>
       <a href={selectedEvent.ticket_link}
-        className="rn-button-style--2 btn-solid mt--20"
+        className="rn-button-style--2 rn-btn-reverse-green mt--20"
       >
         Go to event
       </a>
@@ -102,7 +102,7 @@ const MemberPurchase = () => {
         />
         <h3 className="">Opps ... it is all SOLD OUT! Please check the event description for tickets on-the-door or contact us through our email! Hope we see you soon!</h3>
         <Link to='/'
-          className="rn-button-style--2 btn-solid mt--20"
+          className="rn-button-style--2 rn-btn-reverse-green mt--20"
         >
           Home
         </Link>
@@ -222,7 +222,7 @@ const MemberPurchase = () => {
                     <button
                       disabled={loading}
                       type="submit"
-                      className="rn-button-style--2 btn-solid mt--80"
+                      className="rn-button-style--2 rn-btn-reverse-green mt--80"
                     >
                       {loading ? <Loader /> : <span>Proceed to paying</span>}
                     </button>

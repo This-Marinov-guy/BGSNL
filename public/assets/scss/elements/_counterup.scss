@@ -14,7 +14,7 @@
             margin-bottom: 17px;
             position: relative;
             display: inline-block;
-            color: $theme-color;
+            color: $body-color;
             margin-left: -20px;
             @media #{$sm-layout} {
                 font-size: 45px;
@@ -60,7 +60,7 @@
         text-align: center;
         h5{
             &.counter{
-                color: $theme-color;
+                color: $body-color;
             }
         }
         p{
@@ -77,7 +77,7 @@
         &.counter{
             font-size: 50px;
             line-height: 60px;
-            color: $theme-color;
+            color: $body-color;
             display: inline-block;
             margin-bottom: 10px;
         }

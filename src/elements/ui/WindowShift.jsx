@@ -9,7 +9,7 @@ const WindowShift = (props) => {
         <button
           className={
             window === props.main
-              ? "rn-button-style--2 btn-solid option-btn"
+              ? "rn-button-style--2 rn-btn-reverse-green option-btn"
               : "rn-button-style--2 rn-btn-reverse option-btn"
           }
           onClick={() => {
@@ -21,7 +21,7 @@ const WindowShift = (props) => {
         <button
           className={
             window === props.secondary
-              ? "rn-button-style--2 btn-solid option-btn"
+              ? "rn-button-style--2 rn-btn-reverse-green option-btn"
               : "rn-button-style--2 rn-btn-reverse option-btn"
           }
           onClick={() => {

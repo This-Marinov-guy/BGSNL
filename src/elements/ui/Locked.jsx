@@ -81,13 +81,13 @@ const Locked = (props) => {
               return <li key={index} >
                 <button disabled={loading}
                   onClick={() => handleUnlock(index)}
-                  className={'rn-button-style--2 btn-solid'}>Extend with {option.period} months</button>
+                  className={'rn-button-style--2 rn-btn-reverse-green'}>Extend with {option.period} months</button>
               </li>
             })}
           </ul> : <button
             disabled={loading}
             onClick={handleUnlock}
-            className="rn-button-style--2 btn-solid mt--40"
+            className="rn-button-style--2 rn-btn-reverse-green mt--40"
           >
             {loading ? <Loader /> : <span>Proceed to paying</span>}
           </button>

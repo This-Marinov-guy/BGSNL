@@ -158,8 +158,8 @@ const Header = (props) => {
                       <button onClick={() => {
                         navigate("/login");
                         if (routePath !== '/') sessionStorage.setItem('prevUrl', routePath);
-                      }} className="rn-btn">
-                        <span style={{ color: 'white' }}>Log In</span>
+                      }} className="rn-button-style--2 rn-btn-reverse-green">
+                        <span>Log In</span>
                       </button>
                     ) : (
                       <button

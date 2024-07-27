@@ -605,7 +605,7 @@ const EventForm = (props) => {
                             disabled={loading}
                             type="submit"
                             onClick={() => handleSubmit(errors, isValid, dirty)}
-                            className="rn-button-style--2 btn-solid"
+                            className="rn-button-style--2 rn-btn-reverse-green"
                         >
                             {loading ? <Loader /> : <span>Submit Event</span>}
                         </button>

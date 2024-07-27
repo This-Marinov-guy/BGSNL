@@ -18,7 +18,7 @@ const MembershipBanner = () => {
                 <span className="">Log in</span>
             </Link>
             <Link
-                className="rn-button-style--2 btn-solid center_text"
+                className="rn-button-style--2 rn-btn-reverse-green center_text"
                 onClick={() => sessionStorage.setItem('prevUrl', routePath)}
                 to="/signup"
             >

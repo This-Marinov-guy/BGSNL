@@ -146,7 +146,7 @@ const Donation = () => {
                             <button
                                 disabled={loading}
                                 type="submit"
-                                className="rn-button-style--2 btn-solid mt--20"
+                                className="rn-button-style--2 rn-btn-reverse-green mt--20"
                             >
                                 {loading ? <Loader /> : <span>Continue the payment</span>}
                             </button>

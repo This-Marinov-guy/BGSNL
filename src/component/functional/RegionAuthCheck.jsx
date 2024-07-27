@@ -20,7 +20,7 @@ const RegionAuthCheck = ({ children }) => {
             />
             <h3 className="">It looks like you are trying to access an event with your profile for another city!</h3>
             <Link to='/'
-                className="rn-button-style--2 btn-solid mt--20"
+                className="rn-button-style--2 rn-btn-reverse-green mt--20"
             >
                Home
             </Link>

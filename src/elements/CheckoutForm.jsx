@@ -50,7 +50,7 @@ const CheckoutForm = () => {
     return (
         <form className="payment_form" id="payment-form" onSubmit={handleSubmit}>
             <PaymentElement id="payment-element" />
-            <button disabled={isProcessing || !stripe || !elements} id="submit" className="rn-button-style--2 btn-solid mt--40"
+            <button disabled={isProcessing || !stripe || !elements} id="submit" className="rn-button-style--2 rn-btn-reverse-green mt--40"
             >
                 <span id="button-text">
                     {isProcessing ? "Processing ... " : "Pay now"}

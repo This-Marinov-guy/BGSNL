@@ -382,7 +382,17 @@
       top: 0;
       right: 0;
       padding: 5px 20px;
-      background-color: $theme-color-2;
+      background-color: $theme-color-3;
+      border-bottom-left-radius: 10px;
+    }
+  }
+  &.header-green {
+    @media only screen and (min-width: 991px) {
+      position:fixed;
+      top: 0;
+      right: 0;
+      padding: 5px 20px;
+      background-color: $body-color-2;
       border-bottom-left-radius: 10px;
     }
   }

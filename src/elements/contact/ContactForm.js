@@ -56,7 +56,7 @@ function ContactForm(props) {
 
       <div className="rn-form-group">
         <button
-          className="rn-button-style--2 btn-solid"
+          className="rn-button-style--2 rn-btn-reverse-green"
           type="submit"
           value="submit"
           name="submit"

@@ -136,7 +136,7 @@ const Login = (props) => {
               {!confirmChanging && (
                 loading ? <Loader /> : <button
                   type="submit"
-                  className="rn-button-style--2 btn-solid mt--80"
+                  className="rn-button-style--2 rn-btn-reverse-green mt--80"
                 >
                   Proceed
                 </button>
@@ -227,7 +227,7 @@ const Login = (props) => {
                   <button
                     disabled={loading}
                     type="submit"
-                    className="rn-button-style--2 btn-solid mt--80"
+                    className="rn-button-style--2 rn-btn-reverse-green mt--80"
                   >
                     {loading ? <Loader /> : <span>Change Password</span>}
                   </button>
@@ -265,7 +265,7 @@ const Login = (props) => {
           <button
             disabled={loading && !loginFormValues.email && !loginFormValues.password}
             type="submit"
-            className="rn-button-style--2 btn-solid mt--40"
+            className="rn-button-style--2 rn-btn-reverse-green mt--40"
           >
             {loading ? <Loader /> : <span>Log In</span>}
           </button>

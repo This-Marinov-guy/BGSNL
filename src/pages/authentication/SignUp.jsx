@@ -630,7 +630,7 @@ const SignUp = (props) => {
                     <button
                       disabled={loading}
                       type="submit"
-                      className="rn-button-style--2 btn-solid"
+                      className="rn-button-style--2 rn-btn-reverse-green"
                       onClick={() => handleErrorMsg(errors, isValid)}
                     >
                       {loading ? <Loader /> : 'Payment'}

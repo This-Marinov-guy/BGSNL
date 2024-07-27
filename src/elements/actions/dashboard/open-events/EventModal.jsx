@@ -37,7 +37,7 @@ const EventModal = (props) => {
                             navigate('/user/edit-event');
                         }}
                         to={`/user/edit-event`}
-                        className="rn-button-style--2 btn-solid"
+                        className="rn-button-style--2 rn-btn-reverse-green"
                     >
                         Edit
                     </button>

@@ -50,7 +50,7 @@ const Home = () => {
       title: `Bulgarian Society ${region || 'Netherlands'}`,
       description: "",
       buttonText: user.token ? "Go To Profile" : "Become a Member",
-      style: user.token ? " rn-btn-reverse-green" : " btn-primary-color",
+      style: " rn-btn-reverse-green",
       buttonLink: user.token ? `/user` : "/signup",
     },
   ];

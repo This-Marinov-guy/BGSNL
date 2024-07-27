@@ -31,7 +31,7 @@ const HeaderPageLoading = () => {
                                 onClick={() => {
                                     window.location.reload()
                                 }}
-                                className="rn-button-style--2 btn-solid"
+                                className="rn-button-style--2 rn-btn-reverse-green"
                             >
                                 Try again
                             </button>

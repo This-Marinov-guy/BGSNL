@@ -141,14 +141,14 @@ const EventDetails = () => {
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
                           href={selectedEvent.ticket_link}
                           selectedEvent="_blank"
-                          className="rn-button-style--2 btn-solid mt--80"
+                          className="rn-button-style--2 rn-btn-reverse-green mt--80"
                         >
                           {eventClosed ? "Sold out" : 'Buy Ticket'}
                         </a></WithBackBtn>
                         <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <WithBackBtn><Link
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
                           to={`/${region}/purchase-ticket/${eventId}`}
-                          className="rn-button-style--2 btn-solid"
+                          className="rn-button-style--2 rn-btn-reverse-green"
                         >
                           {eventClosed ? "Sold out" : 'Buy Ticket'}
                         </Link></WithBackBtn>}

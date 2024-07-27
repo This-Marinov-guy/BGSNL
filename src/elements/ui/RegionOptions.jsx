@@ -17,7 +17,7 @@ const RegionOptions = (props) => {
                         <Link to={`/${r}/${props.to}`}>
                             <button
                             //  style={r != select ? {opacity: '50%'} : {}}
-                                className={' rn-button-style--2 btn-solid'}
+                                className={' rn-button-style--2 rn-btn-reverse-green'}
                                 onClick={() => setSelected(r)}>{r}</button>
                         </Link>
                     </li>

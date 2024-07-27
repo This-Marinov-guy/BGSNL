@@ -47,7 +47,7 @@ const PhotoGallery = (props) => {
             <a
               href={REGION_FLICKER[region] || REGION_FLICKER['netherlands']}
               target="_blank"
-              className="rn-button-style--2 btn-solid"
+              className="rn-button-style--2 rn-btn-reverse-green"
             >
               Check our Flickr for more
             </a>

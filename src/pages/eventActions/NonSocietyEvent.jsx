@@ -118,7 +118,7 @@ const NonSocietyEvent = (props) => {
             <button
               disabled={loading}
               onClick={submitMemberForm}
-              className="rn-button-style--2 btn-solid mt--30"
+              className="rn-button-style--2 rn-btn-reverse-green mt--30"
             >
               {loading ? <Loader /> : <span>Register</span>}
             </button></div> : <Loader center />) : <Formik
@@ -253,7 +253,7 @@ const NonSocietyEvent = (props) => {
                 <button
                   disabled={loading}
                   type="submit"
-                  className="rn-button-style--2 btn-solid mt--80"
+                  className="rn-button-style--2 rn-btn-reverse-green mt--80"
                 >
                   {loading ? <Loader /> : <span>Update information</span>}
                 </button>
@@ -317,7 +317,7 @@ const NonSocietyEvent = (props) => {
                         dispatch(showModal(NSE_REGISTRATION_MODAL));
                       }
                     }
-                    className="rn-button-style--2 btn-solid"
+                    className="rn-button-style--2 rn-btn-reverse-green"
                   >
                     Register
                   </button>

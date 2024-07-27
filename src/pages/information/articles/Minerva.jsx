@@ -131,7 +131,7 @@ const Minerva = () => {
                             </p>
                         </div>
                     </div>
-                    <a href="https://viewer.mapme.com/cb7dd22a-5629-491c-bcd8-f79a49876d26" target="_blank" className="rn-button-style--2 btn-solid mt--80"
+                    <a href="https://viewer.mapme.com/cb7dd22a-5629-491c-bcd8-f79a49876d26" target="_blank" className="rn-button-style--2 rn-btn-reverse-green mt--80"
                     >To the map</a>
                     <p>Be there <span style={{ color: "#ab1c02" }}>June 15 - 20</span></p>
 

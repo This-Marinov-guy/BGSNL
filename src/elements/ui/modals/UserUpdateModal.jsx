@@ -326,7 +326,7 @@ const UserUpdateModal = ({currentUser}) => {
                             <button
                                 disabled={loading}
                                 type="submit"
-                                className="rn-button-style--2 btn-solid"
+                                className="rn-button-style--2 rn-btn-reverse-green"
                             >
                                 {loading ? <Loader /> : <span>Update information</span>}
                             </button>

@@ -216,7 +216,7 @@ const ContestRegister = (props) => {
                                 <button
                                     disabled={loading}
                                     type="submit"
-                                    className="rn-button-style--2 btn-solid mt--80"
+                                    className="rn-button-style--2 rn-btn-reverse-green mt--80"
                                 >
                                     {loading ? <Loader /> : <span>Finish Registration</span>}
                                 </button>
