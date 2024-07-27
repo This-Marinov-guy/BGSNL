@@ -11,7 +11,7 @@ const NoEventFound = () => {
             <HeaderTwo />
             <div className="ver_section mt--200">
                 <ImageFb
-                    className="logo-md"
+                    className="mr--40 logo-md"
                     src="/assets/images/avatars/no-event-found.png"
                     alt="Logo"
                 />
