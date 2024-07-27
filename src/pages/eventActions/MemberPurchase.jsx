@@ -121,7 +121,7 @@ const MemberPurchase = () => {
           <h2 className="center_text mb--80">Purchase a Ticket</h2>
 
           <div className="row slide-down center_div">
-            <ImageFb src={`${selectedEvent.images[0]}.webp`} fallback={`${selectedEvent.images[0]}.jpg`} alt="Event" className="title_img" />
+            <ImageFb src={`${selectedEvent.images[0]}`} alt="Event" className="title_img" />
           </div>
           <div
             style={{ width: "80%", margin: "auto" }}

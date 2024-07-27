@@ -118,7 +118,7 @@ const NonMemberPurchase = () => {
           {!selectedEvent.membersOnly && <div className="row">
             <div className="col-lg-4 col-md-12 col-12">
               <div className="mb--20">
-                <ImageFb src={`${selectedEvent.images[0]}.webp`} fallback={`${selectedEvent.images[0]}.jpg`} alt="Event" className="title_img" />
+                <ImageFb src={`${selectedEvent.images[0]}`} alt="Event" className="title_img" />
                 <h2 className="mt--40">Event Details</h2>
                 <p>Name:{" "}{selectedEvent.title}</p>
                 <p>
@@ -193,7 +193,7 @@ const NonMemberPurchase = () => {
                       );
                       formData.append("guestPhone", values.phone);
                       if (selectedEvent.isFree || selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname)) {
-                        const responseData = await sendRequest(
+                        await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
                           formData
