@@ -142,7 +142,7 @@ const Root = () => {
     }
   }, [error])
 
-  if (process.env.REACT_APP_MAINTENANCE) {
+  if (process.env.REACT_APP_MAINTENANCE == false) {
     return <Maintenance />
   }
 
