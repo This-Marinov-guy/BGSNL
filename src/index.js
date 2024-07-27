@@ -137,7 +137,7 @@ const Root = () => {
     }
   }, [error])
 
-  if (process.env.REACT_APP_MAINTENANCE == false) {
+  if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />
   }
 
