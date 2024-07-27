@@ -19,6 +19,7 @@ import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { encryptData } from "../../util/functions/helpers";
+import NoEventFound from "../../elements/ui/errors/NoEventFound";
 
 const NonMemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -61,8 +62,10 @@ const NonMemberPurchase = () => {
     getEventDetails();
   }, [])
 
-  if (loadingPage || !selectedEvent) {
+  if (loading) {
     return <HeaderLoadingError />
+  } else if (!selectedEvent) {
+    return <NoEventFound />
   }
 
   if (selectedEvent.ticket_link) {

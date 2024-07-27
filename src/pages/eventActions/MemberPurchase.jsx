@@ -19,6 +19,7 @@ import { selectUser } from "../../redux/user";
 import { decodeJWT } from "../../util/functions/jwt";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
+import NoEventFound from "../../elements/ui/errors/NoEventFound";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -70,8 +71,10 @@ const MemberPurchase = () => {
     getEventDetails();
   }, [])
 
-  if (loadingPage || !currentUser || !selectedEvent) {
+  if (loading || !currentUser) {
     return <HeaderLoadingError />
+  } else if (!selectedEvent) {
+    return <NoEventFound />
   }
 
   if (selectedEvent.ticket_link) {

@@ -15,6 +15,7 @@ import WithBackBtn from "../../elements/ui/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent } from "../../util/functions/helpers";
+import NoEventFound from "../../elements/ui/errors/NoEventFound";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -38,8 +39,10 @@ const EventDetails = () => {
     getEventDetails();
   }, [])
 
-  if (loading || !selectedEvent) {
+  if (loading) {
     return <HeaderLoadingError/>
+  } else if (!selectedEvent) {
+    return <NoEventFound/>
   }
 
   const price = estimatePriceByEvent(selectedEvent, user);
