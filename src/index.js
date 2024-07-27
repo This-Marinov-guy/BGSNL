@@ -10,14 +10,7 @@ import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
 import { clarityTrack, isProd } from "./util/functions/helpers";
-
-// Style
-import './index.scss'
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-
-// Blocks Layout
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
@@ -25,11 +18,13 @@ import { removeLogsOnProd } from "./util/functions/helpers";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import GlobalError from "./component/common/GlobalError";
-import { BIRTHDAY_MODAL } from "./util/defines/defines";
-import { selectModal } from "./redux/modal";
 import BirthdayModal from "./elements/ui/modals/BirthdayModal";
 
-// Pages
+// Style
+import './index.scss'
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+// Pages  
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/information/About"));
 const Contact = lazy(() => import("./pages/information/Contact"));

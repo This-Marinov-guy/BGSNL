@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import Header from "../component/header/Header";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
+import ImageFb from "../elements/ui/ImageFb";
 
 const Maintenance = () => {
     return (
@@ -14,9 +15,10 @@ const Maintenance = () => {
                             <div className="inner">
                                 <h1 className="theme-gradient">Maintenance Break</h1>
                                 <p style={{ color: 'white', fontSize: '20px' }}>We are experiencing technical issues - please come back tomorrow! </p>
-                                <img
+                                <ImageFb
                                     style={{ borderRadius: "50%", height: '100px', marginTop: '20px' }}
-                                    src="/assets/images/about/contact.webp"
+                                    src="/assets/images/logo/logo.webp"
+                                    fallback="/assets/images/logo/logo.jpg"
                                     alt="Logo"
                                 />
                             </div>
