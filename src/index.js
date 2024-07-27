@@ -169,7 +169,7 @@ const Root = () => {
               <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
               <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
               <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
-              <Route exact path={`/:region/event-details/:eventName`} element={<RegionLayout><EventDetails /></RegionLayout>} />
+              <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
               <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent toast={toast} /></RegionLayout>}>
 
               </Route>
@@ -193,7 +193,7 @@ const Root = () => {
                 <Fragment>
                   <Route
                     exact
-                    path={"/:region/purchase-ticket/:eventName"}
+                    path={"/:region/purchase-ticket/:eventId"}
                     element={<RegionLayout><MemberPurchase /></RegionLayout>}
                   />
                   <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
@@ -209,7 +209,7 @@ const Root = () => {
                   <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                   <Route
                     exact
-                    path={"/:region/purchase-ticket/:eventName"}
+                    path={"/:region/purchase-ticket/:eventId"}
                     element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
                   />
 

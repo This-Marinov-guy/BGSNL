@@ -28,7 +28,7 @@ const MemberPurchase = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [eventClosed, setEventClosed] = useState(false)
 
-  const { region, eventName } = useParams()
+  const { region, eventId } = useParams()
 
   const user = useSelector(selectUser);
 
@@ -49,7 +49,6 @@ const MemberPurchase = () => {
         const responseData = await sendRequest(`user/${userId}`);
         setCurrentUser(responseData.user);
       } catch (err) {
-        console.log(err);
       }
     };
     fetchCurrentUser();
@@ -59,7 +58,7 @@ const MemberPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details/${region}/${eventName}`);
+        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {

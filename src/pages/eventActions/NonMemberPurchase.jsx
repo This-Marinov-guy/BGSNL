@@ -29,7 +29,7 @@ const NonMemberPurchase = () => {
   const [marketingData, setMarketingData] = useState({})
   const [quantity, setQuantity] = useState(1);
 
-  const { region, eventName } = useParams()
+  const { region, eventId } = useParams()
 
   const schema = yup.object().shape({
     name: yup.string().required(),
@@ -49,7 +49,7 @@ const NonMemberPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details/${region}/${eventName}`);
+        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {
@@ -285,8 +285,7 @@ const NonMemberPurchase = () => {
                             />
                           </div>
                         </div>
-                        {selectedEvent.marketingInputs && <MarketingForm setMarketingData={setMarketingData} />}
-                        {selectedEvent.extraInputsForm.length && <FormExtras selectedEvent={selectedEvent.extraInputsForm} />}
+                        {selectedEvent.extraInputsForm.length > 0 && <FormExtras selectedEvent={selectedEvent.extraInputsForm} />}
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">
                             <Field
