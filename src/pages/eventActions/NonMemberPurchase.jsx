@@ -50,7 +50,7 @@ const NonMemberPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`);
+        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {
