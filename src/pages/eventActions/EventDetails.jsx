@@ -13,7 +13,7 @@ import Loader from "../../elements/ui/loading/Loader";
 import { Link, useParams } from "react-router-dom";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";
-import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent } from "../../util/functions/helpers";
 
 const EventDetails = () => {
@@ -29,7 +29,7 @@ const EventDetails = () => {
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`);
+        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) { }
@@ -39,7 +39,7 @@ const EventDetails = () => {
   }, [])
 
   if (loading || !selectedEvent) {
-    return <HeaderPageLoading/>
+    return <HeaderLoadingError/>
   }
 
   const price = estimatePriceByEvent(selectedEvent, user);

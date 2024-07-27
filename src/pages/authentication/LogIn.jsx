@@ -8,7 +8,7 @@ import { login, selectUser } from "../../redux/user";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import Loader from "../../elements/ui/loading/Loader";
-import ModalWindow from "../../elements/ui/ModalWindow";
+import ModalWindow from "../../elements/ui/modals/ModalWindow";
 import { FiX } from "react-icons/fi";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { Link } from "react-router-dom";

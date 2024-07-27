@@ -1,7 +1,7 @@
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 import { useSelector } from "react-redux";
-import { selectWarning } from "../../redux/modal";
+import { selectWarning } from "../../../redux/modal";
 import Modal from "react-bootstrap/Modal";
 
 const Update = () => {

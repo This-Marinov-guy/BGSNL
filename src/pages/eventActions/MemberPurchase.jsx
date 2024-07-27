@@ -6,7 +6,7 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
-import Locked from "../../elements/ui/Locked";
+import Locked from "../../elements/ui/modals/Locked";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { decodeJWT } from "../../util/functions/jwt";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
-import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -71,7 +71,7 @@ const MemberPurchase = () => {
   }, [])
 
   if (loadingPage || !currentUser || !selectedEvent) {
-    return <HeaderPageLoading />
+    return <HeaderLoadingError />
   }
 
   if (selectedEvent.ticket_link) {

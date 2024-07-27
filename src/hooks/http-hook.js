@@ -19,7 +19,7 @@ export const useHttpClient = () => {
     process.env.REACT_APP_TEST_SERVER_URL;
 
   const sendRequest = useCallback(
-    async (url, method = "GET", data = null, headers = {}) => {
+    async (url, method = "GET", data = null, headers = {}, withError = true) => {
       if (!loading) forceStartLoading();
 
       if (user && user.token) {
@@ -35,11 +35,13 @@ export const useHttpClient = () => {
           data,
           headers,
         });
- 
+
         return response.data;
       } catch (err) {
-        dispatch(showError(err.response.data.message));
-        setTimeout(() => dispatch(removeError()), 6000);
+        if (withError) {
+          dispatch(showError(err.response.data.message));
+          setTimeout(() => dispatch(removeError()), 6000);
+        }
       } finally {
         dispatch(stopLoading());
       }

@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FiX } from "react-icons/fi";
 
-import ModalWindow from "../../elements/ui/ModalWindow";
+import ModalWindow from "../ui/modals/ModalWindow";
 
 import GifSearch from "./GifSearch";
 import GifImage from "./GifImage";

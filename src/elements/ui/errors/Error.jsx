@@ -2,7 +2,7 @@ import React from "react";
 import Alert from "react-bootstrap/Alert";
 import { FiX } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import { removeError } from "../../redux/error";
+import { removeError } from "../../../redux/error";
 
 const Error = (props) => {
   const dispatch = useDispatch();

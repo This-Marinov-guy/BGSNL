@@ -4,7 +4,7 @@ import ImageFb from '../ImageFb'
 import { Link, useNavigate } from 'react-router-dom'
 import Fade from 'react-bootstrap/Fade';
 
-const HeaderPageLoading = () => {
+const HeaderLoadingError = () => {
     const navigate = useNavigate();
     const [showBtns, setShowBtns] = useState(false);
 
@@ -49,4 +49,4 @@ const HeaderPageLoading = () => {
     )
 }
 
-export default HeaderPageLoading
+export default HeaderLoadingError

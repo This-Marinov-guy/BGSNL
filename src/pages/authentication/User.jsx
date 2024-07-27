@@ -9,7 +9,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import Locked from "../../elements/ui/Locked";
+import Locked from "../../elements/ui/modals/Locked";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { decodeJWT } from "../../util/functions/jwt";
 import Greeting from "../../elements/Greeting";
@@ -18,7 +18,7 @@ import { selectUser } from "../../redux/user";
 import SubscriptionManage from "../../elements/ui/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
 import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
-import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserCard from "../../elements/ui/cards/UserCard";
 import BirthdayBanner from "../../elements/banners/BirthdayBanner";
@@ -194,7 +194,7 @@ const User = (props) => {
   }
 
   if (!currentUser) {
-    return <HeaderPageLoading />
+    return <HeaderLoadingError />
   }
 
   return <React.Fragment>

@@ -72,7 +72,7 @@ const EventDashboard = lazy(() =>
 const NonMemberPurchase = lazy(() =>
   import("./pages/eventActions/NonMemberPurchase")
 );
-const Error = lazy(() => import("./elements/ui/Error"));
+const Error = lazy(() => import("./elements/ui/errors/Error"));
 const GuestCheck = lazy(() => import("./pages/redirects/GuestCheck"));
 const Success = lazy(() => import("./pages/redirects/Success"));
 const SuccessDonation = lazy(() => import("./pages/redirects/SuccessDonation"));

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useHttpClient } from "../../hooks/http-hook";
-import Loader from "./loading/Loader";
+import { useHttpClient } from "../../../hooks/http-hook";
+import Loader from "../loading/Loader";
 import { Link } from "react-router-dom";
 import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
-import SubscriptionManage from "./SubscriptionManage";
-import { showError } from "../../redux/error";
-import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
+import SubscriptionManage from "../SubscriptionManage";
+import { showError } from "../../../redux/error";
+import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../../util/defines/REGIONS_AUTH_CONFIG";
 
 const Locked = (props) => {
   const { loading, sendRequest } = useHttpClient();

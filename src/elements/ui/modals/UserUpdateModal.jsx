@@ -3,7 +3,7 @@ import { useHttpClient } from "../../../hooks/http-hook";
 import { useSelector, useDispatch } from "react-redux";
 import { removeModal, selectModal } from "../../../redux/modal";
 import { FiX } from "react-icons/fi";
-import ModalWindow from "../../../elements/ui/ModalWindow";
+import ModalWindow from "./ModalWindow";
 import Loader from "../../../elements/ui/loading/Loader";
 import ImageInput from "../../../elements/inputs/ImageInput";
 import * as yup from "yup";

@@ -17,7 +17,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import MarketingForm from "../../elements/ui/MarketingForm";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/WithBackBtn";
-import HeaderPageLoading from "../../elements/ui/loading/HeaderPageLoading";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { encryptData } from "../../util/functions/helpers";
 
 const NonMemberPurchase = () => {
@@ -62,7 +62,7 @@ const NonMemberPurchase = () => {
   }, [])
 
   if (loadingPage || !selectedEvent) {
-    return <HeaderPageLoading />
+    return <HeaderLoadingError />
   }
 
   if (selectedEvent.ticket_link) {
