@@ -329,3 +329,12 @@ button,a {
   justify-content: space-between;
   max-width: 350px;
 }
+
+.btn-icon-frame {
+  border: 2px solid;
+  margin: 0 10px;
+  border-radius: 20%;
+  &.red {
+    color: #f92820;
+  }
+}

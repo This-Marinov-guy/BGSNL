@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import StringDynamicInputs from './StringDynamicInputs';
+import PlusButton from '../ui/buttons/PlusButton';
+import XButton from '../ui/buttons/XButton';
 
 const InputsBuilder = (props) => {
     const emptyInputObj = { type: '', placeholder: '', required: false, options: [] }
@@ -16,6 +18,10 @@ const InputsBuilder = (props) => {
     };
 
     const removeInput = (index) => {
+        if (inputs.length === 1 && index === 0) {
+            return
+        }
+
         const newInputs = [...inputs];
         newInputs.splice(index, 1);
         setInputs(newInputs);
@@ -45,12 +51,8 @@ const InputsBuilder = (props) => {
                             <option value='text'>Text</option>
                             <option value='select'>Select</option>
                         </select>
-                        <button type='button' className='col-1 rn-btn rn-btn-green' style={{ fontSize: '22px' }} onClick={() => addInput(value.type)}>
-                            +
-                        </button>
-                        <button type='button' className='col-1 rn-btn' onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
-                            X
-                        </button>
+                        <PlusButton onClick={() => addInput(value.type)} />
+                        <XButton onClick={() => removeInput(index)} />
                     </div>
                     {value.type && (value.type === 'text' ?
                         <div className='row mt--10'>

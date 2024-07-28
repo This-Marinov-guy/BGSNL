@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const EventButtons = (props) => {
+const EventButtons = () => {
     return (
             <div className="options-btns-div mt--60">
                 <Link

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import XButton from '../ui/buttons/XButton';
+import PlusButton from '../ui/buttons/PlusButton';
 
 const StringDynamicInputs = (props) => {
   const [inputs, setInputs] = useState(props.intValues?.length > 0 ? props.intValues : []);
@@ -10,6 +12,10 @@ const StringDynamicInputs = (props) => {
   };
 
   const removeInput = (index) => {
+    if (inputs.length === 1 && index === 0) {
+      return
+    }
+
     const newInputs = [...inputs];
     newInputs.splice(index, 1);
     setInputs(newInputs);
@@ -45,14 +51,10 @@ const StringDynamicInputs = (props) => {
             placeholder={placeholder(index)}
             onChange={(e) => handleInputChange(index, e.target.value)}
           />
-          <button type='button' className='rn-btn' onClick={() => removeInput(index)} disabled={inputs.length === 1 && index === 0}>
-            X
-          </button>
+          <XButton onClick={() => removeInput(index)} />
         </div>
       ))}
-      <button type='button' className='rn-btn rn-btn-green mt--10' style={{ fontSize: '22px' }} onClick={addInput}>
-        +
-      </button>
+      <PlusButton onClick={addInput} />
     </>
   );
 };
