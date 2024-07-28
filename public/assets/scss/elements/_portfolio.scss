@@ -5,36 +5,9 @@
 .portfolio {
   position: relative;
   @extend %transition;
-  min-height: 600px;
+  margin: 1em auto;
+  height: 10em;
   width: 80%;
-
-  @media #{$laptop-device} {
-    min-height: 350px;
-  }
-  @media only screen and (min-width: 1200px) and (max-width: 1999px) {
-    min-height: 300px;
-  }
-  @media only screen and (min-width: 777px) and (max-width: 1199px) {
-    min-height: 280px;
-  }
-  @media only screen and (min-width: 576px) and (max-width: 776px) {
-    min-height: 240px;
-  }
-  @media only screen and (max-width: 575px) {
-    min-height: 265px;
-  }
-
-  &.portfolio-slider {
-    @media only screen and (min-width: 1200px) {
-      min-height: 370px !important;
-    }
-    @media only screen and (min-width: 890px) and (max-width: 990px) {
-      min-height: 320px !important;
-    }
-    @media only screen and (min-width: 481px) and (max-width: 575px) {
-      min-height: 150px !important;
-    }
-  }
 
   .thumbnail-inner,
   .thumbnail-inner-2 {
