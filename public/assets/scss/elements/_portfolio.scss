@@ -9,6 +9,26 @@
   height: 10em;
   width: 80%;
 
+  @media (min-width: 995px) and (max-width: 1200px) {
+    height: 6em !important;
+  }
+
+  @media (min-width: 768px) and (max-width: 1436px) {
+    height: 8em;
+  }
+
+  @media (min-width: 666px) and (max-width: 767px) {
+    height: 10em;
+  }
+
+  @media (min-width: 331px) and (max-width: 428px) {
+    height: 5em;
+  }
+
+  @media (max-width: 330px) {
+    height: 3em;
+  }
+  
   .thumbnail-inner,
   .thumbnail-inner-2 {
     padding-top: 100%;
