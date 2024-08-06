@@ -73,7 +73,7 @@ const Footer = () => {
 
                       <div className="social-share-inner">
                         <ul className="social-share social-style--2 d-flex justify-content-start liststyle mt--15">
-                          {REGION_SOCIALS[region || `default`].map((val, i) => (
+                          {REGION_SOCIALS[region] && REGION_SOCIALS[region || `default`].map((val, i) => (
                             <li key={i}>
                               <a href={`${val.link}`}>{val.Social}</a>
                             </li>

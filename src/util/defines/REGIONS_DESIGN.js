@@ -4,7 +4,7 @@ import { FaInstagram, FaFlickr, FaLinkedinIn, FaLinkedin, FaFacebookF } from "re
 export const BG_INDEX = 23
 
 export const REGIONS = [
-    'amsterdam', 'breda', 'groningen', 'leeuwarden', 'maastricht', 'rotterdam'
+    'amsterdam', 'breda', 'eindhoven', 'groningen', 'leeuwarden', 'maastricht', 'rotterdam'
 ]
 
 export const REGION_MAIN_COLOR = {
@@ -13,7 +13,8 @@ export const REGION_MAIN_COLOR = {
     leeuwarden: '#ffbd59',
     breda : '#FF8F47',
     amsterdam: '#014CB2',
-    maastricht: '#FBBF54'
+    maastricht: '#FBBF54',
+    eindhoven: '#E68E4A'
 }
 
 
@@ -23,7 +24,8 @@ export const REGION_SECOND_COLOR = {
     leeuwarden: '#ff914d',
     breda : '#F64535',
     amsterdam: '#007862',
-    maastricht: '#381096'
+    maastricht: '#381096',
+    eindhoven: '#346532'
 }
 
 export const REGION_EMAIL = {
@@ -32,7 +34,8 @@ export const REGION_EMAIL = {
     leeuwarden: 'bulgariansociety.lwd@gmail.com',
     breda : 'bulgariansociety.bre@gmail.com',
     amsterdam: 'bulgariansociety.ams@gmail.com',
-    maastricht: 'bulgariansociety.maas@gmail.com'
+    maastricht: 'bulgariansociety.maas@gmail.com',
+    eindhoven: 'bulgariansociety.eind@gmail.com'
 }
 
 export const REGION_WHATSAPP = {
@@ -41,7 +44,8 @@ export const REGION_WHATSAPP = {
     leeuwarden: '',
     breda : '',
     amsterdam: 'https://chat.whatsapp.com/JVSM61uSkBB61oysBvABUm',
-    maastricht: ''
+    maastricht: '',
+    eindhoven: ''
 }
 
 export const REGION_FLICKER = {
@@ -51,7 +55,8 @@ export const REGION_FLICKER = {
     leeuwarden : "https://flickr.com",
     breda : '',
     amsterdam: '',
-    maastricht: ''
+    maastricht: '',
+    eindhoven: ''
 }
 
 export const REGION_SOCIALS = {
