@@ -338,3 +338,18 @@ button,a {
     color: #f92820;
   }
 }
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border: solid 1px;
+  border-radius: 10px;
+  font-size: 6px !important;
+
+  &.new-badge {
+    color: #f92820;
+    border-color: #f92820;
+  }
+}
