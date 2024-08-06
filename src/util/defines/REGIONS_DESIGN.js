@@ -14,7 +14,7 @@ export const REGION_MAIN_COLOR = {
     breda : '#FF8F47',
     amsterdam: '#014CB2',
     maastricht: '#FBBF54',
-    eindhoven: '#E68E4A'
+    eindhoven: '#FF914D'
 }
 
 
@@ -25,7 +25,7 @@ export const REGION_SECOND_COLOR = {
     breda : '#F64535',
     amsterdam: '#007862',
     maastricht: '#381096',
-    eindhoven: '#346532'
+    eindhoven: '#24632D'
 }
 
 export const REGION_EMAIL = {
