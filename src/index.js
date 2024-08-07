@@ -1,5 +1,6 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from 'react-ga';
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -10,7 +11,6 @@ import { useDispatch } from "react-redux";
 import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
 import { clarityTrack, isProd } from "./util/functions/helpers";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./component/functional/RegionLayout";
 import { Toast } from 'primereact/toast';
@@ -85,11 +85,17 @@ let gaInit = false;
 const Root = () => {
   const toast = useRef(null)
 
+  const { pathname } = useLocation();
+
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
   const error = useSelector(selectError);
   const errorMessage = useSelector(selectErrorMsg);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   //auto logout
   useEffect(() => {
