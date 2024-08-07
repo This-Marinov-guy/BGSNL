@@ -1,5 +1,5 @@
 import React from "react";
-import ImageFb from "../ImageFb";
+import ImageFb from "../media/ImageFb";
 
 const PageLoading = () => {
   return (

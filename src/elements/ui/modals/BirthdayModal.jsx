@@ -4,7 +4,7 @@ import { removeModal, selectModal } from "../../../redux/modal";
 import { Dialog } from 'primereact/dialog';
 import { BIRTHDAY_MODAL } from "../../../util/defines/defines";
 import Confetti from 'react-confetti'
-import ImageFb from '../ImageFb';
+import ImageFb from '../media/ImageFb';
 
 const BirthdayModal = () => {
   const modal = useSelector(selectModal);

@@ -5,7 +5,7 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
-import WindowShift from "../../elements/ui/WindowShift";
+import WindowShift from "../../elements/ui/functional/WindowShift";
 import TeamTwo from "../../elements/TeamTwo";
 import { useParams } from "react-router-dom";
 import { REGION_COMMITTEE_MEMBERS } from "../../util/defines/REGIONS_STRUCTURE";

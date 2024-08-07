@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import styles from '../../component/functional/RegionLayout.module.css'
+import styles from '../../../component/functional/RegionLayout.module.css'
 import { Link, useParams } from 'react-router-dom'
-import {capitalizeFirstLetter} from '../../util/functions/capitalize'
-import { REGIONS } from '../../util/defines/REGIONS_DESIGN'
+import {capitalizeFirstLetter} from '../../../util/functions/capitalize'
+import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 
 const RegionOptions = (props) => {
     const { region } = useParams();

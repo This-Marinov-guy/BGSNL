@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom/cjs/react-router-dom.min'
 import { selectUser } from '../../redux/user';
-import ImageFb from '../../elements/ui/ImageFb';
+import ImageFb from '../../elements/ui/media/ImageFb';
 import { REGIONS_MEMBERSHIP } from '../../util/defines/REGIONS_AUTH_CONFIG';
 
 const RegionAuthCheck = ({ children }) => {

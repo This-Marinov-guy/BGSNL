@@ -15,7 +15,7 @@ import { decodeJWT } from "../../util/functions/jwt";
 import Greeting from "../../elements/Greeting";
 import Christmas from "../../elements/special/Christmas";
 import { selectUser } from "../../redux/user";
-import SubscriptionManage from "../../elements/ui/SubscriptionManage";
+import SubscriptionManage from "../../elements/ui/buttons/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
 import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";

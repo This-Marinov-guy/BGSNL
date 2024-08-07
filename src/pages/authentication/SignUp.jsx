@@ -16,12 +16,12 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
-import RegionOptions from "../../elements/ui/RegionOptions";
+import RegionOptions from "../../elements/ui/buttons/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
 import { askBeforeRedirect } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
-import RegionOptions2 from "../../elements/ui/RegionOptions2";
+import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL } from "../../util/defines/defines";
 

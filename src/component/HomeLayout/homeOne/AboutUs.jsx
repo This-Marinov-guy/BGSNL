@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ImageFb from "../../../elements/ui/ImageFb";
+import ImageFb from "../../../elements/ui/media/ImageFb";
 
 class AboutUs extends Component {
   render() {

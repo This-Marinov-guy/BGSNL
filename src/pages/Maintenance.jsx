@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import Header from "../component/header/Header";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
-import ImageFb from "../elements/ui/ImageFb";
+import ImageFb from "../elements/ui/media/ImageFb";
 
 const Maintenance = () => {
     return (

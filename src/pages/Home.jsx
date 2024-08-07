@@ -12,7 +12,7 @@ import {
   FutureEventsContent,
   FutureOtherEventsContent,
 } from "./information/FutureEvents";
-import ImageFb from "../elements/ui/ImageFb";
+import ImageFb from "../elements/ui/media/ImageFb";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";

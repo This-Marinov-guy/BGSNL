@@ -1,6 +1,6 @@
 import React from 'react'
 import HeaderTwo from '../../../component/header/HeaderTwo'
-import ImageFb from '../ImageFb'
+import ImageFb from '../media/ImageFb'
 import { useNavigate } from 'react-router-dom'
 
 const NoEventFound = () => {

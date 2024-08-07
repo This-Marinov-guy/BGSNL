@@ -2,7 +2,7 @@ import React from "react";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import PageHelmet from "../../component/common/Helmet";
 import ScrollToTop from "react-scroll-up";
-import ImageFb from "../../elements/ui/ImageFb";
+import ImageFb from "../../elements/ui/media/ImageFb";
 import { FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";

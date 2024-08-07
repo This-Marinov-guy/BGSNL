@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import HeaderTwo from '../../../component/header/HeaderTwo'
-import ImageFb from '../ImageFb'
+import ImageFb from '../media/ImageFb'
 import { Link, useNavigate } from 'react-router-dom'
 import Fade from 'react-bootstrap/Fade';
 

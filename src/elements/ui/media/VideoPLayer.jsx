@@ -1,7 +1,7 @@
 
 import React from 'react';
 import YouTube from 'react-youtube';
-import useBreakdown from '../../hooks/use-breakdown';
+import useBreakdown from '../../../hooks/use-breakdown';
 
 const VideoPlayer = ({ src }) => {
     const onPlayerReady = (event) => {

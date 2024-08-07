@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import ImageFb from './ui/ImageFb'
+import ImageFb from './ui/media/ImageFb'
 import { useParams } from 'react-router-dom'
 import { REGION_COMMITTEE_MEMBERS } from '../util/defines/REGIONS_STRUCTURE'
 

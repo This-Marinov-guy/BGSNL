@@ -7,7 +7,7 @@ import { FiChevronUp } from "react-icons/fi";
 import { slickDot } from "../../page-demo/script";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
-import ImageFb from "../../elements/ui/ImageFb";
+import ImageFb from "../../elements/ui/media/ImageFb";
 import { Link , useParams} from "react-router-dom";
 import {PAST_EVENTS} from '../../util/defines/PAST_EVENTS'
 

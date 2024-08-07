@@ -1,6 +1,6 @@
 import React from "react";
 import ContactForm from "./ContactForm";
-import ImageFb from "../ui/ImageFb";
+import ImageFb from "../ui/media/ImageFb";
 import { useParams } from "react-router-dom";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 

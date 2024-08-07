@@ -4,7 +4,7 @@ import Loader from "../loading/Loader";
 import { Link } from "react-router-dom";
 import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
-import SubscriptionManage from "../SubscriptionManage";
+import SubscriptionManage from "../buttons/SubscriptionManage";
 import { showError } from "../../../redux/error";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../../util/defines/REGIONS_AUTH_CONFIG";
 

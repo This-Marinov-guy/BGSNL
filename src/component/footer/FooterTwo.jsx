@@ -1,5 +1,5 @@
 import React from "react";
-import ImageFb from "../../elements/ui/ImageFb";
+import ImageFb from "../../elements/ui/media/ImageFb";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "react-router-dom";
 import Donation from "../../elements/Donation";

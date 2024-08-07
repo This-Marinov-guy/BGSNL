@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ImageFb from "./ImageFb";
+import ImageFb from "../media/ImageFb";
 
 const GoogleTranslate = () => {
   const googleTranslateElementInit = () => {

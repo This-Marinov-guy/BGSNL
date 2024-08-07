@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { REGIONS } from '../../util/defines/REGIONS_DESIGN'
+import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { Card } from 'primereact/card';
-import { capitalizeFirstLetter } from '../../util/functions/capitalize';
+import { capitalizeFirstLetter } from '../../../util/functions/capitalize';
 
 const RegionOptions2 = (props) => {
     return (

@@ -10,14 +10,14 @@ import Locked from "../../elements/ui/modals/Locked";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
-import ImageFb from "../../elements/ui/ImageFb";
+import ImageFb from "../../elements/ui/media/ImageFb";
 import { createCustomerTicket } from "../../util/functions/ticket-creator";
-import FormExtras from "../../elements/ui/FormExtras";
+import FormExtras from "../../elements/ui/forms/FormExtras";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { decodeJWT } from "../../util/functions/jwt";
-import WithBackBtn from "../../elements/ui/WithBackBtn";
+import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 
