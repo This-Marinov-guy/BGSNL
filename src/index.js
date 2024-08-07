@@ -1,6 +1,6 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from 'react-ga';
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -82,6 +82,16 @@ const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
 
 let gaInit = false;
 
+const PageNavigationFunc() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 const Root = () => {
   const toast = useRef(null)
   
@@ -148,6 +158,7 @@ const Root = () => {
   else {
     return (
       <BrowserRouter basename={"/"}>
+        <PageNavigationFunc/>
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
             <BirthdayModal />
