@@ -91,7 +91,7 @@ button {
 }
 
 button,
-input[type='file'],
+input[type="file"],
 a {
   &.rn-button-style--2 {
     color: #fff;
@@ -229,7 +229,8 @@ button {
   }
 }
 
-button,a {
+button,
+a {
   &.option-btn {
     height: 100px;
     width: 200px;
@@ -351,5 +352,14 @@ button,a {
   &.new-badge {
     color: #f92820;
     border-color: #f92820;
+  }
+}
+
+.edit_btn {
+  cursor: pointer;
+  opacity: 0.75;
+  font-weight: 300;
+  &:hover {
+    color: $body-color;
   }
 }

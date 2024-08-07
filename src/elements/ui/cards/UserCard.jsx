@@ -10,7 +10,7 @@ const UserCard = ({ user }) => {
     const dispatch = useDispatch();
 
     return (
-        <div className="service service__style--2 team_member_border-5">
+        <div className="service team_member_border-5">
             <div className="content">
                 <h2>Greetings, {user.name}!</h2>
                 <div className="hor_section mb--40">
@@ -28,23 +28,23 @@ const UserCard = ({ user }) => {
                         className="list-style--1"
                     >
                         <li>
-                            <FiCircle style={{ fontSize: "14px" }} /> Full Name:{" "}
+                            Full Name:{" "}
                             {user.name + " " + user.surname}
                         </li>
                         <li>
-                            <FiCircle style={{ fontSize: "14px" }} /> Date of Birth:{" "}
+                            Date of Birth:{" "}
                             {user.birth}
                         </li>
                         <li>
-                            <FiCircle style={{ fontSize: "14px" }} /> Email:{" "}
+                            Email:{" "}
                             {user.email}
                         </li>
                         <li>
-                            <FiCircle style={{ fontSize: "14px" }} /> Phone:{" "}
+                            Phone:{" "}
                             {user.phone}
                         </li>
                         <li>
-                            <FiCircle style={{ fontSize: "14px" }} /> University:{" "}
+                            University:{" "}
                             {user.university === "other"
                                 ? user.otherUniversityName
                                 : user.university}
