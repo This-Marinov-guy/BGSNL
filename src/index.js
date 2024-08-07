@@ -187,10 +187,10 @@ const Root = () => {
               <Route exact path={`/donation/success`} element={<SuccessDonation />} />
               <Route exact path={`/fail`} element={<Fail />} />
 
-              <Route exact path={`/user`} element={<User toast={toast} />} />
               {/* Auth pages */}
               {(user && user.token) ? (
                 <Fragment>
+                  <Route exact path={`/user`} element={<User toast={toast} />} />
                   <Route
                     exact
                     path={"/:region/purchase-ticket/:eventId"}
@@ -203,8 +203,6 @@ const Root = () => {
                 </Fragment>
               ) : (
                 <Fragment>
-                  {!isProd() && <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />}
-
                   <Route exact path={`/login`} element={<LogIn toast={toast} />} />
                   <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
                   <Route

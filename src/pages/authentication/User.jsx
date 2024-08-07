@@ -22,11 +22,16 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserCard from "../../elements/ui/cards/UserCard";
 import BirthdayBanner from "../../elements/banners/BirthdayBanner";
+import { isProd } from "../../util/functions/helpers";
+
+const TABS = ['news', 'tickets', 'internships'];
 
 const User = (props) => {
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
   const [expand, setExpand] = useState(false);
+  const [tab, setTab] = useState(window.location.hash.substring(1).split('?')[0]);
+  const [disableScroll, setDisableScroll] = useState(false);
 
   const { sendRequest } = useHttpClient();
 
@@ -36,7 +41,6 @@ const User = (props) => {
   const navigate = useNavigate();
 
   const routePath = location.pathname + location.hash;
-  const tab = window.location.hash.substring(1).split('?')[0];
 
   const scrollRef = useRef(null);
 
@@ -70,21 +74,24 @@ const User = (props) => {
     fetchCurrentUser();
   }, []);
 
-  // fix optional url params someday ??!
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.href.split('?')[1]);
-    const scrollQuery = searchParams.get('scroll');
+    const hash = window.location.hash.substring(1).split('?')[0];
+    setTab(hash);
+  }, [location]);
 
-    if (scrollRef.current && scrollQuery === 'news') {
-      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
+        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [currentUser])
+
+    setDisableScroll(false);
+  }, [tab]);
 
   let menuContent = null;
 
-  switch (tab) {
-    case 'news':
+  switch (tab) {  
     case '':
+    case TABS[0]:
       menuContent = <Fragment>
         <div className="container">
           <div className="row">
@@ -109,13 +116,13 @@ const User = (props) => {
         </div>
       </Fragment>
       break;
-    case 'tickets':
+    case TABS[1]:
       menuContent = <div className="container">
         <div className="row">
           <div className="col-lg-12">
             <div className="mb--30 mb_sm--0">
               <h2 className="title mb--40">Ticket Collection</h2>
-              {currentUser.tickets.length > 0 ? (
+              {(currentUser && currentUser.tickets.length > 0) ? (
                 <div className="row">
                   {currentUser.tickets.map((ticket, i) => (
                     <div className="col-lg-4 col-md-6 col-12" key={i}>
@@ -147,7 +154,7 @@ const User = (props) => {
         </div>
       </div>
       break;
-    case 'internships':
+    case TABS[2]:
       menuContent = <Fragment>
         <div className="container">
           <div className="row">
@@ -215,7 +222,7 @@ const User = (props) => {
       <div className="container">
         <div className="row service-one-wrapper">
           <div className="col-lg-6 col-md-12 col-12 ">
-            {currentUser.subscription && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
+            {(!isProd() || currentUser.subscription) && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
             <div className="service service__style--2">
               {hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
               <LazyLoadImage src={currentUser.image} alt="profile" />
@@ -231,9 +238,19 @@ const User = (props) => {
     {/* <Greeting /> */}
     {/* Start User Collection */}
     <div ref={scrollRef} className="options-btns-div mt--60">
-      <Link to='#news' className={`rn-button-style--2 ${['', 'news'].includes(tab) ? 'btn-solid' : 'rn-btn-reverse'}`}>News</Link>
-      <Link to='#tickets' className={`rn-button-style--2 ${tab === 'tickets' ? 'btn-solid' : 'rn-btn-reverse'}`}>Tickets</Link>
-      <Link to='#internships' className={`rn-button-style--2 ${tab === 'internships' ? 'btn-solid' : 'rn-btn-reverse'}`}>Internships</Link>
+      {TABS.map((t, i) => (
+        <Link
+          key={i}
+          to={`#${t}`}
+          className={`rn-button-style--2 ${tab === t || (tab === '' && t === TABS[0]) ? 'btn-solid' : 'rn-btn-reverse'}`}
+          onClick={() => {
+            setDisableScroll(true);
+            setTab(t);
+            }}
+        >
+          {t}
+        </Link>
+      ))}
     </div>
 
     {menuContent !== null && menuContent}

@@ -146,9 +146,33 @@ const HeaderTwo = (props) => {
                   <Link to={`/${region}/contact`}>Contact</Link>
                 </li>}
                 {user.token && (
-                  <li>
-                    <Link to={`/user`}>Profile</Link>
-                  </li>
+                  <>
+                    <li className="has-dropdown">
+                      <Link to={`/user`}>Profile</Link>
+                      <ul className="submenu">
+                        <li>
+                          <Link to={`/user#news`}>News</Link>
+                        </li>
+                        <li>
+                          <Link to={`/user#tickets`}>Tickets</Link>
+                        </li>
+                        <li>
+                          <Link to={`/user#internships`}>Internships</Link>
+                        </li>
+                      </ul>
+                    </li>
+                    <li className="has-dropdown">
+                      <a style={{ cursor: 'pointer' }}>Event's Panel</a>
+                      <ul className="submenu">
+                        <li>
+                          <Link to="/user/dashboard">Dashboard</Link>
+                        </li>
+                        <li>
+                          <Link to="/user/add-event">Add Event</Link>
+                        </li>
+                      </ul>
+                    </li>
+                  </>
                 )}
 
                 <li>
