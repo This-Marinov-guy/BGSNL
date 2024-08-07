@@ -82,7 +82,7 @@ const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
 
 let gaInit = false;
 
-const PageNavigationFunc() {
+const PageNavigationFunc = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
