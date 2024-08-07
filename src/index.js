@@ -85,8 +85,8 @@ let gaInit = false;
 const Root = () => {
   const toast = useRef(null)
 
-  const {pathname} = useLocation();
-
+  const location = useLocation();
+  
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
@@ -95,7 +95,7 @@ const Root = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [location]);
 
   //auto logout
   useEffect(() => {
@@ -116,7 +116,7 @@ const Root = () => {
     clarityTrack();
 
     if (!gaInit) {
-      ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG, { debug: !isProd() });
+      ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
     }
 
     ReactGA.pageview(window.location.pathname + window.location.search);
