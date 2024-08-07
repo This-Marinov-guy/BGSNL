@@ -85,7 +85,7 @@ let gaInit = false;
 const Root = () => {
   const toast = useRef(null)
 
-  const { pathname } = useLocation();
+  const {pathname} = useLocation();
 
   const dispatch = useDispatch();
 
