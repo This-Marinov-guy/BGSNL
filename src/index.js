@@ -1,6 +1,6 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ReactGA from 'react-ga';
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
@@ -84,8 +84,6 @@ let gaInit = false;
 
 const Root = () => {
   const toast = useRef(null)
-
-  const location = useLocation();
   
   const dispatch = useDispatch();
 
@@ -95,7 +93,7 @@ const Root = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location]);
+  }, [window.location.pathname]);
 
   //auto logout
   useEffect(() => {
