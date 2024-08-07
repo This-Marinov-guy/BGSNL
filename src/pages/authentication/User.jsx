@@ -80,8 +80,10 @@ const User = (props) => {
   }, [location]);
 
   useEffect(() => {
-    if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
-        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
+          scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
 
     setDisableScroll(false);
