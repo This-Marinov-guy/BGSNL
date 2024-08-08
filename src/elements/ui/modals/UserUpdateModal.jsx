@@ -12,26 +12,26 @@ import { USER_UPDATE_MODAL } from "../../../util/defines/defines";
 
 const schema = yup.object().shape({
     image: yup.string(),
-    name: yup.string().required(),
-    surname: yup.string().required(),
-    phone: yup.string().min(8).required(),
-    email: yup.string().email("Please enter a valid email").required(),
-    university: yup.string().required(),
+    name: yup.string(),
+    surname: yup.string(),
+    phone: yup.string().min(8),
+    email: yup.string().email("Please enter a valid email"),
+    university: yup.string(),
     otherUniversityName: yup.string().when("university", {
         is: "other",
-        then: () => yup.string().required("Please state which university"),
+        then: () => yup.string(),
         otherwise: () => yup.string(),
     }),
     graduationDate: yup.number(),
     course: yup.string().when("university", {
         is: true,
-        then: () => yup.string().required("Your course is a required filed"),
+        then: () => yup.string(),
         otherwise: () => yup.string(),
     }),
     studentNumber: yup.string().when("university", {
         is: true,
         then: () =>
-            yup.string().required("Your student number is a required filed"),
+            yup.string(),
         otherwise: () => yup.string(),
     }),
     password: yup
@@ -41,13 +41,11 @@ const schema = yup.object().shape({
         .matches(
             /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/,
             "Please create a stronger password with capital and small letters, number and a special symbol"
-        )
-        .required(),
+        ),
     confirmPassword: yup
         .string()
         .nullable()
         .oneOf([yup.ref("password"), null], "Passwords do not match")
-        .required("Passwords do not match"),
 });
 
 const UserUpdateModal = ({currentUser}) => {
@@ -322,7 +320,7 @@ const UserUpdateModal = ({currentUser}) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="mt--40">
+                        <div className="mt--40 center_div">
                             <button
                                 disabled={loading}
                                 type="submit"

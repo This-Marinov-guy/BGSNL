@@ -225,9 +225,9 @@ const User = (props) => {
         <div className="row service-one-wrapper">
           <div className="col-lg-6 col-md-12 col-12 ">
             {(!isProd() || currentUser.subscription) && <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} toast={props.toast} />}
-            <div className="service service__style--2">
+            <div className="service">
               {hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
-              <LazyLoadImage src={currentUser.image} alt="profile" />
+              <LazyLoadImage src={currentUser.image} alt="profile" className="team_member_border-2" />
             </div>
           </div>
           <div className="col-lg-6 col-md-12 col-12">
