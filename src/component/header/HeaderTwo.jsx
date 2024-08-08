@@ -148,8 +148,11 @@ const HeaderTwo = (props) => {
                 {user.token && (
                   <>
                     <li className="has-dropdown">
-                      <Link to={`/user`}>Profile</Link>
+                      <a style={{ cursor: 'pointer' }}>Profile</a>
                       <ul className="submenu">
+                        <li>
+                          <Link to={`/user`}>My details</Link>
+                        </li>
                         <li>
                           <Link to={`/user#news`}>News</Link>
                         </li>
