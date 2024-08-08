@@ -203,7 +203,6 @@ const Header = (props) => {
                     ) : (
                       <button
                         onClick={() => setLogoutAlert(true)}
-                        style={{ color: 'white' }}
                         className="rn-btn"
                       >
                         <span>Log Out</span>

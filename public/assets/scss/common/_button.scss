@@ -61,7 +61,7 @@ button {
     position: relative;
     z-index: 2;
     // font-family: Montserrat;
-    color: $theme-color;
+    color: #faf9f6;
     background-color: $theme-color;
     letter-spacing: 0.2px;
     @extend %transition;
@@ -69,8 +69,8 @@ button {
     &:hover {
       border: 2px solid $theme-color;
       transform: translateY(-3px);
-      color: #faf9f6;
-      background: $theme-color;
+      color: $theme-color;
+      background: #faf9f6;
     }
     &.btn-white {
       border: 2px solid #faf9f6;
@@ -285,7 +285,7 @@ a {
   margin: 20px auto 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-direction: row;
   gap: 10px !important;
   max-width: 600px;
