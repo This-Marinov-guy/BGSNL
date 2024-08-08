@@ -13,8 +13,8 @@ class AboutUs extends Component {
                 <div className="thumbnail">
                   <ImageFb
                     className="w-100"
-                    src="/assets/images/about/board.webp"
-                    fallback="/assets/images/about/board.jpg"
+                    src="/assets/images/presentation/1.jpg"
+                    fallback="/assets/images/presentation/1.jpg"
                     alt="About Images"
                   />
                 </div>
