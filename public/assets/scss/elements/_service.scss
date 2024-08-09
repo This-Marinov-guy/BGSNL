@@ -464,3 +464,11 @@
   height: 50px;
   opacity: 0;
 }
+
+.small-presentation img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+  max-height: 300px;
+}

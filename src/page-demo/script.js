@@ -27,24 +27,15 @@ export const CustomNextArrow = (props) => {
     );
 };
 
-export const portfolioSlick = {
-    dots: true,
+export const presentation = {
+    autoplay: true,
+    autoplaySpeed: 5000,
+    speed: 800,
     infinite: true,
-    slidesToShow: 4,
+    slidesToShow: 1,
     slidesToScroll: 1,
-    responsive: [{
-        breakpoint: 800,
-        settings: {
-            slidesToShow: 2,
-        }
-    },
-    {
-        breakpoint: 420,
-        settings: {
-            slidesToShow: 1,
-        }
-    }
-]
+    dots: false,
+    arrows: false,
 };
 
 export const portfolioSlick2 = {
