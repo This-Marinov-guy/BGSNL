@@ -29,6 +29,7 @@ export const CustomNextArrow = (props) => {
 
 export const presentation = {
     autoplay: true,
+    infinite: true,
     autoplaySpeed: 5000,
     speed: 800,
     infinite: true,
