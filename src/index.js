@@ -150,14 +150,18 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
-    if (errorMessage) {
-      toast.current.show({ severity: 'error', summary: 'You got an error :(', detail: errorMessage, life: 8000 });
-    }
+    // to show to toast on ref null
+    setTimeout(() => {
+      if (errorMessage) {
+        toast.current.show({ severity: 'error', summary: 'You got an error :(', detail: errorMessage, life: 8000 });
+      }
 
-    if (informationNotification) {
-      toast.current.show({ ...informationNotificationDetails, life: 8000 });
-    }
-  }, [errorMessage, informationNotificationDetails]) 
+      if (informationNotification) {
+        toast.current.show({ severity: informationNotificationDetails.severity, detail: informationNotificationDetails.detail, life: 8000 });
+      }
+    }, 50)
+   
+  }, [errorMessage, informationNotificationDetails.severity, informationNotificationDetails.detail]) 
 
   const handleHideToast = () => {
     if (errorMessage) {

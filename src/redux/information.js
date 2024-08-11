@@ -25,7 +25,7 @@ export const selectNotification = (state) => state.information.value;
 export const selectNotificationDetails = (state) => {
     return {
         severity: state.information.severity,
-        details: state.information.detail
+        detail: state.information.detail
     }
 };
 export const { showInfoNotification, removeInfoNotification } = informationSlice.actions;
