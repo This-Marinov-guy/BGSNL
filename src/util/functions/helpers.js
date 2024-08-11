@@ -7,8 +7,9 @@ export const isProd = () => {
 
 export const removeLogsOnProd = () => {
     if (isProd()) {
-        console.error = () => { }
-        console.debug = () => { }
+        console.error = () => { };
+        console.warn = () => { };
+        console.debug = () => { };
     }
 }
 
