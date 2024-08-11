@@ -23,7 +23,6 @@ const GuestCheck = () => {
 
     const navigate = useNavigate();
 
-
     const handleCountChange = (e) => {
         const newCount = e.target.value;
         searchParams.set('count', newCount);

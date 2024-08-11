@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeError, showError } from "../redux/error";
+import { showError } from "../redux/error";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 import axios from 'axios';
 import { isProd } from "../util/functions/helpers";
@@ -38,9 +38,10 @@ export const useHttpClient = () => {
 
         return response.data;
       } catch (err) {
+        !isProd() && console.log(err.response.data ?? err); 
+
         if (withError) {
           dispatch(showError(err.response.data.message));
-          setTimeout(() => dispatch(removeError()), 6000);
         }
       } finally {
         dispatch(stopLoading());

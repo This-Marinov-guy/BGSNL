@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect, Route, useLocation } from 'react-router-dom';
-import { REGIONS } from '../util/defines/REGIONS_DESIGN';
+import { REGIONS } from '../../util/defines/REGIONS_DESIGN';
 import styles from './RegionLayout.module.css'
 
 const RegionParamRoute = ({ component: Component, ...rest }) => {
