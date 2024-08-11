@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectDonation, showDonation } from "../../redux/donation";
 import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/defines/REGIONS_DESIGN";
 
-const Footer = () => {
-
-  const { region } = useParams();
+const Footer = ({forceRegion}) => {
+  const region = forceRegion ?? useParams().region;
 
   const donation = useSelector(selectDonation)
   const dispatch = useDispatch();

@@ -212,6 +212,7 @@ const User = (props) => {
       headertransparent="header--transparent"
       colorblack="color--black"
       logoname="logo.png"
+      forceRegion={currentUser.region ?? null}
     />
     <UserUpdateModal currentUser={currentUser} />
     {currentUser.status !== "active" && (
@@ -219,7 +220,7 @@ const User = (props) => {
     )}
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}
-    <div className="service-area ptb--120 bg_color--1 mt--120">
+    <div className="service-area ptb--20 bg_color--1 mt--80">
       {/* {hasBirthday && <BirthdayBanner birth={currentUser.birth} name={currentUser.name}/>} */}
       <div className="container">
         <div className="row service-one-wrapper">
@@ -259,7 +260,7 @@ const User = (props) => {
     {/* End User Collection */}
 
     {/* Start Footer Style  */}
-    <FooterTwo />
+    <FooterTwo forceRegion={currentUser.region ?? null}/>
     {/* End Footer Style  */}
     {/* Start Back To Top */}
     <div className="backto-top">

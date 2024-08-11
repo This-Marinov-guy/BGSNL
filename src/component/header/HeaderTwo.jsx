@@ -17,7 +17,7 @@ const HeaderTwo = (props) => {
   const user = useSelector(selectUser);
   const userRegion = user.token ? decodeJWT(user.token).region : '';
 
-  const { region } = useParams();
+  const region = props.forceRegion ?? useParams().region;
 
   const dispatch = useDispatch();
 

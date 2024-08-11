@@ -388,6 +388,9 @@
       margin-left: 0;
     }
   }
+  @media #{$lg-layout} {
+    right: -100px !important;
+  }
   &.header-red {
     @media only screen and (min-width: 991px) {
       position:fixed;
