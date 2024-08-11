@@ -15,6 +15,7 @@ import InputsBuilder from "../../inputs/InputsBuilder";
 import { askBeforeRedirect } from "../../../util/functions/helpers";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -25,7 +26,7 @@ const EventForm = (props) => {
 
     const handleSubmit = (errors, isValid, dirty) => {
         if (errors && !isValid && dirty) {
-            return props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
+            return props.toast.current.show(INCORRECT_MISSING_DATA);
         }
     }
 

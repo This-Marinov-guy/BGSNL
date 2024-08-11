@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { loadSingleEvent } from '../../../../redux/events';
 import { useNavigate } from 'react-router-dom';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
+import moment from 'moment';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
@@ -26,7 +27,7 @@ const EventModal = (props) => {
     return (
         <>
             <ConfirmCenterModal text='Deleting an event is an irreversible action! Are you sure you want to delete it?' onConfirm={onDelete} visible={visible} setVisible={setVisible} />
-            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${props.event.date}, ${props.event.time}`}
+            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format("Do MMMM")}, ${moment(props.event.time).format('hh:mm') }`}
                 visible={props.show} style={{ maxWidth: '90%' }}
                 onHide={() => props.setShow(false)}
                 dismissableMask>
@@ -34,9 +35,8 @@ const EventModal = (props) => {
                     <button
                         onClick={() => {
                             dispatch(loadSingleEvent(props.event));
-                            navigate('/user/edit-event');
+                            navigate(`/user/edit-event/${props.event.id}`);
                         }}
-                        to={`/user/edit-event`}
                         className="rn-button-style--2 rn-btn-reverse-green"
                     >
                         Edit
@@ -56,10 +56,10 @@ const EventModal = (props) => {
                     <p>Region: {props.event.region}</p>
                     <p>Title: {props.event.title}</p>
                     <p>Descriptions: {props.event.description}</p>
-                    <p>Date: {props.event.date}</p>
-                    <p>Time: {props.event.time}</p>
+                    <p>Date: {moment(props.event.date).format("Do MMMM")}</p>
+                    <p>Time: {moment(props.event.time).format('hh:mm')}</p>
                     <p>Location: {props.event.location}</p>
-                    <p>Ticket Timer: {props.event.ticketTimer}</p>
+                    <p>Ticket Timer: {moment(props.event.ticketTimer).format('Do MMMM,hh:mm')}</p>
                     <p>Ticket Limit: {props.event.ticketLimit}</p>
                     <p>Is it only for members: {props.event.memberOnly ? 'Yes' : 'No'}</p>
                     <p>Extra Inputs Required: {!!props.event.extraInputsForm ? 'Yes' : 'No'}</p>
@@ -87,8 +87,8 @@ const EventModal = (props) => {
                             <p>Active Member Price Id: {props.event.activeMemberPriceId}</p>
                             <br />
                         </>}
-                        <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join(', ') : 'None'}</p>
-                        <p>Discount Pass List: {props.event.discountPass.length ? props.event.discountPass.join(', ') : 'None'}</p>
+                        <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join('| ') : 'None'}</p>
+                        <p>Discount Pass List: {props.event.discountPass.length ? props.event.discountPass.join('| ') : 'None'}</p>
                     </>}
                     <h3>Images</h3>
                     <hr />

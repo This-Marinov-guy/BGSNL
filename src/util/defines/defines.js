@@ -23,3 +23,6 @@ export const BIRTHDAY_MODAL = 'birthday_modal';
 export const USER_UPDATE_MODAL = 'user_update_modal';
 export const RESET_PASSWORD_MODAL = 'reset_password_modal';
 export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';
+
+//toasts
+export const INCORRECT_MISSING_DATA = { severity: 'warning', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' }

@@ -21,11 +21,9 @@ const Error404 = () => {
                 <h1 className="title theme-gradient">404!</h1>
                 <h3 className="sub-title">Page not found</h3>
                 <span>The page you were looking for could not be found.</span>
-                <div className="error-button">
                   <Link className="rn-button-style--2 rn-btn-reverse-green" to="/">
                     Back To Home
                   </Link>
-                </div>
               </div>
             </div>
           </div>

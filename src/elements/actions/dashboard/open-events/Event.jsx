@@ -3,6 +3,7 @@ import EventModal from './EventModal';
 import { Tooltip } from 'primereact/tooltip';
 import { FiInfo } from 'react-icons/fi';
 import { dateConvertor } from '../../../../util/functions/date';
+import moment from 'moment';
 
 const Event = (props) => {
     const [show, setShow] = useState(false);
@@ -25,15 +26,15 @@ const Event = (props) => {
             <div onClick={() => setShow(true)} style={expired ? { backgroundColor: '#ff4d4d' } : {}} className='service service__style--2 common-border-2 flex'>
                 <div>
                     <p>Title: {props.event.title}</p>
-                    <p>Date: {props.event.date}</p>
-                    <p>Time: {props.event.time}</p>
+                    <p>Date: {moment(props.event.date).format("Do MMMM")}</p>
+                    <p>Time: {moment(props.event.time).format('hh:mm')}</p>
                     <p>Location: {props.event.location}</p>
                     <p>Price <FiInfo className='price_info tooltip_info'
                         data-pr-tooltip="Guest / Member / Active Member"
                         data-pr-position="top" /> : {price}</p>
-                    <p>Status: {expired ? 'EXPIRED' : props.event.status}</p>
+                    <p>Status: {expired ? <span className='error'>Expired</span> : props.event.status}</p>
                 </div>
-                <img style={{ maxWidth: '150px', objectFit: 'contain' }} src='/assets/images/portfolio/groningen/portfolio-37.jpg' alt='Poster' />
+                <img style={{ maxWidth: '150px', objectFit: 'contain' }} src={props.event.poster} alt='Poster' />
             </div>
         </>
 

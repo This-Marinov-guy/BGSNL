@@ -23,7 +23,7 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
-import { BIRTHDAY_MODAL } from "../../util/defines/defines";
+import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/defines";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -110,7 +110,7 @@ const SignUp = (props) => {
 
   const handleErrorMsg = (errors, isValid) => {
     if (errors && !isValid) {
-      props.toast.current.show({ severity: 'error', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' });
+      props.toast.current.show(INCORRECT_MISSING_DATA);
     }
   }
 

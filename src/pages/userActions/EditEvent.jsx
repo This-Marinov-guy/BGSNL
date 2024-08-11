@@ -4,10 +4,10 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import EventForm from '../../elements/actions/form/EventForm';
 import { useHttpClient } from '../../hooks/http-hook';
-import PageLoading from '../../elements/ui/loading/PageLoading';
+import HeaderLoadingError from '../../elements/ui/errors/HeaderLoadingError';
 import { loadSingleEvent, selectSingleEvent } from '../../redux/events';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditEvent = (props) => {
   const [pageLoading, setPageLoading] = useState(false);
@@ -18,27 +18,36 @@ const EditEvent = (props) => {
 
   const event = useSelector(selectSingleEvent);
 
+  const { eventId } = useParams();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     const reloadEvent = async () => {
+      if (event && event.id === eventId ) {
+        return setPageLoading(false);
+      }
+      
       try {
         setPageLoading(true);
-        const responseData = await sendRequest(`event/actions/event/${event.id}`);
-        dispatch(loadSingleEvent(responseData.user));
+        const responseData = await sendRequest(`event/actions/full-event-details/${eventId}`);
+        dispatch(loadSingleEvent(responseData.event));
 
         if (!event) {
-          navigate('/user/dashboard')
+          navigate('/user/dashboard');
         }
       } catch (err) {
       } finally {
         setPageLoading(false);
       }
     };
+
     reloadEvent();
   }, [])
 
-  if (pageLoading) return <PageLoading />
+  if (pageLoading) {
+    return <HeaderLoadingError />
+  } 
 
   return (
     <React.Fragment>
@@ -50,7 +59,7 @@ const EditEvent = (props) => {
       <div className="container mt--200">
         <h3 className="center_text">Edit Event</h3>
       </div>
-      <EventForm toast={props.toast} />
+      <EventForm event={event} toast={props.toast}/>
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}
