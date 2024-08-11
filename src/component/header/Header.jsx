@@ -214,7 +214,7 @@ const Header = (props) => {
             </nav>
 
             {/* Start Humberger Menu  */}
-            <div className="humberger-menu d-block d-lg-none pl--20">
+            <div className="humberger-menu d-block d-xl-none pl--20">
               <span
                 onClick={() => {
                   setIsMenuOpened(true);
@@ -225,7 +225,7 @@ const Header = (props) => {
               </span>
             </div>
             {/* End Humberger Menu  */}
-            <div className="close-menu d-block d-lg-none">
+            <div className="close-menu d-block d-xl-none">
               <span
                 onClick={() => {
                   setIsMenuOpened(false);

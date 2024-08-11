@@ -153,6 +153,9 @@ Mainmenu Area
             > a,
             h3 {
               color: rgba(255, 255, 255, 0.6);
+              @media #{$lg-layout} {
+                color: $theme-color;
+              }
               @media #{$md-layout} {
                 color: $theme-color;
               }
