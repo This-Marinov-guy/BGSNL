@@ -16,7 +16,7 @@ const GuestLayout = ({ children }) => {
         if (isAuthenticated) {
             dispatch(showInfoNotification({
                 severity: 'warn',
-                message: 'You are already logged into your account - please log out and then proceed to this page!'
+                detail: 'You are already logged into your account - please log out and then proceed to this page!'
             }));
 
             return navigate('/user');

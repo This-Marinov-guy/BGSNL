@@ -25,6 +25,7 @@ import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import AuthLayout from "./layouts/authentication/AuthLayout";
 import { removeInfoNotification, selectNotification, selectNotificationDetails } from "./redux/information";
+import GuestLayout from "./layouts/authentication/GuestLayout";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -224,21 +225,21 @@ const Root = () => {
               <Route exact path={`/donation/success`} element={<SuccessDonation />} />
               <Route exact path={`/fail`} element={<Fail />} />
 
+              {/* TICKET PURCHASE */}
+              <Route exact path={"/:region/purchase-ticket/:eventId"}
+                element={
+                  <RegionLayout>
+                    {user && user.token ? <MemberPurchase /> : <NonMemberPurchase />}
+                  </RegionLayout>
+                }
+              />
+
               {/* Auth pages */}
               <Fragment>
                 <Route exact path={`/user`}
                   element={
                     <AuthLayout>
                       <User toast={toast} />
-                    </AuthLayout>
-                  }
-                />
-                <Route exact path={"/:region/purchase-ticket/:eventId"}
-                  element={
-                    <AuthLayout>
-                      <RegionLayout>
-                        <MemberPurchase />
-                      </RegionLayout>
                     </AuthLayout>
                   }
                 />
@@ -273,17 +274,23 @@ const Root = () => {
               </Fragment>
 
               {/* Un-auth pages */}
-              {!(user && user.token) && (
-                <Fragment>
-                  <Route exact path={`/login`} element={<LogIn toast={toast} />} />
-                  <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
-                  <Route
-                    exact
-                    path={"/:region/purchase-ticket/:eventId"}
-                    element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
-                  />
-                </Fragment>
-              )}
+              <Fragment>
+                <Route exact path={`/login`}
+                  element={
+                    <GuestLayout>
+                      <LogIn toast={toast} />
+                    </GuestLayout>
+                  }
+                />
+                <Route exact path={`/:region?/signup`}
+                  element={
+                    <GuestLayout>
+                      <SignUp toast={toast} />
+                    </GuestLayout>
+                  }
+                />
+                {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}
+              </Fragment>
 
               <Route exact path="/:region?" element={<Home />} />
               <Route path="*" element={<Error404 />} />
