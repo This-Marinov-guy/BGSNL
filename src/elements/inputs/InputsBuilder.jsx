@@ -86,7 +86,7 @@ const InputsBuilder = (props) => {
                             </select>
                             <input type='text'
                                 placeholder='Placeholder of the input'
-                                className='col-12'
+                                className='col-12 mt--10'
                                 onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
                                 name='placeholder' ></input>
                             <StringDynamicInputs onChange={(inputs) => handleInputChange(index, 'options', inputs)} placeholder='Add option' />

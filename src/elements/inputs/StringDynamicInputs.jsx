@@ -54,7 +54,7 @@ const StringDynamicInputs = (props) => {
           <XButton onClick={() => removeInput(index)} />
         </div>
       ))}
-      <PlusButton onClick={addInput} />
+      <PlusButton className='mt--10' onClick={addInput} />
     </>
   );
 };

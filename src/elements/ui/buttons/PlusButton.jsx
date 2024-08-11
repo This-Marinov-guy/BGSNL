@@ -1,9 +1,11 @@
 import React from 'react'
 import { FiPlus } from "react-icons/fi";
 
-const PlusButton = ({onClick}, ...props) => {
+const PlusButton = (props) => {
+  const {className, ...rest} = props;
+
   return (
-      <FiPlus onClick={onClick} className='btn-icon-frame' {...props} />
+      <FiPlus className={'btn-icon-frame ' + className} {...rest} />
   )
 }
 

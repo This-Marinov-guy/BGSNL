@@ -1,9 +1,11 @@
 import React from 'react'
 import { FiX } from "react-icons/fi";
 
-const XButton = ({onClick}, ...props) => {
+const XButton = (props) => {
+  const { className, ...rest } = props;
+
   return (
-      <FiX onClick={onClick} className='btn-icon-frame red' {...props}/>
+      <FiX className='btn-icon-frame red' {...props}/>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import {capitalizeFirstLetter} from "../../../util/functions/capitalize";
+import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -13,9 +13,9 @@ import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";
 import InputsBuilder from "../../inputs/InputsBuilder";
 import { askBeforeRedirect } from "../../../util/functions/helpers";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
+import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -23,6 +23,11 @@ const EventForm = (props) => {
     const [isValidFiles, setIsValidFiles] = useState(true);
 
     const navigate = useNavigate();
+
+    const {eventId} = useParams();
+
+    const edit = props.edit;
+    const initialData = edit ? props.initialData : null;
 
     const handleSubmit = (errors, isValid, dirty) => {
         if (errors && !isValid && dirty) {
@@ -99,10 +104,12 @@ const EventForm = (props) => {
                         }
                     });
 
-                    const responseData = await sendRequest('event/actions/add-event', 'POST', formData)
+                    const responseData = props.edit ?
+                        await sendRequest(`event/actions/edit-event/${eventId}`, 'PATCH', formData)
+                        : await sendRequest('event/actions/add-event', 'POST', formData);
 
                     if (responseData.status) {
-                        props.toast.current.show({ severity: 'success', summary: 'Event added' });
+                        props.toast.current.show(props.edit ? EVENT_EDITED : EVENT_ADDED);
                         navigate('/user/dashboard');
                     }
 
@@ -110,44 +117,44 @@ const EventForm = (props) => {
                 }
             }}
             initialValues={{
-                memberOnly: false,
-                hidden: false,
-                extraInputsForm: [
+                memberOnly: initialData?.memberOnly ?? false,
+                hidden: initialData?.hidden ?? false,
+                extraInputsForm: initialData?.extraInputsForm ?? [
                     // { type: '', placeholder: '', required: false, options: [] }
                 ],
-                freePass: [],
-                discountPass: [],
-                subEventDescription: '',
-                subEventLinks: [],
-                region: '',
-                title: '',
-                description: '',
-                date: '',
-                time: '',
-                location: '',
-                ticketTimer: '',
-                ticketLimit: null,
-                isTicketLink: false,
-                isSaleClosed: false,
-                isFree: false,
-                isMemberFree: false,
-                entry: null,
-                memberEntry: null,
-                activeMemberEntry: null,
-                entryIncluding: '',
-                memberIncluding: '',
-                ticketLink: '',
-                priceId: '',
-                memberPriceId: '',
-                activeMemberPriceId: "",
-                text: '',
-                title: '',
-                images: [],
-                ticketImg: null,
-                ticketColor: '#faf9f6',
-                poster: null,
-                bgImage: 1,
-                bgImageExtra: null,
+                freePass: initialData?.freePass ?? [],
+                discountPass: initialData?.discountPass ?? [],
+                subEventDescription: initialData?.subEventDescription ?? '',
+                subEventLinks: initialData?.subEventLinks ??[],
+                region: initialData?.region ?? '',
+                title: initialData?.title ?? '',
+                description: initialData?.description ?? '',
+                date: initialData?.date ?? '',
+                time: initialData?.time ?? '',
+                location: initialData?.location ?? '',
+                ticketTimer: initialData?.ticketTimer ?? '',
+                ticketLimit: initialData?.ticketLimit ?? null,
+                isTicketLink: initialData?.isTicketLink ?? false,
+                isSaleClosed: initialData?.isSaleClosed ?? false,
+                isFree: initialData?.isFree ?? false,
+                isMemberFree: initialData?.isMemberFree ?? false,
+                entry: initialData?.entry ?? null,
+                memberEntry: initialData?.memberEntry ?? null,
+                activeMemberEntry: initialData?.activeMemberEntry ?? null,
+                entryIncluding: initialData?.entryIncluding ?? '',
+                memberIncluding: initialData?.memberIncluding ?? '',
+                ticketLink: initialData?.ticketLink ?? '',
+                priceId: initialData?.priceId ?? '',
+                memberPriceId: initialData?.memberPriceId ?? '',
+                activeMemberPriceId: initialData?.activeMemberPriceId ?? "",
+                text: initialData?.text ?? '',
+                title: initialData?.title ?? '',
+                images: initialData?.images ??[],
+                ticketImg: initialData?.ticketImg ?? null,
+                ticketColor: initialData?.ticketColor ?? '#faf9f6',
+                poster: initialData?.poster ?? null,
+                bgImage: initialData?.bgImage ?? 1,
+                bgImageExtra: initialData?.bgImageExtra ?? null,
             }}
         >
             {({ values, setFieldValue, errors, isValid, dirty }) => (

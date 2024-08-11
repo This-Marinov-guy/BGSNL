@@ -59,7 +59,7 @@ const EditEvent = (props) => {
       <div className="container mt--200">
         <h3 className="center_text">Edit Event</h3>
       </div>
-      <EventForm event={event} toast={props.toast}/>
+      <EventForm edit initialData={event} toast={props.toast}/>
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}
