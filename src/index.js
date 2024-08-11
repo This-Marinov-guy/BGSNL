@@ -12,7 +12,7 @@ import { selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
 import { clarityTrack, isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
-import RegionLayout from "./component/functional/RegionLayout";
+import RegionLayout from "./layouts/RegionLayout";
 import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/functions/helpers";
 import Toni from "./pages/information/articles/Toni";
@@ -23,6 +23,7 @@ import BirthdayModal from "./elements/ui/modals/BirthdayModal";
 // Style
 import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import AuthLayout from "./layouts/AuthLayout";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -94,7 +95,7 @@ const PageNavigationFunc = () => {
 
 const Root = () => {
   const toast = useRef(null)
-  
+
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
@@ -158,7 +159,7 @@ const Root = () => {
   else {
     return (
       <BrowserRouter basename={"/"}>
-        <PageNavigationFunc/>
+        <PageNavigationFunc />
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
             <BirthdayModal />
@@ -203,20 +204,67 @@ const Root = () => {
               <Route exact path={`/fail`} element={<Fail />} />
 
               {/* Auth pages */}
-              {(user && user.token) ? (
-                <Fragment>
-                  <Route exact path={`/user`} element={<User toast={toast} />} />
-                  <Route
-                    exact
-                    path={"/:region/purchase-ticket/:eventId"}
-                    element={<RegionLayout><MemberPurchase /></RegionLayout>}
-                  />
-                  <Route exact path={`/user/add-event`} element={<AddEvent toast={toast} />} />
-                  <Route exact path={`/user/edit-event/:eventId`} element={<EditEvent toast={toast} />} />
-                  <Route exact path={`/user/dashboard`} element={<EventDashboard toast={toast} />} />
-                  <Route exact path={`/check-guest-list/:data`} element={<GuestCheck />} />
-                </Fragment>
-              ) : (
+              <Fragment>
+                <Route
+                  exact
+                  path={`/user`}
+                  element={
+                    <AuthLayout>
+                      <User toast={toast} />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={"/:region/purchase-ticket/:eventId"}
+                  element={
+                    <AuthLayout>
+                      <RegionLayout>
+                        <MemberPurchase />
+                      </RegionLayout>
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/add-event`}
+                  element={
+                    <AuthLayout>
+                      <AddEvent toast={toast} />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/edit-event/:eventId`}
+                  element={
+                    <AuthLayout>
+                      <EditEvent toast={toast} />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/dashboard`}
+                  element={
+                    <AuthLayout>
+                      <EventDashboard toast={toast} />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/check-guest-list/:data`}
+                  element={
+                    <AuthLayout>
+                      <GuestCheck />
+                    </AuthLayout>
+                  }
+                />
+              </Fragment>
+
+              {/* Un-auth pages */}
+              {!(user && user.token) && (
                 <Fragment>
                   <Route exact path={`/login`} element={<LogIn toast={toast} />} />
                   <Route exact path={`/:region?/signup`} element={<SignUp toast={toast} />} />
@@ -225,9 +273,9 @@ const Root = () => {
                     path={"/:region/purchase-ticket/:eventId"}
                     element={<RegionLayout><NonMemberPurchase /></RegionLayout>}
                   />
-
                 </Fragment>
               )}
+
               <Route exact path="/:region?" element={<Home />} />
               <Route path="*" element={<Error404 />} />
             </Routes>

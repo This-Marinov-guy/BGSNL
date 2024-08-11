@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Navigate, useLocation } from 'react-router-dom';
-import { REGIONS } from '../../util/defines/REGIONS_DESIGN';
+import { REGIONS } from '../util/defines/REGIONS_DESIGN';
 import styles from './RegionLayout.module.css'
 
 const RegionLayout = (props) => {
