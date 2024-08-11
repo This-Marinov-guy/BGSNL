@@ -62,7 +62,7 @@ const Home = () => {
       {/* Start Slider Area   */}
       <div style={{ height: '100vh' }} className="slider-activation slider-creative-agency">
         <ImageFb
-          src={`/assets/images/bg/paralax/${region || 'netherlands'}.jpg`}
+          src={`/assets/images/bg/paralax/${region || 'netherlands'}.webp`}
           fallback={`/assets/images/bg/paralax/${region || 'netherlands'}.jpg`}
           className="home_bg"
         />
