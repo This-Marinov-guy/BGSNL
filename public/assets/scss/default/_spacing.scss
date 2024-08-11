@@ -464,6 +464,14 @@
   justify-content: center;
 }
 
+.center_div_col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
 .center_div_no_gap {
   display: flex;
   align-items: center;
