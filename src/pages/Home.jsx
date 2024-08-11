@@ -159,7 +159,7 @@ const Home = () => {
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
-    </Fragment >
+    </Fragment>
   );
 };
 
