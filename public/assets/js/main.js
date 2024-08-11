@@ -41,7 +41,6 @@ window.onload = function () {
 }
 
 $(document).ready(() => {
-  console.log('wow');
   for (let i = 1; i <= 50; i++) {
     $(`.bg_image--${i}`).css('background-image', 'url(' + `/assets/images/bg/bg-image--${i}.webp` + ')' );
   };

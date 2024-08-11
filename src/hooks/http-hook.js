@@ -22,7 +22,7 @@ export const useHttpClient = () => {
     async (url, method = "GET", data = null, headers = {}, withError = true) => {
       if (!loading) forceStartLoading();
 
-      if (user && user.token) {
+      if (user && !!user.token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
       }
 

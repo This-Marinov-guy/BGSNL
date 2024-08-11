@@ -229,7 +229,7 @@ const Root = () => {
               <Route exact path={"/:region/purchase-ticket/:eventId"}
                 element={
                   <RegionLayout>
-                    {user && user.token ? <MemberPurchase /> : <NonMemberPurchase />}
+                    {user && !!user.token ? <MemberPurchase /> : <NonMemberPurchase />}
                   </RegionLayout>
                 }
               />
