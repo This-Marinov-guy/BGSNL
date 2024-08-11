@@ -5,14 +5,20 @@ import { FiInfo } from 'react-icons/fi';
 import {capitalizeFirstLetter} from '../../../../util/functions/capitalize';
 import { useDispatch } from 'react-redux';
 import { loadSingleEvent } from '../../../../redux/events';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
 import moment from 'moment';
+import { EVENT_DELETED } from '../../../../util/defines/defines';
+import { useHttpClient } from '../../../../hooks/http-hook';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
     const [expandImage, setExpandImage] = useState(null);
     const [expandBg, setExpandBg] = useState(false);
+
+    const {sendRequest, loading} = useHttpClient();
+
+    const {eventId} = useParams();
 
     const navigate = useNavigate();
 
@@ -23,7 +29,14 @@ const EventModal = (props) => {
         data-pr-position="top" />
 
 
-    const onDelete = async () => { }
+    const onDelete = async () => {
+        const responseData = await sendRequest(`event/actions/delete-event/${eventId}`, 'DELETE');
+
+        if (responseData.status) {
+            props.toast.current.show(EVENT_DELETED);
+            setVisible(false);
+        }
+     }
     return (
         <>
             <ConfirmCenterModal text='Deleting an event is an irreversible action! Are you sure you want to delete it?' onConfirm={onDelete} visible={visible} setVisible={setVisible} />
