@@ -10,7 +10,7 @@ const GuestLayout = ({ children }) => {
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
 
-    const isAuthenticated = (user && !!user.token) || localStorage.getItem('userData');
+    const isAuthenticated = (user && !!user.token);
 
     useEffect(() => {
         if (isAuthenticated) {
