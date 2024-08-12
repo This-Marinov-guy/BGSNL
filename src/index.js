@@ -72,8 +72,8 @@ const EventDashboard = lazy(() =>
   import("./pages/userActions/EventDashboard")
 );
 
-const NonMemberPurchase = lazy(() =>
-  import("./pages/eventActions/NonMemberPurchase")
+const GuestPurchase = lazy(() =>
+  import("./pages/eventActions/GuestPurchase")
 );
 const Error = lazy(() => import("./elements/ui/errors/Error"));
 const GuestCheck = lazy(() => import("./pages/redirects/GuestCheck"));
@@ -229,7 +229,7 @@ const Root = () => {
               <Route exact path={"/:region/purchase-ticket/:eventId"}
                 element={
                   <RegionLayout>
-                    {user && !!user.token ? <MemberPurchase /> : <NonMemberPurchase />}
+                    {user && !!user.token ? <MemberPurchase /> : <GuestPurchase />}
                   </RegionLayout>
                 }
               />

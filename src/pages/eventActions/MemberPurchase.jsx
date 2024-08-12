@@ -20,6 +20,7 @@ import { decodeJWT } from "../../util/functions/jwt";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
+import moment from "moment";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -34,14 +35,6 @@ const MemberPurchase = () => {
   const user = useSelector(selectUser);
 
   const navigate = useNavigate()
-
-  // const schema = yup.object().shape({
-  //   extraOne: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[0] && selectedEvent.extraInputsForm[0].required) ? yup.string().required("Required field") : yup.string(),
-  //   extraTwo: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[1] && selectedEvent.extraInputsForm[1].required) ? yup.string().required("Required field") : yup.string(),
-  //   extraThree: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[2] && selectedEvent.extraInputsForm[2].required) ? yup.string().required("Required field") : yup.string(),
-  // });
-
-  const schema = () => { }
 
   useEffect(() => {
     const userId = decodeJWT(user.token).userId;
@@ -94,6 +87,17 @@ const MemberPurchase = () => {
     </div>)
   }
 
+  const schemaFields = {};
+
+  if (selectedEvent.extraInputsForm && Array.isArray(selectedEvent.extraInputsForm)) {
+    selectedEvent.extraInputsForm.forEach((input, index) => {
+      const fieldName = `extraInput${index + 1}`;
+      schemaFields[fieldName] = input.required ? yup.string().required("Required field") : yup.string();
+    });
+  }
+
+  const schema = yup.object().shape(schemaFields);
+
   if (eventClosed) {
     return (
       <div className="container center_text mt--100">
@@ -136,12 +140,12 @@ const MemberPurchase = () => {
                 try {
                   forceStartLoading();
 
-                  const checkMemberTicket = sendRequest(`event/check-member/${currentUser.id}/${selectedEvent.id}`);
+                  const checkMemberTicket = sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
 
                   if (!checkMemberTicket.status) {
                     return;
                   }
-                  
+
                   const data = encryptData({
                     event: selectedEvent.title,
                     name: currentUser.name,
@@ -192,13 +196,12 @@ const MemberPurchase = () => {
                   }
                 } catch (err) { }
               }}
-              initialValues={{
-                extraOne: '',
-                extraTwo: '',
-                extraThree: '',
-              }}>
+              initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
+                acc[`extraInput${index + 1}`] = '';
+                return acc;
+              }, {}) || {})}>
               {() => (
-                <Form id='form' encType="multipart/form-data"
+                <Form id='form' encType="multipart/form-data" className="row"
                 >
                   <div className="col-lg-6 col-md-12 col-12">
                     <div className="event_details">
@@ -207,20 +210,22 @@ const MemberPurchase = () => {
                       <p>
                         Date:{" "}
                         {selectedEvent.correctedDate
-                          ? selectedEvent.correctedDate + " Updated!"
-                          : selectedEvent.date}
+                          ? moment(selectedEvent.correctedDate).format("Do MMMM") + " Updated!"
+                          : moment(selectedEvent.date).format("Do MMMM")}
                       </p>
                       <p>
                         Time:{" "}
                         {selectedEvent.correctedTime
-                          ? selectedEvent.correctedTime + " Updated!"
-                          : selectedEvent.time}
+                          ? moment(selectedEvent.correctedTime).format('hh:mm') + " Updated!"
+                          : moment(selectedEvent.time).format('hh:mm')}
                       </p>
                       <p>Address: {selectedEvent.location}</p>
                       <p>Price: {(selectedEvent.isFree || selectedEvent.isMemberFree) ? ' FREE' : selectedEvent.memberEntry ? `${selectedEvent.memberEntry} euro (discounted)` : `${selectedEvent.entry} (no MEMBER discount)`}</p>
                     </div>
                   </div>
-                  {selectedEvent.extraInputsFormForm.length && <FormExtras selectedEvent={selectedEvent.extraInputsFormForm} />}
+                  <div className="col-lg-6 col-md-12 col-12 row container mt--40">
+                    {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
+                  </div>
                   <WithBackBtn>
                     <button
                       disabled={loading}

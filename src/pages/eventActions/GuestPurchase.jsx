@@ -20,29 +20,17 @@ import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { encryptData } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
+import moment from "moment";
 
-const NonMemberPurchase = () => {
+const GuestPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
   const [loadingPage, setLoadingPage] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventClosed, setEventClosed] = useState(false)
-  const [marketingData, setMarketingData] = useState({})
   const [quantity, setQuantity] = useState(1);
 
   const { region, eventId } = useParams()
-
-  const schema = yup.object().shape({
-    name: yup.string().required(),
-    surname: yup.string().required(),
-    phone: yup.string().required(),
-    email: yup.string().email("Please enter a valid email").required(),
-    // extraOne: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[0] && selectedEvent.extraInputsForm[0].required) ? yup.string().required("Required field") : yup.string(),
-    // extraTwo: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[1] && selectedEvent.extraInputsForm[1].required) ? yup.string().required("Required field") : yup.string(),
-    // extraThree: (selectedEvent.extraInputsForm && selectedEvent.extraInputsForm[2] && selectedEvent.extraInputsForm[2].required) ? yup.string().required("Required field") : yup.string(),
-    policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-    payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  });
 
   const navigate = useNavigate()
 
@@ -60,7 +48,26 @@ const NonMemberPurchase = () => {
     };
 
     getEventDetails();
-  }, [])
+  }, []);
+
+  const schemaFields = {};
+
+  if (selectedEvent?.extraInputsForm && Array.isArray(selectedEvent.extraInputsForm)) {
+    selectedEvent.extraInputsForm.forEach((input, index) => {
+      const fieldName = `extraInput${index + 1}`;
+      schemaFields[fieldName] = input.required ? yup.string().required("Required field") : yup.string();
+    });
+  }
+
+  const schema = yup.object().shape({
+    name: yup.string().required(),
+    surname: yup.string().required(),
+    phone: yup.string().required(),
+    email: yup.string().email("Please enter a valid email").required(),
+    policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+    payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+    ...schemaFields
+  });
 
   if (loading) {
     return <HeaderLoadingError />
@@ -127,14 +134,14 @@ const NonMemberPurchase = () => {
                 <p>
                   Date:{" "}
                   {selectedEvent.correctedDate
-                    ? selectedEvent.correctedDate + " Updated!"
-                    : selectedEvent.date}
+                    ? moment(selectedEvent.correctedDate).format("Do MMMM") + " Updated!"
+                    : moment(selectedEvent.date).format("Do MMMM")}
                 </p>
                 <p>
                   Time:{" "}
                   {selectedEvent.correctedTime
-                    ? selectedEvent.correctedTime + " Updated!"
-                    : selectedEvent.time}
+                    ? moment(selectedEvent.correctedTime).format('hh:mm') + " Updated!"
+                    : moment(selectedEvent.time).format('hh:mm')}
                 </p>
                 <p>Address:{" "}{selectedEvent.location}</p>
                 <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.entry + ' euro'}</p>
@@ -187,9 +194,7 @@ const NonMemberPurchase = () => {
                       if (selectedEvent.extraInputsForm) {
                         formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
                       }
-                      if (selectedEvent.marketingInputs && marketingData) {
-                        formData.append('marketing', JSON.stringify(marketingData))
-                      }
+
                       formData.append(
                         "guestName",
                         values.name + " " + values.surname
@@ -221,11 +226,12 @@ const NonMemberPurchase = () => {
                     surname: "",
                     email: "",
                     phone: "",
-                    extraOne: '',
-                    extraTwo: '',
-                    extraThree: '',
                     policyTerms: false,
                     payTerms: false,
+                    ...(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
+                      acc[`extraInput${index + 1}`] = '';
+                      return acc;
+                    }, {}) || {})
                   }}
                 >
                   {(values) => (
@@ -288,7 +294,9 @@ const NonMemberPurchase = () => {
                             />
                           </div>
                         </div>
-                        {selectedEvent.extraInputsForm.length > 0 && <FormExtras selectedEvent={selectedEvent.extraInputsForm} />}
+                        <div className="col-12 row container mt--40">
+                          {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
+                        </div>
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">
                             <Field
@@ -371,4 +379,4 @@ const NonMemberPurchase = () => {
   }
 };
 
-export default NonMemberPurchase;
+export default GuestPurchase;
