@@ -66,16 +66,76 @@ const EventForm = (props) => {
         location: yup.string().required("Location is required"),
         ticketTimer: yup.string().required("Ticket Timer is required"),
         ticketLimit: yup.number().required("Ticket Limit is required"),
-        entry: yup.number().required("Normal Price is required"),
-        memberEntry: yup.number().required("Member Price is required"),
-        // ticketLink: yup.string().required("Ticket Link is required"),
-        priceId: yup.string().required("Provide Stripe id for guest price"),
+        priceId: yup.string().when(
+            ['isFree', 'isTicketLink'],
+            {
+                is: (isFree, isTicketLink) =>
+                    isFree || isTicketLink,
+                then: yup.string().notRequired(),
+                otherwise: yup.string().required("Provide Stripe id for guest price"),
+            }
+        ),
+        entry: yup.number().when(
+            ['isFree', 'isTicketLink'],
+            {
+                is: (isFree, isTicketLink) =>
+                    isFree || isTicketLink,
+                then: yup.number().notRequired(),
+                otherwise: yup.number().required("Guest Price is required"),
+            }
+        ),
+        memberPriceId: yup.string().when(
+            ['isFree', 'isMemberFree', 'memberOnly', 'isTicketLink'],
+            {
+                is: (isFree, isMemberFree, memberOnly, isTicketLink) =>
+                    isFree || isMemberFree || memberOnly || isTicketLink,
+                then: yup.string().notRequired(),
+                otherwise: yup.string().required("Provide Stripe id for member price"),
+            }
+        ),
+
+        memberEntry: yup.number().when(
+            ['isFree', 'isMemberFree', 'memberOnly', 'isTicketLink'],
+            {
+                is: (isFree, isMemberFree, memberOnly, isTicketLink) =>
+                    isFree || isMemberFree || memberOnly || isTicketLink,
+                then: yup.number().notRequired(),
+                otherwise: yup.number().required("Member Price is required"),
+            }
+        ),
+        ticketLink: yup.string().when(
+            ['isTicketLink'],
+            {
+                is: (isTicketLink) =>
+                    isTicketLink,
+                then: yup.string().required("Link to the ticket platform is required"),
+                otherwise: yup.string().notRequired(),
+            }
+        ),
         memberPriceId: yup.string().required("Provide Stripe id for member price"),
         activeMemberPriceId: yup.string().required("Provide Stripe id for active member price"),
         text: yup.string().required("Add some content to the event"),
         title: yup.string().required("Title is required"),
         ticketImg: yup.mixed().required('A ticket image is required'),
+        bgImage: yup
+            .number()
+            .when('bgImageExtra', {
+                is: (val) => !val || val.length === 0,
+                then: yup.number().required('Please provide a background image from the selected or your own'),
+                otherwise: yup.number(),
+            }),
+        bgImageExtra: yup
+            .mixed()
+            .when('bgImage', {
+                is: (val) => !val,
+                then: yup.mixed().required('Please provide a background image from the selected or your own'),
+                otherwise: yup.mixed(),
+            }),
         poster: yup.mixed().required('A poster is required'),
+        isFree: yup.boolean(),
+        isMemberFree: yup.boolean(),
+        memberOnly: yup.boolean(),
+        isTicketLink: yup.boolean,
     });
 
     return (
@@ -489,11 +549,15 @@ const EventForm = (props) => {
                                 <p className="mt--10 information center_text">
                                     *choose a wide one
                                 </p>
-                                <ErrorMessage
+                                {errors.bgImage ? <ErrorMessage
                                     className="error"
                                     name="bgImage"
                                     component="div"
-                                />
+                                /> : <ErrorMessage
+                                    className="error"
+                                    name="bgImageExtra"
+                                    component="div"
+                                />}
                             </div>
                         </div>
                     </div>

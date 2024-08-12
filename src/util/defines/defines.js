@@ -25,7 +25,7 @@ export const RESET_PASSWORD_MODAL = 'reset_password_modal';
 export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';
 
 //toasts
-export const INCORRECT_MISSING_DATA = { severity: 'warning', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' }
+export const INCORRECT_MISSING_DATA = { severity: 'warn', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' }
 export const EVENT_ADDED = { severity: 'success', summary: 'Event added' };
 export const EVENT_EDITED = { severity: 'success', summary: 'Event added' };
 export const EVENT_DELETED = { severity: 'success', summary: 'Event deleted' };
