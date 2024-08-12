@@ -25,7 +25,9 @@ const EventList = () => {
                 setIsEventsLoading(true);
                 const responseData = await sendRequest(`event/actions/events`);
                 dispatch(loadEvents(responseData.events));
-            } catch (err) { } finally {
+            } catch (err) { 
+                
+            } finally {
                 setIsEventsLoading(false);
             }
         }

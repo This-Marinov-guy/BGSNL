@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Tooltip } from 'primereact/tooltip';
 import { Dialog } from 'primereact/dialog';
 import { FiInfo } from 'react-icons/fi';
-import {capitalizeFirstLetter} from '../../../../util/functions/capitalize';
+import { capitalizeFirstLetter } from '../../../../util/functions/capitalize';
 import { useDispatch } from 'react-redux';
 import { loadSingleEvent } from '../../../../redux/events';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,9 +16,9 @@ const EventModal = (props) => {
     const [expandImage, setExpandImage] = useState(null);
     const [expandBg, setExpandBg] = useState(false);
 
-    const {sendRequest, loading} = useHttpClient();
+    const { sendRequest, loading } = useHttpClient();
 
-    const {eventId} = useParams();
+    const { eventId } = useParams();
 
     const navigate = useNavigate();
 
@@ -37,11 +37,11 @@ const EventModal = (props) => {
             props.setShow(false);
             navigate('/user/dashboard');
         }
-     }
+    }
     return (
         <>
             <ConfirmCenterModal text='Deleting an event is an irreversible action! Are you sure you want to delete it?' onConfirm={onDelete} visible={visible} setVisible={setVisible} />
-            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format("Do MMMM")}, ${moment(props.event.time).format('hh:mm') }`}
+            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format("Do MMMM")}, ${moment(props.event.time).format('hh:mm')}`}
                 visible={props.show} style={{ maxWidth: '90%' }}
                 onHide={() => props.setShow(false)}
                 dismissableMask>
@@ -106,13 +106,17 @@ const EventModal = (props) => {
                     </>}
                     <h3>Images</h3>
                     <hr />
-                    <p>Images {tooltip}: {props.event.images.length ?
-                        props.event.images.map((img, index) =>
-                            <img key={index}
-                                onClick={() => setExpandImage(expandImage == null ? index : null)}
-                                className={'small_preview ' + (expandImage === index && 'center_expand')}
-                                src={img}
-                                alt='preview' />) : 'Only poster will be displayed'}</p>
+                    <p>Images {tooltip}: {props.event.images.length > 0 ?
+                        props.event.images.map((img, index) => {
+                            if (!img) { return <p>No extra images</p> }
+                            {
+                                return <img key={index}
+                                    onClick={() => setExpandImage(expandImage == null ? index : null)}
+                                    className={'small_preview ' + (expandImage === index && 'center_expand')}
+                                    src={img}
+                                    alt='preview' />
+                            }
+                        }) : 'Only poster will be displayed'}</p>
                     <p>Ticket: </p> <img src={props.event.ticketImg} className='normal_preview' alt='ticket' />
                     <p>Poster: </p> <img src={props.event.ticketImg} className='normal_preview' alt='poster' />
                     <p>Background {tooltip}: </p>

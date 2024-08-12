@@ -208,9 +208,9 @@ const EventForm = (props) => {
                     isSaleClosed: initialData?.isSaleClosed ?? false,
                     isFree: initialData?.isFree ?? false,
                     isMemberFree: initialData?.isMemberFree ?? false,
-                    entry: initialData?.entry ?? null,
-                    memberEntry: initialData?.memberEntry ?? null,
-                    activeMemberEntry: initialData?.activeMemberEntry ?? null,
+                    entry: !isNaN(initialData?.entry) ? initialData.entry : null,
+                    memberEntry: !isNaN(initialData?.memberEntry) ? initialData.memberEntry : null,
+                    activeMemberEntry: !isNaN(initialData?.activeMemberEntry) ? initialData.activeMemberEntry : null,
                     entryIncluding: initialData?.entryIncluding ?? '',
                     memberIncluding: initialData?.memberIncluding ?? '',
                     ticketLink: initialData?.ticketLink ?? '',
@@ -300,7 +300,7 @@ const EventForm = (props) => {
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
                                     <Calendar id="date" name="date"
-                                        value={values.date}
+                                        value={new Date(values.date)}
                                         onChange={(event) => values.date = event.target.value}
                                         dateFormat="dd/mm/yy"
                                         minDate={new Date()}
@@ -309,7 +309,8 @@ const EventForm = (props) => {
                                         placeholder="Date of Event"
                                         touchUI
                                         showButtonBar
-                                        showIcon />
+                                        showIcon
+                                        hideOnDateTimeSelect/>
                                     <ErrorMessage
                                         className="error"
                                         name="date"
@@ -319,11 +320,12 @@ const EventForm = (props) => {
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
-                                    <Calendar value={values.time}
+                                    <Calendar value={new Date(values.time)}
                                         onChange={(event) => values.time = event.target.value}
                                         style={{ width: '100%' }}
                                         placeholder="Time of Event"
-                                        timeOnly />
+                                        timeOnly
+                                        hideOnDateTimeSelect />
                                     <ErrorMessage
                                         className="error"
                                         name="time"
@@ -634,7 +636,7 @@ const EventForm = (props) => {
                             <div className="col-lg-6 col-12">
                                 <div className="rn-form-group">
                                     <Calendar id="ticket-date" name="ticketTimer"
-                                        value={values.ticketTimer}
+                                        value={new Date(values.ticketTimer)}
                                         onChange={(event) => setFieldValue('ticketTimer', event.target.value)}
                                         dateFormat="dd/mm/yy"
                                         minDate={new Date()}
@@ -680,7 +682,7 @@ const EventForm = (props) => {
                                 onClick={() => handleSubmit(errors, isValid, dirty)}
                                 className="rn-button-style--2 rn-btn-reverse-green"
                             >
-                                {loading ? <Loader /> : <span>Submit Event</span>}
+                                {loading ? <Loader /> : <span>{props.edit ? 'Edit Event' : 'Submit Event'}</span>}
                             </button>
                         </div>
                     </Form>
