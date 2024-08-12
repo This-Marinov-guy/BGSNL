@@ -3,7 +3,7 @@ import XButton from '../ui/buttons/XButton';
 import PlusButton from '../ui/buttons/PlusButton';
 
 const StringDynamicInputs = (props) => {
-  const [inputs, setInputs] = useState(props.intValues?.length > 0 ? props.intValues : []);
+  const [inputs, setInputs] = useState(props.initialValues?.length > 0 ? props.initialValues : []);
 
   const addInput = () => {
     if (props.max > inputs.length) {

@@ -17,12 +17,12 @@ const Event = (props) => {
         price = props.event.entry + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.memberEntry) + (props.event.activeMemberPrice ? ' / ' + props.event.activeMemberPrice : '')
     }
 
-    const expired = dateConvertor(props.event.date + ' ' + props.event.time, true) < new Date().valueOf;
+    const expired = dateConvertor(props.event.date, props.event.time, true) < new Date().valueOf;
 
     return (
         <>
             <Tooltip target=".price_info" />
-            <EventModal show={show} setShow={setShow} event={props.event}/>
+            <EventModal show={show} setShow={setShow} event={props.event} loadData={props.loadData}/>
             <div onClick={() => setShow(true)} style={expired ? { backgroundColor: '#ff4d4d' } : {}} className='service service__style--2 common-border-2 flex'>
                 <div>
                     <p>Title: {props.event.title}</p>

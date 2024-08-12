@@ -19,19 +19,19 @@ const EventList = () => {
     const events = useSelector(selectEvents);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchEventsFromApi = async () => {
-            try {
-                setIsEventsLoading(true);
-                const responseData = await sendRequest(`event/actions/events`);
-                dispatch(loadEvents(responseData.events));
-            } catch (err) { 
-                
-            } finally {
-                setIsEventsLoading(false);
-            }
+    const fetchEventsFromApi = async () => {
+        try {
+            setIsEventsLoading(true);
+            const responseData = await sendRequest(`event/actions/events`);
+            dispatch(loadEvents(responseData.events));
+        } catch (err) { 
+            
+        } finally {
+            setIsEventsLoading(false);
         }
+    }
 
+    useEffect(() => {
         fetchEventsFromApi();
     }, [])
 
@@ -44,7 +44,7 @@ const EventList = () => {
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
                         <div className='col-12 grid'>
                             {events[region].length ? events[region].map((event, i) => {
-                                return <Event key={i} event={event} />
+                                return <Event key={i} event={event} loadData={fetchEventsFromApi}/>
                             }) : <p>No current events for the region</p>}
                         </div>
                         <hr />

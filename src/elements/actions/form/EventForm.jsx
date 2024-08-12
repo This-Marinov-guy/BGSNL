@@ -167,7 +167,7 @@ const EventForm = (props) => {
                                 val.forEach((v, i) => {
                                     formData.append(`${key}[]`, v);
                                 })
-                            } else {
+                            } else if (!!val) {
                                 formData.append(key, val);
                             }
                         });
@@ -199,18 +199,18 @@ const EventForm = (props) => {
                     region: initialData?.region ?? '',
                     title: initialData?.title ?? '',
                     description: initialData?.description ?? '',
-                    date: initialData?.date ?? '',
-                    time: initialData?.time ?? '',
+                    date: initialData?.date ? new Date(initialData.date) : '',
+                    time: initialData?.time ? new Date(initialData.time) : '',
                     location: initialData?.location ?? '',
                     ticketTimer: initialData?.ticketTimer ?? '',
-                    ticketLimit: initialData?.ticketLimit ?? null,
+                    ticketLimit: initialData?.ticketLimit ? new Date(initialData.ticketLimit) : '',
                     isTicketLink: initialData?.isTicketLink ?? false,
                     isSaleClosed: initialData?.isSaleClosed ?? false,
                     isFree: initialData?.isFree ?? false,
                     isMemberFree: initialData?.isMemberFree ?? false,
-                    entry: !isNaN(initialData?.entry) ? initialData.entry : null,
-                    memberEntry: !isNaN(initialData?.memberEntry) ? initialData.memberEntry : null,
-                    activeMemberEntry: !isNaN(initialData?.activeMemberEntry) ? initialData.activeMemberEntry : null,
+                    entry: !isNaN(initialData?.entry) ? initialData.entry : undefined,
+                    memberEntry: !isNaN(initialData?.memberEntry) ? initialData.memberEntry : undefined,
+                    activeMemberEntry: !isNaN(initialData?.activeMemberEntry) ? initialData.activeMemberEntry : undefined,
                     entryIncluding: initialData?.entryIncluding ?? '',
                     memberIncluding: initialData?.memberIncluding ?? '',
                     ticketLink: initialData?.ticketLink ?? '',
@@ -300,7 +300,7 @@ const EventForm = (props) => {
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
                                     <Calendar id="date" name="date"
-                                        value={new Date(values.date)}
+                                        value={values.date}
                                         onChange={(event) => values.date = event.target.value}
                                         dateFormat="dd/mm/yy"
                                         minDate={new Date()}
@@ -320,7 +320,7 @@ const EventForm = (props) => {
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
-                                    <Calendar value={new Date(values.time)}
+                                    <Calendar value={values.time}
                                         onChange={(event) => values.time = event.target.value}
                                         style={{ width: '100%' }}
                                         placeholder="Time of Event"
@@ -618,7 +618,7 @@ const EventForm = (props) => {
                             <div className="col-12 mt--20">
                                 <h5>Link a sub-event</h5>
                                 <Field as='textarea' placeholder="Sub-event description" name="subEventDescription" rows={2} />
-                                <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} intValues={values.subEventLinks} max={6} placeholder='Add first link' />
+                                <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} initialValues={values.subEventLinks} max={6} placeholder='Add first link' />
                             </div>
                         </div>
 
@@ -636,7 +636,7 @@ const EventForm = (props) => {
                             <div className="col-lg-6 col-12">
                                 <div className="rn-form-group">
                                     <Calendar id="ticket-date" name="ticketTimer"
-                                        value={new Date(values.ticketTimer)}
+                                        value={values.ticketTimer}
                                         onChange={(event) => setFieldValue('ticketTimer', event.target.value)}
                                         dateFormat="dd/mm/yy"
                                         minDate={new Date()}
@@ -660,16 +660,16 @@ const EventForm = (props) => {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt--20">
                                 <h5>Discount emails (extra from the active members)</h5>
-                                <StringDynamicInputs name='discountPass' onChange={(inputs) => values.discountPass = inputs} intValues={values.discountPass} placeholder='Add email' />
+                                <StringDynamicInputs name='discountPass' onChange={(inputs) => values.discountPass = inputs} initialValues={values.discountPass} placeholder='Add email' />
                             </div>
                             <div className="col-lg-6 col-12 mt--20">
                                 <h5>Free Pass emails (for those who need a free ticket)</h5>
-                                <StringDynamicInputs name='freePass' onChange={(inputs) => values.freePass = inputs} intValues={values.freePass} placeholder='Add email' />
+                                <StringDynamicInputs name='freePass' onChange={(inputs) => values.freePass = inputs} initialValues={values.freePass} placeholder='Add email' />
                             </div>
                         </div>
 
                         <h3 className="label mt--40">Add extra inputs by your choice</h3>
-                        <InputsBuilder onChange={(inputs) => values.extraInputsForm = inputs} />
+                        <InputsBuilder onChange={(inputs) => values.extraInputsForm = inputs} initialValues={values.extraInputsForm}/>
 
                         <ConfirmDialog />
                         <div className="mt--40 mb--20 center_div">

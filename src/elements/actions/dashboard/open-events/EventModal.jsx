@@ -33,6 +33,7 @@ const EventModal = (props) => {
         const responseData = await sendRequest(`event/actions/delete-event/${props.event.id}`, 'DELETE');
 
         if (responseData.status) {
+            props.loadData();
             setVisible(false);
             props.setShow(false);
             navigate('/user/dashboard');

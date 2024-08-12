@@ -5,7 +5,7 @@ import XButton from '../ui/buttons/XButton';
 
 const InputsBuilder = (props) => {
     const emptyInputObj = { type: '', placeholder: '', required: false, options: [] }
-    const [inputs, setInputs] = useState(props.intValues?.length > 0 ? props.intValues : [emptyInputObj]);
+    const [inputs, setInputs] = useState(props.initialValues?.length > 0 ? props.initialValues : [emptyInputObj]);
 
     const addInput = (type) => {
         if (props.max > inputs.length) {
@@ -67,7 +67,7 @@ const InputsBuilder = (props) => {
                                 <option value={false}>No</option>
                             </select>
                             <input type='text'
-                                placeholder='Placeholder of the input'
+                                placeholder={value.placeholder ?? 'Placeholder of the input'}
                                 className='col-12'
                                 onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
                                 name='placeholder' ></input>
@@ -85,11 +85,11 @@ const InputsBuilder = (props) => {
                                 <option value={false}>No</option>
                             </select>
                             <input type='text'
-                                placeholder='Placeholder of the input'
+                                placeholder={value.placeholder ?? 'Placeholder of the input'}
                                 className='col-12 mt--10'
                                 onChange={(e) => handleInputChange(index, e.target.name, e.target.value)}
                                 name='placeholder' ></input>
-                            <StringDynamicInputs onChange={(inputs) => handleInputChange(index, 'options', inputs)} placeholder='Add option' />
+                            <StringDynamicInputs onChange={(inputs) => handleInputChange(index, 'options', inputs)} initialValues={value.options ?? []} placeholder='Add option' />
                         </div>
                     )}
                 </Fragment>
