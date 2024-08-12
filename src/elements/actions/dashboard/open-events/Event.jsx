@@ -22,7 +22,7 @@ const Event = (props) => {
     return (
         <>
             <Tooltip target=".price_info" />
-            <EventModal show={show} setShow={setShow} event={props.event} />
+            <EventModal show={show} setShow={setShow} event={props.event}/>
             <div onClick={() => setShow(true)} style={expired ? { backgroundColor: '#ff4d4d' } : {}} className='service service__style--2 common-border-2 flex'>
                 <div>
                     <p>Title: {props.event.title}</p>

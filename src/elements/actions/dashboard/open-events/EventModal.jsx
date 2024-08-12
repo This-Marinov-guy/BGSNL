@@ -30,11 +30,12 @@ const EventModal = (props) => {
 
 
     const onDelete = async () => {
-        const responseData = await sendRequest(`event/actions/delete-event/${eventId}`, 'DELETE');
+        const responseData = await sendRequest(`event/actions/delete-event/${props.event.id}`, 'DELETE');
 
         if (responseData.status) {
-            props.toast.current.show(EVENT_DELETED);
             setVisible(false);
+            props.setShow(false);
+            navigate('/user/dashboard');
         }
      }
     return (
