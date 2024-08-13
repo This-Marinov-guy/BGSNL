@@ -61,7 +61,11 @@ export const REGION_FLICKER = {
 
 export const REGION_SOCIALS = {
     netherlands: [
-        { Social: <FaInstagram />, link: "https://www.instagram.com/bulgariansociety.netherlands/" }
+        { Social: <FaInstagram />, link: "https://www.instagram.com/bulgariansociety.netherlands/" },
+        {
+            Social: <FaLinkedin />,
+            link: "https://www.linkedin.com/company/bulgarian-society-netherlands",
+        },
     ],
     groningen: [
         { Social: <FaInstagram />, link: "https://www.instagram.com/bulgariansociety.gro/" },
@@ -103,5 +107,9 @@ export const REGION_SOCIALS = {
     maastricht: [{
         Social: <FaInstagram />,
         link: "https://www.instagram.com/bulgariansociety.maas/",
+    }],
+    maastricht: [{
+        Social: <FaInstagram />,
+        link: "https://www.instagram.com/bulgariansociety.ein/",
     }]
 }
