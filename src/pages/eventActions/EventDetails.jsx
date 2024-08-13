@@ -87,7 +87,7 @@ const EventDetails = () => {
                 <div className="inner">
                   <h2>About</h2>
                   <p className="subtitle">{selectedEvent.title}</p>
-                  <p>{selectedEvent.text}</p>
+                  <p style={{ whiteSpace: 'pre-line' }}>{selectedEvent.text}</p>
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
                       <span>When</span>
@@ -116,14 +116,14 @@ const EventDetails = () => {
                   </div>
                   {
                     //for links to subEvent
-                    (selectedEvent?.subEventDescription && selectedEvent?.subEventDescription.length > 0 ) &&
+                    (selectedEvent?.subEvent.description && selectedEvent?.subEvent.links.length > 0 ) &&
                     <div className="mt--40 mb--40 team_member_border-1 center_section">
                       <h3 className="center_text">
-                          {selectedEvent.subEventDescription}
+                          {selectedEvent.subEvent.description}
                       </h3>
                       <div className="row">
                         {
-                            selectedEvent.subEventDescription.map((link) => {
+                            selectedEvent.subEvent.links.map((link) => {
                             return <a
                               className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
                               href={'/' + region + '/event-details' + link.href}

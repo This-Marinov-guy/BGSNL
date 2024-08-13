@@ -478,6 +478,7 @@ const EventForm = (props) => {
                                 <hr />
                                 <h5 className="center_text">Poster Image</h5>
                                 <ImageInput
+                                    initialImage={values.poster}
                                     onChange={(event) => {
                                         setFieldValue("poster", event.target.files[0]);
                                     }}
@@ -492,6 +493,7 @@ const EventForm = (props) => {
                                 <hr />
                                 <h5 className="center_text">Ticket Image</h5>
                                 <ImageInput
+                                    initialImage={values.ticketImg}
                                     onChange={(event) => {
                                         setFieldValue("ticketImg", event.target.files[0]);
                                     }}
@@ -552,6 +554,7 @@ const EventForm = (props) => {
                                     </Field>
                                     <h5>or choose your own</h5>
                                     <ImageInput
+                                        initialImage={values.bgImageExtra}
                                         style={{ height: '150px' }}
                                         onChange={(event) => {
                                             setFieldValue("bgImageExtra", event.target.files[0]);
