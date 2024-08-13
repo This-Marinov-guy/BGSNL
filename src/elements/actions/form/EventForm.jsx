@@ -1,7 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import * as yup from "yup";
-import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Calendar } from 'primereact/calendar';
 import { Tooltip } from 'primereact/tooltip';
@@ -17,6 +16,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
 import LongLoading from "../../ui/loading/LongLoading";
+import SubEventBuilder from "../../inputs/SubEventBuilder";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -161,7 +161,7 @@ const EventForm = (props) => {
                         });
 
                         Object.entries(values).forEach(([key, val]) => {
-                            if (key === 'extraInputsForm') {
+                            if (key === 'extraInputsForm' || key === 'subEvent') {
                                 formData.append(key, JSON.stringify(val));
                             } else if (Array.isArray(val)) {
                                 val.forEach((v, i) => {
@@ -194,16 +194,15 @@ const EventForm = (props) => {
                     ],
                     freePass: initialData?.freePass ?? [],
                     discountPass: initialData?.discountPass ?? [],
-                    subEventDescription: initialData?.subEventDescription ?? '',
-                    subEventLinks: initialData?.subEventLinks ?? [],
+                    subEvent: initialData?.subEvent ?? null,
                     region: initialData?.region ?? '',
                     title: initialData?.title ?? '',
                     description: initialData?.description ?? '',
                     date: initialData?.date ? new Date(initialData.date) : '',
                     time: initialData?.time ? new Date(initialData.time) : '',
                     location: initialData?.location ?? '',
-                    ticketTimer: initialData?.ticketTimer ?? '',
-                    ticketLimit: initialData?.ticketLimit ? new Date(initialData.ticketLimit) : '',
+                    ticketLimit: initialData?.ticketLimit ?? '',
+                    ticketTimer: initialData?.ticketTimer ? new Date(initialData.ticketTimer) : '',
                     isTicketLink: initialData?.isTicketLink ?? false,
                     isSaleClosed: initialData?.isSaleClosed ?? false,
                     isFree: initialData?.isFree ?? false,
@@ -614,13 +613,7 @@ const EventForm = (props) => {
                             </div>
                         </div>
 
-                        <div className='row'>
-                            <div className="col-12 mt--20">
-                                <h5>Link a sub-event</h5>
-                                <Field as='textarea' placeholder="Sub-event description" name="subEventDescription" rows={2} />
-                                <StringDynamicInputs name='subEventLinks' onChange={(inputs) => values.subEventLinks = inputs} initialValues={values.subEventLinks} max={6} placeholder='Add first link' />
-                            </div>
-                        </div>
+                        <SubEventBuilder initialValues={values.subEvent}/>
 
                         <div className="row">
                             <div className="col-lg-6 col-12">

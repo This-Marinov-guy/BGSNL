@@ -75,7 +75,7 @@ const GuestPurchase = () => {
     return <NoEventFound />
   }
 
-  if (selectedEvent.ticket_link) {
+  if (selectedEvent.ticketLink) {
     return (<div className="container center_text mt--100">
       <ImageFb
         className="logo mb--40"
@@ -84,7 +84,7 @@ const GuestPurchase = () => {
         alt="Logo"
       />
       <h3 className="">This event is sold through an external platform - click below to see it!</h3>
-      <a href={selectedEvent.ticket_link}
+      <a href={selectedEvent.ticketLink}
         className="rn-button-style--2 rn-btn-reverse-green mt--20"
       >
         Go to event
@@ -123,7 +123,7 @@ const GuestPurchase = () => {
             {selectedEvent.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
               <h2 className="center_text mb--80">Purchase a Ticket</h2>}
 
-            {!selectedEvent.ticket_link && <MembershipBanner />}
+            {!selectedEvent.ticketLink && <MembershipBanner />}
           </div>
           {!selectedEvent.membersOnly && <div className="row">
             <div className="col-lg-4 col-md-12 col-12">

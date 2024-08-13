@@ -70,7 +70,7 @@ const MemberPurchase = () => {
     return <NoEventFound />
   }
 
-  if (selectedEvent.ticket_link) {
+  if (selectedEvent.ticketLink) {
     return (<div className="container center_text mt--100">
       <ImageFb
         className="logo mb--40"
@@ -79,7 +79,7 @@ const MemberPurchase = () => {
         alt="Logo"
       />
       <h3 className="">This event is sold through an external platform - click below to see it!</h3>
-      <a href={selectedEvent.ticket_link}
+      <a href={selectedEvent.ticketLink}
         className="rn-button-style--2 rn-btn-reverse-green mt--20"
       >
         Go to event

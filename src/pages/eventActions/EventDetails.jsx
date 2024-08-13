@@ -116,14 +116,14 @@ const EventDetails = () => {
                   </div>
                   {
                     //for links to subEvent
-                    selectedEvent.subEvent &&
+                    (selectedEvent?.subEventDescription && selectedEvent?.subEventDescription.length > 0 ) &&
                     <div className="mt--40 mb--40 team_member_border-1 center_section">
                       <h3 className="center_text">
-                        {selectedEvent.subEvent.description}
+                          {selectedEvent.subEventDescription}
                       </h3>
                       <div className="row">
                         {
-                          selectedEvent.subEvent.links.map((link) => {
+                            selectedEvent.subEventDescription.map((link) => {
                             return <a
                               className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
                               href={'/' + region + '/event-details' + link.href}
@@ -135,15 +135,15 @@ const EventDetails = () => {
                       </div>
                     </div>
                   }
-                  {!selectedEvent.is_tickets_closed && (loading ? <div>
+                  {!selectedEvent.isSaleClosed && (loading ? <div>
                     <h3 className="mt--20">Checking Ticket Availability - please be patient!</h3>
                     <Loader />
                   </div> :
                     <div className="purchase-btn">
-                      {selectedEvent.ticket_link ? <div>
+                      {selectedEvent.ticketLink ? <div>
                         <WithBackBtn><a
                           style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                          href={selectedEvent.ticket_link}
+                          href={selectedEvent.ticketLink}
                           selectedEvent="_blank"
                           className="rn-button-style--2 rn-btn-reverse-green mt--80"
                         >

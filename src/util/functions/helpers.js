@@ -83,7 +83,7 @@ export const estimatePriceByEvent = (selectedEvent, user = {}) => {
 
     if (selectedEvent.isFree) {
         price = 'FREE'
-    } else if (selectedEvent.ticket_link) {
+    } else if (selectedEvent.ticketLink) {
         price = 'Check ticket portal'
     } else if (user && !!user.token && (selectedEvent.memberEntry || selectedEvent.isMemberFree)) {
         price = selectedEvent.isMemberFree ? 'FREE'

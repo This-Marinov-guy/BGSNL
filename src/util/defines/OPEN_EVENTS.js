@@ -27,7 +27,7 @@ export const SOCIETY_EVENTS = {
         //   entry: 2.50,
         //   memberEntry: 'Free',
         //   including: ['(+ drink and snack)', '(+ drink and snack)'],
-        //   ticket_link: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
+        //   ticketLink: 'https://www.tickettailor.com/events/hellenicassociationgroningen/1156915',
         //   price_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
         //   memberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
         //   activeMemberPrice_id: 'price_1P7uhsIOw5UGbAo1fvnUj3yw',
