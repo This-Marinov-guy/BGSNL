@@ -188,8 +188,7 @@ const GuestPurchase = () => {
                       formData.append("quantity", quantity);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
-                      formData.append("eventName", selectedEvent.title);
-                      formData.append("eventDate", selectedEvent.date);
+                      formData.append("eventId", selectedEvent.id);
                       formData.append("guestEmail", values.email);
                       if (selectedEvent.extraInputsForm) {
                         formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))

@@ -170,8 +170,7 @@ const MemberPurchase = () => {
                   formData.append("region", region);
                   formData.append("origin_url", window.location.origin);
                   formData.append("method", "buy_member_ticket");
-                  formData.append("eventName", selectedEvent.title);
-                  formData.append("eventDate", selectedEvent.date);
+                  formData.append("eventId", selectedEvent.id);
                   formData.append("userId", currentUser.id);
                   if (selectedEvent.extraInputsFormForm) {
                     formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
