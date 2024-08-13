@@ -11,7 +11,7 @@ const SubEventBuilder = (props) => {
             ...prevInput,
             links: [...prevInput.links, { name: '', href: '' }]
         }));
-        // props.onChange(input);
+        props.onChange(input);
     };
 
     const removeLink = (linkIndex) => {
@@ -20,7 +20,7 @@ const SubEventBuilder = (props) => {
                 ...prevInput,
                 links: prevInput.links.filter((_, index) => index !== linkIndex)
             }));
-            // props.onChange(input);
+            props.onChange(input);
         }
     };
 
@@ -31,7 +31,7 @@ const SubEventBuilder = (props) => {
                 index === linkIndex ? { ...link, [field]: value } : link
             )
         }));
-        // props.onChange(input);
+        props.onChange(input);
     };
 
     const handleDescriptionChange = (value) => {
@@ -39,7 +39,7 @@ const SubEventBuilder = (props) => {
             ...prevInput,
             description: value
         }));
-        // props.onChange(input);
+        props.onChange(input);
     };
 
     return (

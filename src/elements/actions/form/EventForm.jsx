@@ -613,7 +613,7 @@ const EventForm = (props) => {
                             </div>
                         </div>
 
-                        <SubEventBuilder initialValues={values.subEvent}/>
+                        <SubEventBuilder onChange={(input) => setFieldValue('subEvent', input)} initialValues={values.subEvent}/>
 
                         <div className="row">
                             <div className="col-lg-6 col-12">
