@@ -653,16 +653,16 @@ const EventForm = (props) => {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt--20">
                                 <h5>Discount emails (extra from the active members)</h5>
-                                <StringDynamicInputs name='discountPass' onChange={(inputs) => values.discountPass = inputs} initialValues={values.discountPass} placeholder='Add email' />
+                                <StringDynamicInputs name='discountPass' onChange={(inputs) => setFieldValue('discountPass', inputs)} initialValues={values.discountPass} placeholder='Add email' />
                             </div>
                             <div className="col-lg-6 col-12 mt--20">
                                 <h5>Free Pass emails (for those who need a free ticket)</h5>
-                                <StringDynamicInputs name='freePass' onChange={(inputs) => values.freePass = inputs} initialValues={values.freePass} placeholder='Add email' />
+                                <StringDynamicInputs name='freePass' onChange={(inputs) => setFieldValue('freePass', inputs)} initialValues={values.freePass} placeholder='Add email' />
                             </div>
                         </div>
 
                         <h3 className="label mt--40">Add extra inputs by your choice</h3>
-                        <InputsBuilder onChange={(inputs) => values.extraInputsForm = inputs} initialValues={values.extraInputsForm}/>
+                        <InputsBuilder onChange={(inputs) => setFieldValue('extraInputsForm', inputs)} initialValues={values.extraInputsForm}/>
 
                         <ConfirmDialog />
                         <div className="mt--40 mb--20 center_div">
