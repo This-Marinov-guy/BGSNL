@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Donation from "../../elements/Donation";
 import { useDispatch, useSelector } from "react-redux";
 import { selectDonation, showDonation } from "../../redux/donation";
-import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS } from "../../util/defines/REGIONS_DESIGN";
+import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS, KVK } from "../../util/defines/REGIONS_DESIGN";
 
 const Footer = ({forceRegion}) => {
   const region = forceRegion ?? useParams().region;
@@ -90,7 +90,7 @@ const Footer = ({forceRegion}) => {
                         Rights Reserved.
                       </p>
 
-                      <p className="information">{`Version ${packageJson.version}`}</p>
+                      <p className="information">{`KVK: ${KVK} | Version ${packageJson.version}`}</p>
                     </div>
                   </div>
                 </div>

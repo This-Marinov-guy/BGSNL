@@ -39,6 +39,32 @@ const EventModal = (props) => {
             navigate('/user/dashboard');
         }
     }
+
+    const priceInfo = <>
+        <h3>Price Info</h3>
+        <hr />
+        <p>Is the sale closed: {props.event.isSaleClosed ? 'Yes' : 'No'}</p>
+        <p>Is the Event Free: {props.event.isFree ? 'Yes' : 'No'}</p>
+        <p>Is the Event Member Free: {props.event.isMemberFree ? 'Yes' : 'No'} </p>
+        <br />
+        <p>Price for guests: {props.event.entry}</p>
+        <p>Guest Ticket Including: {props.event.entryIncluding || 'None'}</p>
+        <p>Guest Price Id: {props.event.priceId}</p>
+        <br />
+
+        {!props.event.isMemberFree && <>
+            <p>Price for members: {props.event.memberEntry}</p>
+            <p>Member Ticket Including: {props.event.memberIncluding || 'None'}</p>
+            <p>Member Price Id: {props.event.memberPriceId}</p>
+            <br />
+            <p>Price for active members: {props.event.activeMemberEntry}</p>
+            <p>Active Member Price Id: {props.event.activeMemberPriceId}</p>
+            <br />
+        </>}
+        <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join('| ') : 'None'}</p>
+        <p>Discount Pass List: {props.event.discountPass.length ? props.event.discountPass.join('| ') : 'None'}</p>
+    </>
+
     return (
         <>
             <ConfirmCenterModal text='Deleting an event is an irreversible action! Are you sure you want to delete it?' onConfirm={onDelete} visible={visible} setVisible={setVisible} />
@@ -81,30 +107,11 @@ const EventModal = (props) => {
                     <p>Sub-event: {props.event.subEventDescription || 'None'}</p>
                     <p>Text for the event: {props.event.text}</p>
 
-                    {!props.event.isFree && <>
-                        <h3>Price Info</h3>
-                        <hr />
-                        <p>Is the sale closed: {props.event.isSaleClosed ? 'Yes' : 'No'}</p>
-                        <p>Is the Event Free: {props.event.isFree ? 'Yes' : 'No'}</p>
-                        <p>Is the Event Member Free: {props.event.isMemberFree ? 'Yes' : 'No'} </p>
-                        <br />
-                        <p>Price for guests: {props.event.entry}</p>
-                        <p>Guest Ticket Including: {props.event.entryIncluding || 'None'}</p>
-                        <p>Guest Price Id: {props.event.priceId}</p>
-                        <br />
-
-                        {!props.event.isMemberFree && <>
-                            <p>Price for members: {props.event.memberEntry}</p>
-                            <p>Member Ticket Including: {props.event.memberIncluding || 'None'}</p>
-                            <p>Member Price Id: {props.event.memberPriceId}</p>
-                            <br />
-                            <p>Price for active members: {props.event.activeMemberEntry}</p>
-                            <p>Active Member Price Id: {props.event.activeMemberPriceId}</p>
-                            <br />
-                        </>}
-                        <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join('| ') : 'None'}</p>
-                        <p>Discount Pass List: {props.event.discountPass.length ? props.event.discountPass.join('| ') : 'None'}</p>
-                    </>}
+                    {props.event.isFree ?
+                        <h3>Price Info: Event is free</h3> :
+                        (props.event.ticketLink ?
+                            <h3>Ticket are bought from <a href={props.event.ticketLink} target='_blank'>here</a></h3> :
+                            priceInfo)}
                     <h3>Images</h3>
                     <hr />
                     <p>Images {tooltip}: {props.event.images.length > 0 ?

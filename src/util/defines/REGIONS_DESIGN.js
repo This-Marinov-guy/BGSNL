@@ -113,3 +113,5 @@ export const REGION_SOCIALS = {
         link: "https://www.instagram.com/bulgariansociety.ein/",
     }]
 }
+
+export const KVK = '88233855';
