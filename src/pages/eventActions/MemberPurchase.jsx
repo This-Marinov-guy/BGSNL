@@ -21,6 +21,7 @@ import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
+import { encryptData } from "../../util/functions/helpers";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -52,7 +53,7 @@ const MemberPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`, "GET", null, {}, false);
+        const responseData = await sendRequest(`event/actions/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {
@@ -96,6 +97,8 @@ const MemberPurchase = () => {
     });
   }
 
+  console.log(selectedEvent);
+
   const schema = yup.object().shape(schemaFields);
 
   if (eventClosed) {
@@ -138,9 +141,7 @@ const MemberPurchase = () => {
               validationSchema={schema}
               onSubmit={async (values) => {
                 try {
-                  forceStartLoading();
-
-                  const checkMemberTicket = sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
+                  const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
 
                   if (!checkMemberTicket.status) {
                     return;
@@ -153,7 +154,8 @@ const MemberPurchase = () => {
                     email: currentUser.email,
                   });
                   const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}`;
-                  const { ticketBlob } = await createCustomerTicket(selectedEvent.ticket_img, currentUser.name, currentUser.surname, selectedEvent.ticket_color, qrCode);
+                  
+                  const { ticketBlob } = await createCustomerTicket(selectedEvent.poster, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
 
                   // formData
                   const formData = new FormData();
@@ -162,10 +164,10 @@ const MemberPurchase = () => {
                     ticketBlob,
                     selectedEvent.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
                   );
-                  if (selectedEvent.activeMemberPrice_id && (currentUser.expireDate === "Board Member" || currentUser.expireDate === "Committee Member" || currentUser.expireDate === "VIP" || currentUser.expireDate === "VIP Member" || (selectedEvent.discountPass && selectedEvent.discountPass.includes(currentUser.email)))) {
-                    formData.append("itemId", selectedEvent.activeMemberPrice_id);
+                  if (selectedEvent.activeMemberPriceId && (selectedEvent.discountPass && selectedEvent.discountPass.includes(currentUser.email))) {
+                    formData.append("itemId", selectedEvent.activeMemberPriceId);
                   } else {
-                    formData.append("itemId", selectedEvent.memberPrice_id);
+                    formData.append("itemId", selectedEvent.memberPriceId);
                   }
                   formData.append("region", region);
                   formData.append("origin_url", window.location.origin);
@@ -173,7 +175,10 @@ const MemberPurchase = () => {
                   formData.append("eventId", selectedEvent.id);
                   formData.append("userId", currentUser.id);
                   if (selectedEvent.extraInputsFormForm) {
-                    formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
+                    formData.append('preferences', JSON.stringify(Object.keys(schemaFields).reduce((obj, key) => {
+                      obj[key] = values[key];
+                      return obj;
+                    }, {})))
                   }
                   if (selectedEvent.isFree || selectedEvent.isMemberFree || selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname)) {
                     const responseData = await sendRequest(
@@ -193,7 +198,9 @@ const MemberPurchase = () => {
                       window.location.assign(responseData.url);
                     }
                   }
-                } catch (err) { }
+                } catch (err) {
+                  console.log(err)
+                 }
               }}
               initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
                 acc[`extraInput${index + 1}`] = '';

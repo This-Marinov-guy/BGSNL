@@ -6,11 +6,19 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
   var canvas = document.createElement("canvas");
   var layout = canvas.getContext("2d");
   let ticket = new Image();
+  ticket.crossOrigin = "anonymous"; // This enables CORS on the image
   ticket.src = ticketImage;
 
   await new Promise((resolve, reject) => {
-    ticket.onload = resolve;
-    ticket.onerror = reject;
+    ticket.onload = function () {
+      console.log("Image loaded successfully.");
+      resolve();
+    };
+
+    ticket.onerror = function (error) {
+      console.log("Failed to load image:", error);
+      reject(error);
+    };
   });
 
   //image

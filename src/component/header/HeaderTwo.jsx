@@ -9,6 +9,7 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import { decodeJWT } from "../../util/functions/jwt";
+import NewBadge from "../../elements/ui/badges/NewBadge";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
@@ -97,6 +98,17 @@ const HeaderTwo = (props) => {
                       <Link to='/'>Netherlands</Link>
                     </li>
                     {REGIONS.map((region, index) => {
+                      if (region === 'eindhoven') {
+                        return <li key={index}>
+                          <Link to={"/" + region}>
+                            <div className="hor_section">
+                              {capitalizeFirstLetter(region)}
+                              <NewBadge />
+                            </div>
+                          </Link>
+                        </li>
+                      }
+
                       return <li key={index}>
                         <Link to={"/" + region}>{capitalizeFirstLetter(region)}</Link>
                       </li>

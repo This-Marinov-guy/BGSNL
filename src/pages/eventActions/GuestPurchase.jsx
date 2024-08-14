@@ -38,7 +38,7 @@ const GuestPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/get-event-details-id/${eventId}`, "GET", null, {}, false);
+        const responseData = await sendRequest(`event/actions/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {
@@ -166,7 +166,7 @@ const GuestPurchase = () => {
                         email: values.email,
                       });
                       const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}&count=${quantity}`;
-                      const { ticketBlob } = await createCustomerTicket(selectedEvent.ticket_img, values.name, values.surname, selectedEvent.ticket_color, qrCode);
+                      const { ticketBlob } = await createCustomerTicket(selectedEvent.poster, values.name, values.surname, selectedEvent.ticketColor, qrCode);
 
                       // formData
                       const formData = new FormData();
@@ -181,17 +181,20 @@ const GuestPurchase = () => {
                       );
                       formData.append("region", region);
                       if (selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname))) {
-                        formData.append("itemId", selectedEvent.activeMemberPrice_id);
+                        formData.append("itemId", selectedEvent.activeMemberPriceId);
                       } else {
-                        formData.append("itemId", selectedEvent.price_id);
+                        formData.append("itemId", selectedEvent.priceId);
                       }
                       formData.append("quantity", quantity);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
                       formData.append("eventId", selectedEvent.id);
                       formData.append("guestEmail", values.email);
-                      if (selectedEvent.extraInputsForm) {
-                        formData.append('preferences', JSON.stringify({ bar: values.extraOne, }))
+                      if (selectedEvent.extraInputsFormForm) {
+                        formData.append('preferences', JSON.stringify(Object.keys(schemaFields).reduce((obj, key) => {
+                          obj[key] = values[key];
+                          return obj;
+                        }, {})))
                       }
 
                       formData.append(
