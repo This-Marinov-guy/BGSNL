@@ -5,6 +5,7 @@ import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import { useDispatch } from 'react-redux';
 import { USER_UPDATE_MODAL, formatRole } from '../../../util/defines/defines';
+import moment from 'moment';
 
 const UserCard = ({ user }) => {
     const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const UserCard = ({ user }) => {
                         </li>
                         <li>
                             Date of Birth:{" "}
-                            {user.birth}
+                            {moment(user.birth).format("D MMM YYYY")}
                         </li>
                         <li>
                             Email:{" "}
