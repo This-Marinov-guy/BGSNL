@@ -213,9 +213,31 @@ hr {
 }
 
 .p-toast-message {
-  backdrop-filter: blur(2000px) !important; /* Ensure the background is fully opaque */
+  backdrop-filter: blur(
+    2000px
+  ) !important; /* Ensure the background is fully opaque */
 }
 
 .p-steps .p-steps-item.p-highlight .p-steps-number {
   background-color: $theme-color;
+}
+
+.rdp-caption_label {
+  font-size: large;
+  margin-left: 10px;
+}
+
+.calendar {
+  position: absolute;
+  top: 100%;
+  z-index: 100;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-top: -30px;
+
+  @media only screen and (max-width: 800px) {
+    scale: 0.8;
+    margin-left: -10%;
+  }
 }

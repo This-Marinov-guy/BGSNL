@@ -3,7 +3,6 @@ import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FiCheck, FiChevronLeft } from "react-icons/fi";
-import { Calendar } from 'primereact/calendar';
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/http-hook";
@@ -16,14 +15,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
-import RegionOptions from "../../elements/ui/buttons/RegionOptions";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
-import { askBeforeRedirect, encryptData } from "../../util/functions/helpers";
+import { encryptData } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/defines";
+import Calendar from "../../elements/inputs/Calendar";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -370,14 +369,9 @@ const SignUp = (props) => {
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-12">
                     <div className="rn-form-group">
-                      <Calendar id="date" name="date"
-                        value={values.birth}
-                        onChange={(event) => values.birth = event.target.value}
-                        dateFormat="dd/mm/yy"
-                        mask="99/99/9999"
-                        placeholder="Select Birth Date"
-                        style={{ width: '100%' }}
-                        showIcon />
+                      <Calendar onSelect={(value) => {
+                        setFieldValue('birth', value)
+                      }}/>
                       <ErrorMessage
                         className="error"
                         name="birth"
