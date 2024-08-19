@@ -38,7 +38,7 @@ const schema = yup.object().shape({
   }),
   graduationDate: yup.number().when("university", {
     is: true,
-    then: () => yup.number().required("Graduation year is required"),
+    then: () => yup.number().required("Graduation year is required").max(2050, 'Graduation Year should not exceed 2050'),
     otherwise: () => yup.number(),
   }),
   course: yup.string().when("university", {
