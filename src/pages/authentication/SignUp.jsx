@@ -623,7 +623,7 @@ const SignUp = (props) => {
                 </div>
                 <div className="ver_section mt--20">
                   <div className="options-btns-div">
-                    {!loading && <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', margin: 'auto 20px auto auto' }}>
+                    {!loading && <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', marginBottom: 0 }}>
                       <FiChevronLeft />
                       Back
                     </p>}
