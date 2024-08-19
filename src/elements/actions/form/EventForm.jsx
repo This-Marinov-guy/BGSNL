@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Calendar } from 'primereact/calendar';
 import { Tooltip } from 'primereact/tooltip';
 import { FileUpload } from 'primereact/fileupload';
 import { useHttpClient } from "../../../hooks/http-hook";
@@ -17,6 +16,7 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
 import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
+import Calendar from "../../inputs/Calendar";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -297,34 +297,20 @@ const EventForm = (props) => {
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-md-12 col-12">
-                                <div className="rn-form-group">
-                                    <Calendar id="date" name="date"
-                                        value={values.date}
-                                        onChange={(event) => values.date = event.target.value}
-                                        dateFormat="dd/mm/yy"
-                                        minDate={new Date()}
-                                        mask="99/99/9999"
-                                        style={{ width: '100%' }}
-                                        placeholder="Date of Event"
-                                        touchUI
-                                        showButtonBar
-                                        showIcon
-                                        hideOnDateTimeSelect/>
-                                    <ErrorMessage
-                                        className="error"
-                                        name="date"
-                                        component="div"
-                                    />
-                                </div>
+                                <Calendar placeholder='Date of event' onSelect={(value) => {
+                                    setFieldValue('date', value)
+                                }} />
+                                <ErrorMessage
+                                    className="error"
+                                    name="date"
+                                    component="div"
+                                />
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
-                                    <Calendar value={values.time}
-                                        onChange={(event) => values.time = event.target.value}
-                                        style={{ width: '100%' }}
-                                        placeholder="Time of Event"
-                                        timeOnly
-                                        hideOnDateTimeSelect />
+                                    <input type='time' placeholder='Time of event' onChange={(e) => {
+                                        setFieldValue('time', e.target.value)
+                                    }} />
                                     <ErrorMessage
                                         className="error"
                                         name="time"
@@ -616,7 +602,7 @@ const EventForm = (props) => {
                             </div>
                         </div>
 
-                        <SubEventBuilder onChange={(input) => setFieldValue('subEvent', input)} initialValues={values.subEvent}/>
+                        <SubEventBuilder onChange={(input) => setFieldValue('subEvent', input)} initialValues={values.subEvent} />
 
                         <div className="row">
                             <div className="col-lg-6 col-12">
@@ -631,19 +617,9 @@ const EventForm = (props) => {
                             </div>
                             <div className="col-lg-6 col-12">
                                 <div className="rn-form-group">
-                                    <Calendar id="ticket-date" name="ticketTimer"
-                                        value={values.ticketTimer}
-                                        onChange={(event) => setFieldValue('ticketTimer', event.target.value)}
-                                        dateFormat="dd/mm/yy"
-                                        minDate={new Date()}
-                                        style={{ width: '100%' }}
-                                        placeholder="Ticket Sale End"
-                                        touchUI
-                                        showButtonBar
-                                        showIcon
-                                        showTime
-                                        hourFormat="24"
-                                    />
+                                    <Calendar placeholder='Date of event' onSelect={(value) => {
+                                        setFieldValue('date', value)
+                                    }} />
                                     <ErrorMessage
                                         className="error"
                                         name="ticketTimer"
@@ -665,7 +641,7 @@ const EventForm = (props) => {
                         </div>
 
                         <h3 className="label mt--40">Add extra inputs by your choice</h3>
-                        <InputsBuilder onChange={(inputs) => setFieldValue('extraInputsForm', inputs)} initialValues={values.extraInputsForm}/>
+                        <InputsBuilder onChange={(inputs) => setFieldValue('extraInputsForm', inputs)} initialValues={values.extraInputsForm} />
 
                         <ConfirmDialog />
                         <div className="mt--40 mb--20 center_div">

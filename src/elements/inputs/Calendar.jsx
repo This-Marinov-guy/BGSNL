@@ -23,7 +23,7 @@ const Calendar = (props) => {
                 <input
                     type="text"
                     value={selected ? selected.toLocaleDateString() : ""}                   
-                    placeholder="Select a date"
+                    placeholder={props.placeholder ?? "Select a date"}
                     onClick={toggleCalendar}
                 />
                 <FiCalendar

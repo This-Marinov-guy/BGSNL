@@ -33,3 +33,10 @@ export const yearsSinceBirthday = (birthDate) => {
 
     return age;
 }
+
+export const TIME_OPTIONS = {
+    timeZone: 'Europe/Amsterdam',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false, // Use 24-hour format
+};

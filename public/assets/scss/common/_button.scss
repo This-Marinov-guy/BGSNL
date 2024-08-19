@@ -335,8 +335,15 @@ a {
   border: 2px solid;
   margin: 0 10px;
   border-radius: 20%;
+  transition: 0.3s;
+
   &.red {
     color: #f92820;
+  }
+
+  &:hover {
+    box-shadow: 0 10px 15px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
   }
 }
 
