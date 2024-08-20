@@ -115,7 +115,7 @@ export const CalendarWithClock = (props) => {
                     alignItems: 'center',
                     cursor: "pointer",
                 }}>
-                <FiCalendar /> &
+                <FiCalendar />/
                 <FiClock />
             </div>
 

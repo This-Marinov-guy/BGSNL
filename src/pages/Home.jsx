@@ -131,7 +131,7 @@ const Home = () => {
           </li>
 
           <li className="mt--40" ref={recruitRef} >
-            <p> Membership 2023-2024 open. <Link to='/signup'>
+            <p> Membership 2024-2025 open. <Link to='/signup'>
               Sign up!
             </Link>
             </p>
