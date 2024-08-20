@@ -1,44 +1,30 @@
 import React, { useEffect, useState } from 'react'
 import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN'
 import Event from './Event'
-import { useHttpClient } from '../../../../hooks/http-hook';
-import { useDispatch, useSelector } from 'react-redux';
-import { loadEvents, selectEvents } from '../../../../redux/events';
+import { useSelector } from 'react-redux';
+import { selectEvents } from '../../../../redux/events';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import Filter from '../Filter';
 import { useSearchParams } from 'react-router-dom';
+import { useLoadEvents } from '../../../../hooks/api-hooks';
 
 const EventList = () => {
-    const [isEventsLoading, setIsEventsLoading] = useState(false);
-    const { sendRequest } = useHttpClient();
+    const {reloadEvents, eventsLoading} = useLoadEvents();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const regionParam = REGIONS.includes(searchParams.get("region")) ? searchParams.get("region") : '';
     const regionList = regionParam ? REGIONS.filter((r) => r === regionParam) : REGIONS;
 
     const events = useSelector(selectEvents);
-    const dispatch = useDispatch();
-
-    const fetchEventsFromApi = async () => {
-        try {
-            setIsEventsLoading(true);
-            const responseData = await sendRequest(`event/actions/events`);
-            dispatch(loadEvents(responseData.events));
-        } catch (err) { 
-            
-        } finally {
-            setIsEventsLoading(false);
-        }
-    }
 
     useEffect(() => {
-        fetchEventsFromApi();
+        reloadEvents();
     }, [])
 
     return (
         <>
             <Filter />
-            {isEventsLoading ? <ProgressSpinner /> : <div className='mt--10'>
+            {eventsLoading ? <ProgressSpinner /> : <div className='mt--10'>
                 {regionList.map((region, index) => {
                     return <div className='row' key={index}>
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import ScrollToTop from "react-scroll-up";
@@ -8,38 +8,23 @@ import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";
 import PortfolioList from "../../elements/portfolio/PortfolioList";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
-import { useDispatch, useSelector } from "react-redux";
-import { loadEvents, selectEvents } from "../../redux/events";
+import { useSelector } from "react-redux";
+import { selectEvents } from "../../redux/events";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
-import { useHttpClient } from "../../hooks/http-hook";
-
+import { useLoadEvents } from "../../hooks/api-hooks";
 
 const FutureEventsContent = ({ displayAll }) => {
-  const [isEventsLoading, setIsEventsLoading] = useState();
-
   const { region } = useParams();
 
-  const { sendRequest } = useHttpClient();
+  const { reloadEvents, eventsLoading } = useLoadEvents();
 
   let events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
   if (Array.isArray(events)) {
     events = events.filter(event => event.hidden === false);
   }
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchEventsFromApi = async () => {
-      try {
-        setIsEventsLoading(true);
-        const responseData = await sendRequest(`event/actions/events`);
-        dispatch(loadEvents(responseData.events));
-      } catch (err) {
-      } finally {
-        setIsEventsLoading(false);
-      }
-    }
-
-    fetchEventsFromApi();
+    reloadEvents();
   }, []);
 
   return (
@@ -58,7 +43,7 @@ const FutureEventsContent = ({ displayAll }) => {
             </div>
             <div className="col-lg-12">
               <div className="row slick-space-gutter--15 slickdot--20">
-                {isEventsLoading ? <EventsLoading /> :
+                {eventsLoading ? <EventsLoading /> :
                   events && events.length > 0 ? (
                     <PortfolioList
                       style="society"
