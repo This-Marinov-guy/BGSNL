@@ -236,7 +236,7 @@ const Login = (props) => {
             </Formik>
           )}
         </ModalWindow>
-      <div className="container mt--160 mb--40 team_member_border-3" style={{ maxWidth: "600px" }}>
+      <div className="container team_member_border-3" style={{ maxWidth: "600px", marginTop: '25vh' }}>
         <h3 style={{ fontSize: '0.8em' }} className="center_text">Log in your account</h3>
         <form
           className="center_section"
