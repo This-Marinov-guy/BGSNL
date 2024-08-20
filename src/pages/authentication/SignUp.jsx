@@ -22,7 +22,7 @@ import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/defines";
-import Calendar from "../../elements/inputs/Calendar";
+import {Calendar} from "../../elements/inputs/Calendar";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),

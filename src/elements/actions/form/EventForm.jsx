@@ -16,7 +16,7 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
 import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
-import Calendar from "../../inputs/Calendar";
+import {Calendar, CalendarWithClock} from "../../inputs/Calendar";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -617,9 +617,14 @@ const EventForm = (props) => {
                             </div>
                             <div className="col-lg-6 col-12">
                                 <div className="rn-form-group">
-                                    <Calendar placeholder='Date of event' onSelect={(value) => {
-                                        setFieldValue('date', value)
-                                    }} />
+                                    <CalendarWithClock
+                                        mode="single"
+                                        locale='en-nl'
+                                        placeholder='Ticket Timer'
+                                        captionLayout="dropdown"
+                                        onSelect={(value) => {
+                                            setFieldValue('date', value)
+                                        }} />
                                     <ErrorMessage
                                         className="error"
                                         name="ticketTimer"
