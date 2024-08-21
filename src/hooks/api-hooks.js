@@ -11,6 +11,10 @@ export const useLoadEvents = () => {
     const reloadEvents = useCallback(async () => {
         try {
             setEventsLoading(true);
+
+            // timeout as it is too fast
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
             const responseData = await sendRequest(`event/actions/events`);
             dispatch(loadEvents(responseData.events));
         } catch (err) {
