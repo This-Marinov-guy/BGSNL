@@ -2,11 +2,8 @@ import React from "react";
 import ImageFb from "../ui/media/ImageFb";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { encodeForURL } from "../../util/functions/helpers";
-import moment from "moment";
 
 const PortfolioList = (props) => {
-
   const { region } = useParams();
 
   return (
@@ -17,8 +14,8 @@ const PortfolioList = (props) => {
             <Link
               to={
                 props.style === "society"
-                  ? `/${region}/event-details/${value.id}`
-                  : `/${region}/other-event-details/${value.id}`
+                  ? `/${value.region ?? region}/event-details/${value.id}`
+                  : `/${value.region ?? region}/other-event-details/${value.id}`
               }
               className={
                 props.style === "society"

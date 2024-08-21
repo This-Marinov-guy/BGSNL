@@ -446,15 +446,20 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 250px;
   height: 250px;
+  width: 250px;
+  min-width: 250px; /* Ensures the minimum width is 250px */
+  max-width: 800px; /* Keeps your existing max-width */
   border: 1px solid #d4d4d4;
   border-radius: 7%;
 
   img {
     border: 1px solid #d4d4d4;
     object-fit: cover;
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
   }
 }
 

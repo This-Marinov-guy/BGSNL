@@ -30,7 +30,7 @@ const EventList = () => {
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
                         <div className='col-12 grid'>
                             {events[region].length ? events[region].map((event, i) => {
-                                return <Event key={i} event={event} loadData={fetchEventsFromApi}/>
+                                return <Event key={i} event={event} loadData={reloadEvents}/>
                             }) : <p>No current events for the region</p>}
                         </div>
                         <hr />

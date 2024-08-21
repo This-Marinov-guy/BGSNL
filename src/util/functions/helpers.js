@@ -96,3 +96,8 @@ export const estimatePriceByEvent = (selectedEvent, user = {}) => {
 
     return price;
 }
+
+export const checkObjectOfArraysEmpty = (obj) => {
+    const allArrays = Object.values(obj);
+    return allArrays.every((arr) => arr.length === 0);
+};

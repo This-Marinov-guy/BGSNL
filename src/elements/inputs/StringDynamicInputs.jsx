@@ -12,9 +12,9 @@ const StringDynamicInputs = (props) => {
   };
 
   const removeInput = (index) => {
-    if (inputs.length === 1 && index === 0) {
-      return
-    }
+    // if (inputs.length === 1 && index === 0) {
+    //   return
+    // }
 
     const newInputs = [...inputs];
     newInputs.splice(index, 1);

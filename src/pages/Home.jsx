@@ -119,22 +119,22 @@ const Home = () => {
       <div className="container mt--110 mb--80">
         <h2 className="title">News</h2>
         <ul style={{ margin: '0', padding: '0' }}>
+          <li className="mt--40" ref={recruitRef} >
+            <p> Membership 2024-2025 open. <Link to='/signup'>
+              Sign up!
+            </Link>
+            </p>
+          </li>
+
           <li className="mt--40">
             <p>Еxhibitions of Bulgarian students in Groningen <Link to='/articles/acedemie-minerva'>
               Check it out
             </Link>
             </p>
           </li>
-          
+
           <li className="mt--40" ref={recruitRef}>
             <Recruit />
-          </li>
-
-          <li className="mt--40" ref={recruitRef} >
-            <p> Membership 2024-2025 open. <Link to='/signup'>
-              Sign up!
-            </Link>
-            </p>
           </li>
 
         </ul>
@@ -143,10 +143,14 @@ const Home = () => {
       {/* End News Area */}
 
       {/* Start Upcoming Events Area */}
-      {region && <Fragment>
-        <FutureEventsContent />
-        <FutureOtherEventsContent />
-      </Fragment>}
+      {region ?
+        <Fragment>
+          <FutureEventsContent />
+          <FutureOtherEventsContent />
+        </Fragment>
+        :
+        <FutureEventsContent displayAll />
+      }
       {/* End Upcoming Events Area */}
 
       {/* Start Footer Style  */}

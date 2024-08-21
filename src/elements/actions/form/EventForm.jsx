@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -17,10 +17,13 @@ import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util
 import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
 import {Calendar, CalendarWithClock} from "../../inputs/Calendar";
+import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
+    const [visible, setVisible] = useState(false);
+    const [confirmResolver, setConfirmResolver] = useState(null);
     const [submitting, setSubmitting] = useState(false);
     const [files, setFiles] = useState([]);
     const [isValidFiles, setIsValidFiles] = useState(true);
@@ -31,8 +34,10 @@ const EventForm = (props) => {
 
     const edit = props.edit;
     const initialData = edit ? props.initialData : null;
+    const bgs = Array.from({ length: BG_INDEX }, (_, i) => i + 1);
+    const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
 
-    const handleSubmit = (errors, isValid, dirty) => {
+    const preSubmitCheck = (errors, isValid, dirty) => {
         if (!isProd()) {
             console.log(errors);
         }
@@ -41,8 +46,6 @@ const EventForm = (props) => {
             return props.toast.current.show(INCORRECT_MISSING_DATA);
         }
     }
-
-    const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
 
     const inputHandler = (event) => {
         const pickedFiles = Array.from(event.target.files);
@@ -58,7 +61,20 @@ const EventForm = (props) => {
         }
     };
 
-    const bgs = Array.from({ length: BG_INDEX }, (_, i) => i + 1)
+    const onSubmit = useCallback(() => {
+        if (confirmResolver) {
+            confirmResolver();
+            setConfirmResolver(null);
+            setVisible(false);
+        }
+    }, [confirmResolver]);
+
+    const waitForConfirmation = () => {
+        return new Promise((resolve) => {
+            setVisible(true);
+            setConfirmResolver(() => resolve);
+        });
+    };
 
     useEffect(() => {
         askBeforeRedirect();
@@ -72,7 +88,7 @@ const EventForm = (props) => {
         time: yup.string().required("Time is required"),
         location: yup.string().required("Location is required"),
         ticketTimer: yup.string().required("Ticket Timer is required"),
-        ticketLimit: yup.number().required("Ticket Limit is required"),
+        ticketLimit: yup.number().required("Ticket Limit is required").min(1, 'Must be greater than 0'),
         isFree: yup.bool(),
         isMemberFree: yup.bool(),
         memberOnly: yup.bool(),
@@ -92,7 +108,7 @@ const EventForm = (props) => {
             {
                 is: (isFree, isTicketLink) => isFree || isTicketLink,
                 then: () => yup.number().nullable(),
-                otherwise: () => yup.number().required("Guest Price is required"),
+                otherwise: () => yup.number().required("Guest Price is required").min(1, 'Must be greater than 0'),
             }
         ),
 
@@ -112,7 +128,7 @@ const EventForm = (props) => {
                 is: (isFree, isMemberFree, memberOnly, isTicketLink) =>
                     (isFree || isMemberFree) && !memberOnly && !isTicketLink,
                 then: () => yup.number().nullable(),
-                otherwise: () => yup.number().required("Member Price is required"),
+                otherwise: () => yup.number().required("Member Price is required").min(1, 'Must be greater than 0'),
             }
         ),
 
@@ -122,7 +138,7 @@ const EventForm = (props) => {
             otherwise: () => yup.string(),
         }),
 
-        activeMemberEntry: yup.number().nullable(),
+        activeMemberEntry: yup.number().min(1, 'Must be greater than 0').nullable(),
 
         activeMemberPriceId: yup.string().when(
             ['activeMemberEntry', 'isFree', 'isMemberFree', 'memberOnly', 'isTicketLink'],
@@ -141,12 +157,15 @@ const EventForm = (props) => {
 
     return (
         <>
+            <ConfirmCenterModal text='Are you sure you want to submit the event?' onConfirm={onSubmit} visible={visible} setVisible={setVisible} />
             <LongLoading visible={submitting} />
             <Formik
                 className="container"
                 validationSchema={schema}
                 onSubmit={async (values) => {
                     try {
+                        await waitForConfirmation();
+
                         setSubmitting(true);
                         forceStartLoading();
 
@@ -189,9 +208,7 @@ const EventForm = (props) => {
                 initialValues={{
                     memberOnly: initialData?.memberOnly ?? false,
                     hidden: initialData?.hidden ?? false,
-                    extraInputsForm: initialData?.extraInputsForm ?? [
-                        // { type: '', placeholder: '', required: false, options: [] }
-                    ],
+                    extraInputsForm: initialData?.extraInputsForm ?? [],
                     freePass: initialData?.freePass ?? [],
                     discountPass: initialData?.discountPass ?? [],
                     subEvent: initialData?.subEvent ?? null,
@@ -224,6 +241,7 @@ const EventForm = (props) => {
                     poster: initialData?.poster ?? null,
                     bgImage: initialData?.bgImage ?? 1,
                     bgImageExtra: initialData?.bgImageExtra ?? null,
+                    bgSelection: initialData?.bgSelection ?? 'bgImageExtra',
                 }}
             >
                 {({ values, setFieldValue, errors, isValid, dirty }) => (
@@ -308,9 +326,7 @@ const EventForm = (props) => {
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
-                                    <input type='time' placeholder='Time of event' onChange={(e) => {
-                                        setFieldValue('time', e.target.value)
-                                    }} />
+                                    <Field type='time' name='time' placeholder='Time of event' id='event-time'/>
                                     <ErrorMessage
                                         className="error"
                                         name="time"
@@ -470,7 +486,7 @@ const EventForm = (props) => {
                                     }}
                                 />
                                 <ErrorMessage
-                                    className="error"
+                                    className="error center_div"
                                     name="poster"
                                     component="div"
                                 />
@@ -488,7 +504,7 @@ const EventForm = (props) => {
                                     *ticket must be jpg or png in resolution 300:97 (like 1500 x 485)
                                 </p>
                                 <ErrorMessage
-                                    className="error"
+                                    className="error center_div"
                                     name="ticketImg"
                                     component="div"
                                 />
@@ -549,6 +565,19 @@ const EventForm = (props) => {
                                     <p className="mt--10 information center_text">
                                         *choose a wide one
                                     </p>
+                                    {(values.bgImage && values.bgImageExtra) && <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
+                                        <h5 className="center_text">Select which want to display</h5>
+                                        <div className="center_div" style={{ gap: '50px' }}>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="bgSelection" value="bgImage" />
+                                                Default Backgrounds
+                                            </h5>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="bgSelection" value="bgImageExtra" />
+                                                Extra Background
+                                            </h5>
+                                        </div>
+                                    </div>}
                                 </div>
                             </div>
                         </div>
@@ -602,12 +631,10 @@ const EventForm = (props) => {
                             </div>
                         </div>
 
-                        <SubEventBuilder onChange={(input) => setFieldValue('subEvent', input)} initialValues={values.subEvent} />
-
                         <div className="row">
                             <div className="col-lg-6 col-12">
                                 <div className="rn-form-group">
-                                    <Field type="number" placeholder="Ticket Limit" name="ticketLimit" />
+                                    <Field type="number" placeholder="Ticket Limit" name="ticketLimit" min={1} />
                                     <ErrorMessage
                                         className="error"
                                         name="ticketLimit"
@@ -623,7 +650,7 @@ const EventForm = (props) => {
                                         placeholder='Ticket Timer'
                                         captionLayout="dropdown"
                                         onSelect={(value) => {
-                                            setFieldValue('date', value)
+                                            setFieldValue('ticketTimer', value)
                                         }} />
                                     <ErrorMessage
                                         className="error"
@@ -645,6 +672,8 @@ const EventForm = (props) => {
                             </div>
                         </div>
 
+                        <SubEventBuilder onChange={(input) => setFieldValue('subEvent', input)} initialValues={values.subEvent} />
+
                         <h3 className="label mt--40">Add extra inputs by your choice</h3>
                         <InputsBuilder onChange={(inputs) => setFieldValue('extraInputsForm', inputs)} initialValues={values.extraInputsForm} />
 
@@ -656,7 +685,7 @@ const EventForm = (props) => {
                             <button
                                 disabled={loading}
                                 type="submit"
-                                onClick={() => handleSubmit(errors, isValid, dirty)}
+                                onClick={() => preSubmitCheck(errors, isValid, dirty)}
                                 className="rn-button-style--2 rn-btn-reverse-green"
                             >
                                 {loading ? <Loader /> : <span>{props.edit ? 'Edit Event' : 'Submit Event'}</span>}

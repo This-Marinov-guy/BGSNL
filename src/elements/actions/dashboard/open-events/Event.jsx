@@ -27,7 +27,7 @@ const Event = (props) => {
                 <div>
                     <p>Title: {props.event.title}</p>
                     <p>Date: {moment(props.event.date).format("Do MMMM")}</p>
-                    <p>Time: {moment(props.event.time).format('hh:mm')}</p>
+                    <p>Time: {props.event.time}</p>
                     <p>Location: {props.event.location}</p>
                     <p>Price <FiInfo className='price_info tooltip_info'
                         data-pr-tooltip="Guest / Member / Active Member"

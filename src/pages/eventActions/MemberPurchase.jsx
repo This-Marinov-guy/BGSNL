@@ -97,8 +97,6 @@ const MemberPurchase = () => {
     });
   }
 
-  console.log(selectedEvent);
-
   const schema = yup.object().shape(schemaFields);
 
   if (eventClosed) {

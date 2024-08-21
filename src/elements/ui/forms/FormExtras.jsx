@@ -13,7 +13,7 @@ const FormExtras = ({ inputs }) => {
                             <h4>{input.placeholder}</h4>
                             <Field as='select' name={name} className="col-12 mt--10">
                                 <option value="" disabled selected>Select an option</option>
-                                {input.options.map((val, i) => (
+                                {input.options && input.options.map((val, i) => (
                                     <option key={i} value={val}>{val}</option>
                                 ))}
                             </Field>

@@ -323,17 +323,17 @@ const UserUpdateModal = ({currentUser}) => {
                         <div className="mt--40 options-btns-div center_div">
                             <button
                                 disabled={loading}
+                                onClick={closeHandler}
+                                className="rn-button-style--2 rn-btn-reverse"
+                            >
+                                {<span>Cancel</span>}
+                            </button>
+                            <button
+                                disabled={loading}
                                 type="submit"
                                 className="rn-button-style--2 rn-btn-reverse-green"
                             >
                                 {loading ? <Loader /> : <span>Update information</span>}
-                            </button>
-                            <button
-                                disabled={loading}
-                                onClick={closeHandler}
-                                className="rn-btn"
-                            >
-                                {<span>Cancel</span>}
                             </button>
                         </div>
                     </Form>

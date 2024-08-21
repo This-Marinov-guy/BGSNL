@@ -1,10 +1,17 @@
 
 export const dateConvertor = (date, time, getAsValue = false) => {
+    // Ensure date is a Date object
     date = new Date(date);
-    time = new Date(time);
+
+    // Parse time string if it's not a Date object
+    if (!(time instanceof Date)) {
+        const [hours, minutes] = time.split(':').map(Number);
+        time = new Date();
+        time.setUTCHours(hours, minutes, 0, 0);
+    }
 
     const year = date.getUTCFullYear();
-    const month = date.getUTCMonth(); 
+    const month = date.getUTCMonth();
     const day = date.getUTCDate();
 
     const hours = time.getUTCHours();
@@ -15,7 +22,7 @@ export const dateConvertor = (date, time, getAsValue = false) => {
     const combinedDateTime = new Date(Date.UTC(year, month, day, hours, minutes, seconds, milliseconds));
 
     // Creating Date object
-    return getAsValue ? combinedDateTime.toISOString().valueOf : combinedDateTime.toISOString();
+    return getAsValue ? combinedDateTime.valueOf() : combinedDateTime.toISOString();
 }
 
 export const yearsSinceBirthday = (birthDate) => {

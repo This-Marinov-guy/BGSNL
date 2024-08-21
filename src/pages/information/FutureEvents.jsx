@@ -12,20 +12,29 @@ import { useSelector } from "react-redux";
 import { selectEvents } from "../../redux/events";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/api-hooks";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import { checkObjectOfArraysEmpty } from "../../util/functions/helpers";
 
 const FutureEventsContent = ({ displayAll }) => {
   const { region } = useParams();
 
   const { reloadEvents, eventsLoading } = useLoadEvents();
 
-  let events = displayAll ? useSelector(selectEvents) : useSelector(selectEvents)[region];
-  if (Array.isArray(events)) {
-    events = events.filter(event => event.hidden === false);
+  let events;
+
+  if (displayAll) {
+    events = useSelector(selectEvents);
+  } else {
+    events = useSelector(selectEvents)[region].filter(event => event.hidden === false);
   }
 
   useEffect(() => {
     reloadEvents();
   }, []);
+
+  if (displayAll && checkObjectOfArraysEmpty(events)) {
+    return null;
+  }
 
   return (
     <div className="portfolio-area pt--120 pb--120 bg_color--5">
@@ -41,23 +50,40 @@ const FutureEventsContent = ({ displayAll }) => {
                 </p>
               </div>
             </div>
-            <div className="col-lg-12">
-              <div className="row slick-space-gutter--15 slickdot--20">
-                {eventsLoading ? <EventsLoading /> :
-                  events && events.length > 0 ? (
-                    <PortfolioList
-                      style="society"
-                      target={events}
-                      styevariation="text-center mt--40"
-                      column="col-lg-4 col-md-5 col-sm-6"
-                    />
-                  ) : (
-                    <p className="col-lg-6 mt--20 mb--20">
-                      Currently there are no upcoming other events. Follow us for updates!
-                    </p>
-                  )}
+            {displayAll ?
+              <div className="col-lg-12">
+                  {REGIONS.map((region, index) => {
+                    if (events[region].length) {
+                      return <div className='row mt--20' key={index}>
+                        <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
+                          <PortfolioList
+                            style="society"
+                            target={events[region]}
+                            styevariation="text-center mt--40"
+                            column="col-lg-4 col-md-5 col-sm-6"
+                          />
+                      </div>
+                    }
+                  })}
               </div>
-            </div>
+              :
+              <div className="col-lg-12">
+                <div className="row slick-space-gutter--15 slickdot--20">
+                  {eventsLoading ? <EventsLoading /> :
+                    events && events.length > 0 ? (
+                      <PortfolioList
+                        style="society"
+                        target={events}
+                        styevariation="text-center mt--40"
+                        column="col-lg-4 col-md-5 col-sm-6"
+                      />
+                    ) : (
+                      <p className="col-lg-6 mt--20 mb--20">
+                        Currently there are no upcoming other events. Follow us for updates!
+                      </p>
+                    )}
+                </div>
+              </div>}
           </div>
         </div>
       </div>
@@ -109,7 +135,6 @@ const FutureOtherEventsContent = () => {
 };
 
 const FutureEvents = (props) => {
-
   return (
     <React.Fragment>
       <PageHelmet pageTitle="Events" />
@@ -124,7 +149,7 @@ const FutureEvents = (props) => {
       {/* End Breadcrump Area */}
 
       {/* Start Future Events Area */}
-      <FutureEventsContent openSocietyEvents={props.openSocietyEvents} />
+      <FutureEventsContent />
       <FutureOtherEventsContent
         openNonSocietyEvents={props.openNonSocietyEvents}
       />

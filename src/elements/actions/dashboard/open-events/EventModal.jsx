@@ -8,8 +8,8 @@ import { loadSingleEvent } from '../../../../redux/events';
 import { useNavigate, useParams } from 'react-router-dom';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
 import moment from 'moment';
-import { EVENT_DELETED } from '../../../../util/defines/defines';
 import { useHttpClient } from '../../../../hooks/http-hook';
+import Loader from '../../../ui/loading/Loader';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
@@ -17,8 +17,6 @@ const EventModal = (props) => {
     const [expandBg, setExpandBg] = useState(false);
 
     const { sendRequest, loading } = useHttpClient();
-
-    const { eventId } = useParams();
 
     const navigate = useNavigate();
 
@@ -67,8 +65,8 @@ const EventModal = (props) => {
 
     return (
         <>
-            <ConfirmCenterModal text='Deleting an event is an irreversible action! Are you sure you want to delete it?' onConfirm={onDelete} visible={visible} setVisible={setVisible} />
-            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format("Do MMMM")}, ${moment(props.event.time).format('hh:mm')}`}
+            <ConfirmCenterModal text={loading ? <Loader /> : 'Deleting an event is an irreversible action! Are you sure you want to delete it?'} onConfirm={onDelete} visible={visible} setVisible={setVisible} />
+            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format("Do MMMM")}, ${props.event.time}`}
                 visible={props.show} style={{ maxWidth: '90%' }}
                 onHide={() => props.setShow(false)}
                 dismissableMask>
@@ -98,7 +96,7 @@ const EventModal = (props) => {
                     <p>Title: {props.event.title}</p>
                     <p>Descriptions: {props.event.description}</p>
                     <p>Date: {moment(props.event.date).format("Do MMMM")}</p>
-                    <p>Time: {moment(props.event.time).format('hh:mm')}</p>
+                    <p>Time: {props.event.time}</p>
                     <p>Location: {props.event.location}</p>
                     <p>Ticket Timer: {moment(props.event.ticketTimer).format('Do MMMM,hh:mm')}</p>
                     <p>Ticket Limit: {props.event.ticketLimit}</p>
