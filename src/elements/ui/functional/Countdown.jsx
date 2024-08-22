@@ -5,8 +5,12 @@ const Countdown = (props) => {
 
     function calculateTimeRemaining() {
         const now = new Date().getTime();
-        const targetTime = new Date(props.targetTime).getTime();
-        const timeDifference = targetTime - now;
+        let targetTime = new Date(props.targetTime);
+        targetTime.setHours(targetTime.getHours() - 2);
+        const updatedTime = targetTime.getTime();
+
+        const timeDifference = updatedTime - now;
+
         return Math.max(0, timeDifference);
     }
 

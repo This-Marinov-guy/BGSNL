@@ -131,10 +131,7 @@ const MemberPurchase = () => {
           <div className="row slide-down center_div">
             <ImageFb src={`${selectedEvent.images[0]}`} alt="Event" className="title_img" />
           </div>
-          <div
-            style={{ width: "80%", margin: "auto" }}
-            className="row team_member_border-3 mt--80 purchase_panel"
-          >
+          <div className="row team_member_border-3 mt--80 purchase_panel">
             <Formik
               validationSchema={schema}
               onSubmit={async (values) => {
@@ -152,7 +149,7 @@ const MemberPurchase = () => {
                     email: currentUser.email,
                   });
                   const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}`;
-                  
+
                   const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
 
                   // formData
@@ -202,7 +199,7 @@ const MemberPurchase = () => {
                   }
                 } catch (err) {
                   console.log(err)
-                 }
+                }
               }}
               initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
                 acc[`extraInput${index + 1}`] = '';
@@ -231,19 +228,19 @@ const MemberPurchase = () => {
                       <p>Price: {(selectedEvent.isFree || selectedEvent.isMemberFree) ? ' FREE' : selectedEvent.memberEntry ? `${selectedEvent.memberEntry} euro (discounted)` : `${selectedEvent.entry} (no MEMBER discount)`}</p>
                     </div>
                   </div>
-                  <div className="col-lg-6 col-md-12 col-12 row container mt--40">
-                    {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
-                  </div>
+                  {selectedEvent.extraInputsForm.length > 0 && <div className="col-lg-6 col-md-12 col-12 row container mt--40">
+                    <FormExtras inputs={selectedEvent.extraInputsForm} />
+                  </div>}
                   <WithBackBtn>
                     <button
                       disabled={loading}
                       type="submit"
-                      className="rn-button-style--2 rn-btn-reverse-green mt--80"
+                      className="rn-button-style--2 rn-btn-reverse-green"
                     >
                       {loading ? <Loader /> : <span>Proceed to paying</span>}
                     </button>
                   </WithBackBtn>
-                  <p className="information mt--20">
+                  <p className="information mt--40">
                     The information for purchasing this ticket will be taken from your
                     account. Be sure it is accurate as it can be used as a proof of
                     your identity on the entry!

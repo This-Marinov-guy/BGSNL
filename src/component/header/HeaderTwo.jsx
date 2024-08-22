@@ -116,7 +116,7 @@ const HeaderTwo = (props) => {
                   </ul>
                 </li>
                 {region ? <Fragment>
-                  <li className="has-dropdown">
+                  {/* <li className="has-dropdown">
                     <a style={{ cursor: 'pointer' }}>Structure</a>
                     <ul className="submenu">
                       <li>
@@ -126,7 +126,7 @@ const HeaderTwo = (props) => {
                         <Link to={`/${region}/committees`}>Meet the Committees</Link>
                       </li>
                     </ul>
-                  </li>
+                  </li> */}
                   <li className="has-dropdown">
                     <Link to={`/${region}/events`}>Events</Link>
                     <ul className="submenu">

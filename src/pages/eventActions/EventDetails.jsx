@@ -157,8 +157,7 @@ const EventDetails = () => {
                         >
                           {eventClosed ? "Sold out" : 'Buy Ticket'}
                         </Link></WithBackBtn>}
-                        {selectedEvent.isGala && <h4>Ticket Sale closes on the 23th at 23:59</h4>}
-                      {selectedEvent.ticketTimer && <Countdown selectedEventTime={selectedEvent.ticketTimer} setEventClosed={setEventClosed} />}
+                      {selectedEvent.ticketTimer && <Countdown targetTime={selectedEvent.ticketTimer} setEventClosed={setEventClosed} />}
                     </div>)}
                 </div>
                 <br />

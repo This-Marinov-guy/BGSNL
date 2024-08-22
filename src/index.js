@@ -201,9 +201,9 @@ const Root = () => {
               <ContestRegister toast={toast} />
               </Route> */}
 
-              <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
+              {/* <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
+              <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} /> */}
               <Route exact path={`/:region/contact`} element={<RegionLayout><Contact /></RegionLayout>} />
-              <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} />
               <Route exact path={`/:region/events`} element={<RegionLayout><Events /></RegionLayout>} />
               <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
               <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
