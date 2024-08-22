@@ -92,7 +92,7 @@ const EventDetails = () => {
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
                       <span>When</span>
-                      <h4>{moment(selectedEvent.date).format("Do MMMM") + ", " + moment(selectedEvent.time).format('hh:mm')}</h4>
+                      <h4>{moment(selectedEvent.date).format("Do MMMM") + ", " + selectedEvent.time}</h4>
                       {selectedEvent.correctedDate && (
                         <p style={{ color: "#f80707" }} className="error">
                           {"Updated Date -> " + moment(selectedEvent.correctedDate).format("Do MMMM")}
@@ -100,7 +100,7 @@ const EventDetails = () => {
                       )}
                       {selectedEvent.correctedTime && (
                         <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Time -> " + moment(selectedEvent.correctedTime).format('hh:mm')}
+                          {"Updated Time -> " + selectedEvent.correctedTime}
                         </p>
                       )}
                     </div>

@@ -139,8 +139,8 @@ const GuestPurchase = () => {
                 <p>
                   Time:{" "}
                   {selectedEvent.correctedTime
-                    ? moment(selectedEvent.correctedTime).format('hh:mm') + " Updated!"
-                    : moment(selectedEvent.time).format('hh:mm')}
+                    ? selectedEvent.correctedTime + " Updated!"
+                    : selectedEvent.time}
                 </p>
                 <p>Address:{" "}{selectedEvent.location}</p>
                 <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.entry + ' euro'}</p>

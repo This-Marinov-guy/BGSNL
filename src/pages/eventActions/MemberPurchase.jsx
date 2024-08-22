@@ -224,8 +224,8 @@ const MemberPurchase = () => {
                       <p>
                         Time:{" "}
                         {selectedEvent.correctedTime
-                          ? moment(selectedEvent.correctedTime).format('hh:mm') + " Updated!"
-                          : moment(selectedEvent.time).format('hh:mm')}
+                          ? selectedEvent.correctedDate + " Updated!"
+                          : selectedEvent.time}
                       </p>
                       <p>Address: {selectedEvent.location}</p>
                       <p>Price: {(selectedEvent.isFree || selectedEvent.isMemberFree) ? ' FREE' : selectedEvent.memberEntry ? `${selectedEvent.memberEntry} euro (discounted)` : `${selectedEvent.entry} (no MEMBER discount)`}</p>
