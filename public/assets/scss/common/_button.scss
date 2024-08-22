@@ -326,8 +326,27 @@ button,a {
 .footer-btns {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 350px;
+  justify-content: center;
+  height: 100%;
+  gap: 20px;
+
+  .button-container {
+    display: flex;
+    flex-direction: row; 
+    gap: 10px;
+    align-items: center;
+    justify-content: center; 
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      width: 100%; 
+    }
+  }
+
+  button, a {
+    text-align: center;
+    flex: 1;
+  }
 }
 
 .btn-icon-frame {
