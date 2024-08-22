@@ -65,7 +65,7 @@ const MemberPurchase = () => {
     getEventDetails();
   }, [])
 
-  if (loading || !currentUser) {
+  if (loadingPage || !currentUser) {
     return <HeaderLoadingError />
   } else if (!selectedEvent) {
     return <NoEventFound />
@@ -141,8 +141,8 @@ const MemberPurchase = () => {
                 try {
                   const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
 
-                  if (!checkMemberTicket.status) {
-                    return;
+                  if (!checkMemberTicket.hasOwnProperty('status')) {
+                    return
                   }
 
                   const data = encryptData({
@@ -153,14 +153,14 @@ const MemberPurchase = () => {
                   });
                   const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}`;
                   
-                  const { ticketBlob } = await createCustomerTicket(selectedEvent.poster, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
+                  const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
 
                   // formData
                   const formData = new FormData();
                   formData.append(
                     "image",
                     ticketBlob,
-                    selectedEvent.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
+                    selectedEvent.id + "_" + currentUser.name + currentUser.surname + "_MEMBER"
                   );
                   if (selectedEvent.activeMemberPriceId && (selectedEvent.discountPass && selectedEvent.discountPass.includes(currentUser.email))) {
                     formData.append("itemId", selectedEvent.activeMemberPriceId);
@@ -174,7 +174,11 @@ const MemberPurchase = () => {
                   formData.append("userId", currentUser.id);
                   if (selectedEvent.extraInputsFormForm) {
                     formData.append('preferences', JSON.stringify(Object.keys(schemaFields).reduce((obj, key) => {
-                      obj[key] = values[key];
+                      if (Array.isArray(values[key])) {
+                        obj[key] = values[key].join(', ');
+                      } else {
+                        obj[key] = values[key];
+                      }
                       return obj;
                     }, {})))
                   }

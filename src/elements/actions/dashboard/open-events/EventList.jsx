@@ -3,10 +3,10 @@ import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN'
 import Event from './Event'
 import { useSelector } from 'react-redux';
 import { selectEvents } from '../../../../redux/events';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import Filter from '../Filter';
 import { useSearchParams } from 'react-router-dom';
 import { useLoadEvents } from '../../../../hooks/api-hooks';
+import EventsLoading from '../../../ui/loading/EventsLoading';
 
 const EventList = () => {
     const {reloadEvents, eventsLoading} = useLoadEvents();
@@ -18,13 +18,13 @@ const EventList = () => {
     const events = useSelector(selectEvents);
 
     useEffect(() => {
-        reloadEvents();
+        reloadEvents(2000);
     }, [])
 
     return (
         <>
             <Filter />
-            {eventsLoading ? <ProgressSpinner /> : <div className='mt--10'>
+            {eventsLoading ? <EventsLoading /> : <div className='mt--10'>
                 {regionList.map((region, index) => {
                     return <div className='row' key={index}>
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>

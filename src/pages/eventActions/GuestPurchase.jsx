@@ -14,7 +14,6 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { createCustomerTicket } from "../../util/functions/ticket-creator"
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import MarketingForm from "../../elements/ui/forms/MarketingForm";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
@@ -69,7 +68,7 @@ const GuestPurchase = () => {
     ...schemaFields
   });
 
-  if (loading) {
+  if (loadingPage) {
     return <HeaderLoadingError />
   } else if (!selectedEvent) {
     return <NoEventFound />
@@ -159,6 +158,16 @@ const GuestPurchase = () => {
                     try {
                       forceStartLoading();
 
+                      const response = await sendRequest(`event/check-guest-discount/${selectedEvent.id}`, 'POST', {
+                        email: values.email,
+                        name: values.name,
+                        surname: values.surname
+                      })
+
+                      if(!response.hasOwnProperty('status')) {
+                        return
+                      }
+
                       const data = encryptData({
                         event: selectedEvent.title,
                         name: values.name,
@@ -166,14 +175,14 @@ const GuestPurchase = () => {
                         email: values.email,
                       });
                       const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}&count=${quantity}`;
-                      const { ticketBlob } = await createCustomerTicket(selectedEvent.poster, values.name, values.surname, selectedEvent.ticketColor, qrCode);
+                      const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, values.name, values.surname, selectedEvent.ticketColor, qrCode);
 
                       // formData
                       const formData = new FormData();
                       formData.append(
                         "image",
                         ticketBlob,
-                        selectedEvent.title +
+                        selectedEvent.id +
                         "_" +
                         values.name +
                         values.surname +
@@ -192,7 +201,11 @@ const GuestPurchase = () => {
                       formData.append("guestEmail", values.email);
                       if (selectedEvent.extraInputsFormForm) {
                         formData.append('preferences', JSON.stringify(Object.keys(schemaFields).reduce((obj, key) => {
-                          obj[key] = values[key];
+                          if (Array.isArray(values[key])) {
+                            obj[key] = values[key].join(', ');
+                          } else {
+                            obj[key] = values[key];
+                          }
                           return obj;
                         }, {})))
                       }

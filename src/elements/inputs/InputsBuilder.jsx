@@ -9,13 +9,9 @@ const InputsBuilder = (props) => {
 
     const [inputs, setInputs] = useState(props.initialValues?.length > 0 ? props.initialValues : []);
 
-    const addInput = (type) => {
+    const addInput = () => {
         if (props.max > inputs.length) {
-            const newInput = { type, placeholder: '', required: false }
-            if (type === 'select') {
-                newInput = emptyInputObj;
-            }
-            setInputs([...inputs, newInput]);
+            setInputs([...inputs, emptyInputObj]);
         }
     };
 
@@ -50,11 +46,11 @@ const InputsBuilder = (props) => {
                             name='type'
                             className='col-7'
                         >
-                            <option disabled selected value=''>Select</option>
+                            <option disabled selected value=''>Choose type</option>
                             <option value='text'>Text</option>
                             <option value='select'>Select</option>
                         </select>
-                        <PlusButton onClick={() => addInput(value.type)} />
+                        <PlusButton onClick={addInput} />
                         <XButton onClick={() => removeInput(index)} />
                     </div>
                     {value.type && (value.type === 'text' ?
@@ -117,7 +113,7 @@ const InputsBuilder = (props) => {
                     )}
                 </Fragment>
             )) :
-                <PlusButton onClick={() => addInput('')} />}
+                <PlusButton onClick={addInput} />}
         </>
     );
 };

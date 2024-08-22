@@ -8,13 +8,13 @@ export const useLoadEvents = () => {
     const dispatch = useDispatch();
     const { sendRequest } = useHttpClient();
 
-    const reloadEvents = useCallback(async (withDelay = false) => {
+    const reloadEvents = useCallback(async (withDelay = 0) => {
         try {
             setEventsLoading(true);
 
             // timeout as it is too fast
             if (withDelay) {
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await new Promise(resolve => setTimeout(resolve, withDelay));
             }
 
             const responseData = await sendRequest(`event/actions/events`);
