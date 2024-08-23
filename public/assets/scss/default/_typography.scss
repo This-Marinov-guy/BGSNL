@@ -172,13 +172,15 @@ a:active {
   outline: none;
 }
 input,
-button,
-select,
 textarea {
   font-family: $body-font;
   background: transparent;
   transition: all 0.4s ease-out 0s;
   color: $body-color;
+}
+button,
+select {
+  background: transparent;
 }
 input,
 select,

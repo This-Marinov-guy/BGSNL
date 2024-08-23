@@ -154,15 +154,22 @@ const Root = () => {
     // to show to toast on ref null
     setTimeout(() => {
       if (errorMessage) {
-        toast.current.show({ severity: 'error', summary: 'You got an error :(', detail: errorMessage, life: 8000 });
+        toast.current.show({
+          severity: 'error',
+          summary: 'You got an error :(',
+          detail: errorMessage,
+          life: 80000,
+          style: { background: '#ffcccb', color: '#8b0000' },
+          contentStyle: { background: '#ffcccb', color: '#8b0000' }        
+        });
       }
 
       if (informationNotification) {
         toast.current.show({ severity: informationNotificationDetails.severity, detail: informationNotificationDetails.detail, life: 8000 });
       }
     }, 50)
-   
-  }, [errorMessage, informationNotificationDetails.severity, informationNotificationDetails.detail]) 
+
+  }, [errorMessage, informationNotificationDetails.severity, informationNotificationDetails.detail])
 
   const handleHideToast = () => {
     if (errorMessage) {
@@ -185,7 +192,7 @@ const Root = () => {
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
             <BirthdayModal />
-            <Toast ref={toast} position="top-center" onHide={handleHideToast}/>
+            <Toast ref={toast} position="top-center" onHide={handleHideToast} />
             <Routes>
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
