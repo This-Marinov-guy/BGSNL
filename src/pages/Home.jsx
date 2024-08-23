@@ -105,11 +105,6 @@ const Home = () => {
         ))}
       </div>
       {/* End Slider Area   */}
-      {/* Start Sponsor Area */}
-
-      <BrandTwo />
-
-      {/* End Sponsor Area */}
 
       {/* Start About Area  */}
       {!region && <AboutUs />}
@@ -152,6 +147,12 @@ const Home = () => {
         <FutureEventsContent displayAll />
       }
       {/* End Upcoming Events Area */}
+
+      {/* Start Sponsor Area */}
+
+      <BrandTwo />
+
+      {/* End Sponsor Area */}
 
       {/* Start Footer Style  */}
       <FooterTwo />
