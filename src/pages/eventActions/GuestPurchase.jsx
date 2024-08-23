@@ -158,16 +158,6 @@ const GuestPurchase = () => {
                     try {
                       forceStartLoading();
 
-                      const response = await sendRequest(`event/check-guest-discount/${selectedEvent.id}`, 'POST', {
-                        email: values.email,
-                        name: values.name,
-                        surname: values.surname
-                      })
-
-                      if(!response.hasOwnProperty('status')) {
-                        return
-                      }
-
                       const data = encryptData({
                         event: selectedEvent.title,
                         name: values.name,
@@ -189,11 +179,7 @@ const GuestPurchase = () => {
                         "_GUEST"
                       );
                       formData.append("region", region);
-                      if (selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname))) {
-                        formData.append("itemId", selectedEvent.activeMemberPriceId);
-                      } else {
-                        formData.append("itemId", selectedEvent.priceId);
-                      }
+                      formData.append("itemId", selectedEvent.priceId);
                       formData.append("quantity", quantity);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
@@ -215,23 +201,46 @@ const GuestPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-                      if (selectedEvent.isFree || selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname)) {
+       
+                      if (selectedEvent.isFree) {
                         await sendRequest(
                           "event/purchase-ticket/guest",
                           "POST",
                           formData
                         );
-                        navigate('/success');
-                      } else {
-                        const responseData = await sendRequest(
-                          "payment/checkout/guest",
-                          "POST",
-                          formData,
-                        );
-                        if (responseData.url) {
-                          window.location.assign(responseData.url);
+                        return navigate('/success');
+                      }
+
+                      const response = await sendRequest(`event/check-guest-discount/${selectedEvent.id}?withError=${false}`, 'POST', {
+                        email: values.email,
+                        name: values.name,
+                        surname: values.surname
+                      });
+
+                      if (response.hasOwnProperty('status')) {
+                        if (selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname))) {
+                          formData.append("itemId", selectedEvent.activeMemberPriceId ?? selectedEvent.memberPriceId);
+                        }
+
+                        if (selectedEvent.freePass && (selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname))) {
+                          await sendRequest(
+                            "event/purchase-ticket/guest",
+                            "POST",
+                            formData
+                          );
+                          return navigate('/success');
                         }
                       }
+
+                      const responseData = await sendRequest(
+                        "payment/checkout/guest",
+                        "POST",
+                        formData,
+                      );
+                      if (responseData.url) {
+                        window.location.assign(responseData.url);
+                      }
+                      
                     } catch (err) {
                       // console.log(err)
                     }
@@ -309,9 +318,7 @@ const GuestPurchase = () => {
                             />
                           </div>
                         </div>
-                        <div className="col-12 row container mt--40">
                           {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
-                        </div>
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">
                             <Field

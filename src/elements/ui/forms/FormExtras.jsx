@@ -10,7 +10,7 @@ const FormExtras = ({ inputs }) => {
                 if (input.type === 'select') {
                     if (input.multiselect) {
                         return (
-                            <div key={index} className="col-12 mt--10">
+                            <div key={index} className="col-12 mt--20 rn-form-group">
                                 <h4 className="center_text">{input.placeholder} (you can select more than 1)</h4>
                                 <div className="center_div" style={{ gap: '50px' }}>
                                     {input.options && input.options.map((val, i) => (
@@ -24,7 +24,7 @@ const FormExtras = ({ inputs }) => {
                         )
                     } else {
                         return (
-                            <div key={index} className="col-12 mt--10">
+                            <div key={index} className="col-12 mt--20 rn-form-group">
                                 <h4>{input.placeholder}</h4>
                                 <Field as='select' name={name} className="col-12 mt--10">
                                     <option value="" disabled selected>Select an option</option>
@@ -44,7 +44,7 @@ const FormExtras = ({ inputs }) => {
                 }
 
                 if (input.type === 'text') {
-                    return <div key={index} className="col-12 mt--10">
+                    return <div key={index} className="col-12 mt--20 rn-form-group">
                         <h4>{input.placeholder}</h4>
                         <Field type="text" name={name} placeholder='Write your value' ></Field>
                         <ErrorMessage

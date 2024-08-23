@@ -1,4 +1,5 @@
 import { clarity } from 'react-microsoft-clarity';
+import Resizer from "react-image-file-resizer";
 import CryptoJS from 'crypto-js';
 
 export const isProd = () => {
@@ -101,3 +102,19 @@ export const checkObjectOfArraysEmpty = (obj) => {
     const allArrays = Object.values(obj);
     return allArrays.every((arr) => arr.length === 0);
 };
+
+export const resizeFile = (file , width = 1500, height= 485, format = 'WEBP') =>
+    new Promise((resolve) => {
+        Resizer.imageFileResizer(
+            file,
+            width,
+            height,
+            format,
+            100,
+            0,
+            (uri) => {
+                resolve(uri);
+            },
+            "blob"
+        );
+    });

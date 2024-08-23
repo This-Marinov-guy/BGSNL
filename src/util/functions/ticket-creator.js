@@ -3,11 +3,15 @@ import QRCode from "qrcode";
 export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '') => {
   // Create a canvas element, add the image and text, covert to blob
   //for 1500 x 485 images
+  const response = await fetch(ticketImage);
+  const ticketImageBlob = await response.blob();
+  const resizedTicketImage = await resizeFile(ticketImageBlob);
+
   var canvas = document.createElement("canvas");
   var layout = canvas.getContext("2d");
   let ticket = new Image();
   ticket.crossOrigin = "anonymous"; // This enables CORS on the image
-  ticket.src = ticketImage;
+  ticket.src = URL.createObjectURL(resizedTicketImage);
 
   await new Promise((resolve, reject) => {
     ticket.onload = function () {
