@@ -10,6 +10,8 @@ import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
 import moment from 'moment';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import Loader from '../../../ui/loading/Loader';
+import { showNotification } from '../../../../redux/notification';
+import { EVENT_DELETED } from '../../../../util/defines/defines';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
@@ -31,6 +33,7 @@ const EventModal = (props) => {
         const responseData = await sendRequest(`event/actions/delete-event/${props.event.id}`, 'DELETE');
 
         if (responseData.status) {
+            dispatch(showNotification(EVENT_DELETED));
             props.loadData();
             setVisible(false);
             props.setShow(false);
