@@ -8,13 +8,13 @@ import { store } from "./redux/store";
 import { useSelector } from "react-redux";
 import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
-import { removeError, selectError, selectErrorMsg } from "./redux/error";
 import { PrimeReactProvider } from 'primereact/api';
 import { clarityTrack, isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { Toast } from 'primereact/toast';
 import { removeLogsOnProd } from "./util/functions/helpers";
+import { selectNotification, selectNotificationIndex, showNotification } from "./redux/notification";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import GlobalError from "./component/common/GlobalError";
@@ -24,7 +24,6 @@ import BirthdayModal from "./elements/ui/modals/BirthdayModal";
 import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import AuthLayout from "./layouts/authentication/AuthLayout";
-import { removeInfoNotification, selectNotification, selectNotificationDetails } from "./redux/information";
 import GuestLayout from "./layouts/authentication/GuestLayout";
 
 // Pages  
@@ -75,7 +74,6 @@ const EventDashboard = lazy(() =>
 const GuestPurchase = lazy(() =>
   import("./pages/eventActions/GuestPurchase")
 );
-const Error = lazy(() => import("./elements/ui/errors/Error"));
 const GuestCheck = lazy(() => import("./pages/redirects/GuestCheck"));
 const Success = lazy(() => import("./pages/redirects/Success"));
 const SuccessDonation = lazy(() => import("./pages/redirects/SuccessDonation"));
@@ -101,10 +99,8 @@ const Root = () => {
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
-  const error = useSelector(selectError);
-  const errorMessage = useSelector(selectErrorMsg);
-  const informationNotification = useSelector(selectNotification);
-  const informationNotificationDetails = useSelector(selectNotificationDetails);
+  const notification = useSelector(selectNotification);
+  const notificationIndex = useSelector(selectNotificationIndex);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -151,35 +147,10 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
-    // to show to toast on ref null
     setTimeout(() => {
-      if (errorMessage) {
-        toast.current.show({
-          severity: 'error',
-          summary: 'You got an error :(',
-          detail: errorMessage,
-          life: 80000,
-          style: { background: '#ffcccb', color: '#8b0000' },
-          contentStyle: { background: '#ffcccb', color: '#8b0000' }        
-        });
-      }
-
-      if (informationNotification) {
-        toast.current.show({ severity: informationNotificationDetails.severity, detail: informationNotificationDetails.detail, life: 8000 });
-      }
+      if (toast.current && notificationIndex) toast.current.show(notification)
     }, 50)
-
-  }, [errorMessage, informationNotificationDetails.severity, informationNotificationDetails.detail])
-
-  const handleHideToast = () => {
-    if (errorMessage) {
-      dispatch(removeError());
-    }
-
-    if (informationNotification) {
-      dispatch(removeInfoNotification());
-    }
-  }
+  }, [notificationIndex])
 
   if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />
@@ -192,7 +163,7 @@ const Root = () => {
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
             <BirthdayModal />
-            <Toast ref={toast} position="top-center" onHide={handleHideToast} />
+            <Toast ref={toast} position="top-center" life={8000}/>
             <Routes>
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
@@ -201,11 +172,11 @@ const Root = () => {
               <Route exact path={`/articles/toni-villa`} element={<Toni />} />
               <Route exact path={`/articles/acedemie-minerva`} element={<Minerva />} />
               {/* <Route exact path={`/active-member`} >
-                <ActiveMember toast={toast} />
+                <ActiveMember />
               </Route> */}
               {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
               {/* <Route exact path={`/contest/register`}>
-              <ContestRegister toast={toast} />
+              <ContestRegister />
               </Route> */}
 
               {/* <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
@@ -215,7 +186,7 @@ const Root = () => {
               <Route exact path={`/:region/future-events`} element={<RegionLayout><FutureEvents /></RegionLayout>} />
               <Route exact path={`/:region/past-events`} element={<RegionLayout><PastEvents /></RegionLayout>} />
               <Route exact path={`/:region/event-details/:eventId`} element={<RegionLayout><EventDetails /></RegionLayout>} />
-              <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent toast={toast} /></RegionLayout>}>
+              <Route exact path={"/:region/other-event-details/:eventId"} element={<RegionLayout><NonSocietyEvent /></RegionLayout>}>
 
               </Route>
               <Route
@@ -246,28 +217,28 @@ const Root = () => {
                 <Route exact path={`/user`}
                   element={
                     <AuthLayout>
-                      <User toast={toast} />
+                      <User />
                     </AuthLayout>
                   }
                 />
                 <Route exact path={`/user/add-event`}
                   element={
                     <AuthLayout>
-                      <AddEvent toast={toast} />
+                      <AddEvent />
                     </AuthLayout>
                   }
                 />
                 <Route exact path={`/user/edit-event/:eventId`}
                   element={
                     <AuthLayout>
-                      <EditEvent toast={toast} />
+                      <EditEvent />
                     </AuthLayout>
                   }
                 />
                 <Route exact path={`/user/dashboard`}
                   element={
                     <AuthLayout>
-                      <EventDashboard toast={toast} />
+                      <EventDashboard />
                     </AuthLayout>
                   }
                 />
@@ -285,14 +256,14 @@ const Root = () => {
                 <Route exact path={`/login`}
                   element={
                     <GuestLayout>
-                      <LogIn toast={toast} />
+                      <LogIn />
                     </GuestLayout>
                   }
                 />
                 <Route exact path={`/:region?/signup`}
                   element={
                     <GuestLayout>
-                      <SignUp toast={toast} />
+                      <SignUp />
                     </GuestLayout>
                   }
                 />

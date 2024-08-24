@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { showError } from "../redux/error";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 import axios from 'axios';
 import { isProd } from "../util/functions/helpers";
 import { selectUser } from "../redux/user";
+import { showNotification } from "../redux/notification";
 
 export const useHttpClient = () => {
   const dispatch = useDispatch();
@@ -38,10 +38,14 @@ export const useHttpClient = () => {
 
         return response.data;
       } catch (err) {
-        !isProd() && console.log(err.response.data ?? err); 
+        !isProd() && console.log(err.response.data ?? err);
 
         if (withError) {
-          dispatch(showError(err.response.data.message));
+          dispatch(showNotification({
+            severity: 'error',
+            summary: 'You got an error :(',
+            detail: err.response.data.message,
+          }));
         }
       } finally {
         dispatch(stopLoading());

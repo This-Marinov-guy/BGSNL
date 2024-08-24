@@ -12,6 +12,8 @@ import Footer from "../../component/footer/Footer";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { showNotification } from "../../redux/notification";
+import { useDispatch } from "react-redux";
 
 const schema = yup.object().shape({
     name: yup.string().required("Name is required"),
@@ -24,6 +26,8 @@ const ContestRegister = (props) => {
     const { loading, sendRequest } = useHttpClient();
 
     const navigate = useNavigate();
+
+    const dispatch = useDispatch();
 
     const closeHandler = () => {
 
@@ -100,7 +104,7 @@ const ContestRegister = (props) => {
                                         comments: values.comments
                                     }
                                 );
-                                props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password' });
+                                dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password' }));
                                 navigate("/");
                                 return;
                             } catch (err) {

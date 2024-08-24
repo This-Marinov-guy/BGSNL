@@ -13,6 +13,7 @@ import { FiX } from "react-icons/fi";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { Link } from "react-router-dom";
 import { BIRTHDAY_MODAL, RESET_PASSWORD_MODAL } from "../../util/defines/defines";
+import { showNotification } from "../../redux/notification";
 
 const schema = yup.object().shape({
   token: yup.string().required("Please provide the token send to you by email"),
@@ -94,7 +95,7 @@ const Login = (props) => {
           ).toISOString(),
         })
       );
-      props.toast.current.show({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' });
+      dispatch(showNotification({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' }));
 
       if (responseData.celebrate) {
         dispatch(showModal(BIRTHDAY_MODAL));
@@ -159,8 +160,7 @@ const Login = (props) => {
                       password: values.password,
                     }
                   );
-                  props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 });
-
+                  dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 }));
                   dispatch(removeModal());
                   navigate("/login");
                 } catch (err) { }

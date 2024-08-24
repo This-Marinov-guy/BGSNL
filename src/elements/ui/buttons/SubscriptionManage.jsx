@@ -2,9 +2,13 @@ import React from 'react'
 import Loader from '../loading/Loader'
 import { useHttpClient } from '../../../hooks/http-hook'
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../../redux/notification';
 
 const SubscriptionManage = (props) => {
-    const { loading, sendRequest } = useHttpClient()
+    const { loading, sendRequest } = useHttpClient();
+
+    const dispatch = useDispatch();
 
     const confirm1 = (event) => {
         confirmPopup({
@@ -44,7 +48,7 @@ const SubscriptionManage = (props) => {
                 },
             );
             if (responseData.message) {
-                props.toast.current.show({ severity: 'success', summary: 'Success', detail: responseData.message });
+                dispatch(showNotification({ severity: 'success', summary: 'Success', detail: responseData.message }));
             }
         } catch (err) { }
     }

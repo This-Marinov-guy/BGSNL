@@ -23,6 +23,7 @@ import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/defines";
 import {Calendar} from "../../elements/inputs/Calendar";
+import { showNotification } from "../../redux/notification";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -109,7 +110,7 @@ const SignUp = (props) => {
 
   const handleErrorMsg = (errors, isValid) => {
     if (errors && !isValid) {
-      props.toast.current.show(INCORRECT_MISSING_DATA);
+      dispatch(showNotification(INCORRECT_MISSING_DATA))
     }
   }
 
@@ -264,7 +265,7 @@ const SignUp = (props) => {
                               ).toISOString(),
                             })
                           );
-                          props.toast.current.show({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 });
+                          dispatch(showNotification({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 }));
 
                           if (responseData.celebrate) {
                             dispatch(showModal(BIRTHDAY_MODAL));

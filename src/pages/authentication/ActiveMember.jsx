@@ -11,6 +11,8 @@ import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showInfoNotification } from "../../redux/information";
 
 const schema = yup.object().shape({
     prSC: yup.boolean(),
@@ -72,6 +74,8 @@ const ActiveMember = (props) => {
     const { loading, sendRequest } = useHttpClient();
 
     const navigate = useNavigate();
+
+    const dispatch = useDispatch();
 
     const closeHandler = () => {
 
@@ -146,7 +150,7 @@ const ActiveMember = (props) => {
                                     "POST",
                                     formData
                                 );
-                                props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'Thank you for your interest - expect from us soon' });
+                                dispatch(showInfoNotification({ severity: 'success', summary: 'Success', detail: 'Thank you for your interest - expect from us soon' }));
                                 navigate("/");
                             } catch (err) {
                             }

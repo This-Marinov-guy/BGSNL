@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import ModalWindow from "./ModalWindow";
 import { useDispatch } from "react-redux";
 import SubscriptionManage from "../buttons/SubscriptionManage";
-import { showError } from "../../../redux/error";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../../util/defines/REGIONS_AUTH_CONFIG";
+import { showNotification } from "../../../redux/notification";
 
 const Locked = (props) => {
   const { loading, sendRequest } = useHttpClient();
@@ -21,7 +21,7 @@ const Locked = (props) => {
 
   const handleUnlock = async (index) => {
     if (!props.user.id) {
-      dispatch(showError("User cannot be found, please try again"));
+      dispatch(showNotification({severity: 'error', detail: "User cannot be found, please try again"}));
       return;
     }
     setMembershipIndex(index)
@@ -74,7 +74,7 @@ const Locked = (props) => {
             ? "To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account."
             : "We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: bgsn.tech.nl@gmail.com"}
         </p>
-        {props.user.subscription && <SubscriptionManage userId={props.user.id} subscription={props.user.subscription} toast={props.toast}/>}
+        {props.user.subscription && <SubscriptionManage userId={props.user.id} subscription={props.user.subscription} />}
         {props.case === "locked" && (REGIONS_MEMBERSHIP_SPECIFICS.length > 1 ?
           <ul className="brand-style-2">
             {REGIONS_MEMBERSHIP_SPECIFICS.map((option, index) => {

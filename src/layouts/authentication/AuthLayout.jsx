@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
-import { showInfoNotification } from '../../redux/information';
+import { showNotification } from '../../redux/notification';
 
 const AuthLayout = ({ children }) => {
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const AuthLayout = ({ children }) => {
     useEffect(() => {
         if (!isAuthenticated) {
             sessionStorage.setItem('prevUrl', routePath);
-            dispatch(showInfoNotification({
+            dispatch(showNotification({
                 severity: 'warn',
                 detail: 'Please log in your account to proceed to the page!'
             }));

@@ -15,7 +15,7 @@ const AddEvent = (props) => {
       <div className="container mt--200">
         <h3 className="center_text">Add an Event</h3>
       </div>
-      <EventForm toast={props.toast}/>
+      <EventForm />
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>

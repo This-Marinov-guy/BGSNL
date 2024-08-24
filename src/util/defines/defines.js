@@ -25,7 +25,52 @@ export const RESET_PASSWORD_MODAL = 'reset_password_modal';
 export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';
 
 //toasts
-export const INCORRECT_MISSING_DATA = { severity: 'warn', summary: 'Missing details', detail: 'Please check the form again and fill the missing or incorrect data!' }
-export const EVENT_ADDED = { severity: 'success', summary: 'Event added' };
-export const EVENT_EDITED = { severity: 'success', summary: 'Event added' };
-export const EVENT_DELETED = { severity: 'success', summary: 'Event deleted' };
+export const SUCCESS_STYLE = {
+    life: 8000,
+    style: { background: '#d4edda', color: '#155724' },
+    contentStyle: { background: '#d4edda', color: '#155724' }
+};
+
+export const INFO_STYLE = {
+    life: 8000,
+    style: { background: '#cce5ff', color: '#004085' },
+    contentStyle: { background: '#cce5ff', color: '#004085'}
+}
+
+export const WARNING_STYLE = {
+    life: 8000,
+    style: { background: '#fff3cd', color: '#856404' },
+    contentStyle: { background: '#fff3cd', color: '#856404' }
+}
+
+export const DANGER_STYLE = {
+    life: 8000,
+    style: { background: '#ffcccb', color: '#8b0000' },
+    contentStyle: { background: '#ffcccb', color: '#8b0000' }
+}
+
+export const INCORRECT_MISSING_DATA = {
+    severity: 'warn',
+    summary: 'Missing details',
+    detail: 'Please check the form again and fill the missing or incorrect data!',
+    ...WARNING_STYLE
+};
+
+export const getStyleBySeverity = (severity) => {
+    switch (severity) {
+        case 'error':
+            return DANGER_STYLE;
+        case 'warn':
+            return WARNING_STYLE;
+        case 'info':
+            return INFO_STYLE;
+        case 'success':
+            return SUCCESS_STYLE;
+        default:
+            return {}
+    }
+};
+
+export const EVENT_ADDED = { severity: 'success', summary: 'Event added', ...SUCCESS_STYLE };
+export const EVENT_EDITED = { severity: 'success', summary: 'Event added', ...SUCCESS_STYLE };
+export const EVENT_DELETED = { severity: 'success', summary: 'Event deleted', ...SUCCESS_STYLE };

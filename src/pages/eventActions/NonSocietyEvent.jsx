@@ -19,6 +19,7 @@ import { useObjectGrabUrl } from "../../hooks/object-hook";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { decodeJWT } from "../../util/functions/jwt";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/defines";
+import { showNotification } from "../../redux/notification";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -76,7 +77,7 @@ const NonSocietyEvent = (props) => {
             : "Any",
         }
       );
-      props.toast.current.show({ severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!' });
+      dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!' }));
       navigate("/");
       setTimeout(() => closeNotificationHandler(), 7000);
     } catch (err) { }
@@ -139,9 +140,9 @@ const NonSocietyEvent = (props) => {
                       notificationTypeTerms: values.notificationTypeTerms,
                     }
                   );
-                  props.toast.current.show({
+                  dispatch(showNotification({
                     severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!'
-                  });
+                  }));
                   navigate("/");
                   setTimeout(() => closeNotificationHandler(), 7000);
                 } catch (err) { }

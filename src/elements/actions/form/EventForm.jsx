@@ -18,6 +18,8 @@ import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
 import {Calendar, CalendarWithClock} from "../../inputs/Calendar";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../../../redux/notification";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -30,6 +32,7 @@ const EventForm = (props) => {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch();
     const { eventId } = useParams();
 
     const edit = props.edit;
@@ -43,7 +46,7 @@ const EventForm = (props) => {
         }
 
         if (errors && !isValid && dirty) {
-            return props.toast.current.show(INCORRECT_MISSING_DATA);
+            return dispatch(showNotification(INCORRECT_MISSING_DATA));
         }
     }
 
@@ -188,7 +191,7 @@ const EventForm = (props) => {
                             : await sendRequest('event/actions/add-event', 'POST', formData);
 
                         if (responseData.status) {
-                            props.toast.current.show(props.edit ? EVENT_EDITED : EVENT_ADDED);
+                            dispatch(showNotification(props.edit ? EVENT_EDITED : EVENT_ADDED));
                             navigate('/user/dashboard');
                         }
 
