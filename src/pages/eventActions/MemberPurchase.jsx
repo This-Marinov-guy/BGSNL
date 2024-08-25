@@ -14,7 +14,7 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { createCustomerTicket } from "../../util/functions/ticket-creator";
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { decodeJWT } from "../../util/functions/jwt";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
@@ -22,6 +22,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
 import { encryptData } from "../../util/functions/helpers";
+import { showNotification } from "../../redux/notification";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -29,13 +30,26 @@ const MemberPurchase = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(true);
-  const [eventClosed, setEventClosed] = useState(false)
+  const [eventClosed, setEventClosed] = useState(false);
+  const [normalTicket, setNormalTicket] = useState(false);
+
+  const dispatch = useDispatch();
 
   const { region, eventId } = useParams()
 
   const user = useSelector(selectUser);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const buyFreeTicket = async (formData) => {
+    await sendRequest(
+      "event/purchase-ticket/member",
+      "POST",
+      formData
+    );
+
+    navigate('/success');
+  }
 
   useEffect(() => {
     const userId = decodeJWT(user.token).userId;
@@ -136,10 +150,27 @@ const MemberPurchase = () => {
               validationSchema={schema}
               onSubmit={async (values) => {
                 try {
-                  const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
+                  forceStartLoading();
 
-                  if (!checkMemberTicket.hasOwnProperty('status')) {
-                    return
+                  let allowDiscount = false;
+                  // TODO: add active members to the check
+                  const isMemberForDiscount = selectedEvent.activeMemberPriceId && selectedEvent.discountPass && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
+                  const isMemberForFreeTicket = selectedEvent.freePass && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
+
+                  if (!normalTicket && (isMemberForDiscount || isMemberForFreeTicket)) {
+                    const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
+
+                    if (!checkMemberTicket.hasOwnProperty('status') && !checkMemberTicket.status) {
+                      dispatch(showNotification({
+                        severity: 'warn',
+                        detail: "You already have a member ticket for this event - you can still proceed the checkout but will pay the guest price!",
+                        life: 1200
+                      }));
+                      setNormalTicket(true);
+                      return;
+                    } else {
+                      allowDiscount = true;
+                    }
                   }
 
                   const data = encryptData({
@@ -148,6 +179,7 @@ const MemberPurchase = () => {
                     surname: currentUser.surname,
                     email: currentUser.email,
                   });
+
                   const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}`;
 
                   const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
@@ -159,11 +191,7 @@ const MemberPurchase = () => {
                     ticketBlob,
                     selectedEvent.id + "_" + currentUser.name + currentUser.surname + "_MEMBER"
                   );
-                  if (selectedEvent.activeMemberPriceId && (selectedEvent.discountPass && selectedEvent.discountPass.includes(currentUser.email))) {
-                    formData.append("itemId", selectedEvent.activeMemberPriceId);
-                  } else {
-                    formData.append("itemId", selectedEvent.memberPriceId);
-                  }
+
                   formData.append("region", region);
                   formData.append("origin_url", window.location.origin);
                   formData.append("method", "buy_member_ticket");
@@ -179,24 +207,32 @@ const MemberPurchase = () => {
                       return obj;
                     }, {})))
                   }
-                  if (selectedEvent.isFree || selectedEvent.isMemberFree || selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname)) {
-                    const responseData = await sendRequest(
-                      "event/purchase-ticket/member",
-                      "POST",
-                      formData
-                    );
-                    navigate('/success');
+
+                  if (selectedEvent.isFree || selectedEvent.isMemberFree) {
+                    return buyFreeTicket(formData);
                   }
-                  else {
-                    const responseData = await sendRequest(
-                      "payment/checkout/member",
-                      "POST",
-                      formData,
-                    );
-                    if (responseData.url) {
-                      window.location.assign(responseData.url);
+
+                  if (allowDiscount && (isMemberForDiscount || isMemberForFreeTicket)) {
+                    if (isMemberForFreeTicket) {
+                      return buyFreeTicket(formData);
+                    } else {
+                      formData.append("itemId", selectedEvent.activeMemberPriceId);
                     }
+                  } else if (normalTicket) {
+                    formData.append("itemId", selectedEvent.priceId);
+                  } else {
+                    formData.append("itemId", selectedEvent.memberPriceId);
                   }
+
+                  const responseData = await sendRequest(
+                    "payment/checkout/member",
+                    "POST",
+                    formData,
+                  );
+                  if (responseData.url) {
+                    window.location.assign(responseData.url);
+                  }
+
                 } catch (err) {
                   console.log(err)
                 }

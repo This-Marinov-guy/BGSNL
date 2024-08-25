@@ -20,6 +20,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { encryptData } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
+import { useDispatch } from "react-redux";
 
 const GuestPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -28,10 +29,23 @@ const GuestPurchase = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventClosed, setEventClosed] = useState(false)
   const [quantity, setQuantity] = useState(1);
+  const [normalTicket, setNormalTicket] = useState(false);
 
-  const { region, eventId } = useParams()
+  const { region, eventId } = useParams();
 
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const buyFreeTicket = async (formData) => {
+    await sendRequest(
+      "event/purchase-ticket/guest",
+      "POST",
+      formData
+    );
+
+    navigate('/success');
+  }
 
   useEffect(() => {
     setLoadingPage(true);
@@ -158,6 +172,30 @@ const GuestPurchase = () => {
                     try {
                       forceStartLoading();
 
+                      let allowDiscount = false;
+                      const isGuestForDiscount = selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname));
+                      const isGuestForFreeTicket = selectedEvent.freePass && (selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname));
+
+                      if (!normalTicket && (isGuestForDiscount || isGuestForFreeTicket)) {
+                        const checkDiscounts = await sendRequest(`event/check-guest-discount/${eventId}`, "POST", {
+                          email: values.email,
+                          name: values.name,
+                          surname: values.surname
+                        });
+
+                        if (!checkDiscounts.hasOwnProperty('status') && !checkDiscounts.status) {
+                          dispatch(showNotification({
+                            severity: 'warn',
+                            detail: "You already have an applied bonus for this event - you can still proceed the checkout but will pay the guest price!",
+                            life: 1200
+                          }));
+                          setNormalTicket(true);
+                          return;
+                        } else {
+                          allowDiscount = true;
+                        }
+                      }
+
                       const data = encryptData({
                         event: selectedEvent.title,
                         name: values.name,
@@ -179,7 +217,6 @@ const GuestPurchase = () => {
                         "_GUEST"
                       );
                       formData.append("region", region);
-                      formData.append("itemId", selectedEvent.priceId);
                       formData.append("quantity", quantity);
                       formData.append("origin_url", window.location.origin);
                       formData.append("method", "buy_guest_ticket");
@@ -201,35 +238,19 @@ const GuestPurchase = () => {
                         values.name + " " + values.surname
                       );
                       formData.append("guestPhone", values.phone);
-       
+
                       if (selectedEvent.isFree) {
-                        await sendRequest(
-                          "event/purchase-ticket/guest",
-                          "POST",
-                          formData
-                        );
-                        return navigate('/success');
+                        return buyFreeTicket(formData);
                       }
-
-                      const response = await sendRequest(`event/check-guest-discount/${selectedEvent.id}?withError=${false}`, 'POST', {
-                        email: values.email,
-                        name: values.name,
-                        surname: values.surname
-                      });
-
-                      if (response.hasOwnProperty('status')) {
-                        if (selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname))) {
+                      
+                      if (allowDiscount && (isGuestForDiscount || isGuestForFreeTicket)) {
+                        if (isGuestForFreeTicket) {
+                          return buyFreeTicket(formData);
+                        } else {
                           formData.append("itemId", selectedEvent.activeMemberPriceId ?? selectedEvent.memberPriceId);
                         }
-
-                        if (selectedEvent.freePass && (selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname))) {
-                          await sendRequest(
-                            "event/purchase-ticket/guest",
-                            "POST",
-                            formData
-                          );
-                          return navigate('/success');
-                        }
+                      } else {
+                        formData.append("itemId", selectedEvent.priceId);
                       }
 
                       const responseData = await sendRequest(
@@ -240,7 +261,7 @@ const GuestPurchase = () => {
                       if (responseData.url) {
                         window.location.assign(responseData.url);
                       }
-                      
+
                     } catch (err) {
                       // console.log(err)
                     }
@@ -318,7 +339,7 @@ const GuestPurchase = () => {
                             />
                           </div>
                         </div>
-                          {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
+                        {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="hor_section_nospace mt--40">
                             <Field

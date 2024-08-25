@@ -16,7 +16,7 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
 import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
-import {Calendar, CalendarWithClock} from "../../inputs/Calendar";
+import { Calendar, CalendarWithClock } from "../../inputs/Calendar";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
@@ -62,6 +62,38 @@ const EventForm = (props) => {
         } else {
             setIsValidFiles(false);
         }
+    };
+
+    const isImageCorrectRatio = (file) => {
+        return new Promise((resolve, reject) => {
+            if (!file) {
+                reject(new Error('No file provided'));
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const width = img.width;
+                    const height = img.height;
+
+                    if (Math.abs(width / height - 1500 / 485) < 0.01) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                };
+                img.onerror = () => {
+                    reject(new Error('Failed to load image'));
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = () => {
+                reject(new Error('Failed to read file'));
+            };
+            reader.readAsDataURL(file);
+        });
     };
 
     const onSubmit = useCallback(() => {
@@ -321,7 +353,7 @@ const EventForm = (props) => {
                             </div>
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
-                                    <Field type='time' name='time' placeholder='Time of event' id='event-time'/>
+                                    <Field type='time' name='time' placeholder='Time of event' id='event-time' />
                                     <ErrorMessage
                                         className="error"
                                         name="time"
@@ -492,7 +524,24 @@ const EventForm = (props) => {
                                 <ImageInput
                                     initialImage={values.ticketImg}
                                     onChange={(event) => {
-                                        setFieldValue("ticketImg", event.target.files[0]);
+                                        const file = event.target.files[0];
+                                        isImageCorrectRatio(file)
+                                            .then(isCorrect => {
+                                                if (isCorrect) {
+                                                    setFieldValue("ticketImg", event.target.files[0]);
+                                                } else {
+                                                    dispatch((showNotification({
+                                                        severity: 'warn',
+                                                        detail: 'Image is not the correct ration and will not be uploaded - please choose another image!'
+                                                    })))
+                                                }
+                                            })
+                                            .catch(error => {
+                                                dispatch((showNotification({
+                                                    severity: 'danger',
+                                                    detail: 'Error uploading the image - please try again!'
+                                                })))
+                                            });
                                     }}
                                 />
                                 <p className="mt--10 information center_text">
