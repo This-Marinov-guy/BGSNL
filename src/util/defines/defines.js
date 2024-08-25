@@ -76,5 +76,5 @@ export const getStyleBySeverity = (severity) => {
 };
 
 export const EVENT_ADDED = { severity: 'success', summary: 'Event added', ...SUCCESS_STYLE };
-export const EVENT_EDITED = { severity: 'success', summary: 'Event added', ...SUCCESS_STYLE };
+export const EVENT_EDITED = { severity: 'success', summary: 'Event edited', ...SUCCESS_STYLE };
 export const EVENT_DELETED = { severity: 'success', summary: 'Event deleted', ...SUCCESS_STYLE };
