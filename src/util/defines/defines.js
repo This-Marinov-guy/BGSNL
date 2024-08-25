@@ -8,6 +8,10 @@ export const BOARD_MEMBER = 'board_member';
 export const COMMITTEE_MEMBER = 'committee_member';
 export const MEMBER = 'member';
 
+export const ACCESS_1 = [SUPER_ADMIN];
+export const ACCESS_2 = [...ACCESS_1, ADMIN, SOCIETY_ADMIN];
+export const ACCESS_3 = [...ACCESS_2, BOARD_MEMBER, COMMITTEE_MEMBER]
+
 // event status
 export const EVENT_OPENED = 'opened';
 export const EVENT_CLOSED = 'closed';

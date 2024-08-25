@@ -16,7 +16,7 @@ import FormExtras from "../../elements/ui/forms/FormExtras";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { decodeJWT } from "../../util/functions/jwt";
+import { decodeJWT } from "../../util/functions/authorization";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
@@ -174,13 +174,13 @@ const MemberPurchase = () => {
                   }
 
                   const data = encryptData({
-                    event: selectedEvent.title,
+                    eventId: selectedEvent.id,
                     name: currentUser.name,
                     surname: currentUser.surname,
                     email: currentUser.email,
                   });
 
-                  const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}`;
+                  const qrCode = `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}`;
 
                   const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
 

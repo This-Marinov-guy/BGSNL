@@ -197,12 +197,13 @@ const GuestPurchase = () => {
                       }
 
                       const data = encryptData({
-                        event: selectedEvent.title,
+                        eventId: selectedEvent.id,
                         name: values.name,
                         surname: values.surname,
                         email: values.email,
                       });
-                      const qrCode = `${process.env.REACT_APP_SERVER_URL}event/check-guest-list?data=${data}&count=${quantity}`;
+
+                      const qrCode = `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}&count=${quantity}`;
                       const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, values.name, values.surname, selectedEvent.ticketColor, qrCode);
 
                       // formData

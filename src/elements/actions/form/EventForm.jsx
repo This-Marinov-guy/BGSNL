@@ -243,7 +243,7 @@ const EventForm = (props) => {
                     title: initialData?.title ?? '',
                     description: initialData?.description ?? '',
                     date: initialData?.date ? new Date(initialData.date) : '',
-                    time: initialData?.time ? new Date(initialData.time) : '',
+                    time: initialData?.time ?? '',
                     location: initialData?.location ?? '',
                     ticketLimit: initialData?.ticketLimit ?? '',
                     ticketTimer: initialData?.ticketTimer ? new Date(initialData.ticketTimer) : '',

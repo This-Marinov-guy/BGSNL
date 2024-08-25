@@ -11,7 +11,7 @@ import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import Locked from "../../elements/ui/modals/Locked";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { decodeJWT } from "../../util/functions/jwt";
+import { decodeJWT } from "../../util/functions/authorization";
 import Greeting from "../../elements/Greeting";
 import Christmas from "../../elements/special/Christmas";
 import { selectUser } from "../../redux/user";

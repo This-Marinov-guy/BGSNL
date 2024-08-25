@@ -25,6 +25,7 @@ import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import AuthLayout from "./layouts/authentication/AuthLayout";
 import GuestLayout from "./layouts/authentication/GuestLayout";
+import { ACCESS_1, ACCESS_2, ACCESS_3 } from "./util/defines/defines";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -223,28 +224,28 @@ const Root = () => {
                 />
                 <Route exact path={`/user/add-event`}
                   element={
-                    <AuthLayout>
+                    <AuthLayout access={ACCESS_1}>
                       <AddEvent />
                     </AuthLayout>
                   }
                 />
                 <Route exact path={`/user/edit-event/:eventId`}
                   element={
-                    <AuthLayout>
+                    <AuthLayout access={ACCESS_1}>
                       <EditEvent />
                     </AuthLayout>
                   }
                 />
                 <Route exact path={`/user/dashboard`}
                   element={
-                    <AuthLayout>
+                    <AuthLayout access={ACCESS_2}>
                       <EventDashboard />
                     </AuthLayout>
                   }
                 />
-                <Route exact path={`/check-guest-list/:data`}
+                <Route exact path={`/user/check-guest-list`}
                   element={
-                    <AuthLayout>
+                    <AuthLayout access={ACCESS_3}>
                       <GuestCheck />
                     </AuthLayout>
                   }

@@ -118,3 +118,11 @@ export const resizeFile = (file , width = 1500, height= 485, format = 'WEBP') =>
             "blob"
         );
     });
+
+export const hasOverlap = (array1, array2) => {
+    const set = new Set(array2);
+    for (let item of array1) {
+        if (set.has(item)) return true;
+    }
+    return false;
+}

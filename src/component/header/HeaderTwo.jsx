@@ -8,7 +8,7 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
-import { decodeJWT } from "../../util/functions/jwt";
+import { decodeJWT } from "../../util/functions/authorization";
 import NewBadge from "../../elements/ui/badges/NewBadge";
 
 const HeaderTwo = (props) => {

@@ -17,7 +17,7 @@ import { selectUser } from "../../redux/user";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { useObjectGrabUrl } from "../../hooks/object-hook";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
-import { decodeJWT } from "../../util/functions/jwt";
+import { decodeJWT } from "../../util/functions/authorization";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/defines";
 import { showNotification } from "../../redux/notification";
 

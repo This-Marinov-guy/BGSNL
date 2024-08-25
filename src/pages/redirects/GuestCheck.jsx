@@ -8,10 +8,10 @@ import HeaderTwo from '../../component/header/HeaderTwo';
 import { decryptData } from '../../util/functions/helpers';
 
 const GuestCheck = () => {
-    const {data} = useParams();
     const searchParams = new URLSearchParams(window.location.search);
-
-    const {event, name, surname, email} = decryptData(data);
+    
+    const data = searchParams.get('data');
+    const {eventId, name, surname, email} = decryptData(data);
     const count = searchParams.get('count');
 
     const { sendRequest, loading } = useHttpClient();
@@ -43,8 +43,8 @@ const GuestCheck = () => {
             'event/check-guest-list',
             "PATCH",
             {
-                event,
-                name,
+                eventId,
+                name: `${name} ${surname}`,
                 email,
                 count: count || null
             }
@@ -77,7 +77,7 @@ const GuestCheck = () => {
     }
 
     useEffect(() => {
-        if (!(email && name && surname && event)) {
+        if (!(email && name && surname && eventId)) {
             return navigate('/');
         }
 
