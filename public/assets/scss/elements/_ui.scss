@@ -206,6 +206,8 @@ hr {
 
 .p-datepicker-next,
 .p-datepicker-prev {
+  display: inline-block !important;
+  z-index: 999 !important;
   color: $body-color !important;
   font-size: medium !important;
   font-weight: bold !important;
