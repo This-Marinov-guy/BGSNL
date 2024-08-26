@@ -16,13 +16,15 @@ import FormExtras from "../../elements/ui/forms/FormExtras";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { decodeJWT } from "../../util/functions/authorization";
+import { checkAuthorization, decodeJWT } from "../../util/functions/authorization";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
+import { Message } from 'primereact/message';
 import { encryptData } from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
+import { ACCESS_3 } from "../../util/defines/defines";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -154,10 +156,11 @@ const MemberPurchase = () => {
 
                   let allowDiscount = false;
                   // TODO: add active members to the check
+                  const isActiveMember = checkAuthorization(user.token, ACCESS_3);
                   const isMemberForDiscount = selectedEvent.activeMemberPriceId && selectedEvent.discountPass && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
                   const isMemberForFreeTicket = selectedEvent.freePass && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
 
-                  if (!normalTicket && (isMemberForDiscount || isMemberForFreeTicket)) {
+                  if (!normalTicket) {
                     const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
 
                     if (!checkMemberTicket.hasOwnProperty('status') && !checkMemberTicket.status) {
@@ -212,7 +215,7 @@ const MemberPurchase = () => {
                     return buyFreeTicket(formData);
                   }
 
-                  if (allowDiscount && (isMemberForDiscount || isMemberForFreeTicket)) {
+                  if (allowDiscount && (isMemberForDiscount || isMemberForFreeTicket || isActiveMember)) {
                     if (isMemberForFreeTicket) {
                       return buyFreeTicket(formData);
                     } else {
@@ -267,15 +270,18 @@ const MemberPurchase = () => {
                   {selectedEvent.extraInputsForm.length > 0 && <div className="col-lg-6 col-md-12 col-12 row container mt--40">
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>}
-                  <WithBackBtn>
-                    <button
-                      disabled={loading}
-                      type="submit"
-                      className="rn-button-style--2 rn-btn-reverse-green"
-                    >
-                      {loading ? <Loader /> : <span>Proceed to paying</span>}
-                    </button>
-                  </WithBackBtn>
+                  <div style={{maxWidth: '10em'}}>
+                    <WithBackBtn>
+                      <button
+                        disabled={loading}
+                        type="submit"
+                        className="rn-button-style--2 rn-btn-reverse-green"
+                      >
+                        {loading ? <Loader /> : <span>Proceed to paying</span>}
+                      </button>
+                    </WithBackBtn>
+                  {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
+                  </div>
                   <p className="information mt--40">
                     The information for purchasing this ticket will be taken from your
                     account. Be sure it is accurate as it can be used as a proof of

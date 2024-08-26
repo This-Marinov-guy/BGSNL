@@ -1,6 +1,8 @@
 import { clarity } from 'react-microsoft-clarity';
 import Resizer from "react-image-file-resizer";
 import CryptoJS from 'crypto-js';
+import { checkAuthorization } from './authorization';
+import { ACCESS_3 } from '../defines/defines';
 
 export const isProd = () => {
     return process.env.NODE_ENV === 'production'
@@ -81,12 +83,16 @@ export const decryptData = (string) => {
 
 export const estimatePriceByEvent = (selectedEvent, user = {}) => {
     let price; 
+    const isMember = user && !!user.token;
+    const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_3);
 
     if (selectedEvent.isFree) {
         price = 'FREE'
     } else if (selectedEvent.ticketLink) {
         price = 'Check ticket portal'
-    } else if (user && !!user.token && (selectedEvent.memberEntry || selectedEvent.isMemberFree)) {
+    } else if (isActiveMember && selectedEvent.activeMemberEntry) {
+        price = selectedEvent.activeMemberEntry + (!isNaN(selectedEvent.activeMemberEntry) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
+    } else if (isMember && (selectedEvent.memberEntry || selectedEvent.isMemberFree)) {
         price = selectedEvent.isMemberFree ? 'FREE'
             : selectedEvent.memberEntry + (!isNaN(selectedEvent.memberEntry) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 0) ? selectedEvent.including[0] : '')
     } else if (selectedEvent.entry) {
