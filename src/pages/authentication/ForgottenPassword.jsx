@@ -48,7 +48,7 @@ const schema = yup.object().shape({
 const ForgottenPassword = (props) => {
     const { visible, onHide } = props;
 
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
     const [formValues, setFormValues] = useState(initialValues);
     
     const { loading, sendRequest } = useHttpClient();
