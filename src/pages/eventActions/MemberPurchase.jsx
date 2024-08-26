@@ -22,7 +22,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
 import { Message } from 'primereact/message';
-import { encryptData } from "../../util/functions/helpers";
+import { encryptData, estimatePriceByEvent } from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
 import { ACCESS_3 } from "../../util/defines/defines";
 
@@ -157,8 +157,8 @@ const MemberPurchase = () => {
                   let allowDiscount = false;
                   // TODO: add active members to the check
                   const isActiveMember = checkAuthorization(user.token, ACCESS_3);
-                  const isMemberForDiscount = selectedEvent.activeMemberPriceId && selectedEvent.discountPass && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
-                  const isMemberForFreeTicket = selectedEvent.freePass && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
+                  const isMemberForDiscount = selectedEvent.activeMemberPriceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
+                  const isMemberForFreeTicket = selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
 
                   if (!normalTicket) {
                     const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
@@ -264,7 +264,7 @@ const MemberPurchase = () => {
                           : selectedEvent.time}
                       </p>
                       <p>Address: {selectedEvent.location}</p>
-                      <p>Price: {(selectedEvent.isFree || selectedEvent.isMemberFree) ? ' FREE' : selectedEvent.memberEntry ? `${selectedEvent.memberEntry} euro (discounted)` : `${selectedEvent.entry} (no MEMBER discount)`}</p>
+                      <p>Price: {estimatePriceByEvent(selectedEvent, {...currentUser, token: user.token ?? ''}, normalTicket)}</p>
                     </div>
                   </div>
                   {selectedEvent.extraInputsForm.length > 0 && <div className="col-lg-6 col-md-12 col-12 row container mt--40">
