@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, selectUser } from "../../redux/user";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
+import { Password } from 'primereact/password';
 import Loader from "../../elements/ui/loading/Loader";
 import ModalWindow from "../../elements/ui/modals/ModalWindow";
 import { FiX } from "react-icons/fi";
@@ -115,134 +116,134 @@ const Login = (props) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-        <ModalWindow show={modal === RESET_PASSWORD_MODAL}>
-          {!confirmChanging ? (
-            <form
-              className="container pd--40"
-              onSubmit={(event) => sendTokenHandler(event)}
-            >
-              <div className="hor_section">
-                <h3>
-                  You are about to start procedure for changing password!
-                  Please enter your account email!
-                </h3>
-                <FiX className="x_icon" onClick={closeHandler} />
-              </div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                onChange={(event) => changeFormInputHandler(event)}
-              />
-              {!confirmChanging && (
-                loading ? <Loader /> : <button
+      <ModalWindow show={modal === RESET_PASSWORD_MODAL}>
+        {!confirmChanging ? (
+          <form
+            className="container pd--40"
+            onSubmit={(event) => sendTokenHandler(event)}
+          >
+            <div className="hor_section">
+              <h3>
+                You are about to start procedure for changing password!
+                Please enter your account email!
+              </h3>
+              <FiX className="x_icon" onClick={closeHandler} />
+            </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              onChange={(event) => changeFormInputHandler(event)}
+            />
+            {!confirmChanging && (
+              loading ? <Loader /> : <button
+                type="submit"
+                className="rn-button-style--2 rn-btn-reverse-green mt--80"
+              >
+                Proceed
+              </button>
+            )}
+          </form>
+        ) : (
+          <Formik
+            className="inner"
+            validationSchema={schema}
+            validateOnChange={false}
+            validateOnBlur={false}
+            onSubmit={async (values) => {
+              try {
+                const responseData = await sendRequest(
+                  `user/change-password`,
+                  "PATCH",
+                  {
+                    userToken: values.token,
+                    email: userEmail,
+                    password: values.password,
+                  }
+                );
+                dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 }));
+                dispatch(removeModal());
+                navigate("/login");
+              } catch (err) { }
+            }}
+            initialValues={{
+              token: "",
+              password: "",
+              confirmPassword: "",
+            }}
+          >
+            {() => (
+              <Form id="form" style={{ padding: "50px" }}>
+                <div className="hor_section">
+                  <h3>Reset you password</h3>
+                  <FiX className="x_icon" onClick={closeHandler} />
+                </div>
+                <div className="row">
+                  <div className="col-lg-12 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        autoComplete="off"
+                        type="number"
+                        placeholder="Validation token"
+                        name="token"
+                      />
+                      <ErrorMessage
+                        className="error"
+                        name="token"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-12 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        autoComplete="off"
+                        type="password"
+                        placeholder="New Password"
+                        name="password"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="password"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-12 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        autoComplete="off"
+                        type="password"
+                        placeholder="Confirm New Password"
+                        name="confirmPassword"
+                      />
+                      <ErrorMessage
+                        className="error"
+                        name="confirmPassword"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button
+                  disabled={loading}
                   type="submit"
                   className="rn-button-style--2 rn-btn-reverse-green mt--80"
                 >
-                  Proceed
+                  {loading ? <Loader /> : <span>Change Password</span>}
                 </button>
-              )}
-            </form>
-          ) : (
-            <Formik
-              className="inner"
-              validationSchema={schema}
-              validateOnChange={false}
-              validateOnBlur={false}
-              onSubmit={async (values) => {
-                try {
-                  const responseData = await sendRequest(
-                    `user/change-password`,
-                    "PATCH",
-                    {
-                      userToken: values.token,
-                      email: userEmail,
-                      password: values.password,
-                    }
-                  );
-                  dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 }));
-                  dispatch(removeModal());
-                  navigate("/login");
-                } catch (err) { }
-              }}
-              initialValues={{
-                token: "",
-                password: "",
-                confirmPassword: "",
-              }}
-            >
-              {() => (
-                <Form id="form" style={{ padding: "50px" }}>
-                  <div className="hor_section">
-                    <h3>Reset you password</h3>
-                    <FiX className="x_icon" onClick={closeHandler} />
-                  </div>
-                  <div className="row">
-                    <div className="col-lg-12 col-md-12 col-12">
-                      <div className="rn-form-group">
-                        <Field
-                          autoComplete="off"
-                          type="number"
-                          placeholder="Validation token"
-                          name="token"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="token"
-                          component="div"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-12 col-md-12 col-12">
-                      <div className="rn-form-group">
-                        <Field
-                          autoComplete="off"
-                          type="password"
-                          placeholder="New Password"
-                          name="password"
-                        ></Field>
-                        <ErrorMessage
-                          className="error"
-                          name="password"
-                          component="div"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-12 col-md-12 col-12">
-                      <div className="rn-form-group">
-                        <Field
-                          autoComplete="off"
-                          type="password"
-                          placeholder="Confirm New Password"
-                          name="confirmPassword"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="confirmPassword"
-                          component="div"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    className="rn-button-style--2 rn-btn-reverse-green mt--80"
-                  >
-                    {loading ? <Loader /> : <span>Change Password</span>}
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </ModalWindow>
+              </Form>
+            )}
+          </Formik>
+        )}
+      </ModalWindow>
       <div className="container team_member_border-3" style={{ maxWidth: "600px", marginTop: '25vh' }}>
         <h3 style={{ fontSize: '0.8em' }} className="center_text">Log in your account</h3>
         <form
           className="center_section"
           onSubmit={(event) => loginHandler(event)}
         >
-          <div className="col-lg-8 col-md-8 col-sm-10">
+          <div className="col-lg-8 col-md-8 col-sm-11">
             <div className="rn-form-group">
               <input
                 type="text"
@@ -252,14 +253,15 @@ const Login = (props) => {
               />
             </div>
           </div>
-          <div className="col-lg-8 col-md-8 col-sm-10">
+          <div className="col-lg-8 col-md-8 col-sm-11">
             <div className="rn-form-group">
-              <input
-                type="password"
+              <Password
                 name="password"
                 placeholder="Password"
                 onChange={(event) => changeFormInputHandler(event)}
-              ></input>
+                toggleMask
+                feedback={false}
+                unstyled />
             </div>
           </div>
           <button

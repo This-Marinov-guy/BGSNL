@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import moment from 'moment'
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Password } from 'primereact/password';
 import { FiCheck, FiChevronLeft } from "react-icons/fi";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
@@ -487,12 +488,14 @@ const SignUp = (props) => {
                 <div className="row">
                   <div className="col-lg-6 col-md-12 col-12">
                     <div className="rn-form-group">
-                      <Field
+                      <Password
                         autoComplete="off"
-                        type="password"
                         placeholder="Password"
                         name="password"
-                      ></Field>
+                        onChange={(e) => setFieldValue('password', e.target.value)}
+                        toggleMask
+                        feedback={false}
+                        unstyled />
                       <ErrorMessage
                         className="error"
                         name="password"
@@ -503,12 +506,14 @@ const SignUp = (props) => {
 
                   <div className="col-lg-6 col-md-12 col-12">
                     <div className="rn-form-group">
-                      <Field
+                      <Password
                         autoComplete="off"
-                        type="password"
                         placeholder="Confirm Password"
                         name="confirmPassword"
-                      ></Field>
+                        onChange={(e) => setFieldValue('confirmPassword', e.target.value)}
+                        toggleMask
+                        feedback={false}
+                        unstyled />
                       <ErrorMessage
                         className="error"
                         name="confirmPassword"
