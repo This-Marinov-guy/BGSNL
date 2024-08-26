@@ -204,6 +204,13 @@ hr {
   border-radius: 50%;
 }
 
+.p-datepicker-next,
+.p-datepicker-prev {
+  color: $body-color !important;
+  font-size: medium !important;
+  font-weight: bold !important;
+}
+
 .p-inputnumber-button-up,
 .p-inputnumber-button-down {
   border-radius: 30% !important;
