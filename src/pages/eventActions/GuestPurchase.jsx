@@ -177,6 +177,7 @@ const GuestPurchase = () => {
                       const isGuestForDiscount = selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname));
                       const isGuestForFreeTicket = selectedEvent.freePass && (selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname));
 
+                      // TODO: add functionality for multiple tickets
                       if (!normalTicket && (isGuestForDiscount || isGuestForFreeTicket)) {
                         const checkDiscounts = await sendRequest(`event/check-guest-discount/${eventId}`, "POST", {
                           email: values.email,
