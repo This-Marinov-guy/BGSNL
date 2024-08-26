@@ -50,6 +50,7 @@ const ForgottenPassword = (props) => {
 
     const [step, setStep] = useState(0);
     const [formValues, setFormValues] = useState(initialValues);
+    
     const { loading, sendRequest } = useHttpClient();
 
     const dispatch = useDispatch();
