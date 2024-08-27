@@ -203,7 +203,6 @@ const ForgottenPassword = (props) => {
                             }
                         })} 
                         touchUI
-                        style={{padding: '0'}}
                         />
                     </div>
                     <input
