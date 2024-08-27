@@ -198,7 +198,7 @@ const Root = () => {
 
               {/* Redirect pages */}
 
-              {!isProd() && <Route exact path={`/ticket`} element={<TicketComponent />} />}
+              {!isProd() && <Route exact path={`/test`} element={<TicketComponent />} />}
 
               <Route exact path={`/success`} element={<Success />} />
               <Route exact path={`/donation/success`} element={<SuccessDonation />} />
