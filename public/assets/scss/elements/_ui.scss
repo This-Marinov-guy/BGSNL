@@ -221,6 +221,17 @@ hr {
   scale: 0.8 !important;
 }
 
+/* Hide the scrollbar for all PrimeReact Dialogs */
+.p-dialog .p-dialog-content::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.p-dialog .p-dialog-content {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
 .p-toast-message {
   backdrop-filter: blur(
     2000px
