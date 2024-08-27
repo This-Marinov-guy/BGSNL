@@ -149,7 +149,7 @@ const Root = () => {
 
   useEffect(() => {
     if (toast.current) {
-      toast.current.replace(notification);
+      toast.current.show(notification);
     }
   }, [notificationIndex]);
 
