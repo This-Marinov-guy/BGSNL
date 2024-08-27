@@ -148,12 +148,11 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (toast.current && notificationIndex) {
-        toast.current.show(notification);
-      }
-    }, 50)
-  }, [notificationIndex])
+    if (toast.current) {
+      toast.current.clear();
+      toast.current.show(notification);
+    }
+  }, [notificationIndex]);
 
   if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />
