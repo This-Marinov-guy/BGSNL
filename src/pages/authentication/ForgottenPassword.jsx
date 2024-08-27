@@ -188,6 +188,7 @@ const ForgottenPassword = (props) => {
                                 token: e.value
                             }
                         })} 
+                        integerOnly
                         length={6}
                         className="col-12 mt--10" />
                     <h4 className="col-12 center_div mt--10">Additional Information</h4>
