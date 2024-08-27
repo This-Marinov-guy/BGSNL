@@ -202,7 +202,9 @@ const ForgottenPassword = (props) => {
                                 birth: e.value
                             }
                         })} 
-                        touchUI />
+                        touchUI
+                        style={{padding: '0'}}
+                        />
                     </div>
                     <input
                         type="tel"
