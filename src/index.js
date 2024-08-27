@@ -149,7 +149,10 @@ const Root = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (toast.current && notificationIndex) toast.current.show(notification)
+      if (toast.current && notificationIndex) {
+        toast.current.clear();
+        toast.current.show(notification);
+      }
     }, 50)
   }, [notificationIndex])
 
