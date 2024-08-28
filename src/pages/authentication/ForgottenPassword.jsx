@@ -50,7 +50,7 @@ const ForgottenPassword = (props) => {
 
     const [step, setStep] = useState(0);
     const [formValues, setFormValues] = useState(initialValues);
-    
+
     const { loading, sendRequest } = useHttpClient();
 
     const dispatch = useDispatch();
@@ -138,7 +138,7 @@ const ForgottenPassword = (props) => {
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
                     <p className="col-12">
-                        You are about to start procedure for changing your password!
+                        You are about to start procedure for changing your password! <br/>
                         Please enter your account email and we will send you a verification token!
                     </p>
                     <input
@@ -176,7 +176,7 @@ const ForgottenPassword = (props) => {
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
                     <p>
-                        We have sent an email containing the token. In order to verify it is you, we will need some extra information!
+                        We have sent an email containing the token. <br/> In order to verify it is you, we will need some extra information!
                     </p>
                     <h4 className="col-12 center_div">Verification Token</h4>
                     <InputOtp
@@ -243,7 +243,7 @@ const ForgottenPassword = (props) => {
                     confirmPassword: "",
                 }}
             >
-                {({setFieldValue}) => (
+                {({ setFieldValue }) => (
                     <Form id="form" style={{ padding: "10px 20px" }}>
                         <div className="hor_section">
                             <p>Now it is time to make your new password</p>
@@ -311,7 +311,7 @@ const ForgottenPassword = (props) => {
 
     return (
         <>
-            <Dialog header="Reset your password" visible={visible} style={{ maxWidth: '80vw' }} onHide={onHide}>
+            <Dialog header="Reset your password" visible={visible} style={{ maxWidth: '80vw', textAlign: 'center' }} onHide={onHide}>
                 <Steps model={stepConfig} activeIndex={step} className="mt--20" />
                 {content}
             </Dialog>
