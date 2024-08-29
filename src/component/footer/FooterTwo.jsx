@@ -35,7 +35,7 @@ const FooterTwo = () => {
                 </div>
                 <div className="button-container">
                   <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showDonation())}>Support us</button> 
-                  <Link style={{ height: "73px" }} to="/about">
+                  <Link style={{ height: "73px" }} to="/developers">
                     <button className="rn-button-style--2 rn-btn-reverse-green">Developers</button>
                   </Link>
                 </div>

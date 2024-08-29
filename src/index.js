@@ -27,6 +27,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/information/About"));
+const Developers = lazy(() => import("./pages/information/Developers"));
 const Contact = lazy(() => import("./pages/information/Contact"));
 const Policy = lazy(() => import("./pages/information/Policy"));
 const Error404 = lazy(() => import("./pages/Error404"));
@@ -167,6 +168,7 @@ const Root = () => {
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
               <Route exact path={`/about`} element={<About />} />
+              <Route exact path={`/developers`} element={<Developers />} />
               <Route exact path={`/rules-and-regulations`} element={<Policy />} />
               <Route exact path={`/articles/toni-villa`} element={<Toni />} />
               <Route exact path={`/articles/acedemie-minerva`} element={<Minerva />} />
