@@ -8,10 +8,19 @@ import HeaderTwo from '../../component/header/HeaderTwo';
 import { decryptData } from '../../util/functions/helpers';
 
 const GuestCheck = () => {
+    const navigate = useNavigate();
+
     const searchParams = new URLSearchParams(window.location.search);
     
     const data = searchParams.get('data');
-    const {eventId, name, surname, email} = decryptData(data);
+
+    const decryptedData = decryptData(data);
+
+    if (!decryptData) {
+        navigate('/user');
+    }
+
+    const { eventId, name, surname, email } = decryptedData;
     const count = searchParams.get('count');
 
     const { sendRequest, loading } = useHttpClient();
@@ -21,7 +30,6 @@ const GuestCheck = () => {
     const [message, setMessage] = useState(null);
     const [eventName, setEventName] = useState(null);
 
-    const navigate = useNavigate();
 
     const handleCountChange = (e) => {
         const newCount = e.target.value;
@@ -78,7 +86,7 @@ const GuestCheck = () => {
 
     useEffect(() => {
         if (!(email && name && surname && eventId)) {
-            return navigate('/');
+            return navigate('/user');
         }
 
         updateGuestList();

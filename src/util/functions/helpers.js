@@ -65,9 +65,8 @@ export const encryptData = (data) => {
 
     const stringifiedData = JSON.stringify(data);
     const encryptedData = CryptoJS.AES.encrypt(stringifiedData, process.env.REACT_APP_ENCRYPTION_KEY).toString();
-    const encodedData = encodeURIComponent(encryptedData);
 
-    return encodedData;
+    return encryptedData;
 }
 
 export const decryptData = (string) => {
@@ -75,8 +74,14 @@ export const decryptData = (string) => {
         return {};
     }
 
-    const decryptedBytes = CryptoJS.AES.decrypt(decodeURIComponent(string), process.env.REACT_APP_ENCRYPTION_KEY);
-    const decryptedData = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+    let decryptedData;
+
+    try {
+        const decryptedBytes = CryptoJS.AES.decrypt(decodeURIComponent(string), process.env.REACT_APP_ENCRYPTION_KEY);
+        decryptedData = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
+    } catch (err) {
+        return false;
+    }
 
     return decryptedData;
 }

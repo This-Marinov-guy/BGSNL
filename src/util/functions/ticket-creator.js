@@ -4,15 +4,16 @@ import { resizeFile } from "./helpers";
 export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '') => {
   // Create a canvas element, add the image and text, covert to blob
   //for 1500 x 485 images
+  //for 2000 x 647 images
   const response = await fetch(ticketImage);
   const ticketImageBlob = await response.blob();
-  // const resizedTicketImage = await resizeFile(ticketImageBlob);
+  const resizedTicketImage = await resizeFile(ticketImageBlob);
 
   var canvas = document.createElement("canvas");
   var layout = canvas.getContext("2d");
   let ticket = new Image();
   ticket.crossOrigin = "anonymous"; // This enables CORS on the image
-  ticket.src = URL.createObjectURL(ticketImageBlob);
+  ticket.src = URL.createObjectURL(resizedTicketImage);
 
   await new Promise((resolve, reject) => {
     ticket.onload = function () {
@@ -54,13 +55,13 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
     await QRCode.toCanvas(qrCodeCanvas, qrLink, { width: 200, margin: 0 });
 
     // Calculate the desired size (e.g., 40x40 pixels)
-    const desiredSize = 90;
+    const desiredSize = 80;
 
     // Draw QR Code on the ticket, scaling it down
     layout.rotate(-4.71);
     layout.drawImage(
       qrCodeCanvas,
-      1324,
+      1326,
       canvas.height - 380,
       desiredSize,
       desiredSize
