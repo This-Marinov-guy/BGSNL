@@ -12,6 +12,8 @@ const GuestLayout = ({ children }) => {
 
     const isAuthenticated = (user && !!user.token);
 
+    let navigatePath = "/user";
+
     useEffect(() => {
         if (isAuthenticated) {
             dispatch(showNotification({
@@ -19,11 +21,11 @@ const GuestLayout = ({ children }) => {
                 detail: 'You are already logged into your account - please log out and then proceed to this page!'
             }));
 
-            return navigate('/user');
+            navigatePath = '/user';
         }
     }, []);
 
-    return !isAuthenticated ? children : <Navigate to="/user" />;
+    return !isAuthenticated ? children : <Navigate to={navigatePath} />;
 };
 
 export default GuestLayout

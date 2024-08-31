@@ -16,6 +16,8 @@ const AuthLayout = ({ children, access = [] }) => {
 
     const isAuthenticated = (user && !!user.token) || localStorage.getItem('userData');
 
+    let navigatePath = "/login";
+
     useEffect(() => {
         if (!isAuthenticated) {
             sessionStorage.setItem('prevUrl', routePath);
@@ -24,7 +26,7 @@ const AuthLayout = ({ children, access = [] }) => {
                 detail: 'Please log in your account to proceed to the page!'
             }));
 
-            return navigate('/login');
+            navigatePath = "/login";
         }
 
         if (access && access.length > 0 && !checkAuthorization(user.token, access)) {
@@ -33,11 +35,11 @@ const AuthLayout = ({ children, access = [] }) => {
                 detail: 'You do not have access to this page'
             }));
 
-            return navigate('/user');
+            navigatePath = "/user";
         }
     }, [])
 
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    return isAuthenticated ? children : <Navigate to={navigatePath} />;
 };
 
 export default AuthLayout
