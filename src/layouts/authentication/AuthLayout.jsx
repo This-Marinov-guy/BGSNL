@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
@@ -16,26 +16,24 @@ const AuthLayout = ({ children, access = [] }) => {
 
     const isAuthenticated = (user && !!user.token) || localStorage.getItem('userData');
 
-    useEffect(() => {
-        if (!isAuthenticated) {
-            sessionStorage.setItem('prevUrl', routePath);
-            dispatch(showNotification({
-                severity: 'warn',
-                detail: 'Please log in your account to proceed to the page!'
-            }));
+    if (!isAuthenticated) {
+        sessionStorage.setItem('prevUrl', routePath);
+        dispatch(showNotification({
+            severity: 'warn',
+            detail: 'Please log in your account to proceed to the page!'
+        }));
 
-            return navigate('/login');
-        }
+        return navigate('/login');
+    }
 
-        if (access && access.length > 0 && !checkAuthorization(user.token, access)) {
-            dispatch(showNotification({
-                severity: 'error',
-                detail: 'You do not have access to this page'
-            }));
+    if (access && access.length > 0 && !checkAuthorization(user.token, access)) {
+        dispatch(showNotification({
+            severity: 'error',
+            detail: 'You do not have access to this page'
+        }));
 
-            return navigate('/user');
-        }
-    }, []);
+        return navigate('/user');
+    }
 
     return isAuthenticated ? children : <Navigate to="/login" />;
 };
