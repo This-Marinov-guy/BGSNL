@@ -253,23 +253,19 @@ const Root = () => {
               </Fragment>
 
               {/* Un-auth pages */}
-              <Fragment>
+              {!user?.token && <Fragment>
                 <Route exact path={`/login`}
                   element={
-                    <GuestLayout>
                       <LogIn />
-                    </GuestLayout>
                   }
                 />
                 <Route exact path={`/:region?/signup`}
                   element={
-                    <GuestLayout>
                       <SignUp />
-                    </GuestLayout>
                   }
                 />
                 {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}
-              </Fragment>
+              </Fragment>}
 
               <Route exact path="/:region?" element={<Home />} />
               <Route path="*" element={<Error404 />} />

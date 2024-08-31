@@ -17,7 +17,6 @@ const AuthLayout = ({ children, access = [] }) => {
     const isAuthenticated = (user && !!user.token) || localStorage.getItem('userData');
 
     let navigatePath = "/login";
-
     useEffect(() => {
         if (!isAuthenticated) {
             sessionStorage.setItem('prevUrl', routePath);
@@ -27,9 +26,7 @@ const AuthLayout = ({ children, access = [] }) => {
             }));
 
             navigatePath = "/login";
-        }
-
-        if (access && access.length > 0 && !checkAuthorization(user.token, access)) {
+        } else if (access && access.length > 0 && !checkAuthorization(user.token, access)) {
             dispatch(showNotification({
                 severity: 'error',
                 detail: 'You do not have access to this page'
