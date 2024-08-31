@@ -83,7 +83,7 @@ export const decryptData = (string) => {
         return false;
     }
 
-    return decryptedData;
+    return {};
 }
 
 export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = false) => {

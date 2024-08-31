@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
 import { showNotification } from '../../redux/notification';
-import { checkAuthorization, decodeJWT } from '../../util/functions/authorization';
+import { checkAuthorization } from '../../util/functions/authorization';
 
 const AuthLayout = ({ children, access = [] }) => {
-    const navigate = useNavigate();
     const location = useLocation();
     const routePath = location.pathname + location.search ?? '';
 
@@ -17,6 +16,7 @@ const AuthLayout = ({ children, access = [] }) => {
     const isAuthenticated = (user && !!user.token) || localStorage.getItem('userData');
 
     let navigatePath = "/login";
+
     useEffect(() => {
         if (!isAuthenticated) {
             sessionStorage.setItem('prevUrl', routePath);

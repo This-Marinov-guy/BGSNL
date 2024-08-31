@@ -75,7 +75,7 @@ const EventDashboard = lazy(() =>
 const GuestPurchase = lazy(() =>
   import("./pages/eventActions/GuestPurchase")
 );
-const GuestCheck = lazy(() => import("./pages/redirects/GuestCheck"));
+const GuestCheck = lazy(() => import("./pages/redirects/CheckTicket"));
 const Success = lazy(() => import("./pages/redirects/Success"));
 const SuccessDonation = lazy(() => import("./pages/redirects/SuccessDonation"));
 const Fail = lazy(() => import("./pages/redirects/Fail"));
@@ -148,8 +148,10 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
-    if (toast.current) {
-      toast.current.show(notification);
+    if (toast.current && notification.severity) {
+      setTimeout(() => {
+        toast.current.show(notification);
+      }, 50)
     }
   }, [notificationIndex]);
 
@@ -164,7 +166,7 @@ const Root = () => {
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
             <BirthdayModal />
-            <Toast ref={toast} position="top-center" life={8000}/>
+            <Toast ref={toast} position="top-center" life={8000} />
             <Routes>
               {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
@@ -256,12 +258,12 @@ const Root = () => {
               {!user?.token && <Fragment>
                 <Route exact path={`/login`}
                   element={
-                      <LogIn />
+                    <LogIn />
                   }
                 />
                 <Route exact path={`/:region?/signup`}
                   element={
-                      <SignUp />
+                    <SignUp />
                   }
                 />
                 {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}

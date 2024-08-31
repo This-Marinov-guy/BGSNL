@@ -19,16 +19,6 @@ const GuestCheck = () => {
 
     const decryptedData = decryptData(data);
 
-    if (!decryptData) {
-        console.log('rree')
-        dispatch(showNotification({
-            severity: 'warning',
-            detail: 'It looks like the link was invalid!'
-        }));
-
-        navigate('/user');
-    }
-
     const { eventId, name, surname, email } = decryptedData;
     const count = searchParams.get('count');
 
@@ -96,7 +86,7 @@ const GuestCheck = () => {
     useEffect(() => {
         if (!(email && name && surname && eventId)) {
             dispatch(showNotification({
-                severity: 'warning',
+                severity: 'warn',
                 detail: 'It looks like the link was invalid!'
             }));
 
