@@ -10,6 +10,7 @@ import { Password } from 'primereact/password';
 import Loader from "../../elements/ui/loading/Loader";
 import { showNotification } from "../../redux/notification";
 import { Calendar } from 'primereact/calendar';
+import { convertToUTC } from "../../util/functions/date";
 
 const initialValues = {
     email: "",
@@ -48,7 +49,7 @@ const schema = yup.object().shape({
 const ForgottenPassword = (props) => {
     const { visible, onHide } = props;
 
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(1);
     const [formValues, setFormValues] = useState(initialValues);
 
     const { loading, sendRequest } = useHttpClient();
@@ -92,12 +93,7 @@ const ForgottenPassword = (props) => {
             const responseData = await sendRequest(
                 "user/verify-token",
                 "POST",
-                {
-                    token: formValues.token,
-                    email: formValues.email,
-                    phone: formValues.phone,
-                    birth: formValues.birth,
-                }
+                formValues
             );
 
             if (responseData.status) {
@@ -138,7 +134,7 @@ const ForgottenPassword = (props) => {
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
                     <p className="col-12">
-                        You are about to start procedure for changing your password! <br/>
+                        You are about to start procedure for changing your password! <br />
                         Please enter your account email and we will send you a verification token!
                     </p>
                     <input
@@ -176,7 +172,7 @@ const ForgottenPassword = (props) => {
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
                     <p>
-                        We have sent an email containing the token. <br/> In order to verify it is you, we will need some extra information!
+                        We have sent an email containing the token. <br /> In order to verify it is you, we will need some extra information!
                     </p>
                     <h4 className="col-12 center_div">Verification Token</h4>
                     <InputOtp
@@ -187,22 +183,23 @@ const ForgottenPassword = (props) => {
                                 ...prevState,
                                 token: e.value
                             }
-                        })} 
+                        })}
                         integerOnly
                         length={6}
                         className="col-12 mt--10" />
                     <h4 className="col-12 center_div mt--10">Additional Information</h4>
-                    <div className="col-12">
-                        <Calendar 
-                        value={formValues.birth}
-                        placeholder="Enter birth date"
-                         onChange={(e) => setFormValues(prevState => {
-                            return {
-                                ...prevState,
-                                birth: e.value
-                            }
-                        })} 
-                        touchUI
+                    <div className="col-12" style={{ padding: '0' }}>
+                        <Calendar
+                            value={formValues.birth}
+                            placeholder="Enter birth date"
+                            onChange={(e) => setFormValues(prevState => {
+                                return {
+                                    ...prevState,
+                                    birth: e.value
+                                }
+                            })}
+                            touchUI
+                            dateFormat="dd/mm/yy"
                         />
                     </div>
                     <input
