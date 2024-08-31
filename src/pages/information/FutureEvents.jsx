@@ -25,7 +25,11 @@ const FutureEventsContent = ({ displayAll }) => {
   if (displayAll) {
     events = useSelector(selectEvents);
   } else {
-    events = useSelector(selectEvents)[region].filter(event => event.hidden === false);
+    events = useSelector(selectEvents)[region];
+
+    if (events && events.length) {
+      events = events.filter(event => event.hidden === false)
+    }
   }
 
   useEffect(() => {

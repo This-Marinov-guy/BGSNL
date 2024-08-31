@@ -6,9 +6,12 @@ import PageLoading from '../../elements/ui/loading/PageLoading';
 import { useNavigate, useParams } from 'react-router-dom';
 import HeaderTwo from '../../component/header/HeaderTwo';
 import { decryptData } from '../../util/functions/helpers';
+import { useDispatch } from 'react-redux';
+import { showNotification } from '../../redux/notification';
 
 const GuestCheck = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const searchParams = new URLSearchParams(window.location.search);
     
@@ -17,6 +20,12 @@ const GuestCheck = () => {
     const decryptedData = decryptData(data);
 
     if (!decryptData) {
+        console.log('rree')
+        dispatch(showNotification({
+            severity: 'warning',
+            detail: 'It looks like the link was invalid!'
+        }));
+
         navigate('/user');
     }
 
@@ -86,6 +95,11 @@ const GuestCheck = () => {
 
     useEffect(() => {
         if (!(email && name && surname && eventId)) {
+            dispatch(showNotification({
+                severity: 'warning',
+                detail: 'It looks like the link was invalid!'
+            }));
+
             return navigate('/user');
         }
 

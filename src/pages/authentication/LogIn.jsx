@@ -33,7 +33,6 @@ const Login = () => {
     });
   };
 
-
   const loginHandler = async (event) => {
     event.preventDefault();
     try {

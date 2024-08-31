@@ -12,14 +12,16 @@ const GuestLayout = ({ children }) => {
 
     const isAuthenticated = (user && !!user.token);
 
-    if (isAuthenticated) {
-        dispatch(showNotification({
-            severity: 'warn',
-            detail: 'You are already logged into your account - please log out and then proceed to this page!'
-        }));
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(showNotification({
+                severity: 'warn',
+                detail: 'You are already logged into your account - please log out and then proceed to this page!'
+            }));
 
-        return navigate('/user');
-    }
+            return navigate('/user');
+        }
+    }, []);
 
     return !isAuthenticated ? children : <Navigate to="/user" />;
 };
