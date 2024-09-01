@@ -166,23 +166,23 @@ const User = (props) => {
                 <p>As a BGSNL member you get special access to our recommended positions. Although public, you get some special credit coming from the organization. Check the section frequently as we aim to add exclusive internships for our members only!</p>
                 {INTERNSHIPS.map((i, index) => {
                   return <div key={index} className="row mt--20">
-                    <div className="col-lg-6 col-12 reading">
-                      <h3>Company: <span>{i.company}</span></h3>
-                      <h3>Specialty: <span>{i.specialty}</span></h3>
-                      <h3>Location: <span>{i.location}</span></h3>
-                      <h3>Duration: <span>{i.duration}</span></h3>
+                    <div className="col-lg-8 col-md-6 col-12 reading">
+                      <h3>Company: </h3><p>{i.company}</p>
+                      <h3>Specialty: </h3><p>{i.specialty}</p>
+                      <h3>Location: </h3><p>{i.location}</p>
+                      <h3>Duration: </h3><p>{i.duration}</p>
                       {i.bonuses.length > 0 &&
-                        <h3>Bonuses: {i.bonuses.map((b, index) => {
-                          return <span key={index}> {b} |</span>
-                        })}</h3>}
-                      {i.requirements.length > 0 &&
-                        <h3>Requirements: {i.requirements.map((r, index) => {
-                          return <span key={index}> {r} |</span>
-                        })}</h3>}
-                      <h3>Description: <span>{i.description}</span></h3>
+                      <>
+                        <h3>Bonuses: </h3><p>{i.bonuses.join(' | ')}</p>
+                      </>}
+
+                      {i.requirements.length > 0 && <>
+                        <h3>Requirements: </h3><p>{i.requirements.join(' | ')}</p>
+                      </>}
+                     <h3>Description: </h3><p>{i.description}</p>
                     </div>
-                    <div className="col-lg-6 col-12" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <img src={i.logo} className={i.logoClass ?? ''} style={{ maxWidth: '300px' }} alt='Company Logo'></img>
+                    <div className="col-lg-4 col-md-6 col-12" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <img src={i.logo} className={'responsive_img ' + i.logoClass ?? ''} style={{ maxWidth: '300px' }} alt='Company Logo'></img>
                       <a href={i.link} target="_blank" className="mt--20" style={{ fontSize: '30px' }}>
                         <span>Link to internship</span>
                         <FiArrowRight />

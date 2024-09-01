@@ -576,3 +576,15 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+.responsive_img {
+  height: auto;     
+  width: auto;      
+  object-fit: contain; 
+  @media #{$md-layout} {
+    max-height: 5em;
+  }
+  @media #{$sm-layout} {
+    max-height: 3em;
+  }
+}
