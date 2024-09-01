@@ -182,7 +182,7 @@ const User = (props) => {
                       <h3>Description: <span>{i.description}</span></h3>
                     </div>
                     <div className="col-lg-6 col-12" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <img src={i.logo} style={{ maxWidth: '300px' }} alt='Company Logo'></img>
+                      <img src={i.logo} className={i.logoClass ?? ''} style={{ maxWidth: '300px' }} alt='Company Logo'></img>
                       <a href={i.link} target="_blank" className="mt--20" style={{ fontSize: '30px' }}>
                         <span>Link to internship</span>
                         <FiArrowRight />

@@ -13,7 +13,7 @@ const UserCard = ({ user }) => {
     return (
         <div className="service team_member_border-5">
             <div className="content">
-                <h2>Greetings, {user.name}!</h2>
+                <h3>Greetings, {user.name}!</h3>
                 <div className="hor_section mb--40">
                     <p className="mt--20" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </p>
                     <FiEdit
