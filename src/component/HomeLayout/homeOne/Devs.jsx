@@ -55,10 +55,19 @@ const Devs = () => {
               </div>
               {/* Team Members */}
               <div className="col-12">
-                <div className="team_member_container d-flex flex-wrap">
+                <div className="team_member_container d-flex flex-wrap justify-content-start">
                   {teamMembers.length > 0 ? (
                     teamMembers.map((member) => (
-                      <div className="team-member-wrapper mb-4" key={member.id}>
+                      <div
+                        className="team-member-wrapper mb-4 d-flex"
+                        key={member.id}
+                        style={{
+                          width: '200px',
+                          maxWidth: '100%',
+                          marginRight: '20px',
+                          marginLeft: '20px',
+                        }}
+                      >
                         <TeamMember member={member} />
                       </div>
                     ))
