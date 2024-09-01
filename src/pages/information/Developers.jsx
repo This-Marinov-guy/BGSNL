@@ -1,9 +1,9 @@
 import React from "react";
 import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
-import DevInfo from "../../component/HomeLayout/homeOne/DevInfo";
+import Devs from "../../component/HomeLayout/homeOne/Devs";
 import ScrollToTop from "react-scroll-up";
-import { FiCheckCircle, FiChevronUp } from "react-icons/fi";
+import { FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
 
@@ -21,7 +21,7 @@ const Developers = React.memo(() => {
       {/* End Breadcrump Area */}
 
       {/* Start About Area  */}
-      <DevInfo />
+      <Devs />
       {/* End About Area  */}
 
       {/* Start Back To Top */}
