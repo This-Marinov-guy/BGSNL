@@ -402,7 +402,7 @@ const GuestPurchase = () => {
                             type="submit"
                             className="rn-button-style--2 rn-btn-reverse-green mt--20"
                           >
-                            {loading ? <Loader /> : <span>Proceed to paying</span>}
+                            {loading ? <Loader /> : <span>Payment</span>}
                           </button>
                         </WithBackBtn>
                         {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
