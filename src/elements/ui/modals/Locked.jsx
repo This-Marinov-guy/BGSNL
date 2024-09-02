@@ -1,92 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHttpClient } from "../../../hooks/http-hook";
 import Loader from "../loading/Loader";
 import { Link } from "react-router-dom";
 import ModalWindow from "./ModalWindow";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SubscriptionManage from "../buttons/SubscriptionManage";
-import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../../util/defines/REGIONS_AUTH_CONFIG";
+import { REGIONS_MEMBERSHIP_SPECIFICS, findMembershipByProperty } from "../../../util/defines/REGIONS_AUTH_CONFIG";
 import { showNotification } from "../../../redux/notification";
+import { selectUser } from "../../../redux/user";
+import { decodeJWT } from "../../../util/functions/authorization";
+import { isProd } from "../../../util/functions/helpers";
 
-const Locked = (props) => {
+const Locked = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const { loading, sendRequest } = useHttpClient();
 
-  const [membershipIndex, setMembershipIndex] = useState(0)
+  const user = useSelector(selectUser);
+  const userId = decodeJWT(user.token).userId;
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!user.token) {
+      sessionStorage.setItem('prevUrl', routePath);
+      return navigate('/login');
+    }
+
+    const fetchCurrentUser = async () => {
+      try {
+        const responseData = await sendRequest(`user/${userId}`);
+        setCurrentUser(responseData.user);
+        setIsLoaded(true);
+      } catch (err) {
+      }
+    };
+    fetchCurrentUser();
+  }, []);
 
   const handleManage = async () => {
 
   }
 
-  const handleUnlock = async (index) => {
-    if (!props.user.id) {
-      dispatch(showNotification({severity: 'error', detail: "User cannot be found, please try again"}));
+  const handleCreateSubscription = async (id = 1) => {
+    const membership = findMembershipByProperty('id', id);
+
+    if (!userId || !membership.renewItemId || !membership.period) {
+      dispatch(showNotification({ severity: 'error', detail: "There was an error with your request - please contact support!" }));
       return;
     }
-    setMembershipIndex(index)
-    if (REGIONS_MEMBERSHIP_SPECIFICS[membershipIndex].period == props.user.subscription.period) {
-      try {
-        const responseData = await sendRequest(
-          "payment/customer-portal",
-          "POST",
-          {
-            customerId: props.user.subscription.customerId,
-            url: window.location.href,
-            userId: props.user.id
-          },
-        );
-        if (responseData.url) {
-          window.location.assign(responseData.url);
-        }
-      } catch (err) { }
-    }
-    else {
-      try {
-        const responseData = await sendRequest(
-          "payment/subscription-no-file",
-          "POST",
-          {
-            itemId: REGIONS_MEMBERSHIP_SPECIFICS[membershipIndex].renewItemId,
-            period: REGIONS_MEMBERSHIP_SPECIFICS[membershipIndex].period,
-            origin_url: window.location.origin,
-            method: "unlock_account",
-            userId: props.user.id,
-          },
-        );
-        if (responseData.url) {
-          window.location.assign(responseData.url);
-        }
-      } catch (err) { }
-    }
+
+    try {
+      const responseData = await sendRequest(
+        "payment/subscription-no-file",
+        "POST",
+        {
+          itemId: membership.renewItemId,
+          period: membership.period,
+          origin_url: window.location.origin,
+          method: "unlock_account",
+          userId: userId,
+        },
+      );
+      if (responseData.url) {
+        window.location.assign(responseData.url);
+      }
+    } catch (err) {
+      !isProd() && console.log(err);
+     }
   };
 
+  if (!isLoaded) {
+    return <Loader />
+  }
+
   return (
-    <ModalWindow static="static" show={props.show} freeze>
+    <ModalWindow static="static" show={currentUser.status === 'locked'} freeze>
       <div style={{ padding: "40px" }} className="center_section">
         <h2>
-          {props.case === "locked"
+          {currentUser.status === "locked"
             ? "Your account is locked!"
             : "Your account is suspended!"}
         </h2>
         <p className="center_text">
-          {props.case === "locked"
+          {currentUser.status === "locked"
             ? "To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account."
             : "We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: bgsn.tech.nl@gmail.com"}
         </p>
-        {props.user.subscription && <SubscriptionManage userId={props.user.id} subscription={props.user.subscription} />}
-        {props.case === "locked" && (REGIONS_MEMBERSHIP_SPECIFICS.length > 1 ?
-          <ul className="brand-style-2">
+        {currentUser.status === "locked" && (REGIONS_MEMBERSHIP_SPECIFICS.length > 1 ?
+          <div className="center_div_col" style={{ gap: '15px' }}>
             {REGIONS_MEMBERSHIP_SPECIFICS.map((option, index) => {
-              return <li key={index} >
-                <button disabled={loading}
-                  onClick={() => handleUnlock(index)}
-                  className={'rn-button-style--2 rn-btn-reverse-green'}>Extend with {option.period} months</button>
-              </li>
+              return <button
+                key={index}
+                disabled={loading}
+                onClick={() => handleCreateSubscription(option.id)}
+                className={'rn-button-style--2 rn-btn-reverse-green'}>Extend with {option.period} months</button>
             })}
-          </ul> : <button
+          </div> : <button
             disabled={loading}
-            onClick={handleUnlock}
+            onClick={handleCreateSubscription}
             className="rn-button-style--2 rn-btn-reverse-green mt--40"
           >
             {loading ? <Loader /> : <span>Proceed to paying</span>}

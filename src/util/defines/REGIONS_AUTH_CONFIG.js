@@ -3,6 +3,7 @@ import { FiUser, FiUserPlus } from "react-icons/fi";
 
 export const REGIONS_MEMBERSHIP_SPECIFICS = [
     {
+        id: 1,
         title: '6-months Member',
         icon: <FiUser />,
         description: '',
@@ -12,6 +13,7 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
         period: 6
     },
     {
+        id: 2,
         title: 'Annual Member',
         icon: <FiUserPlus />,
         description: 'Be part of the society. Pay yearly for the journey with benefits such as:',
@@ -21,3 +23,7 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
         period: 12
     }
 ]
+
+export function findMembershipByProperty(property, value) {
+    return REGIONS_MEMBERSHIP_SPECIFICS.find(item => item[property] === value);
+}
