@@ -78,6 +78,27 @@ const Devs = () => {
               </div>
             </div>
           </div>
+          {/* Open Source bit */}
+          <div className="container mt-5">
+            <div className="row row--35 align-items-center justify-content-center">
+              <div className="col-lg-7 col-md-12">
+                <div className="about-inner inner">
+                  <div className="about-us-list">
+                    <p className="description">
+                      We are an open-source project, feel free to contribute to our cause.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <a href="https://github.com/This-Marinov-guy/BGSNL" target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/assets/images/developers/github.png"
+                  alt="Github"
+                  style={{ width: "60px", height: "60px" }}
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </React.Fragment>
