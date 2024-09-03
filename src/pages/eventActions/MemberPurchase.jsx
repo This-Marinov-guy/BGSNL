@@ -155,7 +155,6 @@ const MemberPurchase = () => {
                   forceStartLoading();
 
                   let allowDiscount = false;
-                  // TODO: add active members to the check
                   const isActiveMember = checkAuthorization(user.token, ACCESS_3);
                   const isMemberForDiscount = selectedEvent.activeMemberPriceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
                   const isMemberForFreeTicket = selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
@@ -183,7 +182,9 @@ const MemberPurchase = () => {
                     email: currentUser.email,
                   });
 
-                  const qrCode = `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}`;
+                  // TODO: temp fix untill all events have it
+                  const hasQR = selectedEvent.hasOwnProperty('ticketQR') ? selectedEvent.ticketQR : true;
+                  const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}` : '';
 
                   const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
 
@@ -264,13 +265,13 @@ const MemberPurchase = () => {
                           : selectedEvent.time}
                       </p>
                       <p>Address: {selectedEvent.location}</p>
-                      <p>Price: {estimatePriceByEvent(selectedEvent, {...currentUser, token: user.token ?? ''}, normalTicket)}</p>
+                      <p>Price: {estimatePriceByEvent(selectedEvent, { ...currentUser, token: user.token ?? '' }, normalTicket)}</p>
                     </div>
                   </div>
                   {selectedEvent.extraInputsForm.length > 0 && <div className="col-lg-6 col-md-12 col-12 row container mt--40">
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>}
-                  <div style={{maxWidth: '10em'}}>
+                  <div style={{ maxWidth: '10em' }}>
                     <WithBackBtn>
                       <button
                         disabled={loading}
@@ -280,7 +281,7 @@ const MemberPurchase = () => {
                         {loading ? <Loader /> : <span>Proceed to paying</span>}
                       </button>
                     </WithBackBtn>
-                  {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
+                    {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
                   </div>
                   <p className="information mt--40">
                     The information for purchasing this ticket will be taken from your

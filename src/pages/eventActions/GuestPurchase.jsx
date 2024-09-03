@@ -205,7 +205,10 @@ const GuestPurchase = () => {
                         email: values.email,
                       });
 
-                      const qrCode = `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}&count=${quantity}`;
+                      // TODO: temp fix untill all events have it
+                      const hasQR = selectedEvent.hasOwnProperty('ticketQR') ? selectedEvent.ticketQR : true;
+                      const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}&count=${quantity}` : '';
+                      
                       const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, values.name, values.surname, selectedEvent.ticketColor, qrCode);
 
                       // formData

@@ -265,6 +265,7 @@ const EventForm = (props) => {
                     images: initialData?.images ?? [],
                     ticketImg: initialData?.ticketImg ?? null,
                     ticketColor: initialData?.ticketColor ?? '#faf9f6',
+                    ticketQR: initialData?.ticketQR ?? 'true',
                     poster: initialData?.poster ?? null,
                     bgImage: initialData?.bgImage ?? 1,
                     bgImageExtra: initialData?.bgImageExtra ?? null,
@@ -552,17 +553,32 @@ const EventForm = (props) => {
                                     name="ticketImg"
                                     component="div"
                                 />
-                                <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
-                                    <h5 className="center_text">Name on ticket color</h5>
-                                    <div className="center_div" style={{ gap: '50px' }}>
-                                        <h5 className="center_div">
-                                            <Field type="radio" name="ticketColor" value="#faf9f6" />
-                                            Light
-                                        </h5>
-                                        <h5 className="center_div">
-                                            <Field type="radio" name="ticketColor" value="#272528" />
-                                            Dark
-                                        </h5>
+                                <div className="row">
+                                    <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
+                                        <h5 className="center_text">Name on ticket color</h5>
+                                        <div className="center_div" style={{ gap: '50px' }}>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="ticketColor" value="#faf9f6" />
+                                                Light
+                                            </h5>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="ticketColor" value="#272528" />
+                                                Dark
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
+                                        <h5 className="center_text">With QR</h5>
+                                        <div className="center_div" style={{ gap: '50px' }}>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="ticketQR" value={'true'}/>
+                                                Yes
+                                            </h5>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="ticketQR" value={'false'} />
+                                                No
+                                            </h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

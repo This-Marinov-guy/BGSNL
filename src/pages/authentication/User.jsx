@@ -65,7 +65,7 @@ const User = (props) => {
     const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/${userId}`);
+        const responseData = await sendRequest(`user/${userId}?withTickets=${true}`);
         setCurrentUser(responseData.user);
         setHasBirthday(responseData.celebrate);
       } catch (err) {
@@ -124,7 +124,7 @@ const User = (props) => {
           <div className="col-lg-12">
             <div className="mb--30 mb_sm--0">
               <h2 className="title mb--40">Ticket Collection</h2>
-              {(currentUser && currentUser.tickets.length > 0) ? (
+              {(currentUser && currentUser.tickets?.length > 0) ? (
                 <div className="row">
                   {currentUser.tickets.map((ticket, i) => (
                     <div className="col-lg-4 col-md-6 col-12" key={i}>
