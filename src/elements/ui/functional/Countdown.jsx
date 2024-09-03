@@ -1,17 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Countdown = (props) => {
     const [remainingTime, setRemainingTime] = useState(calculateTimeRemaining());
 
     function calculateTimeRemaining() {
-        const now = new Date().getTime();
-        let targetTime = new Date(props.targetTime);
-        targetTime.setHours(targetTime.getHours() - 2);
-        const updatedTime = targetTime.getTime();
-
-        const timeDifference = updatedTime - now;
-
-        return Math.max(0, timeDifference);
+        const now = new Date().getTime(); // Local time in milliseconds
+        const targetTime = new Date(props.targetTime)
+        
+        const timeDifference = targetTime - now; // Difference in milliseconds
+        return Math.max(0, timeDifference); // Ensure non-negative value
     }
 
     useEffect(() => {
@@ -31,7 +28,7 @@ const Countdown = (props) => {
 
     function formatTime(milliseconds) {
         if (milliseconds <= 0) {
-            return;
+            return '';
         }
 
         const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -43,11 +40,11 @@ const Countdown = (props) => {
 
     if (remainingTime <= 0) {
         props.setEventClosed(true);
-        return <h3 style={{ color: 'red', marginTop:'10px' }}>Tickets are all sold out!</h3>
+        return <h3 style={{ color: 'red', marginTop: '10px' }}>Tickets are all sold out!</h3>;
     } else if (remainingTime <= 24 * 60 * 60 * 1000) {
-        return <h3>Ticket selling online closes in: {formatTime(remainingTime)}</h3>
+        return <h3>Ticket selling online closes in: {formatTime(remainingTime)}</h3>;
     } else {
-        return
+        return null;
     }
 };
 
