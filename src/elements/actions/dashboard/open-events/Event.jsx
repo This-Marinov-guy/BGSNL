@@ -17,7 +17,8 @@ const Event = (props) => {
         price = props.event.entry + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.memberEntry) + (props.event.activeMemberPrice ? ' / ' + props.event.activeMemberPrice : '')
     }
 
-    const expired = false;
+    const todayValue = (new Date()).valueOf();
+    const expired = (new Date(props.event.date).valueOf() < todayValue) || (new Date(props.event.ticketTimer).valueOf() < todayValue);
 
     return (
         <>
