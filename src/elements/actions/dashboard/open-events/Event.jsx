@@ -17,7 +17,7 @@ const Event = (props) => {
         price = props.event.entry + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.memberEntry) + (props.event.activeMemberPrice ? ' / ' + props.event.activeMemberPrice : '')
     }
 
-    const expired = dateConvertor(props.event.date, props.event.time, true) < new Date().valueOf;
+    const expired = false;
 
     return (
         <>

@@ -70,7 +70,7 @@ const EventModal = (props) => {
     return (
         <>
             <ConfirmCenterModal text={loading ? <Loader /> : 'Deleting an event is an irreversible action! Are you sure you want to delete it?'} onConfirm={onDelete} visible={visible} setVisible={setVisible} />
-            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format("Do MMMM")}, ${props.event.time}`}
+            <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format(MOMENT_DATE_TIME)}`}
                 visible={props.show} style={{ maxWidth: '90%' }}
                 onHide={() => props.setShow(false)}
                 dismissableMask>
