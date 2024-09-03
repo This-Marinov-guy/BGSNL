@@ -1,17 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Col } from "react-bootstrap";
 import ImageFb from "../../../elements/ui/media/ImageFb";
 import TypewriterEffect from '../../../elements/ui/TypewriterEffect';
-import TeamMember from '../../../pages/information/devteam/DevTeamMembers';
-import teamMembersData from '../../../pages/information/devteam/TeamMemberInfo'; // Ensure this is correctly imported
+import TeamMember from '../../../elements/devteam/DevTeamMembers';
+
+const teamMembers = [
+  {
+    id: 1,
+    name: "Vladislav Marinov",
+    title: "Web Developer",
+    imgSrc: "/assets/images/developers/vladislav.png",
+    socialLinks: [
+      {
+        platform: "linkedin",
+        url: "https://www.linkedin.com/in/vladislav-marinov-122455208/",
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "Presiyan Penkov",
+    title: "Software Developer",
+    imgSrc: "/assets/images/developers/presiyan.png",
+    socialLinks: [
+      {
+        platform: "linkedin",
+        url: "https://www.linkedin.com/in/presiyan-penkov-6a7959299/",
+      },
+    ],
+  }
+];
 
 const Devs = () => {
-  const [teamMembers, setTeamMembers] = useState([]);
-
-  useEffect(() => {
-    setTeamMembers(teamMembersData || []);
-  }, []);
-
   let teamSize = teamMembers.length;
   let columnSize = Math.floor(teamSize / 12);
 
@@ -20,7 +40,6 @@ const Devs = () => {
       <div className="mb--20">
         <div className="container mt-5">
           <div className="row row--35 align-items-center">
-            {/* About the team section */}
             <div className="col-lg-7 col-md-12 mb-5">
               <div className="about-inner inner">
                 <div className="section-title mt-3">
@@ -35,7 +54,6 @@ const Devs = () => {
                 </div>
               </div>
             </div>
-            {/* Image Section */}
             <div className="col-lg-5 col-md-12 mb-5">
               <div className="thumbnail">
                 <ImageFb
@@ -46,7 +64,6 @@ const Devs = () => {
               </div>
             </div>
           </div>
-          {/* Our Team Section */}
           <div className="container mt-5">
             <div className="row row--35 align-items-center">
               <div className="col-lg-7 col-md-12">

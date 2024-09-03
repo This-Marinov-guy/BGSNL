@@ -23,6 +23,7 @@ const TeamMember = ({ member }) => {
         {member.socialLinks.map((link, index) => (
           <li key={index} className="mx-2">
             <a href={link.url} target="_blank" rel="noopener noreferrer">
+            {/* TODO: maybe add other images for other platforms? */}
               <img
                 src="/assets/images/developers/linkedin.png"
                 alt="LinkedIn"
