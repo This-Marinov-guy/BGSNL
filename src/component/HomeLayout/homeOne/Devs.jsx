@@ -97,21 +97,19 @@ const Devs = () => {
               </div>
 
 
-              <div className="col-lg-6 col-12 center_div_col">
-                <a href="https://github.com/This-Marinov-guy/BGSNL" target="_blank" rel="noopener noreferrer">
-                  <img
-                    src="/assets/images/developers/github.png"
-                    alt="Github"
-                    style={{ width: "60px", height: "60px" }}
-                  />
-                </a>
+              <a href="https://github.com/This-Marinov-guy/BGSNL" target="_blank" rel="noopener noreferrer" className="col-lg-6 col-12 center_div_col">
+                <img
+                  src="/assets/images/developers/github.png"
+                  alt="Github"
+                  style={{ width: "60px", height: "60px" }}
+                />
                 <div>
                   <h3 className="description mt--10">
                     We are an open-source project, feel free to contribute and gain your spot here.
                   </h3>
-                  <small>*At least the README.md file please</small>
+                  <small className="information">*At least the README.md file please</small>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>
