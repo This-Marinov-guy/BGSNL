@@ -120,7 +120,6 @@ const EventForm = (props) => {
         title: yup.string().required("Title is required"),
         description: yup.string().required("Description is required"),
         date: yup.string().required("Date is required"),
-        time: yup.string().required("Time is required"),
         location: yup.string().required("Location is required"),
         ticketTimer: yup.string().required("Ticket Timer is required"),
         ticketLimit: yup.number().required("Ticket Limit is required").min(1, 'Must be greater than 0'),
@@ -242,11 +241,10 @@ const EventForm = (props) => {
                     region: initialData?.region ?? '',
                     title: initialData?.title ?? '',
                     description: initialData?.description ?? '',
-                    date: initialData?.date ? new Date(initialData.date) : '',
-                    time: initialData?.time ?? '',
+                    date: initialData?.date ?? '',
                     location: initialData?.location ?? '',
                     ticketLimit: initialData?.ticketLimit ?? '',
-                    ticketTimer: initialData?.ticketTimer ? new Date(initialData.ticketTimer) : '',
+                    ticketTimer: initialData?.ticketTimer ?? '',
                     isTicketLink: initialData?.isTicketLink ?? false,
                     isSaleClosed: initialData?.isSaleClosed ?? false,
                     isFree: initialData?.isFree ?? false,
@@ -342,26 +340,23 @@ const EventForm = (props) => {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-lg-6 col-md-12 col-12">
-                                <Calendar placeholder='Date of event' onSelect={(value) => {
-                                    setFieldValue('date', value)
-                                }} />
+                            <div className="col-lg-12 col-md-12 col-12">
+                                <CalendarWithClock
+                                    mode="single"
+                                    locale='en-nl'
+                                    placeholder='Date and Time'
+                                    captionLayout="dropdown"
+                                    initialValue={values.date}
+                                    onSelect={(value) => {
+                                        setFieldValue('date', value)
+                                    }} />
                                 <ErrorMessage
                                     className="error"
                                     name="date"
                                     component="div"
                                 />
                             </div>
-                            <div className="col-lg-6 col-md-12 col-12">
-                                <div className="rn-form-group">
-                                    <Field type='time' name='time' placeholder='Time of event' id='event-time' />
-                                    <ErrorMessage
-                                        className="error"
-                                        name="time"
-                                        component="div"
-                                    />
-                                </div>
-                            </div>
+                            
                         </div>
                         <div className="row mt--20">
                             <div className="col-lg-12 col-md-12 col-12">

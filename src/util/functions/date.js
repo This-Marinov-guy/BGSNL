@@ -1,3 +1,8 @@
+export const MOMENT_DATE_TIME_YEAR = 'Do MMM YY | h:mm a';
+export const MOMENT_DATE_TIME = 'Do MMM | h:mm a';
+export const MOMENT_DATE_YEAR = 'Do MMM YYYY';
+export const MOMENT_DATE = 'Do MMM';
+
 
 export const dateConvertor = (date, time, getAsValue = false) => {
     // Ensure date is a Date object

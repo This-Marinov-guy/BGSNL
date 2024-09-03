@@ -4,7 +4,7 @@ import "react-day-picker/style.css";
 import { FiCalendar, FiClock } from "react-icons/fi";
 
 export const Calendar = (props) => {
-    const [selected, setSelected] = useState();
+    const [selected, setSelected] = useState(props.initialValue);
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleCalendar = () => {

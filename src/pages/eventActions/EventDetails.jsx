@@ -18,6 +18,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
+import { MOMENT_DATE_TIME } from "../../util/functions/date";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -92,15 +93,10 @@ const EventDetails = () => {
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
                       <span>When</span>
-                      <h4>{moment(selectedEvent.date).format("Do MMMM") + ", " + selectedEvent.time}</h4>
+                      <h4>{moment(selectedEvent.date).format(MOMENT_DATE_TIME)}</h4>
                       {selectedEvent.correctedDate && (
                         <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Date -> " + moment(selectedEvent.correctedDate).format("Do MMMM")}
-                        </p>
-                      )}
-                      {selectedEvent.correctedTime && (
-                        <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Time -> " + selectedEvent.correctedTime}
+                          {"Updated Date/Time -> " + moment(selectedEvent.correctedDate).format("Do MMM YY hh:mm")}
                         </p>
                       )}
                     </div>

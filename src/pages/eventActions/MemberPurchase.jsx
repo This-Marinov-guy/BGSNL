@@ -25,6 +25,7 @@ import { Message } from 'primereact/message';
 import { encryptData, estimatePriceByEvent } from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
 import { ACCESS_3 } from "../../util/defines/defines";
+import { MOMENT_DATE_TIME } from "../../util/functions/date";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -255,14 +256,8 @@ const MemberPurchase = () => {
                       <p>
                         Date:{" "}
                         {selectedEvent.correctedDate
-                          ? moment(selectedEvent.correctedDate).format("Do MMMM") + " Updated!"
-                          : moment(selectedEvent.date).format("Do MMMM")}
-                      </p>
-                      <p>
-                        Time:{" "}
-                        {selectedEvent.correctedTime
-                          ? selectedEvent.correctedDate + " Updated!"
-                          : selectedEvent.time}
+                          ? moment(selectedEvent.correctedDate).format(MOMENT_DATE_TIME) + " Updated!"
+                          : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
                       </p>
                       <p>Address: {selectedEvent.location}</p>
                       <p>Price: {estimatePriceByEvent(selectedEvent, { ...currentUser, token: user.token ?? '' }, normalTicket)}</p>

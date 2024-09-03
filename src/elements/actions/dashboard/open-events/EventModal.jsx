@@ -12,6 +12,7 @@ import { useHttpClient } from '../../../../hooks/http-hook';
 import Loader from '../../../ui/loading/Loader';
 import { showNotification } from '../../../../redux/notification';
 import { EVENT_DELETED } from '../../../../util/defines/defines';
+import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
@@ -98,10 +99,9 @@ const EventModal = (props) => {
                     <p>Region: {props.event.region}</p>
                     <p>Title: {props.event.title}</p>
                     <p>Descriptions: {props.event.description}</p>
-                    <p>Date: {moment(props.event.date).format("Do MMMM")}</p>
-                    <p>Time: {props.event.time}</p>
+                    <p>Date: {moment(props.event.correctedDate ?? props.event.date).format(MOMENT_DATE_TIME)}</p>
                     <p>Location: {props.event.location}</p>
-                    <p>Ticket Timer: {moment(props.event.ticketTimer).format('Do MMMM,hh:mm')}</p>
+                    <p>Ticket Timer: {moment(props.event.ticketTimer).format(MOMENT_DATE_TIME)}</p>
                     <p>Ticket Limit: {props.event.ticketLimit}</p>
                     <p>Is it only for members: {props.event.memberOnly ? 'Yes' : 'No'}</p>
                     <p>Extra Inputs Required: {!!props.event.extraInputsForm ? 'Yes' : 'No'}</p>

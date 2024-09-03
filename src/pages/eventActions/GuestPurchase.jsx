@@ -22,6 +22,7 @@ import { encryptData } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/NoEventFound";
 import moment from "moment";
 import { useDispatch } from "react-redux";
+import { MOMENT_DATE_TIME } from "../../util/functions/date";
 
 const GuestPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -148,14 +149,8 @@ const GuestPurchase = () => {
                 <p>
                   Date:{" "}
                   {selectedEvent.correctedDate
-                    ? moment(selectedEvent.correctedDate).format("Do MMMM") + " Updated!"
-                    : moment(selectedEvent.date).format("Do MMMM")}
-                </p>
-                <p>
-                  Time:{" "}
-                  {selectedEvent.correctedTime
-                    ? selectedEvent.correctedTime + " Updated!"
-                    : selectedEvent.time}
+                    ? moment(selectedEvent.correctedDate).format(MOMENT_DATE_TIME) + " Updated!"
+                    : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
                 </p>
                 <p>Address:{" "}{selectedEvent.location}</p>
                 <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.entry + ' euro'}</p>
