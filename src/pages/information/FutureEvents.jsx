@@ -15,6 +15,7 @@ import { useLoadEvents } from "../../hooks/api-hooks";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { checkObjectOfArraysEmpty } from "../../util/functions/helpers";
 import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
+import CalendarDropdown from "../../elements/CalendarDropdown";
 
 const FutureEventsContent = ({ displayAll }) => {
   const { region } = useParams();
@@ -90,6 +91,7 @@ const FutureEventsContent = ({ displayAll }) => {
                 </div>
               </div>}
           </div>
+            <CalendarDropdown />
         </div>
       </div>
     </div>

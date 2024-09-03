@@ -1,0 +1,48 @@
+.calendar-dropdown-section {
+    margin-top: 20px;
+    background-color: var(--background-color); /* Replace with your theme's background color */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.custom-calendar-dropdown .p-dropdown {
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+    color: var(--text-color); /* Replace with your theme's text color */
+    background-color: var(--input-bg-color); /* Replace with your theme's input background color */
+    border: 1px solid var(--border-color); /* Replace with your theme's border color */
+    padding: 10px;
+}
+
+.custom-calendar-dropdown .p-dropdown-label {
+    font-size: 14px;
+    color: var(--text-color); /* Replace with your theme's text color */
+}
+
+.custom-calendar-dropdown .p-dropdown-item {
+    font-size: 14px;
+    color: var(--text-color); /* Replace with your theme's text color */
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding-left: 5px; /* Reduced padding on the left to decrease space between icon and border */
+}
+
+.dropdown-item .dropdown-label {
+    margin-left: 8px; /* Space between the icon and text */
+}
+
+.dropdown-item svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Set overflow for the dropdown panel to hidden */
+.custom-calendar-dropdown .p-dropdown-panel {
+    overflow: hidden; /* Hide any overflow to prevent scrollbars */
+    max-height: 300px; /* Optional: limit the height to ensure it doesn't grow too large */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow for a better look */
+}
