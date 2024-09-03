@@ -133,9 +133,9 @@ const GuestPurchase = () => {
         />
 
         <div className="container">
-          <div className="mt--200">
+          <div className="mt--120">
             {selectedEvent.membersOnly ? <h3 className="center_text mb--80">Opps... it seems that this is an event exclusive to members! You still have a chance to enter!</h3> :
-              <h2 className="center_text mb--80">Purchase a Ticket</h2>}
+              <h2 className="center_text mb--20">Purchase a Ticket</h2>}
 
             {!selectedEvent.ticketLink && <MembershipBanner />}
           </div>

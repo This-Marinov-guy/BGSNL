@@ -141,7 +141,7 @@ const MemberPurchase = () => {
           logoname="logo.png"
         />
         {currentUser.status !== "active" && <Locked case='locked' show={currentUser.status} />}
-        <div className="container mt--200 mb--120">
+        <div className="container mt--120 mb--120">
           <h2 className="center_text mb--80">Purchase a Ticket</h2>
 
           <div className="row slide-down center_div">
