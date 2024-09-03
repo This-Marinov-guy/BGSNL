@@ -4,6 +4,7 @@ import EventCard from '../../elements/ui/cards/EventCard';
 import EventCard2 from '../../elements/ui/cards/EventCard2';
 import EventCard2List from '../../elements/ui/lists/EventCard2List';
 import EventCardList from '../../elements/ui/lists/EventCardList';
+import { decryptData } from '../../util/functions/helpers';
 
 const TicketComponent = () => {
     const [ticketDataUrl, setTicketDataUrl] = useState(null);
@@ -29,8 +30,8 @@ const TicketComponent = () => {
 
     return (<>
         <img src={ticketDataUrl} alt="Customer Ticket" />
-        <EventCardList/>
-        <EventCard2List/>
+        {/* <EventCardList/>
+        <EventCard2List/> */}
     </>)
 }
 

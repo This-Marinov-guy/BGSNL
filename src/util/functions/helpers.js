@@ -71,7 +71,7 @@ export const encryptData = (data) => {
 
 export const decryptData = (string) => {
     if (!string) {
-        return {};
+        return null;
     }
 
     let decryptedData;
@@ -80,10 +80,10 @@ export const decryptData = (string) => {
         const decryptedBytes = CryptoJS.AES.decrypt(decodeURIComponent(string), process.env.REACT_APP_ENCRYPTION_KEY);
         decryptedData = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
     } catch (err) {
-        return false;
+        return null;
     }
 
-    return {};
+    return decryptedData;
 }
 
 export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = false) => {
