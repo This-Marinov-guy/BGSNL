@@ -4,7 +4,6 @@ import Loader from "../loading/Loader";
 import { Link } from "react-router-dom";
 import { Dialog } from 'primereact/dialog';
 import { useDispatch, useSelector } from "react-redux";
-import SubscriptionManage from "../buttons/SubscriptionManage";
 import { REGIONS_MEMBERSHIP_SPECIFICS, findMembershipByProperty } from "../../../util/defines/REGIONS_AUTH_CONFIG";
 import { showNotification } from "../../../redux/notification";
 import { selectUser } from "../../../redux/user";

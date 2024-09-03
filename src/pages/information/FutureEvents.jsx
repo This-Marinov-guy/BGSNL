@@ -14,6 +14,7 @@ import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/api-hooks";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { checkObjectOfArraysEmpty } from "../../util/functions/helpers";
+import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
 
 const FutureEventsContent = ({ displayAll }) => {
   const { region } = useParams();
@@ -60,10 +61,10 @@ const FutureEventsContent = ({ displayAll }) => {
                     if (events[region].length) {
                       return <div className='row mt--20' key={index}>
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
-                          <PortfolioList
+                          <PortfolioList2
                             style="society"
                             target={events[region]}
-                            styevariation="text-center mt--40"
+                            styevariation="text-center"
                             column="col-lg-4 col-md-5 col-sm-6"
                           />
                       </div>
@@ -75,10 +76,10 @@ const FutureEventsContent = ({ displayAll }) => {
                 <div className="row slick-space-gutter--15 slickdot--20">
                   {eventsLoading ? <EventsLoading /> :
                     events && events.length > 0 ? (
-                      <PortfolioList
+                      <PortfolioList2
                         style="society"
                         target={events}
-                        styevariation="text-center mt--40"
+                        styevariation="text-center"
                         column="col-lg-4 col-md-5 col-sm-6"
                       />
                     ) : (
@@ -114,14 +115,14 @@ const FutureOtherEventsContent = () => {
               </div>
             </div>
           </div>
-          <div className="row mb--80">
+          <div className="row mb--40">
             <div className="col-lg-12">
               <div className="slick-space-gutter--15 slickdot--20">
                 {OTHER_EVENTS[region] && OTHER_EVENTS[region].length > 0 ? (
-                  <PortfolioList
+                  <PortfolioList2
                     style="other"
                     target={OTHER_EVENTS[region]}
-                    styevariation="text-center mt--40"
+                    styevariation="text-center"
                     column="col-lg-4 col-md-6 col-sm-6 col-12"
                   />
                 ) : (

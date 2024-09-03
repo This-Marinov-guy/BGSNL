@@ -12,16 +12,16 @@ const PortfolioList2 = (props) => {
                     <div className={`${column}`} key={index}>
                         <div className={`portfolio-2 ${styevariation}`}>
                             <div className="thumbnail-inner" >
-                                <div className={`thumbnail`} style={{ backgroundImage: `url(${value.image})` }}></div>
+                                <div className={`thumbnail`} style={{ backgroundImage: `url(${value.poster})` }}></div>
                             </div>
                             <div className="content">
                                 <div className="inner">
                                     <p>{value.title}</p>
-                                    <h4><Link to={value.link}>{value.description}</Link></h4>
-                                    <Link className="rn-button-style--2 rn-btn-reverse-green" to={value.link}>View Details</Link>
+                                    <h4><Link to={`/${value.region ?? region}/event-details/${value.id}`}>{value.description}</Link></h4>
+                                    <Link className="rn-button-style--2 rn-btn-reverse-green" to={`/${value.region ?? region}/event-details/${value.id}`}>View Details</Link>
                                 </div>
                             </div>
-                            <Link className="link-overlay" to={value.link}></Link>
+                            <Link className="link-overlay" to={`/${value.region ?? region}/event-details/${value.id}`}></Link>
                         </div>
                     </div>
                 ))}

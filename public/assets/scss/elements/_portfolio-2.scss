@@ -5,22 +5,10 @@
   scale: 0.8;
   position: relative;
   @extend %transition;
-  min-height: 600px;
+  height: 12em;
   width: 100%;
   padding-top: 35%;
-
-  @media #{$laptop-device} {
-    min-height: 500px;
-  }
-  @media #{$lg-layout} {
-    min-height: 500px;
-  }
-  @media #{$md-layout} {
-    min-height: 450px;
-  }
-  @media #{$sm-layout} {
-    min-height: 400px;
-  }
+  
   .thumbnail-inner {
     transition: transform 0.28s ease;
     z-index: 9;
@@ -54,7 +42,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     border-radius: 5px;
     background-color: #0a0a0a;
