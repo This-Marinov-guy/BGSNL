@@ -105,9 +105,12 @@ const Devs = () => {
                     style={{ width: "60px", height: "60px" }}
                   />
                 </a>
-                <h3 className="description mt--10">
-                  We are an open-source project, feel free to contribute to our cause.
-                </h3>
+                <div>
+                  <h3 className="description mt--10">
+                    We are an open-source project, feel free to contribute and gain your spot here.
+                  </h3>
+                  <small>*At least the README.md file please</small>
+                </div>
               </div>
             </div>
           </div>

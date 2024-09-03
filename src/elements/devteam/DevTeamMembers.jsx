@@ -9,10 +9,10 @@ const TeamMember = ({ member }) => {
           style={{ width: "100px", height: "100px", borderRadius: "50%" }}
         />
       <div className="content">
-        <h3 className="fs-3 mb-2">
+        <h3 className="fs-3 mb-2 word-break">
           {member.name}
         </h3>
-        <h4 className="designation fs-6 text-muted">
+        <h4 className="fs-6 text-muted word-break">
           {member.title}
         </h4>
       </div>

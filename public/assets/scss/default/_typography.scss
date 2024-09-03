@@ -194,3 +194,8 @@ select {
   height: 40px;
   padding: 0 15px;
 }
+
+.word-break {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
