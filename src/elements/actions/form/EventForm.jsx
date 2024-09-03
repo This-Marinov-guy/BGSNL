@@ -265,7 +265,7 @@ const EventForm = (props) => {
                     images: initialData?.images ?? [],
                     ticketImg: initialData?.ticketImg ?? null,
                     ticketColor: initialData?.ticketColor ?? '#faf9f6',
-                    ticketQR: initialData?.ticketQR ?? 'true',
+                    ticketQR: `${initialData?.ticketQR ?? true}`,
                     poster: initialData?.poster ?? null,
                     bgImage: initialData?.bgImage ?? 1,
                     bgImageExtra: initialData?.bgImageExtra ?? null,
