@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Col } from "react-bootstrap";
 import ImageFb from "../../../elements/ui/ImageFb";
 import TypewriterEffect from '../../../elements/ui/TypewriterEffect';
 import TeamMember from '../../../pages/information/devteam/DevTeamMembers';
@@ -10,6 +11,9 @@ const Devs = () => {
   useEffect(() => {
     setTeamMembers(teamMembersData || []);
   }, []);
+
+  let teamSize = teamMembers.length;
+  let columnSize = Math.floor(teamSize / 12);
 
   return (
     <React.Fragment>
@@ -53,11 +57,13 @@ const Devs = () => {
                   </div>
                 </div>
               </div>
-              {/* Team Members */}
-              <div className="col-12">
-                <div className="team_member_container d-flex flex-wrap justify-content-start">
-                  {teamMembers.length > 0 ? (
-                    teamMembers.map((member) => (
+            </div>
+            {/* Team Members */}
+            <div className = "row row--35">
+              <div className="team_member_container d-flex flex-wrap justify-content-start">
+                {teamMembers.length > 0 ? (
+                  teamMembers.map((member) => (
+                    <Col key={member.id} md={columnSize}>
                       <div
                         className="team-member-wrapper mb-4 d-flex"
                         key={member.id}
@@ -70,11 +76,11 @@ const Devs = () => {
                       >
                         <TeamMember member={member} />
                       </div>
-                    ))
-                  ) : (
-                    <p>No team members available.</p>
-                  )}
-                </div>
+                    </Col>
+                  ))
+                ) : (
+                  <p>No team members available.</p>
+                )}
               </div>
             </div>
           </div>
