@@ -10,7 +10,7 @@ import ImageInput from "../../inputs/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";
 import InputsBuilder from "../../inputs/InputsBuilder";
-import { askBeforeRedirect, isProd } from "../../../util/functions/helpers";
+import { askBeforeRedirect, isProd, resizeFile } from "../../../util/functions/helpers";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
@@ -529,7 +529,7 @@ const EventForm = (props) => {
                                         isImageCorrectRatio(file)
                                             .then(isCorrect => {
                                                 if (isCorrect) {
-                                                    setFieldValue("ticketImg", event.target.files[0]);
+                                                    setFieldValue("ticketImg", file);
                                                 } else {
                                                     dispatch((showNotification({
                                                         severity: 'warn',

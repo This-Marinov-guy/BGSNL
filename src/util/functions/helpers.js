@@ -146,3 +146,7 @@ export const hasOverlap = (array1, array2) => {
     }
     return false;
 }
+
+export const removeSpaces = (input) => {
+    return input.replace(/\s+/g, '');
+}
