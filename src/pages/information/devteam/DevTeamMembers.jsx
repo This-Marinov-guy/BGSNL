@@ -3,13 +3,11 @@ import React from "react";
 const TeamMember = ({ member }) => {
   return (
     <div className="text-center">
-      <div>
         <img
           src={member.imgSrc}
           alt={`${member.name} Profile`}
           style={{ width: "100px", height: "100px", borderRadius: "50%" }}
         />
-      </div>
       <div className="content">
         <h3 className="fs-3 mb-2">
           {member.name}
