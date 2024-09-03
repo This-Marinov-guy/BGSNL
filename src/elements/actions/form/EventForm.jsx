@@ -525,11 +525,10 @@ const EventForm = (props) => {
                                 <ImageInput
                                     initialImage={values.ticketImg}
                                     onChange={(event) => {
-                                        const file = event.target.files[0];
-                                        isImageCorrectRatio(file)
+                                        isImageCorrectRatio(event.target.files[0])
                                             .then(isCorrect => {
                                                 if (isCorrect) {
-                                                    setFieldValue("ticketImg", file);
+                                                    setFieldValue("ticketImg", event.target.files[0]);
                                                 } else {
                                                     dispatch((showNotification({
                                                         severity: 'warn',
