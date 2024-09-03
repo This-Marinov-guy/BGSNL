@@ -10,7 +10,7 @@ import { Password } from 'primereact/password';
 import Loader from "../../elements/ui/loading/Loader";
 import { showNotification } from "../../redux/notification";
 import { Calendar } from 'primereact/calendar';
-import { convertToUTC } from "../../util/functions/date";
+import moment from "moment";
 
 const initialValues = {
     email: "",
@@ -89,11 +89,17 @@ const ForgottenPassword = (props) => {
 
     const verifyToken = async (event) => {
         event.preventDefault();
+
+        const parameters = {
+            ...formValues,
+            birth: moment(formValues.birth).format('DD MM YY')
+        }
+        
         try {
             const responseData = await sendRequest(
                 "user/verify-token",
                 "POST",
-                formValues
+                parameters
             );
 
             if (responseData.status) {
