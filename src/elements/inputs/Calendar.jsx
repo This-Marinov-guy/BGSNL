@@ -67,6 +67,7 @@ export const CalendarWithClock = (props) => {
             newSelectedDate.setHours(hours);
             newSelectedDate.setMinutes(minutes);
             setSelected(newSelectedDate);
+            toggleCalendar();
             if (time && selected) {
                 props.onSelect(newSelectedDate);
             } else {
@@ -125,7 +126,7 @@ export const CalendarWithClock = (props) => {
                         type="time"
                         value={timeValue}
                         onChange={handleTimeChange}
-                        style={{ marginBottom: "10px" }}
+                        style={{ margin: "0 10px 10px", width: 'auto' }}
                     />
                     <DayPicker
                         mode="single"
