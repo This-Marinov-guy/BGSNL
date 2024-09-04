@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { FiCalendar, FiClock } from "react-icons/fi";
@@ -49,12 +49,25 @@ export const Calendar = (props) => {
 }
 
 export const CalendarWithClock = (props) => {
-    const [selected, setSelected] = useState();
-    const [timeValue, setTimeValue] = useState("");
+    const initialValue = new Date(props.initialValue);
+    
+    const [selected, setSelected] = useState(initialValue);
+    const [timeValue, setTimeValue] = useState(
+        initialValue ?
+            `${initialValue.getHours().toString().padStart(2, '0')}:${initialValue.getMinutes().toString().padStart(2, '0')}`
+            : ""
+    );
     const [isOpen, setIsOpen] = useState(false);
 
+    useEffect(() => {
+        if (initialValue) {
+            setSelected(initialValue);
+            setTimeValue(`${initialValue.getHours().toString().padStart(2, '0')}:${initialValue.getMinutes().toString().padStart(2, '0')}`);
+        }
+    }, [initialValue]);
+
     const toggleCalendar = () => {
-        setIsOpen(!isOpen);
+        setIsOpen(prevState => !prevState);
     };
 
     const handleTimeChange = (e) => {
@@ -67,9 +80,9 @@ export const CalendarWithClock = (props) => {
             newSelectedDate.setHours(hours);
             newSelectedDate.setMinutes(minutes);
             setSelected(newSelectedDate);
-            toggleCalendar();
             if (time && selected) {
                 props.onSelect(newSelectedDate);
+                toggleCalendar();
             } else {
                 props.onSelect(null);
             }
@@ -90,6 +103,7 @@ export const CalendarWithClock = (props) => {
             newDate.setMinutes(minutes);
             setSelected(newDate);
             props.onSelect(newDate);
+            toggleCalendar();
         } else {
             setSelected(date);
             props.onSelect(null);
@@ -139,4 +153,4 @@ export const CalendarWithClock = (props) => {
             )}
         </div>
     );
-}
+};
