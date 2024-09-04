@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import Modal from "react-bootstrap/Modal";
+import { Dialog } from 'primereact/dialog';
 import Loader from "./ui/loading/Loader";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 import { removeDonation, selectDonation } from "../redux/donation";
+import { useHttpClient } from "../hooks/http-hook";
 
 const schema = yup.object().shape({
     name: yup.string(),
@@ -18,7 +19,9 @@ const schema = yup.object().shape({
 
 const Donation = () => {
     const donation = useSelector(selectDonation)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    const {sendRequest} = useHttpClient();
 
     const [loading, setLoading] = useState(false)
     const [stripePromise, setStripePromise] = useState(null);
@@ -26,16 +29,13 @@ const Donation = () => {
     const [error, setError] = useState('');
 
     return (
-        <Modal
-            show={donation}
+        <Dialog 
+            header="Your contribution means a lot!"
+            visible={donation}
             onHide={() => dispatch(removeDonation())}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
             centered
         >
             <div className="payment bg_color--1">
-                <h2>Your contribution means a lot!</h2>
-                <h3 style={{ marginTop: "-15px" }}>Thank you</h3>
                 {(clientSecret && stripePromise ? <Elements stripe={stripePromise} options={{ clientSecret }} >
                     <CheckoutForm />
                 </Elements> : <Formik
@@ -47,25 +47,19 @@ const Donation = () => {
                             setLoading(true);
                             setError('');
 
-                            // Fetch publishableKey
-                            const response = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/config");
-                            const { publishableKey } = await response.json();
-                            setStripePromise(loadStripe(publishableKey));
+                            const responseData = await sendRequest("payment/donation/config");
 
-                            // Create payment intent
-                            let paymentIntentResponse = await fetch(process.env.REACT_APP_SERVER_URL + "payment/donation/create-payment-intent", {
-                                method: "POST",
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    name: values.name,
-                                    amount: values.amount,
-                                    comments: values.comments
-                                }),
-                            });
+                            if (!responseData.publishableKey) {
+                                return
+                            }
+                            
+                            setStripePromise(loadStripe(responseData.publishableKey));
 
-                            paymentIntentResponse = await paymentIntentResponse.json();
+                            const paymentIntentResponse = await sendRequest("payment/donation/create-payment-intent", "POST", {
+                                name: values.name,
+                                amount: values.amount,
+                                comments: values.comments
+                            });                            
 
                             if (paymentIntentResponse.status === false && paymentIntentResponse.message) {
                                 setError(paymentIntentResponse.message);
@@ -93,7 +87,7 @@ const Donation = () => {
                             style={{ padding: "2%" }}
                         >
                             <div className="row">
-                                <div className="col-lg-6 col-md-12 col-12">
+                                <div className="col-lg-6 col-md-12 col-12 mt--10">
                                     <div className="rn-form-group">
                                         <Field
                                             type="text"
@@ -107,7 +101,7 @@ const Donation = () => {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-lg-6 col-md-12 col-12">
+                                <div className="col-lg-6 col-md-12 col-12 mt--10">
                                     <div className="rn-form-group">
                                         <div className="input-container">
                                             <Field
@@ -155,7 +149,7 @@ const Donation = () => {
                 </Formik>
                 )}
             </div>
-        </Modal >
+        </Dialog >
     )
 }
 
