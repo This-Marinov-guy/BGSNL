@@ -84,7 +84,7 @@ const User = (props) => {
       if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
           scrollRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 100);
+    }, 300);
    
     setDisableScroll(false);
   }, [tab]);
