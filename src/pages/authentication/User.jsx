@@ -12,8 +12,6 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import Locked from "../../elements/ui/modals/Locked";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { decodeJWT } from "../../util/functions/authorization";
-import Greeting from "../../elements/Greeting";
-import Christmas from "../../elements/special/Christmas";
 import { selectUser } from "../../redux/user";
 import SubscriptionManage from "../../elements/ui/buttons/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
@@ -26,7 +24,7 @@ import { isProd } from "../../util/functions/helpers";
 
 const TABS = ['news', 'tickets', 'internships'];
 
-const User = (props) => {
+const User = () => {
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
   const [expand, setExpand] = useState(false);

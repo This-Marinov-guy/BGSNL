@@ -152,7 +152,7 @@ const Root = () => {
     if (toast.current && notification.severity) {
       setTimeout(() => {
         toast.current.show(notification);
-      }, 50)
+      }, 200)
     }
   }, [notificationIndex]);
 
