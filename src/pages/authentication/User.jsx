@@ -84,10 +84,10 @@ const User = (props) => {
       if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
           scrollRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 300);
+    }, 100);
    
     setDisableScroll(false);
-  }, [tab]);
+  }, [tab, currentUser]);
 
   let menuContent = null;
 
