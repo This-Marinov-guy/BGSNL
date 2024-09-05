@@ -7,8 +7,8 @@ import { checkAuthorization } from '../../util/functions/authorization';
 
 const AuthLayout = ({ children, access = [] }) => {
     const location = useLocation();
-    const routePath = location.pathname + location.search ?? '';
-
+    const routePath = location.pathname + location.hash + location.search;
+    
     const user = useSelector(selectUser);
 
     const dispatch = useDispatch();
