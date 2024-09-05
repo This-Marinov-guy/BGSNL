@@ -91,6 +91,7 @@ const FutureEventsContent = ({ displayAll }) => {
                 </div>
               </div>}
           </div>
+          
             <CalendarDropdown />
         </div>
       </div>
