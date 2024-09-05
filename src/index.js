@@ -149,7 +149,7 @@ const Root = () => {
   }, []);
 
   useEffect(() => {
-    if (toast.current && notification.severity) {
+    if (notification.severity) {
       setTimeout(() => {
         toast.current.show(notification);
       }, 200)
