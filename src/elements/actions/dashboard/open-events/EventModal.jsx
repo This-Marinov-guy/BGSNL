@@ -49,18 +49,18 @@ const EventModal = (props) => {
         <p>Is the Event Free: {props.event.isFree ? 'Yes' : 'No'}</p>
         <p>Is the Event Member Free: {props.event.isMemberFree ? 'Yes' : 'No'} </p>
         <br />
-        <p>Price for guests: {props.event.entry}</p>
+        <p>Price for guests: {props.event.product?.guest.price}</p>
         <p>Guest Ticket Including: {props.event.entryIncluding || 'None'}</p>
-        <p>Guest Price Id: {props.event.priceId}</p>
+        <p>Guest Price Id: {props.event.product?.guest.priceId}</p>
         <br />
 
         {!props.event.isMemberFree && <>
-            <p>Price for members: {props.event.memberEntry}</p>
+            <p>Price for members: {props.event.product?.member.price}</p>
             <p>Member Ticket Including: {props.event.memberIncluding || 'None'}</p>
-            <p>Member Price Id: {props.event.memberPriceId}</p>
+            <p>Member Price Id: {props.event.product?.member.priceId}</p>
             <br />
-            <p>Price for active members: {props.event.activeMemberEntry}</p>
-            <p>Active Member Price Id: {props.event.activeMemberPriceId}</p>
+            <p>Price for active members: {props.event.product?.activeMember?.price}</p>
+            <p>Active Member Price Id: {props.event.product?.activeMember?.priceId}</p>
             <br />
         </>}
         <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join('| ') : 'None'}</p>
@@ -115,23 +115,36 @@ const EventModal = (props) => {
                             priceInfo)}
                     <h3>Images</h3>
                     <hr />
-                    <p>Images {tooltip}: {props.event.images.length > 0 ?
-                        props.event.images.map((img, index) => {
-                            if (!img) { return <p>No extra images</p> }
-                            {
-                                return <img key={index}
-                                    onClick={() => setExpandImage(expandImage == null ? index : null)}
-                                    className={'small_preview ' + (expandImage === index && 'center_expand')}
-                                    src={img}
-                                    alt='preview' />
-                            }
-                        }) : 'Only poster will be displayed'}</p>
-                    <p>Ticket: </p> <img src={props.event.ticketImg} className='normal_preview' alt='ticket' />
-                    <p>Poster: </p> <img src={props.event.ticketImg} className='normal_preview' alt='poster' />
-                    <p>Background {tooltip}: </p>
-                    {props.event.bgImageExtra ?
-                        <img onClick={() => setExpandBg(!expandBg)} src={props.event.bgImageExtra} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />
-                        : <img onClick={() => setExpandBg(!expandBg)} src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />}
+                    <div className='row'>
+                        <div className='col-lg-4 col-md-6 col-12'>
+                            <p>Ticket: </p> <img src={props.event.ticketImg} className='normal_preview' alt='ticket' />
+                        </div>
+
+                        <div className='col-lg-4 col-md-6 col-12'>
+                            <p>Poster: </p> <img src={props.event.poster} className='normal_preview' alt='poster' />
+                        </div>
+
+                        <div className='col-lg-4 col-md-6 col-12'>
+                            <p>Background {tooltip}: </p>
+                            {props.event.bgImageExtra ?
+                                <img onClick={() => setExpandBg(!expandBg)} src={props.event.bgImageExtra} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />
+                                : <img onClick={() => setExpandBg(!expandBg)} src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />}
+                        </div>
+
+                        <div className='col-12'>
+                            <p>Images {tooltip}: {props.event.images.length > 0 ?
+                                props.event.images.map((img, index) => {
+                                    if (!img) { return <p>No extra images</p> }
+                                    {
+                                        return <img key={index}
+                                            onClick={() => setExpandImage(expandImage == null ? index : null)}
+                                            className={'small_preview ' + (expandImage === index && 'center_expand')}
+                                            src={img}
+                                            alt='preview' />
+                                    }
+                                }) : 'Only poster will be displayed'}</p>
+                        </div>
+                    </div>
                 </div>
             </Dialog>
         </>

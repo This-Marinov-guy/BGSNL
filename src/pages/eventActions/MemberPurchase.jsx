@@ -221,12 +221,12 @@ const MemberPurchase = () => {
                     if (isMemberForFreeTicket) {
                       return buyFreeTicket(formData);
                     } else {
-                      formData.append("itemId", selectedEvent.product.activeMember.priceId);
+                      formData.append("itemId", selectedEvent.product?.activeMember.priceId);
                     }
                   } else if (normalTicket) {
-                    formData.append("itemId", selectedEvent.product.guest.priceId);
+                    formData.append("itemId", selectedEvent.product?.guest.priceId);
                   } else {
-                    formData.append("itemId", selectedEvent.product.member.priceId);
+                    formData.append("itemId", selectedEvent.product?.member.priceId);
                   }
 
                   const responseData = await sendRequest(

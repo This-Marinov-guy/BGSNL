@@ -14,7 +14,7 @@ const Event = (props) => {
     } else if (props.event.isFree) {
         price = 'FREE'
     } else {
-        price = props.event.entry + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.memberEntry) + (props.event.activeMemberPrice ? ' / ' + props.event.activeMemberPrice : '')
+        price = props.event.product?.guest.price + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.product?.member?.price) + (props.event.product?.activeMember ? ' / ' + props.event.product?.activeMember.price : '')
     }
 
     const todayValue = (new Date()).valueOf();

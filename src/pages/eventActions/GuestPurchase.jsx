@@ -153,7 +153,7 @@ const GuestPurchase = () => {
                     : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
                 </p>
                 <p>Address:{" "}{selectedEvent.location}</p>
-                <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.product.guest.price + ' euro'}</p>
+                <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.product?.guest.price + ' euro'}</p>
 
               </div>
             </div>
@@ -248,10 +248,10 @@ const GuestPurchase = () => {
                         if (isGuestForFreeTicket) {
                           return buyFreeTicket(formData);
                         } else {
-                          formData.append("itemId", selectedEvent.product.activeMember.priceId ?? selectedEvent.product.member.priceId);
+                          formData.append("itemId", selectedEvent.product?.activeMember.priceId ?? selectedEvent.product?.member.priceId);
                         }
                       } else {
-                        formData.append("itemId", selectedEvent.product.guest.priceId);
+                        formData.append("itemId", selectedEvent.product?.guest.priceId);
                       }
 
                       const responseData = await sendRequest(
