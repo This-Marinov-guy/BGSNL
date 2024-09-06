@@ -187,7 +187,7 @@ const MemberPurchase = () => {
                   const hasQR = selectedEvent.hasOwnProperty('ticketQR') ? selectedEvent.ticketQR : true;
                   const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}` : '';
 
-                  const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode);
+                  const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode, selectedEvent.ticketName);
 
                   // formData
                   const formData = new FormData();

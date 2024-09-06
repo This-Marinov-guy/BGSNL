@@ -1,7 +1,7 @@
 import QRCode from "qrcode";
 import { resizeFile } from "./helpers";
 
-export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '') => {
+export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '', withName = true) => {
   // Create a canvas element, add the image and text, covert to blob
   //for 1500 x 485 images
   //for 2000 x 647 images
@@ -35,20 +35,24 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
     ticket.naturalWidth,
     ticket.naturalHeight
   );
+
   // text
-  layout.rotate(4.71);
-  layout.font = "52px Archive";
-  layout.fillStyle = color;
-  layout.textAlign = "center";
-  layout.strokeText(name, -255, 1170);
-  layout.fillText(name, -255, 1170);
+  if (withName) {
+    layout.rotate(4.71);
+    layout.font = "52px Archive";
+    layout.fillStyle = color;
+    layout.textAlign = "center";
+    layout.strokeText(name, -255, 1170);
+    layout.fillText(name, -255, 1170);
+  
+    layout.font = "52px Archive";
+    layout.fillStyle = color;
+    layout.textAlign = "center";
+    layout.strokeText(surname, -255, 1230);
+    layout.fillText(surname, -255, 1230);
+  }
 
-  layout.font = "52px Archive";
-  layout.fillStyle = color;
-  layout.textAlign = "center";
-  layout.strokeText(surname, -255, 1230);
-  layout.fillText(surname, -255, 1230);
-
+  // Qr code
   if (qrLink) {
     const qrCodeCanvas = document.createElement("canvas");
     // Create the QR code at a larger size
