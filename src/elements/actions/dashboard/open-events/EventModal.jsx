@@ -126,7 +126,7 @@ const EventModal = (props) => {
 
                         <div className='col-lg-4 col-md-6 col-12'>
                             <p>Background {tooltip}: </p>
-                            {props.event.bgImageExtra ?
+                            {(props.event.bgImageExtra && props.event?.bgImageSelection === 2) ?
                                 <img onClick={() => setExpandBg(!expandBg)} src={props.event.bgImageExtra} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />
                                 : <img onClick={() => setExpandBg(!expandBg)} src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />}
                         </div>

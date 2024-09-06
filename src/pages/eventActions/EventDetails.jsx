@@ -49,7 +49,7 @@ const EventDetails = () => {
   }
 
   const price = estimatePriceByEvent(selectedEvent, user);
-  const imageUrl = selectedEvent.bgImageExtra ? selectedEvent.bgImageExtra : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
+  const imageUrl = (selectedEvent.bgImageExtra && selectedEvent?.bgImageSelection === 2) ? selectedEvent.bgImageExtra : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
 
   return (
     <React.Fragment>
