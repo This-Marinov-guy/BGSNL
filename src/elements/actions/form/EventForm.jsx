@@ -137,7 +137,7 @@ const EventForm = (props) => {
             }
         ),
 
-        entry: yup.number().when(
+        guestPrice: yup.number().when(
             ['isFree', 'isTicketLink'],
             {
                 is: (isFree, isTicketLink) => isFree || isTicketLink,
@@ -146,17 +146,7 @@ const EventForm = (props) => {
             }
         ),
 
-        memberPriceId: yup.string().when(
-            ['isFree', 'isMemberFree', 'memberOnly', 'isTicketLink'],
-            {
-                is: (isFree, isMemberFree, memberOnly, isTicketLink) =>
-                    (isFree || isMemberFree) && !memberOnly && !isTicketLink,
-                then: () => yup.string(),
-                otherwise: () => yup.string().required("Provide Stripe id for member price"),
-            }
-        ),
-
-        memberEntry: yup.number().when(
+        memberPrice: yup.number().when(
             ['isFree', 'isMemberFree', 'memberOnly', 'isTicketLink'],
             {
                 is: (isFree, isMemberFree, memberOnly, isTicketLink) =>
@@ -172,8 +162,7 @@ const EventForm = (props) => {
             otherwise: () => yup.string(),
         }),
 
-        activeMemberEntry: yup.number().min(1, 'Must be greater than 0').nullable(),
-        activeMemberPriceId: yup.string().nullable(),
+        activeMemberPrice: yup.number().min(1, 'Must be greater than 0').nullable(),
 
         text: yup.string().required("Add some content to the event"),
         title: yup.string().required("Title is required"),
@@ -249,15 +238,12 @@ const EventForm = (props) => {
                     isSaleClosed: initialData?.isSaleClosed ?? false,
                     isFree: initialData?.isFree ?? false,
                     isMemberFree: initialData?.isMemberFree ?? false,
-                    entry: !isNaN(initialData?.entry) ? initialData.entry : undefined,
-                    memberEntry: !isNaN(initialData?.memberEntry) ? initialData.memberEntry : undefined,
-                    activeMemberEntry: !isNaN(initialData?.activeMemberEntry) ? initialData.activeMemberEntry : undefined,
+                    guestPrice: !isNaN(initialData?.product.guest.price) ? initialData.product.guest.price : undefined,
+                    memberPrice: !isNaN(initialData?.product.member.price) ? initialData.product.member.price : undefined,
+                    activeMemberPrice: !isNaN(initialData?.product.activeMember.price) ? initialData.product.activeMember.price : undefined,
                     entryIncluding: initialData?.entryIncluding ?? '',
                     memberIncluding: initialData?.memberIncluding ?? '',
                     ticketLink: initialData?.ticketLink ?? '',
-                    priceId: initialData?.priceId ?? '',
-                    memberPriceId: initialData?.memberPriceId ?? '',
-                    activeMemberPriceId: initialData?.activeMemberPriceId ?? "",
                     text: initialData?.text ?? '',
                     title: initialData?.title ?? '',
                     images: initialData?.images ?? [],
@@ -425,10 +411,10 @@ const EventForm = (props) => {
                                 <div className="col-lg-4 col-md-6 col-12">
                                     <h5 className="mt--10">Basic Price</h5>
                                     <div className="rn-form-group">
-                                        <Field type="number" placeholder="Price" name="entry" />
+                                        <Field type="number" placeholder="Price" name="guestPrice" />
                                         <ErrorMessage
                                             className="error"
-                                            name="entry"
+                                            name="guestPrice"
                                             component="div"
                                         />
                                     </div>
@@ -440,22 +426,14 @@ const EventForm = (props) => {
                                             component="div"
                                         />
                                     </div>
-                                    <div className="rn-form-group">
-                                        <Field type="text" placeholder="Price ID" name="priceId" />
-                                        <ErrorMessage
-                                            className="error"
-                                            name="priceId"
-                                            component="div"
-                                        />
-                                    </div>
                                 </div>
                                 {!values.isMemberFree && <><div className="col-lg-4 col-md-6 col-12">
                                     <h5 className="mt--10">Member Price</h5>
                                     <div className="rn-form-group">
-                                        <Field type="number" placeholder="Member Price" name="memberEntry" />
+                                        <Field type="number" placeholder="Member Price" name="memberPrice" />
                                         <ErrorMessage
                                             className="error"
-                                            name="memberEntry"
+                                            name="memberPrice"
                                             component="div"
                                         />
                                     </div>
@@ -467,30 +445,14 @@ const EventForm = (props) => {
                                             component="div"
                                         />
                                     </div>
-                                    <div className="rn-form-group">
-                                        <Field type="text" placeholder="Price ID" name="memberPriceId" />
-                                        <ErrorMessage
-                                            className="error"
-                                            name="memberPriceId"
-                                            component="div"
-                                        />
-                                    </div>
                                 </div>
                                     <div className="col-lg-4 col-md-6 col-12">
                                         <h5 className="mt--10">Active Member Price</h5>
                                         <div className="rn-form-group">
-                                            <Field type="number" placeholder="Active Member Price" name="activeMemberEntry" />
+                                            <Field type="number" placeholder="Active Member Price" name="activeMemberPrice" />
                                             <ErrorMessage
                                                 className="error"
-                                                name="activeMemberEntry"
-                                                component="div"
-                                            />
-                                        </div>
-                                        <div className="rn-form-group">
-                                            <Field type="text" placeholder="Price ID" name="activeMemberPriceId" />
-                                            <ErrorMessage
-                                                className="error"
-                                                name="activeMemberPriceId"
+                                                name="activeMemberPrice"
                                                 component="div"
                                             />
                                         </div>
