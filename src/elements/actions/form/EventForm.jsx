@@ -128,15 +128,6 @@ const EventForm = (props) => {
         memberOnly: yup.bool(),
         isTicketLink: yup.bool(),
 
-        priceId: yup.string().when(
-            ['isFree', 'isTicketLink'],
-            {
-                is: (isFree, isTicketLink) => isFree || isTicketLink,
-                then: () => yup.string(),
-                otherwise: () => yup.string().required("Provide Stripe id for guest price"),
-            }
-        ),
-
         guestPrice: yup.number().when(
             ['isFree', 'isTicketLink'],
             {
@@ -156,13 +147,13 @@ const EventForm = (props) => {
             }
         ),
 
+        activeMemberPrice: yup.number().min(1, 'Must be greater than 0').nullable(),
+
         ticketLink: yup.string().when('isTicketLink', {
             is: (isTicketLink) => isTicketLink,
             then: () => yup.string().required("Link to the ticket platform is required"),
             otherwise: () => yup.string(),
         }),
-
-        activeMemberPrice: yup.number().min(1, 'Must be greater than 0').nullable(),
 
         text: yup.string().required("Add some content to the event"),
         title: yup.string().required("Title is required"),

@@ -157,7 +157,7 @@ const MemberPurchase = () => {
 
                   let allowDiscount = false;
                   const isActiveMember = checkAuthorization(user.token, ACCESS_3);
-                  const isMemberForDiscount = selectedEvent.product.activeMember.priceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
+                  const isMemberForDiscount = selectedEvent.product?.activeMember.priceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
                   const isMemberForFreeTicket = selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
 
                   if (!normalTicket) {
@@ -273,7 +273,7 @@ const MemberPurchase = () => {
                         type="submit"
                         className="rn-button-style--2 rn-btn-reverse-green"
                       >
-                        {loading ? <Loader /> : <span>Proceed to paying</span>}
+                        {loading ? <Loader /> : <span>Payment</span>}
                       </button>
                     </WithBackBtn>
                     {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}

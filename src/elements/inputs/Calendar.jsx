@@ -49,7 +49,7 @@ export const Calendar = (props) => {
 }
 
 export const CalendarWithClock = (props) => {
-    const initialValue = new Date(props.initialValue);
+    const initialValue = props.initialValue ? new Date(props.initialValue) : '';
     
     const [selected, setSelected] = useState(initialValue);
     const [timeValue, setTimeValue] = useState(
@@ -64,7 +64,7 @@ export const CalendarWithClock = (props) => {
             setSelected(initialValue);
             setTimeValue(`${initialValue.getHours().toString().padStart(2, '0')}:${initialValue.getMinutes().toString().padStart(2, '0')}`);
         }
-    }, [initialValue]);
+    }, []);
 
     const toggleCalendar = () => {
         setIsOpen(prevState => !prevState);
