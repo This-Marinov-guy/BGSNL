@@ -157,7 +157,7 @@ const MemberPurchase = () => {
 
                   let allowDiscount = false;
                   const isActiveMember = checkAuthorization(user.token, ACCESS_3);
-                  const isMemberForDiscount = selectedEvent.activeMemberPriceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
+                  const isMemberForDiscount = selectedEvent.product.activeMember.priceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
                   const isMemberForFreeTicket = selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
 
                   if (!normalTicket) {
@@ -221,12 +221,12 @@ const MemberPurchase = () => {
                     if (isMemberForFreeTicket) {
                       return buyFreeTicket(formData);
                     } else {
-                      formData.append("itemId", selectedEvent.activeMemberPriceId);
+                      formData.append("itemId", selectedEvent.product.activeMember.priceId);
                     }
                   } else if (normalTicket) {
-                    formData.append("itemId", selectedEvent.priceId);
+                    formData.append("itemId", selectedEvent.product.guest.priceId);
                   } else {
-                    formData.append("itemId", selectedEvent.memberPriceId);
+                    formData.append("itemId", selectedEvent.product.member.priceId);
                   }
 
                   const responseData = await sendRequest(

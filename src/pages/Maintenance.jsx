@@ -14,7 +14,7 @@ const Maintenance = () => {
                         <div className="col-lg-12">
                             <div className="inner">
                                 <h1 className="theme-gradient">Maintenance Break</h1>
-                                <p style={{ color: 'white', fontSize: '20px' }}>We are making some changes that require time - please check again in a 10-15 minutes! </p>
+                                <p style={{ color: 'white', fontSize: '20px' }}>We are making some changes that require time - please check again in 10-15 minutes! </p>
                                 <ImageFb
                                     style={{ borderRadius: "50%", height: '100px', marginTop: '20px' }}
                                     src="/assets/images/logo/logo.webp"

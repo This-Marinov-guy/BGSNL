@@ -250,6 +250,7 @@ const EventForm = (props) => {
                     ticketImg: initialData?.ticketImg ?? null,
                     ticketColor: initialData?.ticketColor ?? '#faf9f6',
                     ticketQR: `${initialData?.ticketQR ?? true}`,
+                    ticketName: `${initialData?.ticketName ?? true}`,
                     poster: initialData?.poster ?? null,
                     bgImage: initialData?.bgImage ?? 1,
                     bgImageExtra: initialData?.bgImageExtra ?? null,
@@ -520,6 +521,19 @@ const EventForm = (props) => {
                                             <h5 className="center_div">
                                                 <Field type="radio" name="ticketColor" value="#272528" />
                                                 Dark
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
+                                        <h5 className="center_text">With Guest Name</h5>
+                                        <div className="center_div" style={{ gap: '50px' }}>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="ticketName" value={'true'} />
+                                                Yes
+                                            </h5>
+                                            <h5 className="center_div">
+                                                <Field type="radio" name="ticketName" value={'false'} />
+                                                No
                                             </h5>
                                         </div>
                                     </div>

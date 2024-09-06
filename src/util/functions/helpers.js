@@ -88,6 +88,8 @@ export const decryptData = (string) => {
 
 export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = false) => {
     let price;
+    const {product} = selectedEvent
+
     const isMember = user && !!user.token;
     const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_3);
     const isMemberDataFull = user?.name && user?.surname && user?.email; 
@@ -96,19 +98,19 @@ export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = 
         price = 'FREE'
     } else if (selectedEvent.ticketLink) {
         price = 'Check ticket portal'
-    } else if (isActiveMember && selectedEvent.activeMemberEntry) {
-        price = selectedEvent.activeMemberEntry + (!isNaN(selectedEvent.activeMemberEntry) ? ' euro (extra discounted)' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
-    } else if (isMember && (selectedEvent.memberEntry || selectedEvent.isMemberFree)) {
+    } else if (isActiveMember && product.activeMember.price) {
+        price = product.activeMember.price + (!isNaN(product.activeMember.price) ? ' euro (extra discounted)' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
+    } else if (isMember && (product.member.price || selectedEvent.isMemberFree)) {
         price = selectedEvent.isMemberFree ? 'FREE'
-            : selectedEvent.memberEntry + (!isNaN(selectedEvent.memberEntry) ? ' euro (discounted)' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 0) ? selectedEvent.including[0] : '')
-    } else if (selectedEvent.entry) {
-        price = selectedEvent.entry + (!isNaN(selectedEvent.entry) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
+            : product.member.price + (!isNaN(product.member.price) ? ' euro (discounted)' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 0) ? selectedEvent.including[0] : '')
+    } else if (product.guest.price) {
+        price = product.guest.price + (!isNaN(product.guest.price) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
     } else {
         price = 'TBA'
     }
 
     if (!blockDiscounts && isMemberDataFull && selectedEvent.activeMemberPriceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(user.email) || selectedEvent.discountPass.includes(user.name + ' ' + user.surname))) {
-        price = selectedEvent.activeMemberEntry + (!isNaN(selectedEvent.activeMemberEntry) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '');
+        price = product.activeMember.price + (!isNaN(product.activeMember.price) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '');
     }
 
     if (!blockDiscounts && isMemberDataFull && selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(user.email) || selectedEvent.freePass.includes(user.name + ' ' + user.surname))) {
