@@ -152,3 +152,7 @@ export const hasOverlap = (array1, array2) => {
 export const removeSpaces = (input) => {
     return input.replace(/\s+/g, '');
 }
+
+export const removeSpacesAndLowercase = (str) => {
+    return str.replace(/\s+/g, '').toLowerCase();
+}

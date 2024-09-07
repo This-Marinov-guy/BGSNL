@@ -17,14 +17,15 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
-import { encryptData } from "../../util/functions/helpers";
+import { encryptData, removeSpacesAndLowercase } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/defines";
-import {Calendar} from "../../elements/inputs/Calendar";
+import { Calendar } from "../../elements/inputs/Calendar";
 import { showNotification } from "../../redux/notification";
+import { ACCOUNT_KEYS } from "../../util/defines/ACCOUNT_KEYS";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -95,7 +96,7 @@ const SignUp = (props) => {
 
   const handleSelectStep = (e) => {
     const newIndex = e.index;
-    
+
     if (newIndex < activeStep || (region && (newIndex < 2 || selectedMembershipIndex))) {
       setActiveStep(newIndex);
     }
@@ -241,45 +242,31 @@ const SignUp = (props) => {
 
                 );
                 if (responseData.message === 'verified') {
-                  if (values.memberKey) {
+                  if (ACCOUNT_KEYS.includes(removeSpacesAndLowercase(values.email))) {
                     try {
                       const responseData = await sendRequest(
-                        "user/check-member-key",
+                        `user/signup`,
                         "POST",
-                        {
-                          email: values.email,
-                          key: values.memberKey,
-                        }
+                        formData
                       );
-                      if (responseData.message === "verifiedKey") {
-                        try {
-                          const responseData = await sendRequest(
-                            `user/signup`,
-                            "POST",
-                            formData
-                          );
-                          dispatch(
-                            login({
-                              token: responseData.token,
-                              expirationDate: new Date(
-                                new Date().getTime() + 36000000
-                              ).toISOString(),
-                            })
-                          );
-                          dispatch(showNotification({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 }));
+                      dispatch(
+                        login({
+                          token: responseData.token,
+                          expirationDate: new Date(
+                            new Date().getTime() + 36000000
+                          ).toISOString(),
+                        })
+                      );
+                      dispatch(showNotification({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 }));
 
-                          if (responseData.celebrate) {
-                            dispatch(showModal(BIRTHDAY_MODAL));
-                          }
-
-                          navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
-                          sessionStorage.removeItem('prevUrl');
-
-                          return;
-                        } catch (err) {
-                          return;
-                        }
+                      if (responseData.celebrate) {
+                        dispatch(showModal(BIRTHDAY_MODAL));
                       }
+
+                      navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
+                      sessionStorage.removeItem('prevUrl');
+
+                      return;
                     } catch (err) {
                       return;
                     }
@@ -373,7 +360,7 @@ const SignUp = (props) => {
                     <div className="rn-form-group">
                       <Calendar onSelect={(value) => {
                         setFieldValue('birth', value)
-                      }}/>
+                      }} />
                       <ErrorMessage
                         className="error"
                         name="birth"
