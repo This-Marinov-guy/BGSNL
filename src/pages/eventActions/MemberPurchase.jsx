@@ -30,6 +30,7 @@ import { MOMENT_DATE_TIME } from "../../util/functions/date";
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(true);
@@ -153,7 +154,7 @@ const MemberPurchase = () => {
               validationSchema={schema}
               onSubmit={async (values) => {
                 try {
-                  forceStartLoading();
+                  setIsLoading(true);
 
                   let allowDiscount = false;
                   const isActiveMember = checkAuthorization(user.token, ACCESS_3);
@@ -239,7 +240,8 @@ const MemberPurchase = () => {
                   }
 
                 } catch (err) {
-                  console.log(err)
+                } finally {
+                  setIsLoading(false);
                 }
               }}
               initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
@@ -269,11 +271,11 @@ const MemberPurchase = () => {
                   <div style={{ maxWidth: '10em' }}>
                     <WithBackBtn>
                       <button
-                        disabled={loading}
+                        disabled={isLoading}
                         type="submit"
                         className="rn-button-style--2 rn-btn-reverse-green"
                       >
-                        {loading ? <Loader /> : <span>Payment</span>}
+                        {isLoading ? <Loader /> : <span>Payment</span>}
                       </button>
                     </WithBackBtn>
                     {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}

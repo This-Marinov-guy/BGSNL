@@ -82,7 +82,6 @@ export const CalendarWithClock = (props) => {
             setSelected(newSelectedDate);
             if (time && selected) {
                 props.onSelect(newSelectedDate);
-                toggleCalendar();
             } else {
                 props.onSelect(null);
             }
@@ -103,7 +102,6 @@ export const CalendarWithClock = (props) => {
             newDate.setMinutes(minutes);
             setSelected(newDate);
             props.onSelect(newDate);
-            toggleCalendar();
         } else {
             setSelected(date);
             props.onSelect(null);
@@ -140,7 +138,7 @@ export const CalendarWithClock = (props) => {
                         type="time"
                         value={timeValue}
                         onChange={handleTimeChange}
-                        style={{ margin: "0 10px 10px", width: 'auto' }}
+                        style={{ margin: "0 10px 10px", width: '5em' }}
                     />
                     <DayPicker
                         mode="single"

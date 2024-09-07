@@ -27,6 +27,7 @@ import { MOMENT_DATE_TIME } from "../../util/functions/date";
 const GuestPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventClosed, setEventClosed] = useState(false)
@@ -166,7 +167,7 @@ const GuestPurchase = () => {
                   validationSchema={schema}
                   onSubmit={async (values) => {
                     try {
-                      forceStartLoading();
+                      setIsLoading(true);
 
                       let allowDiscount = false;
                       const isGuestForDiscount = selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname));
@@ -203,7 +204,7 @@ const GuestPurchase = () => {
                       // TODO: temp fix untill all events have it
                       const hasQR = selectedEvent.hasOwnProperty('ticketQR') ? selectedEvent.ticketQR : true;
                       const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}&count=${quantity}` : '';
-                      
+
                       const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, values.name, values.surname, selectedEvent.ticketColor, qrCode, selectedEvent.ticketName);
 
                       // formData
@@ -265,6 +266,8 @@ const GuestPurchase = () => {
 
                     } catch (err) {
                       // console.log(err)
+                    } finally {
+                      setIsLoading(false);
                     }
                   }}
                   initialValues={{
@@ -396,11 +399,11 @@ const GuestPurchase = () => {
                       <div>
                         <WithBackBtn>
                           <button
-                            disabled={loading}
+                            disabled={isLoading}
                             type="submit"
                             className="rn-button-style--2 rn-btn-reverse-green mt--20"
                           >
-                            {loading ? <Loader /> : <span>Payment</span>}
+                            {isLoading ? <Loader /> : <span>Payment</span>}
                           </button>
                         </WithBackBtn>
                         {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
