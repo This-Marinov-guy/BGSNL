@@ -161,7 +161,7 @@ const User = () => {
             <div className="col-lg-12">
               <div className="mb--30 mb_sm--0">
                 <h2 className="title">Internships</h2>
-                <p>As a BGSNL member you get special access to our recommended positions. Although public, you get some special credit coming from the organization. Check the section frequently as we aim to add exclusive internships for our members only!</p>
+                <p>As a BGSNL member you get special access to our recommended positions. Check the section frequently as we aim to add exclusive internships for our members only!</p>
                 {INTERNSHIPS.map((i, index) => {
                   return <div key={index} className="row mt--20">
                     <div className="col-lg-8 col-md-6 col-12 reading">
