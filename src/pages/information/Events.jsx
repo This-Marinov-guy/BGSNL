@@ -36,7 +36,7 @@ const Events = () => {
       {/* End Future Events Area */}
 
       {/* Start Past Events Area */}
-      {PAST_EVENTS[region].length <= 3 ? <PastEventsListed/> :  <PastEventsContent />}
+      {PAST_EVENTS[region] && PAST_EVENTS[region].length <= 3 ? <PastEventsListed/> :  <PastEventsContent />}
       {/* End Past Events Area */}
 
       {/* Start Back To Top */}

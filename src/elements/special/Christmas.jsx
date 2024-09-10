@@ -187,7 +187,7 @@ const Christmas = (props) => {
                     </button>
                 </div>
             </div>
-        </Fragment >
+        </Fragment>
     )
 }
 

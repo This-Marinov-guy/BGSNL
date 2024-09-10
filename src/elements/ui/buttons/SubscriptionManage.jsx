@@ -4,6 +4,7 @@ import { useHttpClient } from '../../../hooks/http-hook'
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../../redux/notification';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const SubscriptionManage = (props) => {
     const { loading, sendRequest } = useHttpClient();
@@ -54,7 +55,7 @@ const SubscriptionManage = (props) => {
     }
 
     return (
-        loading ? <div className='center_div mt--40'><Loader /></div> :
+        loading ? <div className='center_div mt--40'><ProgressSpinner style={{ width: '50px', height: '50px' }} /></div> :
             <div className="options-btns-div mt--60">
                 <ConfirmPopup />
                 <button

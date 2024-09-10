@@ -20,6 +20,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserCard from "../../elements/ui/cards/UserCard";
 import BirthdayBanner from "../../elements/banners/BirthdayBanner";
+import Christmas from "../../elements/special/Christmas";
 import { isProd } from "../../util/functions/helpers";
 
 const TABS = ['news', 'tickets', 'internships'];
