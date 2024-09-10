@@ -64,7 +64,7 @@ const EventForm = (props) => {
         }
     };
 
-    const isImageCorrectRatio = (file) => {
+    const isImageCorrectRatio = (file, margin = 0.01) => {
         return new Promise((resolve, reject) => {
             if (!file) {
                 reject(new Error('No file provided'));
@@ -78,7 +78,7 @@ const EventForm = (props) => {
                     const width = img.width;
                     const height = img.height;
 
-                    if (Math.abs(width / height - 1500 / 485) < 0.01) {
+                    if (Math.abs(width / height - 1500 / 485) < margin) {
                         resolve(true);
                     } else {
                         resolve(false);
@@ -474,7 +474,7 @@ const EventForm = (props) => {
                                 <ImageInput
                                     initialImage={values.ticketImg}
                                     onChange={(event) => {
-                                        isImageCorrectRatio(event.target.files[0])
+                                        isImageCorrectRatio(event.target.files[0], 0.02)
                                             .then(isCorrect => {
                                                 if (isCorrect) {
                                                     setFieldValue("ticketImg", event.target.files[0]);
