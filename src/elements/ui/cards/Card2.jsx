@@ -20,7 +20,7 @@ const Card2 = ({ image, title, description, link, action }) => {
                         className="btn-transparent rn-btn-dark"
                         onClick={action}
                     >
-                        <span className="text cursor">Click here</span>
+                        <span className="text pointer">Click here</span>
                     </a> :
                         (link ? <a
                             className="btn-transparent rn-btn-dark"

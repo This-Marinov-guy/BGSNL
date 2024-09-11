@@ -3,6 +3,9 @@ import { Col } from "react-bootstrap";
 import ImageFb from "../../../elements/ui/media/ImageFb";
 import TypewriterEffect from '../../../elements/ui/TypewriterEffect';
 import TeamMember from '../../../elements/devteam/DevTeamMembers';
+import { useDispatch } from "react-redux";
+import { showModal } from "../../../redux/modal";
+import { WEB_DEV_MODAL } from "../../../util/defines/defines";
 
 const teamMembers = [
   {
@@ -30,7 +33,7 @@ const teamMembers = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     name: "Kaloyan Kulov",
     title: "Software Developer",
     imgSrc: "https://media.licdn.com/dms/image/v2/D4D03AQGUMq0cuqlFVA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1718306073326?e=1731542400&v=beta&t=OLcIOFT1hXTY_iaR1Cn2c8hlBSdkSzRMEXwawfXCgQA",
@@ -46,6 +49,8 @@ const teamMembers = [
 const Devs = () => {
   let teamSize = teamMembers.length;
   let columnSize = Math.floor(teamSize / 12);
+
+  const dispatch = useDispatch();
 
   return (
     <React.Fragment>
@@ -63,6 +68,8 @@ const Devs = () => {
                     We help maintain the website, create new features, and ensure
                     the content is frequently updated.
                   </p>
+                  <br/>
+                  <h4>Care to join? Apply now by <a className="" onClick={() => dispatch(showModal(WEB_DEV_MODAL))}>Clicking here!</a></h4>
                 </div>
               </div>
             </div>
