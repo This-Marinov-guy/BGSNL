@@ -13,7 +13,7 @@ const BirthdayModal = () => {
   return (
     <Dialog header="Happy Birthday, dear member" visible={modal === BIRTHDAY_MODAL} onHide={() => dispatch(removeModal())} style={{ maxWidth: '80vw' }} dismissableMask>
       <Confetti />
-      <p className='mt--10'>We are happy that you share the joy and help we bring to people. We want to thank you for your contribution and to cheer with your for the occasion. Hope we share more memories soon!</p>
+      <p className='mt--10'>We are happy that you share the joy and help we bring to people. We want to thank you for your contribution and cheer you on for the occasion. Hope we share more memories soon!</p>
       <ImageFb
         style={{ margin: '10px auto', height: '12em' }}
         className='center_div'
