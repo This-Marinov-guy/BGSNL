@@ -14,7 +14,7 @@ const TeamMember = ({ member }) => {
           {replaceSpaceWithNewLine(member.name)}
         </h3>
         <h4 className="fs-6 text-muted word-break">
-          {member.title}
+          {replaceSpaceWithNewLine(member.title)}
         </h4>
       </div>
 
