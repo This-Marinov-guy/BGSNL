@@ -5,9 +5,11 @@ import { showModal } from '../../../redux/modal';
 import { WEB_DEV_MODAL } from '../../../util/defines/defines';
 import { REGION_INSTAGRAM } from "../../../util/defines/REGIONS_DESIGN";
 import { selectIsAuth } from "../../../redux/user";
+import { useLocation } from "react-router-dom";
 
 const NewsList = () => {
     const dispatch = useDispatch();
+    const location = useLocation();
     const isAuth = useSelector(selectIsAuth)
 
     const NEWS = [
@@ -42,7 +44,7 @@ const NewsList = () => {
         ...NEWS.filter((n) => n.isForMember),
     ];
 
-    const newsArray = isAuth ? MEMBER_NEWS : NEWS;
+    const newsArray = (isAuth && location.pathname === '/user') ? MEMBER_NEWS : NEWS;
 
     return <div className="rn-featured-service-area bg_color--5 pb--40">
         <div className="container">
