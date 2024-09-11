@@ -28,6 +28,18 @@ const teamMembers = [
         url: "https://www.linkedin.com/in/presiyan-penkov-6a7959299/",
       },
     ],
+  },
+  {
+    id: 2,
+    name: "Kaloyan Kulov",
+    title: "Software Developer",
+    imgSrc: "https://media.licdn.com/dms/image/v2/D4D03AQGUMq0cuqlFVA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1718306073326?e=1731542400&v=beta&t=OLcIOFT1hXTY_iaR1Cn2c8hlBSdkSzRMEXwawfXCgQA",
+    socialLinks: [
+      {
+        platform: "linkedin",
+        url: "https://www.linkedin.com/in/kaloyan-kulov/",
+      },
+    ],
   }
 ];
 
@@ -91,7 +103,7 @@ const Devs = () => {
                       </Col>
                     ))
                   ) : (
-                    <p>No team members available.</p>
+                    <p>No team members yet.</p>
                   )}
                 </div>
               </div>

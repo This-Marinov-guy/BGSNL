@@ -1,4 +1,5 @@
 import React from "react";
+import { replaceSpaceWithNewLine } from "../../util/functions/capitalize";
 
 const TeamMember = ({ member }) => {
   return (
@@ -10,7 +11,7 @@ const TeamMember = ({ member }) => {
         />
       <div className="content">
         <h3 className="fs-3 mb-2 word-break">
-          {member.name}
+          {replaceSpaceWithNewLine(member.name)}
         </h3>
         <h4 className="fs-6 text-muted word-break">
           {member.title}

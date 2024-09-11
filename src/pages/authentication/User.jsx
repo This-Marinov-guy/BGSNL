@@ -22,6 +22,7 @@ import UserCard from "../../elements/ui/cards/UserCard";
 import BirthdayBanner from "../../elements/banners/BirthdayBanner";
 import Christmas from "../../elements/special/Christmas";
 import { isProd } from "../../util/functions/helpers";
+import NewsList from "../../elements/ui/lists/NewsList";
 
 const TABS = ['news', 'tickets', 'internships'];
 
@@ -81,41 +82,19 @@ const User = () => {
   useEffect(() => {
     setTimeout(() => {
       if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
-          scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
       }
     }, 100);
-   
+
     setDisableScroll(false);
   }, [tab, currentUser]);
 
   let menuContent = null;
 
-  switch (tab) {  
+  switch (tab) {
     case '':
     case TABS[0]:
-      menuContent = <Fragment>
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="mb--30 mb_sm--0">
-                <h2 className="title">News</h2>
-                <ul>
-                  <li className="mt--40">
-                    <p>Exhibitions of Bulgarian students in Groningen <Link to='/articles/acedemie-minerva'>
-                      Check it out
-                    </Link>
-                    </p>
-                  </li>
-
-                  <li className="mt--40">
-                    <Recruit />
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Fragment>
+      menuContent = <NewsList />
       break;
     case TABS[1]:
       menuContent = <div className="container">
@@ -171,14 +150,14 @@ const User = () => {
                       <h3>Location: </h3><p>{i.location}</p>
                       <h3>Duration: </h3><p>{i.duration}</p>
                       {i.bonuses.length > 0 &&
-                      <>
-                        <h3>Bonuses: </h3><p>{i.bonuses.join(' | ')}</p>
-                      </>}
+                        <>
+                          <h3>Bonuses: </h3><p>{i.bonuses.join(' | ')}</p>
+                        </>}
 
                       {i.requirements.length > 0 && <>
                         <h3>Requirements: </h3><p>{i.requirements.join(' | ')}</p>
                       </>}
-                     <h3>Description: </h3><p>{i.description}</p>
+                      <h3>Description: </h3><p>{i.description}</p>
                     </div>
                     <div className="col-lg-4 col-md-6 col-12" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <img src={i.logo} className={'responsive_img ' + i.logoClass ?? ''} style={{ maxWidth: '300px' }} alt='Company Logo'></img>
@@ -215,7 +194,7 @@ const User = () => {
     />
     <UserUpdateModal currentUser={currentUser} />
     {currentUser.status !== "active" && (
-      <Locked user={currentUser} case="locked" show={currentUser.status}  />
+      <Locked user={currentUser} case="locked" show={currentUser.status} />
     )}
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}
@@ -224,7 +203,7 @@ const User = () => {
       <div className="container">
         <div className="row service-one-wrapper">
           <div className="col-lg-6 col-md-12 col-12 center_div_col">
-            {(!isProd() || currentUser.subscription) ? <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription}  /> : <div className="mt--60" />}
+            {(!isProd() || currentUser.subscription) ? <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} /> : <div className="mt--60" />}
             <div className="service">
               {hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
               <LazyLoadImage src={currentUser.image} alt="profile" className="team_member_border-2" />
@@ -248,7 +227,7 @@ const User = () => {
           onClick={() => {
             setDisableScroll(true);
             setTab(t);
-            }}
+          }}
         >
           {t}
         </Link>
@@ -259,7 +238,7 @@ const User = () => {
     {/* End User Collection */}
 
     {/* Start Footer Style  */}
-    <FooterTwo forceRegion={currentUser.region ?? null}/>
+    <FooterTwo forceRegion={currentUser.region ?? null} />
     {/* End Footer Style  */}
     {/* Start Back To Top */}
     <div className="backto-top">

@@ -26,6 +26,8 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import AuthLayout from "./layouts/authentication/AuthLayout";
 import GuestLayout from "./layouts/authentication/GuestLayout";
 import { ACCESS_1, ACCESS_2, ACCESS_3 } from "./util/defines/defines";
+import Recruit from "./elements/special/Recruite";
+import RecruitModal from "./elements/ui/modals/RecruitModal";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -166,6 +168,7 @@ const Root = () => {
         <PageNavigationFunc />
         <Suspense fallback={<PageLoading />}>
           <GlobalError>
+            <RecruitModal />
             <BirthdayModal />
             <Toast ref={toast} position="top-center" life={8000} />
             <Routes>

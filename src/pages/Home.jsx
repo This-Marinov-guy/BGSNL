@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeModal, selectModal, showModal } from '../redux/modal';
+import { WEB_DEV_MODAL } from '../util/defines/defines';
 import { selectUser } from "../redux/user";
 import Header from "../component/header/Header";
 import AboutUs from "../component/HomeLayout/homeOne/AboutUs";
@@ -17,12 +19,12 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import RegionLogos from "../elements/RegionLogos";
 import Recruit from "../elements/special/Recruite";
+import NewsList from "../elements/ui/lists/NewsList";
 
 const Home = () => {
   const user = useSelector(selectUser);
-
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const { region } = useParams();
 
   useEffect(() => {
@@ -111,29 +113,8 @@ const Home = () => {
       {/* End About Area  */}
       {/* <Greeting /> */}
       {/* Start News Area */}
-      <div className="container mt--110 mb--80">
-        <h2 className="title">News</h2>
-        <ul style={{ margin: '0', padding: '0' }}>
-          <li className="mt--40" ref={recruitRef} >
-            <p> Membership 2024-2025 open. <Link to='/signup'>
-              Sign up!
-            </Link>
-            </p>
-          </li>
-
-          <li className="mt--40">
-            <p>Еxhibitions of Bulgarian students in Groningen <Link to='/articles/acedemie-minerva'>
-              Check it out
-            </Link>
-            </p>
-          </li>
-
-          <li className="mt--40" ref={recruitRef}>
-            <Recruit />
-          </li>
-
-        </ul>
-
+      <div className="mt--110 mb--80">
+        <NewsList />
       </div>
       {/* End News Area */}
 

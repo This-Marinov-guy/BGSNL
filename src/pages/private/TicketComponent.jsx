@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { createCustomerTicket } from '../../util/functions/ticket-creator';
-import EventCard from '../../elements/ui/cards/EventCard';
-import EventCard2 from '../../elements/ui/cards/EventCard2';
-import EventCard2List from '../../elements/ui/lists/EventCard2List';
-import EventCardList from '../../elements/ui/lists/EventCardList';
 import { decryptData } from '../../util/functions/helpers';
 
 const TicketComponent = () => {
@@ -30,8 +26,6 @@ const TicketComponent = () => {
 
     return (<>
         <img src={ticketDataUrl} alt="Customer Ticket" />
-        {/* <EventCardList/>
-        <EventCard2List/> */}
     </>)
 }
 

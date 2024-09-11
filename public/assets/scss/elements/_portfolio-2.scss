@@ -2,11 +2,10 @@
     Portfolio Area 
 ==================*/
 .portfolio-2 {
-  scale: 0.8;
   position: relative;
   @extend %transition;
-  height: 12em;
-  width: 100%;
+  height: 8em;
+  width: 80%;
   padding-top: 35%;
   
   .thumbnail-inner {

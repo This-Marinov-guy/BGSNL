@@ -59,6 +59,17 @@ export const REGION_FLICKER = {
     eindhoven: ''
 }
 
+export const REGION_INSTAGRAM = {
+    netherlands: 'https://www.instagram.com/bulgariansociety.netherlands',
+    groningen: 'https://www.instagram.com/bulgariansociety.gro',
+    rotterdam: 'https://www.instagram.com/bulgariansociety.rtm',
+    leeuwarden: 'https://www.instagram.com/bulgariansociety.lwd',
+    breda: 'https://www.instagram.com/bulgariansociety.bred',
+    amsterdam: 'https://www.instagram.com/bulgariansociety.ams',
+    maastricht: 'https://www.instagram.com/bulgariansociety.maas',
+    eindhoven: 'https://www.instagram.com/bulgariansociety.ein'
+}
+
 export const REGION_SOCIALS = {
     netherlands: [
         { Social: <FaInstagram />, link: "https://www.instagram.com/bulgariansociety.netherlands/" },

@@ -27,6 +27,7 @@ export const BIRTHDAY_MODAL = 'birthday_modal';
 export const USER_UPDATE_MODAL = 'user_update_modal';
 export const RESET_PASSWORD_MODAL = 'reset_password_modal';
 export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';
+export const WEB_DEV_MODAL = 'web_developer_modal';
 
 //toasts
 export const SUCCESS_STYLE = {

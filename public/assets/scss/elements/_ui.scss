@@ -227,13 +227,13 @@ hr {
 
 /* Hide the scrollbar for all PrimeReact Dialogs */
 .p-dialog .p-dialog-content::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+  width: 0;
+  height: 0;
 }
 
 .p-dialog .p-dialog-content {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .p-toast-message {
@@ -267,11 +267,11 @@ hr {
 }
 
 .p-button {
-  color: black !important
+  color: black !important;
 }
 
 .p-icon-field > .p-input-icon {
-  top:0 !important;
+  top: 0 !important;
   margin-top: 0 !important;
 }
 
@@ -289,5 +289,9 @@ hr {
 }
 
 .plain {
-    list-style-type: none;
+  list-style-type: none;
+}
+
+.cursor {
+  cursor: pointer;
 }
