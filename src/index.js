@@ -85,8 +85,6 @@ const Fail = lazy(() => import("./pages/redirects/Fail"));
 
 const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
 
-let gaInit = false;
-
 const PageNavigationFunc = () => {
   const { pathname } = useLocation();
 
@@ -126,13 +124,15 @@ const Root = () => {
   }, [user.token, logout, user.expirationDate]);
 
   useEffect(() => {
-    clarityTrack();
-
-    if (!gaInit) {
-      ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
+    if (process.env.REACT_APP_CLARITY_ENABLE) {
+      clarityTrack();
     }
 
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    if (process.env.REACT_APP_GTM_ENABLE && isProd()) {
+      ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
+      ReactGA.pageview(window.location.pathname + window.location.search);
+    }
+
     let storedData = JSON.parse(localStorage.getItem("userData"));
     if (
       storedData &&
