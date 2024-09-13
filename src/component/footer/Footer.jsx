@@ -22,12 +22,12 @@ const Footer = ({forceRegion}) => {
             <div className="col-lg-6">
               <div className="footer-left" style={{ background: `linear-gradient(145deg, ${REGION_MAIN_COLOR[region] || '#f81f01'} 0%, #ab1c02 100%)` }}>
                 <div className="inner">
-                  <span>Have a Question?</span>
                   <h2>
-                    Do not <br />
-                    hesitate to contact us
+                    Bulgarian <br />
+                    Society <br/>
+                    Netherlands
                   </h2>
-                  <div className="button-container">
+                  <div className="button-container-2">
                     <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showDonation())}>Support us</button>
                     <Link style={{ height: "73px" }} to="/developers">
                       <button className="rn-button-style--2 rn-btn-reverse-green">Developers</button>
@@ -46,9 +46,6 @@ const Footer = ({forceRegion}) => {
                       <h4>Quick Link</h4>
                       <ul className="ft-link">
                         <li>
-                          <Link to='/about'>About</Link>
-                        </li>
-                        <li>
                           <Link to={`/${region}/past-events`}>Events</Link>
                         </li>
                         <li>
@@ -66,18 +63,18 @@ const Footer = ({forceRegion}) => {
                   {/* Start Single Widget  */}
                   <div className="col-lg-6 col-sm-6 col-12 mt_mobile--30">
                     <div className="footer-link">
-                      <h4>Find us</h4>
+                      <h4>Find the society on</h4>
                       <ul className="ft-link">
                         <li>
-                          <a href={`mailto:${REGION_EMAIL[region]}`}>
-                            {REGION_EMAIL[region]}
+                          <a href={`mailto:${REGION_EMAIL['netherlands']}`}>
+                            {REGION_EMAIL['netherlands']}
                           </a>
                         </li>
                       </ul>
 
                       <div className="social-share-inner">
                         <ul className="social-share social-style--2 d-flex justify-content-start liststyle mt--15">
-                          {REGION_SOCIALS[region] && REGION_SOCIALS[region || `default`].map((val, i) => (
+                          {REGION_SOCIALS[`netherlands`].map((val, i) => (
                             <li key={i}>
                               <a href={`${val.link}`}>{val.Social}</a>
                             </li>

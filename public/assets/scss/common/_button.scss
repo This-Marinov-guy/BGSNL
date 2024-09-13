@@ -350,6 +350,14 @@ a {
     }
   }
 
+  .button-container-2 {
+    display: flex;
+    flex-direction: row; 
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start; 
+  }
+
 .btn-icon-frame {
   border: 2px solid;
   margin: 0 10px;

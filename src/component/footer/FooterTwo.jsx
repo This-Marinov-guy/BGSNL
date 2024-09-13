@@ -25,8 +25,8 @@ const FooterTwo = ({ forceRegion }) => {
                   <Link to="/">
                     <ImageFb
                       style={{ borderRadius: "50%" }}
-                      src={`/assets/images/logo/${REGIONS.includes(region) ? region : 'logo'}.webp`}
-                      fallback={`/assets/images/logo/${REGIONS.includes(region) ? region : 'logo'}.jpg`}
+                      src={`/assets/images/logo/logo.webp`}
+                      fallback={`/assets/images/logo/logo.jpg`}
                       alt="Logo images"
                     />
                   </Link>
@@ -44,11 +44,7 @@ const FooterTwo = ({ forceRegion }) => {
           <div className="col-lg-4 col-md-6 col-sm-6 col-12">
             <div className="inner text-center">
               <ul className="social-share rn-lg-size d-flex justify-content-center liststyle">
-                {REGION_SOCIALS[region] ? REGION_SOCIALS[region].map((val, i) => (
-                  <li key={i}>
-                    <a href={`${val.link}`}>{val.Social}</a>
-                  </li>
-                )) : REGION_SOCIALS['netherlands'].map((val, i) => (
+                {REGION_SOCIALS['netherlands'].map((val, i) => (
                   <li key={i}>
                     <a href={`${val.link}`}>{val.Social}</a>
                   </li>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaInstagram, FaFlickr, FaLinkedinIn, FaLinkedin, FaFacebookF } from "react-icons/fa";
+import { FaInstagram, FaFlickr, FaLinkedinIn, FaLinkedin, FaFacebookF, FaMailBulk } from "react-icons/fa";
 
 export const BG_INDEX = 23
 
@@ -17,7 +17,6 @@ export const REGION_MAIN_COLOR = {
     eindhoven: '#FF914D'
 }
 
-
 export const REGION_SECOND_COLOR = {
     groningen: '#017363',
     rotterdam: '#004AB0',
@@ -29,6 +28,7 @@ export const REGION_SECOND_COLOR = {
 }
 
 export const REGION_EMAIL = {
+    netherlands: 'bulgariansociety.nl@gmail.com',
     groningen: 'bulgariansociety.gro@gmail.com',
     rotterdam: 'bulgariansociety.rtm@gmail.com',
     leeuwarden: 'bulgariansociety.lwd@gmail.com',
@@ -77,6 +77,10 @@ export const REGION_SOCIALS = {
             Social: <FaLinkedin />,
             link: "https://www.linkedin.com/company/bulgarian-society-netherlands",
         },
+        {
+            Social: <FaMailBulk />,
+            link: 'mailto:' + REGION_EMAIL.netherlands
+        }
     ],
     groningen: [
         { Social: <FaInstagram />, link: "https://www.instagram.com/bulgariansociety.gro/" },
