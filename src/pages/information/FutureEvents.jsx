@@ -57,19 +57,19 @@ const FutureEventsContent = ({ displayAll }) => {
             </div>
             {displayAll ?
               <div className="col-lg-12">
-                  {REGIONS.map((region, index) => {
-                    if (events[region].length) {
-                      return <div className='row mt--20' key={index}>
-                        <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
-                          <PortfolioList2
-                            style="society"
-                            target={events[region]}
-                            styevariation="text-center"
-                            column="col-lg-4 col-md-5 col-sm-6"
-                          />
-                      </div>
-                    }
-                  })}
+                {eventsLoading ? <EventsLoading /> : REGIONS.map((region, index) => {
+                  if (events[region].length) {
+                    return <div className='row mt--20' key={index}>
+                      <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
+                      <PortfolioList2
+                        style="society"
+                        target={events[region]}
+                        styevariation="text-center"
+                        column="col-lg-4 col-md-5 col-sm-6"
+                      />
+                    </div>
+                  }
+                })}
               </div>
               :
               <div className="col-lg-12">
