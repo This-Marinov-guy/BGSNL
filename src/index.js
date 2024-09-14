@@ -1,7 +1,7 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga4";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -130,7 +130,6 @@ const Root = () => {
 
     if (process.env.REACT_APP_GTM_ENABLE && isProd()) {
       ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
-      ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
     let storedData = JSON.parse(localStorage.getItem("userData"));
