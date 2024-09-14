@@ -1,7 +1,6 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment, useRef } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import ReactGA from "react-ga4";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
@@ -9,7 +8,7 @@ import { useSelector } from "react-redux";
 import { login, logout, selectUser } from "./redux/user";
 import { useDispatch } from "react-redux";
 import { PrimeReactProvider } from 'primereact/api';
-import { clarityTrack, isProd } from "./util/functions/helpers";
+import { clarityTrack, gaTrack, isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { Toast } from 'primereact/toast';
@@ -129,7 +128,7 @@ const Root = () => {
     }
 
     if (process.env.REACT_APP_GTM_ENABLE && isProd()) {
-      ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
+      gaTrack();
     }
 
     let storedData = JSON.parse(localStorage.getItem("userData"));

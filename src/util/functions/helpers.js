@@ -1,5 +1,7 @@
+import React from 'react';
 import { clarity } from 'react-microsoft-clarity';
 import Resizer from "react-image-file-resizer";
+import ReactGA from "react-ga4";
 import CryptoJS from 'crypto-js';
 import { checkAuthorization } from './authorization';
 import { ACCESS_3 } from '../defines/defines';
@@ -13,6 +15,18 @@ export const removeLogsOnProd = () => {
         console.error = () => { };
         console.warn = () => { };
         console.debug = () => { };
+    }
+}
+
+export const gaTrack = () => {
+    if (!isProd()) {
+        return;
+    }
+
+    ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
+
+    if (ReactGA.isInitialized()) {
+        console.log('Track with Google Analytics');
     }
 }
 
