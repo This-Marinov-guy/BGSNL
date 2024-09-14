@@ -127,7 +127,7 @@ const Root = () => {
       clarityTrack();
     }
 
-    if (process.env.REACT_APP_GTM_ENABLE && isProd()) {
+    if (process.env.REACT_APP_GTM_ENABLE) {
       gaTrack();
     }
 
