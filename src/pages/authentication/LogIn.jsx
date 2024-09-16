@@ -9,7 +9,7 @@ import { Password } from 'primereact/password';
 import Loader from "../../elements/ui/loading/Loader";
 import { showModal } from "../../redux/modal";
 import { Link } from "react-router-dom";
-import { BIRTHDAY_MODAL, GENERAL_ERROR } from "../../util/defines/defines";
+import { BIRTHDAY_MODAL, GENERAL_ERROR } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
 import ForgottenPassword from "./ForgottenPassword";
 

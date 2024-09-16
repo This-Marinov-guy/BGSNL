@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeModal, selectModal, showModal } from '../redux/modal';
-import { WEB_DEV_MODAL } from '../util/defines/defines';
+import { WEB_DEV_MODAL } from '../util/defines/common';
 import { selectUser } from "../redux/user";
 import Header from "../component/header/Header";
 import AboutUs from "../component/HomeLayout/homeOne/AboutUs";

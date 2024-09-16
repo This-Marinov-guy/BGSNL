@@ -2,7 +2,7 @@ import React from "react";
 import Slider from "react-slick";
 import ImageFb from "../../../elements/ui/media/ImageFb";
 import { presentation } from "../../../page-demo/script";
-import { SLIDESHOW } from "../../../util/defines/common";
+import { SLIDESHOW } from "../../../util/defines/GLOBAL_INFO";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const AboutUs = () => {

@@ -1,7 +1,7 @@
 import React, { Component, Fragment, useState } from "react";
 import CountUp from "react-countup";
 import VisibilitySensor from "react-visibility-sensor";
-import { STATISTICS } from "../../util/defines/common";
+import { STATISTICS } from "../../util/defines/GLOBAL_INFO";
 
 const CounterOne = () => {
   const [didViewCountUp, setDidViewCountUp] = useState(false);

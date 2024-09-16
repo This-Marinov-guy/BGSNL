@@ -11,7 +11,7 @@ import moment from 'moment';
 import { useHttpClient } from '../../../../hooks/http-hook';
 import Loader from '../../../ui/loading/Loader';
 import { showNotification } from '../../../../redux/notification';
-import { EVENT_DELETED } from '../../../../util/defines/defines';
+import { EVENT_DELETED } from '../../../../util/defines/common';
 import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
 
 const EventModal = (props) => {

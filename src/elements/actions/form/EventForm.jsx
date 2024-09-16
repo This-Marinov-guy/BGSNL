@@ -13,7 +13,7 @@ import InputsBuilder from "../../inputs/InputsBuilder";
 import { askBeforeRedirect, isProd, resizeFile } from "../../../util/functions/helpers";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/defines";
+import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/common";
 import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
 import { Calendar, CalendarWithClock } from "../../inputs/Calendar";

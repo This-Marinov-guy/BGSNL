@@ -3,7 +3,7 @@ import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
 import CryptoJS from 'crypto-js';
 import { checkAuthorization } from './authorization';
-import { ACCESS_3 } from '../defines/defines';
+import { ACCESS_3 } from '../defines/common';
 
 export const isProd = () => {
     return process.env.NODE_ENV === 'production'

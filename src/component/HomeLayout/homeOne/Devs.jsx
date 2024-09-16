@@ -5,7 +5,7 @@ import TypewriterEffect from '../../../elements/ui/TypewriterEffect';
 import TeamMember from '../../../elements/devteam/DevTeamMembers';
 import { useDispatch } from "react-redux";
 import { showModal } from "../../../redux/modal";
-import { WEB_DEV_MODAL } from "../../../util/defines/defines";
+import { WEB_DEV_MODAL } from "../../../util/defines/common";
 
 const teamMembers = [
   {

@@ -4,7 +4,7 @@ import { FiCircle, FiCheckCircle, FiEdit } from "react-icons/fi";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import { useDispatch } from 'react-redux';
-import { USER_UPDATE_MODAL, formatRole } from '../../../util/defines/defines';
+import { USER_UPDATE_MODAL, formatRole } from '../../../util/defines/common';
 import moment from 'moment';
 
 const UserCard = ({ user }) => {

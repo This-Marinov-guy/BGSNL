@@ -24,7 +24,7 @@ import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import AuthLayout from "./layouts/authentication/AuthLayout";
 import GuestLayout from "./layouts/authentication/GuestLayout";
-import { ACCESS_1, ACCESS_2, ACCESS_3 } from "./util/defines/defines";
+import { ACCESS_1, ACCESS_2, ACCESS_3 } from "./util/defines/common";
 import Recruit from "./elements/special/Recruite";
 import RecruitModal from "./elements/ui/modals/RecruitModal";
 

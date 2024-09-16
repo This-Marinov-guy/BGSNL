@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { showModal } from '../../redux/modal';
-import { WEB_DEV_MODAL } from '../../util/defines/defines';
+import { WEB_DEV_MODAL } from '../../util/defines/common';
 
 const Recruit = () => {
     const dispatch = useDispatch();

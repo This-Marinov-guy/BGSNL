@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getStyleBySeverity } from "../util/defines/defines";
+import { getStyleBySeverity } from "../util/defines/common";
 
 export const notificationSlice = createSlice({
     name: "notification",

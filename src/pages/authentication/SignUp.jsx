@@ -22,7 +22,7 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
-import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/defines";
+import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/common";
 import { Calendar } from "../../elements/inputs/Calendar";
 import { showNotification } from "../../redux/notification";
 import { ACCOUNT_KEYS } from "../../util/defines/ACCOUNT_KEYS";

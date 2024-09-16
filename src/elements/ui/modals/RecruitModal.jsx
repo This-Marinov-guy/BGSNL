@@ -2,7 +2,7 @@ import React from 'react'
 import { Dialog } from 'primereact/dialog';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeModal, selectModal } from '../../../redux/modal';
-import { WEB_DEV_MODAL } from '../../../util/defines/defines';
+import { WEB_DEV_MODAL } from '../../../util/defines/common';
 import ContactForm from '../../contact/ContactForm';
 
 const RecruitModal = () => {

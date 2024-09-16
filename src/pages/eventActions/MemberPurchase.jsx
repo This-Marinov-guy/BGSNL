@@ -24,7 +24,7 @@ import moment from "moment";
 import { Message } from 'primereact/message';
 import { encryptData, estimatePriceByEvent } from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
-import { ACCESS_3 } from "../../util/defines/defines";
+import { ACCESS_3 } from "../../util/defines/common";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 
 const MemberPurchase = () => {

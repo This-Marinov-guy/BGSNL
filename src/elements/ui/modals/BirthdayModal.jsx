@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import { removeModal, selectModal } from "../../../redux/modal";
 import { Dialog } from 'primereact/dialog';
-import { BIRTHDAY_MODAL } from "../../../util/defines/defines";
+import { BIRTHDAY_MODAL } from "../../../util/defines/common";
 import Confetti from 'react-confetti'
 import ImageFb from '../media/ImageFb';
 

@@ -8,7 +8,7 @@ import Loader from "../../../elements/ui/loading/Loader";
 import ImageInput from "../../../elements/inputs/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { USER_UPDATE_MODAL } from "../../../util/defines/defines";
+import { USER_UPDATE_MODAL } from "../../../util/defines/common";
 
 const schema = yup.object().shape({
     image: yup.string(),

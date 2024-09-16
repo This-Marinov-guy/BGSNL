@@ -2,7 +2,7 @@ import React from "react";
 import Card2 from "../cards/Card2";
 import { useDispatch, useSelector } from 'react-redux';
 import { showModal } from '../../../redux/modal';
-import { WEB_DEV_MODAL } from '../../../util/defines/defines';
+import { WEB_DEV_MODAL } from '../../../util/defines/common';
 import { REGION_INSTAGRAM } from "../../../util/defines/REGIONS_DESIGN";
 import { selectIsAuth } from "../../../redux/user";
 import { useLocation } from "react-router-dom";
