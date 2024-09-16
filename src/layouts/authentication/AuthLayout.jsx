@@ -47,7 +47,6 @@ const AuthLayout = ({ children, access = [] }) => {
                         return;
                     }
                 } catch (error) {
-                    console.error('Authorization check failed:', error);
                     dispatch(showNotification({
                         severity: 'error',
                         detail: 'An error occurred while checking your access. Please try again.'
@@ -61,7 +60,7 @@ const AuthLayout = ({ children, access = [] }) => {
         };
 
         checkAuth();
-    }, [user, routePath, access, dispatch]);
+    }, [user, routePath, access]);
 
     if (authState.isLoading) {
         return <PageLoading/>; 
