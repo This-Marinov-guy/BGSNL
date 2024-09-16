@@ -9,7 +9,7 @@ import { useLoadEvents } from '../../../../hooks/api-hooks';
 import EventsLoading from '../../../ui/loading/EventsLoading';
 
 const EventList = () => {
-    const {reloadEvents, eventsLoading} = useLoadEvents();
+    const {reloadEvents, eventsLoading} = useLoadEvents(true);
 
     const [searchParams, setSearchParams] = useSearchParams();
     const regionParam = REGIONS.includes(searchParams.get("region")) ? searchParams.get("region") : '';
@@ -18,7 +18,7 @@ const EventList = () => {
     const events = useSelector(selectEvents);
 
     useEffect(() => {
-        reloadEvents(2000);
+        reloadEvents(3000);
     }, [])
 
     return (

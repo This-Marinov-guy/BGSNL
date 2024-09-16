@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHttpClient } from "./http-hook";
 import { loadEvents } from "../redux/events";
 
-export const useLoadEvents = () => {
+export const useLoadEvents = (withFullData = false) => {
     const [eventsLoading, setEventsLoading] = useState(false);
     const dispatch = useDispatch();
     const { sendRequest } = useHttpClient();
@@ -17,7 +17,8 @@ export const useLoadEvents = () => {
                 await new Promise(resolve => setTimeout(resolve, withDelay));
             }
 
-            const responseData = await sendRequest(`event/events-list`);
+            const url = withFullData ? 'future-event/full-data-events-list' : `event/events-list`;
+            const responseData = await sendRequest(url);
             dispatch(loadEvents(responseData.events));
         } catch (err) {
 
