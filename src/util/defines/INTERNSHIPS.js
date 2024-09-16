@@ -1,6 +1,6 @@
 export const INTERNSHIPS = [
     {
-        logo: 'https://studybuddy.bg/wp-content/uploads/2021/05/studybuddy_logo-300x200.png',
+        logo: '/assets/images/brand/brand-04.png',
         company: 'Study Buddy Ltd.',
         specialty: 'Marketing, social media',
         location: 'Remote',
