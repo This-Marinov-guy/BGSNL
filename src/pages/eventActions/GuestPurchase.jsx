@@ -54,7 +54,7 @@ const GuestPurchase = () => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/actions/full-event-details/${eventId}`, "GET", null, {}, false);
+        const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
       } catch (err) {

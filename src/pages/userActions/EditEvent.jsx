@@ -30,7 +30,7 @@ const EditEvent = (props) => {
       
       try {
         setPageLoading(true);
-        const responseData = await sendRequest(`event/actions/full-event-details/${eventId}`);
+        const responseData = await sendRequest(`future-event/full-event-details/${eventId}`);
         dispatch(loadSingleEvent(responseData.event));
 
         if (!event) {

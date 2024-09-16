@@ -198,8 +198,8 @@ const EventForm = (props) => {
                         });
 
                         const responseData = props.edit ?
-                            await sendRequest(`event/actions/edit-event/${eventId}`, 'PATCH', formData)
-                            : await sendRequest('event/actions/add-event', 'POST', formData);
+                            await sendRequest(`future-event/edit-event/${eventId}`, 'PATCH', formData)
+                            : await sendRequest('future-event/add-event', 'POST', formData);
 
                         if (responseData.status) {
                             dispatch(showNotification(props.edit ? EVENT_EDITED : EVENT_ADDED));

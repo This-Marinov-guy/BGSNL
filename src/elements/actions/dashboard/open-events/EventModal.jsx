@@ -31,7 +31,7 @@ const EventModal = (props) => {
 
 
     const onDelete = async () => {
-        const responseData = await sendRequest(`event/actions/delete-event/${props.event.id}`, 'DELETE');
+        const responseData = await sendRequest(`future-event/delete-event/${props.event.id}`, 'DELETE');
 
         if (responseData.status) {
             dispatch(showNotification(EVENT_DELETED));
