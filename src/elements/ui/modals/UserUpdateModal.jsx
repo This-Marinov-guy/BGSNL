@@ -99,7 +99,7 @@ const UserUpdateModal = ({currentUser}) => {
                     if (currentUser.email !== values.email) {
                         try {
                             const responseData = await sendRequest(
-                                "user/check-email",
+                                "security/check-email",
                                 "POST",
                                 {
                                     email: values.email,

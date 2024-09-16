@@ -37,7 +37,7 @@ const Login = () => {
     event.preventDefault();
     try {
       const responseData = await sendRequest(
-        `user/login`,
+        `security/login`,
         "POST",
         {
           email: loginFormValues.email,

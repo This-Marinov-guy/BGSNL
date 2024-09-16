@@ -59,7 +59,7 @@ const MemberPurchase = () => {
     const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/${userId}`);
+        const responseData = await sendRequest(`user/current`);
         setCurrentUser(responseData.user);
       } catch (err) {
       }

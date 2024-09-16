@@ -29,7 +29,7 @@ const Locked = () => {
 
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/${userId}`);
+        const responseData = await sendRequest(`user/current`);
         setCurrentUser(responseData.user);
         setIsLoaded(true);
       } catch (err) {

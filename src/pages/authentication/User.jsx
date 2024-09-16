@@ -65,7 +65,7 @@ const User = () => {
     const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/${userId}?withTickets=${true}`);
+        const responseData = await sendRequest(`user/current?withTickets=${true}`);
         setCurrentUser(responseData.user);
         setHasBirthday(responseData.celebrate);
       } catch (err) {

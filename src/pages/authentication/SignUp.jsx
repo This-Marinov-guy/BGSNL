@@ -234,7 +234,7 @@ const SignUp = (props) => {
               );
               try {
                 const responseData = await sendRequest(
-                  "user/check-email",
+                  "security/check-email",
                   "POST",
                   {
                     email: values.email,
@@ -245,7 +245,7 @@ const SignUp = (props) => {
                   if (ACCOUNT_KEYS.includes(removeSpacesAndLowercase(values.email))) {
                     try {
                       const responseData = await sendRequest(
-                        `user/signup`,
+                        `security/signup`,
                         "POST",
                         formData
                       );

@@ -74,7 +74,7 @@ const ForgottenPassword = (props) => {
         event.preventDefault();
         try {
             const responseData = await sendRequest(
-                "user/send-password-token",
+                "security/send-password-token",
                 "POST",
                 {
                     email: formValues.email,
@@ -97,7 +97,7 @@ const ForgottenPassword = (props) => {
         
         try {
             const responseData = await sendRequest(
-                "user/verify-token",
+                "security/verify-token",
                 "POST",
                 parameters
             );
@@ -111,7 +111,7 @@ const ForgottenPassword = (props) => {
     const changePassword = async (values) => {
         try {
             const responseData = await sendRequest(
-                `user/change-password`,
+                `security/change-password`,
                 "PATCH",
                 {
                     token: formValues.token,
