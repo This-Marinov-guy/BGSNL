@@ -1,1 +1,0 @@
-export const ACCOUNT_KEYS = ['penkov.pr@gmail.com', 'kulovkaloyan@gmail.com'];

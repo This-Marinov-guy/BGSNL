@@ -25,7 +25,6 @@ import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/common";
 import { Calendar } from "../../elements/inputs/Calendar";
 import { showNotification } from "../../redux/notification";
-import { ACCOUNT_KEYS } from "../../util/defines/ACCOUNT_KEYS";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -232,61 +231,56 @@ const SignUp = (props) => {
                 "notificationTypeTerms",
                 values.notificationTypeTerms
               );
-              try {
-                const responseData = await sendRequest(
-                  "security/check-email",
-                  "POST",
-                  {
-                    email: values.email,
-                  },
+              const responseData = await sendRequest(
+                "security/check-email",
+                "POST",
+                {
+                  email: values.email,
+                },
+              );
 
-                );
-                if (responseData.message === 'verified') {
-                  if (ACCOUNT_KEYS.includes(removeSpacesAndLowercase(values.email))) {
-                    try {
-                      const responseData = await sendRequest(
-                        `security/signup`,
-                        "POST",
-                        formData
-                      );
-                      dispatch(
-                        login({
-                          token: responseData.token,
-                          expirationDate: new Date(
-                            new Date().getTime() + 36000000
-                          ).toISOString(),
-                        })
-                      );
-                      dispatch(showNotification({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 }));
-
-                      if (responseData.celebrate) {
-                        dispatch(showModal(BIRTHDAY_MODAL));
-                      }
-
-                      navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
-                      sessionStorage.removeItem('prevUrl');
-
-                      return;
-                    } catch (err) {
-                      return;
-                    }
-                  } else {
-                    try {
-                      const responseData = await sendRequest(
-                        "payment/checkout/signup",
-                        "POST",
-                        formData
-                      );
-                      if (responseData.url) {
-                        window.location.assign(responseData.url);
-                      }
-                    } catch (err) { }
-                  }
-                }
-              } catch (err) {
+              if (!responseData.hasOwnProperty('status')) {
                 return;
               }
-            }}
+
+              if (responseData.status === true) {
+                const checkMember = await sendRequest('security/check-member-key', 'POST', { email: removeSpacesAndLowercase(values.email) });
+
+                if (checkMember?.status === true) {
+                  const responseData = await sendRequest(
+                    `security/signup`,
+                    "POST",
+                    formData
+                  );
+                  dispatch(
+                    login({
+                      token: responseData.token,
+                      expirationDate: new Date(
+                        new Date().getTime() + 36000000
+                      ).toISOString(),
+                    })
+                  );
+                  dispatch(showNotification({ severity: 'success', summary: 'Welcome to the Society', detail: 'Hop in the User section to see your tickets, news and your information', life: 7000 }));
+
+                  if (responseData.celebrate) {
+                    dispatch(showModal(BIRTHDAY_MODAL));
+                  }
+
+                  navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
+                  sessionStorage.removeItem('prevUrl');
+                }
+              } else {
+                const responseData = await sendRequest(
+                  "payment/checkout/signup",
+                  "POST",
+                  formData
+                );
+                if (responseData.url) {
+                  window.location.assign(responseData.url);
+                }
+              }
+            }
+            }
             initialValues={{
               name: '',
               surname: '',
@@ -630,8 +624,9 @@ const SignUp = (props) => {
               </Form>
             )}
           </Formik>
-        </div>}
-      </div>
+        </div>
+        }
+      </div >
       stepButtons = null
       break;
     default:

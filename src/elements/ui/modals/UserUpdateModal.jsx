@@ -48,7 +48,7 @@ const schema = yup.object().shape({
         .oneOf([yup.ref("password"), null], "Passwords do not match")
 });
 
-const UserUpdateModal = ({currentUser}) => {
+const UserUpdateModal = ({ currentUser }) => {
     const { loading, sendRequest } = useHttpClient();
 
     const modal = useSelector(selectModal);
@@ -104,20 +104,24 @@ const UserUpdateModal = ({currentUser}) => {
                                 {
                                     email: values.email,
                                 },
-
                             );
+
+                            if (responseData?.status === true) {
+                                const responseEditUser = await sendRequest(
+                                    `user/edit-info`,
+                                    "PATCH",
+                                    formData
+                                );
+
+                                if (responseEditUser?.status === true) {
+                                    window.location.reload();
+                                }
+                            }
                         } catch (err) {
                             return;
                         }
                     }
-                    try {
-                        const responseData = await sendRequest(
-                            `user/edit-info`,
-                            "PATCH",
-                            formData
-                        );
-                        window.location.reload();
-                    } catch (err) { }
+
                 }}
                 initialValues={{
                     image: "",
