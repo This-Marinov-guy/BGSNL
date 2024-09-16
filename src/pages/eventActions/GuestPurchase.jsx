@@ -118,11 +118,21 @@ const GuestPurchase = () => {
           alt="Logo"
         />
         <h3 className="">Opps ... it is all SOLD OUT! Please check the event description for tickets on-the-door or contact us through our email! Hope we see you soon!</h3>
-        <Link to='/'
-          className="rn-button-style--2 rn-btn-reverse-green mt--20"
-        >
-          Home
-        </Link>
+
+        <div className="options-btns-div mt--60">
+          <button
+            onClick={() => navigate(-1)}
+            className="rn-button-style--2 rn-btn-reverse"
+          >
+            Go Back
+          </button>
+          <Link to={`/${region}`}
+            className="rn-button-style--2 rn-btn-reverse-green"
+          >
+            Home
+          </Link>
+        </div>
+
       </div>)
   } else {
     return (

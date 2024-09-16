@@ -153,7 +153,7 @@ const EventDetails = () => {
                         >
                           {eventClosed ? "Sold out" : 'Buy Ticket'}
                         </Link></WithBackBtn>}
-                      {selectedEvent.ticketTimer && <Countdown targetTime={selectedEvent.ticketTimer} setEventClosed={setEventClosed} />}
+                      {selectedEvent.ticketTimer && <Countdown targetTime={selectedEvent.ticketTimer} eventClosed={eventClosed} setEventClosed={setEventClosed} />}
                     </div>)}
                 </div>
                 <br />
