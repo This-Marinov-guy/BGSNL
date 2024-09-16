@@ -46,7 +46,7 @@ const Locked = () => {
 
     try {
       const responseData = await sendRequest(
-        "payment/customer-portal",
+        "payment/subscription/customer-portal",
         "POST",
         {
           customerId: currentUser.subscription.customerId,
@@ -70,7 +70,7 @@ const Locked = () => {
 
     try {
       const responseData = await sendRequest(
-        "payment/subscription-no-file",
+        "payment/subscription/general",
         "POST",
         {
           itemId: membership.renewItemId,

@@ -25,7 +25,7 @@ const SubscriptionManage = (props) => {
     async function handleManage() {
         try {
             const responseData = await sendRequest(
-                "payment/customer-portal",
+                "payment/subscription/customer-portal",
                 "POST",
                 {
                     customerId: props.subscription.customerId,

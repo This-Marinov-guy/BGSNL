@@ -256,7 +256,7 @@ const GuestPurchase = () => {
                       }
 
                       const responseData = await sendRequest(
-                        "payment/checkout/guest",
+                        "payment/checkout/guest-ticket",
                         "POST",
                         formData,
                       );

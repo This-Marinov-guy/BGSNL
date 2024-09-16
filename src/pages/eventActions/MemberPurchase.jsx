@@ -231,7 +231,7 @@ const MemberPurchase = () => {
                   }
 
                   const responseData = await sendRequest(
-                    "payment/checkout/member",
+                    "payment/checkout/member-ticket",
                     "POST",
                     formData,
                   );
