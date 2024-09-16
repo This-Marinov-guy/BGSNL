@@ -11,6 +11,10 @@ export const decodeJWT = (token) => {
 }
 
 export const checkAuthorization = (token, roles) => {
+    if (!token) {
+        return false;
+    }
+    
     const userRoles = decodeJWT(token)['roles'];
 
     if (userRoles && hasOverlap(userRoles, roles)) {

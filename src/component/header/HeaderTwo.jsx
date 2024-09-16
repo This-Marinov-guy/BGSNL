@@ -8,8 +8,9 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
-import { decodeJWT } from "../../util/functions/authorization";
+import { checkAuthorization, decodeJWT } from "../../util/functions/authorization";
 import NewBadge from "../../elements/ui/badges/NewBadge";
+import { ACCESS_2 } from "../../util/defines/common";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
@@ -176,7 +177,7 @@ const HeaderTwo = (props) => {
                         </li>
                       </ul>
                     </li>
-                    <li className="has-dropdown">
+                    {checkAuthorization(user.token, ACCESS_2) && <li className="has-dropdown">
                       <a style={{ cursor: 'pointer' }}>Event's Panel</a>
                       <ul className="submenu">
                         <li>
@@ -186,7 +187,7 @@ const HeaderTwo = (props) => {
                           <Link to="/user/add-event">Add Event</Link>
                         </li>
                       </ul>
-                    </li>
+                    </li>}
                   </>
                 )}
 

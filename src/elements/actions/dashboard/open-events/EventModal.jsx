@@ -63,8 +63,8 @@ const EventModal = (props) => {
             <p>Active Member Price Id: {props.event.product?.activeMember?.priceId}</p>
             <br />
         </>}
-        <p>Free Pass List: {props.event.freePass.length ? props.event.freePass.join('| ') : 'None'}</p>
-        <p>Discount Pass List: {props.event.discountPass.length ? props.event.discountPass.join('| ') : 'None'}</p>
+        <p>Free Pass List: {props.event.freePass?.length ? props.event.freePass.join('| ') : 'None'}</p>
+        <p>Discount Pass List: {props.event.discountPass?.length ? props.event.discountPass.join('| ') : 'None'}</p>
     </>
 
     return (
@@ -132,7 +132,7 @@ const EventModal = (props) => {
                         </div>
 
                         <div className='col-12'>
-                            <p>Images {tooltip}: {props.event.images.length > 0 ?
+                            <p>Images {tooltip}: {props.event.images?.length > 0 ?
                                 props.event.images.map((img, index) => {
                                     if (!img) { return <p>No extra images</p> }
                                     {
