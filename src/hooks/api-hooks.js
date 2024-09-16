@@ -17,7 +17,7 @@ export const useLoadEvents = () => {
                 await new Promise(resolve => setTimeout(resolve, withDelay));
             }
 
-            const responseData = await sendRequest(`future-event/events-list`);
+            const responseData = await sendRequest(`event/events-list`);
             dispatch(loadEvents(responseData.events));
         } catch (err) {
 
