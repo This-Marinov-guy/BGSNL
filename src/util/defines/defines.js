@@ -32,24 +32,28 @@ export const WEB_DEV_MODAL = 'web_developer_modal';
 //toasts
 export const SUCCESS_STYLE = {
     life: 8000,
+    severity: 'success',
     style: { background: '#d4edda', color: '#155724' },
     contentStyle: { background: '#d4edda', color: '#155724' }
 };
 
 export const INFO_STYLE = {
     life: 8000,
+    severity: 'info',
     style: { background: '#cce5ff', color: '#004085' },
     contentStyle: { background: '#cce5ff', color: '#004085'}
 }
 
 export const WARNING_STYLE = {
     life: 8000,
+    severity: 'warn',
     style: { background: '#fff3cd', color: '#856404' },
     contentStyle: { background: '#fff3cd', color: '#856404' }
 }
 
 export const DANGER_STYLE = {
     life: 8000,
+    severity: 'error',
     style: { background: '#ffcccb', color: '#8b0000' },
     contentStyle: { background: '#ffcccb', color: '#8b0000' }
 }
@@ -76,6 +80,8 @@ export const getStyleBySeverity = (severity) => {
     }
 };
 
-export const EVENT_ADDED = { severity: 'success', summary: 'Event added', ...SUCCESS_STYLE };
-export const EVENT_EDITED = { severity: 'success', summary: 'Event edited', ...SUCCESS_STYLE };
-export const EVENT_DELETED = { severity: 'success', summary: 'Event deleted', ...SUCCESS_STYLE };
+export const EVENT_ADDED = { summary: 'Event added', ...SUCCESS_STYLE };
+export const EVENT_EDITED = { summary: 'Event edited', ...SUCCESS_STYLE };
+export const EVENT_DELETED = { summary: 'Event deleted', ...SUCCESS_STYLE };
+
+export const GENERAL_ERROR = {summary: 'Something went wrong - please try again or report to support!', ...DANGER_STYLE};

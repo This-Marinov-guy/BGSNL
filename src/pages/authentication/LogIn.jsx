@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHttpClient } from "../../hooks/http-hook";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -9,7 +9,7 @@ import { Password } from 'primereact/password';
 import Loader from "../../elements/ui/loading/Loader";
 import { showModal } from "../../redux/modal";
 import { Link } from "react-router-dom";
-import { BIRTHDAY_MODAL, RESET_PASSWORD_MODAL } from "../../util/defines/defines";
+import { BIRTHDAY_MODAL, GENERAL_ERROR } from "../../util/defines/defines";
 import { showNotification } from "../../redux/notification";
 import ForgottenPassword from "./ForgottenPassword";
 
@@ -44,6 +44,10 @@ const Login = () => {
           password: loginFormValues.password,
         },
       );
+
+      if (!responseData.hasOwnProperty('token')) {
+        return dispatch(showNotification(GENERAL_ERROR))
+      }
 
       dispatch(
         login({
