@@ -112,7 +112,7 @@ const UserUpdateModal = ({currentUser}) => {
                     }
                     try {
                         const responseData = await sendRequest(
-                            `user/edit-info/${currentUser.id}`,
+                            `user/edit-info`,
                             "PATCH",
                             formData
                         );
