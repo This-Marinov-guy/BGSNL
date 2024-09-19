@@ -11,7 +11,7 @@ const Success = (props) => {
       style={{ margin: "50px" }}
       variant="success"
     >
-      <h2 className="mb--40">Payment is Successful!</h2>
+      <h2 className="mb--40 center_text">Payment is Successful!</h2>
       <p>
         Your payment was Successful! Check your email for the invoice and enjoy&nbsp;&nbsp;your purchase! Hope to see you soon!
       </p>
@@ -29,7 +29,7 @@ const Success = (props) => {
         If you have been mischarged, have not received your invoice or you face
         any other problems, do not hesitate to contact us!
       </p>
-    </Alert >
+    </Alert>
   );
 };
 

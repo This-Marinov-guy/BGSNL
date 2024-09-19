@@ -11,7 +11,7 @@ const Fail = () => {
       style={{ margin: "50px" }}
       variant="danger"
     >
-      <h2 className="mb--40">Payment Error</h2>
+      <h2 className="mb--40 center_text">Payment Error</h2>
       <p>
         Unfortunately, your payment was unsuccessful and you were NOT charged!
         If you need any help with the payment, please contact us!

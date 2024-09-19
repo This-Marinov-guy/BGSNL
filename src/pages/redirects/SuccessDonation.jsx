@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const SuccessDonation = () => {
   return (
     <Alert
-      className="center_section"
+      className="center_section center_text"
       style={{ margin: "50px" }}
       variant="success"
     >

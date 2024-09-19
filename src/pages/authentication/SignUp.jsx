@@ -268,15 +268,16 @@ const SignUp = (props) => {
 
                   navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
                   sessionStorage.removeItem('prevUrl');
-                }
-              } else {
-                const responseData = await sendRequest(
-                  "payment/checkout/signup",
-                  "POST",
-                  formData
-                );
-                if (responseData.url) {
-                  window.location.assign(responseData.url);
+                } else {
+                  const responseData = await sendRequest(
+                    "payment/checkout/signup",
+                    "POST",
+                    formData
+                  );
+                  
+                  if (responseData.url) {
+                    window.location.assign(responseData.url);
+                  }
                 }
               }
             }
