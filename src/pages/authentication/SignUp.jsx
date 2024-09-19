@@ -355,7 +355,8 @@ const SignUp = (props) => {
                     <div className="rn-form-group">
                       <Calendar onSelect={(value) => {
                         setFieldValue('birth', value)
-                      }} />
+                      }} 
+                      placeholder='Select your Birth Date'/>
                       <ErrorMessage
                         className="error"
                         name="birth"
