@@ -60,7 +60,7 @@ const AuthLayout = ({ children, access = [] }) => {
         };
 
         checkAuth();
-    }, [user, routePath, access]);
+    }, [routePath]);
 
     if (authState.isLoading) {
         return <PageLoading/>; 

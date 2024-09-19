@@ -29,6 +29,7 @@ export const REGION_SECOND_COLOR = {
 
 export const REGION_EMAIL = {
     netherlands: 'bulgariansociety.nl@gmail.com',
+    support: 'bgsn.tech.nl@gmail.com',
     groningen: 'bulgariansociety.gro@gmail.com',
     rotterdam: 'bulgariansociety.rtm@gmail.com',
     leeuwarden: 'bulgariansociety.lwd@gmail.com',

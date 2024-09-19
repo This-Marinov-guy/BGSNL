@@ -27,6 +27,7 @@ import NewsList from "../../elements/ui/lists/NewsList";
 const TABS = ['news', 'tickets', 'internships'];
 
 const User = () => {
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
   const [expand, setExpand] = useState(false);
@@ -62,22 +63,28 @@ const User = () => {
       return navigate('/login');
     }
 
-    const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
         const responseData = await sendRequest(`user/current?withTickets=${true}`);
+
         setCurrentUser(responseData.user);
-        setHasBirthday(responseData.celebrate);
+
+        if (responseData.user && responseData.user.status === 'active') {
+          setHasBirthday(responseData.celebrate);
+          setIsPageLoading(false);
+        }
+
       } catch (err) {
       }
     };
+
     fetchCurrentUser();
   }, []);
 
   useEffect(() => {
     const hash = window.location.hash.substring(1).split('?')[0];
     setTab(hash);
-  }, [location]);
+  }, [location.hash]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -180,8 +187,12 @@ const User = () => {
       menuContent = null
   }
 
-  if (!currentUser) {
-    return <HeaderLoadingError />
+  if (isPageLoading) {
+    return (
+      <>
+        <Locked user={currentUser} />
+        <HeaderLoadingError />
+      </>)
   }
 
   return <React.Fragment>
@@ -193,9 +204,6 @@ const User = () => {
       forceRegion={currentUser.region ?? null}
     />
     <UserUpdateModal currentUser={currentUser} />
-    {currentUser.status !== "active" && (
-      <Locked user={currentUser} case="locked" show={currentUser.status} />
-    )}
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}
     <div className="service-area ptb--20 bg_color--1 mt--80">

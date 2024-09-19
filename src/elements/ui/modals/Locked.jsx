@@ -9,37 +9,19 @@ import { showNotification } from "../../../redux/notification";
 import { selectUser } from "../../../redux/user";
 import { decodeJWT } from "../../../util/functions/authorization";
 import { isProd } from "../../../util/functions/helpers";
+import { REGION_EMAIL } from "../../../util/defines/REGIONS_DESIGN";
 
-const Locked = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+const Locked = ({user}) => {
+  if (!user) {
+    return;
+  }
 
   const { loading, sendRequest } = useHttpClient();
 
-  const user = useSelector(selectUser);
-  const userId = decodeJWT(user.token).userId;
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!user.token) {
-      sessionStorage.setItem('prevUrl', routePath);
-      return navigate('/login');
-    }
-
-    const fetchCurrentUser = async () => {
-      try {
-        const responseData = await sendRequest(`user/current`);
-        setCurrentUser(responseData.user);
-        setIsLoaded(true);
-      } catch (err) {
-      }
-    };
-    fetchCurrentUser();
-  }, []);
-
   const handleManageSubscription = async () => {
-    if (!userId || !currentUser.subscription) {
+    if (!user.id || !user.subscription) {
       dispatch(showNotification({ severity: 'error', detail: "There was an error with your request - please contact support!" }));
       return;
     }
@@ -49,9 +31,9 @@ const Locked = () => {
         "payment/subscription/customer-portal",
         "POST",
         {
-          customerId: currentUser.subscription.customerId,
+          customerId: user.subscription.customerId,
           url: window.location.href,
-          userId: userId
+          userId: user.id
         },
       );
       if (responseData.url) {
@@ -63,7 +45,7 @@ const Locked = () => {
   const handleCreateSubscription = async (id = 1) => {
     const membership = findMembershipByProperty('id', id);
 
-    if (!userId || !membership.renewItemId || !membership.period) {
+    if (!user.id || !membership.renewItemId || !membership.period) {
       dispatch(showNotification({ severity: 'error', detail: "There was an error with your request - please contact support!" }));
       return;
     }
@@ -77,7 +59,7 @@ const Locked = () => {
           period: membership.period,
           origin_url: window.location.origin,
           method: "unlock_account",
-          userId: userId,
+          userId: user.id,
         },
       );
       if (responseData.url) {
@@ -89,7 +71,7 @@ const Locked = () => {
   };
 
 
-  const actionButtons = currentUser && currentUser.subscription ?
+  const actionButtons = user && user.subscription ?
     <button
       disabled={loading}
       onClick={handleManageSubscription}
@@ -108,24 +90,20 @@ const Locked = () => {
       })}
     </div>
 
-  if (!isLoaded) {
-    return <Loader />
-  }
-
   return (
-    <Dialog modal visible={currentUser.status === 'locked'} blockScroll={true} closable={false}>
+    <Dialog modal visible={user.status !== 'active'} blockScroll={true} closable={false}>
       <div className="center_section">
         <h3>
-          {currentUser.status === "locked"
+          {user.status === "locked"
             ? "Your account is locked!"
             : "Your account is suspended!"}
         </h3>
         <p className="center_text">
-          {currentUser.status === "locked"
+          {user.status === "locked"
             ? "To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account."
-            : "We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: bgsn.tech.nl@gmail.com"}
+            : <span>We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>}
         </p>
-        {currentUser.status === "locked" && actionButtons}
+        {user.status === "locked" && actionButtons}
         <Link to="/" className="rn-button-style--2 rn-btn-reverse mt--40">
           Back to Home
         </Link>
