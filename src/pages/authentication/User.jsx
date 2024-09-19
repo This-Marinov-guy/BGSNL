@@ -66,14 +66,11 @@ const User = () => {
     const fetchCurrentUser = async () => {
       try {
         const responseData = await sendRequest(`user/current?withTickets=${true}`);
-
+        
         setCurrentUser(responseData.user);
-
-        if (responseData.user && responseData.user.status === 'active') {
-          setHasBirthday(responseData.celebrate);
-          setIsPageLoading(false);
-        }
-
+        setHasBirthday(responseData.celebrate);
+        setIsPageLoading(false);
+        
       } catch (err) {
       }
     };
@@ -188,11 +185,7 @@ const User = () => {
   }
 
   if (isPageLoading) {
-    return (
-      <>
-        <Locked user={currentUser} />
-        <HeaderLoadingError />
-      </>)
+    return (<HeaderLoadingError />)
   }
 
   return <React.Fragment>
@@ -203,6 +196,7 @@ const User = () => {
       logoname="logo.png"
       forceRegion={currentUser.region ?? null}
     />
+    <Locked currentUser={currentUser} />
     <UserUpdateModal currentUser={currentUser} />
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}

@@ -107,7 +107,7 @@ const NonSocietyEvent = (props) => {
         logoname="logo.png"
       />
       {currentUser && currentUser.status !== "active" && (
-        <Locked user={currentUser} />
+        <Locked currentUser={currentUser} />
       )}
         <ModalWindow show={modal === NSE_REGISTRATION_MODAL}>
           {user.token ? (currentUser ? <div className="center_section pd--20">
