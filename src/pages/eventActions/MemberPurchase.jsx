@@ -142,6 +142,11 @@ const MemberPurchase = () => {
         </div>
       </div>)
   } else {
+    
+    if (!!currentUser && currentUser.status !== 'active') {
+      return <Locked currentUser={currentUser} />
+    }
+
     return (
       <Fragment>
         <PageHelmet pageTitle="Buy Ticket" />
@@ -150,7 +155,6 @@ const MemberPurchase = () => {
           colorblack="color--black"
           logoname="logo.png"
         />
-        {currentUser.status !== "active" && <Locked currentUser={currentUser} />}
         <div className="container mt--140 mb--120">
           <h2 className="center_text mb--80">Purchase a Ticket</h2>
 

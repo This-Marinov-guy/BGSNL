@@ -98,6 +98,10 @@ const NonSocietyEvent = (props) => {
     }
   }, [sendRequest, user]);
 
+  if (!!currentUser && currentUser.status !== 'active') {
+    return <Locked currentUser={currentUser} />
+  }
+
   return (
     <React.Fragment>
       <PageHelmet pageTitle="Other Event Details" />
@@ -106,9 +110,7 @@ const NonSocietyEvent = (props) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      {currentUser && currentUser.status !== "active" && (
-        <Locked currentUser={currentUser} />
-      )}
+     
         <ModalWindow show={modal === NSE_REGISTRATION_MODAL}>
           {user.token ? (currentUser ? <div className="center_section pd--20">
             <FiX style={{ fontSize: '25px' }}

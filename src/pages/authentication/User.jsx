@@ -188,6 +188,10 @@ const User = () => {
     return (<HeaderLoadingError />)
   }
 
+  if (currentUser.status !== 'active') {
+    return <Locked currentUser={currentUser} />
+  }
+
   return <React.Fragment>
     <PageHelmet pageTitle="Profile" />
     <HeaderTwo
@@ -196,7 +200,6 @@ const User = () => {
       logoname="logo.png"
       forceRegion={currentUser.region ?? null}
     />
-    <Locked currentUser={currentUser} />
     <UserUpdateModal currentUser={currentUser} />
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}
