@@ -11,6 +11,7 @@ import Loader from "../../elements/ui/loading/Loader";
 import { showNotification } from "../../redux/notification";
 import { Calendar } from 'primereact/calendar';
 import moment from "moment";
+import { FORGOTTEN_PASSWORD_STEPS_ENUM, FP_CHANGE_PASSWORD, FP_SEND_EMAIL_TOKEN, FP_VERIFY_TOKEN } from "../../util/defines/enum";
 
 const initialValues = {
     email: "",
@@ -49,7 +50,7 @@ const schema = yup.object().shape({
 const ForgottenPassword = (props) => {
     const { visible, onHide } = props;
 
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(FORGOTTEN_PASSWORD_STEPS_ENUM[FP_SEND_EMAIL_TOKEN]);
     const [formValues, setFormValues] = useState(initialValues);
 
     const { loading, sendRequest } = useHttpClient();
@@ -82,7 +83,7 @@ const ForgottenPassword = (props) => {
             );
 
             if (responseData.status) {
-                setStep(1);
+                setStep(FORGOTTEN_PASSWORD_STEPS_ENUM[FP_VERIFY_TOKEN]);
             }
         } catch (err) { }
     };
@@ -103,7 +104,7 @@ const ForgottenPassword = (props) => {
             );
 
             if (responseData.status) {
-                setStep(2);
+                setStep(FORGOTTEN_PASSWORD_STEPS_ENUM[FP_CHANGE_PASSWORD]);
             }
         } catch (err) { }
     }
@@ -121,7 +122,7 @@ const ForgottenPassword = (props) => {
             );
 
             if (responseData.status) {
-                setStep(0);
+                setStep(FORGOTTEN_PASSWORD_STEPS_ENUM[FP_SEND_EMAIL_TOKEN]);
                 setFormValues(initialValues);
                 dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 }));
                 onHide();
@@ -132,7 +133,7 @@ const ForgottenPassword = (props) => {
     let content;
 
     switch (step) {
-        case 0:
+        case FORGOTTEN_PASSWORD_STEPS_ENUM[FP_SEND_EMAIL_TOKEN]:
             content = <form
                 className="center_div_col"
                 style={{ padding: "10px 20px" }}
@@ -170,7 +171,7 @@ const ForgottenPassword = (props) => {
                 }
             </form>;
             break;
-        case 1:
+        case FORGOTTEN_PASSWORD_STEPS_ENUM[FP_VERIFY_TOKEN]:
             content = <form
                 className="center_div_col"
                 style={{ padding: "10px 20px" }}
@@ -234,7 +235,7 @@ const ForgottenPassword = (props) => {
                 }
             </form>;
             break;
-        case 2:
+        case FORGOTTEN_PASSWORD_STEPS_ENUM[FP_CHANGE_PASSWORD]:
             content = <Formik
                 className="inner"
                 validationSchema={schema}
