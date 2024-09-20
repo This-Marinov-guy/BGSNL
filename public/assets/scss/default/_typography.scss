@@ -10,6 +10,16 @@
   font-family: $title-font;
 }
 
+.archive-title {
+    font-family: $title-font;
+    font-size: 0.9em;
+}
+
+.bold {
+  color: $heading-color;
+  font-weight: 600;
+}
+
 img {
   max-width: 100%;
 }

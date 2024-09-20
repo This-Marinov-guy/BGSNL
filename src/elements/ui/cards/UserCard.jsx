@@ -11,11 +11,11 @@ const UserCard = ({ user }) => {
     const dispatch = useDispatch();
 
     return (
-        <div className="service team_member_border-5">
+        <div className="service team_member_border-2">
             <div className="content">
-                <h3>Greetings, {user.name}!</h3>
-                <div className="hor_section mb--40">
-                    <p className="mt--20" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </p>
+                <h2 className='archive-title' >Greetings, {user.name}!</h2>
+                <div className="hor_section mb--10">
+                    <p className="mt--10" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </p>
                     <FiEdit
                         className="edit_btn"
                         onClick={() => {
@@ -29,23 +29,23 @@ const UserCard = ({ user }) => {
                         className="list-style--1"
                     >
                         <li>
-                            Full Name:{" "}
+                            <span className='bold'>Full Name:{" "}</span>
                             {user.name + " " + user.surname}
                         </li>
                         <li>
-                            Date of Birth:{" "}
+                            <span className='bold'>Date of Birth:{" "}</span>
                             {moment(user.birth).format("D MMM YYYY")}
                         </li>
                         <li>
-                            Email:{" "}
+                            <span className='bold'>Email:{" "}</span>
                             {user.email}
                         </li>
                         <li>
-                            Phone:{" "}
+                            <span className='bold'>Phone:{" "}</span>
                             {user.phone}
                         </li>
                         <li>
-                            University:{" "}
+                            <span className='bold'>University:{" "}</span>
                             {user.university === "other"
                                 ? user.otherUniversityName
                                 : user.university}
