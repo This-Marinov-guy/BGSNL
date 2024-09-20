@@ -15,7 +15,7 @@ const UserCard = ({ user }) => {
             <div className="content">
                 <h2 className='archive-title' >Greetings, {user.name}!</h2>
                 <div className="hor_section mb--10">
-                    <h5 className="mt--10" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </h5>
+                    <p className="mt--10" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </p>
                     <FiEdit
                         className="edit_btn"
                         onClick={() => {
