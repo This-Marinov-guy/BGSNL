@@ -209,7 +209,7 @@ const User = () => {
           <div className="col-lg-6 col-md-12 col-12 center_div_col">
             {(!isProd() || currentUser.subscription) ? <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} /> : <div className="mt--60" />}
             <div className="service">
-              {!hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
+              {hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
               <LazyLoadImage src={currentUser.image} alt="profile" className="profile-image" />
             </div>
           </div>
