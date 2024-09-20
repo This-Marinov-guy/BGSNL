@@ -5,9 +5,17 @@
 .birthday-hat {
   position: absolute;
   height: 150px;
-  top: 16vh;
-  left: -30px;
+  top: 6vh;
+  left: -40px;
   transform: rotate(-35deg);
+
+  @media only screen and (min-width: 600px) and (max-width: 1200px) {
+    top: 12vh;  }
+
+  @media only screen and (max-width: 600px) {
+    scale: 0.8;
+    top: 12vh;
+  }
 }
 
 .holiday-special {

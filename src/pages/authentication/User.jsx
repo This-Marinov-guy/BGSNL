@@ -204,13 +204,12 @@ const User = () => {
     {/* <Christmas currentUser={currentUser} /> */}
     {/* Start Info Area */}
     <div className="service-area ptb--20 bg_color--1 mt--80">
-      {/* {hasBirthday && <BirthdayBanner birth={currentUser.birth} name={currentUser.name}/>} */}
       <div className="container">
         <div className="row service-one-wrapper">
           <div className="col-lg-6 col-md-12 col-12 center_div_col">
             {(!isProd() || currentUser.subscription) ? <SubscriptionManage userId={currentUser.id} subscription={currentUser.subscription} /> : <div className="mt--60" />}
             <div className="service">
-              {hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
+              {!hasBirthday && <img src='/assets/images/special/birthday-hat.png' alt='hat' className='birthday-hat' />}
               <LazyLoadImage src={currentUser.image} alt="profile" className="profile-image" />
             </div>
           </div>
