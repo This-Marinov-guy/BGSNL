@@ -20,7 +20,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
 import { selectUser } from "./redux/user";
-import SessionLayout from "./layouts/common/SessionLayout";
+import SessionLayout from "./layouts/authentication/SessionLayout";
 import { selectPageLoading } from "./redux/loading";
 import HeaderLoadingError from "./elements/ui/errors/HeaderLoadingError";
 
