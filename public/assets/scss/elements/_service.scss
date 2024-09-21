@@ -439,6 +439,8 @@
 }
 
 .service-one-wrapper {
+  justify-content: space-between;
+  
   @media #{$md-layout} {
     margin: 0 -40px;
   }
