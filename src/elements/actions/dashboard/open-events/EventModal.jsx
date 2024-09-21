@@ -6,6 +6,7 @@ import { capitalizeFirstLetter } from '../../../../util/functions/capitalize';
 import { useDispatch } from 'react-redux';
 import { loadSingleEvent } from '../../../../redux/events';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Image } from 'primereact/image';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
 import moment from 'moment';
 import { useHttpClient } from '../../../../hooks/http-hook';
@@ -16,8 +17,6 @@ import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
-    const [expandImage, setExpandImage] = useState(null);
-    const [expandBg, setExpandBg] = useState(false);
 
     const { sendRequest, loading } = useHttpClient();
 
@@ -127,8 +126,8 @@ const EventModal = (props) => {
                         <div className='col-lg-4 col-md-6 col-12'>
                             <p>Background {tooltip}: </p>
                             {(props.event.bgImageExtra && props.event?.bgImageSelection === 2) ?
-                                <img onClick={() => setExpandBg(!expandBg)} src={props.event.bgImageExtra} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />
-                                : <img onClick={() => setExpandBg(!expandBg)} src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className={'normal_preview ' + (expandBg && 'center_expand')} alt='bg' />}
+                                <Image src={props.event.bgImageExtra} className='normal_preview' alt='bg with expand' />
+                                : <Image src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className='normal_preview' alt='bg with expand' />}
                         </div>
 
                         <div className='col-12'>
@@ -136,11 +135,10 @@ const EventModal = (props) => {
                                 props.event.images.map((img, index) => {
                                     if (!img) { return <p>No extra images</p> }
                                     {
-                                        return <img key={index}
-                                            onClick={() => setExpandImage(expandImage == null ? index : null)}
-                                            className={'small_preview ' + (expandImage === index && 'center_expand')}
+                                        return <Image key={index}
+                                            className='small_preview'
                                             src={img}
-                                            alt='preview' />
+                                            alt='image with preview' />
                                     }
                                 }) : 'Only poster will be displayed'}</p>
                         </div>

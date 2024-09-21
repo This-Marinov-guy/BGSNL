@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { FiChevronUp, FiArrowRight } from "react-icons/fi";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
@@ -14,6 +13,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { selectUser } from "../../redux/user";
 import SubscriptionManage from "../../elements/ui/buttons/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
+import { Image } from 'primereact/image';
 import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
@@ -30,7 +30,6 @@ const User = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
-  const [expand, setExpand] = useState(false);
   const [tab, setTab] = useState(window.location.hash.substring(1).split('?')[0]);
   const [disableScroll, setDisableScroll] = useState(false);
 
@@ -45,18 +44,6 @@ const User = () => {
 
   const scrollRef = useRef(null);
 
-  const expandHandler = (elementId) => {
-    const ticketImage = document.getElementById(elementId);
-    const className = "expand_ticket_img";
-    if (!ticketImage.classList.contains(className)) {
-      ticketImage.classList.add(className);
-      setExpand(true);
-    } else {
-      ticketImage.classList.remove(className);
-      setExpand(false);
-    }
-  };
-
   useEffect(() => {
     if (!user.token) {
       sessionStorage.setItem('prevUrl', routePath);
@@ -66,11 +53,11 @@ const User = () => {
     const fetchCurrentUser = async () => {
       try {
         const responseData = await sendRequest(`user/current?withTickets=${true}`);
-        
+
         setCurrentUser(responseData.user);
         setHasBirthday(responseData.celebrate);
         setIsPageLoading(false);
-        
+
       } catch (err) {
       }
     };
@@ -105,29 +92,12 @@ const User = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="mb--30 mb_sm--0">
-              <h2 className="title mb--40">Ticket Collection</h2>
+              <h2 className="title">Ticket Collection</h2>
+              <p>*Click one to expand it</p>
               {(currentUser && currentUser.tickets?.length > 0) ? (
                 <div className="row">
                   {currentUser.tickets.map((ticket, i) => (
-                    <div className="col-lg-4 col-md-6 col-12" key={i}>
-                      <OverlayTrigger
-                        overlay={
-                          <Tooltip id="tooltip-disabled">
-                            {expand ? "Click to Shrink" : "Click to Expand"}
-                          </Tooltip>
-                        }
-                      >
-                        <img
-                          id={`ticket${i}`}
-                          className="mb--40"
-                          src={ticket.image}
-                          alt="ticket"
-                          onClick={(event) => {
-                            expandHandler(event.target.id);
-                          }}
-                        />
-                      </OverlayTrigger>
-                    </div>
+                    <Image src={ticket.image} alt="Image with expand" className="col-lg-4 col-md-6 col-12 mt--10 mb--10" key={i} preview />
                   ))}
                 </div>
               ) : (
