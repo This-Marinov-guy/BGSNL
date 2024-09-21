@@ -9,10 +9,11 @@ import { showNotification } from "../../../redux/notification";
 import { isProd } from "../../../util/functions/helpers";
 import { REGION_EMAIL } from "../../../util/defines/REGIONS_DESIGN";
 import PageLoading from "../loading/PageLoading";
+import { LOCKED, SUSPENDED, USER_STATUSES } from "../../../util/defines/enum";
 
-const Locked = ({currentUser}) => {
-  const isLocked = !!currentUser && currentUser.status !== 'active'
-  
+const Locked = ({ currentUser }) => {
+  const isLocked = !!currentUser && currentUser.status !== USER_STATUSES[LOCKED]
+
   if (!isLocked) {
     return null;
   }
@@ -71,7 +72,6 @@ const Locked = ({currentUser}) => {
     }
   };
 
-
   const actionButtons = currentUser && currentUser.subscription ?
     <button
       disabled={loading}
@@ -79,7 +79,7 @@ const Locked = ({currentUser}) => {
       className="rn-button-style--2 rn-btn-reverse-green mt--40"
     >
       {loading ? <Loader /> : <span>Manage Subscription</span>}
-    </button> 
+    </button>
     :
     <div className="center_div_col mt--20" style={{ gap: '15px' }}>
       {REGIONS_MEMBERSHIP_SPECIFICS.map((option, index) => {
@@ -91,29 +91,60 @@ const Locked = ({currentUser}) => {
       })}
     </div>
 
+  let bodyContent;
+
+  switch (currentUser.status) {
+    case USER_STATUSES[LOCKED]:
+      bodyContent = <div className="center_section">
+        <h3>
+          Your account is locked!
+        </h3>
+        <p className="center_text">
+          To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account.
+        </p>
+        {actionButtons}
+        <Link to="/" className="rn-button-style--2 rn-btn-reverse mt--40">
+          Back to Home
+        </Link>
+      </div>;
+      break;
+
+    case USER_STATUSES[SUSPENDED]:
+      bodyContent = <div className="center_section">
+        <h3>
+          Your account is suspended!
+        </h3>
+        <p className="center_text">
+          <span>We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>
+        </p>
+        <Link to="/" className="rn-button-style--2 rn-btn-reverse mt--40">
+          Back to Home
+        </Link>
+      </div>;
+      break;
+
+    default:
+      bodyContent = <div className="center_section">
+        <h3>
+          There is something wrong with your account!
+        </h3>
+        <p className="center_text">
+          <span>We are resolving an issue with your account. Except our apologies and please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>
+        </p>
+        <Link to="/" className="rn-button-style--2 rn-btn-reverse mt--40">
+          Back to Home
+        </Link>
+      </div>;
+  }
+
   return (
     <>
       <PageLoading />
       <Dialog modal visible={isLocked} blockScroll={true} closable={false}>
-        <div className="center_section">
-          <h3>
-            {currentUser.status === "locked"
-              ? "Your account is locked!"
-              : "Your account is suspended!"}
-          </h3>
-          <p className="center_text">
-            {currentUser.status === "locked"
-              ? "To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account."
-              : <span>We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>}
-          </p>
-          {currentUser.status === "locked" && actionButtons}
-          <Link to="/" className="rn-button-style--2 rn-btn-reverse mt--40">
-            Back to Home
-          </Link>
-        </div>
+        {bodyContent}
       </Dialog>
     </>
-    
+
   );
 };
 

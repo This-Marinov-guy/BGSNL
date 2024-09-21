@@ -20,6 +20,7 @@ import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { decodeJWT } from "../../util/functions/authorization";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
+import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -98,7 +99,7 @@ const NonSocietyEvent = (props) => {
     }
   }, [sendRequest, user]);
 
-  if (!!currentUser && currentUser.status !== 'active') {
+  if (!!currentUser && currentUser.status !== USER_STATUSES[ACTIVE]) {
     return <Locked currentUser={currentUser} />
   }
 

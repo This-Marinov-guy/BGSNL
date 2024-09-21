@@ -23,6 +23,7 @@ import BirthdayBanner from "../../elements/banners/BirthdayBanner";
 import Christmas from "../../elements/special/Christmas";
 import { isProd } from "../../util/functions/helpers";
 import NewsList from "../../elements/ui/lists/NewsList";
+import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
 
 const TABS = ['news', 'tickets', 'internships'];
 
@@ -188,7 +189,7 @@ const User = () => {
     return (<HeaderLoadingError />)
   }
 
-  if (currentUser.status !== 'active') {
+  if (currentUser.status !== USER_STATUSES[ACTIVE]) {
     return <Locked currentUser={currentUser} />
   }
 

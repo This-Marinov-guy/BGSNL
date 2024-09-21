@@ -28,6 +28,7 @@ import { ACCESS_3 } from "../../util/defines/common";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
+import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -111,7 +112,7 @@ const MemberPurchase = () => {
     return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />
   }
 
-  if (!!currentUser && currentUser.status !== 'active') {
+  if (!!currentUser && currentUser.status !== USER_STATUSES[ACTIVE]) {
     return <Locked currentUser={currentUser} />
   }
 

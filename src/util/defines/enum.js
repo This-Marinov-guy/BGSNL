@@ -8,3 +8,14 @@ export const FORGOTTEN_PASSWORD_STEPS_ENUM = {
     [FP_VERIFY_TOKEN]: FP_VERIFY_TOKEN,
     [FP_CHANGE_PASSWORD]: FP_CHANGE_PASSWORD
 }
+
+// USER STATUS
+export const ACTIVE = 'active';
+export const LOCKED = 'locked';
+export const SUSPENDED = 'suspended';
+
+export const USER_STATUSES = {
+    [ACTIVE]: ACTIVE,
+    [LOCKED]: LOCKED,
+    [SUSPENDED]: SUSPENDED
+}
