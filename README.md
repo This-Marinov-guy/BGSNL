@@ -27,7 +27,9 @@ npm start
 
 You will need to create an .env file with
 
-REACT_APP_SERVER_URL and the api for requests
+```cli
+REACT_APP_SERVER_URL = api path
+```
 
 Part 2: Key modules
 -------------
