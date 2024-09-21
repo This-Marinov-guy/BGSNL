@@ -28,7 +28,7 @@ npm start
 You will need to create an .env file with
 
 ```cli
-REACT_APP_SERVER_URL = api path
+REACT_APP_TEST_SERVER_URL = api path
 ```
 
 Part 2: Key modules
