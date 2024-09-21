@@ -1,4 +1,4 @@
-BGSNL website (REACT 18)
+BGSNL website (React.js 18)
 ==============================
 
 Part 1: Installation
