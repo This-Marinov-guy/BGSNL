@@ -169,3 +169,7 @@ export const removeSpaces = (input) => {
 export const removeSpacesAndLowercase = (str) => {
     return str.replace(/\s+/g, '').toLowerCase();
 }
+
+export const isObjectEmpty = (obj) => {
+    return Object.keys(obj).length === 0;
+};

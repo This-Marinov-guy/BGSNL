@@ -7,6 +7,7 @@ import { calculateTimeRemaining } from "../../util/functions/date";
 import { login, logout, selectUser } from "../../redux/user";
 import { decodeJWT, isTokenExpired } from "../../util/functions/authorization";
 import { useHttpClient } from "../../hooks/http-hook";
+import { isObjectEmpty } from "../../util/functions/helpers";
 
 const INACTIVITY_TIMEOUT = SESSION_TIMEOUT
 const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
@@ -39,13 +40,13 @@ const InactivityTracker = () => {
         let expirationTime = localStorage.getItem("session_remaining") ?? Date.now();
 
         if (
-            storedUser &&
+            !isObjectEmpty(storedUser) &&
             storedUser.token &&
             expirationTime > Date.now()
         ) {
             let jwtToken = storedUser.token;
 
-            if (isTokenExpired(storedUser.token)) {
+            if (isTokenExpired(jwtToken)) {
                 const token = refreshJWT();
 
                 if (token) {
