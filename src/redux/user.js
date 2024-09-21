@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { SESSION_TIMEOUT } from "../util/defines/common";
 
 export const userSlice = createSlice({
   name: "user",
@@ -9,14 +10,13 @@ export const userSlice = createSlice({
   reducers: {
     login: {
       reducer(state, action) {
-        const { token, expirationDate } = action.payload;
+        const { token } = action.payload;
         state.token = token;
-        state.expirationDate = expirationDate;
+        localStorage.setItem('session_remaining', Date.now() + SESSION_TIMEOUT);
         localStorage.setItem(
           "userData",
           JSON.stringify({
             token: token,
-            expirationDate: expirationDate,
           })
         );
       },
@@ -30,8 +30,8 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
-      state.expirationDate = null;
       localStorage.removeItem("userData");
+      localStorage.removeItem('session_remaining');
     },
   },
 });

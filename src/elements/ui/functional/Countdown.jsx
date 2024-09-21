@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { calculateTimeRemaining } from '../../../util/functions/date';
 
 const Countdown = (props) => {
-    const [remainingTime, setRemainingTime] = useState(calculateTimeRemaining());
-
-    function calculateTimeRemaining() {
-        const now = new Date().getTime(); // Local time in milliseconds
-        const targetTime = new Date(props.targetTime)
-        
-        const timeDifference = targetTime - now; // Difference in milliseconds
-        return Math.max(0, timeDifference); // Ensure non-negative value
-    }
+    const [remainingTime, setRemainingTime] = useState(calculateTimeRemaining(props.targetTime));
 
     useEffect(() => {
         const timer = setInterval(() => {
-            const timeRemaining = calculateTimeRemaining();
+            const timeRemaining = calculateTimeRemaining(props.targetTime);
             setRemainingTime(timeRemaining);
 
             if (timeRemaining <= 0) {

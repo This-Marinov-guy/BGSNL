@@ -10,6 +10,13 @@ export const decodeJWT = (token) => {
     return decodedPayloadJSON;
 }
 
+export const isTokenExpired = (token) => {
+    const {exp} = decodeJWT(token);
+
+    const currentTime = Math.floor(Date.now() / 1000); 
+    return exp < currentTime; 
+}
+
 export const checkAuthorization = (token, roles) => {
     if (!token) {
         return false;

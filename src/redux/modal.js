@@ -3,21 +3,21 @@ import { createSlice } from "@reduxjs/toolkit";
 export const modalSlice = createSlice({
   name: "modal",
   initialState: {
-    modal: null,
-    warning: false,
+    modal: [],
+    warning: [],
   },
   reducers: {
     showModal: (state, action) => {
-      state.modal = action.payload;
+      state.modal = [...state.modal, action.payload];
     },
-    removeModal: (state) => {
-      state.modal = false;
+    removeModal: (state, action) => {
+      state.modal = state.modal.filter((m) => m !== action.payload);
     },
     showWarning: (state) => {
-      state.warning = true;
+      state.warning = [...state.warning, action.payload];
     },
     removeWarning: (state) => {
-      state.warning = null;
+      state.warning = state.warning.filter((w) => w !== action.payload);
     },
   },
 });

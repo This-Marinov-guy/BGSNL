@@ -10,7 +10,7 @@ const RecruitModal = () => {
     const dispatch = useDispatch();
 
     return (
-        <Dialog header="Join the Team" visible={modal === WEB_DEV_MODAL} onHide={() => dispatch(removeModal())}
+        <Dialog header="Join the Team" visible={modal.includes(WEB_DEV_MODAL)} onHide={() => dispatch(removeModal(WEB_DEV_MODAL))}
             style={{ minWidth: '60vw', marginRight: '5px', marginLeft: '5px' }} dismissableMask>
             <div className="contact-form--1">
                 <div className="form-wrapper">

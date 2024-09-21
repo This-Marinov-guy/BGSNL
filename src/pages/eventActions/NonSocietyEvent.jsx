@@ -52,11 +52,11 @@ const NonSocietyEvent = (props) => {
   const navigate = useNavigate();
 
   const closeHandler = () => {
-    dispatch(removeModal());
+    dispatch(removeModal(NSE_REGISTRATION_MODAL));
   };
 
   const closeNotificationHandler = () => {
-    dispatch(removeModal());
+    dispatch(removeModal(NSE_REGISTRATION_MODAL));
 
   };
 
@@ -110,160 +110,160 @@ const NonSocietyEvent = (props) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-     
-        <ModalWindow show={modal === NSE_REGISTRATION_MODAL}>
-          {user.token ? (currentUser ? <div className="center_section pd--20">
-            <FiX style={{ fontSize: '25px' }}
-              className="x_icon"
-              onClick={closeNotificationHandler}
-            />
-            <h3 className="center_text title">Finish registration as {currentUser.name + ' ' + currentUser.surname + ' ?'}</h3>
-            <button
-              disabled={loading}
-              onClick={submitMemberForm}
-              className="rn-button-style--2 rn-btn-reverse-green mt--30"
-            >
-              {loading ? <Loader /> : <span>Register</span>}
-            </button></div> : <Loader center />) : <Formik
-              className="inner"
-              validationSchema={schema}
-              onSubmit={async (values) => {
-                try {
-                  const responseData = await sendRequest(
-                    "event/register/non-society-event",
-                    "POST",
-                    {
-                      event: target.title,
-                      date: target.when,
-                      user: "normal",
-                      name: values.name + " " + values.surname,
-                      phone: values.phone,
-                      email: values.email,
-                      notificationTypeTerms: values.notificationTypeTerms,
-                    }
-                  );
-                  dispatch(showNotification({
-                    severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!'
-                  }));
-                  navigate("/");
-                  setTimeout(() => closeNotificationHandler(), 7000);
-                } catch (err) { }
-              }}
-              initialValues={{
-                name: "",
-                surname: "",
-                phone: "",
-                email: "",
-                notificationTerms: false,
-                notificationTypeTerms: "",
-              }}
-            >
-            {() => (
-              <Form
-                encType="multipart/form-data"
-                className="center_section"
-                id="form"
-                style={{ padding: "2%" }}
-              >
-                <h3>Fill your details and register</h3>
-                <FiX className="x_icon" onClick={closeHandler} />
 
-                <div className="row">
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field type="text" placeholder="Name" name="name" />
-                      <ErrorMessage
-                        className="error"
-                        name="name"
-                        component="div"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field
-                        type="text"
-                        placeholder="Surname"
-                        name="surname"
-                      ></Field>
-                      <ErrorMessage
-                        className="error"
-                        name="surname"
-                        component="div"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field
-                        type="tel"
-                        placeholder="WhatsApp Phone "
-                        name="phone"
-                      ></Field>
-                      <p className="information">
-                        Please type your number with + and country code
-                      </p>
-                      <ErrorMessage
-                        className="error"
-                        name="phone"
-                        component="div"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field type="email" placeholder="Email" name="email" />
-                      <ErrorMessage
-                        className="error"
-                        name="email"
-                        component="div"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="hor_section_nospace mt--40">
-                      <Field
-                        style={{ maxWidth: "30px", margin: "10px" }}
-                        type="checkbox"
-                        name="notificationTerms"
-                      ></Field>
-                      <p className="information">
-                        I consent to being notified by the organizer through the
-                        below contact/s
-                      </p>
-                    </div>
+      <ModalWindow show={modal.includes(NSE_REGISTRATION_MODAL)}>
+        {user.token ? (currentUser ? <div className="center_section pd--20">
+          <FiX style={{ fontSize: '25px' }}
+            className="x_icon"
+            onClick={closeNotificationHandler}
+          />
+          <h3 className="center_text title">Finish registration as {currentUser.name + ' ' + currentUser.surname + ' ?'}</h3>
+          <button
+            disabled={loading}
+            onClick={submitMemberForm}
+            className="rn-button-style--2 rn-btn-reverse-green mt--30"
+          >
+            {loading ? <Loader /> : <span>Register</span>}
+          </button></div> : <Loader center />) : <Formik
+            className="inner"
+            validationSchema={schema}
+            onSubmit={async (values) => {
+              try {
+                const responseData = await sendRequest(
+                  "event/register/non-society-event",
+                  "POST",
+                  {
+                    event: target.title,
+                    date: target.when,
+                    user: "normal",
+                    name: values.name + " " + values.surname,
+                    phone: values.phone,
+                    email: values.email,
+                    notificationTypeTerms: values.notificationTypeTerms,
+                  }
+                );
+                dispatch(showNotification({
+                  severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!'
+                }));
+                navigate("/");
+                setTimeout(() => closeNotificationHandler(), 7000);
+              } catch (err) { }
+            }}
+            initialValues={{
+              name: "",
+              surname: "",
+              phone: "",
+              email: "",
+              notificationTerms: false,
+              notificationTypeTerms: "",
+            }}
+          >
+          {() => (
+            <Form
+              encType="multipart/form-data"
+              className="center_section"
+              id="form"
+              style={{ padding: "2%" }}
+            >
+              <h3>Fill your details and register</h3>
+              <FiX className="x_icon" onClick={closeHandler} />
+
+              <div className="row">
+                <div className="col-lg-6 col-md-12 col-12">
+                  <div className="rn-form-group">
+                    <Field type="text" placeholder="Name" name="name" />
                     <ErrorMessage
                       className="error"
-                      name="notificationTerms"
-                      component="div"
-                    />
-                    <Field as="select" name="notificationTypeTerms">
-                      <option value="" disabled>
-                        Contact By
-                      </option>
-                      <option value="Email">Email</option>
-                      <option value="WhatsApp">WhatsApp</option>
-                      <option value="Email & WhatsApp">Both</option>
-                    </Field>
-                    <ErrorMessage
-                      className="error"
-                      name="notificationTypeTerms"
+                      name="name"
                       component="div"
                     />
                   </div>
                 </div>
+                <div className="col-lg-6 col-md-12 col-12">
+                  <div className="rn-form-group">
+                    <Field
+                      type="text"
+                      placeholder="Surname"
+                      name="surname"
+                    ></Field>
+                    <ErrorMessage
+                      className="error"
+                      name="surname"
+                      component="div"
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-6 col-md-12 col-12">
+                  <div className="rn-form-group">
+                    <Field
+                      type="tel"
+                      placeholder="WhatsApp Phone "
+                      name="phone"
+                    ></Field>
+                    <p className="information">
+                      Please type your number with + and country code
+                    </p>
+                    <ErrorMessage
+                      className="error"
+                      name="phone"
+                      component="div"
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-6 col-md-12 col-12">
+                  <div className="rn-form-group">
+                    <Field type="email" placeholder="Email" name="email" />
+                    <ErrorMessage
+                      className="error"
+                      name="email"
+                      component="div"
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-6 col-md-12 col-12">
+                  <div className="hor_section_nospace mt--40">
+                    <Field
+                      style={{ maxWidth: "30px", margin: "10px" }}
+                      type="checkbox"
+                      name="notificationTerms"
+                    ></Field>
+                    <p className="information">
+                      I consent to being notified by the organizer through the
+                      below contact/s
+                    </p>
+                  </div>
+                  <ErrorMessage
+                    className="error"
+                    name="notificationTerms"
+                    component="div"
+                  />
+                  <Field as="select" name="notificationTypeTerms">
+                    <option value="" disabled>
+                      Contact By
+                    </option>
+                    <option value="Email">Email</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                    <option value="Email & WhatsApp">Both</option>
+                  </Field>
+                  <ErrorMessage
+                    className="error"
+                    name="notificationTypeTerms"
+                    component="div"
+                  />
+                </div>
+              </div>
 
-                <button
-                  disabled={loading}
-                  type="submit"
-                  className="rn-button-style--2 rn-btn-reverse-green mt--80"
-                >
-                  {loading ? <Loader /> : <span>Update information</span>}
-                </button>
-              </Form>
-            )}
-          </Formik>}
-        </ModalWindow>
+              <button
+                disabled={loading}
+                type="submit"
+                className="rn-button-style--2 rn-btn-reverse-green mt--80"
+              >
+                {loading ? <Loader /> : <span>Update information</span>}
+              </button>
+            </Form>
+          )}
+        </Formik>}
+      </ModalWindow>
 
       {/* Start Breadcrump Area */}
       <div

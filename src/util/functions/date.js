@@ -52,3 +52,20 @@ export const TIME_OPTIONS = {
     minute: '2-digit',
     hour12: false, // Use 24-hour format
 };
+
+export const calculateTimeRemaining = (target) => {
+    const now = new Date().getTime(); // Local time in milliseconds
+    const targetTime = new Date(target)
+
+    const timeDifference = targetTime - now; // Difference in milliseconds
+    return Math.max(0, timeDifference); // Ensure non-negative value
+}
+
+export const formatMsToTimer = (ms) => {
+    const minutes = Math.floor(ms / 1000 / 60); 
+    const seconds = Math.floor((ms / 1000) % 60); 
+
+    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+    return formattedTime; 
+}

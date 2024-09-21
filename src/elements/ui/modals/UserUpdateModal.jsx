@@ -56,11 +56,11 @@ const UserUpdateModal = ({ currentUser }) => {
     const dispatch = useDispatch();
 
     const closeHandler = () => {
-        dispatch(removeModal());
+        dispatch(removeModal(USER_UPDATE_MODAL));
     };
 
     return (
-        <ModalWindow show={modal === USER_UPDATE_MODAL}>
+        <ModalWindow show={modal.includes(USER_UPDATE_MODAL)}>
             <Formik
                 className="inner"
                 validationSchema={schema}

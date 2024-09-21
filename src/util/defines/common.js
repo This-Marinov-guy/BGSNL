@@ -1,4 +1,8 @@
 import { capitalizeAfterSpace } from "../functions/capitalize";
+import { isProd } from "../functions/helpers";
+
+// authentication
+export const SESSION_TIMEOUT = (isProd() ? 15 : 60) * 60 * 1000 // minutes in milliseconds
 
 // member roles
 export const SUPER_ADMIN = 'super_admin';
@@ -28,6 +32,7 @@ export const USER_UPDATE_MODAL = 'user_update_modal';
 export const RESET_PASSWORD_MODAL = 'reset_password_modal';
 export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';
 export const WEB_DEV_MODAL = 'web_developer_modal';
+export const INACTIVITY_MODAL = 'inactive_user_modal';
 
 //toasts
 export const SUCCESS_STYLE = {
