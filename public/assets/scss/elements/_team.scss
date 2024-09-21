@@ -75,6 +75,16 @@
   border-image: linear-gradient(to bottom right, #d4d4d4, #9e0d33, #017363) 1;
 }
 
+.gradient-border-2 {
+  border-width: 20px 40px; 
+  border-style: solid; 
+  border-image-source: url(/public/assets/images/borders/4.png);
+  border-image-slice: 50; 
+  border-image-width: 20px 40px; 
+  border-image-outset: 20px; 
+  border-image-repeat: stretch; 
+}
+
 .team_img {
   margin: 70px 0px;
   object-fit: cover;

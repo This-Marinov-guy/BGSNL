@@ -11,7 +11,7 @@ const UserCard = ({ user }) => {
     const dispatch = useDispatch();
 
     return (
-        <div className="service gradient-border-2 content mt--40" >
+        <div className="service gradient-border-2 mt--20" >
             <h2 className='archive-title' >Greetings, {user.name}!</h2>
             <div className="hor_section mb--10">
                 <p className="mt--10" style={{ fontFamily: 'Archive' }}>{capitalizeFirstLetter(user.region)} <br /> {formatRole(user.roles)} </p>
