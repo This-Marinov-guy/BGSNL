@@ -112,7 +112,7 @@ const SessionLayout = () => {
         };
 
         const handleUserActivity = () => {
-            localStorage.setItem('session_remaining', target);
+            localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, target);
             resetInactivityTimeout(); 
         };
 

@@ -12,7 +12,7 @@ export const userSlice = createSlice({
       reducer(state, action) {
         const { token } = action.payload;
         state.token = token;
-        localStorage.setItem('session_remaining', Date.now() + SESSION_TIMEOUT);
+        localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, Date.now() + SESSION_TIMEOUT);
         localStorage.setItem(
           LOCAL_STORAGE_USER_DATA,
           JSON.stringify({
