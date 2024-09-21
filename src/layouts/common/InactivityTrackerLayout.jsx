@@ -9,6 +9,7 @@ import { decodeJWT, isTokenExpired } from "../../util/functions/authorization";
 import { useHttpClient } from "../../hooks/http-hook";
 import { isObjectEmpty } from "../../util/functions/helpers";
 import { useNavigate } from "react-router-dom";
+import { startPageLoading, stopPageLoading } from "../../redux/loading";
 
 const INACTIVITY_TIMEOUT = SESSION_TIMEOUT
 const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
@@ -31,9 +32,16 @@ const InactivityTracker = () => {
     }
 
     const refreshJWT = async () => {
-        const responseData = await sendRequest('user/refresh-token');
-
-        return responseData.token ?? null;
+        try {
+            dispatch(startPageLoading());
+            const responseData = await sendRequest('user/refresh-token');
+    
+            return responseData.token ?? null;
+        } catch (err) {
+            return null;
+        } finally {
+            dispatch(stopPageLoading());
+        }
     }
 
     let target = Date.now() + INACTIVITY_TIMEOUT;
