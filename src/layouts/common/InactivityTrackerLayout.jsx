@@ -8,6 +8,7 @@ import { login, logout, selectUser } from "../../redux/user";
 import { decodeJWT, isTokenExpired } from "../../util/functions/authorization";
 import { useHttpClient } from "../../hooks/http-hook";
 import { isObjectEmpty } from "../../util/functions/helpers";
+import { useNavigate } from "react-router-dom";
 
 const INACTIVITY_TIMEOUT = SESSION_TIMEOUT
 const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
@@ -21,10 +22,12 @@ const InactivityTracker = () => {
 
     const user = useSelector(selectUser);
 
+    const navigate = useNavigate();
 
     const onLogout = () => {
         dispatch(removeModal(INACTIVITY_MODAL)); 
         dispatch(logout());
+        navigate('/');
     }
 
     const refreshJWT = async () => {
@@ -60,7 +63,7 @@ const InactivityTracker = () => {
                 })
             );
         }
-    }, [])
+    }, []);
 
     useEffect(() => {
         let inactivityTimeout;
