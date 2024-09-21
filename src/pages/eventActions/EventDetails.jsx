@@ -16,7 +16,7 @@ import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent } from "../../util/functions/helpers";
-import NoEventFound from "../../elements/ui/errors/NoEventFound";
+import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 
