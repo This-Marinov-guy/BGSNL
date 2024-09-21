@@ -15,7 +15,7 @@ const Locked = ({ currentUser }) => {
   const isLocked = !!currentUser && currentUser.status !== USER_STATUSES[ACTIVE]
 
   if (!isLocked) {
-    return null;
+    return <PageLoading />;
   }
 
   const { loading, sendRequest } = useHttpClient();

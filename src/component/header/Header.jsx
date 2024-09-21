@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
@@ -20,8 +20,6 @@ const Header = (props) => {
   const userRegion = user.token ? decodeJWT(user.token).region : '';
 
   const region = props.forceRegion ?? useParams().region;
-
-  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
