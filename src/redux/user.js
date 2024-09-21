@@ -16,7 +16,7 @@ export const userSlice = createSlice({
         localStorage.setItem(
           "userData",
           JSON.stringify({
-            token: token,
+            token,
           })
         );
       },

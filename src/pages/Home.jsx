@@ -1,7 +1,5 @@
 import React, { Fragment, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { removeModal, selectModal, showModal } from '../redux/modal';
-import { WEB_DEV_MODAL } from '../util/defines/common';
+import { useSelector } from "react-redux";
 import { selectUser } from "../redux/user";
 import Header from "../component/header/Header";
 import AboutUs from "../component/HomeLayout/homeOne/AboutUs";
@@ -17,14 +15,11 @@ import {
 import ImageFb from "../elements/ui/media/ImageFb";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/defines/REGIONS_DESIGN";
-import RegionLogos from "../elements/RegionLogos";
-import Recruit from "../elements/special/Recruite";
 import NewsList from "../elements/ui/lists/NewsList";
 
 const Home = () => {
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { region } = useParams();
 
   useEffect(() => {

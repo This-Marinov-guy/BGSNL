@@ -125,6 +125,18 @@ a {
         color: #fff;
       }
     }
+
+    &.rn-btn-solid-green {
+      border: 2px solid $body-color;
+      background: $body-color;
+      color: #fff;
+      &:hover {
+        border: 2px solid $body-color;
+        background: $body-color;
+        color: #fff;
+      }
+    }
+
     &.rn-btn-reverse-green {
       border: 2px solid $body-color;
       background: $body-color;
@@ -331,32 +343,33 @@ a {
   height: 100%;
   gap: 20px;
 
-  button, a {
+  button,
+  a {
     text-align: center;
     flex: 1;
   }
 }
 
 .button-container {
-    display: flex;
-    flex-direction: row; 
-    gap: 10px;
-    align-items: center;
-    justify-content: flex-start; 
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
 
-    @media (max-width: 767px) {
-      flex-direction: column;
-      width: 100%; 
-    }
+  @media (max-width: 767px) {
+    flex-direction: column;
+    width: 100%;
   }
+}
 
-  .button-container-2 {
-    display: flex;
-    flex-direction: row; 
-    gap: 10px;
-    align-items: center;
-    justify-content: flex-start; 
-  }
+.button-container-2 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+}
 
 .btn-icon-frame {
   border: 2px solid;

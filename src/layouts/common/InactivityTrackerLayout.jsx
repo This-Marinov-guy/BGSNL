@@ -53,6 +53,8 @@ const InactivityTracker = () => {
         if (
             !isObjectEmpty(storedUser) &&
             storedUser.token &&
+            // TODO temp fix
+            !isObjectEmpty(storedUser.token) && 
             expirationTime > Date.now()
         ) {
             let jwtToken = storedUser.token;

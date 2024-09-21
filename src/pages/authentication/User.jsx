@@ -11,7 +11,6 @@ import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import Locked from "../../elements/ui/modals/Locked";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { decodeJWT } from "../../util/functions/authorization";
 import { selectUser } from "../../redux/user";
 import SubscriptionManage from "../../elements/ui/buttons/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
@@ -223,12 +222,12 @@ const User = () => {
     {/* End Info Area */}
     {/* <Greeting /> */}
     {/* Start User Collection */}
-    <div ref={scrollRef} className="options-btns-div mt--60">
+    <div ref={scrollRef} className="btn_row row">
       {TABS.map((t, i) => (
         <Link
           key={i}
           to={`#${t}`}
-          className={`rn-button-style--2 ${tab === t || (tab === '' && t === TABS[0]) ? 'btn-solid' : 'rn-btn-reverse'}`}
+          className={`col-lg-2 col-md-4 col-sm-12 center_text rn-button-style--2 ${tab === t || (tab === '' && t === TABS[0]) ? 'rn-btn-solid-green' : 'rn-btn-green'}`}
           onClick={() => {
             setDisableScroll(true);
             setTab(t);
