@@ -9,10 +9,10 @@ import { showNotification } from "../../../redux/notification";
 import { isProd } from "../../../util/functions/helpers";
 import { REGION_EMAIL } from "../../../util/defines/REGIONS_DESIGN";
 import PageLoading from "../loading/PageLoading";
-import { LOCKED, SUSPENDED, USER_STATUSES } from "../../../util/defines/enum";
+import { ACTIVE, LOCKED, SUSPENDED, USER_STATUSES } from "../../../util/defines/enum";
 
 const Locked = ({ currentUser }) => {
-  const isLocked = !!currentUser && currentUser.status !== USER_STATUSES[LOCKED]
+  const isLocked = !!currentUser && currentUser.status !== USER_STATUSES[ACTIVE]
 
   if (!isLocked) {
     return null;
