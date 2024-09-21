@@ -1,4 +1,4 @@
-export const INTERNSHIPS = [
+export const INTERNSHIPS_LIST = [
     {
         logo: '/assets/images/brand/brand-04.png',
         company: 'Study Buddy Ltd.',

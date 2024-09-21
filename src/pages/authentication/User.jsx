@@ -14,7 +14,7 @@ import { selectUser } from "../../redux/user";
 import SubscriptionManage from "../../elements/ui/buttons/SubscriptionManage";
 import Recruit from "../../elements/special/Recruite";
 import { Image } from 'primereact/image';
-import { INTERNSHIPS } from "../../util/defines/INTERNSHIPS";
+import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserCard from "../../elements/ui/cards/UserCard";
@@ -22,9 +22,7 @@ import BirthdayBanner from "../../elements/banners/BirthdayBanner";
 import Christmas from "../../elements/special/Christmas";
 import { isProd } from "../../util/functions/helpers";
 import NewsList from "../../elements/ui/lists/NewsList";
-import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
-
-const TABS = ['news', 'tickets', 'internships'];
+import { ACCOUNT_TABS, ACTIVE, INTERNSHIPS, NEWS, TICKETS, USER_STATUSES } from "../../util/defines/enum";
 
 const User = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -72,7 +70,7 @@ const User = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (scrollRef.current && TABS.includes(tab) && !disableScroll) {
+      if (scrollRef.current && ACCOUNT_TABS.includes(tab) && !disableScroll) {
         scrollRef.current.scrollIntoView({ behavior: 'smooth' });
       }
     }, 100);
@@ -84,10 +82,10 @@ const User = () => {
 
   switch (tab) {
     case '':
-    case TABS[0]:
+    case NEWS:
       menuContent = <NewsList />
       break;
-    case TABS[1]:
+    case TICKETS:
       menuContent = <div className="container">
         <div className="row">
           <div className="col-lg-12">
@@ -108,7 +106,7 @@ const User = () => {
         </div>
       </div>
       break;
-    case TABS[2]:
+    case INTERNSHIPS:
       menuContent = <Fragment>
         <div className="container">
           <div className="row">
@@ -116,7 +114,7 @@ const User = () => {
               <div className="mb--30 mb_sm--0">
                 <h2 className="title">Internships</h2>
                 <p>As a BGSNL member you get special access to our recommended positions. Check the section frequently as we aim to add exclusive internships for our members only!</p>
-                {INTERNSHIPS.map((i, index) => {
+                {INTERNSHIPS_LIST.map((i, index) => {
                   return <div key={index} className="row mt--20">
                     <div className="col-lg-8 col-md-6 col-12 reading">
                       <h3>Company: </h3><p>{i.company}</p>
@@ -193,11 +191,11 @@ const User = () => {
     {/* <Greeting /> */}
     {/* Start User Collection */}
     <div ref={scrollRef} className="btn_row row">
-      {TABS.map((t, i) => (
+      {ACCOUNT_TABS.map((t, i) => (
         <Link
           key={i}
           to={`#${t}`}
-          className={`col-lg-2 col-md-4 col-sm-12 center_text rn-button-style--2 ${tab === t || (tab === '' && t === TABS[0]) ? 'rn-btn-solid-green' : 'rn-btn-green'}`}
+          className={`col-lg-2 col-md-4 col-sm-12 center_text rn-button-style--2 ${tab === t || (tab === '' && t === ACCOUNT_TABS[0]) ? 'rn-btn-solid-green' : 'rn-btn-green'}`}
           onClick={() => {
             setDisableScroll(true);
             setTab(t);

@@ -19,3 +19,10 @@ export const USER_STATUSES = {
     [LOCKED]: LOCKED,
     [SUSPENDED]: SUSPENDED
 }
+
+// ACCOUNT TABS
+export const TICKETS = 'tickets';
+export const NEWS = 'news';
+export const INTERNSHIPS = 'internships';
+
+export const ACCOUNT_TABS = [NEWS, TICKETS, INTERNSHIPS];
