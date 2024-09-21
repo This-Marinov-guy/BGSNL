@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeModal, showModal } from "../../redux/modal";
-import { INACTIVITY_MODAL, SESSION_TIMEOUT } from "../../util/defines/common";
+import { INACTIVITY_MODAL, LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT } from "../../util/defines/common";
 import InactivityModal from "../../elements/ui/modals/InactivityModal";
 import { calculateTimeRemaining } from "../../util/functions/date";
 import { login, logout, selectUser } from "../../redux/user";
@@ -14,7 +14,7 @@ import { startPageLoading, stopPageLoading } from "../../redux/loading";
 const INACTIVITY_TIMEOUT = SESSION_TIMEOUT
 const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
 
-const InactivityTracker = () => {
+const SessionLayout = () => {
     const [timeRemaining, setTimeRemaining] = useState(INACTIVITY_TIMEOUT); 
 
     const dispatch = useDispatch();
@@ -47,8 +47,8 @@ const InactivityTracker = () => {
     let target = Date.now() + INACTIVITY_TIMEOUT;
 
     useEffect(() => {
-        let storedUser = JSON.parse(localStorage.getItem("userData"));
-        let expirationTime = localStorage.getItem("session_remaining") ?? Date.now();
+        let storedUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USER_DATA));
+        let expirationTime = localStorage.getItem(LOCAL_STORAGE_SESSION_LIFE) ?? Date.now();
 
         if (
             !isObjectEmpty(storedUser) &&
@@ -136,4 +136,4 @@ const InactivityTracker = () => {
     }
 };
 
-export default InactivityTracker;
+export default SessionLayout;

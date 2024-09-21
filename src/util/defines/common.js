@@ -1,6 +1,10 @@
 import { capitalizeAfterSpace } from "../functions/capitalize";
 import { isProd } from "../functions/helpers";
 
+// Local Storage
+export const LOCAL_STORAGE_USER_DATA = 'BGSNL_user_data';
+export const LOCAL_STORAGE_SESSION_LIFE = 'BGSNL_session_life'
+
 // authentication
 export const SESSION_TIMEOUT = (isProd() ? 15 : 60) * 60 * 1000 // minutes in milliseconds
 

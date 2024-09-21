@@ -6,7 +6,6 @@ import { Toast } from 'primereact/toast';
 import { selectNotification, selectNotificationIndex } from "../redux/notification";
 import BirthdayModal from "../elements/ui/modals/BirthdayModal";
 import RecruitModal from "../elements/ui/modals/RecruitModal";
-import InactivityTracker from "./common/InactivityTrackerLayout";
 
 const MainLayout = ({ children }) => {
     const toast = useRef(null);
