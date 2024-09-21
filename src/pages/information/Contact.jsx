@@ -33,7 +33,7 @@ const Contact = () => {
       {/* End Breadcrump Area */}
 
       {/* Start Contact Top Area  */}
-      <div className="rn-contact-top-area ptb--120 bg_color--5">
+      <div className="rn-contact-top-area ptb--60 bg_color--5">
         <div className="container">
           <div className="row">
             {/* Start Single Address  */}
@@ -82,7 +82,7 @@ const Contact = () => {
       {/* End Contact Top Area  */}
 
       {/* Start Contact Page Area  */}
-      <div className="rn-contact-page ptb--120 bg_color--1">
+      <div className="rn-contact-page ptb--40 bg_color--1">
         <ContactTwo />
       </div>
       {/* End Contact Page Area  */}
