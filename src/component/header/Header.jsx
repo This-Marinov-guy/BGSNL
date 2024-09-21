@@ -1,9 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, selectUser } from "../../redux/user";
+import { selectUser } from "../../redux/user";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
-import Alert from "react-bootstrap/Alert";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
@@ -11,6 +10,7 @@ import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import { checkAuthorization, decodeJWT } from "../../util/functions/authorization";
 import NewBadge from "../../elements/ui/badges/NewBadge";
 import { ACCESS_2 } from "../../util/defines/common";
+import LogoutAlert from "../../elements/ui/alerts/Logout";
 
 const Header = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
@@ -48,31 +48,7 @@ const Header = (props) => {
 
   return (
     <Fragment>
-      {logoutAlert && (
-        <Alert className="logout_alert" variant="danger">
-          <p>Continue logging out?</p>
-          <button
-            className="rn-btn mr--10"
-            style={{ color: 'white' }}
-            onClick={() => {
-              dispatch(logout());
-              setLogoutAlert(false);
-              navigate("/");
-            }}
-          >
-            Log out
-          </button>
-          <button
-            className="rn-btn"
-            style={{ background: 'transparent' }}
-            onClick={() => {
-              setLogoutAlert(false);
-            }}
-          >
-            Stay
-          </button>
-        </Alert>
-      )}
+      <LogoutAlert visible={logoutAlert} onHide={() => setLogoutAlert(false)} />
       <header
         className={`header-area formobile-menu header--transparent default-color`}
       >
