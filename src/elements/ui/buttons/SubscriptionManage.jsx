@@ -28,9 +28,7 @@ const SubscriptionManage = (props) => {
                 "payment/subscription/customer-portal",
                 "POST",
                 {
-                    customerId: props.subscription.customerId,
                     url: window.location.href,
-                    userId: props.userId
                 },
             );
             if (responseData.url) {
@@ -41,13 +39,7 @@ const SubscriptionManage = (props) => {
 
     const handleCancel = async () => {
         try {
-            const responseData = await sendRequest(
-                "user/cancel-membership",
-                "POST",
-                {
-                    userId: props.userId
-                },
-            );
+            const responseData = await sendRequest("user/cancel-membership", "DELETE");
             if (responseData.message) {
                 dispatch(showNotification({ severity: 'success', summary: 'Success', detail: responseData.message }));
             }

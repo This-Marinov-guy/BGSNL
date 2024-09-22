@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
 import { showNotification } from '../../redux/notification';
 import { checkAuthorization } from '../../util/functions/authorization';
-import PageLoading from '../../elements/ui/loading/PageLoading';
+import AccountLocked from '../../elements/ui/modals/AccountLocked';
+import { ACTIVE, USER_STATUSES } from '../../util/defines/enum';
+import HeaderLoadingError from '../../elements/ui/errors/HeaderLoadingError';
 
 const AuthLayout = ({ children, access = [] }) => {
     const location = useLocation();
-    const routePath = location.pathname + location.hash + location.search;
-
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
 
-    const [authState, setAuthState] = useState({
-        isAuthenticated: false,
-        hasAccess: true,
-        isLoading: true
-    });
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isActive, setIsActive] = useState(false);
+    const [hasAccess, setHasAccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const checkAuth = async () => {
             const userData = localStorage.getItem('userData');
             const isAuth = (user && !!user.token) || !!userData;
+            const routePath = location.pathname + location.hash + location.search;
 
             if (!isAuth) {
                 sessionStorage.setItem('prevUrl', routePath);
@@ -30,12 +30,24 @@ const AuthLayout = ({ children, access = [] }) => {
                     severity: 'warn',
                     detail: 'Please log in to your account to proceed to the page!'
                 }));
-                setAuthState({ isAuthenticated: false, hasAccess: false, isLoading: false });
+                setIsAuthenticated(false);
+                setIsActive(false);
+                setHasAccess(false);
+                setIsLoading(false);
+                return;
+            }
+
+            const token = user?.token || (userData ? JSON.parse(userData).token : null);
+
+            if (user.status !== USER_STATUSES[ACTIVE]) {
+                setIsAuthenticated(true);
+                setIsActive(false);
+                setHasAccess(false);
+                setIsLoading(false);
                 return;
             }
 
             if (access.length > 0) {
-                const token = user?.token || (userData ? JSON.parse(userData).token : null);
                 try {
                     const authorized = await checkAuthorization(token, access);
                     if (!authorized) {
@@ -43,7 +55,10 @@ const AuthLayout = ({ children, access = [] }) => {
                             severity: 'error',
                             detail: 'You do not have access to this page'
                         }));
-                        setAuthState({ isAuthenticated: true, hasAccess: false, isLoading: false });
+                        setIsAuthenticated(true);
+                        setIsActive(true);
+                        setHasAccess(false);
+                        setIsLoading(false);
                         return;
                     }
                 } catch (error) {
@@ -51,30 +66,40 @@ const AuthLayout = ({ children, access = [] }) => {
                         severity: 'error',
                         detail: 'An error occurred while checking your access. Please try again.'
                     }));
-                    setAuthState({ isAuthenticated: true, hasAccess: false, isLoading: false });
+                    setIsAuthenticated(true);
+                    setIsActive(true);
+                    setHasAccess(false);
+                    setIsLoading(false);
                     return;
                 }
             }
 
-            setAuthState({ isAuthenticated: true, hasAccess: true, isLoading: false });
+            setIsAuthenticated(true);
+            setIsActive(true);
+            setHasAccess(true);
+            setIsLoading(false);
         };
 
         checkAuth();
-    }, [routePath]);
+    }, [access, location, user, dispatch]);
 
-    if (authState.isLoading) {
-        return <PageLoading/>; 
+    if (isLoading) {
+        return <HeaderLoadingError />;
     }
 
-    if (!authState.isAuthenticated) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" />;
     }
 
-    if (!authState.hasAccess) {
+    if (!isActive) {
+        return <AccountLocked/>;
+    }
+
+    if (!hasAccess) {
         return <Navigate to="/user" />;
     }
 
     return children;
 };
 
-export default AuthLayout;
+export default React.memo(AuthLayout);

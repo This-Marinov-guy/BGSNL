@@ -5,13 +5,16 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     token: null,
-    expirationDate: null,
+    status: '',
+    isSubscribed: false,
   },
   reducers: {
     login: {
       reducer(state, action) {
-        const { token } = action.payload;
+        const { token, status, isSubscribed } = action.payload;
         state.token = token;
+        state.status = status;
+        state.isSubscribed = isSubscribed;
         localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, Date.now() + SESSION_TIMEOUT);
         localStorage.setItem(
           LOCAL_STORAGE_USER_DATA,
@@ -30,6 +33,8 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
+      state.status = '';
+      state.isSubscribed = false;
       localStorage.removeItem(LOCAL_STORAGE_USER_DATA);
       localStorage.removeItem(LOCAL_STORAGE_SESSION_LIFE);
     },

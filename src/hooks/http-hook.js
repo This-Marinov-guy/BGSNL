@@ -50,9 +50,7 @@ export const useHttpClient = () => {
       } finally {
         dispatch(stopLoading());
       }
-    },
-    []
-  );
+    }, [user]);
 
   return { loading, sendRequest, forceStartLoading };
 };

@@ -8,8 +8,6 @@ import { FiChevronUp, FiX } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import ModalWindow from "../../elements/ui/modals/ModalWindow";
-import Locked from "../../elements/ui/modals/Locked";
-import Alert from "react-bootstrap/Alert";
 import Loader from "../../elements/ui/loading/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -98,10 +96,6 @@ const NonSocietyEvent = (props) => {
       fetchCurrentUser();
     }
   }, [sendRequest, user]);
-
-  if (!!currentUser && currentUser.status !== USER_STATUSES[ACTIVE]) {
-    return <Locked currentUser={currentUser} />
-  }
 
   return (
     <React.Fragment>

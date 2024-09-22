@@ -21,8 +21,6 @@ import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
 import { selectUser } from "./redux/user";
 import SessionLayout from "./layouts/authentication/SessionLayout";
-import { selectPageLoading } from "./redux/loading";
-import HeaderLoadingError from "./elements/ui/errors/HeaderLoadingError";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -92,14 +90,9 @@ const PageNavigationFunc = () => {
 
 const Root = () => {
   const user = useSelector(selectUser);
-  const pageLoading = useSelector(selectPageLoading);
 
   if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />
-  }
-
-  if (pageLoading) {
-    return <HeaderLoadingError/>
   }
 
   return (

@@ -8,7 +8,6 @@ import ScrollToTop from "react-scroll-up";
 import Tooltip from "react-bootstrap/Tooltip";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import Locked from "../../elements/ui/modals/Locked";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { selectUser } from "../../redux/user";
 import SubscriptionManage from "../../elements/ui/buttons/SubscriptionManage";
@@ -50,7 +49,7 @@ const User = () => {
 
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/current?withTickets=${true}`);
+        const responseData = await sendRequest(`user/current?withTickets=${true}&withChristmas=${true}`);
 
         setCurrentUser(responseData.user);
         setHasBirthday(responseData.celebrate);
@@ -154,10 +153,6 @@ const User = () => {
 
   if (isPageLoading) {
     return (<HeaderLoadingError />)
-  }
-
-  if (currentUser.status !== USER_STATUSES[ACTIVE]) {
-    return <Locked currentUser={currentUser} />
   }
 
   return <React.Fragment>

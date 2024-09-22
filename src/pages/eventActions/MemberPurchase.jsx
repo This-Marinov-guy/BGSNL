@@ -6,7 +6,6 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useHttpClient } from "../../hooks/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
-import Locked from "../../elements/ui/modals/Locked";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
@@ -110,10 +109,6 @@ const MemberPurchase = () => {
 
   if (selectedEvent.ticketLink) {
     return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />
-  }
-
-  if (!!currentUser && currentUser.status !== USER_STATUSES[ACTIVE]) {
-    return <Locked currentUser={currentUser} />
   }
 
   return (
