@@ -21,7 +21,7 @@ const AuthLayout = ({ children, access = [] }) => {
     useEffect(() => {
         const checkAuth = async () => {
             const userData = localStorage.getItem('userData');
-            const isAuth = (user && !!user.token) || !!userData;
+            const isAuth = !!(user && user.token) || !!userData;
             const routePath = location.pathname + location.hash + location.search;
 
             if (!isAuth) {
@@ -81,7 +81,7 @@ const AuthLayout = ({ children, access = [] }) => {
         };
 
         checkAuth();
-    }, [access, location, user]);
+    }, [access]);
 
     if (isLoading) {
         return <HeaderLoadingError />;

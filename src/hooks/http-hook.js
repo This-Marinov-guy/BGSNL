@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectLoading, startLoading, stopLoading } from "../redux/loading";
 import axios from 'axios';
@@ -18,8 +17,7 @@ export const useHttpClient = () => {
     process.env.REACT_APP_SERVER_URL :
     process.env.REACT_APP_TEST_SERVER_URL;
 
-  const sendRequest = useCallback(
-    async (url, method = "GET", data = null, headers = {}, withError = true) => {
+  const sendRequest = async (url, method = "GET", data = null, headers = {}, withError = true) => {
       if (!loading) forceStartLoading();
 
       if (user && !!user.token) {
@@ -50,7 +48,7 @@ export const useHttpClient = () => {
       } finally {
         dispatch(stopLoading());
       }
-    }, [user]);
+    }
 
   return { loading, sendRequest, forceStartLoading };
 };
