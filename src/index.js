@@ -161,21 +161,21 @@ const Root = () => {
               />
               <Route exact path={`/user/add-event`}
                 element={
-                  <AuthLayout access={ACCESS_1}>
+                  <AuthLayout access={ACCESS_3}>
                     <AddEvent />
                   </AuthLayout>
                 }
               />
               <Route exact path={`/user/edit-event/:eventId`}
                 element={
-                  <AuthLayout access={ACCESS_1}>
+                  <AuthLayout access={ACCESS_3}>
                     <EditEvent />
                   </AuthLayout>
                 }
               />
               <Route exact path={`/user/dashboard`}
                 element={
-                  <AuthLayout access={ACCESS_2}>
+                  <AuthLayout access={ACCESS_3}>
                     <EventDashboard />
                   </AuthLayout>
                 }
