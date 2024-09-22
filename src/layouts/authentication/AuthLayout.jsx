@@ -39,7 +39,7 @@ const AuthLayout = ({ children, access = [] }) => {
 
             const token = user?.token || (userData ? JSON.parse(userData).token : null);
 
-            if (user.status !== USER_STATUSES[ACTIVE]) {
+            if (user.status && user.status !== USER_STATUSES[ACTIVE]) {
                 setIsAuthenticated(true);
                 setIsActive(false);
                 setHasAccess(false);
@@ -81,7 +81,7 @@ const AuthLayout = ({ children, access = [] }) => {
         };
 
         checkAuth();
-    }, [access, location, user, dispatch]);
+    }, [access, location, user]);
 
     if (isLoading) {
         return <HeaderLoadingError />;
