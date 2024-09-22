@@ -138,7 +138,7 @@ export const CalendarWithClock = (props) => {
                         type="time"
                         value={timeValue}
                         onChange={handleTimeChange}
-                        style={{ margin: "0 10px 10px", width: '5em' }}
+                        style={{ margin: "0 10px 10px", width: '6em' }}
                     />
                     <DayPicker
                         mode="single"
