@@ -101,11 +101,11 @@ export const decryptData = (string) => {
 
 export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = false) => {
     let price;
-    const {product} = selectedEvent
+    const { product } = selectedEvent
 
     const isMember = user && !!user.token;
     const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_3);
-    const isMemberDataFull = user?.name && user?.surname && user?.email; 
+    const isMemberDataFull = user?.name && user?.surname && user?.email;
 
     if (selectedEvent.isFree) {
         price = 'FREE'
@@ -138,7 +138,7 @@ export const checkObjectOfArraysEmpty = (obj) => {
     return allArrays.every((arr) => arr.length === 0);
 };
 
-export const resizeFile = (file , width = 1500, height= 485, format = 'WEBP') =>
+export const resizeFile = (file, width = 1500, height = 485, format = 'WEBP') =>
     new Promise((resolve) => {
         Resizer.imageFileResizer(
             file,
