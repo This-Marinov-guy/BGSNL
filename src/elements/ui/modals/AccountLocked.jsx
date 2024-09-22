@@ -79,11 +79,11 @@ const AccountLocked = () => {
 
   switch (status) {
     case USER_STATUSES[LOCKED]:
-      bodyContent = <div className="center_section">
+      bodyContent = <div className="center_section center_text">
         <h3>
           Your account is locked!
         </h3>
-        <p className="center_text">
+        <p>
           To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account.
         </p>
         {actionButtons}
@@ -94,11 +94,11 @@ const AccountLocked = () => {
       break;
 
     case USER_STATUSES[SUSPENDED]:
-      bodyContent = <div className="center_section">
+      bodyContent = <div className="center_section center_text">
         <h3>
           Your account is suspended!
         </h3>
-        <p className="center_text">
+        <p>
           <span>We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>
         </p>
         <button onClick={() => navigate(-1)} className="rn-button-style--2 rn-btn-reverse mt--40">
@@ -108,11 +108,11 @@ const AccountLocked = () => {
       break;
 
     default:
-      bodyContent = <div className="center_section">
+      bodyContent = <div className="center_section center_text">
         <h3>
           There is something wrong with your account!
         </h3>
-        <p className="center_text">
+        <p>
           <span>We are resolving an issue with your account. Except our apologies and please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>
         </p>
         <button onClick={() => navigate(-1)} className="rn-button-style--2 rn-btn-reverse mt--40">
