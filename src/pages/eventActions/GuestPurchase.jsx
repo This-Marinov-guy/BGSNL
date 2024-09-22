@@ -26,6 +26,9 @@ import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusiveEvents";
+import { showNotification } from "../../redux/notification";
+import { INCORRECT_MISSING_DATA } from "../../util/defines/common";
+import { error } from "jquery";
 
 const GuestPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -51,6 +54,12 @@ const GuestPurchase = () => {
     );
 
     navigate('/success');
+  }
+
+  const handleErrorMsg = (errors) => {
+    if (!!errors) {
+      dispatch(showNotification(INCORRECT_MISSING_DATA))
+    }
   }
 
   useEffect(() => {
@@ -259,7 +268,7 @@ const GuestPurchase = () => {
                   }, {}) || {})
                 }}
               >
-                {(values) => (
+                {(values, errors) => (
                   <Form id="form" encType="multipart/form-data"
                     className="mb--120">
                     <h3>Fill your details and buy a ticket</h3>
@@ -375,6 +384,7 @@ const GuestPurchase = () => {
                     <div>
                       <WithBackBtn>
                         <button
+                          onClick={() => handleErrorMsg(errors)}
                           disabled={isLoading}
                           type="submit"
                           className="rn-button-style--2 rn-btn-reverse-green mt--20"

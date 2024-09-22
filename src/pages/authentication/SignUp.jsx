@@ -109,8 +109,8 @@ const SignUp = (props) => {
 
   const dispatch = useDispatch();
 
-  const handleErrorMsg = (errors, isValid) => {
-    if (errors && !isValid) {
+  const handleErrorMsg = (errors) => {
+    if (!!errors) {
       dispatch(showNotification(INCORRECT_MISSING_DATA))
     }
   }
@@ -628,7 +628,7 @@ const SignUp = (props) => {
           </Formik>
         </div>
         }
-      </div >
+      </div>
       stepButtons = null
       break;
     default:

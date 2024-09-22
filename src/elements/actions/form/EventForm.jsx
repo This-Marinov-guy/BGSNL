@@ -40,12 +40,12 @@ const EventForm = (props) => {
     const bgs = Array.from({ length: BG_INDEX }, (_, i) => i + 1);
     const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
 
-    const preSubmitCheck = (errors, isValid, dirty) => {
+    const preSubmitCheck = (errors) => {
         if (!isProd()) {
             console.log(errors);
         }
 
-        if (errors && !isValid && dirty) {
+        if (!!errors) {
             return dispatch(showNotification(INCORRECT_MISSING_DATA));
         }
     }
