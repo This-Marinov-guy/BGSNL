@@ -18,7 +18,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import { encryptData } from "../../util/functions/helpers";
+import { encryptData, isObjectEmpty } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { useDispatch } from "react-redux";
@@ -57,7 +57,7 @@ const GuestPurchase = () => {
   }
 
   const handleErrorMsg = (errors) => {
-    if (!!errors) {
+    if (!isObjectEmpty(errors)) {
       dispatch(showNotification(INCORRECT_MISSING_DATA))
     }
   }

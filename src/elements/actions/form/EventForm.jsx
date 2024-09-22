@@ -10,7 +10,7 @@ import ImageInput from "../../inputs/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";
 import InputsBuilder from "../../inputs/InputsBuilder";
-import { askBeforeRedirect, isProd, resizeFile } from "../../../util/functions/helpers";
+import { askBeforeRedirect, isObjectEmpty, isProd, resizeFile } from "../../../util/functions/helpers";
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { EVENT_ADDED, EVENT_EDITED, INCORRECT_MISSING_DATA } from "../../../util/defines/common";
@@ -45,7 +45,7 @@ const EventForm = (props) => {
             console.log(errors);
         }
 
-        if (!!errors) {
+        if (!isObjectEmpty(errors)) {
             return dispatch(showNotification(INCORRECT_MISSING_DATA));
         }
     }
@@ -192,7 +192,7 @@ const EventForm = (props) => {
                                 val.forEach((v, i) => {
                                     formData.append(`${key}[]`, v);
                                 })
-                            } else if (!!val) {
+                            } else {
                                 formData.append(key, val);
                             }
                         });
@@ -245,7 +245,7 @@ const EventForm = (props) => {
                     poster: initialData?.poster ?? null,
                     bgImage: initialData?.bgImage ?? 1,
                     bgImageExtra: initialData?.bgImageExtra ?? null,
-                    bgSelection: initialData?.bgSelection ?? 'bgImageExtra',
+                    bgSelection: initialData?.bgSelection ?? 1,
                 }}
             >
                 {({ values, setFieldValue, errors, isValid, dirty }) => (

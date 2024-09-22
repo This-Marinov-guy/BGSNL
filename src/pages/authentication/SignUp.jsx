@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
-import { encryptData, removeSpacesAndLowercase } from "../../util/functions/helpers";
+import { encryptData, isObjectEmpty, removeSpacesAndLowercase } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
@@ -110,7 +110,7 @@ const SignUp = (props) => {
   const dispatch = useDispatch();
 
   const handleErrorMsg = (errors) => {
-    if (!!errors) {
+    if (!isObjectEmpty(errors)) {
       dispatch(showNotification(INCORRECT_MISSING_DATA))
     }
   }
