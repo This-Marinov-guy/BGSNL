@@ -14,9 +14,11 @@ import Loader from '../../../ui/loading/Loader';
 import { showNotification } from '../../../../redux/notification';
 import { EVENT_DELETED } from '../../../../util/defines/common';
 import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
+import GenerateTicketsModal from './GenerateTicketsModal';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
+    const [ticketGeneratorModal, setTicketGeneratorModal] = useState(false);
 
     const { sendRequest, loading } = useHttpClient();
 
@@ -69,23 +71,32 @@ const EventModal = (props) => {
     return (
         <>
             <ConfirmCenterModal text={loading ? <Loader /> : 'Deleting an event is an irreversible action! Are you sure you want to delete it?'} onConfirm={onDelete} visible={visible} setVisible={setVisible} />
+            <GenerateTicketsModal visible={ticketGeneratorModal} onHide={() => setTicketGeneratorModal(false)} event={props.event} />
             <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format(MOMENT_DATE_TIME)}`}
                 visible={props.show} style={{ maxWidth: '90%' }}
                 onHide={() => props.setShow(false)}
                 dismissableMask>
-                <div className="options-btns-div">
+                <div className="btn_row row">
+                    <button
+                        onClick={() => {
+                            setTicketGeneratorModal(true);
+                        }}
+                        className="col-lg-2 col-md-4 col-sm-12 center_text rn-button-style--2 rn-btn-reverse-green"
+                    >
+                        Generate Tickets
+                    </button>
                     <button
                         onClick={() => {
                             dispatch(loadSingleEvent(props.event));
                             navigate(`/user/edit-event/${props.event.id}`);
                         }}
-                        className="rn-button-style--2 rn-btn-reverse-green"
+                        className="col-lg-2 col-md-4 col-sm-12 center_text rn-button-style--2 rn-btn-reverse-green"
                     >
                         Edit
                     </button>
                     <button
                         onClick={() => setVisible(true)}
-                        className="rn-button-style--2 rn-btn-reverse"
+                        className="col-lg-2 col-md-4 col-sm-12 center_text rn-button-style--2 rn-btn-reverse"
                     >
                         Delete
                     </button>

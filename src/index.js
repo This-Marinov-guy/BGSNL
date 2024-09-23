@@ -12,7 +12,7 @@ import { removeLogsOnProd } from "./util/functions/helpers";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import AuthLayout from "./layouts/authentication/AuthLayout";
-import { ACCESS_1, ACCESS_2, ACCESS_3 } from "./util/defines/common";
+import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4 } from "./util/defines/common";
 
 // Style
 import './index.scss'
@@ -182,7 +182,7 @@ const Root = () => {
               />
               <Route exact path={`/user/check-guest-list`}
                 element={
-                  <AuthLayout access={ACCESS_3}>
+                  <AuthLayout access={ACCESS_4}>
                     <GuestCheck />
                   </AuthLayout>
                 }

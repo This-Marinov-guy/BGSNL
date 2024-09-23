@@ -22,7 +22,7 @@ import moment from "moment";
 import { Message } from 'primereact/message';
 import { encryptData, estimatePriceByEvent } from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
-import { ACCESS_3 } from "../../util/defines/common";
+import { ACCESS_3, ACCESS_4 } from "../../util/defines/common";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
@@ -129,7 +129,7 @@ const MemberPurchase = () => {
                 setIsLoading(true);
 
                 let allowDiscount = false;
-                const isActiveMember = checkAuthorization(user.token, ACCESS_3);
+                const isActiveMember = checkAuthorization(user.token, ACCESS_4);
                 const isMemberForDiscount = selectedEvent.product?.activeMember.priceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
                 const isMemberForFreeTicket = selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
 

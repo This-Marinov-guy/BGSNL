@@ -3,7 +3,7 @@ import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
 import CryptoJS from 'crypto-js';
 import { checkAuthorization } from './authorization';
-import { ACCESS_3 } from '../defines/common';
+import { ACCESS_3, ACCESS_4 } from '../defines/common';
 
 export const isProd = () => {
     return process.env.NODE_ENV === 'production'
@@ -104,7 +104,7 @@ export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = 
     const { product } = selectedEvent
 
     const isMember = user && !!user.token;
-    const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_3);
+    const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
     const isMemberDataFull = user?.name && user?.surname && user?.email;
 
     if (selectedEvent.isFree) {
