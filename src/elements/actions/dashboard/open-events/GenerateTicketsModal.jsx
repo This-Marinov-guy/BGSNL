@@ -121,7 +121,7 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
 
       {inputs.map((inputSet, index) => (
         <div className="multi-input-set mt--10" key={index}>
-          <div className="hor_section_nospace">
+          <div className="hor_section_nospace mobile">
             <input
               type="text"
               value={inputSet.name}

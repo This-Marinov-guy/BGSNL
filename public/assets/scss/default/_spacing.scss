@@ -521,6 +521,12 @@
   align-items: flex-start;
   justify-content: flex-start;
   gap: 10px;
+
+  &.mobile {
+    @media #{$sm-layout} {
+      flex-direction: column;
+    }
+  }
 }
 
 .btn_row {
@@ -585,9 +591,9 @@
 }
 
 .responsive_img {
-  height: auto;     
-  width: auto;      
-  object-fit: contain; 
+  height: auto;
+  width: auto;
+  object-fit: contain;
   @media #{$md-layout} {
     max-height: 5em;
   }
