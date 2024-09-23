@@ -33,9 +33,11 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
   };
 
   const handleInputChange = (index, field, value) => {
-    const newInputs = [...inputs];
-    newInputs[index][field] = value;
-    setInputs(newInputs);
+    setInputs((prevInputs) => {
+      const newInputs = [...prevInputs];  
+      newInputs[index] = { ...newInputs[index], [field]: value };  
+      return newInputs;
+    });
   };
 
   const handleSubmit = async () => {
