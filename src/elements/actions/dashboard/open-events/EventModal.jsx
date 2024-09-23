@@ -137,8 +137,8 @@ const EventModal = (props) => {
                         <div className='col-lg-4 col-md-6 col-12'>
                             <p>Background {tooltip}: </p>
                             {(props.event.bgImageExtra && props.event?.bgImageSelection === 2) ?
-                                <Image src={props.event.bgImageExtra} className='normal_preview' alt='bg with expand' />
-                                : <Image src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className='normal_preview' alt='bg with expand' />}
+                                <Image src={props.event.bgImageExtra} className='normal_preview' alt='bg with expand' preview/>
+                                : <Image src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className='normal_preview' alt='bg with expand' preview />}
                         </div>
 
                         <div className='col-12'>
@@ -147,9 +147,12 @@ const EventModal = (props) => {
                                     if (!img) { return <p>No extra images</p> }
                                     {
                                         return <Image key={index}
-                                            className='small_preview'
+                                            className='mt--10'
+                                            width='100px'
                                             src={img}
-                                            alt='image with preview' />
+                                            alt='image with preview' 
+                                            preview
+                                            />
                                     }
                                 }) : 'Only poster will be displayed'}</p>
                         </div>
