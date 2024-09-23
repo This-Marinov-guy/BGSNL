@@ -6,18 +6,20 @@ import { encryptData } from '../../../../util/functions/helpers';
 import { createCustomerTicket } from '../../../../util/functions/ticket-creator';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../../../redux/notification';
-import { SUCCESS_STYLE } from '../../../../util/defines/common';
+import { SUCCESS_STYLE, WARNING_STYLE } from '../../../../util/defines/common';
+
+const initialValue = { name: '', surname: '', email: '' };
 
 const GenerateTicketsModal = ({ visible, onHide, event }) => {
-  const [inputs, setInputs] = useState([{ name: '', surname: '', email: '' }]);
+  const [inputs, setInputs] = useState([initialValue]);
   const [loading, setLoading] = useState(false);
 
-  const {sendRequest} = useHttpClient();
+  const { sendRequest } = useHttpClient();
 
   const dispatch = useDispatch();
 
   const addInput = () => {
-    setInputs([...inputs, { name: '', surname: '', email: '' }]);
+    setInputs([...inputs, initialValue]);
   };
 
   const removeInput = (index) => {
@@ -38,8 +40,9 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    let success = false;
 
-    for (let i = 0; i < inputs.length; i++ ) {
+    for (let i = 0; i < inputs.length; i++) {
       const element = inputs[i];
 
       if ((!element.name || !element.surname) || !element.email) {
@@ -52,7 +55,7 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
         surname: element.surname,
         email: element.email,
       });
-    
+
       const hasQR = event.hasOwnProperty('ticketQR') ? event.ticketQR : true;
       const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}` : '';
 
@@ -82,18 +85,28 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
       formData.append("guestPhone", '-');
 
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "event/purchase-ticket/guest",
           "POST",
           formData
         );
+
+        if (responseData.status) {
+          success = true;
+        }
       } catch (err) {
 
       }
     }
 
-    onHide();
-    dispatch(showNotification({...SUCCESS_STYLE, summary: 'Generating tickets executed!'}))
+    if (success) {
+      onHide();
+      dispatch(showNotification({ ...SUCCESS_STYLE, summary: 'Generating tickets executed!' }));
+      setInputs([initialValue]);
+    } else {
+      dispatch(showNotification({ ...WARNING_STYLE, summary: 'No tickets were generated!' }));
+    }
+
     setLoading(false);
   }
 
