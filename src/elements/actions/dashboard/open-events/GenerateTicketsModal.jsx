@@ -125,19 +125,19 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
             <input
               type="text"
               value={inputSet.name}
-              placeholder={`Name ${index + 1}`}
+              placeholder={`Name`}
               onChange={(e) => handleInputChange(index, 'name', e.target.value)}
             />
             <input
               type="text"
               value={inputSet.surname}
-              placeholder={`Surname ${index + 1}`}
+              placeholder={`Surname`}
               onChange={(e) => handleInputChange(index, 'surname', e.target.value)}
             />
             <input
               type="email"
               value={inputSet.email}
-              placeholder={`Email ${index + 1}`}
+              placeholder={`Email`}
               onChange={(e) => handleInputChange(index, 'email', e.target.value)}
             />
             <button
