@@ -8,7 +8,7 @@ export const useLoadEvents = (withFullData = false) => {
     const dispatch = useDispatch();
     const { sendRequest } = useHttpClient();
 
-    const reloadEvents = useCallback(async (withDelay = 0) => {
+    const reloadEvents = async (withDelay = 0) => {
         try {
             setEventsLoading(true);
 
@@ -25,7 +25,7 @@ export const useLoadEvents = (withFullData = false) => {
         } finally {
             setEventsLoading(false);
         }
-    }, []);
+    };
 
     return { reloadEvents, eventsLoading }
 }

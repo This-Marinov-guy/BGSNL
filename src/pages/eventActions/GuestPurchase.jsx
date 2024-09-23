@@ -29,6 +29,16 @@ import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusi
 import { showNotification } from "../../redux/notification";
 import { INCORRECT_MISSING_DATA } from "../../util/defines/common";
 import { error } from "jquery";
+import { buildSchemaExtraInputs } from "../../util/functions/input-helpers";
+
+const defaultSchema = yup.object().shape({
+  name: yup.string().required(),
+  surname: yup.string().required(),
+  phone: yup.string().required(),
+  email: yup.string().email("Please enter a valid email").required(),
+  policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+  payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+});
 
 const GuestPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -39,6 +49,7 @@ const GuestPurchase = () => {
   const [eventClosed, setEventClosed] = useState(false)
   const [quantity, setQuantity] = useState(1);
   const [normalTicket, setNormalTicket] = useState(false);
+  const [schema, setSchema] = useState(false);
 
   const { region, eventId } = useParams();
 
@@ -69,7 +80,10 @@ const GuestPurchase = () => {
         const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
+        setSchema(buildSchemaExtraInputs(responseData.event?.extraInputsForm ?? null, defaultSchema));
+        console.log(schema);
       } catch (err) {
+        console.log(err);
       } finally {
         setLoadingPage(false);
       }
@@ -77,25 +91,6 @@ const GuestPurchase = () => {
 
     getEventDetails();
   }, []);
-
-  const schemaFields = {};
-
-  if (selectedEvent?.extraInputsForm && Array.isArray(selectedEvent.extraInputsForm)) {
-    selectedEvent.extraInputsForm.forEach((input, index) => {
-      const fieldName = `extraInput${index + 1}`;
-      schemaFields[fieldName] = input.required ? yup.string().required("Required field") : yup.string();
-    });
-  }
-
-  const schema = yup.object().shape({
-    name: yup.string().required(),
-    surname: yup.string().required(),
-    phone: yup.string().required(),
-    email: yup.string().email("Please enter a valid email").required(),
-    policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-    payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-    ...schemaFields
-  });
 
   if (loadingPage) {
     return <HeaderLoadingError />
@@ -149,7 +144,7 @@ const GuestPurchase = () => {
           <div style={{ width: "40%" }} className="col-lg-4 col-md-12 col-12">
             <div className="container">
               <Formik
-                validationSchema={schema}
+                validationSchema={defaultSchema}
                 onSubmit={async (values) => {
                   try {
                     setIsLoading(true);
@@ -227,12 +222,12 @@ const GuestPurchase = () => {
                     formData.append("guestPhone", values.phone);
 
                     if (selectedEvent.isFree) {
-                      return buyFreeTicket(formData);
+                      return await buyFreeTicket(formData);
                     }
 
                     if (allowDiscount && (isGuestForDiscount || isGuestForFreeTicket)) {
                       if (isGuestForFreeTicket) {
-                        return buyFreeTicket(formData);
+                        return await buyFreeTicket(formData);
                       } else {
                         formData.append("itemId", selectedEvent.product?.activeMember.priceId ?? selectedEvent.product?.member.priceId);
                       }
@@ -262,10 +257,10 @@ const GuestPurchase = () => {
                   phone: "",
                   policyTerms: false,
                   payTerms: false,
-                  ...(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
-                    acc[`extraInput${index + 1}`] = '';
-                    return acc;
-                  }, {}) || {})
+                  // ...(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
+                  //   acc[`extraInput${index + 1}`] = '';
+                  //   return acc;
+                  // }, {}) || {})
                 }}
               >
                 {(values, errors) => (

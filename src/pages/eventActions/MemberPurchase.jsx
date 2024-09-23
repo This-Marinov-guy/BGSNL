@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import * as yup from "yup";
 import { Formik, Form } from "formik";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
@@ -38,6 +37,7 @@ const MemberPurchase = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [eventClosed, setEventClosed] = useState(false);
   const [normalTicket, setNormalTicket] = useState(false);
+  const [schema, setSchema] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -76,6 +76,7 @@ const MemberPurchase = () => {
         const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
+        setSchema(buildSchemaExtraInputs(selectedEvent.extraInputsForm));
       } catch (err) {
       } finally {
         setLoadingPage(false);
@@ -85,16 +86,6 @@ const MemberPurchase = () => {
     getEventDetails();
   }, []);
 
-  const schemaFields = {};
-
-  if (selectedEvent.extraInputsForm && Array.isArray(selectedEvent.extraInputsForm)) {
-    selectedEvent.extraInputsForm.forEach((input, index) => {
-      const fieldName = `extraInput${index + 1}`;
-      schemaFields[fieldName] = input.required ? yup.string().required("Required field") : yup.string();
-    });
-  }
-
-  const schema = yup.object().shape(schemaFields);
 
   if (loadingPage || !currentUser) {
     return <HeaderLoadingError />
@@ -127,7 +118,7 @@ const MemberPurchase = () => {
         </div>
         <div className="row team_member_border-3 mt--80 purchase_panel">
           <Formik
-            validationSchema={schema}
+            // validationSchema={() => {}}
             onSubmit={async (values) => {
               try {
                 setIsLoading(true);
@@ -191,12 +182,12 @@ const MemberPurchase = () => {
                 }
 
                 if (selectedEvent.isFree || selectedEvent.isMemberFree) {
-                  return buyFreeTicket(formData);
+                  return await buyFreeTicket(formData);
                 }
 
                 if (allowDiscount && (isMemberForDiscount || isMemberForFreeTicket || isActiveMember)) {
                   if (isMemberForFreeTicket) {
-                    return buyFreeTicket(formData);
+                    return await buyFreeTicket(formData);
                   } else {
                     formData.append("itemId", selectedEvent.product?.activeMember.priceId);
                   }
@@ -211,6 +202,7 @@ const MemberPurchase = () => {
                   "POST",
                   formData,
                 );
+
                 if (responseData.url) {
                   window.location.assign(responseData.url);
                 }
@@ -220,10 +212,12 @@ const MemberPurchase = () => {
                 setIsLoading(false);
               }
             }}
-            initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
-              acc[`extraInput${index + 1}`] = '';
-              return acc;
-            }, {}) || {})}>
+            initialValues={{}}
+            // initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
+            //   acc[`extraInput${index + 1}`] = '';
+            //   return acc;
+            // }, {}) || {})}
+            >
             {() => (
               <Form id='form' encType="multipart/form-data" className="row"
               >
