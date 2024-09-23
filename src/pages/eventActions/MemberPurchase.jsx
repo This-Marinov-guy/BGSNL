@@ -27,6 +27,7 @@ import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
+import { appendExtraInputsToForm, buildSchemaExtraInputs, constructInitialExtraFormValues } from "../../util/functions/input-helpers";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -37,7 +38,8 @@ const MemberPurchase = () => {
   const [loadingPage, setLoadingPage] = useState(true);
   const [eventClosed, setEventClosed] = useState(false);
   const [normalTicket, setNormalTicket] = useState(false);
-  const [schema, setSchema] = useState(false);
+  const [schema, setSchema] = useState(null);
+  const [schemaFields, setSchemaFields] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -55,10 +57,11 @@ const MemberPurchase = () => {
     );
 
     navigate('/success');
-  }
+  };
 
   useEffect(() => {
-    const userId = decodeJWT(user.token).userId;
+    setLoadingPage(true);
+
     const fetchCurrentUser = async () => {
       try {
         const responseData = await sendRequest(`user/current`);
@@ -66,23 +69,25 @@ const MemberPurchase = () => {
       } catch (err) {
       }
     };
-    fetchCurrentUser();
-  }, []);
 
-  useEffect(() => {
-    setLoadingPage(true);
     const getEventDetails = async () => {
       try {
         const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
-        setSchema(buildSchemaExtraInputs(selectedEvent.extraInputsForm));
+
+        if (responseData.event?.extraInputsForm) {
+          const { schema, schemaFields } = buildSchemaExtraInputs(responseData.event.extraInputsForm);
+          setSchema(schema);
+          setSchemaFields(schemaFields);
+        }
       } catch (err) {
       } finally {
         setLoadingPage(false);
       }
     };
 
+    fetchCurrentUser();
     getEventDetails();
   }, []);
 
@@ -118,7 +123,7 @@ const MemberPurchase = () => {
         </div>
         <div className="row team_member_border-3 mt--80 purchase_panel">
           <Formik
-            // validationSchema={() => {}}
+            validationSchema={schema}
             onSubmit={async (values) => {
               try {
                 setIsLoading(true);
@@ -170,15 +175,8 @@ const MemberPurchase = () => {
                 formData.append("method", "buy_member_ticket");
                 formData.append("eventId", selectedEvent.id);
                 formData.append("userId", currentUser.id);
-                if (selectedEvent.extraInputsFormForm) {
-                  formData.append('preferences', JSON.stringify(Object.keys(schemaFields).reduce((obj, key) => {
-                    if (Array.isArray(values[key])) {
-                      obj[key] = values[key].join(', ');
-                    } else {
-                      obj[key] = values[key];
-                    }
-                    return obj;
-                  }, {})))
+                if (selectedEvent?.extraInputsForm) {
+                  appendExtraInputsToForm(formData, schemaFields, values);
                 }
 
                 if (selectedEvent.isFree || selectedEvent.isMemberFree) {
@@ -208,16 +206,12 @@ const MemberPurchase = () => {
                 }
 
               } catch (err) {
+                console.log(err)
               } finally {
                 setIsLoading(false);
               }
             }}
-            initialValues={{}}
-            // initialValues={(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
-            //   acc[`extraInput${index + 1}`] = '';
-            //   return acc;
-            // }, {}) || {})}
-            >
+            initialValues={constructInitialExtraFormValues(selectedEvent?.extraInputsForm ?? null)}>
             {() => (
               <Form id='form' encType="multipart/form-data" className="row"
               >

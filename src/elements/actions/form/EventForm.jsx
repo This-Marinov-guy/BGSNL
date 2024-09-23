@@ -334,7 +334,7 @@ const EventForm = (props) => {
                                     component="div"
                                 />
                             </div>
-                            
+
                         </div>
                         <div className="row mt--20">
                             <div className="col-lg-12 col-md-12 col-12">
@@ -532,7 +532,7 @@ const EventForm = (props) => {
                                         <h5 className="center_text">With QR</h5>
                                         <div className="center_div" style={{ gap: '50px' }}>
                                             <h5 className="center_div">
-                                                <Field type="radio" name="ticketQR" value={'true'}/>
+                                                <Field type="radio" name="ticketQR" value={'true'} />
                                                 Yes
                                             </h5>
                                             <h5 className="center_div">

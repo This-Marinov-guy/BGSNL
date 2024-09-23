@@ -29,7 +29,7 @@ import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusi
 import { showNotification } from "../../redux/notification";
 import { INCORRECT_MISSING_DATA } from "../../util/defines/common";
 import { error } from "jquery";
-import { buildSchemaExtraInputs } from "../../util/functions/input-helpers";
+import { appendExtraInputsToForm, buildSchemaExtraInputs, constructInitialExtraFormValues } from "../../util/functions/input-helpers";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -49,7 +49,8 @@ const GuestPurchase = () => {
   const [eventClosed, setEventClosed] = useState(false)
   const [quantity, setQuantity] = useState(1);
   const [normalTicket, setNormalTicket] = useState(false);
-  const [schema, setSchema] = useState(false);
+  const [schema, setSchema] = useState(null);
+  const [schemaFields, setSchemaFields] = useState(null);
 
   const { region, eventId } = useParams();
 
@@ -80,10 +81,13 @@ const GuestPurchase = () => {
         const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
-        setSchema(buildSchemaExtraInputs(responseData.event?.extraInputsForm ?? null, defaultSchema));
-        console.log(schema);
+
+        if (responseData.event.hasOwnProperty('extraInputsForm')) {
+          const { schema, schemaFields } = buildSchemaExtraInputs(responseData.event?.extraInputsForm ?? null, defaultSchema);
+          setSchema(schema);
+          setSchemaFields(schemaFields);
+        }
       } catch (err) {
-        console.log(err);
       } finally {
         setLoadingPage(false);
       }
@@ -144,7 +148,7 @@ const GuestPurchase = () => {
           <div style={{ width: "40%" }} className="col-lg-4 col-md-12 col-12">
             <div className="container">
               <Formik
-                validationSchema={defaultSchema}
+                validationSchema={schema}
                 onSubmit={async (values) => {
                   try {
                     setIsLoading(true);
@@ -204,15 +208,8 @@ const GuestPurchase = () => {
                     formData.append("method", "buy_guest_ticket");
                     formData.append("eventId", selectedEvent.id);
                     formData.append("guestEmail", values.email);
-                    if (selectedEvent.extraInputsFormForm) {
-                      formData.append('preferences', JSON.stringify(Object.keys(schemaFields).reduce((obj, key) => {
-                        if (Array.isArray(values[key])) {
-                          obj[key] = values[key].join(', ');
-                        } else {
-                          obj[key] = values[key];
-                        }
-                        return obj;
-                      }, {})))
+                    if (selectedEvent?.extraInputsForm) {
+                      appendExtraInputsToForm(formData, schemaFields, values);
                     }
 
                     formData.append(
@@ -257,10 +254,7 @@ const GuestPurchase = () => {
                   phone: "",
                   policyTerms: false,
                   payTerms: false,
-                  // ...(selectedEvent?.extraInputsForm?.reduce((acc, _, index) => {
-                  //   acc[`extraInput${index + 1}`] = '';
-                  //   return acc;
-                  // }, {}) || {})
+                  ...constructInitialExtraFormValues(selectedEvent?.extraInputsForm ?? null)
                 }}
               >
                 {(values, errors) => (

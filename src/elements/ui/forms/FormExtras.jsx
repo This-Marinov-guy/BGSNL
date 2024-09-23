@@ -5,7 +5,7 @@ const FormExtras = ({ inputs }) => {
     return (
         <>
             {inputs.map((input, index) => {
-                const name = `extraInput${index + 1}`;
+                const name = input.placeholder;
 
                 if (input.type === 'select') {
                     if (input.multiselect) {
