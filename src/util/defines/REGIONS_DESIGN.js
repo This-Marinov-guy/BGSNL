@@ -124,7 +124,7 @@ export const REGION_SOCIALS = {
         Social: <FaInstagram />,
         link: "https://www.instagram.com/bulgariansociety.maas/",
     }],
-    maastricht: [{
+    eindhoven: [{
         Social: <FaInstagram />,
         link: "https://www.instagram.com/bulgariansociety.ein/",
     }]

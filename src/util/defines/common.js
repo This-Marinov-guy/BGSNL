@@ -7,6 +7,7 @@ export const LOCAL_STORAGE_SESSION_LIFE = 'BGSNL_session_life'
 
 // authentication
 export const SESSION_TIMEOUT = (isProd() ? 15 : 60) * 60 * 1000 // minutes in milliseconds
+export const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
 
 // member roles
 export const SUPER_ADMIN = 'super_admin';

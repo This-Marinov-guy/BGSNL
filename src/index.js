@@ -1,8 +1,8 @@
 // React and Redux Required
-import React, { useEffect, lazy, Suspense, Fragment } from "react";
+import React, { useEffect, useState, lazy, Suspense, Fragment } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import ReactDOM from "react-dom/client";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "./redux/store";
 import { PrimeReactProvider } from 'primereact/api';
 import { isProd } from "./util/functions/helpers";
@@ -12,15 +12,21 @@ import { removeLogsOnProd } from "./util/functions/helpers";
 import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import AuthLayout from "./layouts/authentication/AuthLayout";
-import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4 } from "./util/defines/common";
+import { removeModal, showModal } from "./redux/modal";
+import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4, INACTIVITY_MODAL, LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT, WARNING_THRESHOLD } from "./util/defines/common";
+import InactivityModal from "./elements/ui/modals/InactivityModal";
+import { calculateTimeRemaining } from "./util/functions/date";
+import { login, logout, selectUser } from "./redux/user";
+import { isTokenExpired } from "./util/functions/authorization";
+import { useHttpClient } from "./hooks/http-hook";
+import { isObjectEmpty } from "./util/functions/helpers";
+import { startPageLoading, stopPageLoading } from "./redux/loading";
 
 // Style
 import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
-import { selectUser } from "./redux/user";
-import SessionLayout from "./layouts/authentication/SessionLayout";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -89,16 +95,144 @@ const PageNavigationFunc = () => {
 }
 
 const Root = () => {
+  const [timeRemaining, setTimeRemaining] = useState(SESSION_TIMEOUT);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { sendRequest } = useHttpClient();
+
   const user = useSelector(selectUser);
+
+  // start auth session logic (TODO: Should be moved elsewhere but now works here)
+  const onLogout = () => {
+    dispatch(removeModal(INACTIVITY_MODAL));
+    dispatch(logout());
+  }
+
+  const refreshJWT = async () => {
+    try {
+      setIsLoading(true);
+      const responseData = await sendRequest('user/refresh-token');
+
+      return responseData.token ?? null;
+    } catch (err) {
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const loginUser = async (jwtToken) => {
+    try {
+      dispatch(startPageLoading());
+      if (isTokenExpired(jwtToken)) {
+        const token = await refreshJWT();
+
+        if (token) {
+          jwtToken = token;
+        }
+      }
+
+      // TODO: temp fix as we cannot access the token in the hook
+      const responseData = await sendRequest('user/get-subscription-status', 'GET', {}, { Authorization: `Bearer ${jwtToken}` });
+
+      dispatch(
+        login({
+          token: jwtToken,
+          ...responseData
+        })
+      );
+    } catch (err) {
+    } finally {
+      dispatch(stopPageLoading());
+    }
+  }
+
+  let target = Date.now() + SESSION_TIMEOUT;
+
+  useEffect(() => {
+    let storedUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USER_DATA));
+    let expirationTime = localStorage.getItem(LOCAL_STORAGE_SESSION_LIFE) ?? Date.now();
+
+    if (
+      !isObjectEmpty(storedUser) &&
+      storedUser.token &&
+      // TODO temp fix
+      !isObjectEmpty(storedUser.token) &&
+      expirationTime > Date.now()
+    ) {
+      loginUser(storedUser.token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user && user.token) {
+      let inactivityTimeout;
+      let intervalCheck;
+
+      const resetInactivityTimeout = () => {
+        target = Date.now() + SESSION_TIMEOUT;
+
+        dispatch(removeModal(INACTIVITY_MODAL));
+        clearTimeout(inactivityTimeout);
+        clearInterval(intervalCheck);
+        setTimeRemaining(SESSION_TIMEOUT); // Reset remaining time
+
+        inactivityTimeout = setTimeout(() => {
+          onLogout();
+        }, SESSION_TIMEOUT);
+
+        // Check remaining time every second
+        intervalCheck = setInterval(() => {
+          const timeLeft = calculateTimeRemaining(target) // Calculate time remaining
+
+          setTimeRemaining(timeLeft);
+
+          if (timeLeft <= WARNING_THRESHOLD) {
+            executeWarningCode();
+          }
+
+          if (timeLeft <= 0) {
+            clearInterval(intervalCheck); // Stop checking after the timeout expires
+          }
+        }, 1000); // Check every second
+      };
+
+      const executeWarningCode = () => {
+        dispatch(showModal(INACTIVITY_MODAL));
+      };
+
+      const handleUserActivity = () => {
+        localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, target);
+        resetInactivityTimeout();
+      };
+
+      window.addEventListener("click", handleUserActivity);
+
+      resetInactivityTimeout();
+
+      return () => {
+        clearTimeout(inactivityTimeout);
+        clearInterval(intervalCheck);
+        window.removeEventListener("click", handleUserActivity);
+      };
+    }
+  }, [user]);
+  // end auth session logic
 
   if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />
   }
 
+  if (isLoading) {
+    return <PageLoading />
+  }
+
   return (
     <BrowserRouter basename={"/"}>
       <PageNavigationFunc />
-      <SessionLayout />
+      <InactivityModal timeRemaining={timeRemaining} />
       <GlobalError>
         <Suspense fallback={<PageLoading />}>
           <Routes>

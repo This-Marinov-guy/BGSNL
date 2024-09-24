@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
 import { showNotification } from '../../redux/notification';
 import { checkAuthorization } from '../../util/functions/authorization';
@@ -13,6 +13,8 @@ const AuthLayout = ({ children, access = [] }) => {
     const location = useLocation();
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isActive, setIsActive] = useState(false);
@@ -35,7 +37,7 @@ const AuthLayout = ({ children, access = [] }) => {
                 setIsActive(false);
                 setHasAccess(false);
                 setIsLoading(false);
-                return;
+                return navigate('/login');
             }
 
             const token = user?.token || (userData ? JSON.parse(userData).token : null);
@@ -60,7 +62,7 @@ const AuthLayout = ({ children, access = [] }) => {
                         setIsActive(true);
                         setHasAccess(false);
                         setIsLoading(false);
-                        return;
+                        return navigate('/user');
                     }
                 } catch (error) {
                     dispatch(showNotification({
@@ -71,7 +73,7 @@ const AuthLayout = ({ children, access = [] }) => {
                     setIsActive(true);
                     setHasAccess(false);
                     setIsLoading(false);
-                    return;
+                    return navigate('/user');
                 }
             }
 
@@ -88,16 +90,8 @@ const AuthLayout = ({ children, access = [] }) => {
         return <HeaderLoadingError />;
     }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" />;
-    }
-
     if (!isActive) {
         return <AccountLocked/>;
-    }
-
-    if (!hasAccess) {
-        return <Navigate to="/user" />;
     }
 
     return children;

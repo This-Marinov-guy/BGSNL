@@ -15,6 +15,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 const INACTIVITY_TIMEOUT = SESSION_TIMEOUT
 const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
 
+// NOTE: Deprecated code (moved in index.js as here did not worked)
 const SessionLayout = () => {
     const [timeRemaining, setTimeRemaining] = useState(INACTIVITY_TIMEOUT);
 
@@ -128,7 +129,6 @@ const SessionLayout = () => {
             resetInactivityTimeout();
         };
 
-        window.addEventListener("keydown", handleUserActivity);
         window.addEventListener("click", handleUserActivity);
 
         resetInactivityTimeout();
@@ -136,7 +136,6 @@ const SessionLayout = () => {
         return () => {
             clearTimeout(inactivityTimeout);
             clearInterval(intervalCheck);
-            window.removeEventListener("keydown", handleUserActivity);
             window.removeEventListener("click", handleUserActivity);
         };
     }, []);
