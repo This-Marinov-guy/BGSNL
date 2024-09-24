@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
@@ -7,6 +7,7 @@ import { checkAuthorization } from '../../util/functions/authorization';
 import AccountLocked from '../../elements/ui/modals/AccountLocked';
 import { ACTIVE, USER_STATUSES } from '../../util/defines/enum';
 import HeaderLoadingError from '../../elements/ui/errors/HeaderLoadingError';
+import { LOCAL_STORAGE_USER_DATA } from '../../util/defines/common';
 
 const AuthLayout = ({ children, access = [] }) => {
     const location = useLocation();
@@ -20,7 +21,7 @@ const AuthLayout = ({ children, access = [] }) => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const userData = localStorage.getItem('userData');
+            const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA);
             const isAuth = !!(user && user.token) || !!userData;
             const routePath = location.pathname + location.hash + location.search;
 
@@ -49,7 +50,7 @@ const AuthLayout = ({ children, access = [] }) => {
 
             if (access.length > 0) {
                 try {
-                    const authorized = await checkAuthorization(token, access);
+                    const authorized = checkAuthorization(token, access);
                     if (!authorized) {
                         dispatch(showNotification({
                             severity: 'error',
