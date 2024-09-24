@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { selectUser } from '../../redux/user';
 import { showNotification } from '../../redux/notification';
+import { LOCAL_STORAGE_USER_DATA } from '../../util/defines/common';
 
 const GuestLayout = ({ children }) => {
     const navigate = useNavigate();
@@ -10,7 +11,7 @@ const GuestLayout = ({ children }) => {
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
 
-    const isAuthenticated = (user && !!user.token) || localStorage.getItem('userData');
+    const isAuthenticated = (user && !!user.token) || localStorage.getItem(LOCAL_STORAGE_USER_DATA);
 
     let navigatePath = "/user";
 
