@@ -16,9 +16,7 @@ const AuthLayout = ({ children, access = [] }) => {
 
     const navigate = useNavigate();
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isActive, setIsActive] = useState(false);
-    const [hasAccess, setHasAccess] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -33,9 +31,7 @@ const AuthLayout = ({ children, access = [] }) => {
                     severity: 'warn',
                     detail: 'Please log in to your account to proceed to the page!'
                 }));
-                setIsAuthenticated(false);
                 setIsActive(false);
-                setHasAccess(false);
                 setIsLoading(false);
                 return navigate('/login');
             }
@@ -43,9 +39,7 @@ const AuthLayout = ({ children, access = [] }) => {
             const token = user?.token || (userData ? JSON.parse(userData).token : null);
 
             if (user.status && user.status !== USER_STATUSES[ACTIVE]) {
-                setIsAuthenticated(true);
                 setIsActive(false);
-                setHasAccess(false);
                 setIsLoading(false);
                 return;
             }
@@ -58,9 +52,7 @@ const AuthLayout = ({ children, access = [] }) => {
                             severity: 'error',
                             detail: 'You do not have access to this page'
                         }));
-                        setIsAuthenticated(true);
                         setIsActive(true);
-                        setHasAccess(false);
                         setIsLoading(false);
                         return navigate('/user');
                     }
@@ -69,17 +61,13 @@ const AuthLayout = ({ children, access = [] }) => {
                         severity: 'error',
                         detail: 'An error occurred while checking your access. Please try again.'
                     }));
-                    setIsAuthenticated(true);
                     setIsActive(true);
-                    setHasAccess(false);
                     setIsLoading(false);
                     return navigate('/user');
                 }
             }
 
-            setIsAuthenticated(true);
             setIsActive(true);
-            setHasAccess(true);
             setIsLoading(false);
         };
 
