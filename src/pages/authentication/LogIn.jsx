@@ -50,12 +50,7 @@ const Login = () => {
       }
 
       dispatch(
-        login({
-          token: responseData.token,
-          expirationDate: new Date(
-            new Date().getTime() + 36000000
-          ).toISOString(),
-        })
+        login(responseData)
       );
       dispatch(showNotification({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' }));
 
