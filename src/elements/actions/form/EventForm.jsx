@@ -670,6 +670,7 @@ const EventForm = (props) => {
                                         locale='en-nl'
                                         placeholder='Ticket Timer'
                                         captionLayout="dropdown"
+                                        initialValue={values.ticketTimer}
                                         onSelect={(value) => {
                                             setFieldValue('ticketTimer', value)
                                         }} />

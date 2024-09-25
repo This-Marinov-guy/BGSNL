@@ -13,8 +13,10 @@ const Event = (props) => {
         price = 'Tickets are closed';
     } else if (props.event.isFree) {
         price = 'FREE'
-    } else {
+    } else if (!!props.event.product){
         price = props.event.product?.guest.price + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.product?.member?.price) + (props.event.product?.activeMember ? ' / ' + props.event.product?.activeMember.price : '')
+    } else {
+        price = 'TBA';
     }
 
     const todayValue = (new Date()).valueOf();

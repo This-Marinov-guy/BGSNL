@@ -43,7 +43,7 @@ const EventModal = (props) => {
         }
     }
 
-    const priceInfo = <>
+    const priceInfo = !!props.event.product ? <>
         <h3>Price Info</h3>
         <hr />
         <p>Is the sale closed: {props.event.isSaleClosed ? 'Yes' : 'No'}</p>
@@ -66,7 +66,7 @@ const EventModal = (props) => {
         </>}
         <p>Free Pass List: {props.event.freePass?.length ? props.event.freePass.join('| ') : 'None'}</p>
         <p>Discount Pass List: {props.event.discountPass?.length ? props.event.discountPass.join('| ') : 'None'}</p>
-    </>
+    </> : null;
 
     return (
         <>
