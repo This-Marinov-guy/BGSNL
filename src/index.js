@@ -112,20 +112,17 @@ const Root = () => {
 
   const refreshJWT = async () => {
     try {
-      setIsLoading(true);
       const responseData = await sendRequest('user/refresh-token');
 
       return responseData.token ?? null;
     } catch (err) {
       return null;
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   }
 
   const loginUser = async (jwtToken) => {
     try {
-      dispatch(startPageLoading());
+      setIsLoading(true);
       if (isTokenExpired(jwtToken)) {
         const token = await refreshJWT();
 
@@ -145,7 +142,7 @@ const Root = () => {
       );
     } catch (err) {
     } finally {
-      dispatch(stopPageLoading());
+      setIsLoading(false);
     }
   }
 
