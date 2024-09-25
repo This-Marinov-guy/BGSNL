@@ -53,9 +53,10 @@ const User = () => {
 
         setCurrentUser(responseData.user);
         setHasBirthday(responseData.celebrate);
-        setIsPageLoading(false);
 
       } catch (err) {
+      } finally {
+        setIsPageLoading(false);
       }
     };
 
