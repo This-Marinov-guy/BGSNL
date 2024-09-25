@@ -103,27 +103,28 @@ export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = 
     let price;
     const { product } = selectedEvent
 
-    const isMember = user && !!user.token;
+    const isMember = !!user && user.token;
     const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
     const isMemberDataFull = user?.name && user?.surname && user?.email;
+    const includedText = isMember ? (selectedEvent.hasOwnProperty(memberIncluding) ? `(including ${selectedEvent.memberIncluding})` : '') : (selectedEvent.hasOwnProperty(entryIncluding) ? `(including ${selectedEvent.entryIncluding})` : '');
 
     if (selectedEvent.isFree) {
         price = 'FREE'
     } else if (selectedEvent.ticketLink) {
         price = 'Check ticket portal'
     } else if (isActiveMember && product?.activeMember.price) {
-        price = product?.activeMember.price + (!isNaN(product?.activeMember.price) ? ' euro (extra discounted)' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
+        price = product?.activeMember.price + (!isNaN(product?.activeMember.price) ? ' euro (extra discounted)' : ' ') + includedText
     } else if (isMember && (product?.member.price || selectedEvent.isMemberFree)) {
         price = selectedEvent.isMemberFree ? 'FREE'
-            : product?.member.price + (!isNaN(product?.member.price) ? ' euro (discounted)' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 0) ? selectedEvent.including[0] : '')
+            : product?.member.price + (!isNaN(product?.member.price) ? ' euro (discounted)' : ' ') + includedText
     } else if (product?.guest.price) {
-        price = product?.guest.price + (!isNaN(product?.guest.price) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '')
+        price = product?.guest.price + (!isNaN(product?.guest.price) ? ' euro ' : ' ') + includedText
     } else {
         price = 'TBA'
     }
 
     if (!blockDiscounts && isMemberDataFull && selectedEvent.activeMemberPriceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(user.email) || selectedEvent.discountPass.includes(user.name + ' ' + user.surname))) {
-        price = product?.activeMember.price + (!isNaN(product?.activeMember.price) ? ' euro ' : ' ') + ((selectedEvent.including && selectedEvent.including.length > 1) ? selectedEvent.including[1] : '');
+        price = product?.activeMember.price + (!isNaN(product?.activeMember.price) ? ' euro ' : ' ') + includedText;
     }
 
     if (!blockDiscounts && isMemberDataFull && selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(user.email) || selectedEvent.freePass.includes(user.name + ' ' + user.surname))) {
