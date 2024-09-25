@@ -123,15 +123,15 @@ const EventModal = (props) => {
                         (props.event.ticketLink ?
                             <h3>Ticket are bought from <a href={props.event.ticketLink} target='_blank'>here</a></h3> :
                             priceInfo)}
-                    <h3>Images</h3>
+                    <h3>Images (click to expand)</h3>
                     <hr />
                     <div className='row'>
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <p>Ticket: </p> <img src={props.event.ticketImg} className='normal_preview' alt='ticket' />
+                            <p>Ticket: </p> <Image src={props.event.ticketImg} width='200px' className='normal_preview' alt='ticket' preview/>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <p>Poster: </p> <img src={props.event.poster} className='normal_preview' alt='poster' />
+                            <p>Poster: </p> <Image src={props.event.poster} width='200px' className='normal_preview' alt='poster' preview/>
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
