@@ -3,12 +3,12 @@ import { useDispatch } from "react-redux";
 import { useHttpClient } from "./http-hook";
 import { loadEvents } from "../redux/events";
 
-export const useLoadEvents = (withFullData = false) => {
+export const useLoadEvents = () => {
     const [eventsLoading, setEventsLoading] = useState(false);
     const dispatch = useDispatch();
     const { sendRequest } = useHttpClient();
 
-    const reloadEvents = async (withDelay = 0) => {
+    const reloadEvents = async (withFullData = false, withDelay = 0) => {
         try {
             setEventsLoading(true);
 

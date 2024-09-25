@@ -13,7 +13,7 @@ import { ACCESS_2 } from '../../../../util/defines/common';
 import { hasOverlap } from '../../../../util/functions/helpers';
 
 const EventList = () => {
-    const { reloadEvents, eventsLoading } = useLoadEvents(true);
+    const { reloadEvents, eventsLoading } = useLoadEvents();
 
     const user = useSelector(selectUser);
     const { roles, region } = decodeJWT(user.token);
@@ -30,7 +30,7 @@ const EventList = () => {
     const events = useSelector(selectEvents);
 
     useEffect(() => {
-        reloadEvents(3000);
+        reloadEvents(true, 3000);
     }, [])
 
     return (
@@ -43,7 +43,7 @@ const EventList = () => {
                         <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
                         <div className='col-12 grid'>
                             {events[region].length ? events[region].map((event, i) => {
-                                return <Event key={i} event={event} loadData={reloadEvents} />
+                                return <Event key={i} event={event} loadData={() => reloadEvents(true)} />
                             }) : <p>No current events for the region</p>}
                         </div>
                         <hr />
