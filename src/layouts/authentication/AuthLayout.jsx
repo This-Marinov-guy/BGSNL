@@ -72,7 +72,7 @@ const AuthLayout = ({ children, access = [] }) => {
         };
 
         checkAuth();
-    }, [access]);
+    }, []);
 
     if (isLoading) {
         return <HeaderLoadingError />;
