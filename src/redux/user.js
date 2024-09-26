@@ -31,6 +31,7 @@ export const userSlice = createSlice({
         };
       },
     },
+
     logout: (state) => {
       state.token = null;
       state.status = '';
@@ -38,10 +39,24 @@ export const userSlice = createSlice({
       localStorage.removeItem(LOCAL_STORAGE_USER_DATA);
       localStorage.removeItem(LOCAL_STORAGE_SESSION_LIFE);
     },
+
+    refreshToken: (state, action) => {
+      const token = action.payload;
+
+      state.token = action.payload;
+
+      localStorage.setItem(
+        LOCAL_STORAGE_USER_DATA,
+        JSON.stringify({
+          token,
+        })
+      );
+    }
+
   },
 });
 
 export const selectIsAuth = (state) => !!state.user.token;
 export const selectUser = (state) => state.user;
-export const { login, logout } = userSlice.actions;
+export const { login, logout, refreshToken } = userSlice.actions;
 export default userSlice.reducer;

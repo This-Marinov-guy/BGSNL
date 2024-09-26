@@ -13,7 +13,7 @@ import Toni from "./pages/information/articles/Toni";
 import Minerva from "./pages/information/articles/Minerva";
 import AuthLayout from "./layouts/authentication/AuthLayout";
 import { removeModal, showModal } from "./redux/modal";
-import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4, INACTIVITY_MODAL, LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT, WARNING_THRESHOLD } from "./util/defines/common";
+import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4, INACTIVITY_MODAL, JWT_RESET_TIMER, LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT, WARNING_THRESHOLD } from "./util/defines/common";
 import InactivityModal from "./elements/ui/modals/InactivityModal";
 import { calculateTimeRemaining } from "./util/functions/date";
 import { login, logout, selectUser } from "./redux/user";
@@ -27,6 +27,7 @@ import './index.scss'
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
+import { useJWTRefresh } from "./hooks/api-hooks";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
@@ -101,6 +102,7 @@ const Root = () => {
   const dispatch = useDispatch();
 
   const { sendRequest } = useHttpClient();
+  const { refreshJWTinAPI } = useJWTRefresh();
 
   const user = useSelector(selectUser);
 
@@ -110,21 +112,11 @@ const Root = () => {
     dispatch(logout());
   }
 
-  const refreshJWT = async (jwtToken) => {
-    try {
-      const responseData = await sendRequest('user/refresh-token', 'GET', {}, { Authorization: `Bearer ${jwtToken}` });
-
-      return responseData.token ?? null;
-    } catch (err) {
-      return null;
-    } 
-  }
-
   const loginUser = async (jwtToken) => {
     try {
       setIsLoading(true);
       if (isTokenExpired(jwtToken)) {
-        const token = await refreshJWT(jwtToken);
+        const token = await refreshJWTinAPI(jwtToken, false);
 
         if (token) {
           jwtToken = token;
@@ -166,7 +158,12 @@ const Root = () => {
   useEffect(() => {
     if (user && user.token) {
       let inactivityTimeout;
+      let refreshJWTinAPITimer;
       let intervalCheck;
+
+      refreshJWTinAPITimer = setTimeout(() => {
+        refreshJWTinAPI(jwtToken);
+      }, JWT_RESET_TIMER);
 
       const resetInactivityTimeout = () => {
         target = Date.now() + SESSION_TIMEOUT;
@@ -211,6 +208,7 @@ const Root = () => {
 
       return () => {
         clearTimeout(inactivityTimeout);
+        clearTimeout(refreshJWTinAPITimer);
         clearInterval(intervalCheck);
         window.removeEventListener("click", handleUserActivity);
       };
@@ -229,7 +227,7 @@ const Root = () => {
   return (
     <BrowserRouter basename={"/"}>
       <PageNavigationFunc />
-      <InactivityModal timeRemaining={timeRemaining} />
+      <InactivityModal timeRemaining={timeRemaining}/>
       <GlobalError>
         <Suspense fallback={<PageLoading />}>
           <Routes>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { isProd } from "../util/functions/helpers";
 import { selectUser } from "../redux/user";
 import { showNotification } from "../redux/notification";
+import { serverEndpoint } from "../util/defines/common";
 
 export const useHttpClient = () => {
   const dispatch = useDispatch();
@@ -12,10 +13,6 @@ export const useHttpClient = () => {
   const user = useSelector(selectUser);
 
   const forceStartLoading = () => dispatch(startLoading());
-
-  const serverEndpoint = isProd() ?
-    process.env.REACT_APP_SERVER_URL :
-    process.env.REACT_APP_TEST_SERVER_URL;
 
   const sendRequest = async (url, method = "GET", data = null, headers = {}, withError = true) => {
       if (!loading) forceStartLoading();
