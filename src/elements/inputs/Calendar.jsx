@@ -146,6 +146,9 @@ export const CalendarWithClock = (props) => {
                         captionLayout="dropdown"
                         selected={selected}
                         onSelect={handleDaySelect}
+                        disabled={props.min && {
+                            before: props.min,
+                        }}
                     />
                 </div>
             )}

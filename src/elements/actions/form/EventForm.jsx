@@ -325,6 +325,7 @@ const EventForm = (props) => {
                                     placeholder='Date and Time'
                                     captionLayout="dropdown"
                                     initialValue={values.date}
+                                    min={new Date()}
                                     onSelect={(value) => {
                                         setFieldValue('date', value)
                                     }} />
@@ -403,7 +404,7 @@ const EventForm = (props) => {
                                 <div className="col-lg-4 col-md-6 col-12">
                                     <h5 className="mt--10">Basic Price</h5>
                                     <div className="rn-form-group">
-                                        <Field type="number" placeholder="Price" name="guestPrice" />
+                                        <Field type="number" placeholder="Price" name="guestPrice" min={1}/>
                                         <ErrorMessage
                                             className="error"
                                             name="guestPrice"
@@ -422,7 +423,7 @@ const EventForm = (props) => {
                                 {!values.isMemberFree && <><div className="col-lg-4 col-md-6 col-12">
                                     <h5 className="mt--10">Member Price</h5>
                                     <div className="rn-form-group">
-                                        <Field type="number" placeholder="Member Price" name="memberPrice" />
+                                        <Field type="number" placeholder="Member Price" name="memberPrice" min={1} />
                                         <ErrorMessage
                                             className="error"
                                             name="memberPrice"
@@ -441,7 +442,7 @@ const EventForm = (props) => {
                                     <div className="col-lg-4 col-md-6 col-12">
                                         <h5 className="mt--10">Active Member Price</h5>
                                         <div className="rn-form-group">
-                                            <Field type="number" placeholder="Active Member Price" name="activeMemberPrice" />
+                                            <Field type="number" placeholder="Active Member Price" name="activeMemberPrice" min={1} />
                                             <ErrorMessage
                                                 className="error"
                                                 name="activeMemberPrice"
@@ -670,6 +671,7 @@ const EventForm = (props) => {
                                         locale='en-nl'
                                         placeholder='Ticket Timer'
                                         captionLayout="dropdown"
+                                        min={new Date()}
                                         initialValue={values.ticketTimer}
                                         onSelect={(value) => {
                                             setFieldValue('ticketTimer', value)
