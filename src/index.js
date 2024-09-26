@@ -110,9 +110,9 @@ const Root = () => {
     dispatch(logout());
   }
 
-  const refreshJWT = async () => {
+  const refreshJWT = async (jwtToken) => {
     try {
-      const responseData = await sendRequest('user/refresh-token');
+      const responseData = await sendRequest('user/refresh-token', 'GET', {}, { Authorization: `Bearer ${jwtToken}` });
 
       return responseData.token ?? null;
     } catch (err) {
@@ -124,7 +124,7 @@ const Root = () => {
     try {
       setIsLoading(true);
       if (isTokenExpired(jwtToken)) {
-        const token = await refreshJWT();
+        const token = await refreshJWT(jwtToken);
 
         if (token) {
           jwtToken = token;
