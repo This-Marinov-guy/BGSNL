@@ -15,10 +15,12 @@ import { showNotification } from '../../../../redux/notification';
 import { EVENT_DELETED } from '../../../../util/defines/common';
 import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
 import GenerateTicketsModal from './GenerateTicketsModal';
+import { useLoadEvents } from '../../../../hooks/api-hooks';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
     const [ticketGeneratorModal, setTicketGeneratorModal] = useState(false);
+    const { reloadEvents } = useLoadEvents();
 
     const { sendRequest, loading } = useHttpClient();
 
@@ -39,7 +41,7 @@ const EventModal = (props) => {
             props.loadData();
             setVisible(false);
             props.setShow(false);
-            navigate('/user/dashboard');
+            reloadEvents(true, 5000)
         }
     }
 
@@ -127,17 +129,17 @@ const EventModal = (props) => {
                     <hr />
                     <div className='row'>
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <p>Ticket: </p> <Image src={props.event.ticketImg} width='200px' className='normal_preview' alt='ticket' preview/>
+                            <p>Ticket: </p> <Image src={props.event.ticketImg} width='200px' className='normal_preview' alt='ticket' preview />
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
-                            <p>Poster: </p> <Image src={props.event.poster} width='200px' className='normal_preview' alt='poster' preview/>
+                            <p>Poster: </p> <Image src={props.event.poster} width='200px' className='normal_preview' alt='poster' preview />
                         </div>
 
                         <div className='col-lg-4 col-md-6 col-12'>
                             <p>Background {tooltip}: </p>
                             {(props.event.bgImageExtra && props.event?.bgImageSelection === 2) ?
-                                <Image src={props.event.bgImageExtra} className='normal_preview' alt='bg with expand' preview/>
+                                <Image src={props.event.bgImageExtra} className='normal_preview' alt='bg with expand' preview />
                                 : <Image src={`/assets/images/bg/bg-image-${props.event.bgImage}.webp`} className='normal_preview' alt='bg with expand' preview />}
                         </div>
 
@@ -150,9 +152,9 @@ const EventModal = (props) => {
                                             className='mt--10'
                                             width='100px'
                                             src={img}
-                                            alt='image with preview' 
+                                            alt='image with preview'
                                             preview
-                                            />
+                                        />
                                     }
                                 }) : 'Only poster will be displayed'}</p>
                         </div>
