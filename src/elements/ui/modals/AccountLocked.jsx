@@ -17,7 +17,7 @@ const AccountLocked = () => {
   const navigate = useNavigate();
 
   const user = useSelector(selectUser);
-  const {isSubscribed, status} = user;
+  const { isSubscribed, status } = user;
 
   const handleManageSubscription = async () => {
     try {
@@ -66,7 +66,7 @@ const AccountLocked = () => {
     </button>
     :
     <div className="center_div_col mt--20" style={{ gap: '15px' }}>
-      {REGIONS_MEMBERSHIP_SPECIFICS.map((option, index) => {
+      {loading ? <Loader /> : REGIONS_MEMBERSHIP_SPECIFICS.map((option, index) => {
         return <button
           key={index}
           disabled={loading}
