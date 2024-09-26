@@ -30,7 +30,7 @@ const EventList = () => {
     const events = useSelector(selectEvents);
 
     useEffect(() => {
-        reloadEvents(true, 3000);
+        reloadEvents(true);
     }, [])
 
     return (

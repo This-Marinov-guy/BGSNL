@@ -162,7 +162,7 @@ const Root = () => {
       let intervalCheck;
 
       refreshJWTinAPITimer = setTimeout(() => {
-        refreshJWTinAPI(jwtToken);
+        refreshJWTinAPI(user.token);
       }, JWT_RESET_TIMER);
 
       const resetInactivityTimeout = () => {

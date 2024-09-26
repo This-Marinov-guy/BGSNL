@@ -4,7 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { FiInfo } from 'react-icons/fi';
 import { capitalizeFirstLetter } from '../../../../util/functions/capitalize';
 import { useDispatch } from 'react-redux';
-import { loadSingleEvent } from '../../../../redux/events';
+import { loadSingleEvent, removeEventFromAll } from '../../../../redux/events';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Image } from 'primereact/image';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
@@ -20,7 +20,6 @@ import { useLoadEvents } from '../../../../hooks/api-hooks';
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
     const [ticketGeneratorModal, setTicketGeneratorModal] = useState(false);
-    const { reloadEvents } = useLoadEvents();
 
     const { sendRequest, loading } = useHttpClient();
 
@@ -41,7 +40,10 @@ const EventModal = (props) => {
             props.loadData();
             setVisible(false);
             props.setShow(false);
-            reloadEvents(true, 5000)
+            dispatch(removeEventFromAll({
+                region: props.event.region,
+                eventId: props.event.id
+            }));
         }
     }
 
@@ -72,7 +74,7 @@ const EventModal = (props) => {
 
     return (
         <>
-            <ConfirmCenterModal text={loading ? <Loader /> : 'Deleting an event is an irreversible action! Are you sure you want to delete it?'} onConfirm={onDelete} visible={visible} setVisible={setVisible} />
+            <ConfirmCenterModal text={'Deleting an event is an irreversible action! Are you sure you want to delete it?'} onConfirm={onDelete} visible={visible} setVisible={setVisible} loading={loading} />
             <GenerateTicketsModal visible={ticketGeneratorModal} onHide={() => setTicketGeneratorModal(false)} event={props.event} />
             <Dialog header={`${capitalizeFirstLetter(props.event.region)} | ${props.event.title} | ${moment(props.event.date).format(MOMENT_DATE_TIME)}`}
                 visible={props.show} style={{ maxWidth: '90%' }}
@@ -145,18 +147,14 @@ const EventModal = (props) => {
 
                         <div className='col-12'>
                             <p>Images {tooltip}: {props.event.images?.length > 0 ?
-                                props.event.images.map((img, index) => {
-                                    if (!img) { return <p>No extra images</p> }
-                                    {
-                                        return <Image key={index}
-                                            className='mt--10'
-                                            width='100px'
-                                            src={img}
-                                            alt='image with preview'
-                                            preview
-                                        />
-                                    }
-                                }) : 'Only poster will be displayed'}</p>
+                                props.event.images.map((img, index) => <Image key={index}
+                                    className='m--10'
+                                    width='100px'
+                                    src={img}
+                                    alt='image with preview'
+                                    preview
+                                />
+                                ) : 'No extra images'}</p>
                         </div>
                     </div>
                 </div>

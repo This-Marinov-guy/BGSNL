@@ -20,6 +20,7 @@ import { Calendar, CalendarWithClock } from "../../inputs/Calendar";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
+import { addEventToAll, editEventFromAll } from "../../../redux/events";
 
 const EventForm = (props) => {
     const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -202,8 +203,9 @@ const EventForm = (props) => {
                             : await sendRequest('future-event/add-event', 'POST', formData);
 
                         if (responseData.status) {
-                            dispatch(showNotification(props.edit ? EVENT_EDITED : EVENT_ADDED));
                             navigate('/user/dashboard');
+                            dispatch(showNotification(props.edit ? EVENT_EDITED : EVENT_ADDED));
+                            dispatch(props.edit ? editEventFromAll(responseData.event) : addEventToAll(responseData.event))
                         }
 
                     } catch (err) {
@@ -258,7 +260,7 @@ const EventForm = (props) => {
                         <div className="row">
                             <div className="col-lg-6 col-md-12 col-12">
                                 <div className="rn-form-group">
-                                    <Field as="select" name="region">
+                                    <Field disabled={props.edit} as="select" name="region">
                                         <option value="" disabled>
                                             Select Region
                                         </option>
@@ -671,7 +673,7 @@ const EventForm = (props) => {
                                         locale='en-nl'
                                         placeholder='Ticket Timer'
                                         captionLayout="dropdown"
-                                        min={new Date()}
+                                        min={values.date ? new Date(values.date) : new Date()}
                                         initialValue={values.ticketTimer}
                                         onSelect={(value) => {
                                             setFieldValue('ticketTimer', value)
