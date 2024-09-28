@@ -58,7 +58,7 @@ const FutureEventsContent = ({ displayAll }) => {
             {displayAll ?
               (eventsLoading ? <EventsLoading /> : REGIONS.map((region, index) => {
                 if (events[region].length) {
-                  return <div className='col-4 row mt--20' key={index}>
+                  return <div className='col-lg-4 col-md-6 col-12 row mt--20' key={index}>
                     <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
                     <PortfolioList2
                       style="society"
