@@ -4,9 +4,7 @@ import { LOCAL_STORAGE_LANGUAGE_PREFERENCE, PAGE_TRANSLATION_TEXTS } from '../..
 import ChangeLanguageBtns from '../buttons/ChangeLanguageBtns';
 
 const LanguageChangeModal = ({ visible, callback, onHide, availableLanguages = ['bg', 'en'] }) => {
-    const changeLanguage = (e) => {
-        const newLang = e.target.id;
-
+    const changeLanguage = (newLang) => {
         localStorage.setItem(LOCAL_STORAGE_LANGUAGE_PREFERENCE, newLang);
         callback(newLang)
         onHide();
@@ -31,7 +29,7 @@ const LanguageChangeModal = ({ visible, callback, onHide, availableLanguages = [
                     )
                 })}
                 <ChangeLanguageBtns callback={changeLanguage} availableLanguages={availableLanguages} />
-                <button onClick={changeLanguage} className="rn-button-style--2 rn-btn-reverse mt--40">
+                <button onClick={onHide} className="rn-button-style--2 rn-btn-reverse mt--40">
                     Close
                 </button>
             </div>
