@@ -14,21 +14,20 @@ const NewsList = () => {
 
     const NEWS = [
         {
+            image: "/assets/images/profile/from-bg-to-nl/1.webp",
+            title: "From Bulgaria To The Netherlands",
+            description: "Why are more and more young people emigrating?",
+            link: '/articles/from-bulgaria-to-the-netherlands',
+            action: ``,
+            isForMember: true,
+        },
+        {
             image: "/assets/images/bg/bg-image-9.webp",
             title: "Sign up!",
             description: "Membership 2024-2025 are officially open.",
             link: '/signup',
             action: ``,
             isForMember: false,
-        },
-        {
-            image: "/assets/images/profile/minerva/1.webp",
-            title: "Academie Minerva",
-            description: "Еxhibitions of Bulgarian students in Groningen",
-            link: '/articles/acedemie-minerva',
-            action: ``,
-            isForMember: true,
-
         },
         {
             image: "/assets/images/news/designer.png",
