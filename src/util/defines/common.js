@@ -9,6 +9,7 @@ export const serverEndpoint = isProd() ?
 // Local Storage
 export const LOCAL_STORAGE_USER_DATA = 'BGSNL_user_data';
 export const LOCAL_STORAGE_SESSION_LIFE = 'BGSNL_session_life'
+export const LOCAL_STORAGE_LANGUAGE_PREFERENCE = 'BGSNL_language_preference'
 
 // authentication
 export const SESSION_TIMEOUT = (isProd() ? 15 : 60) * 60 * 1000 // minutes in milliseconds
@@ -102,3 +103,17 @@ export const EVENT_EDITED = { summary: 'Event edited', ...SUCCESS_STYLE };
 export const EVENT_DELETED = { summary: 'Event deleted', ...SUCCESS_STYLE };
 
 export const GENERAL_ERROR = { summary: 'Something went wrong - please try again or report to support!', ...DANGER_STYLE };
+
+//languages
+export const PAGE_TRANSLATION_TEXTS = {
+    bg: {
+        title : 'Имаме тази страница налична и на български - сменете от бутоните за език!',
+        button : 'Български',
+        value: 'bg'
+    },
+    en: {
+        title: 'This page is also available in English - change from the language buttons below!',
+        button: 'English',
+        value: 'en'
+    }
+}

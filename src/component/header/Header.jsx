@@ -122,10 +122,13 @@ const Header = (props) => {
                   <a style={{ cursor: 'pointer' }}>Articles</a>
                   <ul className="submenu">
                     <li>
-                      <Link to="/articles/toni-villa">Toni's Villa</Link>
+                      <Link to="/articles/from-bulgaria-to-the-netherlands">From Bulgaria To The Netherlands</Link>
                     </li>
                     <li>
                       <Link to="/articles/acedemie-minerva">Academie Minerva</Link>
+                    </li>
+                    <li>
+                      <Link to="/articles/toni-villa">Toni's Villa</Link>
                     </li>
                   </ul>
                 </li>

@@ -9,8 +9,6 @@ import { isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { removeLogsOnProd } from "./util/functions/helpers";
-import Toni from "./pages/information/articles/Toni";
-import Minerva from "./pages/information/articles/Minerva";
 import AuthLayout from "./layouts/authentication/AuthLayout";
 import { removeModal, showModal } from "./redux/modal";
 import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4, INACTIVITY_MODAL, JWT_RESET_TIMER, LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT, WARNING_THRESHOLD } from "./util/defines/common";
@@ -31,6 +29,9 @@ import { useJWTRefresh } from "./hooks/api-hooks";
 
 // Pages  
 const Home = lazy(() => import("./pages/Home"));
+const Toni = lazy(() => import("./pages/information/articles/Toni"));
+const Minerva = lazy(() => import("./pages/information/articles/Minerva"));
+const StudentMigration = lazy(() => import("./pages/information/articles/StudentMigration"));
 const About = lazy(() => import("./pages/information/About"));
 const Developers = lazy(() => import("./pages/information/Developers"));
 const Contact = lazy(() => import("./pages/information/Contact"));
@@ -237,6 +238,7 @@ const Root = () => {
             <Route exact path={`/developers`} element={<Developers />} />
             <Route exact path={`/rules-and-regulations`} element={<Policy />} />
             <Route exact path={`/articles/toni-villa`} element={<Toni />} />
+            <Route exact path={`/articles/from-bulgaria-to-the-netherlands`} element={<StudentMigration />} />
             <Route exact path={`/articles/acedemie-minerva`} element={<Minerva />} />
             {/* <Route exact path={`/active-member`} >
                 <ActiveMember />
