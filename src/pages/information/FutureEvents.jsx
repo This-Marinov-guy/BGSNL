@@ -29,7 +29,7 @@ const FutureEventsContent = ({ displayAll }) => {
     events = useSelector(selectEvents)[region];
 
     if (events && events.length) {
-      events = events.filter(event => event.hidden === false)
+      events = events.filter(event => event.hidden === false);
     }
   }
 
@@ -46,7 +46,7 @@ const FutureEventsContent = ({ displayAll }) => {
       <div className="rn-slick-dot">
         <div className="container">
           <div className="row mb--40">
-            <div className="col-lg-6">
+            <div className="col-lg-12">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                 <h2 className="title">Future Events</h2>
                 <p>
@@ -56,21 +56,19 @@ const FutureEventsContent = ({ displayAll }) => {
               </div>
             </div>
             {displayAll ?
-              <div className="col-lg-12">
-                {eventsLoading ? <EventsLoading /> : REGIONS.map((region, index) => {
-                  if (events[region].length) {
-                    return <div className='row mt--20' key={index}>
-                      <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
-                      <PortfolioList2
-                        style="society"
-                        target={events[region]}
-                        styevariation="text-center"
-                        column="col-lg-4 col-md-5 col-sm-6"
-                      />
-                    </div>
-                  }
-                })}
-              </div>
+              (eventsLoading ? <EventsLoading /> : REGIONS.map((region, index) => {
+                if (events[region].length) {
+                  return <div className='col-4 row mt--20' key={index}>
+                    <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
+                    <PortfolioList2
+                      style="society"
+                      target={events[region]}
+                      styevariation="text-center"
+                      column="col-12"
+                    />
+                  </div>
+                }
+              }))
               :
               <div className="col-lg-12">
                 <div className="row slick-space-gutter--15 slickdot--20">
