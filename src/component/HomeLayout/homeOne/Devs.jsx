@@ -68,7 +68,7 @@ const Devs = () => {
                     We help maintain the website, create new features, and ensure
                     the content is frequently updated.
                   </p>
-                  <br/>
+                  <br />
                   <h4>Care to join? Apply now by <a className="" onClick={() => dispatch(showModal(WEB_DEV_MODAL))}>Clicking here!</a></h4>
                 </div>
               </div>
@@ -122,12 +122,9 @@ const Devs = () => {
                   alt="Github"
                   style={{ width: "60px", height: "60px" }}
                 />
-                <div>
-                  <h3 className="description mt--10">
-                    We are an open-source project, feel free to contribute and gain your spot here.
-                  </h3>
-                  <small className="information">*At least the README.md file please</small>
-                </div>
+                <h3 className="description mt--10">
+                  We are an open-source project, feel free to contribute and gain your spot here.
+                </h3>
               </a>
             </div>
           </div>
