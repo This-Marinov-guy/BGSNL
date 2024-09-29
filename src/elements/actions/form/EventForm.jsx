@@ -406,7 +406,7 @@ const EventForm = (props) => {
                                 <div className="col-lg-4 col-md-6 col-12">
                                     <h5 className="mt--10">Basic Price</h5>
                                     <div className="rn-form-group">
-                                        <Field type="number" placeholder="Price" name="guestPrice" min={1}/>
+                                        <Field type="number" placeholder="Price" name="guestPrice" min={1} step="0.01"/>
                                         <ErrorMessage
                                             className="error"
                                             name="guestPrice"
@@ -425,7 +425,7 @@ const EventForm = (props) => {
                                 {!values.isMemberFree && <><div className="col-lg-4 col-md-6 col-12">
                                     <h5 className="mt--10">Member Price</h5>
                                     <div className="rn-form-group">
-                                        <Field type="number" placeholder="Member Price" name="memberPrice" min={1} />
+                                        <Field type="number" placeholder="Member Price" name="memberPrice" min={1} step="0.01" />
                                         <ErrorMessage
                                             className="error"
                                             name="memberPrice"
@@ -444,7 +444,7 @@ const EventForm = (props) => {
                                     <div className="col-lg-4 col-md-6 col-12">
                                         <h5 className="mt--10">Active Member Price</h5>
                                         <div className="rn-form-group">
-                                            <Field type="number" placeholder="Active Member Price" name="activeMemberPrice" min={1} />
+                                            <Field type="number" placeholder="Active Member Price" name="activeMemberPrice" min={1} step="0.01" />
                                             <ErrorMessage
                                                 className="error"
                                                 name="activeMemberPrice"
@@ -658,7 +658,7 @@ const EventForm = (props) => {
                         <div className="row">
                             <div className="col-lg-6 col-12">
                                 <div className="rn-form-group">
-                                    <Field type="number" placeholder="Ticket Limit" name="ticketLimit" min={1} />
+                                    <Field type="number" placeholder="Ticket Limit" name="ticketLimit" min={1} step="0.01" />
                                     <ErrorMessage
                                         className="error"
                                         name="ticketLimit"
