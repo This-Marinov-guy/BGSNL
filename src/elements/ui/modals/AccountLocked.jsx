@@ -17,7 +17,7 @@ const AccountLocked = () => {
   const navigate = useNavigate();
 
   const user = useSelector(selectUser);
-  const { isSubscribed, status } = user;
+  const { isSubscribed, status, region } = user;
 
   const handleManageSubscription = async () => {
     try {
@@ -46,6 +46,7 @@ const AccountLocked = () => {
           period: membership.period,
           origin_url: window.location.origin,
           method: "unlock_account",
+          region
         },
       );
       if (responseData.url) {
