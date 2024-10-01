@@ -106,7 +106,7 @@ export const estimatePriceByEvent = (selectedEvent, user = {}, blockDiscounts = 
     const isMember = !!user && user.token;
     const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
     const isMemberDataFull = user?.name && user?.surname && user?.email;
-    const includedText = isMember ? (selectedEvent.hasOwnProperty('memberIncluding') ? `(including ${selectedEvent.memberIncluding})` : '') : (selectedEvent.hasOwnProperty('entryIncluding') ? `(including ${selectedEvent.entryIncluding})` : '');
+    const includedText = isMember ? (selectedEvent?.memberIncluding ? `(including ${selectedEvent.memberIncluding})` : '') : (selectedEvent?.entryIncluding ? `(including ${selectedEvent.entryIncluding})` : '');
 
     if (selectedEvent.isFree) {
         price = 'FREE'
