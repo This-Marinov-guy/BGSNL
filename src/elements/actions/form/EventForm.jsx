@@ -605,8 +605,8 @@ const EventForm = (props) => {
                                 </div>
                             </div>
                         </div>
-                        <h3 className="label">Additional Settings</h3>
-                        <div className="row mt--40">
+                        <h3 className="label mt--20">Additional Settings</h3>
+                        <div className="row mt--20">
                             <div className="col-lg-6 col-12">
                                 <div className="hor_section_nospace mt--20">
                                     <Field

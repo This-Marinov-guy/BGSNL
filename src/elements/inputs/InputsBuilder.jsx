@@ -38,7 +38,7 @@ const InputsBuilder = (props) => {
             {inputs.length > 0 ? inputs.map((value, index) => (
                 <Fragment key={index}>
                     <h3 className='mt--20'>Input {index + 1}</h3>
-                    <div className='row mt--10' key={index}>
+                    <div className='row ml--5 mt--10' key={index}>
                         <h4 className='col-12'>Select type of input</h4>
                         <select
                             value={value.type}
@@ -52,7 +52,7 @@ const InputsBuilder = (props) => {
                         </select>
                         <PlusButton onClick={addInput} />
                         <XButton onClick={() => removeInput(index)} />
-                    </div>
+                    </div>  
                     {value.type && (value.type === 'text' ?
                         <div className='row mt--10'>
                             <div className='col-6'>
@@ -111,6 +111,7 @@ const InputsBuilder = (props) => {
                             <StringDynamicInputs onChange={(inputs) => handleInputChange(index, 'options', inputs)} initialValues={value.options ?? []} placeholder='Add option' />
                         </div>
                     )}
+                    <hr className='mt--10'/>
                 </Fragment>
             )) :
                 <PlusButton onClick={addInput} />}
