@@ -9,25 +9,38 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/media/ImageFb";
-import { createCustomerTicket } from "../../util/functions/ticket-creator";
+import {
+  createCustomerTicket,
+  createQrCodeCheckGuest,
+} from "../../util/functions/ticket-creator";
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { checkAuthorization, decodeJWT } from "../../util/functions/authorization";
+import {
+  checkAuthorization,
+  decodeJWT,
+} from "../../util/functions/authorization";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
-import { Message } from 'primereact/message';
-import { encryptData, estimatePriceByEvent } from "../../util/functions/helpers";
+import { Message } from "primereact/message";
+import {
+  encryptData,
+  estimatePriceByEvent,
+} from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
 import { ACCESS_3, ACCESS_4 } from "../../util/defines/common";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
-import { appendExtraInputsToForm, buildSchemaExtraInputs, constructInitialExtraFormValues } from "../../util/functions/input-helpers";
+import {
+  appendExtraInputsToForm,
+  buildSchemaExtraInputs,
+  constructInitialExtraFormValues,
+} from "../../util/functions/input-helpers";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -43,20 +56,16 @@ const MemberPurchase = () => {
 
   const dispatch = useDispatch();
 
-  const { region, eventId } = useParams()
+  const { region, eventId } = useParams();
 
   const user = useSelector(selectUser);
 
   const navigate = useNavigate();
 
   const buyFreeTicket = async (formData) => {
-    await sendRequest(
-      "event/purchase-ticket/member",
-      "POST",
-      formData
-    );
+    await sendRequest("event/purchase-ticket/member", "POST", formData);
 
-    navigate('/success');
+    navigate("/success");
   };
 
   useEffect(() => {
@@ -66,18 +75,25 @@ const MemberPurchase = () => {
       try {
         const responseData = await sendRequest(`user/current`);
         setCurrentUser(responseData.user);
-      } catch (err) {
-      }
+      } catch (err) {}
     };
 
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
+        const responseData = await sendRequest(
+          `future-event/full-event-details/${eventId}`,
+          "GET",
+          null,
+          {},
+          false
+        );
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
         if (responseData.event?.extraInputsForm) {
-          const { schema, schemaFields } = buildSchemaExtraInputs(responseData.event.extraInputsForm);
+          const { schema, schemaFields } = buildSchemaExtraInputs(
+            responseData.event.extraInputsForm
+          );
           setSchema(schema);
           setSchemaFields(schemaFields);
         }
@@ -91,20 +107,18 @@ const MemberPurchase = () => {
     getEventDetails();
   }, []);
 
-
   if (loadingPage || !currentUser) {
-    return <HeaderLoadingError />
+    return <HeaderLoadingError />;
   } else if (!selectedEvent) {
-    return <NoEventFound />
+    return <NoEventFound />;
   }
 
-  
   if (eventClosed) {
-    return <TicketSaleClosed />
+    return <TicketSaleClosed />;
   }
 
   if (selectedEvent.ticketLink) {
-    return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />
+    return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />;
   }
 
   return (
@@ -130,18 +144,37 @@ const MemberPurchase = () => {
 
                 let allowDiscount = false;
                 const isActiveMember = checkAuthorization(user.token, ACCESS_4);
-                const isMemberForDiscount = selectedEvent.product?.activeMember.priceId && selectedEvent.discountPass.length > 0 && (selectedEvent.discountPass.includes(currentUser.email) || selectedEvent.discountPass.includes(currentUser.name + ' ' + currentUser.surname));
-                const isMemberForFreeTicket = selectedEvent.freePass.length > 0 && (selectedEvent.freePass.includes(currentUser.email) || selectedEvent.freePass.includes(currentUser.name + ' ' + currentUser.surname));
+                const isMemberForDiscount =
+                  selectedEvent.product?.activeMember.priceId &&
+                  selectedEvent.discountPass.length > 0 &&
+                  (selectedEvent.discountPass.includes(currentUser.email) ||
+                    selectedEvent.discountPass.includes(
+                      currentUser.name + " " + currentUser.surname
+                    ));
+                const isMemberForFreeTicket =
+                  selectedEvent.freePass.length > 0 &&
+                  (selectedEvent.freePass.includes(currentUser.email) ||
+                    selectedEvent.freePass.includes(
+                      currentUser.name + " " + currentUser.surname
+                    ));
 
                 if (!normalTicket) {
-                  const checkMemberTicket = await sendRequest(`event/check-member/${currentUser.id}/${eventId}`);
+                  const checkMemberTicket = await sendRequest(
+                    `event/check-member/${currentUser.id}/${eventId}`
+                  );
 
-                  if (!checkMemberTicket.hasOwnProperty('status') && !checkMemberTicket.status) {
-                    dispatch(showNotification({
-                      severity: 'warn',
-                      detail: "You already have a member ticket for this event - you can still proceed the checkout but will pay the guest price!",
-                      life: 1200
-                    }));
+                  if (
+                    !checkMemberTicket.hasOwnProperty("status") &&
+                    !checkMemberTicket.status
+                  ) {
+                    dispatch(
+                      showNotification({
+                        severity: "warn",
+                        detail:
+                          "You already have a member ticket for this event - you can still proceed the checkout but will pay the guest price!",
+                        life: 1200,
+                      })
+                    );
                     setNormalTicket(true);
                     return;
                   } else {
@@ -149,31 +182,41 @@ const MemberPurchase = () => {
                   }
                 }
 
-                const data = encryptData({
+                const data = {
                   eventId: selectedEvent.id,
-                  name: currentUser.name,
-                  surname: currentUser.surname,
-                  email: currentUser.email,
-                });
+                  code: new Date().valueOf(),
+                  quantity: 1,
+                };
 
-                // TODO: temp fix untill all events have it
-                const hasQR = selectedEvent.hasOwnProperty('ticketQR') ? selectedEvent.ticketQR : true;
-                const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}` : '';
+                const hasQR = selectedEvent.ticketQR;
+                const qrCode = hasQR ? createQrCodeCheckGuest(data) : "";
 
-                const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, currentUser.name, currentUser.surname, selectedEvent.ticketColor, qrCode, selectedEvent.ticketName);
+                const { ticketBlob } = await createCustomerTicket(
+                  selectedEvent.ticketImg,
+                  currentUser.name,
+                  currentUser.surname,
+                  selectedEvent.ticketColor,
+                  qrCode,
+                  selectedEvent.ticketName
+                );
 
                 // formData
                 const formData = new FormData();
                 formData.append(
                   "image",
                   ticketBlob,
-                  selectedEvent.id + "_" + currentUser.name + currentUser.surname + "_MEMBER"
+                  selectedEvent.id +
+                    "_" +
+                    currentUser.name +
+                    currentUser.surname +
+                    "_MEMBER"
                 );
 
                 formData.append("region", region);
                 formData.append("origin_url", window.location.origin);
                 formData.append("method", "buy_member_ticket");
                 formData.append("eventId", selectedEvent.id);
+                formData.append("code", data.code);
                 formData.append("userId", currentUser.id);
                 if (selectedEvent?.extraInputsForm) {
                   appendExtraInputsToForm(formData, schemaFields, values);
@@ -183,38 +226,53 @@ const MemberPurchase = () => {
                   return await buyFreeTicket(formData);
                 }
 
-                if (allowDiscount && (isMemberForDiscount || isMemberForFreeTicket || isActiveMember)) {
+                if (
+                  allowDiscount &&
+                  (isMemberForDiscount ||
+                    isMemberForFreeTicket ||
+                    isActiveMember)
+                ) {
                   if (isMemberForFreeTicket) {
                     return await buyFreeTicket(formData);
                   } else {
-                    formData.append("itemId", selectedEvent.product?.activeMember.priceId);
+                    formData.append(
+                      "itemId",
+                      selectedEvent.product?.activeMember.priceId
+                    );
                   }
                 } else if (normalTicket) {
-                  formData.append("itemId", selectedEvent.product?.guest.priceId);
+                  formData.append(
+                    "itemId",
+                    selectedEvent.product?.guest.priceId
+                  );
                 } else {
-                  formData.append("itemId", selectedEvent.product?.member.priceId);
+                  formData.append(
+                    "itemId",
+                    selectedEvent.product?.member.priceId
+                  );
                 }
 
                 const responseData = await sendRequest(
                   "payment/checkout/member-ticket",
                   "POST",
-                  formData,
+                  formData
                 );
 
                 if (responseData.url) {
                   window.location.assign(responseData.url);
                 }
-
               } catch (err) {
-                console.log(err)
+                console.log(err);
               } finally {
                 setIsLoading(false);
               }
             }}
-            initialValues={constructInitialExtraFormValues(selectedEvent?.extraInputsForm ?? null)}>
+            initialValues={constructInitialExtraFormValues(
+              selectedEvent?.extraInputsForm ?? null
+            )}
+          >
             {() => (
-              <Form id='form' encType="multipart/form-data" className="row"
-              >
+              <Form id="form" encType="multipart/form-data" className="row">
                 <div className="col-lg-6 col-md-12 col-12">
                   <div className="event_details">
                     <h2 className="mt--40">Event Details</h2>
@@ -222,17 +280,28 @@ const MemberPurchase = () => {
                     <p>
                       Date:{" "}
                       {selectedEvent.correctedDate
-                        ? moment(selectedEvent.correctedDate).format(MOMENT_DATE_TIME) + " Updated!"
+                        ? moment(selectedEvent.correctedDate).format(
+                            MOMENT_DATE_TIME
+                          ) + " Updated!"
                         : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
                     </p>
                     <p>Address: {selectedEvent.location}</p>
-                    <p>Price: {estimatePriceByEvent(selectedEvent, { ...currentUser, token: user.token ?? '' }, normalTicket)}</p>
+                    <p>
+                      Price:{" "}
+                      {estimatePriceByEvent(
+                        selectedEvent,
+                        { ...currentUser, token: user.token ?? "" },
+                        normalTicket
+                      )}
+                    </p>
                   </div>
                 </div>
-                {selectedEvent.extraInputsForm.length > 0 && <div className="col-lg-6 col-md-12 col-12 row container mt--40">
-                  <FormExtras inputs={selectedEvent.extraInputsForm} />
-                </div>}
-                <div style={{ maxWidth: '10em' }}>
+                {selectedEvent.extraInputsForm.length > 0 && (
+                  <div className="col-lg-6 col-md-12 col-12 row container mt--40">
+                    <FormExtras inputs={selectedEvent.extraInputsForm} />
+                  </div>
+                )}
+                <div style={{ maxWidth: "10em" }}>
                   <WithBackBtn>
                     <button
                       disabled={isLoading}
@@ -242,14 +311,23 @@ const MemberPurchase = () => {
                       {isLoading ? <Loader /> : <span>Payment</span>}
                     </button>
                   </WithBackBtn>
-                  {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
+                  {normalTicket && (
+                    <Message
+                      severity="warn"
+                      className="center_div mt--20"
+                      text="You already have redeemed your discount - if you proceed, you will pay the full ticket price"
+                    />
+                  )}
                 </div>
                 <p className="information mt--40">
-                  The information for purchasing this ticket will be taken from your
-                  account. Be sure it is accurate as it can be used as a proof of
-                  your identity on the entry!
+                  The information for purchasing this ticket will be taken from
+                  your account. Be sure it is accurate as it can be used as a
+                  proof of your identity on the entry!
                 </p>
-                <p className="information mt--10">*Special discounted price for board and committee members may apply</p>
+                <p className="information mt--10">
+                  *Special discounted price for board and committee members may
+                  apply
+                </p>
               </Form>
             )}
           </Formik>
@@ -265,7 +343,7 @@ const MemberPurchase = () => {
 
       <Footer />
     </Fragment>
-  )
-}
+  );
+};
 
 export default MemberPurchase;

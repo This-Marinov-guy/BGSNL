@@ -8,11 +8,14 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/media/ImageFb";
-import { Message } from 'primereact/message';
+import { Message } from "primereact/message";
 import Loader from "../../elements/ui/loading/Loader";
-import { InputNumber } from 'primereact/inputnumber';
+import { InputNumber } from "primereact/inputnumber";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { createCustomerTicket } from "../../util/functions/ticket-creator"
+import {
+  createCustomerTicket,
+  createQrCodeCheckGuest,
+} from "../../util/functions/ticket-creator";
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
@@ -29,7 +32,11 @@ import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusi
 import { showNotification } from "../../redux/notification";
 import { INCORRECT_MISSING_DATA } from "../../util/defines/common";
 import { error } from "jquery";
-import { appendExtraInputsToForm, buildSchemaExtraInputs, constructInitialExtraFormValues } from "../../util/functions/input-helpers";
+import {
+  appendExtraInputsToForm,
+  buildSchemaExtraInputs,
+  constructInitialExtraFormValues,
+} from "../../util/functions/input-helpers";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -46,7 +53,7 @@ const GuestPurchase = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [eventClosed, setEventClosed] = useState(false)
+  const [eventClosed, setEventClosed] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [normalTicket, setNormalTicket] = useState(false);
   const [schema, setSchema] = useState(null);
@@ -59,31 +66,36 @@ const GuestPurchase = () => {
   const navigate = useNavigate();
 
   const buyFreeTicket = async (formData) => {
-    await sendRequest(
-      "event/purchase-ticket/guest",
-      "POST",
-      formData
-    );
+    await sendRequest("event/purchase-ticket/guest", "POST", formData);
 
-    navigate('/success');
-  }
+    navigate("/success");
+  };
 
   const handleErrorMsg = (errors) => {
     if (!isObjectEmpty(errors)) {
-      dispatch(showNotification(INCORRECT_MISSING_DATA))
+      dispatch(showNotification(INCORRECT_MISSING_DATA));
     }
-  }
+  };
 
   useEffect(() => {
     setLoadingPage(true);
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`future-event/full-event-details/${eventId}`, "GET", null, {}, false);
+        const responseData = await sendRequest(
+          `future-event/full-event-details/${eventId}`,
+          "GET",
+          null,
+          {},
+          false
+        );
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
-        if (responseData.event.hasOwnProperty('extraInputsForm')) {
-          const { schema, schemaFields } = buildSchemaExtraInputs(responseData.event?.extraInputsForm ?? null, defaultSchema);
+        if (responseData.event.hasOwnProperty("extraInputsForm")) {
+          const { schema, schemaFields } = buildSchemaExtraInputs(
+            responseData.event?.extraInputsForm ?? null,
+            defaultSchema
+          );
           setSchema(schema);
           setSchemaFields(schemaFields);
         }
@@ -97,21 +109,21 @@ const GuestPurchase = () => {
   }, []);
 
   if (loadingPage) {
-    return <HeaderLoadingError />
+    return <HeaderLoadingError />;
   } else if (!selectedEvent) {
-    return <NoEventFound />
+    return <NoEventFound />;
   }
 
   if (eventClosed) {
-    return <TicketSaleClosed />
+    return <TicketSaleClosed />;
   }
 
   if (selectedEvent.ticketLink) {
-    return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />
+    return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />;
   }
 
   if (selectedEvent.membersOnly) {
-    return <ExclusiveMemberEvent />
+    return <ExclusiveMemberEvent />;
   }
 
   return (
@@ -130,16 +142,22 @@ const GuestPurchase = () => {
             <div className="mb--20">
               <ImageFb src={`${selectedEvent.poster}`} alt="Event" className="title_img" />
               <h2 className="mt--40">Event Details</h2>
-              <p>Name:{" "}{selectedEvent.title}</p>
+              <p>Name: {selectedEvent.title}</p>
               <p>
                 Date:{" "}
                 {selectedEvent.correctedDate
-                  ? moment(selectedEvent.correctedDate).format(MOMENT_DATE_TIME) + " Updated!"
+                  ? moment(selectedEvent.correctedDate).format(
+                      MOMENT_DATE_TIME
+                    ) + " Updated!"
                   : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
               </p>
-              <p>Address:{" "}{selectedEvent.location}</p>
-              <p>Price:{" "}{selectedEvent.isFree ? ' FREE' : selectedEvent.product?.guest.price + ' euro'}</p>
-
+              <p>Address: {selectedEvent.location}</p>
+              <p>
+                Price:{" "}
+                {selectedEvent.isFree
+                  ? " FREE"
+                  : selectedEvent.product?.guest.price + " euro"}
+              </p>
             </div>
           </div>
           <div style={{ width: "20%" }} className="col-lg-4 col-md-12 col-12">
@@ -154,23 +172,46 @@ const GuestPurchase = () => {
                     setIsLoading(true);
 
                     let allowDiscount = false;
-                    const isGuestForDiscount = selectedEvent.discountPass && (selectedEvent.discountPass.includes(values.email) || selectedEvent.discountPass.includes(values.name + ' ' + values.surname));
-                    const isGuestForFreeTicket = selectedEvent.freePass && (selectedEvent.freePass.includes(values.email) || selectedEvent.freePass.includes(values.name + ' ' + values.surname));
+                    const isGuestForDiscount =
+                      selectedEvent.discountPass &&
+                      (selectedEvent.discountPass.includes(values.email) ||
+                        selectedEvent.discountPass.includes(
+                          values.name + " " + values.surname
+                        ));
+                    const isGuestForFreeTicket =
+                      selectedEvent.freePass &&
+                      (selectedEvent.freePass.includes(values.email) ||
+                        selectedEvent.freePass.includes(
+                          values.name + " " + values.surname
+                        ));
 
                     // TODO: add functionality for multiple tickets
-                    if (!normalTicket && (isGuestForDiscount || isGuestForFreeTicket)) {
-                      const checkDiscounts = await sendRequest(`event/check-guest-discount/${eventId}`, "POST", {
-                        email: values.email,
-                        name: values.name,
-                        surname: values.surname
-                      });
+                    if (
+                      !normalTicket &&
+                      (isGuestForDiscount || isGuestForFreeTicket)
+                    ) {
+                      const checkDiscounts = await sendRequest(
+                        `event/check-guest-discount/${eventId}`,
+                        "POST",
+                        {
+                          email: values.email,
+                          name: values.name,
+                          surname: values.surname,
+                        }
+                      );
 
-                      if (!checkDiscounts.hasOwnProperty('status') && !checkDiscounts.status) {
-                        dispatch(showNotification({
-                          severity: 'warn',
-                          detail: "You already have an applied bonus for this event - you can still proceed the checkout but will pay the guest price!",
-                          life: 1200
-                        }));
+                      if (
+                        !checkDiscounts.hasOwnProperty("status") &&
+                        !checkDiscounts.status
+                      ) {
+                        dispatch(
+                          showNotification({
+                            severity: "warn",
+                            detail:
+                              "You already have an applied bonus for this event - you can still proceed the checkout but will pay the guest price!",
+                            life: 1200,
+                          })
+                        );
                         setNormalTicket(true);
                         return;
                       } else {
@@ -178,18 +219,23 @@ const GuestPurchase = () => {
                       }
                     }
 
-                    const data = encryptData({
+                    const data = {
                       eventId: selectedEvent.id,
-                      name: values.name,
-                      surname: values.surname,
-                      email: values.email,
-                    });
+                      code: new Date().valueOf(),
+                      quantity,
+                    };
 
-                    // TODO: temp fix untill all events have it
-                    const hasQR = selectedEvent.hasOwnProperty('ticketQR') ? selectedEvent.ticketQR : true;
-                    const qrCode = hasQR ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}&count=${quantity}` : '';
+                    const hasQR = selectedEvent.ticketQR;
+                    const qrCode = hasQR ? createQrCodeCheckGuest(data) : "";
 
-                    const { ticketBlob } = await createCustomerTicket(selectedEvent.ticketImg, values.name, values.surname, selectedEvent.ticketColor, qrCode, selectedEvent.ticketName);
+                    const { ticketBlob } = await createCustomerTicket(
+                      selectedEvent.ticketImg,
+                      values.name,
+                      values.surname,
+                      selectedEvent.ticketColor,
+                      qrCode,
+                      selectedEvent.ticketName
+                    );
 
                     // formData
                     const formData = new FormData();
@@ -197,16 +243,17 @@ const GuestPurchase = () => {
                       "image",
                       ticketBlob,
                       selectedEvent.id +
-                      "_" +
-                      values.name +
-                      values.surname +
-                      "_GUEST"
+                        "_" +
+                        values.name +
+                        values.surname +
+                        "_GUEST"
                     );
                     formData.append("region", region);
                     formData.append("quantity", quantity);
                     formData.append("origin_url", window.location.origin);
                     formData.append("method", "buy_guest_ticket");
                     formData.append("eventId", selectedEvent.id);
+                    formData.append("code", data.code);
                     formData.append("guestEmail", values.email);
                     if (selectedEvent?.extraInputsForm) {
                       appendExtraInputsToForm(formData, schemaFields, values);
@@ -222,25 +269,34 @@ const GuestPurchase = () => {
                       return await buyFreeTicket(formData);
                     }
 
-                    if (allowDiscount && (isGuestForDiscount || isGuestForFreeTicket)) {
+                    if (
+                      allowDiscount &&
+                      (isGuestForDiscount || isGuestForFreeTicket)
+                    ) {
                       if (isGuestForFreeTicket) {
                         return await buyFreeTicket(formData);
                       } else {
-                        formData.append("itemId", selectedEvent.product?.activeMember.priceId ?? selectedEvent.product?.member.priceId);
+                        formData.append(
+                          "itemId",
+                          selectedEvent.product?.activeMember.priceId ??
+                            selectedEvent.product?.member.priceId
+                        );
                       }
                     } else {
-                      formData.append("itemId", selectedEvent.product?.guest.priceId);
+                      formData.append(
+                        "itemId",
+                        selectedEvent.product?.guest.priceId
+                      );
                     }
 
                     const responseData = await sendRequest(
                       "payment/checkout/guest-ticket",
                       "POST",
-                      formData,
+                      formData
                     );
                     if (responseData.url) {
                       window.location.assign(responseData.url);
                     }
-
                   } catch (err) {
                     // console.log(err)
                   } finally {
@@ -254,12 +310,17 @@ const GuestPurchase = () => {
                   phone: "",
                   policyTerms: false,
                   payTerms: false,
-                  ...constructInitialExtraFormValues(selectedEvent?.extraInputsForm ?? null)
+                  ...constructInitialExtraFormValues(
+                    selectedEvent?.extraInputsForm ?? null
+                  ),
                 }}
               >
                 {(values, errors) => (
-                  <Form id="form" encType="multipart/form-data"
-                    className="mb--120">
+                  <Form
+                    id="form"
+                    encType="multipart/form-data"
+                    className="mb--120"
+                  >
                     <h3>Fill your details and buy a ticket</h3>
                     <div className="row">
                       <div className="col-lg-12 col-md-12 col-12">
@@ -294,7 +355,8 @@ const GuestPurchase = () => {
                             name="email"
                           />
                           <p className="information">
-                            Please enter an email you have access to as the ticket will be send through it
+                            Please enter an email you have access to as the
+                            ticket will be send through it
                           </p>
                           <ErrorMessage
                             className="error"
@@ -317,7 +379,9 @@ const GuestPurchase = () => {
                           />
                         </div>
                       </div>
-                      {selectedEvent.extraInputsForm.length > 0 && <FormExtras inputs={selectedEvent.extraInputsForm} />}
+                      {selectedEvent.extraInputsForm.length > 0 && (
+                        <FormExtras inputs={selectedEvent.extraInputsForm} />
+                      )}
                       <div className="col-lg-12 col-md-12 col-12">
                         <div className="hor_section_nospace mt--40">
                           <Field
@@ -361,12 +425,25 @@ const GuestPurchase = () => {
                           component="div"
                         />
                       </div>
-                      <div className="col-lg-12 col-md-12 col-12 mt--20" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <h3>
-                          Quantity
-                        </h3>
-                        <InputNumber value={quantity} onValueChange={(e) => setQuantity(e.value)} showButtons buttonLayout="horizontal" style={{ width: '160px' }}
-                          decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" min={1} max={10}
+                      <div
+                        className="col-lg-12 col-md-12 col-12 mt--20"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <h3>Quantity</h3>
+                        <InputNumber
+                          value={quantity}
+                          onValueChange={(e) => setQuantity(e.value)}
+                          showButtons
+                          buttonLayout="horizontal"
+                          style={{ width: "160px" }}
+                          decrementButtonClassName="p-button-danger"
+                          incrementButtonClassName="p-button-success"
+                          min={1}
+                          max={10}
                         />
                       </div>
                     </div>
@@ -381,7 +458,13 @@ const GuestPurchase = () => {
                           {isLoading ? <Loader /> : <span>Payment</span>}
                         </button>
                       </WithBackBtn>
-                      {normalTicket && <Message severity="warn" className="center_div mt--20" text="You already have redeemed your discount - if you proceed, you will pay the full ticket price" />}
+                      {normalTicket && (
+                        <Message
+                          severity="warn"
+                          className="center_div mt--20"
+                          text="You already have redeemed your discount - if you proceed, you will pay the full ticket price"
+                        />
+                      )}
                     </div>
                   </Form>
                 )}
@@ -401,6 +484,6 @@ const GuestPurchase = () => {
       <Footer />
     </Fragment>
   );
-}
+};
 
 export default GuestPurchase;

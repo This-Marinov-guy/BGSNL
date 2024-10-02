@@ -1,6 +1,10 @@
 import QRCode from "qrcode";
 import { resizeFile } from "./helpers";
 
+export const createQrCodeCheckGuest = (data) => {
+  return `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?event=${data.eventId}&code=${data.code}&count=${data?.quantity ?? 1}`;
+}
+
 export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '', withName = true) => {
   // Create a canvas element, add the image and text, covert to blob
   //for 1500 x 485 images
