@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN';
 import ImageFb from '../../media/ImageFb';
 
