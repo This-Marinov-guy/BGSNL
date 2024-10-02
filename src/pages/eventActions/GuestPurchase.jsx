@@ -67,6 +67,7 @@ const GuestPurchase = () => {
 
   const buyFreeTicket = async (formData) => {
     await sendRequest("event/purchase-ticket/guest", "POST", formData);
+    sessionStorage.setItem("prevUrl", window.location.href);
 
     navigate("/success");
   };
@@ -140,7 +141,11 @@ const GuestPurchase = () => {
         <div className="row">
           <div className="col-lg-4 col-md-12 col-12">
             <div className="mb--20">
-              <ImageFb src={`${selectedEvent.poster}`} alt="Event" className="title_img" />
+              <ImageFb
+                src={`${selectedEvent.poster}`}
+                alt="Event"
+                className="title_img"
+              />
               <h2 className="mt--40">Event Details</h2>
               <p>Name: {selectedEvent.title}</p>
               <p>
@@ -295,6 +300,7 @@ const GuestPurchase = () => {
                       formData
                     );
                     if (responseData.url) {
+                      sessionStorage.setItem("prevUrl", window.location.href);
                       window.location.assign(responseData.url);
                     }
                   } catch (err) {

@@ -26,9 +26,9 @@ const GuestCheck = () => {
   const [message, setMessage] = useState(null);
   const [eventName, setEventName] = useState(null);
   const [data, setData] = useState({
-    name: '',
-    email: ''
-  })
+    name: "",
+    email: "",
+  });
 
   const handleCountChange = (e) => {
     const newCount = e.target.value;
@@ -59,8 +59,8 @@ const GuestCheck = () => {
       setEventName(responseData.event);
       setData({
         name: responseData.name,
-        email: responseData.email
-      })
+        email: responseData.email,
+      });
     } else {
       return;
     }
@@ -94,7 +94,7 @@ const GuestCheck = () => {
         })
       );
 
-      return navigate("/user");
+      navigate("/user");
     }
 
     updateGuestList();

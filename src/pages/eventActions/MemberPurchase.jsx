@@ -64,6 +64,7 @@ const MemberPurchase = () => {
 
   const buyFreeTicket = async (formData) => {
     await sendRequest("event/purchase-ticket/member", "POST", formData);
+    sessionStorage.setItem("prevUrl", window.location.href);
 
     navigate("/success");
   };
@@ -133,7 +134,11 @@ const MemberPurchase = () => {
         <h2 className="center_text mb--80">Purchase a Ticket</h2>
 
         <div className="row slide-down center_div">
-          <ImageFb src={`${selectedEvent.poster}`} alt="Event" className="title_img" />
+          <ImageFb
+            src={`${selectedEvent.poster}`}
+            alt="Event"
+            className="title_img"
+          />
         </div>
         <div className="row team_member_border-3 mt--80 purchase_panel">
           <Formik
@@ -259,6 +264,7 @@ const MemberPurchase = () => {
                 );
 
                 if (responseData.url) {
+                  sessionStorage.setItem("prevUrl", window.location.href);
                   window.location.assign(responseData.url);
                 }
               } catch (err) {
