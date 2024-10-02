@@ -103,7 +103,7 @@ const PageNavigationFunc = () => {
 
 const Root = () => {
   const [timeRemaining, setTimeRemaining] = useState(SESSION_TIMEOUT);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -113,6 +113,7 @@ const Root = () => {
   const user = useSelector(selectUser);
 
   // start auth session logic (TODO: Should be moved elsewhere but now works here)
+  // also wants refactor
   const onLogout = () => {
     dispatch(removeModal(INACTIVITY_MODAL));
     dispatch(logout());
@@ -171,6 +172,7 @@ const Root = () => {
       loginUser(storedUser.token);
     } else {
       clearUserStorage();
+      setIsLoading(false);
     }
   }, []);
 
