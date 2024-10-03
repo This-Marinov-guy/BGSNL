@@ -14,9 +14,16 @@ const AboutUs = () => {
         <div className="container">
           <div className="row row--35 align-items-center">
             <div className="col-lg-5 col-md-12">
-              <Slider {...presentation}>
+              <Slider {...presentation} >
                 {SLIDESHOW.map((image, index) => {
-                  return <LazyLoadImage key={index} src={image.src} alt={image.alt} className="small-presentation"/>;
+                  return (
+                    <LazyLoadImage
+                      key={index}
+                      src={image.src}
+                      alt={image.alt}
+                      className="small-presentation soft-border"
+                    />
+                  );
                 })}
               </Slider>
             </div>
@@ -31,8 +38,8 @@ const AboutUs = () => {
                     <div className="about-us-list">
                       <h3 className="title">Goal</h3>
                       <p>
-                        We aim to bring the Bulgarian students of the Netherlands
-                        together
+                        We aim to bring the Bulgarian students of the
+                        Netherlands together
                       </p>
                     </div>
                   </div>
@@ -60,7 +67,8 @@ const AboutUs = () => {
                     <div className="about-us-list">
                       <h3 className="title">Representation</h3>
                       <p>
-                        We aim to represent the Bulgarian culture in the Netherlands
+                        We aim to represent the Bulgarian culture in the
+                        Netherlands
                       </p>
                     </div>
                   </div>
