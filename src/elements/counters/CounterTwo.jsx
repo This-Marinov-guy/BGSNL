@@ -34,7 +34,7 @@ class CounterOne extends Component{
 
         return(
             <Fragment>
-                <div className="row mt--40">
+                <div className="row mt--20">
                     {Data.map( (value, index) => (
                         <div className="counterup_style--2 col-lg-3 col-md-6 col-6" key={index}>
                             <ScrollAnimation 

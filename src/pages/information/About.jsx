@@ -26,8 +26,29 @@ const About = React.memo(() => {
       <AboutUs />
       {/* End About Area  */}
 
+      {/* Start Extended About Area  */}
+      <div className="container mb--40">
+        <p className="mb--40">
+          Welcome to the Bulgarian Society Netherlands (BGSNL)! 🇧🇬 Your home
+          away from home. We know the unique challenges that Bulgarian students
+          face when studying abroad, and we’re here to support you every step of
+          the way. From exploring career opportunities to fostering a strong
+          community, we’re here to help you thrive and make the most of your
+          experience in the Netherlands. 🇳🇱
+        </p>
+
+        <p className="mb--40">
+          We’re more than just a student organisation—we’re a vibrant network
+          focused on supporting and empowering Bulgarians to succeed
+          academically, professionally, and personally. Our mission is to help
+          you navigate life abroad, build meaningful connections, and make the
+          most of your time here.
+        </p>
+      </div>
+      {/* End Extended About Area  */}
+
       {/* Start CounterUp Area */}
-      <div className="rn-counterup-area pt--140 p pb--110 bg_color--1">
+      <div className="rn-counterup-area pt--40 p pb--40 bg_color--1">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -41,7 +62,7 @@ const About = React.memo(() => {
       {/* End CounterUp Area */}
 
       {/* Start Speech Area */}
-      <div className="mt--40 mb--100">
+      <div className="mt--40 mb--60">
         <div className="container">
           <p className="mb--20">
             <FiCheckCircle />
@@ -55,19 +76,18 @@ const About = React.memo(() => {
           <p className="mb--20">
             <FiCheckCircle />
             &nbsp;&nbsp; We saw the need to create an environment that will
-            stimulate the Bulgarians in the Netherlands to develop and reach their
-            goals and to become the best version of themselves.
+            stimulate the Bulgarians in the Netherlands to develop and reach
+            their goals and to become the best version of themselves.
           </p>
           <p className="mb--20">
             <FiCheckCircle />
-            &nbsp;&nbsp; We saw the need in the Netherlands to celebrate and develop
-            Bulgarian culture and to showcase it among internationals.
+            &nbsp;&nbsp; We saw the need in the Netherlands to celebrate and
+            develop Bulgarian culture and to showcase it among internationals.
           </p>
 
           <h2 className="center_text mt--40">
             This is why we created Bulgarian Society Netherlands!
           </h2>
-
         </div>
       </div>
       {/* End Speech Area */}
