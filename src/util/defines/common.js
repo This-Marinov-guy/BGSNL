@@ -1,5 +1,6 @@
 import { capitalizeAfterSpace } from "../functions/capitalize";
 import { isProd } from "../functions/helpers";
+import { REGION_EMAIL } from "./REGIONS_DESIGN";
 
 //Server
 export const serverEndpoint = isProd() ?
@@ -117,3 +118,7 @@ export const PAGE_TRANSLATION_TEXTS = {
         value: 'en'
     }
 }
+
+// email attr
+export const BGSNL_CC_MAIL = `cc=${REGION_EMAIL.netherlands}`;
+export const BGSNL_INTERNSHIP_MAIL_SUBJECT = `subject=BGSNL%20Internship%20Program&${BGSNL_CC_MAIL}`;
