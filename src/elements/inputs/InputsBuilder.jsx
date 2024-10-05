@@ -48,7 +48,7 @@ const InputsBuilder = (props) => {
           <Fragment key={index}>
             <h3 className="mt--20">Input {index + 1}</h3>
             <div className="row ml--5 mt--10" key={index}>
-              <h4 className="col-12">Select type of input</h4>
+              <h4 className="col-lg-6 col-12">Select type of input</h4>
               <select
                 value={value.type}
                 onChange={(e) =>
@@ -98,8 +98,8 @@ const InputsBuilder = (props) => {
                   </div>
                 </div>
               ) : (
-                <div className="row mt--10">
-                  <div className="col-5 mr--5 ver_section">
+                <div className="col-lg-6 col-12 row mt--10">
+                  <div className="col-lg-3 col-md-6 col-12 mr--5 ver_section">
                     <h4>Is it required</h4>
                     <select
                       value={value.required}
