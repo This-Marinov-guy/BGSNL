@@ -79,7 +79,7 @@ const ContestRegister = (props) => {
                                     </p>
                                     <p>Announcing the winner: 20th September, 13:00
                                     </p>
-                                    <span className="ma"><Link to='/contest/promo-video'>Terms and Conditions</Link></span>
+                                    <span className="m--a"><Link to='/contest/promo-video'>Terms and Conditions</Link></span>
                                 </div>
                             </div>
                         </div>

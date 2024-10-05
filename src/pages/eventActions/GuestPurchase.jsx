@@ -136,7 +136,7 @@ const GuestPurchase = () => {
         logoname="logo.png"
       />
 
-      <div className="container mt--140 mb--120">
+      <div className="container mt--140 mb--40">
         <h2 className="center_text mb--80">Purchase a Ticket</h2>
         <div className="row">
           <div className="col-lg-4 col-md-12 col-12">
@@ -453,7 +453,7 @@ const GuestPurchase = () => {
                         />
                       </div>
                     </div>
-                    <div>
+                    <div className="center_div_col">
                       <WithBackBtn>
                         <button
                           onClick={() => handleErrorMsg(errors)}

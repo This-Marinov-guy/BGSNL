@@ -179,7 +179,7 @@ const EventDetails = () => {
                 {selectedEvent.isGala && <GalaMembers />}
                 <div className="portfolio-thumb-inner row">
 
-                  {selectedEvent.images?.lenght > 0 && selectedEvent.images[0] && selectedEvent.images.map((value, index) => {
+                  {selectedEvent.images?.length > 0 && selectedEvent.images.map((value, index) => {
                     return <div key={index} className="col-lg-6 col-md-12 col-12 thumb center_div mb--30">
                       <ImageFb src={`${value}`} alt="Portfolio Images" />
                     </div>

@@ -307,8 +307,8 @@ const MemberPurchase = () => {
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>
                 )}
-                <div style={{ maxWidth: "10em" }}>
-                  <WithBackBtn>
+                <div className="m--a" style={{ maxWidth: "10em" }}>
+                  <WithBackBtn >
                     <button
                       disabled={isLoading}
                       type="submit"
