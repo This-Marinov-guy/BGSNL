@@ -1,44 +1,62 @@
 import React, { Fragment } from "react";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "react-router-dom";
-import Donation from "../../elements/Donation";
-import { useDispatch, useSelector } from "react-redux";
-import { selectDonation, showDonation } from "../../redux/donation";
 import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS, KVK } from "../../util/defines/REGIONS_DESIGN";
+import { useDispatch } from "react-redux";
+import { showModal } from "../../redux/modal";
+import { DONATION_MODAL } from "../../util/defines/common";
 
 const Footer = ({forceRegion}) => {
   const region = forceRegion ?? useParams().region;
 
-  const donation = useSelector(selectDonation)
   const dispatch = useDispatch();
 
   return (
     <Fragment>
-      {/* {donation && <Donation />} */}
       <footer className="footer-area">
-        {donation && <Donation />}
         <div className="footer-wrapper">
           <div className="row align-items-end row--0">
             <div className="col-lg-6">
-              <div className="footer-left" style={{ background: `linear-gradient(145deg, ${REGION_MAIN_COLOR[region] || '#f81f01'} 0%, #ab1c02 100%)` }}>
+              <div
+                className="footer-left"
+                style={{
+                  background: `linear-gradient(145deg, ${
+                    REGION_MAIN_COLOR[region] || "#f81f01"
+                  } 0%, #ab1c02 100%)`,
+                }}
+              >
                 <div className="inner">
                   <h2>
                     Bulgarian <br />
-                    Society <br/>
+                    Society <br />
                     Netherlands
                   </h2>
                   <div className="button-container-2">
-                    <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showDonation())}>Support us</button>
+                    <button
+                      className="rn-button-style--2 rn-btn-reverse-green"
+                      onClick={() => dispatch(showModal(DONATION_MODAL))}
+                    >
+                      Support us
+                    </button>
                     <Link style={{ height: "73px" }} to="/developers">
-                      <button className="rn-button-style--2 rn-btn-reverse-green">Developers</button>
+                      <button className="rn-button-style--2 rn-btn-reverse-green">
+                        Developers
+                      </button>
                     </Link>
                   </div>
-
                 </div>
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="footer-right" data-black-overlay="6" style={{ backgroundColor: `${REGION_SECOND_COLOR[region] || '#25632d'}` }}>
+              <div
+                className="footer-right"
+                data-black-overlay="6"
+                style={{
+                  backgroundColor: `${
+                    REGION_SECOND_COLOR[region] || "#25632d"
+                  }`,
+                }}
+              >
                 <div className="row">
                   {/* Start Single Widget  */}
                   <div className="col-lg-6 col-sm-6 col-12">
@@ -66,8 +84,8 @@ const Footer = ({forceRegion}) => {
                       <h4>Find the society on</h4>
                       <ul className="ft-link">
                         <li>
-                          <a href={`mailto:${REGION_EMAIL['netherlands']}`}>
-                            {REGION_EMAIL['netherlands']}
+                          <a href={`mailto:${REGION_EMAIL["netherlands"]}`}>
+                            {REGION_EMAIL["netherlands"]}
                           </a>
                         </li>
                       </ul>

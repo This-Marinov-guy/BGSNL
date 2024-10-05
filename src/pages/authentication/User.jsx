@@ -177,6 +177,7 @@ const User = () => {
                           {i.logo &&
                             (i.website ? (
                               <a
+                                className="center_div_col"
                                 href={i.website}
                                 target="_blank"
                                 alt="website"
@@ -190,6 +191,7 @@ const User = () => {
                                   style={{ maxWidth: "300px" }}
                                   alt="Company Logo"
                                 ></img>
+                                <small>*Click and go to the website</small>
                               </a>
                             ) : (
                               <img
@@ -202,7 +204,11 @@ const User = () => {
                               ></img>
                             ))}
                           <a
-                            href={i.contactMail ? `mailto:${i.contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}` : i.website}
+                            href={
+                              i.contactMail
+                                ? `mailto:${i.contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`
+                                : i.website
+                            }
                             target="_blank"
                             className="mt--20"
                             style={{ fontSize: "30px" }}

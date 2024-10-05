@@ -2,20 +2,18 @@ import React from "react";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "react-router-dom";
-import Donation from "../../elements/Donation";
-import { useDispatch, useSelector } from "react-redux";
-import { selectDonation, showDonation } from "../../redux/donation";
 import { REGIONS, REGION_SECOND_COLOR, REGION_SOCIALS, KVK } from "../../util/defines/REGIONS_DESIGN";
+import { showModal } from "../../redux/modal";
+import { DONATION_MODAL } from "../../util/defines/common";
+import { useDispatch } from "react-redux";
 
 const FooterTwo = ({ forceRegion }) => {
   const region = forceRegion ?? useParams().region;
 
-  const donation = useSelector(selectDonation)
   const dispatch = useDispatch();
 
   return (
     <div className="footer-style-2 ptb--30 bg_image" data-black-overlay="6" style={{ backgroundColor: `${REGION_SECOND_COLOR[region] || 'grey'}` }}>
-      {donation && <Donation />}
       <div className="wrapper plr--50 plr_sm--20">
         <div className="row align-items-center justify-content-between">
           <div className="col-lg-4 col-md-6 col-sm-6 col-12">
@@ -33,7 +31,7 @@ const FooterTwo = ({ forceRegion }) => {
                 </div>
               </div>
               <div className="button-container">
-                <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showDonation())}>Support us</button>
+                <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showModal(DONATION_MODAL))}>Support us</button>
                 <Link style={{ height: "73px" }} to="/developers">
                   <button className="rn-button-style--2 rn-btn-reverse-green">Developers</button>
                 </Link>

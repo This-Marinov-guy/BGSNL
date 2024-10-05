@@ -128,60 +128,40 @@ export const slideSlick = {
     adaptiveHeight: true
 };
 
-export const innerPageDemo = {
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    dots: true,
-    adaptiveHeight: true,
-    responsive: [
-        {
-          breakpoint: 992,
-          settings: {
-            slidesToShow: 2,
-          }
-        },
-        {
-          breakpoint: 577,
-          settings: {
-            slidesToShow: 1,
-          }
-        },
-        {
-          breakpoint: 485,
-          settings: {
-            slidesToShow: 1,
-          }
-        }
-    ]
+export const slickDot2 = {
+  autoplay: true,
+  autoplaySpeed: 10000,
+  speed: 1000,
+  infinite: true,
+  slidesToShow: 2,
+  slidesToScroll: 1,
+  arrows: true,
+  prevArrow: <CustomPrevArrow />,
+  nextArrow: <CustomNextArrow />,
+  responsive: [
+    {
+      breakpoint: 800,
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 993,
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 580,
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 481,
+      settings: {
+        slidesToShow: 1,
+      },
+    },
+  ],
 };
-
-export const testimonialActivation = {
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    dots: true,
-    adaptiveHeight: true,
-    arrows: false,
-    responsive: [
-        {
-            breakpoint: 992,
-            settings: {
-            slidesToShow: 2,
-            }
-        },
-        {
-            breakpoint: 577,
-            settings: {
-            slidesToShow: 1,
-            }
-        },
-        {
-            breakpoint: 485,
-            settings: {
-            slidesToShow: 1,
-            }
-        }
-    ]
-};
-

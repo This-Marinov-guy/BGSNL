@@ -47,6 +47,7 @@ export const RESET_PASSWORD_MODAL = 'reset_password_modal';
 export const NSE_REGISTRATION_MODAL = 'nse_registration_modal';
 export const WEB_DEV_MODAL = 'web_developer_modal';
 export const INACTIVITY_MODAL = 'inactive_user_modal';
+export const DONATION_MODAL = "donation_modal";
 
 //toasts
 export const SUCCESS_STYLE = {

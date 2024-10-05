@@ -2,12 +2,12 @@ import React from 'react'
 
 const Card2 = ({ image, title, description, link, action }) => {
     return (
-        <div className="col-lg-4 col-md-4 mt--30">
+        <div className="col-12 mt--30">
             <div className="standard-service">
                 <div className="thumbnai news-image" >
                     <img
                         src={image}
-                        style={{height: '5em'}}
+                        style={{height: '5em', objectFit: 'contain'}}
                         alt="Corporate Images"
                     />
                 </div>
