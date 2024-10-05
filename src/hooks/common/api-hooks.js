@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHttpClient } from "./http-hook";
-import { loadEvents } from "../redux/events";
-import { refreshToken } from "../redux/user";
+import { loadEvents } from "../../redux/events";
+import { refreshToken } from "../../redux/user";
 import axios from 'axios';
-import { isProd } from "../util/functions/helpers";
-import { serverEndpoint } from "../util/defines/common";
+import { isProd } from "../../util/functions/helpers";
+import { serverEndpoint } from "../../util/defines/common";
 
 export const useLoadEvents = () => {
     const [eventsLoading, setEventsLoading] = useState(false);

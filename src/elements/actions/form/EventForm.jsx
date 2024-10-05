@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Tooltip } from 'primereact/tooltip';
 import { FileUpload } from 'primereact/fileupload';
-import { useHttpClient } from "../../../hooks/http-hook";
+import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../../ui/loading/Loader";
 import ImageInput from "../../inputs/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";

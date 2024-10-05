@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectEvents } from '../../../../redux/events';
 import Filter from '../Filter';
 import { useSearchParams } from 'react-router-dom';
-import { useLoadEvents } from '../../../../hooks/api-hooks';
+import { useLoadEvents } from '../../../../hooks/common/api-hooks';
 import EventsLoading from '../../../ui/loading/EventsLoading';
 import { selectUser } from '../../../../redux/user';
 import { checkAuthorization, decodeJWT } from '../../../../util/functions/authorization';

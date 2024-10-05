@@ -7,7 +7,7 @@ import { FiChevronUp } from "react-icons/fi";
 import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
 import PhotoGallery from "./PhotoGallery";
-import { useObjectGrabUrl } from "../hooks/object-hook";
+import { useObjectGrabUrl } from "../hooks/common/object-hook";
 import { EVENT_REFLECTION_DETAILS } from "../util/defines/OPEN_EVENTS";
 import { EVENT_REFLECTIONS } from "../util/defines/PAST_EVENTS";
 

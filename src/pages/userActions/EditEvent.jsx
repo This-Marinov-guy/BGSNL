@@ -3,7 +3,7 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import EventForm from '../../elements/actions/form/EventForm';
-import { useHttpClient } from '../../hooks/http-hook';
+import { useHttpClient } from '../../hooks/common/http-hook';
 import HeaderLoadingError from '../../elements/ui/errors/HeaderLoadingError';
 import { loadSingleEvent, selectSingleEvent } from '../../redux/events';
 import { useDispatch, useSelector } from 'react-redux';

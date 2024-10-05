@@ -8,7 +8,7 @@ import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 import { removeDonation, selectDonation } from "../redux/donation";
-import { useHttpClient } from "../hooks/http-hook";
+import { useHttpClient } from "../hooks/common/http-hook";
 
 const schema = yup.object().shape({
     name: yup.string(),

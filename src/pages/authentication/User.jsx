@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useHttpClient } from "../../hooks/http-hook";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { useSelector, useDispatch } from "react-redux";
 import { FiChevronUp, FiArrowRight } from "react-icons/fi";
 import FooterTwo from "../../component/footer/FooterTwo";

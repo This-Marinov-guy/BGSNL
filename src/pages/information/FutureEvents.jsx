@@ -11,7 +11,7 @@ import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { useSelector } from "react-redux";
 import { selectEvents } from "../../redux/events";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
-import { useLoadEvents } from "../../hooks/api-hooks";
+import { useLoadEvents } from "../../hooks/common/api-hooks";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { checkObjectOfArraysEmpty } from "../../util/functions/helpers";
 import PortfolioList2 from "../../elements/portfolio/PortfolioList2";

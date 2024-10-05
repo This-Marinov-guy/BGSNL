@@ -9,13 +9,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Image } from 'primereact/image';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
 import moment from 'moment';
-import { useHttpClient } from '../../../../hooks/http-hook';
+import { useHttpClient } from '../../../../hooks/common/http-hook';
 import Loader from '../../../ui/loading/Loader';
 import { showNotification } from '../../../../redux/notification';
 import { EVENT_DELETED } from '../../../../util/defines/common';
 import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
 import GenerateTicketsModal from './GenerateTicketsModal';
-import { useLoadEvents } from '../../../../hooks/api-hooks';
+import { useLoadEvents } from '../../../../hooks/common/api-hooks';
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);

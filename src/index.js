@@ -27,7 +27,7 @@ import InactivityModal from "./elements/ui/modals/InactivityModal";
 import { calculateTimeRemaining } from "./util/functions/date";
 import { login, logout, selectUser } from "./redux/user";
 import { isTokenExpired } from "./util/functions/authorization";
-import { useHttpClient } from "./hooks/http-hook";
+import { useHttpClient } from "./hooks/common/http-hook";
 import { isObjectEmpty } from "./util/functions/helpers";
 import { startPageLoading, stopPageLoading } from "./redux/loading";
 
@@ -36,7 +36,9 @@ import "./index.scss";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
-import { useJWTRefresh } from "./hooks/api-hooks";
+import { useJWTRefresh } from "./hooks/common/api-hooks";
+import { useAppInitialization } from "./hooks/session/app-init";
+import { useAuthSession } from "./hooks/session/auth-session";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -102,140 +104,11 @@ const PageNavigationFunc = () => {
 };
 
 const Root = () => {
-  const [timeRemaining, setTimeRemaining] = useState(SESSION_TIMEOUT);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const dispatch = useDispatch();
-
-  const { sendRequest } = useHttpClient();
-  const { refreshJWTinAPI } = useJWTRefresh();
+  // DO not change order!
+  const { isLoading } = useAppInitialization();
+  const { timeRemaining } = useAuthSession();
 
   const user = useSelector(selectUser);
-
-  // start auth session logic (TODO: Should be moved elsewhere but now works here)
-  // also wants refactor
-  const onLogout = () => {
-    dispatch(removeModal(INACTIVITY_MODAL));
-    dispatch(logout());
-  };
-
-  const loginUser = async (jwtToken) => {
-    try {
-      setIsLoading(true);
-      if (isTokenExpired(jwtToken)) {
-        const token = await refreshJWTinAPI(jwtToken, false);
-
-        if (token) {
-          jwtToken = token;
-        }
-      }
-
-      // TODO: temp fix as we cannot access the token in the hook
-      const responseData = await sendRequest(
-        "user/get-subscription-status",
-        "GET",
-        {},
-        { Authorization: `Bearer ${jwtToken}` }
-      );
-
-      dispatch(
-        login({
-          token: jwtToken,
-          ...responseData,
-        })
-      );
-    } catch (err) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const clearUserStorage = () => {
-    localStorage.removeItem(LOCAL_STORAGE_SESSION_LIFE);
-    localStorage.removeItem(LOCAL_STORAGE_USER_DATA);
-  };
-
-  let target = Date.now() + SESSION_TIMEOUT;
-
-  useEffect(() => {
-    let storedUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USER_DATA));
-    let expirationTime =
-      localStorage.getItem(LOCAL_STORAGE_SESSION_LIFE) ?? Date.now();
-
-    if (
-      !isObjectEmpty(storedUser) &&
-      storedUser.token &&
-      // TODO temp fix
-      !isObjectEmpty(storedUser.token) &&
-      expirationTime > Date.now()
-    ) {
-      loginUser(storedUser.token);
-    } else {
-      clearUserStorage();
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (user && user.token) {
-      let inactivityTimeout;
-      let refreshJWTinAPITimer;
-      let intervalCheck;
-
-      refreshJWTinAPITimer = setTimeout(() => {
-        refreshJWTinAPI(user.token);
-      }, JWT_RESET_TIMER);
-
-      const resetInactivityTimeout = () => {
-        target = Date.now() + SESSION_TIMEOUT;
-
-        dispatch(removeModal(INACTIVITY_MODAL));
-        clearTimeout(inactivityTimeout);
-        clearInterval(intervalCheck);
-        setTimeRemaining(SESSION_TIMEOUT); // Reset remaining time
-
-        inactivityTimeout = setTimeout(() => {
-          onLogout();
-        }, SESSION_TIMEOUT);
-
-        // Check remaining time every second
-        intervalCheck = setInterval(() => {
-          const timeLeft = calculateTimeRemaining(target); // Calculate time remaining
-
-          setTimeRemaining(timeLeft);
-
-          if (timeLeft <= WARNING_THRESHOLD) {
-            executeWarningCode();
-          }
-
-          if (timeLeft <= 0) {
-            clearInterval(intervalCheck); // Stop checking after the timeout expires
-          }
-        }, 1000); // Check every second
-      };
-
-      const executeWarningCode = () => {
-        dispatch(showModal(INACTIVITY_MODAL));
-      };
-
-      const handleUserActivity = () => {
-        localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, target);
-        resetInactivityTimeout();
-      };
-
-      window.addEventListener("click", handleUserActivity);
-
-      resetInactivityTimeout();
-
-      return () => {
-        clearTimeout(inactivityTimeout);
-        clearTimeout(refreshJWTinAPITimer);
-        clearInterval(intervalCheck);
-        window.removeEventListener("click", handleUserActivity);
-      };
-    }
-  }, [user]);
-  // end auth session logic
 
   if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />;

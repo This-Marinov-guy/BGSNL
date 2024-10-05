@@ -1,6 +1,6 @@
 import React from 'react'
 import Loader from '../loading/Loader'
-import { useHttpClient } from '../../../hooks/http-hook'
+import { useHttpClient } from '../../../hooks/common/http-hook'
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../../redux/notification';

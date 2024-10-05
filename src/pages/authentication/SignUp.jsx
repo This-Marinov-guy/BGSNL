@@ -6,7 +6,7 @@ import { Password } from 'primereact/password';
 import { FiCheck, FiChevronLeft } from "react-icons/fi";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { useHttpClient } from "../../hooks/http-hook";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import ImageInput from "../../elements/inputs/ImageInput";
 import FooterTwo from "../../component/footer/FooterTwo";

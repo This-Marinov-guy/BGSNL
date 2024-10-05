@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import Countdown from "../../elements/ui/functional/Countdown";
-import { useHttpClient } from "../../hooks/http-hook";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { Link, useParams } from "react-router-dom";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";

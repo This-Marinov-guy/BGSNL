@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeModal, selectModal } from '../../../redux/modal';
 import { INACTIVITY_MODAL } from '../../../util/defines/common';
 import { formatMsToTimer } from '../../../util/functions/date';
-import { useJWTRefresh } from '../../../hooks/api-hooks';
+import { useJWTRefresh } from '../../../hooks/common/api-hooks';
 import { selectUser } from '../../../redux/user';
 
 function InactivityModal({ timeRemaining }) {

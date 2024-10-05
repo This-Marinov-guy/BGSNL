@@ -1,5 +1,5 @@
 import React from "react";
-import { useHttpClient } from "../../../hooks/http-hook";
+import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../loading/Loader";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from 'primereact/dialog';

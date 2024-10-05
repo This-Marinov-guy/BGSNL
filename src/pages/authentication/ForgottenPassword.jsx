@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as yup from "yup";
 import { Formik, Form, ErrorMessage } from "formik";
-import { useHttpClient } from "../../hooks/http-hook";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { Steps } from 'primereact/steps';
 import { useDispatch } from "react-redux";
 import { Dialog } from 'primereact/dialog';

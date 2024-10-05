@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { useHttpClient } from "../../hooks/http-hook";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
