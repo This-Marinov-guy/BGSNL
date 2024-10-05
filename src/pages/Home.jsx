@@ -108,7 +108,7 @@ const Home = () => {
       {/* End About Area  */}
       {/* <Greeting /> */}
       {/* Start News Area */}
-      <div className="mt--110 mb--80">
+      <div className="mt--40 mb--40">
         <NewsList />
       </div>
       {/* End News Area */}

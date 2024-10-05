@@ -42,7 +42,7 @@ const FutureEventsContent = ({ displayAll }) => {
   }
 
   return (
-    <div className="portfolio-area pt--40 pb--120 bg_color--5">
+    <div className="portfolio-area pt--40 pb--40 bg_color--5">
       <div className="rn-slick-dot">
         <div className="container">
           <div className="row mb--40">
