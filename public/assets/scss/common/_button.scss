@@ -381,13 +381,27 @@ a {
   border-radius: 20%;
   transition: 0.3s;
 
-  &.red {
-    color: #f92820;
-  }
-
   &:hover {
     box-shadow: 0 10px 15px 0 rgba(0, 0, 0, 0.1);
     transform: translateY(-5px);
+  }
+
+  &.green {
+    color: $body-color;
+
+    &:hover {
+      background-color: $body-color;
+      color: $white;
+    }
+  }
+
+  &.red {
+    color: $theme-color;
+
+    &:hover {
+      background-color: $theme-color;
+      color: $white;
+    }
   }
 }
 

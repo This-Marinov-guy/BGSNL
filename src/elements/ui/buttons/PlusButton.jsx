@@ -5,7 +5,7 @@ const PlusButton = (props) => {
   const {className, ...rest} = props;
 
   return (
-      <FiPlus className={'btn-icon-frame ' + className} {...rest} />
+      <FiPlus className={'btn-icon-frame green ' + className} {...rest} />
   )
 }
 
