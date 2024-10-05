@@ -57,8 +57,13 @@ export const useAppInitialization = () => {
         { Authorization: `Bearer ${jwtToken}` }
       );
 
+      if (!Object.prototype.hasOwnProperty.call(responseData, 'status') || !Object.prototype.hasOwnProperty.call(responseData, 'isSubscribed')) {
+        throw new Error("Server Error");
+      }
+
       dispatch(login({ token: jwtToken, ...responseData }));
     } catch (err) {
+      clearUserStorage();
       console.error("Failed to login user:", err);
     }
   };

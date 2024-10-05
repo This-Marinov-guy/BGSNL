@@ -247,7 +247,7 @@ const EventForm = (props) => {
                     poster: initialData?.poster ?? null,
                     bgImage: initialData?.bgImage ?? 1,
                     bgImageExtra: initialData?.bgImageExtra ?? null,
-                    bgSelection: initialData?.bgSelection ?? 1,
+                    bgImageSelection: initialData?.bgImageSelection ?? 1,
                 }}
             >
                 {({ values, setFieldValue, errors, isValid, dirty }) => (
@@ -593,11 +593,11 @@ const EventForm = (props) => {
                                         <h5 className="center_text">Select which want to display</h5>
                                         <div className="center_div" style={{ gap: '50px' }}>
                                             <h5 className="center_div">
-                                                <Field type="radio" name="bgSelection" value="bgImage" />
+                                                <Field type="radio" name="bgImageSelection" value={1} />
                                                 Default Backgrounds
                                             </h5>
                                             <h5 className="center_div">
-                                                <Field type="radio" name="bgSelection" value="bgImageExtra" />
+                                                <Field type="radio" name="bgImageSelection" value={2} />
                                                 Extra Background
                                             </h5>
                                         </div>
