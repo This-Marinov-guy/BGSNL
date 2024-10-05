@@ -29,7 +29,7 @@ const FutureEventsContent = ({ displayAll }) => {
     events = useSelector(selectEvents)[region];
 
     if (events && events.length) {
-      events = events.filter(event => event.hidden === false);
+      events = events.filter((event) => event.hidden === false);
     }
   }
 
@@ -55,38 +55,52 @@ const FutureEventsContent = ({ displayAll }) => {
                 </p>
               </div>
             </div>
-            {displayAll ?
-              (eventsLoading ? <EventsLoading /> : REGIONS.map((region, index) => {
-                if (events[region].length) {
-                  return <div className='col-lg-4 col-md-6 col-12 row mt--20' key={index}>
-                    <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
-                    <PortfolioList2
-                      style="society"
-                      target={events[region]}
-                      styevariation="text-center"
-                      column="col-12"
-                    />
-                  </div>
-                }
-              }))
-              :
+            {displayAll ? (
+              eventsLoading ? (
+                <EventsLoading />
+              ) : (
+                REGIONS.map((region, index) => {
+                  if (events[region].length) {
+                    return (
+                      <div
+                        className="col-lg-4 col-md-6 col-12 mt--20"
+                        key={index}
+                      >
+                        <h4 className="col-12 archive">
+                          {region.toUpperCase()}
+                        </h4>
+                        <PortfolioList2
+                          style="society"
+                          target={events[region]}
+                          styevariation="text-center"
+                          column="col-12"
+                        />
+                      </div>
+                    );
+                  }
+                })
+              )
+            ) : (
               <div className="col-lg-12">
                 <div className="row slick-space-gutter--15 slickdot--20">
-                  {eventsLoading ? <EventsLoading /> :
-                    events && events.length > 0 ? (
-                      <PortfolioList2
-                        style="society"
-                        target={events}
-                        styevariation="text-center"
-                        column="col-lg-4 col-md-5 col-sm-6"
-                      />
-                    ) : (
-                      <p className="col-lg-6 mt--20 mb--20">
-                        Currently there are no upcoming other events. Follow us for updates!
-                      </p>
-                    )}
+                  {eventsLoading ? (
+                    <EventsLoading />
+                  ) : events && events.length > 0 ? (
+                    <PortfolioList2
+                      style="society"
+                      target={events}
+                      styevariation="text-center"
+                      column="col-lg-4 col-md-5 col-sm-6"
+                    />
+                  ) : (
+                    <p className="col-lg-6 mt--20 mb--20">
+                      Currently there are no upcoming other events. Follow us
+                      for updates!
+                    </p>
+                  )}
                 </div>
-              </div>}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -95,9 +109,7 @@ const FutureEventsContent = ({ displayAll }) => {
 };
 
 const FutureOtherEventsContent = () => {
-
   const { region } = useParams();
-
 
   return (
     <div className="portfolio-area pt--20 pb--100 bg_color--5">
@@ -125,7 +137,8 @@ const FutureOtherEventsContent = () => {
                   />
                 ) : (
                   <p className="col-lg-6 mt--20 mb--20">
-                    Currently there are no upcoming other events. Follow us for updates!
+                    Currently there are no upcoming other events. Follow us for
+                    updates!
                   </p>
                 )}
               </div>

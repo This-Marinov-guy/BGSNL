@@ -9,7 +9,7 @@ const PortfolioList2 = (props) => {
         <React.Fragment>
             {target
                 .map((value, index) => (
-                    <div className={`mt--10 mb--10 ${column}`} key={index}>
+                    <div className={`mt--20 mb--20 ${column}`} key={index}>
                         <div className={`portfolio-2 ${styevariation}`}>
                             <div className="thumbnail-inner" >
                                 <div className={`thumbnail`} style={{ backgroundImage: `url(${value.poster})` }}></div>
