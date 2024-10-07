@@ -383,7 +383,7 @@ const EventForm = (props) => {
                                         name="isTicketLink"
                                     ></Field>
                                     <p className="information">
-                                        Buy tickets from external platform
+                                        Buy tickets from external platform (outside the website)
                                     </p>
                                 </div>
                             </div>
@@ -394,6 +394,7 @@ const EventForm = (props) => {
                                     <h5 className="mt--10"></h5>
                                     <div className="rn-form-group">
                                         <Field type="text" placeholder="External Platform Ticket Link" name="ticketLink" />
+                                        <small>*Link will redirect the client outside the website</small>
                                         <ErrorMessage
                                             className="error"
                                             name="ticketLink"
@@ -508,40 +509,40 @@ const EventForm = (props) => {
                                     <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
                                         <h5 className="center_text">Name on ticket color</h5>
                                         <div className="center_div" style={{ gap: '50px' }}>
-                                            <h5 className="center_div">
+                                            <p className="center_div">
                                                 <Field type="radio" name="ticketColor" value="#faf9f6" />
                                                 Light
-                                            </h5>
-                                            <h5 className="center_div">
+                                            </p>
+                                            <p className="center_div">
                                                 <Field type="radio" name="ticketColor" value="#272528" />
                                                 Dark
-                                            </h5>
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
                                         <h5 className="center_text">With Guest Name</h5>
                                         <div className="center_div" style={{ gap: '50px' }}>
-                                            <h5 className="center_div">
+                                            <p className="center_div">
                                                 <Field type="radio" name="ticketName" value={'true'} />
                                                 Yes
-                                            </h5>
-                                            <h5 className="center_div">
+                                            </p>
+                                            <p className="center_div">
                                                 <Field type="radio" name="ticketName" value={'false'} />
                                                 No
-                                            </h5>
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
                                         <h5 className="center_text">With QR</h5>
                                         <div className="center_div" style={{ gap: '50px' }}>
-                                            <h5 className="center_div">
+                                            <p className="center_div">
                                                 <Field type="radio" name="ticketQR" value={'true'} />
                                                 Yes
-                                            </h5>
-                                            <h5 className="center_div">
+                                            </p>
+                                            <p className="center_div">
                                                 <Field type="radio" name="ticketQR" value={'false'} />
                                                 No
-                                            </h5>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -584,22 +585,23 @@ const EventForm = (props) => {
                                         style={{ height: '150px' }}
                                         onChange={(event) => {
                                             setFieldValue("bgImageExtra", event.target.files[0]);
+                                            setFieldValue("bgImageSelection", 2);
                                         }}
                                     />
                                     <p className="mt--10 information center_text">
                                         *choose a wide one
                                     </p>
-                                    {(values.bgImage && values.bgImageExtra) && <div className="col-lg-6 col-md-6 col-6" style={{ margin: 'auto' }}>
-                                        <h5 className="center_text">Select which want to display</h5>
+                                    {(values.bgImage && values.bgImageExtra) && <div className="col-12" style={{ margin: 'auto' }}>
+                                        <h5 className="center_text">Select which one to display</h5>
                                         <div className="center_div" style={{ gap: '50px' }}>
-                                            <h5 className="center_div">
+                                            <p className="center_div">
                                                 <Field type="radio" name="bgImageSelection" value={1} />
                                                 Default Backgrounds
-                                            </h5>
-                                            <h5 className="center_div">
+                                            </p>
+                                            <p className="center_div">
                                                 <Field type="radio" name="bgImageSelection" value={2} />
                                                 Extra Background
-                                            </h5>
+                                            </p>
                                         </div>
                                     </div>}
                                 </div>
