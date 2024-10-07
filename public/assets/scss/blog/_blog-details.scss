@@ -199,7 +199,8 @@ BLog Details Styles
   }
 }
 
-.rn-form-group input, .rn-form-group textarea {
+.rn-form-group input,
+.rn-form-group textarea {
   border-radius: 2%;
 }
 
@@ -245,4 +246,39 @@ BLog Details Styles
   text-align: end;
   font-size: 20px !important;
   font-style: italic;
+}
+
+.image-select-container {
+  position: relative;
+}
+
+.image-select-dropdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-height: 400px;
+  width: 300px;
+  margin-top: 5px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: white;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+}
+
+.image-option {
+  width: 100%;
+}
+
+.image-option img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  cursor: pointer;
 }
