@@ -688,6 +688,7 @@ const EventForm = (props) => {
                 >
                   <ImageSelection
                     placeholder="Choose default background"
+                    initialValue={values.bgImage}
                     onSelect={(option) => setFieldValue("bgImageExtra", option)}
                     options={bgs}
                   />

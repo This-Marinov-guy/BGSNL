@@ -24,14 +24,14 @@ export const eventsSlice = createSlice({
         addEventToAll: (state, action) => {
             const event = action.payload;
 
-            state.all[event.region].push(event);
+            state.all[event.region] = [...state.all[event.region], event];
         },
         editEventFromAll: (state, action) => {
             const event = action.payload;
             const index = state.all[event.region].findIndex(e => e.id === event.id);
 
             if (index !== -1) {
-                state.all[event.region][index] = { ...state.all[index], ...event };
+                state.all[event.region][index] = event;
             }
         },
 
@@ -39,7 +39,7 @@ export const eventsSlice = createSlice({
             reducer(state, action) {
                 const { region, eventId } = action.payload;
 
-                state.all[region].filter(e => e.id !== eventId);
+                state.all[region] = state.all[region].filter(e => e.id !== eventId);
             },
             prepare(values) {
                 return {
