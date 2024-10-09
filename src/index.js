@@ -264,7 +264,7 @@ const Root = () => {
                 exact
                 path={`/user/add-event`}
                 element={
-                  <AuthLayout access={ACCESS_3}>
+                  <AuthLayout access={ACCESS_4}>
                     <AddEvent />
                   </AuthLayout>
                 }
@@ -273,7 +273,7 @@ const Root = () => {
                 exact
                 path={`/user/edit-event/:eventId`}
                 element={
-                  <AuthLayout access={ACCESS_3}>
+                  <AuthLayout access={ACCESS_4}>
                     <EditEvent />
                   </AuthLayout>
                 }
@@ -282,7 +282,7 @@ const Root = () => {
                 exact
                 path={`/user/dashboard`}
                 element={
-                  <AuthLayout access={ACCESS_3}>
+                  <AuthLayout access={ACCESS_4}>
                     <EventDashboard />
                   </AuthLayout>
                 }
