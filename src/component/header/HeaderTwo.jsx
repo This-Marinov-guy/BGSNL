@@ -13,7 +13,7 @@ import {
   decodeJWT,
 } from "../../util/functions/authorization";
 import NewBadge from "../../elements/ui/badges/NewBadge";
-import { ACCESS_2, ACCESS_3 } from "../../util/defines/common";
+import { ACCESS_2, ACCESS_3, ACCESS_4 } from "../../util/defines/common";
 import LogoutAlert from "../../elements/ui/alerts/Logout";
 import { selectArticles } from "../../redux/articles";
 import { encodeForURL } from "../../util/functions/helpers";
@@ -198,7 +198,7 @@ const HeaderTwo = (props) => {
                         </li>
                       </ul>
                     </li>
-                    {checkAuthorization(user.token, ACCESS_3) && (
+                    {checkAuthorization(user.token, ACCESS_4) && (
                       <li className="has-dropdown">
                         <a style={{ cursor: "pointer" }}>Event's Panel</a>
                         <ul className="submenu">
