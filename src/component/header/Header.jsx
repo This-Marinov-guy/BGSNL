@@ -7,17 +7,24 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
-import { checkAuthorization, decodeJWT } from "../../util/functions/authorization";
+import {
+  checkAuthorization,
+  decodeJWT,
+} from "../../util/functions/authorization";
 import NewBadge from "../../elements/ui/badges/NewBadge";
 import { ACCESS_2, ACCESS_3 } from "../../util/defines/common";
 import LogoutAlert from "../../elements/ui/alerts/Logout";
+import { selectArticles } from "../../redux/articles";
+import { encodeForURL } from "../../util/functions/helpers";
 
 const Header = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
   const [logoutAlert, setLogoutAlert] = useState(false);
 
   const user = useSelector(selectUser);
-  const userRegion = user.token ? decodeJWT(user.token).region : '';
+  const userRegion = user.token ? decodeJWT(user.token).region : "";
+
+  const articles = useSelector(selectArticles);
 
   const region = props.forceRegion ?? useParams().region;
 
@@ -38,8 +45,12 @@ const Header = (props) => {
   let logoUrl = (
     <ImageFb
       className="logo"
-      src={`/assets/images/logo/${REGIONS.includes(region) ? region : 'logo'}.webp`}
-      fallback={`/assets/images/logo/${REGIONS.includes(region) ? region : 'logo'}.jpg`}
+      src={`/assets/images/logo/${
+        REGIONS.includes(region) ? region : "logo"
+      }.webp`}
+      fallback={`/assets/images/logo/${
+        REGIONS.includes(region) ? region : "logo"
+      }.jpg`}
       alt="Logo"
     />
   );
@@ -56,7 +67,7 @@ const Header = (props) => {
         >
           <div className="header-left">
             <div className="logo">
-              <Link to={region ? `/${region}` : '/'}>{logoUrl}</Link>
+              <Link to={region ? `/${region}` : "/"}>{logoUrl}</Link>
             </div>
           </div>
           <div className="header-right">
@@ -66,32 +77,38 @@ const Header = (props) => {
                   <Link to={`/${region ?? userRegion}`}>Home</Link>
                 </li>
                 <li className="has-dropdown">
-                  <a style={{ cursor: 'pointer' }}>Regions</a>
+                  <a style={{ cursor: "pointer" }}>Regions</a>
                   <ul className="submenu">
                     <li>
-                      <Link to='/'>Netherlands</Link>
+                      <Link to="/">Netherlands</Link>
                     </li>
                     {REGIONS.map((region, index) => {
-                      if (region === 'eindhoven') {
-                        return <li key={index}>
-                          <Link to={"/" + region}>
-                            <div className="hor_section">
-                              {capitalizeFirstLetter(region)}
-                              <NewBadge />
-                            </div>
-                          </Link>
-                        </li>
+                      if (region === "eindhoven") {
+                        return (
+                          <li key={index}>
+                            <Link to={"/" + region}>
+                              <div className="hor_section">
+                                {capitalizeFirstLetter(region)}
+                                <NewBadge />
+                              </div>
+                            </Link>
+                          </li>
+                        );
                       }
 
-                      return <li key={index}>
-                        <Link to={"/" + region}>{capitalizeFirstLetter(region)}</Link>
-                      </li>
+                      return (
+                        <li key={index}>
+                          <Link to={"/" + region}>
+                            {capitalizeFirstLetter(region)}
+                          </Link>
+                        </li>
+                      );
                     })}
-
                   </ul>
                 </li>
-                {region ? <Fragment>
-                  {/* <li className="has-dropdown">
+                {region ? (
+                  <Fragment>
+                    {/* <li className="has-dropdown">
                     <a style={{ cursor: 'pointer' }}>Structure</a>
                     <ul className="submenu">
                       <li>
@@ -102,30 +119,50 @@ const Header = (props) => {
                       </li>
                     </ul>
                   </li> */}
-                  <li className="has-dropdown">
-                    <Link to={`/${region}/events`}>Events</Link>
-                    <ul className="submenu">
-                      <li>
-                        <Link to={`/${region}/future-events`}>Future Events</Link>
-                      </li>
-                      <li>
-                        <Link to={`/${region}/past-events`}>Past Events</Link>
-                      </li>
-                    </ul>
+                    <li className="has-dropdown">
+                      <Link to={`/${region}/events`}>Events</Link>
+                      <ul className="submenu">
+                        <li>
+                          <Link to={`/${region}/future-events`}>
+                            Future Events
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to={`/${region}/past-events`}>Past Events</Link>
+                        </li>
+                      </ul>
+                    </li>
+                  </Fragment>
+                ) : (
+                  <li>
+                    <Link to="/about">About</Link>
                   </li>
-                </Fragment> : <li>
-                  <Link to="/about">About</Link>
-                </li>}
-
+                )}
 
                 <li className="has-dropdown">
-                  <a style={{ cursor: 'pointer' }}>Articles</a>
+                  <a style={{ cursor: "pointer" }}>Articles</a>
                   <ul className="submenu">
+                    {articles?.length > 0 &&
+                      articles.map((article, i) => (
+                        <li key={i}>
+                          <Link
+                            to={`/articles/${article.id}/${encodeForURL(
+                              article.title
+                            )}`}
+                          >
+                            {article.title}
+                          </Link>
+                        </li>
+                      ))}
                     <li>
-                      <Link to="/articles/from-bulgaria-to-the-netherlands">From Bulgaria To The Netherlands</Link>
+                      <Link to="/articles/from-bulgaria-to-the-netherlands">
+                        From Bulgaria To The Netherlands
+                      </Link>
                     </li>
                     <li>
-                      <Link to="/articles/acedemie-minerva">Academie Minerva</Link>
+                      <Link to="/articles/acedemie-minerva">
+                        Academie Minerva
+                      </Link>
                     </li>
                     <li>
                       <Link to="/articles/toni-villa">Toni's Villa</Link>
@@ -133,13 +170,15 @@ const Header = (props) => {
                   </ul>
                 </li>
 
-                {region && <li>
-                  <Link to={`/${region}/contact`}>Contact</Link>
-                </li>}
+                {region && (
+                  <li>
+                    <Link to={`/${region}/contact`}>Contact</Link>
+                  </li>
+                )}
                 {user.token && (
                   <>
                     <li className="has-dropdown">
-                      <a style={{ cursor: 'pointer' }}>Profile</a>
+                      <a style={{ cursor: "pointer" }}>Profile</a>
                       <ul className="submenu">
                         <li>
                           <Link to={`/user`}>My details</Link>
@@ -155,27 +194,33 @@ const Header = (props) => {
                         </li>
                       </ul>
                     </li>
-                    {checkAuthorization(user.token, ACCESS_3) && <li className="has-dropdown">
-                      <a style={{ cursor: 'pointer' }}>Event's Panel</a>
-                      <ul className="submenu">
-                        <li>
-                          <Link to="/user/dashboard">Dashboard</Link>
-                        </li>
-                        <li>
-                          <Link to="/user/add-event">Add Event</Link>
-                        </li>
-                      </ul>
-                    </li>}
+                    {checkAuthorization(user.token, ACCESS_3) && (
+                      <li className="has-dropdown">
+                        <a style={{ cursor: "pointer" }}>Event's Panel</a>
+                        <ul className="submenu">
+                          <li>
+                            <Link to="/user/dashboard">Dashboard</Link>
+                          </li>
+                          <li>
+                            <Link to="/user/add-event">Add Event</Link>
+                          </li>
+                        </ul>
+                      </li>
+                    )}
                   </>
                 )}
 
                 <li>
                   <div className="header-btn">
                     {!user.token ? (
-                      <button onClick={() => {
-                        navigate("/login");
-                        if (routePath !== '/') sessionStorage.setItem('prevUrl', routePath);
-                      }} className="rn-button-style--2 rn-btn-reverse-green">
+                      <button
+                        onClick={() => {
+                          navigate("/login");
+                          if (routePath !== "/")
+                            sessionStorage.setItem("prevUrl", routePath);
+                        }}
+                        className="rn-button-style--2 rn-btn-reverse-green"
+                      >
                         <span>Log In</span>
                       </button>
                     ) : (

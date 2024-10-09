@@ -44,6 +44,7 @@ import { useAuthSession } from "./hooks/session/auth-session";
 const Home = lazy(() => import("./pages/Home"));
 const Toni = lazy(() => import("./pages/information/articles/Toni"));
 const Minerva = lazy(() => import("./pages/information/articles/Minerva"));
+const Article = lazy(() => import("./pages/information/articles/Article"));
 const StudentMigration = lazy(() =>
   import("./pages/information/articles/StudentMigration")
 );
@@ -140,6 +141,11 @@ const Root = () => {
               exact
               path={`/articles/acedemie-minerva`}
               element={<Minerva />}
+            />
+            <Route
+              exact
+              path={`/articles/:articleId/:articleTitle`}
+              element={<Article />}
             />
             {/* <Route exact path={`/active-member`} >
                 <ActiveMember />

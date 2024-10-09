@@ -4,6 +4,7 @@ import loadingReducer from './loading'
 import modalReducer from "./modal";
 import userReducer from "./user";
 import eventsReducer from "./events";
+import articlesReducer from "./articles";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     modal: modalReducer,
     user: userReducer,
     events: eventsReducer,
+    articles: articlesReducer,
   },
 });

@@ -10,9 +10,11 @@ import {
 import BirthdayModal from "../elements/ui/modals/BirthdayModal";
 import RecruitModal from "../elements/ui/modals/RecruitModal";
 import DonationModal from "../elements/ui/modals/DonationModal";
+import { useArticlesLoad } from "../hooks/common/api-hooks";
 
 const MainLayout = ({ children }) => {
   const toast = useRef(null);
+  const {reloadArticles} = useArticlesLoad();
 
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
@@ -29,6 +31,8 @@ const MainLayout = ({ children }) => {
     if (process.env.REACT_APP_GTM_ENABLE) {
       gaTrack();
     }
+
+    reloadArticles();
   }, []);
 
   useEffect(() => {
