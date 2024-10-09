@@ -48,10 +48,10 @@ const Article = () => {
       {/* End Breadcrump Area */}
 
       {/* Start Article  Details */}
-      <div className="blogger-post" style={{ padding: "10px 5%" }}>
-        <h1 dangerouslySetInnerHTML={{ __html: selectedArticle.title }} />
+      <style>{selectedArticle.styles}</style>
+      <div className="wordpress-embedded-container">
+        <h1 className="mb--20" dangerouslySetInnerHTML={{ __html: selectedArticle.title }} />
         <div
-          className="post-content wp-content"
           dangerouslySetInnerHTML={{
             __html: selectedArticle.content,
           }}

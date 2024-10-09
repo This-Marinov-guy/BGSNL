@@ -11,7 +11,7 @@ const NoArticleFound = () => {
       <HeaderTwo />
       <div className="ver_section mt--200">
         <ImageFb
-          className="mr--40 logo-md logo-rounded"
+          className="logo-md logo-rounded"
           src="/assets/images/avatars/empty.jpg"
           alt="No Article"
         />

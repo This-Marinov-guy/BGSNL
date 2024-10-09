@@ -2,6 +2,14 @@
   animation: slide-down 300ms ease-out forwards;
 }
 
+.wordpress-embedded-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px 5%;
+}
+
 .birthday-hat {
   position: absolute;
   height: 150px;
@@ -10,7 +18,8 @@
   transform: rotate(-35deg);
 
   @media only screen and (min-width: 600px) and (max-width: 1200px) {
-    top: 12vh;  }
+    top: 12vh;
+  }
 
   @media only screen and (max-width: 600px) {
     scale: 0.8;
