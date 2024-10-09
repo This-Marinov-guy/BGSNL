@@ -86,10 +86,11 @@ export const useArticlesLoad = () => {
 
       if (responseData.data) {
         dispatch(loadSingleArticle(responseData.data));
-        dispatch(stopPageLoading());
       }
     } catch (err) {
       return null;
+    } finally {
+        dispatch(stopPageLoading());
     }
   };
 

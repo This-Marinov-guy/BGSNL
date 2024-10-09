@@ -12,6 +12,8 @@ import { decodeFromURL } from "../../../util/functions/helpers";
 import { selectSingleArticle } from "../../../redux/articles";
 import { selectPageLoading } from "../../../redux/loading";
 import PageLoading from "../../../elements/ui/loading/PageLoading";
+import ImageFb from "../../../elements/ui/media/ImageFb";
+import NoArticleFound from "../../../elements/ui/errors/NoArticleFound";
 
 const Article = () => {
   const { articleId } = useParams();
@@ -25,8 +27,12 @@ const Article = () => {
     reloadArticleDetails(articleId);
   }, []);
 
-  if (pageLoading || !selectedArticle) {
+  if (pageLoading) {
     return <PageLoading />;
+  }
+
+  if (!selectedArticle) {
+    return <NoArticleFound />;
   }
 
   return (
