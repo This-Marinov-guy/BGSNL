@@ -7,8 +7,8 @@ import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../../ui/loading/Loader";
 import ImageInput from "../../inputs/common/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
-import StringDynamicInputs from "../../inputs/StringDynamicInputs";
-import InputsBuilder from "../../inputs/InputsBuilder";
+import StringDynamicInputs from "../../inputs/common-complicated/StringDynamicInputs";
+import InputsBuilder from "../../inputs/builders/InputsBuilder";
 import {
   askBeforeRedirect,
   isObjectEmpty,
@@ -22,8 +22,8 @@ import {
   INCORRECT_MISSING_DATA,
 } from "../../../util/defines/common";
 import LongLoading from "../../ui/loading/LongLoading";
-import SubEventBuilder from "../../inputs/SubEventBuilder";
-import { Calendar, CalendarWithClock } from "../../inputs/common/Calendar";
+import SubEventBuilder from "../../inputs/builders/SubEventBuilder";
+import { CalendarWithClock } from "../../inputs/common/Calendar";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";

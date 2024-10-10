@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import XButton from '../ui/buttons/XButton';
-import PlusButton from '../ui/buttons/PlusButton';
+import XButton from '../../ui/buttons/XButton';
+import PlusButton from '../../ui/buttons/PlusButton';
 
 const StringDynamicInputs = (props) => {
   const [inputs, setInputs] = useState(props.initialValues?.length > 0 ? props.initialValues : []);

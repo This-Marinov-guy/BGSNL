@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
-import StringDynamicInputs from "./StringDynamicInputs";
-import PlusButton from "../ui/buttons/PlusButton";
-import XButton from "../ui/buttons/XButton";
+import StringDynamicInputs from "../common-complicated/StringDynamicInputs";
+import PlusButton from "../../ui/buttons/PlusButton";
+import XButton from "../../ui/buttons/XButton";
 
 const InputsBuilder = (props) => {
   //schema

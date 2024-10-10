@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import PlusButton from '../ui/buttons/PlusButton';
-import XButton from '../ui/buttons/XButton';
+import PlusButton from '../../ui/buttons/PlusButton';
+import XButton from '../../ui/buttons/XButton';
 
 const SubEventBuilder = (props) => {
     const emptyInputObj = { description: '', links: [{ name: '', href: '' }] };
