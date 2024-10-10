@@ -30,12 +30,12 @@ Mainmenu Area
         > ul {
           &.submenu {
             @extend %liststyle;
-            min-width: 240px;
+            min-width: 340px;
             height: auto;
             overflow-y: scroll;
             position: absolute;
             top: 100%;
-            left: 0;
+            left: -150%;
             z-index: 90;
             opacity: 0;
             visibility: hidden;
@@ -45,18 +45,29 @@ Mainmenu Area
             @extend %transition;
             padding: 12px 0;
             border-radius: 4px;
+
+            @media #{$smlg-device} {
+              min-width: 240px;
+              left: 0;
+            }
+
             li {
               position: relative;
               a,
               h3 {
+                line-height: normal !important;
                 font-size: 26px;
                 font-weight: 500;
-                padding: 5px 20px;
+                padding: 10px 20px;
                 display: block;
                 color: #1f1f25;
                 margin: 0 10px;
                 border-radius: 3px;
                 @extend %transition;
+
+                @media #{$smlg-device} {
+                  margin: 10px;
+                }
               }
               &:hover {
                 > a,
@@ -202,12 +213,10 @@ Mainmenu Area
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
   }
-
 }
 
 @media #{$sm-layout} {
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
   }
-
 }
