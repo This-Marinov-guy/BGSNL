@@ -5,7 +5,7 @@ import { removeModal, selectModal } from "../../../redux/modal";
 import { FiX } from "react-icons/fi";
 import ModalWindow from "./ModalWindow";
 import Loader from "../../../elements/ui/loading/Loader";
-import ImageInput from "../../../elements/inputs/ImageInput";
+import ImageInput from "../../inputs/common/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { USER_UPDATE_MODAL } from "../../../util/defines/common";

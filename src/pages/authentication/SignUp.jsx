@@ -8,7 +8,7 @@ import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
-import ImageInput from "../../elements/inputs/ImageInput";
+import ImageInput from "../../elements/inputs/common/ImageInput";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
@@ -23,7 +23,7 @@ import { Steps } from 'primereact/steps';
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import { BIRTHDAY_MODAL, INCORRECT_MISSING_DATA } from "../../util/defines/common";
-import { Calendar } from "../../elements/inputs/Calendar";
+import { Calendar } from "../../elements/inputs/common/Calendar";
 import { showNotification } from "../../redux/notification";
 
 const schema = yup.object().shape({

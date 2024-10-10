@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { FileUpload } from "primereact/fileupload";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../../ui/loading/Loader";
-import ImageInput from "../../inputs/ImageInput";
+import ImageInput from "../../inputs/common/ImageInput";
 import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/StringDynamicInputs";
 import InputsBuilder from "../../inputs/InputsBuilder";
@@ -13,10 +13,9 @@ import {
   askBeforeRedirect,
   isObjectEmpty,
   isProd,
-  resizeFile,
 } from "../../../util/functions/helpers";
 import { useNavigate, useParams } from "react-router-dom";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { ConfirmDialog } from "primereact/confirmdialog";
 import {
   EVENT_ADDED,
   EVENT_EDITED,
@@ -24,7 +23,7 @@ import {
 } from "../../../util/defines/common";
 import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/SubEventBuilder";
-import { Calendar, CalendarWithClock } from "../../inputs/Calendar";
+import { Calendar, CalendarWithClock } from "../../inputs/common/Calendar";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";

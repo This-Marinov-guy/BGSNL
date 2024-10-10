@@ -312,3 +312,14 @@ hr {
 .pointer {
   cursor: pointer;
 }
+
+label {
+  background-color: $label-color;
+  width: auto;
+  padding: 2px 5px;
+}
+
+::placeholder {
+  font-weight: 800;
+  border-radius: 10px !important;
+}
