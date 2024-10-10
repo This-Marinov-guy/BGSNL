@@ -14,7 +14,9 @@ import {
 
 export const useAuthSession = () => {
   const [timeRemaining, setTimeRemaining] = useState(SESSION_TIMEOUT);
+
   const user = useSelector(selectUser);
+
   const dispatch = useDispatch();
   const { refreshJWTinAPI } = useJWTRefresh();
 
@@ -33,7 +35,9 @@ export const useAuthSession = () => {
         setTimeRemaining(SESSION_TIMEOUT);
 
         inactivityTimeout = setTimeout(() => {
+          window.location.href = '/';
           dispatch(logout());
+          dispatch(removeModal(INACTIVITY_MODAL));
         }, SESSION_TIMEOUT);
 
         intervalCheck = setInterval(() => {

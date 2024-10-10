@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHttpClient } from "../common/http-hook";
 import { useJWTRefresh } from "../common/api-hooks";
-import { login } from "../../redux/user";
+import { login, selectUser } from "../../redux/user";
 import { isObjectEmpty } from "../../util/functions/helpers";
 import {
   LOCAL_STORAGE_SESSION_LIFE,
@@ -13,7 +13,9 @@ import { isTokenExpired } from "../../util/functions/authorization";
 export const useAppInitialization = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
+
   const { sendRequest } = useHttpClient();
   const { refreshJWTinAPI } = useJWTRefresh();
 

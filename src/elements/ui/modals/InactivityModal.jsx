@@ -28,7 +28,7 @@ function InactivityModal({ timeRemaining }) {
                     Your session is about to expire if you stay inactive
                 </h3>
                 <p className="center_text">
-                    Yoo have {formatMsToTimer(timeRemaining)} seconds until you are automatically get signed out
+                    Yoo have {formatMsToTimer(timeRemaining)} seconds until you are automatically signed out
                 </p>
                 <button onClick={closeHandler} className="rn-button-style--2 rn-btn-reverse-green mt--40">
                     Stay active
