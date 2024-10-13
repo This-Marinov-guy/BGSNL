@@ -32,23 +32,26 @@ export const Calendar = (props) => {
   };
 
   return (
-    <div ref={calendarRef}>
-      <div className="rn-form-group center_div mt--20">
-        <input
-          type="text"
-          value={selected ? selected.toLocaleDateString() : ""}
-          placeholder={props.placeholder ?? "Select a date"}
-          onClick={toggleCalendar}
-        />
-        <FiCalendar
-          onClick={toggleCalendar}
-          style={{
-            cursor: "pointer",
-          }}
-        />
-      </div>
+    <div
+      className="rn-form-group center_div"
+      style={{ marginTop: "15px" }}
+      ref={calendarRef}
+    >
+      {" "}
+      <input
+        type="text"
+        value={selected ? new Date(selected).toLocaleDateString() : ""}
+        placeholder={props.placeholder ?? "Select a date"}
+        onClick={toggleCalendar}
+      />
+      <FiCalendar
+        onClick={toggleCalendar}
+        style={{
+          cursor: "pointer",
+        }}
+      />
       {isOpen && (
-        <div className="calendar">
+        <div className="calendar" style={{ marginBlockEnd: "1em" }}>
           <DayPicker
             mode="single"
             locale="en-nl"

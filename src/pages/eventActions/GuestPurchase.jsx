@@ -37,6 +37,7 @@ import {
   buildSchemaExtraInputs,
   constructInitialExtraFormValues,
 } from "../../util/functions/input-helpers";
+import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -158,10 +159,16 @@ const GuestPurchase = () => {
               </p>
               <p>Address: {selectedEvent.location}</p>
               <p>
-                Price:{" "}
-                {selectedEvent.isFree
-                  ? " FREE"
-                  : selectedEvent.product?.guest.price + " euro"}
+                <span
+                  style={{ justifyContent: "flex-start" }}
+                  className="center_div"
+                >
+                  Price :{" "}
+                  {selectedEvent.isFree
+                    ? " FREE"
+                    : selectedEvent.product?.guest.price + " euro"}
+                  {<DynamicTicketBadge product={selectedEvent?.product} />}
+                </span>
               </p>
             </div>
           </div>
@@ -385,7 +392,7 @@ const GuestPurchase = () => {
                           />
                         </div>
                       </div>
-                      {selectedEvent.extraInputsForm.length > 0 && (
+                      {selectedEvent.extraInputsForm?.length > 0 && (
                         <FormExtras inputs={selectedEvent.extraInputsForm} />
                       )}
                       <div className="col-lg-12 col-md-12 col-12">

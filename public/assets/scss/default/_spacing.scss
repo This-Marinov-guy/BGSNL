@@ -458,7 +458,7 @@
 }
 
 .center_div {
-  display: flex;
+  display: flex !important;
   gap: 5px;
   align-items: center;
   justify-content: center;

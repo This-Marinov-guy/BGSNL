@@ -41,6 +41,7 @@ import {
   buildSchemaExtraInputs,
   constructInitialExtraFormValues,
 } from "../../util/functions/input-helpers";
+import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -293,22 +294,32 @@ const MemberPurchase = () => {
                     </p>
                     <p>Address: {selectedEvent.location}</p>
                     <p>
-                      Price:{" "}
-                      {estimatePriceByEvent(
-                        selectedEvent,
-                        { ...currentUser, token: user.token ?? "" },
-                        normalTicket
-                      )}
+                      <span
+                        style={{ justifyContent: "flex-start" }}
+                        className="center_div"
+                      >
+                        Price :{" "}
+                        {estimatePriceByEvent(
+                          selectedEvent,
+                          { ...currentUser, token: user.token ?? "" },
+                          normalTicket
+                        )}
+                        {
+                          <DynamicTicketBadge
+                            product={selectedEvent?.product}
+                          />
+                        }
+                      </span>
                     </p>
                   </div>
                 </div>
-                {selectedEvent.extraInputsForm.length > 0 && (
+                {selectedEvent.extraInputsForm?.length > 0 && (
                   <div className="col-lg-6 col-md-12 col-12 row container mt--40">
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>
                 )}
                 <div className="m--a" style={{ maxWidth: "10em" }}>
-                  <WithBackBtn >
+                  <WithBackBtn>
                     <button
                       disabled={isLoading}
                       type="submit"

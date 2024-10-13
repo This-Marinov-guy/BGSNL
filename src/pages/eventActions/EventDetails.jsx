@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import PageHelmet from "../../component/common/Helmet";
 import ScrollToTop from "react-scroll-up";
@@ -19,6 +18,7 @@ import { estimatePriceByEvent } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
+import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -33,23 +33,32 @@ const EventDetails = () => {
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const responseData = await sendRequest(`event/event-details/${eventId}`, "GET", null, {}, false);
+        const responseData = await sendRequest(
+          `event/event-details/${eventId}`,
+          "GET",
+          null,
+          {},
+          false
+        );
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
-      } catch (err) { }
+      } catch (err) {}
     };
 
     getEventDetails();
-  }, [])
+  }, []);
 
   if (loading) {
-    return <HeaderLoadingError/>
+    return <HeaderLoadingError />;
   } else if (!selectedEvent) {
-    return <NoEventFound/>
+    return <NoEventFound />;
   }
 
   const price = estimatePriceByEvent(selectedEvent, user);
-  const imageUrl = (selectedEvent.bgImageExtra && selectedEvent?.bgImageSelection == 2) ? selectedEvent.bgImageExtra : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
+  const imageUrl =
+    selectedEvent.bgImageExtra && selectedEvent?.bgImageSelection == 2
+      ? selectedEvent.bgImageExtra
+      : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
 
   return (
     <React.Fragment>
@@ -71,7 +80,9 @@ const EventDetails = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">{selectedEvent.newTitle || selectedEvent.title}</h2>
+                <h2 className="title theme-gradient">
+                  {selectedEvent.newTitle || selectedEvent.title}
+                </h2>
                 <p>{selectedEvent.description}</p>
               </div>
             </div>
@@ -89,14 +100,19 @@ const EventDetails = () => {
                 <div className="inner">
                   <h2>About</h2>
                   <p className="subtitle">{selectedEvent.title}</p>
-                  <p style={{ whiteSpace: 'pre-line' }}>{selectedEvent.text}</p>
+                  <p style={{ whiteSpace: "pre-line" }}>{selectedEvent.text}</p>
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
                       <span>When</span>
-                      <h4>{moment(selectedEvent.date).format(MOMENT_DATE_TIME)}</h4>
+                      <h4>
+                        {moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
+                      </h4>
                       {selectedEvent.correctedDate && (
                         <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Date/Time -> " + moment(selectedEvent.correctedDate).format("Do MMM YY hh:mm")}
+                          {"Updated Date/Time -> " +
+                            moment(selectedEvent.correctedDate).format(
+                              "Do MMM YY hh:mm"
+                            )}
                         </p>
                       )}
                     </div>
@@ -107,54 +123,103 @@ const EventDetails = () => {
                     </div>
 
                     <div className="port-view">
-                      <span>Entry fee</span>
+                      <span className="center_div">
+                        Entry fee{" "}
+                        {
+                          <DynamicTicketBadge
+                            product={selectedEvent?.product}
+                          />
+                        }
+                      </span>
                       <h4>{price}</h4>
                     </div>
                   </div>
                   {
                     //for links to subEvent
-                    (selectedEvent?.subEvent.description && selectedEvent?.subEvent.links.length > 0 ) &&
-                    <div className="mt--40 mb--40 team_member_border-1 center_section">
-                      <h3 className="center_text">
-                          {selectedEvent.subEvent.description}
-                      </h3>
-                      <div className="row">
-                        {
-                            selectedEvent.subEvent.links.map((link) => {
-                            return <a
-                              className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
-                              href={link.href}
-                            >
-                              <span className="">{link.name}</span>
-                            </a>
-                          })
-                        }
-                      </div>
-                    </div>
+                    selectedEvent?.subEvent.description &&
+                      selectedEvent?.subEvent.links.length > 0 && (
+                        <div className="mt--40 mb--40 team_member_border-1 center_section">
+                          <h3 className="center_text">
+                            {selectedEvent.subEvent.description}
+                          </h3>
+                          <div className="row">
+                            {selectedEvent.subEvent.links.map((link) => {
+                              return (
+                                <a
+                                  className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
+                                  href={link.href}
+                                >
+                                  <span className="">{link.name}</span>
+                                </a>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )
                   }
-                  {!selectedEvent.isSaleClosed && (loading ? <div>
-                    <h3 className="mt--20">Checking Ticket Availability - please be patient!</h3>
-                    <Loader />
-                  </div> :
-                    <div className="purchase-btn">
-                      {selectedEvent.ticketLink ? <div>
-                        <WithBackBtn><a
-                          style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                          href={selectedEvent.ticketLink}
-                          selectedEvent="_blank"
-                          className="rn-button-style--2 rn-btn-reverse-green mt--80"
-                        >
-                          {eventClosed ? "Sold out" : 'Buy Ticket'}
-                        </a></WithBackBtn>
-                        <p className="information mt--20">*Tickets are purchased from an outside platform! Click the button to be redirected</p></div> : <WithBackBtn><Link
-                          style={eventClosed ? { pointerEvents: 'none', backgroundColor: '#ccc', borderColor: "white" } : {}}
-                          to={`/${region}/purchase-ticket/${eventId}`}
-                          className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                          {eventClosed ? "Sold out" : 'Buy Ticket'}
-                        </Link></WithBackBtn>}
-                      {selectedEvent.ticketTimer && <Countdown targetTime={selectedEvent.ticketTimer} eventClosed={eventClosed} setEventClosed={setEventClosed} />}
-                    </div>)}
+                  {!selectedEvent.isSaleClosed &&
+                    (loading ? (
+                      <div>
+                        <h3 className="mt--20">
+                          Checking Ticket Availability - please be patient!
+                        </h3>
+                        <Loader />
+                      </div>
+                    ) : (
+                      <div className="purchase-btn">
+                        {selectedEvent.ticketLink ? (
+                          <div>
+                            <WithBackBtn>
+                              <a
+                                style={
+                                  eventClosed
+                                    ? {
+                                        pointerEvents: "none",
+                                        backgroundColor: "#ccc",
+                                        borderColor: "white",
+                                      }
+                                    : {}
+                                }
+                                href={selectedEvent.ticketLink}
+                                selectedEvent="_blank"
+                                className="rn-button-style--2 rn-btn-reverse-green mt--80"
+                              >
+                                {eventClosed ? "Sold out" : "Buy Ticket"}
+                              </a>
+                            </WithBackBtn>
+                            <p className="information mt--20">
+                              *Tickets are purchased from an outside platform!
+                              Click the button to be redirected
+                            </p>
+                          </div>
+                        ) : (
+                          <WithBackBtn>
+                            <Link
+                              style={
+                                eventClosed
+                                  ? {
+                                      pointerEvents: "none",
+                                      backgroundColor: "#ccc",
+                                      borderColor: "white",
+                                    }
+                                  : {}
+                              }
+                              to={`/${region}/purchase-ticket/${eventId}`}
+                              className="rn-button-style--2 rn-btn-reverse-green"
+                            >
+                              {eventClosed ? "Sold out" : "Buy Ticket"}
+                            </Link>
+                          </WithBackBtn>
+                        )}
+                        {selectedEvent.ticketTimer && (
+                          <Countdown
+                            targetTime={selectedEvent.ticketTimer}
+                            eventClosed={eventClosed}
+                            setEventClosed={setEventClosed}
+                          />
+                        )}
+                      </div>
+                    ))}
                 </div>
                 <br />
                 {/* Start Contact Map  */}
@@ -178,13 +243,17 @@ const EventDetails = () => {
                 <br />
                 {selectedEvent.isGala && <GalaMembers />}
                 <div className="portfolio-thumb-inner row">
-
-                  {selectedEvent.images?.length > 0 && selectedEvent.images.map((value, index) => {
-                    return <div key={index} className="col-lg-6 col-md-12 col-12 thumb center_div mb--30">
-                      <ImageFb src={`${value}`} alt="Portfolio Images" />
-                    </div>
-
-                  })}
+                  {selectedEvent.images?.length > 0 &&
+                    selectedEvent.images.map((value, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="col-lg-6 col-md-12 col-12 thumb center_div mb--30"
+                        >
+                          <ImageFb src={`${value}`} alt="Portfolio Images" />
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>

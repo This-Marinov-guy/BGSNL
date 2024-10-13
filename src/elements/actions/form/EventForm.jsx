@@ -11,6 +11,7 @@ import StringDynamicInputs from "../../inputs/common-complicated/StringDynamicIn
 import InputsBuilder from "../../inputs/builders/InputsBuilder";
 import {
   askBeforeRedirect,
+  isPlainObject,
   isObjectEmpty,
   isProd,
 } from "../../../util/functions/helpers";
@@ -29,6 +30,7 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
 import { addEventToAll, editEventFromAll } from "../../../redux/events";
 import ImageSelection from "../../inputs/ImageSelection";
+import AdditionalPrices from "../../inputs/AdditionalPrices";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -168,6 +170,84 @@ const EventForm = (props) => {
 
     activeMemberPrice: yup.number().min(1, "Must be greater than 0").nullable(),
 
+    earlyBird: yup
+      .object()
+      .shape({
+        isEnabled: yup.boolean().required(),
+        price: yup.number().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .number()
+              .required(
+                "Early Bird Price is required when Early Bird is enabled"
+              ),
+          otherwise: () => yup.number().nullable(),
+        }),
+        memberPrice: yup.number().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .number()
+              .required(
+                "Early Bird Member Price is required when Early Bird is enabled"
+              ),
+          otherwise: () => yup.number().nullable(),
+        }),
+        ticketLimit: yup.number().nullable(),
+        ticketTimer: yup.string().nullable(),
+      })
+      .test(
+        "at-least-one-limit",
+        "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
+        function (values) {
+          return (
+            !values.isEnabled ||
+            values.ticketLimit != null ||
+            values.ticketTimer != ""
+          );
+        }
+      ),
+
+    lateBird: yup
+      .object()
+      .shape({
+        isEnabled: yup.boolean().required(),
+        price: yup.number().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .number()
+              .required(
+                "Late Bird Price is required when Late Bird is enabled"
+              ),
+          otherwise: () => yup.number().nullable(),
+        }),
+        memberPrice: yup.number().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .number()
+              .required(
+                "Late Bird Member Price is required when Late Bird is enabled"
+              ),
+          otherwise: () => yup.number().nullable(),
+        }),
+        ticketLimit: yup.number().nullable(),
+        ticketTimer: yup.string().nullable(),
+      })
+      .test(
+        "at-least-one-limit",
+        "Either Ticket Limit or Ticket Timer must be provided when Late Bird is enabled",
+        function (values) {
+          return (
+            !values.isEnabled ||
+            values.ticketLimit != null ||
+            values.ticketTimer != ""
+          );
+        }
+      ),
+
     ticketLink: yup.string().when("isTicketLink", {
       is: (isTicketLink) => isTicketLink,
       then: () =>
@@ -176,7 +256,6 @@ const EventForm = (props) => {
     }),
 
     text: yup.string().required("Add some content to the event"),
-    title: yup.string().required("Title is required"),
     ticketImg: yup.mixed().required("A ticket image is required"),
     poster: yup.mixed().required("A poster is required"),
   });
@@ -210,7 +289,7 @@ const EventForm = (props) => {
             });
 
             Object.entries(values).forEach(([key, val]) => {
-              if (key === "extraInputsForm" || key === "subEvent") {
+              if (isPlainObject(val)) {
                 formData.append(key, JSON.stringify(val));
               } else if (Array.isArray(val)) {
                 val.forEach((v, i) => {
@@ -269,14 +348,13 @@ const EventForm = (props) => {
           memberPrice: !isNaN(initialData?.product?.member.price)
             ? initialData.product?.member.price
             : undefined,
-          activeMemberPrice: !isNaN(initialData?.product?.activeMember.price)
-            ? initialData.product?.activeMember.price
+          activeMemberPrice: !isNaN(initialData?.product?.activeMember?.price)
+            ? initialData.product?.activeMember?.price
             : undefined,
           entryIncluding: initialData?.entryIncluding ?? "",
           memberIncluding: initialData?.memberIncluding ?? "",
           ticketLink: initialData?.ticketLink ?? "",
           text: initialData?.text ?? "",
-          title: initialData?.title ?? "",
           images: initialData?.images ?? [],
           ticketImg: initialData?.ticketImg ?? null,
           ticketColor: initialData?.ticketColor ?? "#faf9f6",
@@ -286,6 +364,24 @@ const EventForm = (props) => {
           bgImage: initialData?.bgImage ?? 1,
           bgImageExtra: initialData?.bgImageExtra ?? null,
           bgImageSelection: initialData?.bgImageSelection ?? 1,
+          earlyBird: {
+            ...(initialData?.earlyBird ?? {
+              ticketLimit: undefined,
+              ticketTimer: "",
+              price: undefined,
+              memberPrice: undefined,
+              isEnabled: false,
+            }),
+          },
+          lateBird: {
+            ...(initialData?.lateBird ?? {
+              ticketLimit: undefined,
+              ticketTimer: "",
+              price: undefined,
+              memberPrice: undefined,
+              isEnabled: false,
+            }),
+          },
         }}
       >
         {({ values, setFieldValue, errors, isValid, dirty }) => (
@@ -529,6 +625,39 @@ const EventForm = (props) => {
                   )}
                 </div>
               ))}
+            <div className="col-12">
+              <h3 className="mt--30 label">Variable Price Options</h3>
+              <div className="hor_section_nospace mt--20 mb--20">
+                <Field
+                  style={{ maxWidth: "30px" }}
+                  type="checkbox"
+                  name="earlyBird[isEnabled]"
+                ></Field>
+                <p>Add Early Bird Price</p>
+              </div>
+              <AdditionalPrices
+                visible={values.earlyBird.isEnabled}
+                label="Early Bird"
+                setFieldValue={setFieldValue}
+                initialCalendarValue={values.earlyBird.ticketTimer}
+              />
+            </div>
+            <div className="col-12">
+              <div className="hor_section_nospace mt--20 mb--20">
+                <Field
+                  style={{ maxWidth: "30px" }}
+                  type="checkbox"
+                  name="lateBird[isEnabled]"
+                ></Field>
+                <p>Add Late Bird Price</p>
+              </div>
+              <AdditionalPrices
+                visible={values.lateBird.isEnabled}
+                label="Late Bird"
+                setFieldValue={setFieldValue}
+                initialCalendarValue={values.lateBird.ticketTimer}
+              />
+            </div>
             <h3 className="mt--30 label">Images</h3>
             <div className="row">
               <div className="col-lg-6 col-md-6 col-12 mt--20">
@@ -797,24 +926,22 @@ const EventForm = (props) => {
                 </div>
               </div>
               <div className="col-lg-6 col-12">
-                <div className="rn-form-group">
-                  <CalendarWithClock
-                    mode="single"
-                    locale="en-nl"
-                    placeholder="Ticket Timer"
-                    captionLayout="dropdown"
-                    min={values.date ? new Date(values.date) : new Date()}
-                    initialValue={values.ticketTimer}
-                    onSelect={(value) => {
-                      setFieldValue("ticketTimer", value);
-                    }}
-                  />
-                  <ErrorMessage
-                    className="error"
-                    name="ticketTimer"
-                    component="div"
-                  />
-                </div>
+                <CalendarWithClock
+                  mode="single"
+                  locale="en-nl"
+                  placeholder="Ticket Timer"
+                  captionLayout="dropdown"
+                  min={values.date ? new Date(values.date) : new Date()}
+                  initialValue={values.ticketTimer}
+                  onSelect={(value) => {
+                    setFieldValue("ticketTimer", value);
+                  }}
+                />
+                <ErrorMessage
+                  className="error"
+                  name="ticketTimer"
+                  component="div"
+                />
               </div>
             </div>
 
