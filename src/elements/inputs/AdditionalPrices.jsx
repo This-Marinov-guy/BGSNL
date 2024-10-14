@@ -18,6 +18,16 @@ const AdditionalPrices = ({
   return (
     <>
       <div className="row">
+        <div className="col-lg-12 col-12">
+          <div className="hor_section_nospace mt--10">
+            <Field
+              style={{ maxWidth: "30px" }}
+              type="checkbox"
+              name={`${prefix}["excludeMembers"]`}
+            />
+            <p className="information">Exclude Member Tickets from count</p>
+          </div>
+        </div>
         <div className="col-lg-6 col-12">
           <div className="rn-form-group">
             <Field
