@@ -132,58 +132,89 @@ const SignUp = (props) => {
       stepButtons = null;
       break;
     case 1:
-      stepComp = <div className="service-area ptb--60">
-        <div className="container">
-          <div className="center_div mb--20">
-            {selectedMembershipIndex !== null ? <p>You have selected: {REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title} </p> : <p>Select one of the options by clicking it</p>}
-          </div>
-          <div className="row service-one-wrapper center_div" style={{ gap: '20px' }}>
-            {REGIONS_MEMBERSHIP_SPECIFICS.map((val, i) => (
-              <div key={i}>
-                <button
-                  style={
-                    (selectedMembershipIndex !== null && val.title === REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title)
-                      ? { backgroundColor: "#017363" }
-                      : {}
-                  }
-                  className="service service__style--2"
-                  onClick={() => {
-                    setSelectedMembershipIndex(i);
-                    setActiveStep(2);
-                  }}
-                >
-                  <div className="hor_section">
-                    <div className="icon">{val.icon}</div>
-                    <h3 style={{ width: "40%" }}>{val.price}&#8364; every {val.period} months</h3>
-                  </div>
-                  <div className="content">
-                    <h3>{val.title}</h3>
-                    <p>{val.description || 'Be part of the society. With this membership you get:'}</p>
-                    <div className="pricing-body">
-                      <ul
-                        style={{ textAlign: "start" }}
-                        className="list-style--1"
-                      >
-                        <li>
-                          <FiCheck />Exclusive member events
-                        </li>
-                        <li>
-                          <FiCheck />Discounts for events
-                        </li>
-                        <li>
-                          <FiCheck />Premium collection of event tickets
-                        </li>
-                      </ul>
+      stepComp = (
+        <div className="service-area ptb--60">
+          <div className="container">
+            <div className="center_div mb--20">
+              {selectedMembershipIndex !== null ? (
+                <p>
+                  You have selected:{" "}
+                  {REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title}{" "}
+                </p>
+              ) : (
+                <p>Select one of the options by clicking it</p>
+              )}
+            </div>
+            <div
+              className="row service-one-wrapper center_div"
+              style={{ gap: "20px" }}
+            >
+              {REGIONS_MEMBERSHIP_SPECIFICS.map((val, i) => (
+                <div key={i}>
+                  <button
+                    style={
+                      selectedMembershipIndex !== null &&
+                      val.title ===
+                        REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
+                          .title
+                        ? { backgroundColor: "#017363" }
+                        : {}
+                    }
+                    className="service service__style--2"
+                    onClick={() => {
+                      setSelectedMembershipIndex(i);
+                      setActiveStep(2);
+                    }}
+                  >
+                    <div className="hor_section">
+                      <div className="icon">{val.icon}</div>
+                      <h3 style={{ width: "40%" }}>
+                        {val.price}&#8364; every {val.period} months
+                      </h3>
                     </div>
-                    <p style={{ fontSize: '15px' }}>*You will automatically be billed on the end of the period, except if you cancel the subscription from your profile or the funds in your bank account are insufficient
-                    </p>
-                  </div>
-                </button>
-              </div>
-            ))}
+                    <div className="content">
+                      <h3>{val.title}</h3>
+                      <p>
+                        {val.description ||
+                          "Be part of the society. With this membership you get:"}
+                      </p>
+                      <div className="pricing-body">
+                        <ul
+                          style={{ textAlign: "start" }}
+                          className="list-style--1"
+                        >
+                          <li>
+                            <FiCheck />
+                            Exclusive member events
+                          </li>
+                          <li>
+                            <FiCheck />
+                            Discounts for events
+                          </li>
+                          <li>
+                            <FiCheck />
+                            Premium collection of event tickets
+                          </li>
+                          <li>
+                            <FiCheck />
+                            Internship opportunities worldwide
+                          </li>
+                        </ul>
+                      </div>
+                      <p style={{ fontSize: "15px" }}>
+                        *You will automatically be billed on the end of the
+                        period, except if you cancel the subscription from your
+                        profile or the funds in your bank account are
+                        insufficient
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      );
       stepButtons = <div className="center_div mb--20">
         <p onClick={() => setActiveStep(prevProps => prevProps - 1)} className='information' style={{ cursor: 'pointer', margin: 'auto' }}>
           <FiChevronLeft />
