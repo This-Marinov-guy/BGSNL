@@ -623,41 +623,41 @@ const EventForm = (props) => {
                       </div>
                     </>
                   )}
+                  <div className="col-12">
+                    <h3 className="mt--30 label">Variable Price Options</h3>
+                    <div className="hor_section_nospace mt--20 mb--20">
+                      <Field
+                        style={{ maxWidth: "30px" }}
+                        type="checkbox"
+                        name="earlyBird[isEnabled]"
+                      ></Field>
+                      <p>Add Early Bird Price</p>
+                    </div>
+                    <AdditionalPrices
+                      visible={values.earlyBird.isEnabled}
+                      label="Early Bird"
+                      setFieldValue={setFieldValue}
+                      initialCalendarValue={values.earlyBird.ticketTimer}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <div className="hor_section_nospace mt--20 mb--20">
+                      <Field
+                        style={{ maxWidth: "30px" }}
+                        type="checkbox"
+                        name="lateBird[isEnabled]"
+                      ></Field>
+                      <p>Add Late Bird Price</p>
+                    </div>
+                    <AdditionalPrices
+                      visible={values.lateBird.isEnabled}
+                      label="Late Bird"
+                      setFieldValue={setFieldValue}
+                      initialCalendarValue={values.lateBird.ticketTimer}
+                    />
+                  </div>
                 </div>
               ))}
-            <div className="col-12">
-              <h3 className="mt--30 label">Variable Price Options</h3>
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="earlyBird[isEnabled]"
-                ></Field>
-                <p>Add Early Bird Price</p>
-              </div>
-              <AdditionalPrices
-                visible={values.earlyBird.isEnabled}
-                label="Early Bird"
-                setFieldValue={setFieldValue}
-                initialCalendarValue={values.earlyBird.ticketTimer}
-              />
-            </div>
-            <div className="col-12">
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="lateBird[isEnabled]"
-                ></Field>
-                <p>Add Late Bird Price</p>
-              </div>
-              <AdditionalPrices
-                visible={values.lateBird.isEnabled}
-                label="Late Bird"
-                setFieldValue={setFieldValue}
-                initialCalendarValue={values.lateBird.ticketTimer}
-              />
-            </div>
             <h3 className="mt--30 label">Images</h3>
             <div className="row">
               <div className="col-lg-6 col-md-6 col-12 mt--20">
