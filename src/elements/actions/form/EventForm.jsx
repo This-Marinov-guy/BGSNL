@@ -371,6 +371,7 @@ const EventForm = (props) => {
               price: undefined,
               memberPrice: undefined,
               isEnabled: false,
+              excludeMembers: false,
             }),
           },
           lateBird: {
@@ -380,6 +381,7 @@ const EventForm = (props) => {
               price: undefined,
               memberPrice: undefined,
               isEnabled: false,
+              excludeMembers: false,
             }),
           },
         }}
