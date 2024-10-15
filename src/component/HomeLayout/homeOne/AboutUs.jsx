@@ -35,7 +35,7 @@ const AboutUs = ({ learnMore }) => {
                   {learnMore ? (
                     <div className="center_div j-start">
                       <h2 className="title mr--20">{title}</h2>
-                      <Link style={{fontSize: '0.7em'}} to="/about">(Learn more)</Link>
+                      <Link style={{fontSize: '0.6em'}} to="/about">(Learn more)</Link>
                     </div>
                   ) : (
                     <h2 className="title">{title}</h2>
