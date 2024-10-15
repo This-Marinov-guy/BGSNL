@@ -462,6 +462,30 @@
   gap: 5px;
   align-items: center;
   justify-content: center;
+
+  &.j-start {
+    justify-content: flex-start;
+  }
+
+    &.j-end {
+    justify-content: flex-end;
+  }
+
+    &.j-start {
+    justify-content: flex-start;
+  }
+
+    &.j-end {
+    justify-content: flex-end;
+  }
+
+    &.a-start {
+    align-content: flex-start;
+  }
+
+    &.a-end {
+    align-content: flex-end;
+  }
 }
 
 .center_div_col {

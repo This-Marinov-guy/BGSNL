@@ -123,7 +123,7 @@ const EventDetails = () => {
                     </div>
 
                     <div className="port-view">
-                      <span className="center_div">
+                      <span className="center_div j-start">
                         Entry fee{" "}
                         {
                           <DynamicTicketBadge

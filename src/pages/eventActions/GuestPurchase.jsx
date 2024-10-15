@@ -160,8 +160,7 @@ const GuestPurchase = () => {
               <p>Address: {selectedEvent.location}</p>
               <p>
                 <span
-                  style={{ justifyContent: "flex-start" }}
-                  className="center_div"
+                  className="center_div j-start"
                 >
                   Price :{" "}
                   {selectedEvent.isFree

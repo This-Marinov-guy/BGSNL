@@ -205,7 +205,8 @@ const EventForm = (props) => {
           return (
             !values.isEnabled ||
             values.ticketLimit != null ||
-            values.ticketTimer != ""
+            values.ticketTimer != "" ||
+            values.startTimer != ""
           );
         }
       ),
@@ -643,7 +644,10 @@ const EventForm = (props) => {
                       visible={values.earlyBird.isEnabled}
                       label="Early Bird"
                       setFieldValue={setFieldValue}
-                      initialCalendarValue={values.earlyBird.ticketTimer}
+                      initialCalendarValue={
+                        values.earlyBird.ticketTimer ||
+                        values.earlyBird.startTimer
+                      }
                     />
                   </div>
                   <div className="col-12">
@@ -659,7 +663,10 @@ const EventForm = (props) => {
                       visible={values.lateBird.isEnabled}
                       label="Late Bird"
                       setFieldValue={setFieldValue}
-                      initialCalendarValue={values.lateBird.ticketTimer}
+                      initialCalendarValue={
+                        values.lateBird.ticketTimer ||
+                        values.lateBird.startTimer
+                      }
                       withLimit={false}
                       timerType={START_TIMER}
                     />
