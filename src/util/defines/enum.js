@@ -26,3 +26,7 @@ export const NEWS = 'news';
 export const INTERNSHIPS = 'internships';
 
 export const ACCOUNT_TABS = [NEWS, TICKETS, INTERNSHIPS];
+
+// TIMER TYPES
+export const END_TIMER = 1;
+export const START_TIMER = 2;

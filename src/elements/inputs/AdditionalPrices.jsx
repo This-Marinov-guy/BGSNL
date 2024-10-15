@@ -1,11 +1,14 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
-import { Calendar } from "./common/Calendar";
+import { Calendar, CalendarWithClock } from "./common/Calendar";
 import { toCamelCase } from "../../util/functions/helpers";
+import { END_TIMER } from "../../util/defines/enum";
 
 const AdditionalPrices = ({
   label,
   visible = true,
+  withLimit = true,
+  timerType = END_TIMER,
   initialCalendarValue,
   setFieldValue,
 }) => {
@@ -18,43 +21,54 @@ const AdditionalPrices = ({
   return (
     <>
       <div className="row">
-        <div className="col-lg-12 col-12">
-          <div className="hor_section_nospace mt--10">
-            <Field
-              style={{ maxWidth: "30px" }}
-              type="checkbox"
-              name={`${prefix}["excludeMembers"]`}
-            />
-            <p className="information">Exclude Member Tickets from count</p>
-          </div>
-        </div>
+        {withLimit && (
+          <>
+            <div className="col-lg-12 col-12">
+              <div className="hor_section_nospace mt--10">
+                <Field
+                  style={{ maxWidth: "30px" }}
+                  type="checkbox"
+                  name={`${prefix}["excludeMembers"]`}
+                />
+                <p className="information">Exclude Member Tickets from count</p>
+              </div>
+            </div>
+            <div className="col-lg-6 col-12">
+              <div className="rn-form-group">
+                <Field
+                  type="number"
+                  placeholder="Ticket Limit"
+                  name={`${prefix}["ticketLimit"]`}
+                  min={1}
+                  step="0.01"
+                />
+                <ErrorMessage
+                  className="error"
+                  name={`${prefix}["at-least-one-limit"]`}
+                  component="div"
+                />
+              </div>
+            </div>
+          </>
+        )}
         <div className="col-lg-6 col-12">
           <div className="rn-form-group">
-            <Field
-              type="number"
-              placeholder="Ticket Limit"
-              name={`${prefix}["ticketLimit"]`}
-              min={1}
-              step="0.01"
-            />
-            <ErrorMessage
-              className="error"
-              name={`${prefix}["at-least-one-limit"]`}
-              component="div"
-            />
-          </div>
-        </div>
-        <div className="col-lg-6 col-12">
-          <div className="rn-form-group">
-            <Calendar
+            <CalendarWithClock
               mode="single"
               locale="en-nl"
-              placeholder="Ticket Timer"
+              placeholder={
+                timerType === END_TIMER ? "Ticket Timer" : "Start from"
+              }
               captionLayout="dropdown"
               min={new Date()}
               initialValue={initialCalendarValue}
               onSelect={(value) => {
-                setFieldValue(`${prefix}["ticketTimer"]`, value);
+                setFieldValue(
+                  timerType === END_TIMER
+                    ? `${prefix}["ticketTimer"]`
+                    : `${prefix}["startTimer"]`,
+                  value
+                );
               }}
             />
             <ErrorMessage

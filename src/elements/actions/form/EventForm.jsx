@@ -31,6 +31,7 @@ import { showNotification } from "../../../redux/notification";
 import { addEventToAll, editEventFromAll } from "../../../redux/events";
 import ImageSelection from "../../inputs/ImageSelection";
 import AdditionalPrices from "../../inputs/AdditionalPrices";
+import { START_TIMER } from "../../../util/defines/enum";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -243,7 +244,8 @@ const EventForm = (props) => {
           return (
             !values.isEnabled ||
             values.ticketLimit != null ||
-            values.ticketTimer != ""
+            values.ticketTimer != "" ||
+            values.startTimer != ""
           );
         }
       ),
@@ -367,6 +369,7 @@ const EventForm = (props) => {
           earlyBird: {
             ...(initialData?.earlyBird ?? {
               ticketLimit: undefined,
+              startTimer: "",
               ticketTimer: "",
               price: undefined,
               memberPrice: undefined,
@@ -377,6 +380,7 @@ const EventForm = (props) => {
           lateBird: {
             ...(initialData?.lateBird ?? {
               ticketLimit: undefined,
+              startTimer: "",
               ticketTimer: "",
               price: undefined,
               memberPrice: undefined,
@@ -656,6 +660,8 @@ const EventForm = (props) => {
                       label="Late Bird"
                       setFieldValue={setFieldValue}
                       initialCalendarValue={values.lateBird.ticketTimer}
+                      withLimit={false}
+                      timerType={START_TIMER}
                     />
                   </div>
                 </div>
