@@ -104,7 +104,7 @@ const Home = () => {
       {/* End Slider Area   */}
 
       {/* Start About Area  */}
-      {!region && <AboutUs />}
+      {!region && <AboutUs learnMore/>}
       {/* End About Area  */}
       {/* <Greeting /> */}
       {/* Start News Area */}

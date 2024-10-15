@@ -4,8 +4,9 @@ import ImageFb from "../../../elements/ui/media/ImageFb";
 import { presentation } from "../../../page-demo/script";
 import { SLIDESHOW } from "../../../util/defines/GLOBAL_INFO";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Link } from "react-router-dom";
 
-const AboutUs = () => {
+const AboutUs = ({ learnMore }) => {
   let title = "About Us";
 
   return (
@@ -14,7 +15,7 @@ const AboutUs = () => {
         <div className="container">
           <div className="row row--35 align-items-center">
             <div className="col-lg-5 col-md-12">
-              <Slider {...presentation} >
+              <Slider {...presentation}>
                 {SLIDESHOW.map((image, index) => {
                   return (
                     <LazyLoadImage
@@ -31,7 +32,14 @@ const AboutUs = () => {
             <div className="col-lg-7 col-md-12">
               <div className="about-inner inner">
                 <div className="section-title">
-                  <h2 className="title">{title}</h2>
+                  {learnMore ? (
+                    <div className="center_div j-start">
+                      <h2 className="title mr--20">{title}</h2>
+                      <Link style={{fontSize: '0.7em'}} to="/about">(Learn more)</Link>
+                    </div>
+                  ) : (
+                    <h2 className="title">{title}</h2>
+                  )}
                 </div>
                 <div className="row mt--30 mt_sm--10">
                   <div className="col-lg-6 col-md-12 col-sm-12 col-12">
@@ -80,6 +88,6 @@ const AboutUs = () => {
       </div>
     </React.Fragment>
   );
-}
+};
 
 export default AboutUs;
