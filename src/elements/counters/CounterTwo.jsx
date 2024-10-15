@@ -39,7 +39,7 @@ const CounterOne = () => {
       countTitle: "Members, part of the society",
     },
     {
-      countNum: loading || !activeMembersCount ? <CustomSpinner /> : activeMembersCount,
+      countNum: 45,
       countTitle: "Active contributors to the society",
     },
     {
