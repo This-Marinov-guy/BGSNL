@@ -35,10 +35,11 @@ const InputsBuilder = (props) => {
   };
 
   const handleInputChange = (index, name, value) => {
-    const newInputs = [...inputs];
-    newInputs[index][name] = value;
+    const newInputs = [...inputs]; 
+    newInputs[index] = { ...newInputs[index] };
+    newInputs[index][name] = value; 
     setInputs(newInputs);
-    props.onChange(newInputs);
+    props.onChange(newInputs); 
   };
 
   return (
@@ -50,7 +51,7 @@ const InputsBuilder = (props) => {
             <div className="row ml--5 mt--10" key={index}>
               <h4 className="col-lg-6 col-12">Select type of input</h4>
               <select
-                value={value.type}
+                value={inputs[index].type}
                 onChange={(e) =>
                   handleInputChange(index, e.target.name, e.target.value)
                 }
@@ -72,7 +73,7 @@ const InputsBuilder = (props) => {
                   <div className="col-6">
                     <h4>Is it required</h4>
                     <select
-                      value={value.required}
+                      value={inputs[index].required}
                       onChange={(e) =>
                         handleInputChange(index, e.target.name, e.target.value)
                       }
@@ -89,6 +90,7 @@ const InputsBuilder = (props) => {
                     <h4>What will be the question</h4>
                     <input
                       type="text"
+                      value={inputs[index].placeholder}
                       placeholder="Enter value"
                       onChange={(e) =>
                         handleInputChange(index, e.target.name, e.target.value)
@@ -98,11 +100,11 @@ const InputsBuilder = (props) => {
                   </div>
                 </div>
               ) : (
-                <div className="col-lg-6 col-12 row mt--10">
-                  <div className="col-lg-3 col-md-6 col-12 mr--5 ver_section">
-                    <h4>Is it required</h4>
+                <div className="col-lg-8 col-12 row mt--10">
+                  <div className="col-lg-3 col-md-6 col-12 mr--5 ver_section a-start">
+                    <h4 className="mt--10">Is it required</h4>
                     <select
-                      value={value.required}
+                      value={inputs[index].required}
                       onChange={(e) =>
                         handleInputChange(index, e.target.name, e.target.value)
                       }
@@ -115,10 +117,12 @@ const InputsBuilder = (props) => {
                       <option value={false}>No</option>
                     </select>
                   </div>
-                  <div className="col-5 ver_section">
-                    <h4>Let client select multiple values</h4>
+                  <div className="col-lg-3 col-md-6 col-12 mr--5 ver_section a-start">
+                    <h4 className="mt--10">
+                      Let client select multiple values
+                    </h4>
                     <select
-                      value={value.multiselect}
+                      value={inputs[index].multiselect}
                       onChange={(e) =>
                         handleInputChange(index, e.target.name, e.target.value)
                       }
@@ -135,6 +139,7 @@ const InputsBuilder = (props) => {
                     <h4>What will be the question</h4>
                     <input
                       type="text"
+                      value={inputs[index].placeholder}
                       placeholder="Enter text"
                       onChange={(e) =>
                         handleInputChange(index, e.target.name, e.target.value)
@@ -147,7 +152,7 @@ const InputsBuilder = (props) => {
                       onChange={(inputs) =>
                         handleInputChange(index, "options", inputs)
                       }
-                      initialValues={value.options ?? []}
+                      initialValues={inputs[index].options ?? []}
                       placeholder="Add option"
                     />
                   </div>

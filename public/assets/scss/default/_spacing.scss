@@ -522,6 +522,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+
+  &.a-start {
+    align-items: flex-start;
+  }
+
+    &.j-start {
+    justify-content: flex-start;
+  }
 }
 
 .ver_section_nospace {
