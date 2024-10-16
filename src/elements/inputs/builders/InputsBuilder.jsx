@@ -12,8 +12,6 @@ const InputsBuilder = (props) => {
     multiselect: false,
     options: [],
   };
-
-  console.log('dasdas');
   
   const [inputs, setInputs] = useState(
     props.initialValues?.length > 0 ? props.initialValues : []
