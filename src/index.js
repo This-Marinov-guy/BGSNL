@@ -1,8 +1,8 @@
 // React and Redux Required
-import React, { useEffect, useState, lazy, Suspense, Fragment } from "react";
+import React, { useEffect, lazy, Suspense, Fragment } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import ReactDOM from "react-dom/client";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
 import { PrimeReactProvider } from "primereact/api";
 import { isProd } from "./util/functions/helpers";
@@ -10,35 +10,24 @@ import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { removeLogsOnProd } from "./util/functions/helpers";
 import AuthLayout from "./layouts/authentication/AuthLayout";
-import { removeModal, showModal } from "./redux/modal";
+import { selectModal } from "./redux/modal";
 import {
   ACCESS_1,
   ACCESS_2,
   ACCESS_3,
   ACCESS_4,
   INACTIVITY_MODAL,
-  JWT_RESET_TIMER,
-  LOCAL_STORAGE_SESSION_LIFE,
-  LOCAL_STORAGE_USER_DATA,
-  SESSION_TIMEOUT,
-  WARNING_THRESHOLD,
 } from "./util/defines/common";
 import InactivityModal from "./elements/ui/modals/InactivityModal";
-import { calculateTimeRemaining } from "./util/functions/date";
-import { login, logout, selectUser } from "./redux/user";
-import { isTokenExpired } from "./util/functions/authorization";
-import { useHttpClient } from "./hooks/common/http-hook";
-import { isObjectEmpty } from "./util/functions/helpers";
-import { startPageLoading, stopPageLoading } from "./redux/loading";
 
 // Style
 import "./index.scss";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
-import { useJWTRefresh } from "./hooks/common/api-hooks";
 import { useAppInitialization } from "./hooks/session/app-init";
 import { useAuthSession } from "./hooks/session/auth-session";
+import { selectUser } from "./redux/user";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -107,9 +96,10 @@ const PageNavigationFunc = () => {
 const Root = () => {
   // DO not change order!
   const { isLoading } = useAppInitialization();
-  const { timeRemaining } = useAuthSession();
+  const { getTimeRemaining } = useAuthSession();
 
   const user = useSelector(selectUser);
+  const modal = useSelector(selectModal);
 
   if (process.env.REACT_APP_MAINTENANCE == true) {
     return <Maintenance />;
@@ -122,7 +112,9 @@ const Root = () => {
   return (
     <BrowserRouter basename={"/"}>
       <PageNavigationFunc />
-      <InactivityModal timeRemaining={timeRemaining} />
+      {modal.includes(INACTIVITY_MODAL) && (
+        <InactivityModal timeRemaining={getTimeRemaining()} />
+      )}
       <GlobalError>
         <Suspense fallback={<PageLoading />}>
           <Routes>

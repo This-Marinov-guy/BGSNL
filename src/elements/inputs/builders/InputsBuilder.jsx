@@ -13,6 +13,8 @@ const InputsBuilder = (props) => {
     options: [],
   };
 
+  console.log('dasdas');
+  
   const [inputs, setInputs] = useState(
     props.initialValues?.length > 0 ? props.initialValues : []
   );

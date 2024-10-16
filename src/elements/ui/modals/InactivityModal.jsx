@@ -7,7 +7,7 @@ import { formatMsToTimer } from '../../../util/functions/date';
 import { useJWTRefresh } from '../../../hooks/common/api-hooks';
 import { selectUser } from '../../../redux/user';
 
-function InactivityModal({ timeRemaining }) {
+const InactivityModal = ({ timeRemaining }) => {
     const dispatch = useDispatch();
 
     const modal = useSelector(selectModal);
@@ -20,6 +20,9 @@ function InactivityModal({ timeRemaining }) {
         refreshJWTinAPI(user.token);
         dispatch(removeModal(INACTIVITY_MODAL));
     }
+
+    console.log(timeRemaining);
+    
     
     return (
         <Dialog modal visible={modal.includes(INACTIVITY_MODAL)} onHide={closeHandler}>
