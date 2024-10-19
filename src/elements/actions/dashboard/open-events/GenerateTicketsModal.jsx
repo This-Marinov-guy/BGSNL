@@ -51,11 +51,11 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
         continue;
       }
 
-      const data = encryptData({
+      const data = {
         eventId: event.id,
         code: new Date().valueOf() - i,
         quantity: 1,
-      });
+      };
 
       const hasQR = event.hasOwnProperty("ticketQR") ? event.ticketQR : true;
       const qrCode = hasQR
