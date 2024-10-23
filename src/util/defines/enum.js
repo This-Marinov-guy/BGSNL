@@ -30,3 +30,16 @@ export const ACCOUNT_TABS = [NEWS, TICKETS, INTERNSHIPS];
 // TIMER TYPES
 export const END_TIMER = 1;
 export const START_TIMER = 2;
+
+// Ticket types
+export const GUEST = 'guest';
+export const MEMBER = 'member';
+export const ACTIVE_MEMBER = 'active member';
+export const FREE = "free";
+
+export const TICKET_TYPES = {
+  [GUEST]: GUEST,
+  [MEMBER]: MEMBER,
+  [ACTIVE_MEMBER]: ACTIVE_MEMBER,
+  [FREE]: FREE,
+};
