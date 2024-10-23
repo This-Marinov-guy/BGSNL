@@ -69,8 +69,8 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
     layout.rotate(-4.71);
     layout.drawImage(
       qrCodeCanvas,
-      1326,
-      canvas.height - 380,
+      1380,
+      canvas.height - 420,
       desiredSize,
       desiredSize
     );

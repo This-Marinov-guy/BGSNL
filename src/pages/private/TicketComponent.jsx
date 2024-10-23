@@ -83,7 +83,7 @@ const TicketComponent = () => {
   useEffect(() => {
     const generateTicket = async () => {
       const ticketImage =
-        "https://res.cloudinary.com/dqwcx5zyh/image/upload/v1724608250/groningen_Bulgarian%20Dinner_Mon%20Sep%2009%202024%2000:00:00%20GMT%2B0300%20%28Eastern%20European%20Summer%20Time%29/ticket.jpg"; // Update this to the correct path
+        "https://res.cloudinary.com/dqwcx5zyh/image/upload/v1728807813/amsterdam_Balkan%20Baba%20Yaga_Fri%20Oct%2025%202024%2023:00:00%20GMT%2B0200%20%28Central%20European%20Summer%20Time%29/ticket.jpg"; // Update this to the correct path
       const name = "John";
       const surname = "Doe";
       const qrLink = createQrCodeCheckGuest({
@@ -110,8 +110,7 @@ const TicketComponent = () => {
 
   return (
     <>
-      {/* <img src={ticketDataUrl} alt="Customer Ticket" /> */}
-      <BloggerPost blogId={"blog10311.wordpress.com"} postId={"8"} />
+      <img src={ticketDataUrl} alt="Customer Ticket" />
     </>
   );
 };
