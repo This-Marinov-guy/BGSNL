@@ -8,11 +8,29 @@ $heading-color: #1f1f25;
 $paragraph-color: #025420;
 $border-color: #d4d4d4;
 $label-color: #add8e6;
-$white: #faf9f6;
+$white: #F8F8F8;
+
+// TODO: change colors
+// $theme-color: #ED4F56;
+// $theme-color-2: #E74034;
+// $theme-color-3: #A21019;
+// $body-color: #25632D;
+// $body-color-2: #0E4927;
+// $heading-color: #1f1f25;
+// $paragraph-color: #20432E;
+// $border-color: #d4d4d4;
+// $label-color: #add8e6;
+// $white: #F8F8F8;
 
 /*===============================
     Font Family 
 =================================*/
+@font-face {
+  font-family: LeagueSpartan;
+  src: url(/public/assets/fonts/LeagueSpartan.woff2) format("woff2"),
+    url(/public/assets/fonts/LeagueSpartan.ttf) format("truetype");
+}
+
 @font-face {
   font-family: Roboto;
   src: url(/public/assets/fonts/Roboto.woff2) format("woff2"),
