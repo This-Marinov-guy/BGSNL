@@ -312,12 +312,22 @@
     Standard Service  
 -------------------------------*/
 .standard-service {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   .thumbnai {
     img {
       border-radius: 5px;
     }
   }
   .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     h3 {
       font-size: 23px;
       margin-top: 30px;
@@ -440,7 +450,7 @@
 
 .service-one-wrapper {
   justify-content: space-between;
-  
+
   @media #{$md-layout} {
     margin: 0 -40px;
   }

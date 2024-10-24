@@ -50,7 +50,10 @@ const Article = () => {
       {/* Start Article  Details */}
       <style>{selectedArticle.styles}</style>
       <div className="wordpress-embedded-container">
-        <h1 className="mb--20" dangerouslySetInnerHTML={{ __html: selectedArticle.title }} />
+        <h1
+          className="mb--20"
+          dangerouslySetInnerHTML={{ __html: selectedArticle.title }}
+        />
         <div
           dangerouslySetInnerHTML={{
             __html: selectedArticle.content,

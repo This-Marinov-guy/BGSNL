@@ -174,6 +174,10 @@ const HeaderTwo = (props) => {
                   </ul>
                 </li>
 
+                <li>
+                  <Link to={`/user#internships`}>Internships</Link>
+                </li>
+
                 {region && (
                   <li>
                     <Link to={`/${region}/contact`}>Contact</Link>

@@ -86,7 +86,7 @@ const NewsList = () => {
           {/* Start Single Service  */}
           <div className="col-lg-9">
             {newsArray.length ? (
-              <Slider {...slickDot2} className="pl--40 pr--40">
+              <Slider {...slickDot2} className="pl--20 pr--20">
                 {newsArray.map((value, index) => (
                   <Card2 key={index} {...value} />
                 ))}

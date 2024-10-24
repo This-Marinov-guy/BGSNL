@@ -3,6 +3,7 @@ import CountUp from "react-countup";
 import VisibilitySensor from "react-visibility-sensor";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import CustomSpinner from "../ui/loading/CustomSpinner";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 
 const CounterOne = () => {
   const [didViewCountUp, setDidViewCountUp] = useState(false);
@@ -25,7 +26,7 @@ const CounterOne = () => {
 
   const STATISTICS = [
     {
-      countNum: 7,
+      countNum: REGIONS.length,
       countTitle: "Cities, part of our network",
     },
     {
@@ -38,11 +39,11 @@ const CounterOne = () => {
       countTitle: "Members, part of the society",
     },
     {
-      countNum: 45,
+      countNum: 60,
       countTitle: "Active contributors to the society",
     },
     {
-      countNum: 1600,
+      countNum: 2200,
       icon: "+",
       countTitle: "Tickets sold",
     },

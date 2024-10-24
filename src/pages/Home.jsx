@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef } from "react";
-import Header from "../component/header/Header";
+import HeaderTwo from "../component/header/HeaderTwo";
 import AboutUs from "../component/HomeLayout/homeOne/AboutUs";
 import FooterTwo from "../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
@@ -13,6 +13,7 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import NewsList from "../elements/ui/lists/NewsList";
+import Hero2 from "../component/hero/Hero2";
 import Hero1 from "../component/hero/Hero1";
 
 const Home = () => {
@@ -40,12 +41,19 @@ const Home = () => {
   return (
     <Fragment>
       <Helmet pageTitle="Welcome" />
-      <Header logo="light" />
-      
+      <HeaderTwo logo="light" />
+
       {/* Start Slider Area   */}
-      <Hero1 />
+      {/* <Hero2 /> */}
+      <Hero1/>
       {/* End Slider Area   */}
 
+      {/* Start Sponsor Area */}
+
+      <BrandTwo />
+
+      {/* End Sponsor Area */}
+      
       {/* Start About Area  */}
       {!region && <AboutUs learnMore/>}
       {/* End About Area  */}
@@ -67,11 +75,6 @@ const Home = () => {
       }
       {/* End Upcoming Events Area */}
 
-      {/* Start Sponsor Area */}
-
-      <BrandTwo />
-
-      {/* End Sponsor Area */}
 
       {/* Start Footer Style  */}
       <FooterTwo />
