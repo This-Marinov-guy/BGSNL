@@ -3,7 +3,7 @@ import { Dialog } from "primereact/dialog";
 import CustomSpinner from "../../../ui/loading/CustomSpinner";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { encryptData } from "../../../../util/functions/helpers";
-import { createCustomerTicket } from "../../../../util/functions/ticket-creator";
+import { createCustomerTicket, createQrCodeCheckGuest } from "../../../../util/functions/ticket-creator";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";
 import { SUCCESS_STYLE, WARNING_STYLE } from "../../../../util/defines/common";
@@ -57,10 +57,8 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
         quantity: 1,
       };
 
-      const hasQR = event.hasOwnProperty("ticketQR") ? event.ticketQR : true;
-      const qrCode = hasQR
-        ? `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?data=${data}`
-        : "";
+      const hasQR = event.ticketQR ?? false;
+      const qrCode = hasQR ? createQrCodeCheckGuest(data) : "";
 
       const { ticketBlob } = await createCustomerTicket(
         event.ticketImg,
