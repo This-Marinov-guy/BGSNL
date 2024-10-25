@@ -2,10 +2,20 @@ import QRCode from "qrcode";
 import { resizeFile } from "./helpers";
 
 export const createQrCodeCheckGuest = (data) => {
-  return `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?event=${data.eventId}&code=${data.code}&count=${data?.quantity ?? 1}`;
-}
+  return `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?event=${
+    data.eventId
+  }&code=${data.code}&count=${data?.quantity ?? 1}`;
+};
 
-export const createCustomerTicket = async (ticketImage, name, surname, color = "#faf9f6", qrLink = '', withName = true) => {
+export const createCustomerTicket = async (
+  ticketImage,
+  name,
+  surname,
+  color = "#faf9f6",
+  qrLink = "",
+  withName = true,
+  quantity = 1
+) => {
   // Create a canvas element, add the image and text, covert to blob
   //for 1500 x 485 images
   //for 2000 x 647 images
@@ -32,13 +42,7 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
   //image
   canvas.width = ticket.naturalWidth;
   canvas.height = ticket.naturalHeight;
-  layout.drawImage(
-    ticket,
-    0,
-    0,
-    ticket.naturalWidth,
-    ticket.naturalHeight
-  );
+  layout.drawImage(ticket, 0, 0, ticket.naturalWidth, ticket.naturalHeight);
 
   // text
   if (withName) {
@@ -48,7 +52,7 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
     layout.textAlign = "center";
     layout.strokeText(name, -255, 1170);
     layout.fillText(name, -255, 1170);
-  
+
     layout.font = "52px Archive";
     layout.fillStyle = color;
     layout.textAlign = "center";
@@ -76,6 +80,20 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
     );
   }
 
+  if (quantity > 1) {
+    layout.font = "42px Archive";
+    layout.fillStyle = color;
+    layout.textAlign = "center";
+    layout.strokeText(`${quantity}`, 1420, canvas.height - 110);
+    layout.fillText(`${quantity}`, 1420, canvas.height - 110);
+
+     layout.font = "25px Archive";
+     layout.fillStyle = color;
+     layout.textAlign = "center";
+     layout.strokeText(`x`, 1400, canvas.height - 115);
+     layout.fillText(`x`, 1400, canvas.height - 115);
+  }
+
   // Data URL
   const ticketUrl = canvas.toDataURL("image/webp");
 
@@ -85,4 +103,4 @@ export const createCustomerTicket = async (ticketImage, name, surname, color = "
   );
 
   return { ticketUrl, ticketBlob };
-}
+};

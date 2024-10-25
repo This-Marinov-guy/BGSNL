@@ -245,7 +245,8 @@ const GuestPurchase = () => {
                       values.surname,
                       selectedEvent.ticketColor,
                       qrCode,
-                      selectedEvent.ticketName
+                      selectedEvent.ticketName,
+                      quantity
                     );
 
                     // formData

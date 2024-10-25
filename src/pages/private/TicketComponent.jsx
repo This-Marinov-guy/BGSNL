@@ -88,7 +88,7 @@ const TicketComponent = () => {
       const surname = "Doe";
       const qrLink = createQrCodeCheckGuest({
         eventId: "66f1337cd435689ec6ec0f4c",
-        quantity: 1,
+        quantity: 2,
       });
 
       try {
@@ -97,7 +97,9 @@ const TicketComponent = () => {
           name,
           surname,
           "#faf9f6",
-          qrLink
+          qrLink,
+          true,
+          2
         );
         setTicketDataUrl(ticketUrl);
       } catch (err) {
