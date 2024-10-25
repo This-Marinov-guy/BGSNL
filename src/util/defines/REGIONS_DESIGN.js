@@ -196,4 +196,7 @@ export const REGION_SOCIALS = {
   ],
 };
 
-export const KVK = "88233855";
+export const KVK = {
+  netherlands: "95335048",
+  groningen: "88233855",
+};

@@ -58,7 +58,7 @@ const FooterTwo = ({ forceRegion }) => {
                   Reserved.
                 </p>
               </div>
-              <p className="information">{`KVK: ${KVK} | Version ${packageJson.version}`}</p>
+              <p className="information">{`KVK: ${KVK.netherlands} | Version ${packageJson.version}`}</p>
             </div>
           </div>
         </div>
