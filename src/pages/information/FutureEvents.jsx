@@ -50,8 +50,7 @@ const FutureEventsContent = ({ displayAll }) => {
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                 <h2 className="title">Future Events</h2>
                 <p>
-                  Our society events. Click on one for more information and buy
-                  a ticket on our website
+                  What you can expect - our society events happening near you! Make sure to subscribe to our social media or calendars in order to be up to date with schedule and promotions
                 </p>
               </div>
             </div>
@@ -151,6 +150,8 @@ const FutureOtherEventsContent = () => {
 };
 
 const FutureEvents = (props) => {
+  const { region } = useParams();
+
   return (
     <React.Fragment>
       <PageHelmet pageTitle="Events" />
@@ -165,10 +166,14 @@ const FutureEvents = (props) => {
       {/* End Breadcrump Area */}
 
       {/* Start Future Events Area */}
-      <FutureEventsContent />
-      <FutureOtherEventsContent
-        openNonSocietyEvents={props.openNonSocietyEvents}
-      />
+      {region ? (
+        <>
+          <FutureEventsContent />
+          <FutureOtherEventsContent />
+        </>
+      ) : (
+        <FutureEventsContent displayAll />
+      )}
       {/* End Future Events Area */}
 
       {/* Start Back To Top */}

@@ -5,6 +5,16 @@
   border-color: white !important;
 }
 
+.groningen button:hover,
+.amsterdam button:hover,
+.breda button:hover,
+.eindhoven button:hover,
+.leeuwarden button:hover,
+.maastricht button:hover,
+.rotterdam button:hover {
+  color: white !important;
+}
+
 /* Groningen */
 
 .groningen p,
@@ -148,4 +158,28 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: #381096 !important;
+}
+
+/* eindhoven */
+
+.eindhoven p,
+.eindhoven h3,
+.eindhoven a:hover,
+.eindhoven li:hover,
+.eindhoven h4 a:hover {
+  color: #ff914d !important;
+}
+
+.eindhoven button {
+  background-color: #ff914d !important;
+  border: #ff914d !important;
+}
+
+.eindhoven .thumbnail-inner-2::before {
+  background-color: #ff914d !important;
+  background-image: linear-gradient(#ff914d 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ff914d !important;
 }

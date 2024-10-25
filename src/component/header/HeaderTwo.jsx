@@ -124,23 +124,40 @@ const HeaderTwo = (props) => {
                     </ul>
                   </li> */}
                     <li className="has-dropdown">
-                      <Link to={`/${region}/events`}>Events</Link>
+                      <a style={{ cursor: "pointer" }}>Events</a>
                       <ul className="submenu">
                         <li>
-                          <Link to={`/${region}/future-events`}>
+                          <Link to={`/${region}/events/future-events`}>
                             Future Events
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/${region}/past-events`}>Past Events</Link>
+                          <Link to={`/${region}/events/past-events`}>
+                            Past Events
+                          </Link>
                         </li>
                       </ul>
                     </li>
                   </Fragment>
                 ) : (
-                  <li>
-                    <Link to="/about">About</Link>
-                  </li>
+                  <Fragment>
+                    <li className="has-dropdown">
+                      <a style={{ cursor: "pointer" }}>Events</a>
+                      <ul className="submenu">
+                        <li>
+                          <Link to={`/events/future-events`}>
+                            Future Events
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to={`/events/past-events`}>Past Events</Link>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <Link to="/about">About</Link>
+                    </li>
+                  </Fragment>
                 )}
 
                 <li className="has-dropdown">

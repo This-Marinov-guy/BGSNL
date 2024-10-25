@@ -7,13 +7,12 @@ import { FutureEventsContent } from "./FutureEvents";
 import { FutureOtherEventsContent } from "./FutureEvents";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
-import { PastEventsContent, PastEventsListed } from "./PastEvents";
+import { PastEventsContent } from "./PastEvents";
 import { useParams } from "react-router-dom";
 import { PAST_EVENTS } from "../../util/defines/PAST_EVENTS";
 
 const Events = () => {
-
-  const {region} = useParams();
+  const { region } = useParams();
 
   return (
     <React.Fragment>
@@ -29,14 +28,14 @@ const Events = () => {
       {/* End Breadcrump Area */}
 
       {/* Start Future Events Area */}
-      <FutureEventsContent/>
-      <FutureOtherEventsContent
-       
-      />
+      <FutureEventsContent />
+      <FutureOtherEventsContent />
       {/* End Future Events Area */}
 
       {/* Start Past Events Area */}
-      {PAST_EVENTS[region] && PAST_EVENTS[region].length <= 3 ? <PastEventsListed/> :  <PastEventsContent />}
+      {PAST_EVENTS[region] && PAST_EVENTS[region].length <= 3 && (
+        <PastEventsContent />
+      )}
       {/* End Past Events Area */}
 
       {/* Start Back To Top */}

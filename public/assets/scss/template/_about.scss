@@ -48,7 +48,7 @@
       width: 90vw;
       align-self: flex-start;
       height: 7em;
-    border-radius: 0px 2em 10px 0px;
+      border-radius: 0px 2em 10px 0px;
 
       h1,
       a,
@@ -320,6 +320,62 @@
       color: rgba(29, 29, 36, 0.75);
       font-size: 20px;
       line-height: 30px;
+    }
+  }
+}
+
+/*====================
+    Events Area 
+======================*/
+
+.past-events-gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+
+  .gallery-element-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .gallery-showcase {
+      transform: rotate(10deg);
+    }
+
+    @media #{$large-mobile} {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .gallery-element-right {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+
+    .gallery-showcase {
+      transform: rotate(-10deg);
+    }
+
+    @media #{$large-mobile} {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .gallery-showcase, img {
+    max-width: 20em;
+    max-height: 20em;
+  }
+
+  h3 {
+    width: 10em;
+    margin: 0 2em 0 2em;
+
+    @media #{$large-mobile} {
+      text-align: center;
+      margin: 2em 0 0 0;
     }
   }
 }

@@ -1,106 +1,64 @@
 import React, { Component } from "react";
 import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
-import Slider from "react-slick";
 import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import { slickDot } from "../../page-demo/script";
+import { FiChevronUp, FiInstagram } from "react-icons/fi";
 import Header from "../../component/header/Header";
+import { Image } from "primereact/image";
 import Footer from "../../component/footer/Footer";
-import ImageFb from "../../elements/ui/media/ImageFb";
-import { Link, useParams } from "react-router-dom";
-import { PAST_EVENTS } from '../../util/defines/PAST_EVENTS'
-
+import RegionOptionsUnstyled from "../../elements/ui/buttons/RegionOptionsUnstyled";
+import { REGION_INSTAGRAM } from "../../util/defines/REGIONS_DESIGN";
+import { PAST_EVENTS_GALLERY } from "../../util/defines/GALLERY";
 
 const PastEventsContent = () => {
-  const { region } = useParams();
-
   return (
     <div className="portfolio-area pt--40 pb--120 bg_color--5">
       <div className="rn-slick-dot">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-6">
+          <div className="row mb--10">
+            <div className="col-12">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                 <h2 className="title">Past Events</h2>
                 <p>
-                  Let us introduce you to our events that brought success
-                  beyond our expectations
+                  Let us introduce you to our events that brought success beyond
+                  our expectations. In Bulgarian Society we rely on variety so
+                  we are proud to showcase it
                 </p>
               </div>
             </div>
           </div>
           <div className="row">
-            <div className="col-lg-12">
-              <div className="slick-space-gutter--15 slickdot--100">
-                {PAST_EVENTS[region] ? <Slider {...slickDot}>
-                  {PAST_EVENTS[region].map((value, index) => (
-                    <div className="portfolio portfolio-slider" key={index}>
-                      <Link
-                        to={`/${region}/event-reflection/${value.url}`}
-                        className="thumbnail-inner-2"
-                      >
-                        <ImageFb
-                          className="thumbnail"
-                          src={`/assets/images/portfolio/${region}/portfolio-${value.image}.webp`}
-                          fallback={`/assets/images/portfolio/${region}/portfolio-${value.image}.jpg`}
-                          alt="Event Images"
-                        />
-                      </Link>
-                    </div>
-                  ))}
-                </Slider> : <h3 className="mt--20">Expect the catalogue of past events soon</h3>}
-              </div>
+            <div className="col-12 past-events-gallery">
+              {PAST_EVENTS_GALLERY.map((e, i) => {
+                return (
+                  <div
+                    key={i}
+                    className={`gallery-element-${
+                      i % 2 === 0 ? "left" : "right"
+                    }`}
+                  >
+                    <h3>{e.text}</h3>
+                    <Image className="gallery-showcase" src={e.src} alt="past event" preview />
+                  </div>
+                );
+              })}
+            </div>
+            <div
+              style={{ alignSelf: "flex-start" }}
+              className="col-12 past-events-gallery"
+            >
+              <h2 className="mt--40">
+                Find more about our latest events on our{" "}
+                <FiInstagram style={{ fontSize: "1em" }} /> channels
+              </h2>
+              <RegionOptionsUnstyled links={REGION_INSTAGRAM} />
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-const PastEventsListed = () => {
-  const { region } = useParams()
-
-  return (
-    <div className="portfolio-area pt--40 pb--40 bg_color--5">
-      <div className="rn-slick-dot">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-6">
-              <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
-                <h2 className="title">Past Events</h2>
-                <p>
-                  Let us introduce you to our events that brought success
-                  beyond our expectations
-                </p>
-              </div>
-            </div>
-          </div>
-          {PAST_EVENTS[region] ? PAST_EVENTS[region].map((value, index) => (
-            <div className="past_events grid">
-              <div className="portfolio grid_item" key={index}>
-                <Link
-                  to={`/${region}/event-reflection/${value.url}`}
-                  className="thumbnail-inner-2"
-                >
-                  <ImageFb
-                    className="thumbnail"
-                    src={`/assets/images/portfolio/${region}/portfolio-${value.image}.webp`}
-                    fallback={`/assets/images/portfolio/${region}/portfolio-${value.image}.jpg`}
-                    alt="Event Images"
-                  />
-                </Link>
-              </div>
-            </div>
-          )) : <h3 className="mt--20">Expect catalogue of the past events soon</h3>}
-
-        </div>
-      </div>
-    </div>
-  );
-
-}
+};
 
 class PastEvents extends Component {
   render() {
@@ -133,4 +91,4 @@ class PastEvents extends Component {
     );
   }
 }
-export { PastEvents, PastEventsContent, PastEventsListed };
+export { PastEvents, PastEventsContent };

@@ -12,7 +12,7 @@ import { EVENT_REFLECTION_DETAILS } from "../util/defines/OPEN_EVENTS";
 import { EVENT_REFLECTIONS } from "../util/defines/PAST_EVENTS";
 
 const EventReflection = React.memo(() => {
-  const {region} = useParams()
+  const { region } = useParams();
 
   const target = useObjectGrabUrl(EVENT_REFLECTIONS[region]);
 

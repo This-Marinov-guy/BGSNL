@@ -22,19 +22,19 @@ const Home = () => {
 
   useEffect(() => {
     if (region && !REGIONS.includes(region)) {
-      navigate('/');
+      navigate("/");
     }
-  }, [region])
+  }, [region]);
 
   const recruitRef = useRef(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
 
-    const campaignQuery = searchParams.get('campaign');
+    const campaignQuery = searchParams.get("campaign");
 
-    if (campaignQuery === 'designer') {
-      recruitRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (campaignQuery === "designer") {
+      recruitRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, []);
 
@@ -45,7 +45,7 @@ const Home = () => {
 
       {/* Start Slider Area   */}
       {/* <Hero2 /> */}
-      <Hero1/>
+      <Hero1 />
       {/* End Slider Area   */}
 
       {/* Start Sponsor Area */}
@@ -53,9 +53,9 @@ const Home = () => {
       <BrandTwo />
 
       {/* End Sponsor Area */}
-      
+
       {/* Start About Area  */}
-      {!region && <AboutUs learnMore/>}
+      {!region && <AboutUs learnMore />}
       {/* End About Area  */}
       {/* <Greeting /> */}
       {/* Start News Area */}
@@ -65,16 +65,15 @@ const Home = () => {
       {/* End News Area */}
 
       {/* Start Upcoming Events Area */}
-      {region ?
-        <Fragment>
+      {region ? (
+        <>
           <FutureEventsContent />
           <FutureOtherEventsContent />
-        </Fragment>
-        :
+        </>
+      ) : (
         <FutureEventsContent displayAll />
-      }
+      )}
       {/* End Upcoming Events Area */}
-
 
       {/* Start Footer Style  */}
       <FooterTwo />

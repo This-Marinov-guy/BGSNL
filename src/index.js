@@ -160,30 +160,13 @@ const Root = () => {
             />
             <Route
               exact
-              path={`/:region/events`}
-              element={
-                <RegionLayout>
-                  <Events />
-                </RegionLayout>
-              }
+              path={`/:region?/events/future-events`}
+              element={<FutureEvents />}
             />
             <Route
               exact
-              path={`/:region/future-events`}
-              element={
-                <RegionLayout>
-                  <FutureEvents />
-                </RegionLayout>
-              }
-            />
-            <Route
-              exact
-              path={`/:region/past-events`}
-              element={
-                <RegionLayout>
-                  <PastEvents />
-                </RegionLayout>
-              }
+              path={`/:region?/events/past-events`}
+              element={<PastEvents />}
             />
             <Route
               exact
@@ -203,14 +186,14 @@ const Root = () => {
                 </RegionLayout>
               }
             ></Route>
-            <Route
+            {/* <Route
               path={`/:region/event-reflection/:eventId`}
               element={
                 <RegionLayout>
                   <EventReflection />
                 </RegionLayout>
               }
-            />
+            /> */}
 
             {/* Redirect pages */}
 
