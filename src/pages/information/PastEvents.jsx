@@ -28,12 +28,12 @@ const PastEventsContent = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col-12 past-events-gallery">
+            <div className="col-12 row past-events-gallery">
               {PAST_EVENTS_GALLERY.map((e, i) => {
                 return (
                   <div
                     key={i}
-                    className={`gallery-element-${
+                    className={`col-lg-6 col-12 gallery-element-${
                       i % 2 === 0 ? "left" : "right"
                     }`}
                   >
@@ -47,7 +47,7 @@ const PastEventsContent = () => {
               style={{ alignSelf: "flex-start" }}
               className="col-12 past-events-gallery"
             >
-              <h2 className="mt--40">
+              <h2 className="mt--40 center_text" style={{fontSize: '1em'}}>
                 Find more about our latest events on our{" "}
                 <FiInstagram style={{ fontSize: "1em" }} /> channels
               </h2>
