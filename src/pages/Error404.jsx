@@ -3,6 +3,7 @@ import Header from "../component/header/Header";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import Footer from "../component/footer/Footer";
 
 const Error404 = () => {
   return (
@@ -21,9 +22,12 @@ const Error404 = () => {
                 <h1 className="title theme-gradient">404!</h1>
                 <h3 className="sub-title">Page not found</h3>
                 <span>The page you were looking for could not be found.</span>
-                  <Link className="rn-button-style--2 rn-btn-reverse-green" to="/">
-                    Back To Home
-                  </Link>
+                <Link
+                  className="rn-button-style--2 rn-btn-reverse-green"
+                  to="/"
+                >
+                  Back To Home
+                </Link>
               </div>
             </div>
           </div>
@@ -38,6 +42,8 @@ const Error404 = () => {
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
+
+      <Footer />
     </Fragment>
   );
 };
