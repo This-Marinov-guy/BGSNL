@@ -3,7 +3,10 @@ import { Dialog } from "primereact/dialog";
 import CustomSpinner from "../../../ui/loading/CustomSpinner";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { encryptData } from "../../../../util/functions/helpers";
-import { createCustomerTicket, createQrCodeCheckGuest } from "../../../../util/functions/ticket-creator";
+import {
+  createCustomerTicket,
+  createQrCodeCheckGuest,
+} from "../../../../util/functions/ticket-creator";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";
 import { SUCCESS_STYLE, WARNING_STYLE } from "../../../../util/defines/common";
@@ -76,6 +79,7 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
         ticketBlob,
         event.id + "_" + element.name + element.surname + "_GUEST"
       );
+      formData.append("type", 'free');
       formData.append("region", event.region);
       formData.append("quantity", 1);
       formData.append("origin_url", window.location.origin);
