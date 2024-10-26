@@ -365,9 +365,18 @@
     }
   }
 
-  .gallery-showcase, img {
+  .gallery-showcase,
+  img {
     max-width: 20em;
     max-height: 20em;
+    border-radius: 50% 45% 55% 50% / 60% 50% 45% 55%;
+    border: 5px solid $label-color;
+    box-shadow: 
+        5px 5px 10px rgba(0, 0, 0, 0.2),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.6),
+        -5px -5px 15px rgba(0, 0, 0, 0.1);
+    
+    animation: bubble-motion 13s infinite ease-in-out;
   }
 
   h3 {
@@ -379,4 +388,19 @@
       margin: 2em 0 0 0;
     }
   }
+}
+
+@keyframes bubble-motion {
+    0%, 100% {
+        border-radius: 60% 40% 70% 30% / 65% 45% 30% 70%;
+    }
+    25% {
+        border-radius: 70% 30% 50% 40% / 45% 65% 55% 35%;
+    }
+    50% {
+        border-radius: 40% 70% 60% 30% / 60% 40% 70% 50%;
+    }
+    75% {
+        border-radius: 55% 45% 35% 65% / 70% 30% 45% 60%;
+    }
 }

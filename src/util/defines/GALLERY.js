@@ -25,7 +25,7 @@ export const PAST_EVENTS_GALLERY = [
   },
 
   {
-    text: "Social drinks",
+    text: "Social drinks & networking",
     src: "https://live.staticflickr.com/65535/53355583325_4c5d2c027c_k.jpg",
   },
   {
