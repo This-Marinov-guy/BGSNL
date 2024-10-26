@@ -27,6 +27,9 @@ const AboutUs = ({ learnMore }) => {
                   );
                 })}
               </Slider>
+              <Link className="center_div" style={{ fontSize: "0.6em" }} to="/events/past-events">
+                (Events showcase)
+              </Link>
             </div>
 
             <div className="col-lg-7 col-md-12">
@@ -35,7 +38,9 @@ const AboutUs = ({ learnMore }) => {
                   {learnMore ? (
                     <div className="center_div j-start">
                       <h2 className="title mr--20">{title}</h2>
-                      <Link style={{fontSize: '0.6em'}} to="/about">(Learn more)</Link>
+                      <Link style={{ fontSize: "0.6em" }} to="/about">
+                        (Learn more)
+                      </Link>
                     </div>
                   ) : (
                     <h2 className="title">{title}</h2>

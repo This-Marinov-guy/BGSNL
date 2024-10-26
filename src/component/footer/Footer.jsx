@@ -64,7 +64,7 @@ const Footer = ({forceRegion}) => {
                       <h4>Quick Link</h4>
                       <ul className="ft-link">
                         <li>
-                          <Link to={`/${region}/past-events`}>Events</Link>
+                          <Link to={`/${region}/past/future-events`}>Events</Link>
                         </li>
                         <li>
                           <Link to={`/${region}/contact`}>Contact</Link>
