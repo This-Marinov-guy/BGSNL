@@ -251,3 +251,9 @@ export const isPlainObject = (value) => {
     !Array.isArray(value)
   );
 }
+
+export const hasNonEmptyValues = (obj, threshold = 1) => {
+  const trueCount = Object.values(obj).filter((value) => value === true || value?.length > 0).length;
+  
+  return trueCount > threshold;
+}

@@ -13,7 +13,10 @@ import { selectEvents } from "../../redux/events";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { checkObjectOfArraysEmpty } from "../../util/functions/helpers";
+import {
+  checkObjectOfArraysEmpty,
+  hasNonEmptyValues,
+} from "../../util/functions/helpers";
 import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
 
 const FutureEventsContent = ({ displayAll }) => {
@@ -32,6 +35,9 @@ const FutureEventsContent = ({ displayAll }) => {
       events = events.filter((event) => event.hidden === false);
     }
   }
+  const isMoreThanOneEvent = hasNonEmptyValues(events);
+  console.log(isMoreThanOneEvent);
+  
 
   useEffect(() => {
     reloadEvents();
@@ -50,7 +56,9 @@ const FutureEventsContent = ({ displayAll }) => {
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                 <h2 className="title">Future Events</h2>
                 <p>
-                  What you can expect - our society events happening near you! Make sure to subscribe to our social media or calendars in order to be up to date with schedule and promotions
+                  What you can expect - our society events happening near you!
+                  Make sure to subscribe to our social media or calendars in
+                  order to be up to date with schedule and promotions
                 </p>
               </div>
             </div>
@@ -59,7 +67,7 @@ const FutureEventsContent = ({ displayAll }) => {
                 <EventsLoading />
               ) : (
                 REGIONS.map((region, index) => {
-                  if (events[region].length) {
+                  if (events[region].length && isMoreThanOneEvent) {
                     return (
                       <div
                         className="col-lg-4 col-md-6 col-12 mt--20"
@@ -74,6 +82,22 @@ const FutureEventsContent = ({ displayAll }) => {
                           styevariation="text-center"
                           column="col-12"
                         />
+                      </div>
+                    );
+                  } else if (events[region].length) {
+                    return (
+                      <div className="col-12 mt--20" key={index}>
+                        <h4 className="col-12 archive">
+                          {region.toUpperCase()}
+                        </h4>
+                        <div className="row">
+                          <PortfolioList2
+                            style="society"
+                            target={events[region]}
+                            styevariation="text-center"
+                            column="col-lg-4 col-md-6 col-12"
+                          />
+                        </div>
                       </div>
                     );
                   }
