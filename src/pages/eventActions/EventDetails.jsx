@@ -127,6 +127,7 @@ const EventDetails = () => {
                         Entry fee{" "}
                         {
                           <DynamicTicketBadge
+                            isMember={!!user?.token}
                             product={selectedEvent?.product}
                           />
                         }
