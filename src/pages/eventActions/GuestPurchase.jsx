@@ -327,7 +327,7 @@ const GuestPurchase = () => {
                   ),
                 }}
               >
-                {(setFieldValue, errors) => (
+                {({setFieldValue, errors}) => (
                   <Form
                     id="form"
                     encType="multipart/form-data"

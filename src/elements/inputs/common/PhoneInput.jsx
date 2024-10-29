@@ -13,12 +13,13 @@ const PhoneInput = ({ className, style, onChange, placeholder }) => {
       ? EUROPEAN_COUNTRIES.find((c) => c.iso2.toUpperCase() === location)
       : getGeoLocation()
   );
-  
+
   const [value, setValue] = useState(undefined);
 
   useEffect(() => {
     if (onChange && selectedCode && value) {
-      onChange(selectedCode + value);
+      onChange(selectedCode.phoneCode + value);    
+        
     }
   }, [selectedCode, value]);
 
@@ -27,7 +28,16 @@ const PhoneInput = ({ className, style, onChange, placeholder }) => {
       <Dropdown
         value={selectedCode}
         filter
-        onChange={(e) => setSelectedCode(e.value)}
+        onChange={(e) => {
+          const inputValue = e.value;
+
+          localStorage.setItem(
+            LOCAL_STORAGE_LOCATION,
+            EUROPEAN_COUNTRIES.find((c) => c.phoneCode === inputValue.phoneCode)['iso2']
+          );
+
+          setSelectedCode(inputValue);
+        }}
         options={EUROPEAN_COUNTRIES}
         optionLabel="phoneCode"
         placeholder="Prefix"
