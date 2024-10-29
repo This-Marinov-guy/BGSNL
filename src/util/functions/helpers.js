@@ -301,7 +301,7 @@ export const getGeoLocation = () => {
   let location = localStorage.getItem(LOCAL_STORAGE_LOCATION) || '';
 
   if (location) {
-    return locationbar;
+    return location;
   }
 
   fetch(`https://ipinfo.io/json?token=${process.env.REACT_APP_GEO_TOKEN}`)

@@ -6,20 +6,17 @@ import { getGeoLocation } from "../../../util/functions/helpers";
 import { LOCAL_STORAGE_LOCATION } from "../../../util/defines/common";
 
 const PhoneInput = ({ className, style, onChange, placeholder }) => {
-  const location = localStorage.getItem(LOCAL_STORAGE_LOCATION);
-
   const [selectedCode, setSelectedCode] = useState(
-    location
-      ? EUROPEAN_COUNTRIES.find((c) => c.iso2.toUpperCase() === location)
-      : getGeoLocation()
+    EUROPEAN_COUNTRIES.find(
+      (c) => c.iso2.toUpperCase() === getGeoLocation()
+    )
   );
 
   const [value, setValue] = useState(undefined);
 
   useEffect(() => {
     if (onChange && selectedCode && value) {
-      onChange(selectedCode.phoneCode + value);    
-        
+      onChange(selectedCode.phoneCode + value);
     }
   }, [selectedCode, value]);
 
@@ -33,7 +30,9 @@ const PhoneInput = ({ className, style, onChange, placeholder }) => {
 
           localStorage.setItem(
             LOCAL_STORAGE_LOCATION,
-            EUROPEAN_COUNTRIES.find((c) => c.phoneCode === inputValue.phoneCode)['iso2']
+            EUROPEAN_COUNTRIES.find(
+              (c) => c.phoneCode === inputValue.phoneCode
+            )["iso2"]
           );
 
           setSelectedCode(inputValue);
