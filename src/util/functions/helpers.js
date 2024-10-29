@@ -4,7 +4,7 @@ import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
 import CryptoJS from "crypto-js";
 import { checkAuthorization } from "./authorization";
-import { ACCESS_3, ACCESS_4 } from "../defines/common";
+import { ACCESS_3, ACCESS_4, LOCAL_STORAGE_LOCATION } from "../defines/common";
 
 export const isProd = () => {
   return process.env.NODE_ENV === "production";
@@ -296,3 +296,24 @@ export const hasNonEmptyValues = (obj, threshold = 1) => {
 
   return trueCount > threshold;
 };
+
+export const getGeoLocation = () => {
+  let location = localStorage.getItem(LOCAL_STORAGE_LOCATION) || '';
+
+  if (location) {
+    return locationbar;
+  }
+
+  fetch(`https://ipinfo.io/json?token=${process.env.REACT_APP_GEO_TOKEN}`)
+    .then((response) => response.json())
+    .then((data) => {
+      location = data.country;
+      localStorage.setItem(LOCAL_STORAGE_LOCATION, location);
+      
+    })
+    .catch((error) => {
+      console.error("Error fetching location data:", error);
+    });
+
+    return location
+}
