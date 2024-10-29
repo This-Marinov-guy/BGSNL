@@ -42,6 +42,7 @@
 // }
 
 .logo {
+  border-radius: 50%;
   width: 120px;
   height: 120px;
 }
@@ -397,7 +398,7 @@
   }
   &.header-red {
     @media only screen and (min-width: 991px) {
-      position:fixed;
+      position: fixed;
       top: 0;
       right: 0;
       padding: 5px 20px;
@@ -407,7 +408,7 @@
   }
   &.header-green {
     @media only screen and (min-width: 991px) {
-      position:fixed;
+      position: fixed;
       top: 0;
       right: 0;
       padding: 5px 20px;

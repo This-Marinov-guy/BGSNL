@@ -35,9 +35,7 @@ const FutureEventsContent = ({ displayAll }) => {
       events = events.filter((event) => event.hidden === false);
     }
   }
-  const isMoreThanOneEvent = hasNonEmptyValues(events);
-  console.log(isMoreThanOneEvent);
-  
+  const isMoreThanOneEvent = hasNonEmptyValues(events);  
 
   useEffect(() => {
     reloadEvents();

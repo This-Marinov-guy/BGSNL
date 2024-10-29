@@ -32,6 +32,7 @@ import { addEventToAll, editEventFromAll } from "../../../redux/events";
 import ImageSelection from "../../inputs/ImageSelection";
 import AdditionalPrices from "../../inputs/AdditionalPrices";
 import { START_TIMER } from "../../../util/defines/enum";
+import PromotionalPrices from "../../inputs/PromotionalPrice";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -251,6 +252,66 @@ const EventForm = (props) => {
         }
       ),
 
+    guestPromotion: yup.object().shape({
+      isEnabled: yup.boolean().required(),
+      discount: yup.number().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .number()
+            .required("Please enter discount %")
+            .min(5, "Must be at least 5%")
+            .max(95, "Cannot exceed 95%"),
+        otherwise: () => yup.number().nullable(),
+      }),
+      startTimer: yup.number().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .string()
+            .required("Please enter a start point of the guest promotion"),
+        otherwise: () => yup.string().nullable(),
+      }),
+      endTimer: yup.string().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .string()
+            .required("Please enter an end point of the guest promotion"),
+        otherwise: () => yup.string().nullable(),
+      }),
+    }),
+
+    memberPromotion: yup.object().shape({
+      isEnabled: yup.boolean().required(),
+      discount: yup.number().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .number()
+            .required("Please enter discount %")
+            .min(5, "Must be at least 5%")
+            .max(95, "Cannot exceed 95%"),
+        otherwise: () => yup.number().nullable(),
+      }),
+      startTimer: yup.number().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .number()
+            .required("Please enter a start point of the guest promotion"),
+        otherwise: () => yup.number().nullable(),
+      }),
+      endTimer: yup.string().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .number()
+            .required("Please enter an end point of the guest promotion"),
+        otherwise: () => yup.number().nullable(),
+      }),
+    }),
+
     ticketLink: yup.string().when("isTicketLink", {
       is: (isTicketLink) => isTicketLink,
       then: () =>
@@ -387,6 +448,22 @@ const EventForm = (props) => {
               memberPrice: undefined,
               isEnabled: false,
               excludeMembers: false,
+            }),
+          },
+          guestPromotion: {
+            ...(initialData?.promotion.guest ?? {
+              isEnabled: false,
+              startTimer: "",
+              endTimer: "",
+              discount: undefined,
+            }),
+          },
+          memberPromotion: {
+            ...(initialData?.promotion.member ?? {
+              isEnabled: false,
+              startTimer: "",
+              endTimer: "",
+              discount: undefined,
             }),
           },
         }}
@@ -631,7 +708,10 @@ const EventForm = (props) => {
                     </>
                   )}
                   <div className="col-12">
-                    <h3 className="mt--30 label">Variable Price Options</h3>
+                    <h3 className="mt--30 label">
+                      Variable Price Options (Change price based on demand and
+                      time)
+                    </h3>
                     <div className="hor_section_nospace mt--20 mb--20">
                       <Field
                         style={{ maxWidth: "30px" }}
@@ -669,6 +749,44 @@ const EventForm = (props) => {
                       }
                       withLimit={false}
                       timerType={START_TIMER}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <h3 className="mt--30 label">
+                      Promotions (deduct % from the price)
+                    </h3>
+                    <div className="hor_section_nospace mt--20 mb--20">
+                      <Field
+                        style={{ maxWidth: "30px" }}
+                        type="checkbox"
+                        name="guestPromotion[isEnabled]"
+                      ></Field>
+                      <p>Add Guest Promotion</p>
+                    </div>
+                    <PromotionalPrices
+                      visible={values.guestPromotion.isEnabled}
+                      label="Guest Promotion"
+                      setFieldValue={setFieldValue}
+                      initialStartValue={values.guestPromotion.startTimer}
+                      initialEndValue={values.guestPromotion.endTimer}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <div className="hor_section_nospace mt--20 mb--20">
+                      <Field
+                        style={{ maxWidth: "30px" }}
+                        type="checkbox"
+                        name="memberPromotion[isEnabled]"
+                      ></Field>
+                      <p>Add Member Promotion</p>
+                    </div>
+                    <PromotionalPrices
+                      visible={values.memberPromotion.isEnabled}
+                      label="Member Promotion"
+                      setFieldValue={setFieldValue}
+                      initialStartValue={values.memberPromotion.startTimer}
+                      initialEndValue={values.memberPromotion.endTimer}
                     />
                   </div>
                 </div>
@@ -832,7 +950,7 @@ const EventForm = (props) => {
                   <ImageSelection
                     placeholder="Choose default background"
                     initialValue={values.bgImage}
-                    onSelect={(option) => setFieldValue("bgImageExtra", option)}
+                    onSelect={(option) => setFieldValue("bgImage", option)}
                     options={bgs}
                   />
                   <h5>or choose your own</h5>
