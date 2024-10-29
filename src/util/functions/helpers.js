@@ -1,3 +1,4 @@
+import React from "react";
 import { clarity } from "react-microsoft-clarity";
 import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
@@ -177,6 +178,38 @@ export const estimatePriceByEvent = (
     price = "FREE";
   }
 
+  // TODO: check this
+  if (
+    isMember &&
+    !isActiveMember &&
+    product.member?.price &&
+    product.member?.discount &&
+    product.member?.originalPrice
+  ) {
+    return (
+      <span>
+        <s>{product.member.originalPrice} euro</s>
+        <br/>
+        {product.member.price} euro
+      </span>
+    );
+  }
+
+  if (
+    !isMember &&
+    product.guest?.price &&
+    product.guest?.discount &&
+    product.guest?.originalPrice
+  ) {
+    return (
+      <h4>
+        <s>{product.guest.originalPrice} euro</s>
+        <br />
+        {product.guest.price} euro
+      </h4>
+    );
+  }
+
   return price;
 };
 
@@ -250,10 +283,16 @@ export const isPlainObject = (value) => {
     !(value instanceof Date) &&
     !Array.isArray(value)
   );
-}
+};
 
 export const hasNonEmptyValues = (obj, threshold = 1) => {
-  const trueCount = Object.values(obj).filter((value) => value === true || value?.length > 0).length;
+  if (!obj) {
+    return false
+  }
   
+  const trueCount = Object.values(obj).filter(
+    (value) => value === true || value?.length > 0
+  ).length;
+
   return trueCount > threshold;
-}
+};

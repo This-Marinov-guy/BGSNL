@@ -4,6 +4,7 @@ import {
   createQrCodeCheckGuest,
 } from "../../util/functions/ticket-creator";
 import { decryptData } from "../../util/functions/helpers";
+import PhoneInput from "../../elements/inputs/common/PhoneInput";
 
 const BloggerPost = ({ blogId, postId }) => {
   const [postData, setPostData] = useState(null);
@@ -112,7 +113,8 @@ const TicketComponent = () => {
 
   return (
     <>
-      <img src={ticketDataUrl} alt="Customer Ticket" />
+      {/* <img src={ticketDataUrl} alt="Customer Ticket" /> */}
+      <PhoneInput />
     </>
   );
 };

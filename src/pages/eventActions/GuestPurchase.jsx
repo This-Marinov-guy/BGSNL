@@ -38,6 +38,7 @@ import {
   constructInitialExtraFormValues,
 } from "../../util/functions/input-helpers";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
+import PhoneInput from "../../elements/inputs/common/PhoneInput";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -159,9 +160,7 @@ const GuestPurchase = () => {
               </p>
               <p>Address: {selectedEvent.location}</p>
               <p>
-                <span
-                  className="center_div j-start"
-                >
+                <span className="center_div j-start">
                   Price :{" "}
                   {selectedEvent.isFree
                     ? " FREE"
@@ -328,7 +327,7 @@ const GuestPurchase = () => {
                   ),
                 }}
               >
-                {(values, errors) => (
+                {(setFieldValue, errors) => (
                   <Form
                     id="form"
                     encType="multipart/form-data"
@@ -380,7 +379,9 @@ const GuestPurchase = () => {
                       </div>
                       <div className="col-lg-12 col-md-12 col-12">
                         <div className="rn-form-group">
-                          <Field type="tel" placeholder="Phone" name="phone" />
+                          <PhoneInput
+                            onChange={(value) => setFieldValue("phone", value)}
+                          />{" "}
                           <p className="information">
                             Please enter your real number as it might be used to
                             prove your identity on the entry

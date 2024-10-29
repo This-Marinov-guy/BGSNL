@@ -19,6 +19,7 @@ import { decodeJWT } from "../../util/functions/authorization";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
 import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
+import PhoneInput from "../../elements/inputs/common/PhoneInput";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -107,19 +108,31 @@ const NonSocietyEvent = (props) => {
       />
 
       <ModalWindow show={modal.includes(NSE_REGISTRATION_MODAL)}>
-        {user.token ? (currentUser ? <div className="center_section pd--20">
-          <FiX style={{ fontSize: '25px' }}
-            className="x_icon"
-            onClick={closeNotificationHandler}
-          />
-          <h3 className="center_text title">Finish registration as {currentUser.name + ' ' + currentUser.surname + ' ?'}</h3>
-          <button
-            disabled={loading}
-            onClick={submitMemberForm}
-            className="rn-button-style--2 rn-btn-reverse-green mt--30"
-          >
-            {loading ? <Loader /> : <span>Register</span>}
-          </button></div> : <Loader center />) : <Formik
+        {user.token ? (
+          currentUser ? (
+            <div className="center_section pd--20">
+              <FiX
+                style={{ fontSize: "25px" }}
+                className="x_icon"
+                onClick={closeNotificationHandler}
+              />
+              <h3 className="center_text title">
+                Finish registration as{" "}
+                {currentUser.name + " " + currentUser.surname + " ?"}
+              </h3>
+              <button
+                disabled={loading}
+                onClick={submitMemberForm}
+                className="rn-button-style--2 rn-btn-reverse-green mt--30"
+              >
+                {loading ? <Loader /> : <span>Register</span>}
+              </button>
+            </div>
+          ) : (
+            <Loader center />
+          )
+        ) : (
+          <Formik
             className="inner"
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -137,12 +150,17 @@ const NonSocietyEvent = (props) => {
                     notificationTypeTerms: values.notificationTypeTerms,
                   }
                 );
-                dispatch(showNotification({
-                  severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!'
-                }));
+                dispatch(
+                  showNotification({
+                    severity: "success",
+                    summary: "Success",
+                    detail:
+                      "Your registration for the event is complete! The organizer will soon contact you!",
+                  })
+                );
                 navigate("/");
                 setTimeout(() => closeNotificationHandler(), 7000);
-              } catch (err) { }
+              } catch (err) {}
             }}
             initialValues={{
               name: "",
@@ -153,111 +171,111 @@ const NonSocietyEvent = (props) => {
               notificationTypeTerms: "",
             }}
           >
-          {() => (
-            <Form
-              encType="multipart/form-data"
-              className="center_section"
-              id="form"
-              style={{ padding: "2%" }}
-            >
-              <h3>Fill your details and register</h3>
-              <FiX className="x_icon" onClick={closeHandler} />
-
-              <div className="row">
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field type="text" placeholder="Name" name="name" />
-                    <ErrorMessage
-                      className="error"
-                      name="name"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field
-                      type="text"
-                      placeholder="Surname"
-                      name="surname"
-                    ></Field>
-                    <ErrorMessage
-                      className="error"
-                      name="surname"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field
-                      type="tel"
-                      placeholder="WhatsApp Phone "
-                      name="phone"
-                    ></Field>
-                    <p className="information">
-                      Please type your number with + and country code
-                    </p>
-                    <ErrorMessage
-                      className="error"
-                      name="phone"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <Field type="email" placeholder="Email" name="email" />
-                    <ErrorMessage
-                      className="error"
-                      name="email"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="hor_section_nospace mt--40">
-                    <Field
-                      style={{ maxWidth: "30px", margin: "10px" }}
-                      type="checkbox"
-                      name="notificationTerms"
-                    ></Field>
-                    <p className="information">
-                      I consent to being notified by the organizer through the
-                      below contact/s
-                    </p>
-                  </div>
-                  <ErrorMessage
-                    className="error"
-                    name="notificationTerms"
-                    component="div"
-                  />
-                  <Field as="select" name="notificationTypeTerms">
-                    <option value="" disabled>
-                      Contact By
-                    </option>
-                    <option value="Email">Email</option>
-                    <option value="WhatsApp">WhatsApp</option>
-                    <option value="Email & WhatsApp">Both</option>
-                  </Field>
-                  <ErrorMessage
-                    className="error"
-                    name="notificationTypeTerms"
-                    component="div"
-                  />
-                </div>
-              </div>
-
-              <button
-                disabled={loading}
-                type="submit"
-                className="rn-button-style--2 rn-btn-reverse-green mt--80"
+            {(setFieldValue) => (
+              <Form
+                encType="multipart/form-data"
+                className="center_section"
+                id="form"
+                style={{ padding: "2%" }}
               >
-                {loading ? <Loader /> : <span>Update information</span>}
-              </button>
-            </Form>
-          )}
-        </Formik>}
+                <h3>Fill your details and register</h3>
+                <FiX className="x_icon" onClick={closeHandler} />
+
+                <div className="row">
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field type="text" placeholder="Name" name="name" />
+                      <ErrorMessage
+                        className="error"
+                        name="name"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field
+                        type="text"
+                        placeholder="Surname"
+                        name="surname"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="surname"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <PhoneInput
+                        placeholder="WhatsApp Phone "
+                        onChange={(value) => setFieldValue("phone", value)}
+                      ></PhoneInput>
+                      <p className="information">
+                        Please type your number with + and country code
+                      </p>
+                      <ErrorMessage
+                        className="error"
+                        name="phone"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="rn-form-group">
+                      <Field type="email" placeholder="Email" name="email" />
+                      <ErrorMessage
+                        className="error"
+                        name="email"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-6 col-md-12 col-12">
+                    <div className="hor_section_nospace mt--40">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="notificationTerms"
+                      ></Field>
+                      <p className="information">
+                        I consent to being notified by the organizer through the
+                        below contact/s
+                      </p>
+                    </div>
+                    <ErrorMessage
+                      className="error"
+                      name="notificationTerms"
+                      component="div"
+                    />
+                    <Field as="select" name="notificationTypeTerms">
+                      <option value="" disabled>
+                        Contact By
+                      </option>
+                      <option value="Email">Email</option>
+                      <option value="WhatsApp">WhatsApp</option>
+                      <option value="Email & WhatsApp">Both</option>
+                    </Field>
+                    <ErrorMessage
+                      className="error"
+                      name="notificationTypeTerms"
+                      component="div"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  disabled={loading}
+                  type="submit"
+                  className="rn-button-style--2 rn-btn-reverse-green mt--80"
+                >
+                  {loading ? <Loader /> : <span>Update information</span>}
+                </button>
+              </Form>
+            )}
+          </Formik>
+        )}
       </ModalWindow>
 
       {/* Start Breadcrump Area */}
@@ -310,11 +328,9 @@ const NonSocietyEvent = (props) => {
                     </div>
                   </div>
                   <button
-                    onClick={
-                      () => {
-                        dispatch(showModal(NSE_REGISTRATION_MODAL));
-                      }
-                    }
+                    onClick={() => {
+                      dispatch(showModal(NSE_REGISTRATION_MODAL));
+                    }}
                     className="rn-button-style--2 rn-btn-reverse-green"
                   >
                     Register
@@ -369,7 +385,7 @@ const NonSocietyEvent = (props) => {
       {/* End Back To Top */}
 
       <Footer />
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 export default NonSocietyEvent;

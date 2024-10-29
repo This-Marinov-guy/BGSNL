@@ -13,6 +13,7 @@ import { FiChevronUp } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showInfoNotification } from "../../redux/information";
+import PhoneInput from "../../elements/inputs/common/PhoneInput";
 
 const schema = yup.object().shape({
     prSC: yup.boolean(),
@@ -82,249 +83,268 @@ const ActiveMember = (props) => {
     };
 
     return (
-        <React.Fragment>
-            <PageHelmet pageTitle="Active Member" />
-            <HeaderTwo
-                headertransparent="header--transparent"
-                colorblack="color--black"
-                logoname="logo.png"
-            />
+      <React.Fragment>
+        <PageHelmet pageTitle="Active Member" />
+        <HeaderTwo
+          headertransparent="header--transparent"
+          colorblack="color--black"
+          logoname="logo.png"
+        />
 
-            <div className="container mt--200">
-                <h2 className="center_text">Кандидатура за активни членове</h2>
-            </div>
-            {/* Start Options Area */}
-            <div className="container mt--80 mb--80">
-                <p>Екипът на Българското Общество в Грьонинген се разраства, затова търсим нови попълнения в нашия отбор. Ако си ентусиазиран и постоянен, обичаш да организираш събития и споделяш мисията на Обществото, кандидатствай за свободните ни позиции като отговориш на въпросите (до 200 думи на въпрос) и, ако имаш желание, ни изпратиш CV (до 300 думи).</p>
-                <br />
-                <p>Като активен член на Bulgarian Society Groningen, ще работиш в разрастващ и развиващ се екип от борд и комитети. Също така ще имаш намaления за събитията на BGSG, както и достъп до събития, организирани за целия екип, с цел обмяна на информация и сплотяване на екипа. </p>
-                <br />
-                <p style={{ color: 'red' }}>Срокът за кандидатстване е 31/08/2023</p>
-            </div>
+        <div className="container mt--200">
+          <h2 className="center_text">Кандидатура за активни членове</h2>
+        </div>
+        {/* Start Options Area */}
+        <div className="container mt--80 mb--80">
+          <p>
+            Екипът на Българското Общество в Грьонинген се разраства, затова
+            търсим нови попълнения в нашия отбор. Ако си ентусиазиран и
+            постоянен, обичаш да организираш събития и споделяш мисията на
+            Обществото, кандидатствай за свободните ни позиции като отговориш на
+            въпросите (до 200 думи на въпрос) и, ако имаш желание, ни изпратиш
+            CV (до 300 думи).
+          </p>
+          <br />
+          <p>
+            Като активен член на Bulgarian Society Groningen, ще работиш в
+            разрастващ и развиващ се екип от борд и комитети. Също така ще имаш
+            намaления за събитията на BGSG, както и достъп до събития,
+            организирани за целия екип, с цел обмяна на информация и сплотяване
+            на екипа.{" "}
+          </p>
+          <br />
+          <p style={{ color: "red" }}>Срокът за кандидатстване е 31/08/2023</p>
+        </div>
 
+        {/* End Options Area */}
+        {/* Start Form Area */}
 
-            {/* End Options Area */}
-            {/* Start Form Area */}
+        <div className="blog-comment-form pb--120 bg_color--1">
+          <div className="container">
+            <Formik
+              className="inner"
+              validationSchema={schema}
+              onSubmit={async (values) => {
+                const formData = new FormData();
+                const positions = ["PR of Integration Committee"];
+                const date = [];
 
-            <div className="blog-comment-form pb--120 bg_color--1">
-                <div className="container">
-                    <Formik
-                        className="inner"
-                        validationSchema={schema}
-                        onSubmit={async (values) => {
-                            const formData = new FormData();
-                            const positions = ['PR of Integration Committee']
-                            const date = []
+                // values.prIC && positions.push('PR of Integration Committee')
+                // positions.forEach((value, index) => {
+                //     formData.append(`positions[${index}]`, value);
+                // });
+                formData.append("positions", positions);
 
-                            // values.prIC && positions.push('PR of Integration Committee')
-                            // positions.forEach((value, index) => {
-                            //     formData.append(`positions[${index}]`, value);
-                            // });
-                            formData.append('positions', positions);
-
-                            if (values.option4) {
-                                date.push('None of the given')
-                            } else {
-                                values.option1 && date.push('1st September');
-                                values.option2 && date.push('2nd September')
-                                values.option3 && date.push('3rd September')
-                            }
-                            date.forEach((value, index) => {
-                                formData.append(`date[${index}]`, value);
-                            });
-                            formData.append("email", values.email);
-                            formData.append("phone", values.phone)
-                            formData.append("cv", values.cv);
-                            // formData.append("letter", values.letter);
-                            formData.append('questions',
-                                [
-                                    values.q1,
-                                    values.q2,
-                                    values.q3,
-                                    values.q4,
-                                ]
-                            )
-                            try {
-                                const responseData = await sendRequest(
-                                    "user/active-member",
-                                    "POST",
-                                    formData
-                                );
-                                dispatch(showInfoNotification({ severity: 'success', summary: 'Success', detail: 'Thank you for your interest - expect from us soon' }));
-                                navigate("/");
-                            } catch (err) {
-                            }
-
-                        }}
-                        initialValues={{
-                            option1: false,
-                            option2: false,
-                            option3: false,
-                            option4: false,
-                            phone: '',
-                            email: '',
-                            cv: null,
-                            // letter: null,
-                            q1: '',
-                            q2: '',
-                            q3: '',
-                            q4: '',
-
-                        }}
-                    >
-                        {({ setFieldValue }) => (
-                            <Form
-                                encType="multipart/form-data"
-                                id="form"
-                                className="pt--40"
-                            >
-                                <h2 >Отворени позиции: </h2>
-                                <h3 className="mt--20">PR Integration Committee
-                                </h3>
-                                <p>Ако често прекарваш време в социалните мрежи или обичаш да създаваш визуално съдържание, тази позиция е за теб! Като PR в Integration Committee ще отговаряш за присъствието ни в социалните мрежи, свързано с дейността на комитета. Това включва създаване на съдържание като постове, reels, strories и правене на снимки по време на събитията. Опит със социални мрежи, Canva, Photoshop или с камера е бонус, но не е задължителен. </p>
-                                <h3 className="mt--100">В кой/кои от дните си свободен/а за интервю? </h3>
-                                <div>
-                                    <div className="hor_section_nospace">
-                                        <Field
-                                            style={{ maxWidth: "30px", margin: "10px" }}
-                                            type="checkbox"
-                                            name="option1"
-                                        ></Field>
-                                        <p>
-                                            1ви Септември
-                                        </p>
-                                    </div>
-                                    <div className="hor_section_nospace">
-                                        <Field
-                                            style={{ maxWidth: "30px", margin: "10px" }}
-                                            type="checkbox"
-                                            name="option2"
-                                        ></Field>
-                                        <p>
-                                            2ри Септември
-                                        </p>
-                                    </div>
-                                    <div className="hor_section_nospace">
-                                        <Field
-                                            style={{ maxWidth: "30px", margin: "10px" }}
-                                            type="checkbox"
-                                            name="option3"
-                                        ></Field>
-                                        <p>
-                                            3ти Септември
-                                        </p>
-                                    </div>
-                                    <div className="hor_section_nospace">
-                                        <Field
-                                            style={{ maxWidth: "30px", margin: "10px" }}
-                                            type="checkbox"
-                                            name="option4"
-                                        ></Field>
-                                        <p>
-                                            Нито един от посочените
-                                        </p>
-                                    </div>
-
-                                </div>
-                                <h3 className="mt--80">Контакти</h3>
-                                <div className="row ">
-                                    <div className="col-lg-6 col-md-12 col-12">
-                                        <Field type="email" placeholder="Email" name="email" />
-                                        <ErrorMessage
-                                            className="error"
-                                            name="email"
-                                            component="div"
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-md-12 col-12">
-                                        <Field
-                                            type="text"
-                                            placeholder="Phone"
-                                            name="phone"
-                                        ></Field>
-                                        <ErrorMessage
-                                            className="error"
-                                            name="phone"
-                                            component="div"
-                                        />
-                                    </div>
-                                </div>
-                                <h3 className="mt--80 mb--20">Въпроси</h3>
-                                <div className="row ">
-                                    <div className="col-lg-6 col-md-12 col-12 mt--40">
-                                        <h4>1. Защо искаш да станеш част от Integration Committee и от Bulgarian Society Groningen? </h4>
-                                        <Field as='textarea' placeholder="Въпрос 1" name="q1" />
-                                        <ErrorMessage
-                                            className="error"
-                                            name="q1"
-                                            component="div"
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-md-12 col-12 mt--40">
-                                        <h4>2. Имаш ли опит със създаване на съдържание за социалните мрежи, canva/photoshop, или друг опит, който смяташ за полезен за тази позиция?
-                                        </h4>
-                                        <Field
-                                            as='textarea'
-
-                                            placeholder="Въпрос 2"
-                                            name="q2"
-                                        ></Field>
-                                        <ErrorMessage
-                                            className="error"
-                                            name="q2"
-                                            component="div"
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-md-12 col-12 mt--40">
-                                        <h4>3. С какво би допринесъл към комитета и към BGSG като цяло?
-                                        </h4>
-                                        <Field as='textarea' placeholder="Въпрос 3" name="q3" />
-                                        <ErrorMessage
-                                            className="error"
-                                            name="q3"
-                                            component="div"
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-md-12 col-12 mt--40">
-                                        <h4>4. Какви събития би искал/а да видиш в BGSG?
-                                        </h4>
-                                        <Field
-                                            as='textarea'
-
-                                            placeholder="Въпрос 4"
-                                            name="q4"
-                                        ></Field>
-                                        <ErrorMessage
-                                            className="error"
-                                            name="q4"
-                                            component="div"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row mt--100">
-                                    <div className="col-lg-6 col-md-12 col-12 mt--20 file-input">
-                                        <h3>Качи CV</h3>
-                                        <Field name="cv">
-                                            {({ field }) => (
-                                                <div>
-                                                    <input
-                                                        type="file"
-                                                        accept=".pdf,.docx"
-                                                        onChange={(event) => {
-                                                            setFieldValue("cv", event.target.files[0]);
-                                                        }}
-                                                    />
-                                                </div>
-                                            )}
-                                        </Field>
-                                        <p>*Не е задължително</p>
-                                        <ErrorMessage
-                                            className="error"
-                                            name="cv"
-                                            component="div"
-                                        />
-                                    </div>
-                                    {/* <div className="col-lg-6 col-md-12 col-12 mt--20 file-input">
+                if (values.option4) {
+                  date.push("None of the given");
+                } else {
+                  values.option1 && date.push("1st September");
+                  values.option2 && date.push("2nd September");
+                  values.option3 && date.push("3rd September");
+                }
+                date.forEach((value, index) => {
+                  formData.append(`date[${index}]`, value);
+                });
+                formData.append("email", values.email);
+                formData.append("phone", values.phone);
+                formData.append("cv", values.cv);
+                // formData.append("letter", values.letter);
+                formData.append("questions", [
+                  values.q1,
+                  values.q2,
+                  values.q3,
+                  values.q4,
+                ]);
+                try {
+                  const responseData = await sendRequest(
+                    "user/active-member",
+                    "POST",
+                    formData
+                  );
+                  dispatch(
+                    showInfoNotification({
+                      severity: "success",
+                      summary: "Success",
+                      detail:
+                        "Thank you for your interest - expect from us soon",
+                    })
+                  );
+                  navigate("/");
+                } catch (err) {}
+              }}
+              initialValues={{
+                option1: false,
+                option2: false,
+                option3: false,
+                option4: false,
+                phone: "",
+                email: "",
+                cv: null,
+                // letter: null,
+                q1: "",
+                q2: "",
+                q3: "",
+                q4: "",
+              }}
+            >
+              {({ setFieldValue }) => (
+                <Form
+                  encType="multipart/form-data"
+                  id="form"
+                  className="pt--40"
+                >
+                  <h2>Отворени позиции: </h2>
+                  <h3 className="mt--20">PR Integration Committee</h3>
+                  <p>
+                    Ако често прекарваш време в социалните мрежи или обичаш да
+                    създаваш визуално съдържание, тази позиция е за теб! Като PR
+                    в Integration Committee ще отговаряш за присъствието ни в
+                    социалните мрежи, свързано с дейността на комитета. Това
+                    включва създаване на съдържание като постове, reels,
+                    strories и правене на снимки по време на събитията. Опит със
+                    социални мрежи, Canva, Photoshop или с камера е бонус, но не
+                    е задължителен.{" "}
+                  </p>
+                  <h3 className="mt--100">
+                    В кой/кои от дните си свободен/а за интервю?{" "}
+                  </h3>
+                  <div>
+                    <div className="hor_section_nospace">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="option1"
+                      ></Field>
+                      <p>1ви Септември</p>
+                    </div>
+                    <div className="hor_section_nospace">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="option2"
+                      ></Field>
+                      <p>2ри Септември</p>
+                    </div>
+                    <div className="hor_section_nospace">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="option3"
+                      ></Field>
+                      <p>3ти Септември</p>
+                    </div>
+                    <div className="hor_section_nospace">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="option4"
+                      ></Field>
+                      <p>Нито един от посочените</p>
+                    </div>
+                  </div>
+                  <h3 className="mt--80">Контакти</h3>
+                  <div className="row ">
+                    <div className="col-lg-6 col-md-12 col-12">
+                      <Field type="email" placeholder="Email" name="email" />
+                      <ErrorMessage
+                        className="error"
+                        name="email"
+                        component="div"
+                      />
+                    </div>
+                    <div className="col-lg-6 col-md-12 col-12">
+                      <PhoneInput
+                        placeholder="WhatsApp Phone "
+                        onChange={(value) => setFieldValue("phone", value)}
+                      ></PhoneInput>
+                      <ErrorMessage
+                        className="error"
+                        name="phone"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <h3 className="mt--80 mb--20">Въпроси</h3>
+                  <div className="row ">
+                    <div className="col-lg-6 col-md-12 col-12 mt--40">
+                      <h4>
+                        1. Защо искаш да станеш част от Integration Committee и
+                        от Bulgarian Society Groningen?{" "}
+                      </h4>
+                      <Field as="textarea" placeholder="Въпрос 1" name="q1" />
+                      <ErrorMessage
+                        className="error"
+                        name="q1"
+                        component="div"
+                      />
+                    </div>
+                    <div className="col-lg-6 col-md-12 col-12 mt--40">
+                      <h4>
+                        2. Имаш ли опит със създаване на съдържание за
+                        социалните мрежи, canva/photoshop, или друг опит, който
+                        смяташ за полезен за тази позиция?
+                      </h4>
+                      <Field
+                        as="textarea"
+                        placeholder="Въпрос 2"
+                        name="q2"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="q2"
+                        component="div"
+                      />
+                    </div>
+                    <div className="col-lg-6 col-md-12 col-12 mt--40">
+                      <h4>
+                        3. С какво би допринесъл към комитета и към BGSG като
+                        цяло?
+                      </h4>
+                      <Field as="textarea" placeholder="Въпрос 3" name="q3" />
+                      <ErrorMessage
+                        className="error"
+                        name="q3"
+                        component="div"
+                      />
+                    </div>
+                    <div className="col-lg-6 col-md-12 col-12 mt--40">
+                      <h4>4. Какви събития би искал/а да видиш в BGSG?</h4>
+                      <Field
+                        as="textarea"
+                        placeholder="Въпрос 4"
+                        name="q4"
+                      ></Field>
+                      <ErrorMessage
+                        className="error"
+                        name="q4"
+                        component="div"
+                      />
+                    </div>
+                  </div>
+                  <div className="row mt--100">
+                    <div className="col-lg-6 col-md-12 col-12 mt--20 file-input">
+                      <h3>Качи CV</h3>
+                      <Field name="cv">
+                        {({ field }) => (
+                          <div>
+                            <input
+                              type="file"
+                              accept=".pdf,.docx"
+                              onChange={(event) => {
+                                setFieldValue("cv", event.target.files[0]);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <p>*Не е задължително</p>
+                      <ErrorMessage
+                        className="error"
+                        name="cv"
+                        component="div"
+                      />
+                    </div>
+                    {/* <div className="col-lg-6 col-md-12 col-12 mt--20 file-input">
                                         <h3>Качи мотивационно писмо</h3>
                                         <Field name="letter">
                                             {({ field }) => (
@@ -345,31 +365,31 @@ const ActiveMember = (props) => {
                                             component="div"
                                         />
                                     </div> */}
-                                </div>
-                                <button
-                                    disabled={loading}
-                                    type="submit"
-                                    className="rn-button-style--2 rn-btn-reverse-green mt--80"
-                                >
-                                    {loading ? <Loader /> : <span>Изпрати Кандидатура</span>}
-                                </button>
-                            </Form>
-                        )}
-                    </Formik>
-                </div>
-            </div>
-            {/* End Form Area */}
-            {/* Start Footer Style  */}
-            <FooterTwo />
-            {/* End Footer Style  */}
-            {/* Start Back To Top */}
-            <div className="backto-top">
-                <ScrollToTop showUnder={160}>
-                    <FiChevronUp />
-                </ScrollToTop>
-            </div>
-            {/* End Back To Top */}
-        </React.Fragment >
+                  </div>
+                  <button
+                    disabled={loading}
+                    type="submit"
+                    className="rn-button-style--2 rn-btn-reverse-green mt--80"
+                  >
+                    {loading ? <Loader /> : <span>Изпрати Кандидатура</span>}
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+        {/* End Form Area */}
+        {/* Start Footer Style  */}
+        <FooterTwo />
+        {/* End Footer Style  */}
+        {/* Start Back To Top */}
+        <div className="backto-top">
+          <ScrollToTop showUnder={160}>
+            <FiChevronUp />
+          </ScrollToTop>
+        </div>
+        {/* End Back To Top */}
+      </React.Fragment>
     );
 };
 

@@ -339,3 +339,30 @@ label {
   font-weight: 800;
   border-radius: 10px !important;
 }
+
+.p-dropdown-label {
+  height: 38px;
+  font-size: 20px;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto";
+  color: #017363;
+}
+
+.phone_code {
+  height: 1.5em;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  justify-content: flex-start;
+
+  .phone_code_prefix {
+    border: 2px solid #aaa;
+  }
+
+  .phone_code_content {
+    width: 100%;
+  }
+}
