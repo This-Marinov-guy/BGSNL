@@ -3,9 +3,8 @@ import { InputNumber } from "primereact/inputnumber";
 import { Message } from "primereact/message";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import PageLoading from "../../elements/ui/loading/PageLoading";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { decryptData } from "../../util/functions/helpers";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../redux/notification";
 
@@ -20,7 +19,6 @@ const GuestCheck = () => {
   const count = searchParams.get("count");
 
   const { sendRequest, loading } = useHttpClient();
-  const [timeoutId, setTimeoutId] = useState(null);
   const [status, setStatus] = useState(null);
   const [severity, setSeverity] = useState(null);
   const [message, setMessage] = useState(null);
@@ -33,18 +31,6 @@ const GuestCheck = () => {
   const handleCountChange = (e) => {
     const newCount = e.target.value;
     searchParams.set("count", newCount);
-
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    const newTimeoutId = setTimeout(() => {
-      navigate(`${location.pathname}?${searchParams.toString()}`, {
-        replace: true,
-      });
-    }, 1000);
-
-    setTimeoutId(newTimeoutId);
   };
 
   const updateGuestList = async () => {
@@ -100,14 +86,6 @@ const GuestCheck = () => {
     updateGuestList();
   }, [window.location.href]);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [timeoutId]);
-
   if (loading) {
     return <PageLoading />;
   }
@@ -159,6 +137,20 @@ const GuestCheck = () => {
                   min={1}
                   max={10}
                 />
+                <br/>
+                <button
+                  onClick={() =>
+                    navigate(
+                      `${location.pathname}?${searchParams.toString()}`,
+                      {
+                        replace: true,
+                      }
+                    )
+                  }
+                  className="rn-button-style--2 rn-btn-reverse-green"
+                >
+                  Submit Count
+                </button>
               </div>
               {info}
             </div>
