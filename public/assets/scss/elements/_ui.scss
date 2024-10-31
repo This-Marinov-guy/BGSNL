@@ -308,6 +308,11 @@ hr {
   margin-top: 0 !important;
 }
 
+div[data-pc-name="password"] {
+  input.p-inputtext.p-component.p-filled {
+    padding-right: 31px;
+}
+
 .p-calendar {
   padding: 0 !important;
   margin: 0 !important;
