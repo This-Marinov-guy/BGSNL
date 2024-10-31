@@ -451,7 +451,7 @@ const EventForm = (props) => {
             }),
           },
           guestPromotion: {
-            ...(initialData?.promotion.guest ?? {
+            ...(initialData?.promotion?.guest ?? {
               isEnabled: false,
               startTimer: "",
               endTimer: "",
@@ -459,7 +459,7 @@ const EventForm = (props) => {
             }),
           },
           memberPromotion: {
-            ...(initialData?.promotion.member ?? {
+            ...(initialData?.promotion?.member ?? {
               isEnabled: false,
               startTimer: "",
               endTimer: "",
