@@ -7,18 +7,14 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 
 const CounterOne = () => {
   const [didViewCountUp, setDidViewCountUp] = useState(false);
-  const [membersCount, setMembersCount] = useState(0);
-  const [activeMembersCount, setActiveMembersCount] = useState(0);
+  const [data, setData] = useState({});
 
   const { loading, sendRequest } = useHttpClient();
 
   useEffect(() => {
     const fetchCounts = async () => {
-      const response1 = await sendRequest("common/get-member-count");
-      const response2 = await sendRequest("common/get-active-member-count");
-
-      setMembersCount(response1.count);
-      setActiveMembersCount(response2.count);
+      const response = await sendRequest("common/get-about-data");
+      setData(response);
     };
 
     fetchCounts();
@@ -30,20 +26,27 @@ const CounterOne = () => {
       countTitle: "Cities, part of our network",
     },
     {
-      countNum: 80,
+      countNum: loading || !data?.events ? <CustomSpinner /> : data?.events,
       icon: "+",
       countTitle: "Events that we have hosted by today",
     },
     {
-      countNum: loading || !membersCount ? <CustomSpinner /> : membersCount,
+      countNum: loading || !data?.members ? <CustomSpinner /> : data?.members,
       countTitle: "Members, part of the society",
     },
     {
-      countNum: 60,
+      countNum:
+        loading || !data?.activeMembers ? (
+          <CustomSpinner />
+        ) : data?.activeMembers < 60 ? (
+          65
+        ) : (
+          data?.activeMember
+        ),
       countTitle: "Active contributors to the society",
     },
     {
-      countNum: 2200,
+      countNum: loading || !data?.tickets ? <CustomSpinner /> : data?.tickets,
       icon: "+",
       countTitle: "Tickets sold",
     },
