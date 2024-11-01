@@ -63,7 +63,6 @@ const NonSocietyEvent = lazy(() =>
   import("./pages/eventActions/NonSocietyEvent")
 );
 const EventDetails = lazy(() => import("./pages/eventActions/EventDetails"));
-const EventReflection = lazy(() => import("./elements/EventReflection"));
 const MemberPurchase = lazy(() =>
   import("./pages/eventActions/MemberPurchase")
 );
@@ -186,14 +185,6 @@ const Root = () => {
                 </RegionLayout>
               }
             ></Route>
-            {/* <Route
-              path={`/:region/event-reflection/:eventId`}
-              element={
-                <RegionLayout>
-                  <EventReflection />
-                </RegionLayout>
-              }
-            /> */}
 
             {/* Redirect pages */}
 
