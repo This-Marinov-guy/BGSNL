@@ -26,17 +26,27 @@ const CounterOne = () => {
       countTitle: "Cities, part of our network",
     },
     {
-      countNum: loading || !data?.events ? <CustomSpinner /> : data?.events,
+      countNum:
+        loading || !data.hasOwnProperty("events") ? (
+          <CustomSpinner />
+        ) : (
+          data?.events
+        ),
       icon: "+",
       countTitle: "Events that we have hosted by today",
     },
     {
-      countNum: loading || !data?.members ? <CustomSpinner /> : data?.members,
+      countNum:
+        loading || !data.hasOwnProperty("members") ? (
+          <CustomSpinner />
+        ) : (
+          data?.members
+        ),
       countTitle: "Members, part of the society",
     },
     {
       countNum:
-        loading || !data?.activeMembers ? (
+        loading || !data.hasOwnProperty("activeMembers") ? (
           <CustomSpinner />
         ) : data?.activeMembers < 60 ? (
           65
@@ -46,7 +56,12 @@ const CounterOne = () => {
       countTitle: "Active contributors to the society",
     },
     {
-      countNum: loading || !data?.tickets ? <CustomSpinner /> : data?.tickets,
+      countNum:
+        loading || !data.hasOwnProperty("tickets") ? (
+          <CustomSpinner />
+        ) : (
+          data?.tickets
+        ),
       icon: "+",
       countTitle: "Tickets sold",
     },
