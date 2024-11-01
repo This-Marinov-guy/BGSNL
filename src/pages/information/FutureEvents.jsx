@@ -19,7 +19,7 @@ import {
 } from "../../util/functions/helpers";
 import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
 
-const FutureEventsContent = ({ displayAll }) => {
+const FutureEventsContent = ({ displayAll, nullable = true }) => {
   const { region } = useParams();
 
   const { reloadEvents, eventsLoading } = useLoadEvents();
@@ -41,7 +41,7 @@ const FutureEventsContent = ({ displayAll }) => {
     reloadEvents();
   }, []);
 
-  if (displayAll && checkObjectOfArraysEmpty(events)) {
+  if (nullable && displayAll && checkObjectOfArraysEmpty(events)) {
     return null;
   }
 
@@ -190,11 +190,11 @@ const FutureEvents = (props) => {
       {/* Start Future Events Area */}
       {region ? (
         <>
-          <FutureEventsContent />
+          <FutureEventsContent nullable={false} />
           <FutureOtherEventsContent />
         </>
       ) : (
-        <FutureEventsContent displayAll />
+        <FutureEventsContent displayAll nullable={false} />
       )}
       {/* End Future Events Area */}
 
