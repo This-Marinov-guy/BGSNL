@@ -158,11 +158,12 @@ const MemberPurchase = () => {
                       currentUser.name + " " + currentUser.surname
                     ));
                 const isMemberForFreeTicket =
-                  selectedEvent.freePass.length > 0 &&
+                  selectedEvent.isMemberFree ||
+                  (selectedEvent.freePass.length > 0 &&
                   (selectedEvent.freePass.includes(currentUser.email) ||
                     selectedEvent.freePass.includes(
                       currentUser.name + " " + currentUser.surname
-                    ));
+                    )));
 
                 if (!normalTicket) {
                   const checkMemberTicket = await sendRequest(
@@ -273,7 +274,6 @@ const MemberPurchase = () => {
                   window.location.assign(responseData.url);
                 }
               } catch (err) {
-                console.log(err);
               } finally {
                 setIsLoading(false);
               }
