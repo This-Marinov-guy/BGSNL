@@ -160,7 +160,7 @@ const GuestPurchase = () => {
               </p>
               <p>Address: {selectedEvent.location}</p>
               <p>
-                <span className="center_div j-start">
+                <span className="center_div">
                   Price :{" "}
                   {selectedEvent.isFree
                     ? " FREE"
