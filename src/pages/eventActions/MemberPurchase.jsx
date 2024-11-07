@@ -273,7 +273,6 @@ const MemberPurchase = () => {
                   window.location.assign(responseData.url);
                 }
               } catch (err) {
-                console.log(err);
               } finally {
                 setIsLoading(false);
               }
