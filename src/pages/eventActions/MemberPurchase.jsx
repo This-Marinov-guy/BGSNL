@@ -151,19 +151,18 @@ const MemberPurchase = () => {
                 let allowDiscount = false;
                 const isActiveMember = checkAuthorization(user.token, ACCESS_4);
                 const isMemberForDiscount =
-                  selectedEvent.product?.activeMember.priceId &&
+                  selectedEvent.product?.activeMember?.priceId &&
                   selectedEvent.discountPass.length > 0 &&
                   (selectedEvent.discountPass.includes(currentUser.email) ||
                     selectedEvent.discountPass.includes(
                       currentUser.name + " " + currentUser.surname
                     ));
                 const isMemberForFreeTicket =
-                  selectedEvent.isMemberFree ||
-                  (selectedEvent.freePass.length > 0 &&
+                  selectedEvent.freePass.length > 0 &&
                   (selectedEvent.freePass.includes(currentUser.email) ||
                     selectedEvent.freePass.includes(
                       currentUser.name + " " + currentUser.surname
-                    )));
+                    ));
 
                 if (!normalTicket) {
                   const checkMemberTicket = await sendRequest(
@@ -274,6 +273,7 @@ const MemberPurchase = () => {
                   window.location.assign(responseData.url);
                 }
               } catch (err) {
+                console.log(err);
               } finally {
                 setIsLoading(false);
               }
@@ -298,7 +298,7 @@ const MemberPurchase = () => {
                     </p>
                     <p>Address: {selectedEvent.location}</p>
                     <p>
-                      <span className="center_div j-start">
+                      <span className="center_div">
                         Price :{" "}
                         {estimatePriceByEvent(
                           selectedEvent,
