@@ -127,7 +127,7 @@ export const estimatePriceByEvent = (
     ? `(including ${selectedEvent.entryIncluding})`
     : "";
 
-  if (selectedEvent.isFree) {
+  if (selectedEvent.isFree || (isMember && selectedEvent.isMemberFree)) {
     price = "FREE";
   } else if (selectedEvent.ticketLink) {
     price = "Check ticket portal";
