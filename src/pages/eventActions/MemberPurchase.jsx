@@ -221,7 +221,7 @@ const MemberPurchase = () => {
                 if (isActiveMember) {
                   formData.append("type", "active member");
                 }
-                
+
                 formData.append("region", region);
                 formData.append("origin_url", window.location.origin);
                 formData.append("method", "buy_member_ticket");
@@ -297,7 +297,7 @@ const MemberPurchase = () => {
                     </p>
                     <p>Address: {selectedEvent.location}</p>
                     <p>
-                      <span className="center_div">
+                      <span className="center_div justify-content-sm-start">
                         Price :{" "}
                         {estimatePriceByEvent(
                           selectedEvent,

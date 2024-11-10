@@ -20,6 +20,8 @@ import SolidBadge from "../../elements/ui/badges/SolidBadge";
 
 const HeaderContent = (props) => {
   const user = useSelector(selectUser);
+  const [logoutAlert, setLogoutAlert] = useState(false);
+
   const userRegion = user.token ? decodeJWT(user.token).region : "";
 
   const articles = useSelector(selectArticles);
@@ -31,6 +33,9 @@ const HeaderContent = (props) => {
   const routePath = location.pathname;
 
   return (
+    <>
+      <LogoutAlert visible={logoutAlert} onHide={() => setLogoutAlert(false)} />
+
       <nav className={"mainmenunav d-lg-block"}>
         <ul className={props.dark ? "mainmenu dark_nav" : "mainmenu"}>
           <li>
@@ -210,6 +215,7 @@ const HeaderContent = (props) => {
           </li>
         </ul>
       </nav>
+    </>
   );
 };
 

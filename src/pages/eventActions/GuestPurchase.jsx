@@ -160,7 +160,7 @@ const GuestPurchase = () => {
               </p>
               <p>Address: {selectedEvent.location}</p>
               <p>
-                <span className="center_div">
+                <span className="center_div justify-content-sm-start">
                   Price :{" "}
                   {selectedEvent.isFree
                     ? " FREE"
@@ -327,7 +327,7 @@ const GuestPurchase = () => {
                   ),
                 }}
               >
-                {({setFieldValue, errors}) => (
+                {({ setFieldValue, errors }) => (
                   <Form
                     id="form"
                     encType="multipart/form-data"
