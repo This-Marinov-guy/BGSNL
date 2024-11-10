@@ -5,11 +5,16 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { Password } from 'primereact/password';
+import { Password } from "primereact/password";
 import Loader from "../../elements/ui/loading/Loader";
 import { showModal } from "../../redux/modal";
 import { Link } from "react-router-dom";
-import { BIRTHDAY_MODAL, GENERAL_ERROR } from "../../util/defines/common";
+import { Button } from "primereact/button";
+import {
+  BIRTHDAY_MODAL,
+  GENERAL_ERROR,
+  INFO_STYLE,
+} from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
 import ForgottenPassword from "./ForgottenPassword";
 
@@ -36,32 +41,52 @@ const Login = () => {
   const loginHandler = async (event) => {
     event.preventDefault();
     try {
-      const responseData = await sendRequest(
-        `security/login`,
-        "POST",
-        {
-          email: loginFormValues.email,
-          password: loginFormValues.password,
-        },
-      );
+      const responseData = await sendRequest(`security/login`, "POST", {
+        email: loginFormValues.email,
+        password: loginFormValues.password,
+      });
 
-      if (!responseData.hasOwnProperty('token')) {
-        return dispatch(showNotification(GENERAL_ERROR))
+      if (!responseData.hasOwnProperty("token")) {
+        return dispatch(showNotification(GENERAL_ERROR));
       }
 
+      dispatch(login(responseData));
       dispatch(
-        login(responseData)
+        showNotification({
+          severity: "success",
+          summary: "Welcome Back",
+          detail:
+            "Hop in the User section to see your tickets, news and your information",
+        })
       );
-      dispatch(showNotification({ severity: 'success', summary: 'Welcome Back', detail: 'Hop in the User section to see your tickets, news and your information' }));
+
+      dispatch(
+        showNotification({
+          ...INFO_STYLE,
+          position: "bottom-center",
+          content: () => (
+            <>
+              <p>
+                Fancy an entry-level job or an internships?{" "}
+                <Button
+                  size="small"
+                  label="Check out our suggestion!"
+                  link
+                  onClick={() => navigate("/user#internships")}
+                />
+              </p>
+            </>
+          ),
+        })
+      );
 
       if (responseData.celebrate) {
         dispatch(showModal(BIRTHDAY_MODAL));
       }
 
-      navigate(sessionStorage.getItem('prevUrl') ?? `/${responseData.region}`);
-      sessionStorage.removeItem('prevUrl');
-
-    } catch (err) { }
+      navigate(sessionStorage.getItem("prevUrl") ?? `/${responseData.region}`);
+      sessionStorage.removeItem("prevUrl");
+    } catch (err) {}
   };
 
   return (
@@ -72,9 +97,17 @@ const Login = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <ForgottenPassword visible={isVisible} onHide={() => setIsVisible(false)}/>
-      <div className="container team_member_border-3" style={{ maxWidth: "600px", marginTop: '25vh' }}>
-        <h3 style={{ fontSize: '0.8em' }} className="center_text">Log in your account</h3>
+      <ForgottenPassword
+        visible={isVisible}
+        onHide={() => setIsVisible(false)}
+      />
+      <div
+        className="container team_member_border-3"
+        style={{ maxWidth: "600px", marginTop: "25vh" }}
+      >
+        <h3 style={{ fontSize: "0.8em" }} className="center_text">
+          Log in your account
+        </h3>
         <form
           className="center_section"
           onSubmit={(event) => loginHandler(event)}
@@ -97,11 +130,14 @@ const Login = () => {
                 onChange={(event) => changeFormInputHandler(event)}
                 toggleMask
                 feedback={false}
-                unstyled />
+                unstyled
+              />
             </div>
           </div>
           <button
-            disabled={loading && !loginFormValues.email && !loginFormValues.password}
+            disabled={
+              loading && !loginFormValues.email && !loginFormValues.password
+            }
             type="submit"
             className="rn-button-style--2 rn-btn-reverse-green mt--40"
           >
@@ -119,9 +155,10 @@ const Login = () => {
             Forgot my password
           </button>
           <Link
-            style={{ fontSize: '0.9em' }}
+            style={{ fontSize: "0.9em" }}
             className="rn-button-style--1 center_text"
-            to="/signup">
+            to="/signup"
+          >
             Not a member? Register now!
           </Link>
         </div>

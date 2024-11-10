@@ -421,6 +421,13 @@ a {
   }
 }
 
+.absolute-badge {
+  position: absolute;
+  scale: 0.8;
+  left: -5px;
+  top: 0px;
+}
+
 .edit_btn {
   cursor: pointer;
   opacity: 0.75;

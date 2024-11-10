@@ -14,7 +14,7 @@ import { useArticlesLoad } from "../hooks/common/api-hooks";
 
 const MainLayout = ({ children }) => {
   const toast = useRef(null);
-  const {reloadArticles} = useArticlesLoad();
+  const { reloadArticles } = useArticlesLoad();
 
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
@@ -38,7 +38,12 @@ const MainLayout = ({ children }) => {
   useEffect(() => {
     if (notification.severity) {
       setTimeout(() => {
-        toast.current.show(notification);
+        toast.current.show({
+          ...notification,
+          // default values
+          life: notification.life ?? 8000,
+          sticky: !notification?.closable
+        });
       }, 200);
     }
   }, [notificationIndex]);
@@ -48,7 +53,7 @@ const MainLayout = ({ children }) => {
       <DonationModal />
       <RecruitModal />
       <BirthdayModal />
-      <Toast ref={toast} position="top-center" life={8000} />
+      <Toast ref={toast} position={notification.position ?? "top-center"} />
       {children}
     </>
   );

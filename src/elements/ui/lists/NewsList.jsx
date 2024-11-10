@@ -16,6 +16,14 @@ const NewsList = () => {
 
   const NEWS = [
     {
+      image: "/assets/images/news/internships.jpg",
+      title: "BGSNL Internships",
+      description: "Fancy am entry job or an internship? Check out what are organization has to offer in our member-exclusive section and sign for your area of interest!",
+      link: "/user#internships",
+      action: ``,
+      isForMember: false,
+    },
+    {
       image:
         "https://images.gofundme.com/3DeeQatkuCV2f1cFGQpHo_V8lao=/720x405/https://d2g8igdw686xgo.cloudfront.net/83216271_172803224437761_r.png",
       title: "Support our mission",

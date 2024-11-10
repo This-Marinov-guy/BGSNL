@@ -133,7 +133,7 @@ export const slickDot2 = {
   autoplaySpeed: 10000,
   speed: 1000,
   infinite: true,
-  slidesToShow: 2,
+  slidesToShow: 3,
   slidesToScroll: 1,
   arrows: true,
   prevArrow: <CustomPrevArrow />,
