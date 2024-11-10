@@ -15,7 +15,7 @@ import {
   GENERAL_ERROR,
   INFO_STYLE,
 } from "../../util/defines/common";
-import { showNotification } from "../../redux/notification";
+import { removeNotification, showNotification } from "../../redux/notification";
 import ForgottenPassword from "./ForgottenPassword";
 
 const Login = () => {
@@ -72,7 +72,10 @@ const Login = () => {
                   size="small"
                   label="Check out our suggestion!"
                   link
-                  onClick={() => navigate("/user#internships")}
+                  onClick={() => {
+                    navigate("/user#internships");
+                    dispatch(removeNotification());
+                  }}
                 />
               </p>
             </>

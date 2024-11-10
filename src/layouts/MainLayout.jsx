@@ -41,10 +41,11 @@ const MainLayout = ({ children }) => {
         toast.current.show({
           ...notification,
           // default values
-          life: notification.life ?? 8000,
-          sticky: !notification?.closable
+          sticky: !notification?.closable,
         });
       }, 200);
+    } else {
+      toast.current.clear();
     }
   }, [notificationIndex]);
 
@@ -53,7 +54,11 @@ const MainLayout = ({ children }) => {
       <DonationModal />
       <RecruitModal />
       <BirthdayModal />
-      <Toast ref={toast} position={notification.position ?? "top-center"} />
+      <Toast
+        ref={toast}
+        life={notification.life ?? 8000}
+        position={notification.position ?? "top-center"}
+      />
       {children}
     </>
   );
