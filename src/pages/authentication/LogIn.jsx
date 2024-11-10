@@ -50,6 +50,7 @@ const Login = () => {
         return dispatch(showNotification(GENERAL_ERROR));
       }
 
+      dispatch(removeNotification());
       dispatch(login(responseData));
       dispatch(
         showNotification({
