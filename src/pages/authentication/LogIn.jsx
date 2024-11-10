@@ -67,14 +67,14 @@ const Login = () => {
           content: () => (
             <>
               <p>
-                Fancy an entry-level job or an internships?{" "}
+                Fancy an entry-level job or an internship?
                 <Button
                   size="small"
                   label="Check out our suggestion!"
                   link
                   onClick={() => {
-                    navigate("/user#internships");
                     dispatch(removeNotification());
+                    navigate("/user#internships");
                   }}
                 />
               </p>
