@@ -14,7 +14,7 @@ const Event = (props) => {
     } else if (props.event.isFree) {
         price = 'FREE'
     } else if (!!props.event.product){
-        price = props.event.product?.guest.price + ' / ' + (props.event.IsMemberFree ? 'FREE' : props.event.product?.member?.price) + (props.event.product?.activeMember ? ' / ' + props.event.product?.activeMember.price : '')
+        price = props.event.product?.guest.price + ' / ' + (props.event.IsMemberFree ? 'FREE' : (props.event.product?.member?.price ?? '-')) + (props.event.product?.activeMember ? ' / ' + props.event.product?.activeMember.price : '')
     } else {
         price = 'TBA';
     }
