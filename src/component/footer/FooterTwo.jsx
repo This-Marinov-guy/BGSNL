@@ -13,7 +13,11 @@ const FooterTwo = ({ forceRegion }) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="footer-style-2 ptb--30 bg_image" data-black-overlay="6" style={{ backgroundColor: `${REGION_SECOND_COLOR[region] || 'grey'}` }}>
+    <div
+      className="footer-style-2 ptb--30 bg_image"
+      data-black-overlay="6"
+      style={{ backgroundColor: `${REGION_SECOND_COLOR[region] || "grey"}` }}
+    >
       <div className="wrapper plr--50 plr_sm--20">
         <div className="row align-items-center justify-content-between">
           <div className="col-lg-4 col-md-6 col-sm-6 col-12">
@@ -31,18 +35,24 @@ const FooterTwo = ({ forceRegion }) => {
                 </div>
               </div>
               <div className="button-container">
-                <button className="rn-button-style--2 rn-btn-reverse-green" onClick={() => dispatch(showModal(DONATION_MODAL))}>Support us</button>
+                <button
+                  className="rn-button-style--2 rn-btn-reverse-green"
+                  onClick={() => dispatch(showModal(DONATION_MODAL))}
+                >
+                  Support us
+                </button>
                 <Link style={{ height: "73px" }} to="/developers">
-                  <button className="rn-button-style--2 rn-btn-reverse-green">Developers</button>
+                  <button className="rn-button-style--2 rn-btn-reverse-green">
+                    Developers
+                  </button>
                 </Link>
               </div>
-
             </div>
           </div>
           <div className="col-lg-4 col-md-6 col-sm-6 col-12">
             <div className="inner text-center">
               <ul className="social-share rn-lg-size d-flex justify-content-center liststyle">
-                {REGION_SOCIALS['netherlands'].map((val, i) => (
+                {REGION_SOCIALS["netherlands"].map((val, i) => (
                   <li key={i}>
                     <a href={`${val.link}`}>{val.Social}</a>
                   </li>
@@ -54,7 +64,7 @@ const FooterTwo = ({ forceRegion }) => {
             <div className="inner text-lg-right text-center mt_md--20 mt_sm--20">
               <div className="text">
                 <p>
-                  Copyright © 2022 Bulgarian Society Netherlands. All Rights
+                  Copyright ©️ 2022 Bulgarian Society Netherlands. All Rights
                   Reserved.
                 </p>
               </div>
