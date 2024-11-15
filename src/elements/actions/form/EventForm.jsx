@@ -353,7 +353,7 @@ const EventForm = (props) => {
             });
 
             Object.entries(values).forEach(([key, val]) => {
-              if (isPlainObject(val)) {
+              if (isPlainObject(val) || key === "extraInputsForm") {
                 formData.append(key, JSON.stringify(val));
               } else if (Array.isArray(val)) {
                 val.forEach((v, i) => {
