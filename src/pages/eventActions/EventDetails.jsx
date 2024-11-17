@@ -243,7 +243,7 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-                {region === 'groningen' && <SponsoredBySmall/>}
+              <SponsoredBySmall/>
                 <div className="portfolio-thumb-inner row">
                   {selectedEvent.images?.length > 0 &&
                     selectedEvent.images.map((value, index) => {

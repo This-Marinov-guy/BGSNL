@@ -312,7 +312,7 @@ const MemberPurchase = () => {
                         }
                       </span>
                     </p>
-                    {region === "groningen" && <SponsoredBySmall />}
+                  <SponsoredBySmall />
                   </div>
                 </div>
                 {selectedEvent.extraInputsForm?.length > 0 && (

@@ -169,7 +169,7 @@ const GuestPurchase = () => {
                   {<DynamicTicketBadge product={selectedEvent?.product} />}
                 </span>
               </p>
-              {region === "groningen" && <SponsoredBySmall />}
+              <SponsoredBySmall />
             </div>
           </div>
           <div style={{ width: "20%" }} className="col-lg-4 col-md-12 col-12">
