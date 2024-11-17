@@ -39,6 +39,7 @@ import {
 } from "../../util/functions/input-helpers";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -168,6 +169,7 @@ const GuestPurchase = () => {
                   {<DynamicTicketBadge product={selectedEvent?.product} />}
                 </span>
               </p>
+              {region === "groningen" && <SponsoredBySmall />}
             </div>
           </div>
           <div style={{ width: "20%" }} className="col-lg-4 col-md-12 col-12">

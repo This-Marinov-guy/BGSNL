@@ -19,6 +19,7 @@ import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
+import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -242,7 +243,7 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-                {selectedEvent.isGala && <GalaMembers />}
+                {region === 'groningen' && <SponsoredBySmall/>}
                 <div className="portfolio-thumb-inner row">
                   {selectedEvent.images?.length > 0 &&
                     selectedEvent.images.map((value, index) => {

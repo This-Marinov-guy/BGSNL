@@ -42,6 +42,7 @@ import {
   constructInitialExtraFormValues,
 } from "../../util/functions/input-helpers";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
+import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -311,6 +312,7 @@ const MemberPurchase = () => {
                         }
                       </span>
                     </p>
+                    {region === "groningen" && <SponsoredBySmall />}
                   </div>
                 </div>
                 {selectedEvent.extraInputsForm?.length > 0 && (
