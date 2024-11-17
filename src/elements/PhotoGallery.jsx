@@ -3,11 +3,9 @@ import ImageFb from "./ui/media/ImageFb";
 import { useParams } from "react-router-dom";
 import { REGION_FLICKER } from "../util/defines/REGIONS_DESIGN";
 
-
 //works only with webp and jpg pair images
 const PhotoGallery = (props) => {
-
- const {region} = useParams();
+  const { region } = useParams();
 
   if (props.target.length > 0) {
     return (
@@ -45,7 +43,7 @@ const PhotoGallery = (props) => {
         <div className="row">
           <div className="col-lg-12">
             <a
-              href={REGION_FLICKER[region] || REGION_FLICKER['netherlands']}
+              href={REGION_FLICKER[region] || REGION_FLICKER["netherlands"]}
               target="_blank"
               className="rn-button-style--2 rn-btn-reverse-green"
             >

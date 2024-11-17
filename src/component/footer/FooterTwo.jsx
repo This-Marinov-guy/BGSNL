@@ -64,8 +64,8 @@ const FooterTwo = ({ forceRegion }) => {
             <div className="inner text-lg-right text-center mt_md--20 mt_sm--20">
               <div className="text">
                 <p>
-                  Copyright ©️ 2022 Bulgarian Society Netherlands. All Rights
-                  Reserved.
+                  Copyright ©️ {new Date().getFullYear()} Bulgarian Society
+                  Netherlands. All Rights Reserved.
                 </p>
               </div>
               <p className="information">{`KVK: ${KVK.netherlands} | Version ${packageJson.version}`}</p>

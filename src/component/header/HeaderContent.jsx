@@ -113,8 +113,19 @@ const HeaderContent = (props) => {
                   </li>
                 </ul>
               </li>
-              <li>
-                <Link to="/about">About</Link>
+
+              <li className="has-dropdown">
+                <a style={{ cursor: "pointer" }}>About</a>
+                <ul className="submenu">
+                  <li>
+                    <Link to="/about">About the society</Link>
+                  </li>
+                  <li>
+                    <Link to={`/board-and-committee`}>
+                      Meet the Board & Committee
+                    </Link>
+                  </li>
+                </ul>
               </li>
             </Fragment>
           )}

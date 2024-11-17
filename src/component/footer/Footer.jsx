@@ -114,7 +114,7 @@ const Footer = ({forceRegion}) => {
                   <div className="col-lg-12">
                     <div className="copyright-text">
                       <p>
-                        Copyright ©️ 2022 Bulgarian Society Netherlands. All
+                        Copyright ©️ {new Date().getFullYear()} Bulgarian Society Netherlands. All
                         Rights Reserved.
                       </p>
 
