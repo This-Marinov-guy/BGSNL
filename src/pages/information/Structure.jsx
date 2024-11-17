@@ -15,14 +15,14 @@ import { BOARD_AND_COMMITTEES_IMAGES } from "../../util/defines/REGIONS_STRUCTUR
 const Structure = () => {
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Structure" />
+      <PageHelmet pageTitle="Boards & Committees" />
       <Header
         headertransparent="header--transparent"
         colorblack="color--black"
         logoname="logo.png"
       />
       {/* Start Breadcrump Area */}
-      <Breadcrumb title={"Board & Committee"} />
+      <Breadcrumb title={"Boards & Committees"} />
       {/* End Breadcrump Area */}
 
       {/* Start Board of NL */}
@@ -55,7 +55,10 @@ const Structure = () => {
             </div>
 
             <div className="col-lg-5 col-md-12">
-              <a href="" target="_blank">
+              <a
+                href="https://www.instagram.com/p/DCUfE39tnsZ/?hl=en&img_index=1"
+                target="_blank"
+              >
                 <ImageFb src="/assets/images/team/1.jpg" alt="board" />
               </a>
             </div>
