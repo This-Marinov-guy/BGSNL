@@ -16,6 +16,8 @@ export const BOARD_AND_COMMITTEES_IMAGES = [
     id: 5,
     text: "The big and united family of Amsterdam",
   },
+  {
+    id: 6,
+    text: "Leeuwarden with their Board, Social Committee and Culture Committee",
+  },
 ];
-
-

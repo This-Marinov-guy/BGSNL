@@ -85,7 +85,7 @@ const Structure = () => {
         </div>
         {BOARD_AND_COMMITTEES_IMAGES.map((img, index) => {
           return (
-            <div key={index} className="col-lg-6 col-md-6 col-12">
+            <div key={index} className="col-lg-6 col-md-6 col-12 m--a">
               <div className="mb--30 mb_sm--0 center_section">
                 <ImageFb
                   style={{ height: "15em" }}
