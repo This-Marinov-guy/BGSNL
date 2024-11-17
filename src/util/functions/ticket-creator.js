@@ -73,8 +73,8 @@ export const createCustomerTicket = async (
     layout.rotate(-4.71);
     layout.drawImage(
       qrCodeCanvas,
-      1380,
-      canvas.height - 420,
+      1330,
+      canvas.height - 380,
       desiredSize,
       desiredSize
     );
@@ -84,14 +84,14 @@ export const createCustomerTicket = async (
     layout.font = "42px Archive";
     layout.fillStyle = color;
     layout.textAlign = "center";
-    layout.strokeText(`${quantity}`, 1420, canvas.height - 110);
-    layout.fillText(`${quantity}`, 1420, canvas.height - 110);
+    layout.strokeText(`${quantity}`, 1380, canvas.height - 110);
+    layout.fillText(`${quantity}`, 1380, canvas.height - 110);
 
      layout.font = "25px Archive";
      layout.fillStyle = color;
      layout.textAlign = "center";
-     layout.strokeText(`x`, 1400, canvas.height - 115);
-     layout.fillText(`x`, 1400, canvas.height - 115);
+     layout.strokeText(`x`, 1360, canvas.height - 115);
+     layout.fillText(`x`, 1360, canvas.height - 115);
   }
 
   // Data URL
