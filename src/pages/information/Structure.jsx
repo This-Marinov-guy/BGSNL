@@ -65,8 +65,8 @@ const Structure = () => {
       {/* End Board of NL */}
 
       {/* Start Boards and Committiees of NL */}
-      <div className="row">
-        <div className="container col-12 mb--40">
+      <div className="row container m--a">
+        <div className="col-12 mb--40">
           <div className="about-us-list">
             <h3 className="title">
               How are city boards and committees structured and elected?
@@ -79,31 +79,39 @@ const Structure = () => {
               useful collaborations with other organizations.
             </p>
             <p>
-              Committees are organized groups of people that are responsible for specific are of events. Each city decide what committees to establish but the most common ones are Cultural, PR, Sports and Personal Development. They are smaller than the board and are responsible for a specific task in order to be extremely efficient.
+              Committees are organized groups of people that are responsible for
+              specific are of events. Each city decide what committees to
+              establish but the most common ones are Cultural, PR, Sports and
+              Personal Development. They are smaller than the board and are
+              responsible for a specific task in order to be extremely
+              efficient.
             </p>
           </div>
         </div>
-        {BOARD_AND_COMMITTEES_IMAGES.map((img, index) => {
-          return (
-            <div key={index} className="col-lg-6 col-md-6 col-12 m--a">
-              <div className="mb--30 mb_sm--0 center_section">
-                <ImageFb
-                  style={{ height: "15em" }}
-                  className={
-                    index % 2 !== 0
-                      ? "team_member_border-3 mb--20"
-                      : "team_member_border-4 mb--20"
-                  }
-                  src={`/assets/images/team/${img.id}.jpg`}
-                  alt="Blog Images"
-                />
-                {img.text && (
-                  <p style={{ fontStyle: "italic" }}>{`"${img.text}"`}</p>
-                )}
+
+        <div className="row col-12">
+          {BOARD_AND_COMMITTEES_IMAGES.map((img, index) => {
+            return (
+              <div key={index} className="col-lg-6 col-md-6 col-12 m--a">
+                <div className="mb--30 mb_sm--0 center_section">
+                  <ImageFb
+                    style={{ height: "15em" }}
+                    className={
+                      index % 2 !== 0
+                        ? "team_member_border-3 mb--20"
+                        : "team_member_border-4 mb--20"
+                    }
+                    src={`/assets/images/team/${img.id}.jpg`}
+                    alt="Blog Images"
+                  />
+                  {img.text && (
+                    <p style={{ fontStyle: "italic" }}>{`"${img.text}"`}</p>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
       {/* End Boards and Committiees of NL */}
 
