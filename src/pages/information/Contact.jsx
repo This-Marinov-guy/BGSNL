@@ -47,10 +47,10 @@ const Contact = () => {
                   <p>
                     <a
                       style={{ overflowWrap: "break-word" }}
-                      href={`mailto:${REGION_EMAIL[region]}`}
+                      href={`mailto:${REGION_EMAIL[region ?? "netherlands"]}`}
                       target="_blank"
                     >
-                      {REGION_EMAIL[region]}
+                      {REGION_EMAIL[region ?? "netherlands"]}
                     </a>
                   </p>
                 </div>
@@ -65,11 +65,15 @@ const Contact = () => {
                 </div>
                 <div className="inner">
                   <div className="social_media">
-                    {REGION_SOCIALS[region] ? REGION_SOCIALS[region].map((val, i) => (
-                      <div key={i}>
-                        <a href={`${val.link}`}>{val.Social}</a>
-                      </div>
-                    )) : <h3>Expect Socials Soon</h3>}
+                    {REGION_SOCIALS[region ?? "netherlands"] ? (
+                      REGION_SOCIALS[region ?? "netherlands"].filter(val => !val.special).map((val, i) => (
+                        <div key={i}>
+                          <a href={`${val.link}`}>{val.Social}</a>
+                        </div>
+                      ))
+                    ) : (
+                      <h3>Expect Socials Soon</h3>
+                    )}
                   </div>
                 </div>
               </div>

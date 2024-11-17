@@ -153,11 +153,9 @@ const HeaderContent = (props) => {
             <Link to={`/user#internships`}>Internships</Link>
           </li>
 
-          {region && (
-            <li>
-              <Link to={`/${region}/contact`}>Contact</Link>
-            </li>
-          )}
+          <li>
+            <Link to={`/${region ? region + "/" : ""}contact`}>Contact</Link>
+          </li>
           {user.token && (
             <>
               <li className="has-dropdown">

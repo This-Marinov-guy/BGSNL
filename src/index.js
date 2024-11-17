@@ -148,15 +148,7 @@ const Root = () => {
 
             {/* <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
               <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} /> */}
-            <Route
-              exact
-              path={`/:region/contact`}
-              element={
-                <RegionLayout>
-                  <Contact />
-                </RegionLayout>
-              }
-            />
+            <Route exact path={`/:region?/contact`} element={<Contact />} />
             <Route
               exact
               path={`/:region?/events/future-events`}

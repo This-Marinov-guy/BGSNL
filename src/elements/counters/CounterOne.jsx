@@ -44,17 +44,17 @@ const CounterOne = () => {
         ),
       countTitle: "Members, part of the society",
     },
-    {
-      countNum:
-        loading || !data.hasOwnProperty("activeMembers") ? (
-          <CustomSpinner />
-        ) : data?.activeMembers < 60 ? (
-          65
-        ) : (
-          data?.activeMember
-        ),
-      countTitle: "Active contributors to the society",
-    },
+    // {
+    //   countNum:
+    //     loading || !data.hasOwnProperty("activeMembers") ? (
+    //       <CustomSpinner />
+    //     ) : data?.activeMembers < 60 ? (
+    //       65
+    //     ) : (
+    //       data?.activeMember
+    //     ),
+    //   countTitle: "Active contributors to the society",
+    // },
     {
       countNum:
         loading || !data.hasOwnProperty("tickets") ? (

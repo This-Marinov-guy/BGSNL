@@ -42,7 +42,7 @@ export const REGION_SECOND_COLOR = {
 };
 
 export const REGION_EMAIL = {
-  netherlands: "bulgariansociety.nl@gmail.com",
+  netherlands: "info@bulgariansociety.nl",
   support: "bgsn.tech.nl@gmail.com",
   groningen: "bulgariansociety.gro@gmail.com",
   rotterdam: "bulgariansociety.rtm@gmail.com",
@@ -100,10 +100,12 @@ export const REGION_SOCIALS = {
       link: "https://www.linkedin.com/company/bulgarian-society-netherlands",
     },
     {
+      special: true,
       Social: <FaMailBulk />,
       link: "mailto:" + REGION_EMAIL.netherlands,
     },
     {
+      special: true,
       Social: <FaDollarSign />,
       link: REGION_GO_FUND_ME.netherlands,
     },
