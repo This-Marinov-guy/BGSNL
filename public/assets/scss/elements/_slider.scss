@@ -187,23 +187,19 @@ Slider Default Style
         //here for resize
         &.title {
           color: #ffffff;
-          font-size: 75px;
-          font-weight: 700;
-
-          @media #{$laptop-device} {
-            font-size: 65px;
-          }
+          font-size: 2.5em;
+          font-weight: 600;
 
           @media #{$lg-layout} {
-            font-size: 60px;
+            font-size: 2.5em;
           }
 
           @media #{$md-layout} {
-            font-size: 40px;
+            font-size: 2em;
             margin-bottom: 18px;
           }
           @media #{$sm-layout} {
-            font-size: 40px;
+            font-size: 1.2em;
             line-height: 64px;
           }
         }
@@ -582,7 +578,6 @@ Personal Portfolio
 ------------------------------*/
 
 .slider-creative-agency {
-  
   .slider-paralax {
     @media #{$md-layout} {
       height: 100%;
@@ -837,7 +832,7 @@ Custom Animation
   border-radius: 5px;
   box-shadow: 0 25px 65px rgba(0, 0, 0, 0.1);
 }
- 
+
 /*---------------------
     Box Model  
 ----------------------*/
