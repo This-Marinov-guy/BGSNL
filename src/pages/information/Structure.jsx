@@ -2,13 +2,11 @@ import React from "react";
 import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import BrandTwo from "../../elements/BrandTwo";
-import CounterOne from "../../elements/counters/CounterOne";
-import AboutUs from "../../component/HomeLayout/homeOne/AboutUs";
+import { Image } from "primereact/image";
 import ScrollToTop from "react-scroll-up";
 import { FiCheckCircle, FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
-import { InstagramNlBoardPost } from "../../elements/embed/InstagramPosts";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { BOARD_AND_COMMITTEES_IMAGES } from "../../util/defines/REGIONS_STRUCTURE";
 
@@ -97,13 +95,14 @@ const Structure = () => {
             return (
               <div key={index} className="col-lg-6 col-md-6 col-12 m--a">
                 <div className="mb--30 mb_sm--0 center_section">
-                  <ImageFb
+                  <Image
                     style={{ width: "400px" }}
                     className={
                       index % 2 !== 0
                         ? "team_member_border-3 mb--20"
                         : "team_member_border-4 mb--20"
                     }
+                    preview
                     src={`/assets/images/team/${img.id}.jpg`}
                     alt="Blog Images"
                   />
