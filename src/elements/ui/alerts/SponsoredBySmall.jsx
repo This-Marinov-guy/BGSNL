@@ -4,7 +4,7 @@ import ImageFb from "../media/ImageFb";
 const SponsoredBySmall = () => {
   return (
     <div className="mb--20 hor_section_sm">
-      <h3 style={{ fontWeight: "100" }} className="archive">
+      <h3 style={{ fontWeight: "100", marginTop: '10px' }} className="archive">
         With the help of
       </h3>
       <div
