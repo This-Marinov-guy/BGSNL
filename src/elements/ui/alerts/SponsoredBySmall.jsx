@@ -13,7 +13,7 @@ const SponsoredBySmall = () => {
       >
         <ImageFb
           style={{ height: "1.5em", margin: "2px" }}
-          src="/assets/images/brand/brand-07.png"
+          src="/assets/images/brand/trans-brand-07.png"
           alt="small-logo"
         />
         <ImageFb
