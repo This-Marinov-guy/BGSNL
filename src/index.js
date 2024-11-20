@@ -123,7 +123,7 @@ const Root = () => {
             <Route exact path={`/about`} element={<About />} />
             <Route exact path={`/board-and-committee`} element={<Structure />} />
             <Route exact path={`/developers`} element={<Developers />} />
-            <Route exact path={`/rules-and-regulations`} element={<Policy />} />
+            <Route exact path={`/terms-and-legals`} element={<Policy />} />
             <Route exact path={`/articles/toni-villa`} element={<Toni />} />
             <Route
               exact

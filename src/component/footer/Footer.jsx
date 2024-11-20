@@ -78,7 +78,7 @@ const Footer = ({forceRegion}) => {
                           <Link to={`/${region}/contact`}>Contact</Link>
                         </li>
                         <li>
-                          <Link to="/rules-and-regulations" target="_blank">
+                          <Link to="/terms-and-legals" target="_blank">
                             Terms and policy
                           </Link>
                         </li>

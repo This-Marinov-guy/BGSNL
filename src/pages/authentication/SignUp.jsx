@@ -612,7 +612,7 @@ const SignUp = (props) => {
                             I have read and accept the&nbsp;
                             <a
                               style={{ color: "#017363" }}
-                              href="/rules-and-regulations"
+                              href="/terms-and-legals"
                               target="_blank"
                             >
                               society's rules and regulations

@@ -409,8 +409,8 @@ const GuestPurchase = () => {
                             I have read and accept the&nbsp;
                             <a
                               style={{ color: "#017363" }}
-                              href="/assets/documents/Rules and regulations.pdf"
-                              selectedEvent="_blank"
+                              href={'/terms-and-legals'}
+                              target="_blank"
                             >
                               society's policy
                             </a>
