@@ -7,6 +7,7 @@ const Rules = () => {
         <h2 className="center_text">
           Bulgarian Society Netherlands Rules and Regulations
         </h2>
+        <h5 style={{ textAlign: "right" }}>Last updated: May 22, 2023</h5>
       </div>
       <div className="container mt--80 mb--80">
         <h3>Article 1. Structure of the organization and the roles within</h3>
