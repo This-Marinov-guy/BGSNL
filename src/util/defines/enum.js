@@ -43,3 +43,9 @@ export const TICKET_TYPES = {
   [ACTIVE_MEMBER]: ACTIVE_MEMBER,
   [FREE]: FREE,
 };
+
+// Legal Tabs
+export const RULES = "rules";
+export const PRIVACY = "privacy";
+
+export const LEGAL_TABS = [RULES, PRIVACY];
