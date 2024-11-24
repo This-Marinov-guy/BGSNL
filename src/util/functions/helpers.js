@@ -285,7 +285,7 @@ export const isPlainObject = (value) => {
   );
 };
 
-export const hasNonEmptyValues = (obj, threshold = 1) => {
+export const hasNonEmptyValues = (obj, threshold = 1, max = 3) => {
   if (!obj) {
     return false
   }
@@ -294,7 +294,7 @@ export const hasNonEmptyValues = (obj, threshold = 1) => {
     (value) => value === true || value?.length > 0
   ).length;
 
-  return trueCount > threshold;
+  return trueCount > threshold && trueCount <= max;
 };
 
 export const getGeoLocation = () => {
