@@ -17,7 +17,7 @@ const InactivityModal = ({ timeRemaining }) => {
   const { refreshJWTinAPI } = useJWTRefresh();
 
   const closeHandler = () => {
-    if (timeRemaining === 0) {
+    if (!timeRemaining) {
       window.location.href = "/";
     }
 
