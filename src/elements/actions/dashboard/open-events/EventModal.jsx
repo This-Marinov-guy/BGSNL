@@ -54,15 +54,15 @@ const EventModal = (props) => {
         <p>Is the Event Free: {props.event.isFree ? 'Yes' : 'No'}</p>
         <p>Is the Event Member Free: {props.event.isMemberFree ? 'Yes' : 'No'} </p>
         <br />
-        <p>Price for guests: {props.event.product?.guest.price}</p>
+        <p>Price for guests: {props.event.product?.guest?.price}</p>
         <p>Guest Ticket Including: {props.event.entryIncluding || 'None'}</p>
-        <p>Guest Price Id: {props.event.product?.guest.priceId}</p>
+        <p>Guest Price Id: {props.event.product?.guest?.priceId}</p>
         <br />
 
         {!props.event.isMemberFree && <>
-            <p>Price for members: {props.event.product?.member.price}</p>
+            <p>Price for members: {props.event.product?.member?.price}</p>
             <p>Member Ticket Including: {props.event.memberIncluding || 'None'}</p>
-            <p>Member Price Id: {props.event.product?.member.priceId}</p>
+            <p>Member Price Id: {props.event.product?.member?.priceId}</p>
             <br />
             <p>Price for active members: {props.event.product?.activeMember?.price}</p>
             <p>Active Member Price Id: {props.event.product?.activeMember?.priceId}</p>
