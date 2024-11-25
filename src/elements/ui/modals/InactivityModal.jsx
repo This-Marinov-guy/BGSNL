@@ -5,20 +5,22 @@ import { removeModal, selectModal } from "../../../redux/modal";
 import { INACTIVITY_MODAL } from "../../../util/defines/common";
 import { formatMsToTimer } from "../../../util/functions/date";
 import { useJWTRefresh } from "../../../hooks/common/api-hooks";
-import { selectUser } from "../../../redux/user";
+import { logout, selectUser } from "../../../redux/user";
 
 const InactivityModal = ({ timeRemaining }) => {
   const dispatch = useDispatch();
-
   const modal = useSelector(selectModal);
-
   const user = useSelector(selectUser);
-
   const { refreshJWTinAPI } = useJWTRefresh();
 
   const closeHandler = () => {
-    if (!timeRemaining) {
+    const timeRemaining = timeRemaining;
+
+    if (timeRemaining <= 0) {
+      dispatch(logout());
+      dispatch(removeModal(INACTIVITY_MODAL));
       window.location.href = "/";
+      return;
     }
 
     refreshJWTinAPI(user.token);
@@ -34,7 +36,7 @@ const InactivityModal = ({ timeRemaining }) => {
       <div className="center_section">
         <h3>Your session is about to expire if you stay inactive</h3>
         <p className="center_text">
-          Yoo have {formatMsToTimer(timeRemaining)} seconds until you are
+          You have {formatMsToTimer(timeRemaining)} seconds until you are
           automatically signed out
         </p>
         <button
