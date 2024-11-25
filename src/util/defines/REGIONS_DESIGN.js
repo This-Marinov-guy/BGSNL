@@ -87,6 +87,7 @@ export const REGION_INSTAGRAM = {
   amsterdam: "https://www.instagram.com/bulgariansociety.ams",
   maastricht: "https://www.instagram.com/bulgariansociety.maas",
   eindhoven: "https://www.instagram.com/bulgariansociety.ein",
+  netherlands: "https://www.instagram.com/bulgariansociety.netherlands",
 };
 
 export const REGION_SOCIALS = {

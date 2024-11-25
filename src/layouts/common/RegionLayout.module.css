@@ -183,3 +183,27 @@
 ::-webkit-scrollbar-thumb {
   background-color: #ff914d !important;
 }
+
+/* Netherlands */
+
+.netherlands p,
+.netherlands h3,
+.netherlands a:hover,
+.netherlands li:hover,
+.netherlands h4 a:hover {
+  color: grey !important;
+}
+
+.netherlands button {
+  background-color: grey !important;
+  border: grey !important;
+}
+
+.netherlands .thumbnail-inner-2::before {
+  background-color: grey !important;
+  background-image: linear-gradient(grey 10%, #000000 100%) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: grey !important;
+}
