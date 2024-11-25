@@ -14,7 +14,7 @@ const FormExtras = ({ inputs }) => {
                                 <h4 className="mb--10">{input.placeholder} (multiple selection)</h4>
                                 <div className="row center_div">
                                     {input.options && input.options.map((val, i) => (
-                                        <h5 key={i} className="col-4 center_div extra_input">
+                                        <h5 key={i} className="col-lg-4 col-md-6 col-12 center_div extra_input">
                                             <Field type="checkbox" name={name} value={val} />
                                             {val}
                                         </h5>
