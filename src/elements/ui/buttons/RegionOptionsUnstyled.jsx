@@ -5,10 +5,10 @@ import { REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 const RegionOptionsUnstyled = (props) => {
   const {withMain = false} = props;
 
-  const allRegions = REGIONS;
+  let allRegions = REGIONS;
 
   if (withMain) {
-    allRegions.push("netherlands");
+    allRegions = [...REGIONS, "netherlands"];
   }
 
   return (
