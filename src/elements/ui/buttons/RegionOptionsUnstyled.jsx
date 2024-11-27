@@ -3,9 +3,17 @@ import styles from "../../../layouts/common/RegionLayout.module.css";
 import { REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 
 const RegionOptionsUnstyled = (props) => {
+  const {withMain = false} = props;
+
+  const allRegions = REGIONS;
+
+  if (withMain) {
+    allRegions.push("netherlands");
+  }
+
   return (
     <div className="row">
-      {REGIONS.map((r, index) => {
+      {allRegions.map((r, index) => {
         return (
           <a
             key={index}

@@ -38,7 +38,12 @@ const PastEventsContent = () => {
                     }`}
                   >
                     <h3>{e.text}</h3>
-                    <Image className="gallery-showcase" src={e.src} alt="past event" preview />
+                    <Image
+                      className="gallery-showcase"
+                      src={e.src}
+                      alt="past event"
+                      preview
+                    />
                   </div>
                 );
               })}
@@ -47,11 +52,11 @@ const PastEventsContent = () => {
               style={{ alignSelf: "flex-start" }}
               className="col-12 past-events-gallery"
             >
-              <h2 className="mt--40 center_text" style={{fontSize: '1em'}}>
+              <h2 className="mt--40 center_text" style={{ fontSize: "1em" }}>
                 Find more about our latest events on our{" "}
                 <FiInstagram style={{ fontSize: "1em" }} /> channels
               </h2>
-              <RegionOptionsUnstyled links={REGION_INSTAGRAM} />
+              <RegionOptionsUnstyled links={REGION_INSTAGRAM} withMain />
             </div>
           </div>
         </div>
