@@ -248,7 +248,8 @@ const MemberPurchase = () => {
                   } else {
                     formData.append(
                       "itemId",
-                      selectedEvent.product?.activeMember.priceId
+                      selectedEvent.product?.activeMember?.priceId ??
+                        selectedEvent.product?.member?.priceId
                     );
                   }
                 } else if (normalTicket) {

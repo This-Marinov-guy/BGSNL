@@ -428,27 +428,23 @@ const EventForm = (props) => {
           bgImage: initialData?.bgImage ?? 1,
           bgImageExtra: initialData?.bgImageExtra ?? null,
           bgImageSelection: initialData?.bgImageSelection ?? 1,
-          earlyBird: {
-            ...(initialData?.earlyBird ?? {
-              ticketLimit: undefined,
-              startTimer: "",
-              ticketTimer: "",
-              price: undefined,
-              memberPrice: undefined,
-              isEnabled: false,
-              excludeMembers: false,
-            }),
+          earlyBird: initialData?.earlyBird ?? {
+            ticketLimit: undefined,
+            startTimer: "",
+            ticketTimer: "",
+            price: undefined,
+            memberPrice: undefined,
+            isEnabled: false,
+            excludeMembers: false,
           },
-          lateBird: {
-            ...(initialData?.lateBird ?? {
-              ticketLimit: undefined,
-              startTimer: "",
-              ticketTimer: "",
-              price: undefined,
-              memberPrice: undefined,
-              isEnabled: false,
-              excludeMembers: false,
-            }),
+          lateBird: initialData?.lateBird ?? {
+            ticketLimit: undefined,
+            startTimer: "",
+            ticketTimer: "",
+            price: undefined,
+            memberPrice: undefined,
+            isEnabled: false,
+            excludeMembers: false,
           },
           guestPromotion: {
             ...(initialData?.promotion?.guest ?? {
