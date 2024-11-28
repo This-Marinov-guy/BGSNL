@@ -342,7 +342,7 @@
     justify-content: center;
 
     .gallery-showcase {
-      transform: rotate(-10deg);
+      // transform: rotate(-10deg);
     }
 
     @media #{$large-mobile} {
@@ -357,7 +357,7 @@
     justify-content: center;
 
     .gallery-showcase {
-      transform: rotate(10deg);
+      // transform: rotate(10deg);
     }
 
     @media #{$large-mobile} {

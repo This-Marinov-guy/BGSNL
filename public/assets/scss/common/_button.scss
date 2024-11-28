@@ -100,6 +100,7 @@ a {
   &.rn-button-style--2 {
     color: #fff;
     font-size: 16px;
+    text-align: center;
     text-transform: uppercase;
     letter-spacing: 2px;
     border: 2px solid #fff;
@@ -109,7 +110,7 @@ a {
     font-weight: 500;
     transition: 0.3s;
     @media #{$sm-layout} {
-      padding: 9px 25px;
+      padding: 9px 12px;
     }
 
     &.rn-btn-green {
