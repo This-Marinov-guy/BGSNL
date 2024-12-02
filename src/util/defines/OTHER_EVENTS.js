@@ -12,6 +12,7 @@ export const OTHER_EVENTS = [
     bgImage: "4",
     date: "16th December",
     time: "14:00",
+    timeStamp: "2024-12-16T14:00:00",
     ticketTimer: "2024-12-16T14:00:00",
     ticketLimit: 250,
     //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB

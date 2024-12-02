@@ -77,20 +77,20 @@ const NonSocietyEvent = (props) => {
 
       const form = new FormData();
 
-      formData.append(
+      form.append(
         "image",
         ticketBlob,
         target.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
       );
 
-      formData.append("event", target.title);
-      formData.append("date", target.when);
-      formData.append("user", "member");
-      formData.append("name", currentUser.name + " " + currentUser.surname);
-      formData.append("phone", currentUser.phone);
-      formData.append("email", currentUser.email);
-      formData.append("extraData", formData.extraGuestName);
-      formData.append(
+      form.append("event", target.title);
+      form.append("date", target.timeStamp);
+      form.append("user", "member");
+      form.append("name", currentUser.name + " " + currentUser.surname);
+      form.append("phone", currentUser.phone);
+      form.append("email", currentUser.email);
+      form.append("extraData", formData.extraGuestName);
+      form.append(
         "notificationTypeTerms",
         currentUser.notificationTypeTerms
           ? currentUser.notificationTypeTerms
@@ -103,17 +103,19 @@ const NonSocietyEvent = (props) => {
         form
       );
 
-      dispatch(
-        showNotification({
-          severity: "success",
-          summary: "Success",
-          detail:
-            "Your registration for the event is complete! Please check your email for confirmation!",
-        })
-      );
-      
-      navigate("/");
-      setTimeout(() => closeNotificationHandler(), 7000);
+      if (responseData?.status) {
+        dispatch(
+          showNotification({
+            severity: "success",
+            summary: "Success",
+            detail:
+              "Your registration for the event is complete! Please check your email for confirmation!",
+          })
+        );
+
+        navigate("/");
+        setTimeout(() => closeNotificationHandler(), 7000);
+      }
     } catch (err) {}
   };
 
