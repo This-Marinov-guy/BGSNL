@@ -35,7 +35,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
       events = events.filter((event) => event.hidden === false);
     }
   }
-  const isMoreThanOneEvent = hasNonEmptyValues(events);  
+  const isMoreThanOneEvent = hasNonEmptyValues(events);
 
   useEffect(() => {
     reloadEvents();
@@ -130,8 +130,6 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
 };
 
 const FutureOtherEventsContent = () => {
-  const { region } = useParams();
-
   return (
     <div className="portfolio-area pt--20 pb--100 bg_color--5">
       <div className="rn-slick-dot">
@@ -139,22 +137,21 @@ const FutureOtherEventsContent = () => {
           <div className="row">
             <div className="col-lg-6">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
-                <h3 className="title">Other events</h3>
-                <p>
-                  Events that you might find interesting from other organizers
-                </p>
+                <h3 className="title">Netherlands events</h3>
+                <p>Events that you might find interesting from our partners</p>
               </div>
             </div>
           </div>
           <div className="row mb--40">
             <div className="col-lg-12">
               <div className="slick-space-gutter--15 slickdot--20">
-                {OTHER_EVENTS[region] && OTHER_EVENTS[region].length > 0 ? (
+                {OTHER_EVENTS && OTHER_EVENTS.length > 0 ? (
                   <PortfolioList2
                     style="other"
-                    target={OTHER_EVENTS[region]}
+                    target={OTHER_EVENTS}
                     styevariation="text-center"
                     column="col-lg-4 col-md-6 col-sm-6 col-12"
+                    special
                   />
                 ) : (
                   <p className="col-lg-6 mt--20 mb--20">
@@ -190,11 +187,14 @@ const FutureEvents = (props) => {
       {/* Start Future Events Area */}
       {region ? (
         <>
-          <FutureEventsContent nullable={false} />
           <FutureOtherEventsContent />
+          <FutureEventsContent nullable={false} />
         </>
       ) : (
-        <FutureEventsContent displayAll nullable={false} />
+        <>
+          <FutureOtherEventsContent />
+          <FutureEventsContent displayAll nullable={false} />
+        </>
       )}
       {/* End Future Events Area */}
 

@@ -121,7 +121,11 @@ const Root = () => {
             {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
             <Route exact path="/404" element={<Error404 />} />
             <Route exact path={`/about`} element={<About />} />
-            <Route exact path={`/board-and-committee`} element={<Structure />} />
+            <Route
+              exact
+              path={`/board-and-committee`}
+              element={<Structure />}
+            />
             <Route exact path={`/developers`} element={<Developers />} />
             <Route exact path={`/terms-and-legals`} element={<Policy />} />
             <Route exact path={`/articles/toni-villa`} element={<Toni />} />
@@ -172,12 +176,8 @@ const Root = () => {
             />
             <Route
               exact
-              path={"/:region/other-event-details/:eventId"}
-              element={
-                <RegionLayout>
-                  <NonSocietyEvent />
-                </RegionLayout>
-              }
+              path={"/other-event-details/carrier-day-deloitte"}
+              element={<NonSocietyEvent />}
             ></Route>
 
             {/* Redirect pages */}

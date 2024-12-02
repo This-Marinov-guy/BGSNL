@@ -20,6 +20,11 @@ import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
 import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import ImageFb from "../../elements/ui/media/ImageFb";
+import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusiveEvents";
+import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
+import FormExtras from "../../elements/ui/forms/FormExtras";
+import { createCustomerTicket } from "../../util/functions/ticket-creator";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -38,11 +43,14 @@ const schema = yup.object().shape({
 const NonSocietyEvent = (props) => {
   const [currentUser, setCurrentUser] = useState();
 
+  const [formData, setFormData] = useState({
+    hasExtraGuest: false,
+    extraGuestName: "",
+  });
+
   const { loading, sendRequest } = useHttpClient();
 
-  const { region } = useParams();
-
-  const target = useObjectGrabUrl(OTHER_EVENTS[region]);
+  const target = OTHER_EVENTS[0];
 
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
@@ -57,34 +65,64 @@ const NonSocietyEvent = (props) => {
 
   const closeNotificationHandler = () => {
     dispatch(removeModal(NSE_REGISTRATION_MODAL));
-
   };
 
   const submitMemberForm = async () => {
     try {
+      const { ticketBlob } = await createCustomerTicket(
+        target.ticket_img,
+        currentUser.name,
+        currentUser.surname
+      );
+
+      const form = new FormData();
+
+      formData.append(
+        "image",
+        ticketBlob,
+        target.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
+      );
+
+      formData.append("event", target.title);
+      formData.append("date", target.when);
+      formData.append("user", "member");
+      formData.append("name", currentUser.name + " " + currentUser.surname);
+      formData.append("phone", currentUser.phone);
+      formData.append("email", currentUser.email);
+      formData.append("extraData", formData.extraGuestName);
+      formData.append(
+        "notificationTypeTerms",
+        currentUser.notificationTypeTerms
+          ? currentUser.notificationTypeTerms
+          : "Any"
+      );
+
       const responseData = await sendRequest(
         "event/register/non-society-event",
         "POST",
-        {
-          event: target.title,
-          date: target.when,
-          user: "member",
-          name: currentUser.name + " " + currentUser.surname,
-          phone: currentUser.phone,
-          email: currentUser.email,
-          notificationTypeTerms: currentUser.notificationTypeTerms
-            ? currentUser.notificationTypeTerms
-            : "Any",
-        }
+        form
       );
-      dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'Your registration for the event is complete! The organizer will soon contact you!' }));
+
+      dispatch(
+        showNotification({
+          severity: "success",
+          summary: "Success",
+          detail:
+            "Your registration for the event is complete! Please check your email for confirmation!",
+        })
+      );
+      
       navigate("/");
       setTimeout(() => closeNotificationHandler(), 7000);
-    } catch (err) { }
+    } catch (err) {}
   };
 
+  const imageUrl =
+    target.bgImageExtra && target?.bgImageSelection == 2
+      ? target.bgImageExtra
+      : `/assets/images/bg/bg-image-${target.bgImage}.webp`;
+
   useEffect(() => {
-    const userId = decodeJWT(user.token).userId;
     const fetchCurrentUser = async () => {
       try {
         const responseData = await sendRequest(`user/current`);
@@ -96,7 +134,15 @@ const NonSocietyEvent = (props) => {
     if (user.token) {
       fetchCurrentUser();
     }
-  }, [sendRequest, user]);
+  }, []);
+
+  if (target.eventClosed) {
+    return <TicketSaleClosed />;
+  }
+
+  if (target.membersOnly && !user?.token) {
+    return <ExclusiveMemberEvent />;
+  }
 
   return (
     <React.Fragment>
@@ -120,13 +166,55 @@ const NonSocietyEvent = (props) => {
                 Finish registration as{" "}
                 {currentUser.name + " " + currentUser.surname + " ?"}
               </h3>
-              <button
-                disabled={loading}
-                onClick={submitMemberForm}
-                className="rn-button-style--2 rn-btn-reverse-green mt--30"
-              >
-                {loading ? <Loader /> : <span>Register</span>}
-              </button>
+
+              <div className="col-12">
+                <label> Would you like to bring additional guest</label>
+                <select
+                  value={formData.hasExtraGuest ? "1" : "0"}
+                  onChange={(e) =>
+                    setFormData((prevState) => {
+                      return {
+                        ...prevState,
+                        hasExtraGuest: e.target.value === "1",
+                      };
+                    })
+                  }
+                >
+                  <option value="0">No</option>
+                  <option value="1">Yes</option>
+                </select>
+              </div>
+
+              {formData.hasExtraGuest && (
+                <div className="col-12">
+                  <label> Please type their name</label>
+
+                  <input
+                    type="text"
+                    value={formData.extraGuestName}
+                    onChange={(e) =>
+                      setFormData((prevState) => {
+                        return {
+                          ...prevState,
+                          extraGuestName: e.target.value,
+                        };
+                      })
+                    }
+                  ></input>
+                </div>
+              )}
+
+              {formData.hasExtraGuest && !formData.extraGuestName ? (
+                ""
+              ) : (
+                <button
+                  disabled={loading}
+                  onClick={submitMemberForm}
+                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
+                >
+                  {loading ? <Loader /> : <span>Register</span>}
+                </button>
+              )}
             </div>
           ) : (
             <Loader center />
@@ -280,7 +368,8 @@ const NonSocietyEvent = (props) => {
 
       {/* Start Breadcrump Area */}
       <div
-        className={`rn-page-title-area pt--120 pb--190 bg_image bg_image--${target.bgImage}`}
+        className={`rn-page-title-area pt--120 pb--190 bg_image`}
+        style={{ backgroundImage: `url(${imageUrl})` }}
         data-black-overlay="7"
       >
         <div className="container">
@@ -304,13 +393,14 @@ const NonSocietyEvent = (props) => {
               <div className="portfolio-details">
                 <div className="inner">
                   <h2>About</h2>
-                  <p className="subtitle">{target.text[0]}</p>
-                  <p>{target.text[1]}</p>
+                  <p dangerouslySetInnerHTML={{ __html: target.text }}></p>
 
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
                       <span>When</span>
-                      <h4>{target.when}</h4>
+                      <h4>
+                        {target.date}, {target.time}
+                      </h4>
                     </div>
 
                     <div className="port-view">
@@ -320,11 +410,7 @@ const NonSocietyEvent = (props) => {
 
                     <div className="port-view">
                       <span>Fee</span>
-                      <h4>
-                        {user.token
-                          ? target.memberEntry + " euro (discounted)"
-                          : target.entry + " euro"}
-                      </h4>
+                      <h4>Free</h4>
                     </div>
                   </div>
                   <button
@@ -361,13 +447,18 @@ const NonSocietyEvent = (props) => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-                <div className="portfolio-thumb-inner">
-                  <div className="thumb position-relative mb--30">
-                    <img
-                      src={`${target.images[0]}.jpg`}
-                      alt="Portfolio Images"
-                    />
-                  </div>
+                <div className="portfolio-thumb-inner row">
+                  {target.images?.length > 0 &&
+                    target.images.map((value, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="col-lg-6 col-md-12 col-12 thumb center_div mb--30"
+                        >
+                          <ImageFb src={`${value}`} alt="Portfolio Images" />
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -388,4 +479,5 @@ const NonSocietyEvent = (props) => {
     </React.Fragment>
   );
 };
+
 export default NonSocietyEvent;

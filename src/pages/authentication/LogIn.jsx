@@ -37,7 +37,7 @@ const Login = () => {
       return { ...prevState, [event.target.name]: event.target.value };
     });
   };
-
+  
   const loginHandler = async (event) => {
     event.preventDefault();
     try {
@@ -90,7 +90,9 @@ const Login = () => {
 
       navigate(sessionStorage.getItem("prevUrl") ?? `/${responseData.region}`);
       sessionStorage.removeItem("prevUrl");
-    } catch (err) {}
+    } catch (err) {
+
+    }
   };
 
   return (

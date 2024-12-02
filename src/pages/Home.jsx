@@ -61,11 +61,14 @@ const Home = () => {
       {/* Start Upcoming Events Area */}
       {region ? (
         <>
-          <FutureEventsContent />
           <FutureOtherEventsContent />
+          <FutureEventsContent />
         </>
       ) : (
-        <FutureEventsContent displayAll />
+        <>
+          <FutureOtherEventsContent />
+          <FutureEventsContent displayAll />
+        </>
       )}
       {/* End Upcoming Events Area */}
 

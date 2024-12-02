@@ -22,8 +22,6 @@ const HeaderContent = (props) => {
   const user = useSelector(selectUser);
   const [logoutAlert, setLogoutAlert] = useState(false);
 
-  const userRegion = user.token ? decodeJWT(user.token).region : "";
-
   const articles = useSelector(selectArticles);
 
   const region = props.forceRegion ?? useParams().region;
@@ -38,9 +36,6 @@ const HeaderContent = (props) => {
 
       <nav className={"mainmenunav d-lg-block"}>
         <ul className={props.dark ? "mainmenu dark_nav" : "mainmenu"}>
-          <li>
-            <Link to={`/${region ?? userRegion}`}>Home</Link>
-          </li>
           <li className="has-dropdown">
             <a style={{ cursor: "pointer" }}>Regions</a>
             <ul className="submenu">
