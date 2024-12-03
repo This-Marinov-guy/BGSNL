@@ -10,7 +10,7 @@ export const OTHER_EVENTS = [
     newTitle: "Career Day",
     description: "Deloitte Bulgaria",
     bgImage: "4",
-    bgImageExtra: "/assets/images/events/portfolio-1.jpeg",
+    bgImageExtra: "/assets/images/events/portfolio-1.1.jpeg",
     date: "16th December",
     time: "14:00",
     timeStamp: "2024-12-16T14:00:00",
@@ -60,6 +60,6 @@ export const OTHER_EVENTS = [
       "/assets/images/events/5.jpg",
       "/assets/images/events/6.jpg",
     ],
-    poster: "/assets/images/events/portfolio-1.1.jpeg",
+    poster: "/assets/images/events/portfolio-1.jpeg",
   },
 ];
