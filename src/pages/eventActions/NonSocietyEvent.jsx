@@ -25,6 +25,7 @@ import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusi
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { createCustomerTicket } from "../../util/functions/ticket-creator";
+import MembershipBanner from "../../elements/banners/MembershipBanner";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -66,6 +67,8 @@ const NonSocietyEvent = (props) => {
   const closeNotificationHandler = () => {
     dispatch(removeModal(NSE_REGISTRATION_MODAL));
   };
+
+  const block = target.membersOnly && !user?.token;
 
   const submitMemberForm = async () => {
     try {
@@ -140,10 +143,6 @@ const NonSocietyEvent = (props) => {
 
   if (target.eventClosed) {
     return <TicketSaleClosed />;
-  }
-
-  if (target.membersOnly && !user?.token) {
-    return <ExclusiveMemberEvent />;
   }
 
   return (
@@ -415,19 +414,24 @@ const NonSocietyEvent = (props) => {
                       <h4>Free</h4>
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      dispatch(showModal(NSE_REGISTRATION_MODAL));
-                    }}
-                    className="rn-button-style--2 rn-btn-reverse-green"
-                  >
-                    Register
-                  </button>
-                  <p className="information mt--20">
-                    {user.token
-                      ? "*As a member, your information will be taken directly from your profile"
-                      : "Press the button and fill your details"}
-                  </p>
+                  {!block && (
+                    <button
+                      onClick={() => {
+                        dispatch(showModal(NSE_REGISTRATION_MODAL));
+                      }}
+                      className="rn-button-style--2 rn-btn-reverse-green"
+                    >
+                      Register
+                    </button>
+                  )}
+
+                  {block && (
+                    <p className="mt--20" style={{color: 'red'}}>
+                      This event is only exclusive to members!
+                    </p>
+                  )}
+
+                  {block && <MembershipBanner border={1}/>}
                 </div>
                 <br />
                 {/* Start Contact Map  */}
