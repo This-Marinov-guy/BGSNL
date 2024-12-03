@@ -94,6 +94,13 @@ button {
   }
 }
 
+button:disabled {
+  color: white !important;
+  background-color: grey !important;
+  border-color: grey !important;
+  cursor: not-allowed !important;
+}
+
 button,
 input[type="file"],
 a {

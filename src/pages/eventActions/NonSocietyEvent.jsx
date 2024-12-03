@@ -167,7 +167,6 @@ const NonSocietyEvent = (props) => {
                 Finish registration as{" "}
                 {currentUser.name + " " + currentUser.surname + " ?"}
               </h3>
-
               <div className="col-12">
                 <label> Would you like to bring additional guest</label>
                 <select
@@ -185,7 +184,6 @@ const NonSocietyEvent = (props) => {
                   <option value="1">Yes</option>
                 </select>
               </div>
-
               {formData.hasExtraGuest && (
                 <div className="col-12">
                   <label> Please type their name</label>
@@ -204,18 +202,16 @@ const NonSocietyEvent = (props) => {
                   ></input>
                 </div>
               )}
-
-              {formData.hasExtraGuest && !formData.extraGuestName ? (
-                ""
-              ) : (
-                <button
-                  disabled={loading}
-                  onClick={submitMemberForm}
-                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
-                >
-                  {loading ? <Loader /> : <span>Register</span>}
-                </button>
-              )}
+              <button
+                disabled={
+                  loading ||
+                  (formData.hasExtraGuest && !formData.extraGuestName)
+                }
+                onClick={submitMemberForm}
+                className="rn-button-style--2 rn-btn-reverse-green mt--30"
+              >
+                {loading ? <Loader /> : <span>Register</span>}
+              </button>
             </div>
           ) : (
             <Loader center />
@@ -377,7 +373,9 @@ const NonSocietyEvent = (props) => {
           <div className="row">
             <div className="col-lg-12">
               <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">{target.newTitle ?? target.title}</h2>
+                <h2 className="title theme-gradient">
+                  {target.newTitle ?? target.title}
+                </h2>
                 <p>{target.description}</p>
               </div>
             </div>
