@@ -2,7 +2,7 @@ import React from "react";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
 
-const Success = (props) => {
+const Success = () => {
   const prevUrl = sessionStorage.getItem('prevUrl')
 
   return (
@@ -16,13 +16,13 @@ const Success = (props) => {
         Your payment was Successful! Check your email for the invoice and enjoy&nbsp;&nbsp;your purchase! Hope to see you soon!
       </p>
       <div className="options-btns-div">
+        {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
+        } className="rn-button-style--2 rn-btn-green mt--30" to={prevUrl}>
+          Return to Page
+        </Link>}
         <Link className="rn-button-style--2 rn-btn-green mt--30" to="/">
           Home
         </Link>
-        {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
-        } className="rn-button-style--2 rn-btn-green mt--30" to={prevUrl}>
-          Back To Event
-        </Link>}
       </div>
       <hr />
       <p className="information">
