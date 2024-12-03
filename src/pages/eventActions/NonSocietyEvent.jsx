@@ -123,7 +123,7 @@ const NonSocietyEvent = (props) => {
   };
 
   const imageUrl =
-    target.bgImageExtra && target?.bgImageSelection == 2
+    target.bgImageExtra
       ? target.bgImageExtra
       : `/assets/images/bg/bg-image-${target.bgImage}.webp`;
 
@@ -377,7 +377,7 @@ const NonSocietyEvent = (props) => {
           <div className="row">
             <div className="col-lg-12">
               <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">{target.title}</h2>
+                <h2 className="title theme-gradient">{target.newTitle ?? target.title}</h2>
                 <p>{target.description}</p>
               </div>
             </div>
@@ -426,12 +426,12 @@ const NonSocietyEvent = (props) => {
                   )}
 
                   {block && (
-                    <p className="mt--20" style={{color: 'red'}}>
+                    <p className="mt--20" style={{ color: "red" }}>
                       This event is only exclusive to members!
                     </p>
                   )}
 
-                  {block && <MembershipBanner border={1}/>}
+                  {block && <MembershipBanner border={1} />}
                 </div>
                 <br />
                 {/* Start Contact Map  */}
