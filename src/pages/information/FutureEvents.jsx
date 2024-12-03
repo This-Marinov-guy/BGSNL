@@ -46,13 +46,13 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
   }
 
   return (
-    <div className="portfolio-area pt--40 pb--40 bg_color--5">
+    <div className="portfolio-area pt--40 pb--10 bg_color--5">
       <div className="rn-slick-dot">
         <div className="container">
           <div className="row mb--40">
             <div className="col-lg-12">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
-                <h2 className="title">Future Events</h2>
+                <h3 className="title">Future Events</h3>
                 <p>
                   What you can expect - our society events happening near you!
                   Make sure to subscribe to our social media or calendars in
@@ -131,13 +131,13 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
 
 const FutureOtherEventsContent = () => {
   return (
-    <div className="portfolio-area pt--20 pb--100 bg_color--5">
+    <div className="portfolio-area pt--40 pb--10 bg_color--5">
       <div className="rn-slick-dot">
         <div className="container">
           <div className="row">
             <div className="col-lg-6">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
-                <h3 className="title">Netherlands events</h3>
+                <h3 className="title">Special events</h3>
                 <p>Events that you might find interesting from our partners</p>
               </div>
             </div>
