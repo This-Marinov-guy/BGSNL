@@ -53,9 +53,9 @@ const Header = (props) => {
           id="header-wrapper"
         >
           <div className="header-left">
-            <div className="logo">
-              <Link to={region ? `/${region}` : "/"}>{logoUrl}</Link>
-            </div>
+              <Link className="logo" to={region ? `/${region}` : "/"}>
+                {logoUrl}
+              </Link>
           </div>
           <div className="header-right">
             <HeaderContent />
