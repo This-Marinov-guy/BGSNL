@@ -5,6 +5,7 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import HeaderContent from "./HeaderContent";
+import { HOLIDAYS } from "../../util/configs/common";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
@@ -25,10 +26,14 @@ const HeaderTwo = (props) => {
     <ImageFb
       className="logo"
       src={`/assets/images/logo/${
-        region && REGIONS.includes(region) ? region : "logo"
+        region && REGIONS.includes(region) ? region : HOLIDAYS.isWinter
+          ? "logo-xmas"
+          : "logo"
       }.webp`}
       fallback={`/assets/images/logo/${
-        region && REGIONS.includes(region) ? region : "logo"
+        region && REGIONS.includes(region) ? region : HOLIDAYS.isWinter
+          ? "logo-xmas"
+          : "logo"
       }.jpg`}
       alt="Logo"
     />

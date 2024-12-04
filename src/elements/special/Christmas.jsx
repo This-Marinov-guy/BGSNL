@@ -9,6 +9,7 @@ import ModalWindow from "../ui/modals/ModalWindow";
 
 import GifSearch from "./GifSearch";
 import GifImage from "./GifImage";
+import { HOLIDAYS } from "../../util/configs/common";
 
 const schema = yup.object().shape({
     text: yup.string().required("You are not sending without a wish >:("),
@@ -33,6 +34,10 @@ const Christmas = (props) => {
 
     const { loading, sendRequest } = useHttpClient();
 
+    if (!HOLIDAYS.isChristmas) {
+        return;
+    }
+    
     return (
         <Fragment>
             {showInbox && <ModalWindow show={showInbox}>

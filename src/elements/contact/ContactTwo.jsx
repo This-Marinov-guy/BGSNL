@@ -3,6 +3,7 @@ import ContactForm from "./ContactForm";
 import ImageFb from "../ui/media/ImageFb";
 import { useParams } from "react-router-dom";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import { HOLIDAYS } from "../../util/configs/common";
 
 const ContactTwo = () => {
   const { region } = useParams();
@@ -23,8 +24,20 @@ const ContactTwo = () => {
             <div className="thumbnail mb_md--30 mb_sm--30">
               <ImageFb
                 style={{ borderRadius: "50%" }}
-                src={`/assets/images/logo/${REGIONS.includes(region) ? region : 'logo'}.webp`}
-                fallback={`/assets/images/logo/${REGIONS.includes(region) ? region : 'logo'}.jpg`}
+                src={`/assets/images/logo/${
+                  REGIONS.includes(region)
+                    ? region
+                    : HOLIDAYS.isWinter
+                    ? "logo-xmas"
+                    : "logo"
+                }.webp`}
+                fallback={`/assets/images/logo/${
+                  REGIONS.includes(region)
+                    ? region
+                    : HOLIDAYS.isWinter
+                    ? "logo-xmas"
+                    : "logo"
+                }.jpg`}
                 alt="Logo"
               />
             </div>

@@ -37,13 +37,15 @@ const Hero1 = () => {
           className="slide slide-style-2 slider-paralax d-flex align-items-center justify-content-center"
           key={index}
         >
-          <div className="container">
+          <div className="">
             <div className="row">
               <div className="col-lg-12">
                 <div className={`inner ${value.textPosition}`}>
                   {value.category ? <span>{value.category}</span> : ""}
                   {value.title ? (
-                    <h1 className="title theme-gradient">{value.title}</h1>
+                    <h1 className="title theme-gradient">
+                      {value.title}
+                    </h1>
                   ) : (
                     ""
                   )}

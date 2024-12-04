@@ -6,14 +6,14 @@ const SnowBackground = () => {
   if (!HOLIDAYS.isWinter) {
     return;
   }
-  
+
   return (
     <div
       style={{
         height: "100%",
         width: "100%",
         position: "absolute",
-        zIndex: "10000",
+        zIndex: "1",
       }}
     >
       <Snowfall snowflakeCount={200} />

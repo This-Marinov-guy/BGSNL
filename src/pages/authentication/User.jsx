@@ -247,7 +247,7 @@ const User = () => {
         forceRegion={currentUser.region ?? null}
       />
       <UserUpdateModal currentUser={currentUser} />
-      {/* <Christmas currentUser={currentUser} /> */}
+      <Christmas currentUser={currentUser} />
       {/* Start Info Area */}
       <div className="service-area ptb--20 bg_color--1 mt--80">
         <div className="container">
