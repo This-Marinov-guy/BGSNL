@@ -6,7 +6,7 @@ const PortfolioList2 = (props) => {
 
   return target.map((value, index) => {
     const link = special
-      ? `/other-event-details/carrier-day-deloitte`
+      ? `/other-event-details/career-day-pwc`
       : `/${value.region ?? region}/event-details/${value.id}`;
 
     return (
