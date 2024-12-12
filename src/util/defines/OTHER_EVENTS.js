@@ -6,7 +6,7 @@ export const OTHER_EVENTS = [
     region: "",
     membersOnly: true,
     visible: true,
-    title: "PwC Кариерен Ден",
+    title: "PwC Career Pathways",
     // newTitle: "Career Day",
     // description: "Deloitte Bulgaria",
     bgImage: "4",
