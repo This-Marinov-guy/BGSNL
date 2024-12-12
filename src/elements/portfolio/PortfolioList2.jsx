@@ -20,9 +20,9 @@ const PortfolioList2 = (props) => {
           </div>
           <div className="content">
             <div className="inner">
-              <p>{value.title}</p>
+              <p>{value.description}</p>
               <h4>
-                <Link to={link}>{value.description}</Link>
+                <Link to={link}>{value.title}</Link>
               </h4>
               <Link
                 className="rn-button-style--2 rn-btn-reverse-green"

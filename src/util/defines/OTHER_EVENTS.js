@@ -6,20 +6,20 @@ export const OTHER_EVENTS = [
     region: "",
     membersOnly: true,
     visible: true,
-    title: "Carrier Day",
-    newTitle: "Career Day",
-    description: "Deloitte Bulgaria",
+    title: "PwC Кариерен Ден",
+    // newTitle: "Career Day",
+    // description: "Deloitte Bulgaria",
     bgImage: "4",
-    bgImageExtra: "/assets/images/events/portfolio-1.1.jpeg",
-    date: "16th December",
-    time: "14:00",
-    timeStamp: "2024-12-16T14:00:00",
-    ticketTimer: "2024-12-16T14:00:00",
+    bgImageExtra: "/assets/images/events/portfolio-2.3.png",
+    date: "7-ми Януари",
+    time: "15:00",
+    timeStamp: "2025-01-07T15:00:00",
+    ticketTimer: "2025-01-07T15:00:00",
     ticketLimit: 250,
     //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
     correctedDate: "",
     correctedTime: "",
-    where: `Mihail Tanev 4, Sofia, Bulgaria`,
+    where: `София, бул. Мария Луиза 9-11`,
     isMemberFree: true,
     entry: "Free",
     memberEntry: "Free",
@@ -30,36 +30,35 @@ export const OTHER_EVENTS = [
     // memberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     // activeMemberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     text: `
-    🌌 <strong>Launch Your Career into the Stratosphere!</strong><br><br>
+    🌌 <strong>PwC и Българското общество в Нидерландия те канят на специално събитие!</strong><br><br>
 
-    Ready to take the first step toward an extraordinary future? Want to earn your spot at 
-    <strong>Deloitte’s Summer Business Camp</strong>? Join us at the 
-    <strong>Career Day @ Deloitte Bulgaria</strong> and prepare to skyrocket your career 🚀<br><br>
+    Обмисляш ли възможности за своето професионално развитие след университета? <br>
+    Чудиш ли се какви знания и умения са ти необходими?<br><br>
 
-    <strong>When?</strong> 16 December 2024 @ 2:00 PM - 6:00 PM<br>
-    <strong>Where?</strong> Deloitte Bulgaria HQ (Ul. "Mihail Tenev" 4, Balkan Business Center)<br><br>
 
-    <strong>Why attend?</strong><br>
-    <ul>
-      <li>🌠 Learn about Deloitte’s mission and values directly from the founder of the Deloitte office in Bulgaria–Silviya Peneva.</li>
-      <li>👩‍🚀 Learn from the best: Engage in a panel discussion featuring senior team members sharing their career journeys and expertise.</li>
-      <li>🔭 Get insider tips: Dive into a tailored session on internships and job application processes where you can ask all of your burning questions.</li>
-      <li>✨ Expand your circle: End the day with informal networking with Deloitte professionals.</li>
-    </ul><br>
+    Научи повече за това как можеш да стартираш успешна кариера в България с PwC – глобална компания с мисия да развива младите таланти.
 
-    NB! This exclusive event is open to members only, and but member can invite a +1 to join the experience.
+    В @ PwC Bulgaria вярват, че бъдещето принадлежи на тези, които са амбициозни, мотивирани и готови да разгърнат потенциала си. Затова на 7 януари 2025 г. са подготвили вълнуваща програма, която ще ти помогне да определиш своите силни страни и умения и да ги свържеш с правилния кариерен път. <br><br>
 
-    Whether you’re looking for career inspiration, guidance, or opportunities, this event is your chance to make it happen! Don’t miss this unique opportunity to meet industry leaders, explore career pathways, and ask all your burning questions.
-  `,
+    Програма: <br>
+    🌟 Открий своите силни страни: интерактивна сесия с Kameliya Damyanova (HR Leader for PwC SEE)<br><br>
+
+
+    📢 История, която вдъхновява: Nadya Haralampieva е завършила в Нидерландия и ще разкаже за своето завръщане в България и първите стъпки към успешната кариера в PwC.<br><br>
+    
+    🤝 Networking: Възможност да се срещнеш с професионалисти от различни екипи на PwC, които също са учили в Нидерландия.  <br><br>
+    
+    Заповядай, получи ценни съвети и създай нови контакти!<br><br>
+
+    👉  Важна информация: Събитието е с ограничен капацитет и задължителна регистрация за членове на обществото!
+    `,
     freePass: ["vladislavmarinov3142@gmail.com"],
     marketingInputs: false,
-    ticket_img: "/assets/images/events/ticket-1.jpg",
+    ticket_img: "/assets/images/events/ticket-2.png",
     images: [
-      "/assets/images/events/3.jpg",
-      "/assets/images/events/4.jpg",
-      "/assets/images/events/5.jpg",
-      "/assets/images/events/6.jpg",
+      "/assets/images/events/portfolio-2.jpeg",
+      "/assets/images/events/portfolio-2.2.png",
     ],
-    poster: "/assets/images/events/portfolio-1.jpeg",
+    poster: "/assets/images/events/portfolio-2.jpeg",
   },
 ];
