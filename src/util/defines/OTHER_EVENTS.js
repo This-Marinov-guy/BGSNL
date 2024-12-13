@@ -13,8 +13,9 @@ export const OTHER_EVENTS = [
     bgImageExtra: "/assets/images/events/portfolio-2.3.png",
     date: "7-ми Януари",
     time: "15:00",
-    timeStamp: "2025-01-07T15:00:00",
-    ticketTimer: "2025-01-07T15:00:00",
+    // 1 hour earlier than Netherlands / 2 than Bulgaria
+    timeStamp: "2025-01-07T13:00:00",
+    ticketTimer: "2025-01-07T13:00:00",
     ticketLimit: 250,
     //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
     correctedDate: "",
