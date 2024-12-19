@@ -23,7 +23,10 @@ const ArticlesPage = () => {
   const INIT_ITEMS_PER_PAGE = 6;
 
   const [listedArticles, setListedArticles] = useState(restArticles);
-  const [first, setFirst] = useState((searchParams.get("page") ? searchParams.get("page") - 1 : 0) * INIT_ITEMS_PER_PAGE);
+  const [first, setFirst] = useState(
+    (searchParams.get("page") ? searchParams.get("page") - 1 : 0) *
+      INIT_ITEMS_PER_PAGE
+  );
   const [rows, setRows] = useState(INIT_ITEMS_PER_PAGE);
 
   const searchArticles = (e) => {
@@ -47,6 +50,19 @@ const ArticlesPage = () => {
 
   useEffect(() => {
     reloadArticles();
+  }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8703070946657360";
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
   }, []);
 
   useEffect(() => {

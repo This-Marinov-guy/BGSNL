@@ -29,6 +29,19 @@ const StudentMigration = () => {
         }
     }, []);
 
+      useEffect(() => {
+        const script = document.createElement("script");
+        script.src =
+          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8703070946657360";
+        script.async = true;
+    
+        document.body.appendChild(script);
+    
+        return () => {
+          document.body.removeChild(script);
+        };
+      }, []);
+
     return <React.Fragment>
         <PageHelmet pageTitle="Articles" />
         <Header

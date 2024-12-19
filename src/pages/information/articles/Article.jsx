@@ -27,6 +27,19 @@ const Article = () => {
     reloadArticleDetails(articleId);
   }, []);
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8703070946657360";
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   if (pageLoading) {
     return <PageLoading />;
   }

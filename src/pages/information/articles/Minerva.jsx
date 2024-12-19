@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../../../elements/common/Breadcrumb";
 import PageHelmet from "../../../component/common/Helmet";
 import ScrollToTop from "react-scroll-up";
@@ -11,6 +11,19 @@ import VideoPlayer from "../../../elements/ui/media/VideoPLayer";
 
 const Minerva = () => {
     const [modal, setModal] = useState();
+
+      useEffect(() => {
+        const script = document.createElement("script");
+        script.src =
+          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8703070946657360";
+        script.async = true;
+    
+        document.body.appendChild(script);
+    
+        return () => {
+          document.body.removeChild(script);
+        };
+      }, []);
 
     return <React.Fragment>
         <PageHelmet pageTitle="Articles" />
