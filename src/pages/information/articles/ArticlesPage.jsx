@@ -85,19 +85,23 @@ const ArticlesPage = () => {
             </div>
           </div>
           <div className="row mt--20">
-            {listedArticles?.length > 0 ? listedArticles.map((article, index) => (
-              <div key={index} className="col-lg-4 col-md-6 col-12">
-                <Card2
-                  image={article.thumbnail}
-                  fallbackImage="/assets/images/avatars/article.png"
-                  description={article.description}
-                  link={`/articles/${article.id}/${encodeForURL(
-                    article.title
-                  )}`}
-                  isInsideLink
-                />
-              </div>
-            )) : <p className="col-12 center_text">No more articles found</p>}
+            {listedArticles?.length > 0 ? (
+              listedArticles.map((article, index) => (
+                <div key={index} className="col-lg-4 col-md-6 col-12">
+                  <Card2
+                    image={article.thumbnail}
+                    fallbackImage="/assets/images/avatars/article.png"
+                    description={article.description}
+                    link={article.legacyLink ?? `/articles/${
+                      article.id
+                    }/${encodeForURL(article.title)}`}
+                    isInsideLink
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="col-12 center_text">No more articles found</p>
+            )}
           </div>
         </div>
       </div>

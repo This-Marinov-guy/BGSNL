@@ -59,6 +59,10 @@ export const askBeforeRedirect = (basedOnEnv = true) => {
 };
 
 export const encodeForURL = (string) => {
+  if (!string) {
+    return '';
+  }
+  
   let encodedString = string.toLowerCase().replace(/ /g, "_");
 
   return encodeURIComponent(encodedString);

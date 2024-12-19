@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { LEGACY_ARTICLES } from "../util/defines/ARTICLES";
 
 export const articlesSlice = createSlice({
   name: "articles",
@@ -18,6 +19,7 @@ export const articlesSlice = createSlice({
     loadArticles: (state, action) => {
       state.all = []; 
       action.payload.forEach((article) => state.all.push(article));
+      state.all.push(...LEGACY_ARTICLES);
     },
 
     startLoadingAll: (state) => {
