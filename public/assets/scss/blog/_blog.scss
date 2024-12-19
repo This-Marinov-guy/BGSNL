@@ -170,6 +170,10 @@ Blog Styles
     object-fit: cover;
   }
 
+  .main-link {
+    font-size: $a;
+  }
+
   .navigation {
     display: flex;
     justify-content: space-between;

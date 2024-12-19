@@ -63,6 +63,7 @@ const ArticlesPage = () => {
             <h3 className="mb--20">{firstArticle.title}</h3>
             <p>{firstArticle.description}</p>
             <Link
+            className="main-link"
               to={`/articles/${firstArticle.id}/${encodeForURL(
                 firstArticle.title
               )}`}
