@@ -11,8 +11,8 @@
 }
 
 .archive-title {
-    font-family: $title-font;
-    font-size: 0.9em;
+  font-family: $title-font;
+  font-size: 0.9em;
 }
 
 .bold {
@@ -43,9 +43,9 @@ body {
 }
 
 a {
+  font-size: $a;
   transition: all 0.4s ease-in-out 0s;
 }
-
 
 h1,
 h2,

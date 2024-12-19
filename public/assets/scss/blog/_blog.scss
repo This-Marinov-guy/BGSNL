@@ -163,3 +163,16 @@ Blog Styles
   font-weight: 300;
   color: #f80707;
 }
+
+.articles-list-container {
+  img.main {
+    max-height: 10em;
+    object-fit: cover;
+  }
+
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

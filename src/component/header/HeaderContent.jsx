@@ -125,33 +125,8 @@ const HeaderContent = (props) => {
             </Fragment>
           )}
 
-          <li className="has-dropdown">
-            <a style={{ cursor: "pointer" }}>Articles</a>
-            <ul className="submenu">
-              {articles?.length > 0 &&
-                articles.map((article, i) => (
-                  <li key={i}>
-                    <Link
-                      to={`/articles/${article.id}/${encodeForURL(
-                        article.title
-                      )}`}
-                    >
-                      {article.title}
-                    </Link>
-                  </li>
-                ))}
-              <li>
-                <Link to="/articles/from-bulgaria-to-the-netherlands">
-                  From Bulgaria To The Netherlands
-                </Link>
-              </li>
-              <li>
-                <Link to="/articles/acedemie-minerva">Academie Minerva</Link>
-              </li>
-              <li>
-                <Link to="/articles/toni-villa">Toni's Villa</Link>
-              </li>
-            </ul>
+          <li>
+            <Link to="/articles">Articles</Link>
           </li>
 
           <li>
@@ -175,9 +150,6 @@ const HeaderContent = (props) => {
                   </li>
                   <li>
                     <Link to={`/user#tickets`}>Tickets</Link>
-                  </li>
-                  <li>
-                    <Link to={`/user#internships`}>Internships</Link>
                   </li>
                 </ul>
               </li>

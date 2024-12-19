@@ -33,6 +33,9 @@ import { selectUser } from "./redux/user";
 const Home = lazy(() => import("./pages/Home"));
 const Toni = lazy(() => import("./pages/information/articles/Toni"));
 const Minerva = lazy(() => import("./pages/information/articles/Minerva"));
+const ArticlesPage = lazy(() =>
+  import("./pages/information/articles/ArticlesPage")
+);
 const Article = lazy(() => import("./pages/information/articles/Article"));
 const StudentMigration = lazy(() =>
   import("./pages/information/articles/StudentMigration")
@@ -128,12 +131,21 @@ const Root = () => {
             />
             <Route exact path={`/developers`} element={<Developers />} />
             <Route exact path={`/terms-and-legals`} element={<Policy />} />
+
+            <Route
+              exact
+              path={`/articles`}
+              element={<ArticlesPage />}
+            />
+
             <Route exact path={`/articles/toni-villa`} element={<Toni />} />
+
             <Route
               exact
               path={`/articles/from-bulgaria-to-the-netherlands`}
               element={<StudentMigration />}
             />
+            
             <Route
               exact
               path={`/articles/acedemie-minerva`}

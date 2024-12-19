@@ -16,6 +16,7 @@ export const articlesSlice = createSlice({
     },
 
     loadArticles: (state, action) => {
+      state.all = []; 
       action.payload.forEach((article) => state.all.push(article));
     },
 
