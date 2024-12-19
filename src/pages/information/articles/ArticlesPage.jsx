@@ -10,6 +10,7 @@ import Card2 from "../../../elements/ui/cards/Card2";
 import Footer from "../../../component/footer/Footer";
 import { useArticlesLoad } from "../../../hooks/common/api-hooks";
 import SearchField from "../../../elements/ui/functional/SearchField";
+import ArticleCard from "../../../elements/ui/cards/ArticleCard";
 
 const ArticlesPage = () => {
   const articles = useSelector(selectArticles);
@@ -53,7 +54,9 @@ const ArticlesPage = () => {
       />
 
       <div className="container articles-list-container mt--150 mb--60">
-        <label className="center_div mb--40">Latest Article</label>
+        <h3 className="center_text mt--150">Articles</h3>
+        <p className="center_text">Stay updated with our latest insights</p>
+        <label className="center_div mt--40 mb--40">Latest Article</label>
         <div className="row g--5">
           <img
             src={firstArticle.thumbnail}
@@ -63,7 +66,7 @@ const ArticlesPage = () => {
             <h3 className="mb--20">{firstArticle.title}</h3>
             <p>{firstArticle.description}</p>
             <Link
-            className="main-link"
+              className="main-link"
               to={`/articles/${firstArticle.id}/${encodeForURL(
                 firstArticle.title
               )}`}
@@ -76,7 +79,7 @@ const ArticlesPage = () => {
         <div className="mt--60">
           <div className="d-flex flex-column flex-md-row align-items-center gap-3">
             <div className="d-flex flex-md-grow-1 justify-content-md-start justify-content-center">
-              <label>Main Articles</label>
+              <label>All Articles</label>
             </div>
             <div className="d-flex justify-content-center">
               <SearchField
@@ -89,13 +92,15 @@ const ArticlesPage = () => {
             {listedArticles?.length > 0 ? (
               listedArticles.map((article, index) => (
                 <div key={index} className="col-lg-4 col-md-6 col-12">
-                  <Card2
+                  <ArticleCard
                     image={article.thumbnail}
                     fallbackImage="/assets/images/avatars/article.png"
+                    title={article.title}
                     description={article.description}
-                    link={article.legacyLink ?? `/articles/${
-                      article.id
-                    }/${encodeForURL(article.title)}`}
+                    link={
+                      article.legacyLink ??
+                      `/articles/${article.id}/${encodeForURL(article.title)}`
+                    }
                     isInsideLink
                   />
                 </div>
