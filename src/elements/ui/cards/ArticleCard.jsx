@@ -14,7 +14,7 @@ const ArticleCard = (props) => {
   
     return (
       <div className="col-12 mt--30 mb--30">
-        <div className="">
+        <div className="article-card">
           <div className="thumbnai article-image">
             <img
               src={image}
