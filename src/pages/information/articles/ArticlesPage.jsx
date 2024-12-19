@@ -85,7 +85,7 @@ const ArticlesPage = () => {
             </div>
           </div>
           <div className="row mt--20">
-            {listedArticles?.length < 0 ? listedArticles.map((article, index) => (
+            {listedArticles?.length > 0 ? listedArticles.map((article, index) => (
               <div key={index} className="col-lg-4 col-md-6 col-12">
                 <Card2
                   image={article.thumbnail}
