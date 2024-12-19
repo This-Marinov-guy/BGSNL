@@ -85,20 +85,20 @@ button {
     }
   }
   &.rn-btn-green {
-    border: 2px solid #017363 !important;
-    color: #017363 !important;
+    border: 2px solid #017363;
+    color: #017363;
     &:hover {
-      background: #017363 !important;
-      color: #fff !important;
+      background: #017363;
+      color: #fff;
     }
   }
 }
 
-button:disabled {
-  color: white !important;
-  background-color: grey !important;
-  border-color: grey !important;
-  cursor: not-allowed !important;
+button[disabled][class*="rn-btn"] {
+  color: white;
+  background-color: grey;
+  border-color: grey;
+  cursor: not-allowed;
 }
 
 button,
@@ -121,11 +121,11 @@ a {
     }
 
     &.rn-btn-green {
-      border: 2px solid #017363 !important;
-      color: #017363 !important;
+      border: 2px solid #017363;
+      color: #017363;
       &:hover {
-        background: #017363 !important;
-        color: #fff !important;
+        background: #017363;
+        color: #fff;
       }
     }
 
@@ -311,7 +311,7 @@ a {
   align-items: center;
   justify-content: center;
   flex-direction: row;
-  gap: 10px !important;
+  gap: 10px;
   max-width: 600px;
   @media #{$sm-layout} {
     flex-direction: column;
@@ -420,7 +420,7 @@ a {
   padding: 5px 10px;
   border: solid 1px;
   border-radius: 10px;
-  font-size: 6px !important;
+  font-size: 6px;
   color: $white;
 
   &.new-badge {

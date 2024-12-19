@@ -314,6 +314,14 @@ div[data-pc-name="password"] {
   }
 }
 
+.p-paginator-page.p-paginator-element.p-link.p-highlight {
+  height: 2em !important;
+  min-width: 2em !important;
+  width: 2em !important;
+  border: 2px solid $body-color !important;
+  border-radius: 50% !important;
+}
+
 .p-calendar {
   padding: 0 !important;
   margin: 0 !important;

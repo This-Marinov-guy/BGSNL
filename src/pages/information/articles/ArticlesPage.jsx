@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { selectArticles } from "../../../redux/articles";
 import { encodeForURL } from "../../../util/functions/helpers";
 import PageLoading from "../../../elements/ui/loading/PageLoading";
-import { Link } from "react-router-dom";
-import Card2 from "../../../elements/ui/cards/Card2";
+import { Link, useSearchParams } from "react-router-dom";
+import { Paginator } from "primereact/paginator";
 import Footer from "../../../component/footer/Footer";
 import { useArticlesLoad } from "../../../hooks/common/api-hooks";
 import SearchField from "../../../elements/ui/functional/SearchField";
@@ -16,9 +16,15 @@ const ArticlesPage = () => {
   const articles = useSelector(selectArticles);
   const [firstArticle, ...restArticles] = articles;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { reloadArticles } = useArticlesLoad();
 
+  const INIT_ITEMS_PER_PAGE = 6;
+
   const [listedArticles, setListedArticles] = useState(restArticles);
+  const [first, setFirst] = useState((searchParams.get("page") ? searchParams.get("page") - 1 : 0) * INIT_ITEMS_PER_PAGE);
+  const [rows, setRows] = useState(INIT_ITEMS_PER_PAGE);
 
   const searchArticles = (e) => {
     const keyword = e.target.value.toLowerCase();
@@ -30,6 +36,13 @@ const ArticlesPage = () => {
           a.description.toLowerCase().includes(keyword)
       )
     );
+  };
+
+  const onPageChange = (event) => {
+    setFirst(event.first);
+    setRows(event.rows);
+
+    setSearchParams({ page: event.page + 1 });
   };
 
   useEffect(() => {
@@ -90,21 +103,35 @@ const ArticlesPage = () => {
           </div>
           <div className="row mt--20">
             {listedArticles?.length > 0 ? (
-              listedArticles.map((article, index) => (
-                <div key={index} className="col-lg-4 col-md-6 col-12">
-                  <ArticleCard
-                    image={article.thumbnail}
-                    fallbackImage="/assets/images/avatars/article.png"
-                    title={article.title}
-                    description={article.description}
-                    link={
-                      article.legacyLink ??
-                      `/articles/${article.id}/${encodeForURL(article.title)}`
-                    }
-                    isInsideLink
-                  />
-                </div>
-              ))
+              <>
+                {listedArticles
+                  .slice(first, first + rows)
+                  .map((article, index) => (
+                    <div key={index} className="col-lg-4 col-md-6 col-12">
+                      <ArticleCard
+                        image={article.thumbnail}
+                        fallbackImage="/assets/images/avatars/article.png"
+                        title={article.title}
+                        description={article.description}
+                        link={
+                          article.legacyLink ??
+                          `/articles/${article.id}/${encodeForURL(
+                            article.title
+                          )}`
+                        }
+                        isInsideLink
+                      />
+                    </div>
+                  ))}
+                <Paginator
+                  className="col-12"
+                  first={first}
+                  rows={rows}
+                  totalRecords={listedArticles.length ?? 0}
+                  rowsPerPageOptions={[INIT_ITEMS_PER_PAGE, 10, 15]}
+                  onPageChange={onPageChange}
+                />
+              </>
             ) : (
               <p className="col-12 center_text">No more articles found</p>
             )}
