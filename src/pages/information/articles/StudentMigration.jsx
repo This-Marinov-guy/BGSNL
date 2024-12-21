@@ -114,7 +114,7 @@ const StudentMigration = () => {
                             style={{ width: '15em', objectFit: 'contain' }}
                             src={ARTICLE_FROM_BG_TO_NL.folder + '2.webp'}
                             fallback={ARTICLE_FROM_BG_TO_NL.folder + '2.jpg'}
-                            alt="Blog Images"
+                            alt="Blog Image"
                         />
                         <h5 className="mt--10">
                             {text.imgDesc2}
