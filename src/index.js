@@ -121,7 +121,7 @@ const Root = () => {
       <GlobalError>
         <Suspense fallback={<PageLoading />}>
           <Routes>
-            {/* The '/' route can be found in the seperate Routeses in order to work the current functionality */}
+            {/* The '/' route can be found in the separate Routes in order to work the current functionality */}
             <Route exact path="/404" element={<Error404 />} />
             <Route exact path={`/about`} element={<About />} />
             <Route
