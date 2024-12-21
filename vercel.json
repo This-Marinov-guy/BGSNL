@@ -1,6 +1,10 @@
 {
+  "trailingSlash": false,
   "routes": [
-    { "src": "/ads.txt", "dest": "/ads.txt", "continue": true },
-    { "handle": "filesystem" }
+    {
+      "src": "/ads.txt",
+      "headers": { "content-type": "text/plain" },
+      "dest": "/ads.txt"
+    }
   ]
 }

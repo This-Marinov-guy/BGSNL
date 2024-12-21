@@ -98,7 +98,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 50px 0;
+    padding-top: 50px;
     flex-wrap: wrap;
     @media #{$sm-layout} {
       padding: 15px 0;

@@ -249,7 +249,7 @@ const User = () => {
       <UserUpdateModal currentUser={currentUser} />
       <Christmas currentUser={currentUser} />
       {/* Start Info Area */}
-      <div className="service-area ptb--20 bg_color--1 mt--80">
+      <div className="service-area ptb--20 bg_color--1 mt--100">
         <div className="container">
           <div className="row service-one-wrapper">
             <div className="col-lg-5 col-md-12 col-12 center_div_col">
