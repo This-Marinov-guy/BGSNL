@@ -1,5 +1,13 @@
 {
-  "rewrites": [
-    { "source": "/ads.txt", "destination": "/ads.txt" }
+  "headers": [
+    {
+      "source": "/ads.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain"
+        }
+      ]
+    }
   ]
 }
