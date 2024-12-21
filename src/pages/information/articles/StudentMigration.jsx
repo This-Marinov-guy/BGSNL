@@ -10,7 +10,6 @@ import LanguageChangeModal from "../../../elements/ui/modals/LanguageChangeModal
 import { LOCAL_STORAGE_LANGUAGE_PREFERENCE } from "../../../util/defines/common";
 import { ARTICLE_FROM_BG_TO_NL } from "../../../util/defines/ARTICLES";
 import ChangeLanguageBtns from "../../../elements/ui/buttons/ChangeLanguageBtns";
-import { object } from "yup";
 
 const StudentMigration = () => {
     let savedLanguage = localStorage.getItem(LOCAL_STORAGE_LANGUAGE_PREFERENCE);
