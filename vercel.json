@@ -1,4 +1,8 @@
 {
+  "routes": [
+    { "src": "/ads.txt", "dest": "/ads.txt", "continue": true },
+    { "handle": "filesystem" }
+  ],
   "rewrites": [
     {
       "source": "/ads.txt",
