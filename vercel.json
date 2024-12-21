@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/ads.txt",
-      "destination": "/static/ads.txt"
+      "destination": "/ads.txt"
     }
   ]
 }
