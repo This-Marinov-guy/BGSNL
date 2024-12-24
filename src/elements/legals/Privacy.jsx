@@ -46,7 +46,7 @@ const Privacy = () => {
         <h3 className="mt--40">Under GDPR, you have rights to:</h3>
 
         <ul className="list-style--1 ml--20">
-          <li>Access your dat</li>
+          <li>Access your data</li>
           <li>Request corrections</li>
           <li>Request deletion</li>
           <li>Restrict processing</li>

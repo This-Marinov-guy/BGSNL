@@ -12,6 +12,7 @@ export const LOCAL_STORAGE_USER_DATA = 'BGSNL_user_data';
 export const LOCAL_STORAGE_SESSION_LIFE = 'BGSNL_session_life';
 export const LOCAL_STORAGE_LANGUAGE_PREFERENCE = 'BGSNL_language_preference';
 export const LOCAL_STORAGE_LOCATION = "BGSNL_location";
+export const LOCAL_STORAGE_COOKIE_CONSENT = "BGSNL_cookie_consent";
 
 // authentication
 export const SESSION_TIMEOUT = (isProd() ? 15 : 60) * 60 * 1000 // minutes in milliseconds

@@ -8,7 +8,8 @@ import { FiChevronUp } from "react-icons/fi";
 import Rules from "../../elements/legals/Rules";
 import Privacy from "../../elements/legals/Privacy";
 import { Link } from "react-router-dom";
-import { LEGAL_TABS, PRIVACY, RULES } from "../../util/defines/enum";
+import { COOKIES, LEGAL_TABS, PRIVACY, RULES } from "../../util/defines/enum";
+import Cookies from "../../elements/legals/Cookies";
 
 const Policy = React.memo(() => {
   const [tab, setTab] = useState(window.location.hash.substring(1).split("?")[0] || "rules");
@@ -20,6 +21,9 @@ const Policy = React.memo(() => {
       break;
     case RULES:
       activeTab = <Rules />;
+      break;
+    case COOKIES:
+      activeTab = <Cookies />;
       break;
     default:
       activeTab = null;

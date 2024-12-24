@@ -47,5 +47,6 @@ export const TICKET_TYPES = {
 // Legal Tabs
 export const RULES = "rules";
 export const PRIVACY = "privacy";
+export const COOKIES = "cookies"; 
 
-export const LEGAL_TABS = [RULES, PRIVACY];
+export const LEGAL_TABS = [RULES, PRIVACY, COOKIES];
