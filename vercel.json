@@ -5,7 +5,7 @@
       "dest": "/ads.txt",
       "status": 200,
       "continue": true,
-      "headers": [
+      "headers": 
         {
           "source": "/ads.txt",
           "headers": [
@@ -15,7 +15,7 @@
             }
           ]
         }
-      ]
+      
     }
   ]
 }
