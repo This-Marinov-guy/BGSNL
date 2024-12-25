@@ -8,14 +8,12 @@
       "headers": 
         {
           "source": "/ads.txt",
-          "headers": [
+          "headers": 
             {
               "key": "Content-Type",
               "value": "text/plain"
             }
-          ]
         }
-      
     }
   ]
 }
