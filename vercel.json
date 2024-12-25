@@ -3,9 +3,19 @@
     {
       "src": "/ads.txt",
       "dest": "/ads.txt",
-      "headers": {
-        "cache-control": "public, max-age=0, must-revalidate"
-      }
+      "status": 200,
+      "continue": true,
+      "headers": [
+        {
+          "source": "/ads.txt",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
