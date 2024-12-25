@@ -7,12 +7,8 @@
       "continue": true,
       "headers": 
         {
-          "source": "/ads.txt",
-          "headers": 
-            {
               "key": "Content-Type",
               "value": "text/plain"
-            }
         }
     }
   ]
