@@ -301,6 +301,7 @@ hr {
 
 .p-button {
   color: black !important;
+  border: none !important;
 }
 
 .p-icon-field > .p-input-icon {
@@ -313,6 +314,7 @@ div[data-pc-name="password"] {
     padding-right: 31px;
   }
 }
+
 
 .p-paginator-page.p-paginator-element.p-link.p-highlight {
   height: 2em !important;
