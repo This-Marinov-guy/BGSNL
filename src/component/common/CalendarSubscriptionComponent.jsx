@@ -1,89 +1,71 @@
 import React from "react";
 import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
+import "../../../public/assets/scss/elements/_calendarSubscriptionComponent.scss";
 
 const CalendarSubscriptionComponent = () => {
-  // todo: replace with actual ids
-  const googleCalendarId = "your_calendar_id@gmail.com";
-  const googleCalendarPublicLink = `https://calendar.google.com/calendar/embed?src=${googleCalendarId}&ctz=Europe/Amsterdam`;
+  const googleCalendarId = "8f0daebdf04f1aa6ad47325bda0405abd072547ff8e1ec0f62720bc836bac964@group.calendar.google.com";
+  const googleCalendarPublicLink = `https://calendar.google.com/calendar/render?cid=${googleCalendarId}`;
   const icsLink = `https://calendar.google.com/calendar/ical/${googleCalendarId}/public/basic.ics`;
+  const outlookWebLink = `https://outlook.office.com/owa/?path=/calendar/view/Month&src=${icsLink}`;
+  const googleCalendarIframeSrc = `https://calendar.google.com/calendar/embed?height=400&wkst=2&ctz=Europe%2FAmsterdam&showPrint=0&showTabs=0&title=BGSNL%20Events&src=${googleCalendarId}`;
 
   return (
-    <div className="portfolio-area pt--40 pb--10 bg_color--5">
+    <div className="calendar-subscription__area">
       <div className="rn-slick-dot">
-        <div className="container">
-          <div style={styles.container}>
-            <h2 style={styles.header}>📅 Subscribe to Our Calendar</h2>
-            <p style={styles.description}>
-              Stay connected and never miss an event! Subscribe to our calendar
-              on your preferred platform:
-            </p>
-            <div style={styles.buttonsContainer}>
-              <a
-                href={googleCalendarPublicLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ ...styles.button }}
-              >
-                <FaGoogle style={styles.icon} /> Add to Google Calendar
-              </a>
-              <a href={icsLink} style={{ ...styles.button }}>
-                <FaApple style={styles.icon} /> Add to Apple Calendar
-              </a>
-              <a href={icsLink} style={{ ...styles.button }}>
-                <FaMicrosoft style={styles.icon} /> Add to Outlook Calendar
-              </a>
-            </div>
+        <div className="calendar-subscription__container">
+          <h2 className="calendar-subscription__header">
+            📅 Subscribe to Our Calendar
+          </h2>
+          <p className="calendar-subscription__description">
+            Stay connected and never miss an event! Subscribe to our calendar on
+            your preferred platform:
+          </p>
+          <div className="calendar-subscription__buttons">
+            <a
+              href={googleCalendarPublicLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="calendar-subscription__buttons-button calendar-subscription__buttons-button--google"
+            >
+              <FaGoogle className="calendar-subscription__icon" /> Add to Google
+              Calendar
+            </a>
+
+            {/* downloads .ics file */}
+            <a
+              href={icsLink}
+              download="calendar.ics"
+              className="calendar-subscription__buttons-button calendar-subscription__buttons-button--apple"
+              title="Download ICS file for Apple Calendar"
+            >
+              <FaApple className="calendar-subscription__icon" /> Download ICS
+              File
+            </a>
+
+            <a
+              href={outlookWebLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="calendar-subscription__buttons-button calendar-subscription__buttons-button--outlook"
+            >
+              <FaMicrosoft className="calendar-subscription__icon" /> Add to
+              Outlook Calendar
+            </a>
+          </div>
+
+          {/* google iframe calendar */}
+          <div className="calendar-subscription__iframe-container">
+            <iframe
+              src={googleCalendarIframeSrc}
+              title="Google Calendar"
+              frameBorder="0"
+              scrolling="no"
+            ></iframe>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: "600px",
-    margin: "20px auto",
-    padding: "20px",
-    textAlign: "center",
-    backgroundColor: "#f9f9f9",
-    borderRadius: "10px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    fontFamily: "'Roboto', sans-serif",
-  },
-  header: {
-    fontSize: "24px",
-    marginBottom: "10px",
-    color: "#333",
-  },
-  description: {
-    fontSize: "16px",
-    marginBottom: "20px",
-    color: "#555",
-  },
-  buttonsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "15px",
-    flexWrap: "wrap",
-  },
-  button: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    padding: "10px 20px",
-    fontSize: "14px",
-    color: "#fff",
-    textDecoration: "none",
-    borderRadius: "5px",
-    transition: "background-color 0.3s ease",
-    cursor: "pointer",
-    fontWeight: "bold",
-    backgroundColor: "#2a6e5e",
-  },
-  icon: {
-    fontSize: "18px",
-  },
 };
 
 export default CalendarSubscriptionComponent;
