@@ -1,14 +1,18 @@
 import React from "react";
 import InputsBuilder from "../../inputs/builders/InputsBuilder";
+import "./formStyles.scss";
 
 const ExtraInputsSection = ({ values, setFieldValue }) => {
   return (
-    <div>
-      <h3 className="label mt--40">Add extra inputs by your choice</h3>
-      <InputsBuilder
-        onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
-        initialValues={values.extraInputsForm}
-      />
+    <div className="form-wrapper">
+      <h3 className="section-title">Add Extra Inputs</h3>
+      <div className="form-group">
+        <InputsBuilder
+          onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
+          initialValues={values.extraInputsForm}
+          className="rn-input"
+        />
+      </div>
     </div>
   );
 };
