@@ -1,6 +1,12 @@
 /*====================
     Breadcrump Area 
 ======================*/
+.watermark {
+  background-image: url(/public/assets/images/watermark.jpg);
+  background-size: contain;
+  background-repeat: repeat-y;
+  background-position: center;
+}
 
 @media (min-width: 1200px){
     .container {

@@ -12,6 +12,7 @@ import RecruitModal from "../elements/ui/modals/RecruitModal";
 import DonationModal from "../elements/ui/modals/DonationModal";
 import { useArticlesLoad } from "../hooks/common/api-hooks";
 import CookiesModal from "../elements/ui/modals/CookiesModal";
+import GoogleCalendarModal from "../elements/ui/modals/GoogleCalendarModal";
 
 const MainLayout = ({ children }) => {
   const toast = useRef(null);
@@ -53,6 +54,7 @@ const MainLayout = ({ children }) => {
       <RecruitModal />
       <BirthdayModal />
       <CookiesModal/>
+      <GoogleCalendarModal/>
       <Toast
         ref={toast}
         life={notification.life ?? 8000}

@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
+import { Tooltip } from "primereact/tooltip";
+import { FiCalendar, FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";
-import PortfolioList from "../../elements/portfolio/PortfolioList";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectEvents } from "../../redux/events";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
@@ -19,9 +19,13 @@ import {
 } from "../../util/functions/helpers";
 import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
 import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
+import { showModal } from "../../redux/modal";
+import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
 
 const FutureEventsContent = ({ displayAll, nullable = true }) => {
   const { region } = useParams();
+
+  const dispatch = useDispatch();
 
   const { reloadEvents, eventsLoading } = useLoadEvents();
 
@@ -53,8 +57,17 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
           <div className="row mb--40">
             <div className="col-lg-12">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
-                <h3 className="title">Future Events</h3>
-                <p>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h3 className="title">Future Events</h3>
+                  <Tooltip target=".google_calendar" />
+                  <FiCalendar
+                    className="pointer swing google_calendar"
+                    onClick={() => dispatch(showModal(GOOGLE_CALENDAR_MODAL))}
+                    data-pr-tooltip="Click to see our Cloud Calendar"
+                    data-pr-position="top"
+                  />
+                </div>
+                <p className="mt--10">
                   What you can expect - our society events happening near you!
                   Make sure to subscribe to our social media or calendars in
                   order to be up to date with schedule and promotions
