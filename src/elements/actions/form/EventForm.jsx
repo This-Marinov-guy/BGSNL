@@ -480,7 +480,7 @@ const EventForm = (props) => {
               setFieldValue={setFieldValue}
               edit={props.edit}
             />
-
+            <br />
             <PriceDetails
               values={values}
               setFieldValue={setFieldValue}
