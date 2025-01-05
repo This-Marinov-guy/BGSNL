@@ -61,6 +61,7 @@
     "stream": "npm:stream-browserify",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
+    "styled-components": "^6.1.14",
     "web-vitals": "^2.1.4",
     "yup": "^1.3.3"
   },
