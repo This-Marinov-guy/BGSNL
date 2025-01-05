@@ -18,6 +18,7 @@ import {
   hasNonEmptyValues,
 } from "../../util/functions/helpers";
 import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
+import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
 
 const FutureEventsContent = ({ displayAll, nullable = true }) => {
   const { region } = useParams();
@@ -183,6 +184,9 @@ const FutureEvents = (props) => {
       {/* Start Breadcrump Area */}
       <Breadcrumb title={"Future Events"} />
       {/* End Breadcrump Area */}
+
+      {/* Add Calendar Subscription Component Here */}
+      <CalendarSubscriptionComponent />
 
       {/* Start Future Events Area */}
       {region ? (
