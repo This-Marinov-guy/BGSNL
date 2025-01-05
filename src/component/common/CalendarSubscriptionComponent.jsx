@@ -1,13 +1,10 @@
 import React from "react";
 import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
 import "../../../public/assets/scss/elements/_calendarSubscriptionComponent.scss";
+import { googleCalendarIframeSrc, googleCalendarPublicLink, icsLink, outlookWebLink } from "../../util/configs/google";
 
 const CalendarSubscriptionComponent = () => {
-  const googleCalendarId = "8f0daebdf04f1aa6ad47325bda0405abd072547ff8e1ec0f62720bc836bac964@group.calendar.google.com";
-  const googleCalendarPublicLink = `https://calendar.google.com/calendar/render?cid=${googleCalendarId}`;
-  const icsLink = `https://calendar.google.com/calendar/ical/${googleCalendarId}/public/basic.ics`;
-  const outlookWebLink = `https://outlook.office.com/owa/?path=/calendar/view/Month&src=${icsLink}`;
-  const googleCalendarIframeSrc = `https://calendar.google.com/calendar/embed?height=400&wkst=2&ctz=Europe%2FAmsterdam&showPrint=0&showTabs=0&title=BGSNL%20Events&src=${googleCalendarId}`;
+  
 
   return (
     <div className="calendar-subscription__area">
