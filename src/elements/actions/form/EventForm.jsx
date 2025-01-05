@@ -33,6 +33,11 @@ import ImageSelection from "../../inputs/ImageSelection";
 import AdditionalPrices from "../../inputs/AdditionalPrices";
 import { START_TIMER } from "../../../util/defines/enum";
 import PromotionalPrices from "../../inputs/PromotionalPrice";
+import BasicInfo from "./BasicInfo";
+import PriceDetails from "./PriceDetails";
+import ImagesSection from "./ImagesSection";
+import AdditionalSettings from "./AdditionalSettings";
+import ExtraInputsSection from "./ExtraInputsSection";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -470,7 +475,13 @@ const EventForm = (props) => {
             id="form"
             style={{ padding: "2%" }}
           >
-            <h3 className="label">Basic Information</h3>
+            <BasicInfo 
+              values={values}
+              setFieldValue={setFieldValue}
+              edit={props.edit}
+            />
+
+            {/* <h3 className="label">Basic Information</h3>
             <div className="row">
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
@@ -562,8 +573,13 @@ const EventForm = (props) => {
                 />
                 <ErrorMessage className="error" name="text" component="div" />
               </div>
-            </div>
-            <h3 className="mt--30 label">Price Details</h3>
+            </div> */}
+
+            <PriceDetails
+              values={values}
+              setFieldValue={setFieldValue}
+            />
+            {/* <h3 className="mt--30 label">Price Details</h3>
             <div className="row">
               <div className="col-lg-4 col-12">
                 <div className="hor_section_nospace mt--20">
@@ -767,7 +783,6 @@ const EventForm = (props) => {
                       initialEndValue={values.guestPromotion.endTimer}
                     />
                   </div>
-
                   <div className="col-12">
                     <div className="hor_section_nospace mt--20 mb--20">
                       <Field
@@ -786,8 +801,17 @@ const EventForm = (props) => {
                     />
                   </div>
                 </div>
-              ))}
-            <h3 className="mt--30 label">Images</h3>
+              ))} */}
+
+            <ImagesSection
+              values={values}
+              setFieldValue={setFieldValue}
+              dispatch={dispatch} // Pass redux dispatch
+              showNotification={(notification) =>
+                dispatch(showNotification(notification))
+              }
+            />
+            {/* <h3 className="mt--30 label">Images</h3>
             <div className="row">
               <div className="col-lg-6 col-md-6 col-12 mt--20">
                 <hr />
@@ -904,7 +928,6 @@ const EventForm = (props) => {
                 </div>
               </div>
             </div>
-
             <div className="row center_text">
               <div className="col-lg-6 col-12 mt--20">
                 <hr />
@@ -988,8 +1011,13 @@ const EventForm = (props) => {
                   )}
                 </div>
               </div>
-            </div>
-            <h3 className="label mt--20">Additional Settings</h3>
+            </div> */}
+
+            <AdditionalSettings
+              values={values}
+              setFieldValue={setFieldValue}
+            />
+            {/* <h3 className="label mt--20">Additional Settings</h3>
             <div className="row mt--20">
               <div className="col-lg-6 col-12">
                 <div className="hor_section_nospace mt--20">
@@ -1036,7 +1064,6 @@ const EventForm = (props) => {
                 <ErrorMessage className="error" name="hidden" component="div" />
               </div>
             </div>
-
             <div className="row">
               <div className="col-lg-6 col-12">
                 <div className="rn-form-group">
@@ -1073,7 +1100,6 @@ const EventForm = (props) => {
                 />
               </div>
             </div>
-
             <div className="row">
               <div className="col-lg-6 col-12 mt--20">
                 <h5>Discount emails (extra from the active members)</h5>
@@ -1094,17 +1120,20 @@ const EventForm = (props) => {
                 />
               </div>
             </div>
-
             <SubEventBuilder
               onChange={(input) => setFieldValue("subEvent", input)}
               initialValues={values.subEvent}
-            />
+            /> */}
 
-            <h3 className="label mt--40">Add extra inputs by your choice</h3>
+            <ExtraInputsSection
+              values={values}
+              setFieldValue={setFieldValue}
+            />
+            {/* <h3 className="label mt--40">Add extra inputs by your choice</h3>
             <InputsBuilder
               onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
               initialValues={values.extraInputsForm}
-            />
+            /> */}
 
             <ConfirmDialog />
             <div className="mt--40 mb--20 center_div">
