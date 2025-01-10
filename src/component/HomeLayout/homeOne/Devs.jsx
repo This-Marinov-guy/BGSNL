@@ -36,7 +36,7 @@ const teamMembers = [
     id: 3,
     name: "Kaloyan Kulov",
     title: "Software Developer",
-    imgSrc: "https://media.licdn.com/dms/image/v2/D4D03AQGUMq0cuqlFVA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1718306073326?e=1731542400&v=beta&t=OLcIOFT1hXTY_iaR1Cn2c8hlBSdkSzRMEXwawfXCgQA",
+    imgSrc: "/assets/images/developers/kaloyan.png",
     socialLinks: [
       {
         platform: "linkedin",
