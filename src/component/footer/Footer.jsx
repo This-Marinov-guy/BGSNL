@@ -31,7 +31,7 @@ const Footer = ({forceRegion}) => {
                     Society <br />
                     Netherlands
                   </h2>
-                  <div className="d-flex flex-column align-items-center justify-content-center">
+                  <div className="button-container-2">
                     <button
                       className="rn-button-style--2 rn-btn-reverse-green"
                       onClick={() => dispatch(showModal(DONATION_MODAL))}
