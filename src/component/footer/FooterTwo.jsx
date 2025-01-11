@@ -34,7 +34,7 @@ const FooterTwo = ({ forceRegion }) => {
                   </Link>
                 </div>
               </div>
-              <div className="button-container">
+              <div className="d-flex flex-column align-items-center justify-content-center">
                 <button
                   className="rn-button-style--2 rn-btn-reverse-green"
                   onClick={() => dispatch(showModal(DONATION_MODAL))}

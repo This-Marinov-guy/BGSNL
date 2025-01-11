@@ -31,7 +31,7 @@ const Footer = ({forceRegion}) => {
                     Society <br />
                     Netherlands
                   </h2>
-                  <div className="button-container-2">
+                  <div className="d-flex flex-column align-items-center justify-content-center">
                     <button
                       className="rn-button-style--2 rn-btn-reverse-green"
                       onClick={() => dispatch(showModal(DONATION_MODAL))}
@@ -114,8 +114,8 @@ const Footer = ({forceRegion}) => {
                   <div className="col-lg-12">
                     <div className="copyright-text">
                       <p>
-                        Copyright ©️ {new Date().getFullYear()} Bulgarian Society Netherlands. All
-                        Rights Reserved.
+                        Copyright ©️ {new Date().getFullYear()} Bulgarian
+                        Society Netherlands. All Rights Reserved.
                       </p>
 
                       <p className="information">{`KVK: ${KVK.netherlands} | Version ${packageJson.version}`}</p>
