@@ -35,7 +35,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: $body-font;
   color: $paragraph-color;
-  font-weight: 800;
+  font-weight: $body-font-weight;
 }
 
 .reading span {
