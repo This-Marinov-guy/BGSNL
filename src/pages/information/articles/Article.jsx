@@ -14,6 +14,7 @@ import { selectPageLoading } from "../../../redux/loading";
 import PageLoading from "../../../elements/ui/loading/PageLoading";
 import ImageFb from "../../../elements/ui/media/ImageFb";
 import NoArticleFound from "../../../elements/ui/errors/NoArticleFound";
+import ChangeLanguageLinks from "../../../elements/ui/buttons/ChangeLanguageLinks";
 
 const Article = () => {
   const { articleId } = useParams();
@@ -54,6 +55,7 @@ const Article = () => {
           className="mb--20"
           dangerouslySetInnerHTML={{ __html: selectedArticle.title }}
         />
+        {selectedArticle.withTranslation && <ChangeLanguageLinks post={selectedArticle} />}
         <div
           dangerouslySetInnerHTML={{
             __html: selectedArticle.content,
