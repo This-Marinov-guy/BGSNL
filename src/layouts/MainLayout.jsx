@@ -20,6 +20,8 @@ const MainLayout = ({ children }) => {
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
 
+  const { reloadArticles } = useArticlesLoad();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [window.location.pathname]);
@@ -32,6 +34,8 @@ const MainLayout = ({ children }) => {
     if (process.env.REACT_APP_GTM_ENABLE) {
       gaTrack();
     }
+
+    reloadArticles();
   }, []);
 
   useEffect(() => {
@@ -53,8 +57,8 @@ const MainLayout = ({ children }) => {
       <DonationModal />
       <RecruitModal />
       <BirthdayModal />
-      <CookiesModal/>
-      <GoogleCalendarModal/>
+      <CookiesModal />
+      <GoogleCalendarModal />
       <Toast
         ref={toast}
         life={notification.life ?? 8000}

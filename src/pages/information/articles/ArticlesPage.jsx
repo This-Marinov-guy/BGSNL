@@ -8,7 +8,6 @@ import PageLoading from "../../../elements/ui/loading/PageLoading";
 import { Link, useSearchParams } from "react-router-dom";
 import { Paginator } from "primereact/paginator";
 import Footer from "../../../component/footer/Footer";
-import { useArticlesLoad } from "../../../hooks/common/api-hooks";
 import SearchField from "../../../elements/ui/functional/SearchField";
 import ArticleCard from "../../../elements/ui/cards/ArticleCard";
 
@@ -17,8 +16,6 @@ const ArticlesPage = () => {
   const [firstArticle, ...restArticles] = articles;
 
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { reloadArticles } = useArticlesLoad();
 
   const INIT_ITEMS_PER_PAGE = 6;
 
@@ -47,10 +44,6 @@ const ArticlesPage = () => {
 
     setSearchParams({ page: event.page + 1 });
   };
-
-  useEffect(() => {
-    reloadArticles();
-  }, []);
 
   useEffect(() => {
     setListedArticles(restArticles);
