@@ -1,5 +1,6 @@
 import React from "react";
 import { FiUser, FiUserPlus } from "react-icons/fi";
+import { MEMBERSHIP_PRICES_IDS } from "./PRICES";
 
 export const REGIONS_MEMBERSHIP_SPECIFICS = [
   {
@@ -8,8 +9,8 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
     icon: <FiUser />,
     description: "",
     price: 6,
-    itemId: "price_1QOg1FAShinXgMFZ1dZiQn1P",
-    renewItemId: "price_1QOg1FAShinXgMFZ1dZiQn1P",
+    itemId: MEMBERSHIP_PRICES_IDS["6-months Member"].start,
+    renewItemId: MEMBERSHIP_PRICES_IDS["6-months Member"].renewal,
     period: 6,
   },
   {
@@ -19,8 +20,8 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
     description:
       "Be part of the society. Pay yearly for the journey with benefits such as:",
     price: 10,
-    itemId: "price_1QOg1XAShinXgMFZyH0F4P9i",
-    renewItemId: "price_1QOg1XAShinXgMFZyH0F4P9i",
+    itemId: MEMBERSHIP_PRICES_IDS["12-months Member"].start,
+    renewItemId: MEMBERSHIP_PRICES_IDS["12-months Member"].renewal,
     period: 12,
   },
 ];
