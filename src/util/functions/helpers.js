@@ -308,6 +308,10 @@ export const getGeoLocation = () => {
     return location;
   }
 
+  if (!isProd()) {
+    return 'bg';
+  }
+
   fetch(`https://ipinfo.io/json?token=${process.env.REACT_APP_GEO_TOKEN}`)
     .then((response) => response.json())
     .then((data) => {
