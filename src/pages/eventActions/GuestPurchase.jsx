@@ -312,7 +312,7 @@ const GuestPurchase = () => {
                     }
 
                     const responseData = await sendRequest(
-                      "event/purchase-ticket/guest",
+                      "payment/checkout/guest-ticket",
                       "POST",
                       formData
                     );
