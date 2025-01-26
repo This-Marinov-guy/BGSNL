@@ -18,7 +18,7 @@ const Success = () => {
       <div className="options-btns-div">
         {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
         } className="rn-button-style--2 rn-btn-green mt--30" to={prevUrl}>
-          Return to Page
+          Go Back
         </Link>}
         <Link className="rn-button-style--2 rn-btn-green mt--30" to="/">
           Home
