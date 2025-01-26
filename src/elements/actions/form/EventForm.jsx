@@ -33,6 +33,7 @@ import ImageSelection from "../../inputs/ImageSelection";
 import AdditionalPrices from "../../inputs/AdditionalPrices";
 import { START_TIMER } from "../../../util/defines/enum";
 import PromotionalPrices from "../../inputs/PromotionalPrice";
+import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -312,6 +313,12 @@ const EventForm = (props) => {
       }),
     }),
 
+    addOns: yup.object().shape({
+      isEnabled: yup.boolean(),
+      title: yup.string().nullable(),
+      description: yup.string().nullable(),
+    }),
+
     ticketLink: yup.string().when("isTicketLink", {
       is: (isTicketLink) => isTicketLink,
       then: () =>
@@ -353,7 +360,7 @@ const EventForm = (props) => {
             });
 
             Object.entries(values).forEach(([key, val]) => {
-              if (isPlainObject(val) || key === "extraInputsForm") {
+              if (isPlainObject(val) || ["extraInputsForm", "addOns"].includes(key)) {
                 formData.append(key, JSON.stringify(val));
               } else if (Array.isArray(val)) {
                 val.forEach((v, i) => {
@@ -422,7 +429,7 @@ const EventForm = (props) => {
           images: initialData?.images ?? [],
           ticketImg: initialData?.ticketImg ?? null,
           ticketColor: initialData?.ticketColor ?? "#faf9f6",
-          ticketQR: `${initialData?.ticketQR ?? true}`,
+          ticketQR: `${initialData?.ticketQR ?? false}`,
           ticketName: `${initialData?.ticketName ?? true}`,
           poster: initialData?.poster ?? null,
           bgImage: initialData?.bgImage ?? 1,
@@ -461,6 +468,13 @@ const EventForm = (props) => {
               endTimer: "",
               discount: undefined,
             }),
+          },
+          addOns: initialData?.addOns ?? {
+            isEnabled: false,
+            multi: false,
+            title: "",
+            description: "",
+            items: [{ title: "", description: "", price: undefined }],
           },
         }}
       >
@@ -783,6 +797,24 @@ const EventForm = (props) => {
                       setFieldValue={setFieldValue}
                       initialStartValue={values.memberPromotion.startTimer}
                       initialEndValue={values.memberPromotion.endTimer}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <h3 className="mt--30 label">
+                      Add-Ons (additional services or products to the ticket)
+                    </h3>
+                    <div className="hor_section_nospace mt--20 mb--20">
+                      <Field
+                        style={{ maxWidth: "30px" }}
+                        type="checkbox"
+                        name="addOns[isEnabled]"
+                      ></Field>
+                      <p>Enable add-ons</p>
+                    </div>
+                    <AddOnsBuilder
+                      onChange={(input) => setFieldValue("addOns", input)}
+                      value={values.addOns}
                     />
                   </div>
                 </div>

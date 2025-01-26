@@ -40,6 +40,7 @@ import {
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import CardInputs from "../../elements/inputs/common/CardInputs";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -268,8 +269,16 @@ const GuestPurchase = () => {
                     formData.append("eventId", selectedEvent.id);
                     formData.append("code", data.code);
                     formData.append("guestEmail", values.email);
+
                     if (selectedEvent?.extraInputsForm) {
                       appendExtraInputsToForm(formData, schemaFields, values);
+                    }
+
+                    if (
+                      selectedEvent?.addOns?.isEnabled &&
+                      values.addOns?.length > 0
+                    ) {
+                      formData.append("addOns", JSON.stringify(values.addOns));
                     }
 
                     formData.append(
@@ -303,7 +312,7 @@ const GuestPurchase = () => {
                     }
 
                     const responseData = await sendRequest(
-                      "payment/checkout/guest-ticket",
+                      "event/purchase-ticket/guest",
                       "POST",
                       formData
                     );
@@ -327,9 +336,10 @@ const GuestPurchase = () => {
                   ...constructInitialExtraFormValues(
                     selectedEvent?.extraInputsForm ?? null
                   ),
+                  addOns: [],
                 }}
               >
-                {({ setFieldValue, errors }) => (
+                {({ values, setFieldValue, errors }) => (
                   <Form
                     id="form"
                     encType="multipart/form-data"
@@ -395,9 +405,33 @@ const GuestPurchase = () => {
                           />
                         </div>
                       </div>
+
                       {selectedEvent.extraInputsForm?.length > 0 && (
                         <FormExtras inputs={selectedEvent.extraInputsForm} />
                       )}
+
+                      {selectedEvent?.addOns?.isEnabled &&
+                        selectedEvent.addOns?.items?.length > 0 && (
+                          <div className="col-12 mt--40">
+                            <h3 className="text-center">
+                              {selectedEvent.title}
+                            </h3>
+                            <small className="d-flex justify-content-center">
+                              {selectedEvent.addOns?.multi
+                                ? "*Choose one or more"
+                                : "*Choose only one"}
+                            </small>
+                            <CardInputs
+                              multi={selectedEvent.addOns?.multi}
+                              items={selectedEvent.addOns?.items}
+                              values={values.addOns}
+                              onSelect={(value) =>
+                                setFieldValue("addOns", value)
+                              }
+                            />
+                          </div>
+                        )}
+
                       <div className="col-lg-12 col-md-12 col-12">
                         <div className="hor_section_nospace mt--40">
                           <Field
@@ -409,7 +443,7 @@ const GuestPurchase = () => {
                             I have read and accept the&nbsp;
                             <a
                               style={{ color: "#017363" }}
-                              href={'/terms-and-legals'}
+                              href={"/terms-and-legals"}
                               target="_blank"
                             >
                               society's policy

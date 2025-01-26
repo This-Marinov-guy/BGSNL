@@ -43,6 +43,7 @@ import {
 } from "../../util/functions/input-helpers";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import CardInputs from "../../elements/inputs/common/CardInputs";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -229,8 +230,16 @@ const MemberPurchase = () => {
                 formData.append("eventId", selectedEvent.id);
                 formData.append("code", data.code);
                 formData.append("userId", currentUser.id);
+
                 if (selectedEvent?.extraInputsForm) {
                   appendExtraInputsToForm(formData, schemaFields, values);
+                }
+
+                if (
+                  selectedEvent?.addOns?.isEnabled &&
+                  values.addOns?.length > 0
+                ) {
+                  formData.append("addOns", JSON.stringify(values.addOns));
                 }
 
                 if (selectedEvent.isFree || selectedEvent.isMemberFree) {
@@ -279,11 +288,14 @@ const MemberPurchase = () => {
                 setIsLoading(false);
               }
             }}
-            initialValues={constructInitialExtraFormValues(
-              selectedEvent?.extraInputsForm ?? null
-            )}
+            initialValues={{
+              ...constructInitialExtraFormValues(
+                selectedEvent?.extraInputsForm ?? null
+              ),
+              addOns: [],
+            }}
           >
-            {() => (
+            {({ values, setFieldValue }) => (
               <Form id="form" encType="multipart/form-data" className="row">
                 <div className="col-lg-6 col-md-12 col-12">
                   <div className="event_details">
@@ -313,7 +325,7 @@ const MemberPurchase = () => {
                         }
                       </span>
                     </p>
-                  <SponsoredBySmall />
+                    <SponsoredBySmall />
                   </div>
                 </div>
                 {selectedEvent.extraInputsForm?.length > 0 && (
@@ -321,6 +333,23 @@ const MemberPurchase = () => {
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>
                 )}
+                {selectedEvent?.addOns?.isEnabled &&
+                  selectedEvent.addOns?.items?.length > 0 && (
+                    <div className="col-lg-6 col-md-6 col-12 mt--40">
+                      <h3 className="text-center">{selectedEvent.title}</h3>
+                      <small className="d-flex justify-content-center">
+                        {selectedEvent.addOns?.multi
+                          ? "*Choose one or more"
+                          : "*Choose only one"}
+                      </small>
+                      <CardInputs
+                        multi={selectedEvent.addOns?.multi}
+                        items={selectedEvent.addOns?.items}
+                        values={values.addOns}
+                        onSelect={(value) => setFieldValue("addOns", value)}
+                      />
+                    </div>
+                  )}
                 <div className="m--a" style={{ maxWidth: "10em" }}>
                   <WithBackBtn>
                     <button

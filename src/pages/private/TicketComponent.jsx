@@ -5,6 +5,27 @@ import {
 } from "../../util/functions/ticket-creator";
 import { decryptData } from "../../util/functions/helpers";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import CardInputs from "../../elements/inputs/common/CardInputs";
+
+const TEST = [
+  {
+    title: "Belotte Tournament",
+    description: "Join us for a fun evening of Belotte!",
+    price: 5,
+  },
+
+  {
+    title: "Belotte Tournament",
+    description: "Join us for a fun evening of Belotte!",
+    price: 5,
+  },
+
+  {
+    title: "Belotte Tournament",
+    description: "Join us for a fun evening of Belotte!",
+    price: 5,
+  },
+];
 
 const BloggerPost = ({ blogId, postId }) => {
   const [postData, setPostData] = useState(null);
@@ -54,7 +75,7 @@ const BloggerPost = ({ blogId, postId }) => {
   }
 
   return (
-    <div className="blogger-post" style={{ padding: "10px 5%" }}>
+    <div className="contaner" >
       <h1 dangerouslySetInnerHTML={{ __html: postData.title.rendered }} />
       {postData._embedded &&
         postData._embedded["wp:featuredmedia"] && (
@@ -113,8 +134,9 @@ const TicketComponent = () => {
 
   return (
     <>
-      <img src={ticketDataUrl} alt="Customer Ticket" />
-      {/* <PhoneInput /> */}
+      <div className="container">
+        <CardInputs items={TEST} />
+      </div>
     </>
   );
 };

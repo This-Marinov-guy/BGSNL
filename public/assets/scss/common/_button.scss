@@ -12,7 +12,7 @@ Button Area
 .common-border-1 {
   padding: 2%;
   border-radius: 10px;
-  border: 2px dashed $theme-color-2;
+  border: 2px dashed $body-color;
 }
 
 .common-border-2 {
@@ -442,5 +442,29 @@ a {
   font-weight: 300;
   &:hover {
     color: $body-color;
+  }
+}
+
+.card {
+  .card-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+  }
+}
+
+.card-1 {
+  min-width: 3em;
+  
+  &.card-active {
+    background-color: $label-color;
+    border-color: $heading-color;
+  }
+
+  &:hover {
+    background-color: $label-color;
+    border-color: $heading-color;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
 }
