@@ -454,7 +454,11 @@ a {
 }
 
 .card-1 {
-  width: 4em;
+  min-width: 3em;
+
+  h4 {
+    text-align: center;
+  }
   
   &.card-active {
     background-color: $label-color;
