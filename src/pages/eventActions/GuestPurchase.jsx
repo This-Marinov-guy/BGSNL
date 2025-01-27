@@ -418,8 +418,8 @@ const GuestPurchase = () => {
                             </h3>
                             <small className="d-flex justify-content-center">
                               {selectedEvent.addOns?.multi
-                                ? "*Choose one or more"
-                                : "*Choose only one"}
+                                ? "*You can add one or more"
+                                : "*You can add one"}
                             </small>
                             <CardInputs
                               multi={selectedEvent.addOns?.multi}

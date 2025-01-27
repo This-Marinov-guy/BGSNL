@@ -1,49 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PlusButton from "../../ui/buttons/PlusButton";
 import XButton from "../../ui/buttons/XButton";
 
 const AddOnsBuilder = (props) => {
   const emptyInputObj = {
-    title: "",
+    isEnabled: false,
     multi: false,
+    title: "",
     items: [{ title: "", description: "", price: undefined }],
   };
+
   const [input, setInput] = useState(props.value ?? emptyInputObj);
 
+  // Sync internal state with props
+  useEffect(() => {
+    setInput(props.value ?? emptyInputObj);
+  }, [props.value]);
+
   const addItem = () => {
-    setInput((prevInput) => ({
-      ...prevInput,
-      items: [...prevInput.items, { title: "", description: "", price: undefined }],
-    }));
-    props.onChange(input);
+    const newInput = {
+      ...input,
+      items: [...input.items, { title: "", description: "", price: undefined }],
+    };
+    setInput(newInput);
+    props.onChange(newInput);
   };
 
   const removeItem = (itemIndex) => {
     if (input.items.length > 1) {
-      setInput((prevInput) => ({
-        ...prevInput,
-        items: prevInput.items.filter((_, index) => index !== itemIndex),
-      }));
-      props.onChange(input);
+      const newInput = {
+        ...input,
+        items: input.items.filter((_, index) => index !== itemIndex),
+      };
+      setInput(newInput);
+      props.onChange(newInput);
     }
   };
 
   const handleItemChange = (itemIndex, field, value) => {
-    setInput((prevInput) => ({
-      ...prevInput,
-      items: prevInput.items.map((item, index) =>
+    const newInput = {
+      ...input,
+      items: input.items.map((item, index) =>
         index === itemIndex ? { ...item, [field]: value } : item
       ),
-    }));
-    props.onChange(input);
+    };
+    setInput(newInput);
+    props.onChange(newInput);
   };
 
   const handleValueChange = (name, value) => {
-    setInput((prevInput) => ({
-      ...prevInput,
+    const newInput = {
+      ...input,
       [name]: value,
-    }));
-    props.onChange(input);
+    };
+    setInput(newInput);
+    props.onChange(newInput);
   };
 
   if (!props.value.isEnabled) {
@@ -63,14 +74,14 @@ const AddOnsBuilder = (props) => {
           <select
             value={input.multi}
             onChange={(e) =>
-              handleValueChange('multi', e.target.value)
+              handleValueChange("multi", e.target.value === "true")
             }
           >
             <option disabled value="">
               Add multiple add-ons?
             </option>
-            <option value={true}>Yes</option>
-            <option value={false}>No</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
           </select>
         </div>
         <div className="row mt--10 mb--10">
@@ -95,7 +106,7 @@ const AddOnsBuilder = (props) => {
               <input
                 type="number"
                 placeholder="Price"
-                value={item.price}
+                value={item.price || ""}
                 onChange={(e) =>
                   handleItemChange(itemIndex, "price", e.target.value)
                 }
