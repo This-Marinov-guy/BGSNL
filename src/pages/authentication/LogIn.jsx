@@ -61,28 +61,28 @@ const Login = () => {
         })
       );
 
-      dispatch(
-        showNotification({
-          ...INFO_STYLE,
-          position: "bottom-center",
-          content: () => (
-            <>
-              <p>
-                Fancy an entry-level job or an internship?
-                <Button
-                  size="small"
-                  label="Check out our suggestion!"
-                  link
-                  onClick={() => {
-                    dispatch(removeNotification());
-                    navigate("/user#internships");
-                  }}
-                />
-              </p>
-            </>
-          ),
-        })
-      );
+      // dispatch(
+      //   showNotification({
+      //     ...INFO_STYLE,
+      //     position: "bottom-center",
+      //     content: () => (
+      //       <>
+      //         <p>
+      //           Fancy an entry-level job or an internship?
+      //           <Button
+      //             size="small"
+      //             label="Check out our suggestion!"
+      //             link
+      //             onClick={() => {
+      //               dispatch(removeNotification());
+      //               navigate("/user#internships");
+      //             }}
+      //           />
+      //         </p>
+      //       </>
+      //     ),
+      //   })
+      // );
 
       if (responseData.celebrate) {
         dispatch(showModal(BIRTHDAY_MODAL));
