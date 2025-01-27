@@ -336,7 +336,7 @@ const MemberPurchase = () => {
                 {selectedEvent?.addOns?.isEnabled &&
                   selectedEvent.addOns?.items?.length > 0 && (
                     <div className="col-lg-6 col-md-6 col-12 mt--40">
-                      <h3 className="text-center">{selectedEvent.title}</h3>
+                      <h3 className="text-center">{selectedEvent.addOns.title}</h3>
                       <small className="d-flex justify-content-center">
                         {selectedEvent.addOns?.multi
                           ? "*You can add one or more"

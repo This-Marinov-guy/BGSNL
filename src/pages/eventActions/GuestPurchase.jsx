@@ -414,7 +414,7 @@ const GuestPurchase = () => {
                         selectedEvent.addOns?.items?.length > 0 && (
                           <div className="col-12 mt--40">
                             <h3 className="text-center">
-                              {selectedEvent.title}
+                              {selectedEvent.addOns.title}
                             </h3>
                             <small className="d-flex justify-content-center">
                               {selectedEvent.addOns?.multi
