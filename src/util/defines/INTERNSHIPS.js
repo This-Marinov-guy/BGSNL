@@ -90,7 +90,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://www.groningenmail.com",
   },
   {
-    logo: "https://www.domakin.nl/img/logo-3.png",
+    logo: "https://www.domakin.nl/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-2.2290d784.png&w=1920&q=75",
     company: "Domakin",
     specialty: "Real Estate, Digital Marketing",
     location: "On-site, hybrid and remote | Netherlands",
