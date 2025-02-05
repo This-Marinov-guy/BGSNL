@@ -142,6 +142,7 @@ const GuestPurchase = () => {
 
       <div className="container mt--140 mb--40">
         <h2 className="center_text mb--80">Purchase a Ticket</h2>
+        {selectedEvent?.product?.member?.price && <MembershipBanner />}
         <div className="row">
           <div className="col-lg-4 col-md-12 col-12">
             <div className="mb--20 d-flex flex-column align-items-center align-items-lg-start">

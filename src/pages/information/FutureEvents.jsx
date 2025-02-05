@@ -79,40 +79,25 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                 <EventsLoading />
               ) : (
                 REGIONS.map((region, index) => {
-                  if (events[region].length && isMoreThanOneEvent) {
-                    return (
-                      <div
-                        className="col-lg-4 col-md-6 col-12 mt--20"
-                        key={index}
-                      >
-                        <h4 className="col-12 archive">
-                          {region.toUpperCase()}
-                        </h4>
-                        <PortfolioList2
-                          style="society"
-                          target={events[region]}
-                          styevariation="text-center"
-                          column="col-12"
-                        />
-                      </div>
-                    );
-                  } else if (events[region].length) {
-                    return (
-                      <div className="col-12 mt--20" key={index}>
-                        <h4 className="col-12 archive">
-                          {region.toUpperCase()}
-                        </h4>
-                        <div className="row">
-                          <PortfolioList2
-                            style="society"
-                            target={events[region]}
-                            styevariation="text-center"
-                            column="col-lg-4 col-md-6 col-12"
-                          />
-                        </div>
-                      </div>
-                    );
-                  }
+                  // Skip regions that have no events
+                  if (!events[region] || !events[region].length) {
+                    return null;
+                  };
+
+                  return (
+                    <div
+                      className="col-lg-4 col-md-6 col-12 mt--20"
+                      key={index}
+                    >
+                      <h4 className="col-12 archive">{region.toUpperCase()}</h4>
+                      <PortfolioList2
+                        style="society"
+                        target={events[region]}
+                        styevariation="text-center"
+                        column="col-12"
+                      />
+                    </div>
+                  );
                 })
               )
             ) : (
