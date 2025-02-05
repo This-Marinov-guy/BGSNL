@@ -1,9 +1,13 @@
 //  Purchase css
 .purchase_panel {
   text-align: left;
-  @media #{$large-mobile} {
-    text-align: center;
+ @media #{$md-layout}, #{$sm-layout} {
+  text-align: center;
+
+  .price {
+    justify-content: center !important;
   }
+}
 }
 
 .title_img {
