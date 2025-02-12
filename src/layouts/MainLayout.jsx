@@ -27,11 +27,11 @@ const MainLayout = ({ children }) => {
   }, [window.location.pathname]);
 
   useEffect(() => {
-    if (process.env.REACT_APP_CLARITY_ENABLE) {
+    if (process.env.REACT_APP_CLARITY_ENABLE === '1') {
       clarityTrack();
     }
 
-    if (process.env.REACT_APP_GTM_ENABLE) {
+    if (process.env.REACT_APP_GTM_ENABLE === '1') {
       gaTrack();
     }
 

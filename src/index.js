@@ -104,7 +104,7 @@ const Root = () => {
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
 
-  if (process.env.REACT_APP_MAINTENANCE == true) {
+  if (process.env.REACT_APP_MAINTENANCE === '1') {
     return <Maintenance />;
   }
 
