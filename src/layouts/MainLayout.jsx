@@ -44,8 +44,8 @@ const MainLayout = ({ children }) => {
         toast.current.show({
           ...notification,
           // default values
-          sticky: !notification?.closable,
-          life: notification?.life ?? 8000,
+          sticky: !(notification.closable ?? true),
+          life: notification.life ?? 8000,
         });
       }, 200);
     } else {

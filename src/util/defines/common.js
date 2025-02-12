@@ -54,7 +54,7 @@ export const GOOGLE_CALENDAR_MODAL = 'google_calendar_modal';
 
 //toasts
 export const SUCCESS_STYLE = {
-    life: 8000,
+    life: 5000,
     severity: 'success',
     style: { background: '#d4edda', color: '#155724' },
     contentStyle: { background: '#d4edda', color: '#155724' }

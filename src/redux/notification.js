@@ -8,6 +8,7 @@ export const notificationSlice = createSlice({
     data: {},
   },
   reducers: {
+    
     showNotification: (state, action) => {
       state.index++;
       state.data = {
@@ -15,6 +16,7 @@ export const notificationSlice = createSlice({
         ...getStyleBySeverity(action.payload?.severity ?? ""),
       };
     },
+
     removeNotification: (state) => {
       state.index++;
       state.data = {};
