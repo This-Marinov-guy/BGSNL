@@ -45,6 +45,7 @@ const MainLayout = ({ children }) => {
           ...notification,
           // default values
           sticky: !notification?.closable,
+          life: notification?.life ?? 8000,
         });
       }, 200);
     } else {
@@ -61,7 +62,6 @@ const MainLayout = ({ children }) => {
       <GoogleCalendarModal />
       <Toast
         ref={toast}
-        life={notification.life ?? 8000}
         position={notification.position ?? "top-center"}
       />
       {children}

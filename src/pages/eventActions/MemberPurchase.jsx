@@ -79,7 +79,9 @@ const MemberPurchase = () => {
       try {
         const responseData = await sendRequest(`user/current`);
         setCurrentUser(responseData.user);
-      } catch (err) {}
+      } catch (err) {
+        // do nothing
+      }
     };
 
     const getEventDetails = async () => {
@@ -102,6 +104,7 @@ const MemberPurchase = () => {
           setSchemaFields(schemaFields);
         }
       } catch (err) {
+        // do nothing
       } finally {
         setLoadingPage(false);
       }
@@ -172,7 +175,7 @@ const MemberPurchase = () => {
                   );
 
                   if (
-                    !checkMemberTicket.hasOwnProperty("status") &&
+                    checkMemberTicket.hasOwnProperty("status") &&
                     !checkMemberTicket.status
                   ) {
                     dispatch(
