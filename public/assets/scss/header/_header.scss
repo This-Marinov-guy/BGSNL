@@ -45,6 +45,16 @@
   border-radius: 50%;
   width: 140px;
   height: 140px;
+
+  @media #{$md-layout} {
+    width: 110px;
+    height: 110px;
+  }
+
+  @media #{$sm-layout} {
+    width: 80px;
+    height: 80px;
+  }
 }
 
 .logo-md {
