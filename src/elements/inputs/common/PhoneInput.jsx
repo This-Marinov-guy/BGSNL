@@ -16,7 +16,7 @@ const PhoneInput = ({ className, style, onChange, placeholder }) => {
 
   useEffect(() => {
     if (onChange && selectedCode && value) {
-      onChange(selectedCode.phoneCode + value);
+      onChange(selectedCode.phoneCode + ' ' + value);
     }
   }, [selectedCode, value]);
 
