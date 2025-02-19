@@ -11,11 +11,10 @@ const Success = () => {
       style={{ margin: "50px" }}
       variant="success"
     >
-      <h2 className="mb--40 center_text">Payment is Successful!</h2>
       <p>
         Your payment was Successful! Check your email for the invoice and enjoy&nbsp;&nbsp;your purchase! Hope to see you soon!
       </p>
-      <div className="options-btns-div">
+      <div className="d-flex justify-content-center align-items-center g--5 mb--40">
         {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
         } className="rn-button-style--2 rn-btn-green mt--30" to={prevUrl}>
           Go Back

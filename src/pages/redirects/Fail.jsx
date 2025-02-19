@@ -11,16 +11,20 @@ const Fail = () => {
       style={{ margin: "50px" }}
       variant="danger"
     >
-      <h2 className="mb--40 center_text">Payment Error</h2>
       <p>
         Unfortunately, your payment was unsuccessful and you were NOT charged!
-        If you need any help with the payment, please contact us!
+        If you need any help with the payment, please contact support!
       </p>
-      <div className="options-btns-div">
-        {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
-        } className="rn-button-style--2 rn-btn-green mt--30" to={prevUrl}>
-          Go Back
-        </Link>}
+      <div className="d-flex justify-content-center align-items-center g--5 mb--40">
+        {!prevUrl && (
+          <Link
+            onClick={() => sessionStorage.removeItem("prevUrl")}
+            className="rn-button-style--2 rn-btn-green mt--30"
+            to={prevUrl}
+          >
+            Go Back
+          </Link>
+        )}
         <Link className="rn-button-style--2 rn-btn-green mt--30" to="/">
           Home
         </Link>
