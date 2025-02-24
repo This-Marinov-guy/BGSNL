@@ -325,3 +325,36 @@ export const getGeoLocation = () => {
 
     return location
 }
+
+// NOTE: use like isTodayInRange("06-01", "08-31") A.K.A mm-dd
+export function isTodayInRange(start, end) {
+  // Always show if we are on dev 
+  // if (!isProd()) {
+  //   return true;
+  // }
+
+  const today = new Date();
+  const currentYear = today.getFullYear();
+
+  // Parse the start and end dates
+  const [startMonth, startDay] = start.split("-").map(Number);
+  const [endMonth, endDay] = end.split("-").map(Number);
+
+  // Create Date objects for the start and end dates
+  const startDate = new Date(currentYear, startMonth - 1, startDay); // Months are 0-based
+  let endDate = new Date(currentYear, endMonth - 1, endDay);
+
+  // If the end date is in the next year, adjust it
+  if (endMonth < startMonth || (endMonth === startMonth && endDay < startDay)) {
+    endDate = new Date(currentYear + 1, endMonth - 1, endDay);
+  }
+
+  // Adjust today's date if it's in the range crossing year boundary
+  const adjustedToday =
+    today >= startDate
+      ? today
+      : new Date(currentYear + 1, today.getMonth(), today.getDate());
+
+  // Check if today's date is within the range
+  return adjustedToday >= startDate && adjustedToday <= endDate;
+}

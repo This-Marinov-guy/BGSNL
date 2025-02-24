@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 const Card2 = (props) => {
   const {
     image,
-    fallbackImage = '',
+    fallbackImage = "",
     title,
     description,
-    link,
+    links,
     action,
     isInsideLink = false,
   } = props;
@@ -28,21 +28,21 @@ const Card2 = (props) => {
         </div>
         <div className="content">
           <h3>
-            <a href={link || ""}>{title}</a>
+            <a href={links[0].href ?? ""}>{title}</a>
           </h3>
           <p>{description}</p>
           {action ? (
             <a className="btn-transparent rn-btn-dark" onClick={action}>
               <span className="text pointer">Click here</span>
             </a>
-          ) : link ? (
+          ) : links[0].href ? (
             isInsideLink ? (
-              <Link className="btn-transparent rn-btn-dark" to={link}>
-                <span className="text">Read more</span>
+              <Link className="btn-transparent rn-btn-dark" to={links[0].href}>
+                <span className="text">{links[0].name || "Read more"}</span>
               </Link>
             ) : (
-              <a className="btn-transparent rn-btn-dark" href={link}>
-                <span className="text">Read more</span>
+              <a className="btn-transparent rn-btn-dark" href={links[0].href}>
+                <span className="text"> {links[0].name || "Read more"}</span>
               </a>
             )
           ) : null}

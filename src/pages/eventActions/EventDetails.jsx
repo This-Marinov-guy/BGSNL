@@ -20,6 +20,7 @@ import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import CampaignBanner from "../../elements/banners/CampaignBanner";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -223,7 +224,6 @@ const EventDetails = () => {
                       </div>
                     ))}
                 </div>
-                <br />
                 {/* Start Contact Map  */}
                 <div className="container">
                   <div className="rn-contact-map-area position-relative">
@@ -243,7 +243,10 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-              <SponsoredBySmall/>
+                {!user?.token && (
+                  <CampaignBanner campaignKey="membership_month_march" />
+                )}
+                <SponsoredBySmall />
                 <div className="portfolio-thumb-inner row">
                   {selectedEvent.images?.length > 0 &&
                     selectedEvent.images.map((value, index) => {

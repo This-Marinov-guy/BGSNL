@@ -28,6 +28,7 @@ import GlobalError from "./component/common/GlobalError";
 import { useAppInitialization } from "./hooks/session/app-init";
 import { useAuthSession } from "./hooks/session/auth-session";
 import { selectUser } from "./redux/user";
+import CampaignLayout from "./layouts/CampaignLayout";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -104,7 +105,7 @@ const Root = () => {
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
 
-  if (process.env.REACT_APP_MAINTENANCE == '1') {
+  if (process.env.REACT_APP_MAINTENANCE == "1") {
     return <Maintenance />;
   }
 
@@ -120,168 +121,166 @@ const Root = () => {
       )}
       <GlobalError>
         <Suspense fallback={<PageLoading />}>
-          <Routes>
-            {/* The '/' route can be found in the separate Routes in order to work the current functionality */}
-            <Route exact path="/404" element={<Error404 />} />
-            <Route exact path={`/about`} element={<About />} />
-            <Route
-              exact
-              path={`/board-and-committee`}
-              element={<Structure />}
-            />
-            <Route exact path={`/developers`} element={<Developers />} />
-            <Route exact path={`/terms-and-legals`} element={<Policy />} />
+          <CampaignLayout>
+            <Routes>
+              {/* The '/' route can be found in the separate Routes in order to work the current functionality */}
+              <Route exact path="/404" element={<Error404 />} />
+              <Route exact path={`/about`} element={<About />} />
+              <Route
+                exact
+                path={`/board-and-committee`}
+                element={<Structure />}
+              />
+              <Route exact path={`/developers`} element={<Developers />} />
+              <Route exact path={`/terms-and-legals`} element={<Policy />} />
 
-            <Route
-              exact
-              path={`/articles`}
-              element={<ArticlesPage />}
-            />
+              <Route exact path={`/articles`} element={<ArticlesPage />} />
 
-            <Route exact path={`/articles/toni-villa`} element={<Toni />} />
+              <Route exact path={`/articles/toni-villa`} element={<Toni />} />
 
-            <Route
-              exact
-              path={`/articles/from-bulgaria-to-the-netherlands`}
-              element={<StudentMigration />}
-            />
-            
-            <Route
-              exact
-              path={`/articles/acedemie-minerva`}
-              element={<Minerva />}
-            />
-            <Route
-              exact
-              path={`/articles/:articleId/:articleTitle`}
-              element={<Article />}
-            />
-            {/* <Route exact path={`/active-member`} >
+              <Route
+                exact
+                path={`/articles/from-bulgaria-to-the-netherlands`}
+                element={<StudentMigration />}
+              />
+
+              <Route
+                exact
+                path={`/articles/acedemie-minerva`}
+                element={<Minerva />}
+              />
+              <Route
+                exact
+                path={`/articles/:articleId/:articleTitle`}
+                element={<Article />}
+              />
+              {/* <Route exact path={`/active-member`} >
                 <ActiveMember />
               </Route> */}
-            {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
-            {/* <Route exact path={`/contest/register`}>
+              {/* <Route exact path={`/contest/promo-video`} element={<Contest} /> */}
+              {/* <Route exact path={`/contest/register`}>
               <ContestRegister />
               </Route> */}
 
-            {/* <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
+              {/* <Route exact path={`/:region/board`} element={<RegionLayout><Board /></RegionLayout>} />
               <Route exact path={`/:region/committees`} element={<RegionLayout><Committees /></RegionLayout>} /> */}
-            <Route exact path={`/:region?/contact`} element={<Contact />} />
-            <Route
-              exact
-              path={`/:region?/events/future-events`}
-              element={<FutureEvents />}
-            />
-            <Route
-              exact
-              path={`/:region?/events/past-events`}
-              element={<PastEvents />}
-            />
-            <Route
-              exact
-              path={`/:region/event-details/:eventId`}
-              element={
-                <RegionLayout>
-                  <EventDetails />
-                </RegionLayout>
-              }
-            />
-            <Route
-              exact
-              path={"/other-event-details/pwc-career-pathways"}
-              element={<NonSocietyEvent />}
-            ></Route>
-
-            {/* Redirect pages */}
-
-            {!isProd() && (
-              <Route exact path={`/test`} element={<TicketComponent />} />
-            )}
-
-            <Route exact path={`/success`} element={<Success />} />
-            <Route
-              exact
-              path={`/donation/success`}
-              element={<SuccessDonation />}
-            />
-            <Route exact path={`/fail`} element={<Fail />} />
-
-            {/* TICKET PURCHASE */}
-            <Route
-              exact
-              path={"/:region/purchase-ticket/:eventId"}
-              element={
-                <RegionLayout>
-                  {user && !!user.token ? (
-                    <MemberPurchase />
-                  ) : (
-                    <GuestPurchase />
-                  )}
-                </RegionLayout>
-              }
-            />
-
-            {/* Auth pages */}
-            <Fragment>
+              <Route exact path={`/:region?/contact`} element={<Contact />} />
               <Route
                 exact
-                path={`/user`}
+                path={`/:region?/events/future-events`}
+                element={<FutureEvents />}
+              />
+              <Route
+                exact
+                path={`/:region?/events/past-events`}
+                element={<PastEvents />}
+              />
+              <Route
+                exact
+                path={`/:region/event-details/:eventId`}
                 element={
-                  <AuthLayout>
-                    <User />
-                  </AuthLayout>
+                  <RegionLayout>
+                    <EventDetails />
+                  </RegionLayout>
                 }
               />
               <Route
                 exact
-                path={`/user/add-event`}
-                element={
-                  <AuthLayout access={ACCESS_4}>
-                    <AddEvent />
-                  </AuthLayout>
-                }
-              />
-              <Route
-                exact
-                path={`/user/edit-event/:eventId`}
-                element={
-                  <AuthLayout access={ACCESS_4}>
-                    <EditEvent />
-                  </AuthLayout>
-                }
-              />
-              <Route
-                exact
-                path={`/user/dashboard`}
-                element={
-                  <AuthLayout access={ACCESS_4}>
-                    <EventDashboard />
-                  </AuthLayout>
-                }
-              />
-              <Route
-                exact
-                path={`/user/check-guest-list`}
-                element={
-                  <AuthLayout access={ACCESS_4}>
-                    <GuestCheck />
-                  </AuthLayout>
-                }
-              />
-            </Fragment>
+                path={"/other-event-details/pwc-career-pathways"}
+                element={<NonSocietyEvent />}
+              ></Route>
 
-            {/* Un-auth pages */}
-            {!user?.token && (
+              {/* Redirect pages */}
+
+              {!isProd() && (
+                <Route exact path={`/test`} element={<TicketComponent />} />
+              )}
+
+              <Route exact path={`/success`} element={<Success />} />
+              <Route
+                exact
+                path={`/donation/success`}
+                element={<SuccessDonation />}
+              />
+              <Route exact path={`/fail`} element={<Fail />} />
+
+              {/* TICKET PURCHASE */}
+              <Route
+                exact
+                path={"/:region/purchase-ticket/:eventId"}
+                element={
+                  <RegionLayout>
+                    {user && !!user.token ? (
+                      <MemberPurchase />
+                    ) : (
+                      <GuestPurchase />
+                    )}
+                  </RegionLayout>
+                }
+              />
+
+              {/* Auth pages */}
               <Fragment>
-                <Route exact path={`/login`} element={<LogIn />} />
-                <Route exact path={`/:region?/signup`} element={<SignUp />} />
-                {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}
+                <Route
+                  exact
+                  path={`/user`}
+                  element={
+                    <AuthLayout>
+                      <User />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/add-event`}
+                  element={
+                    <AuthLayout access={ACCESS_4}>
+                      <AddEvent />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/edit-event/:eventId`}
+                  element={
+                    <AuthLayout access={ACCESS_4}>
+                      <EditEvent />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/dashboard`}
+                  element={
+                    <AuthLayout access={ACCESS_4}>
+                      <EventDashboard />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/check-guest-list`}
+                  element={
+                    <AuthLayout access={ACCESS_4}>
+                      <GuestCheck />
+                    </AuthLayout>
+                  }
+                />
               </Fragment>
-            )}
 
-            <Route exact path="/:region?" element={<Home />} />
-            <Route path="*" element={<Error404 />} />
-          </Routes>
+              {/* Un-auth pages */}
+              {!user?.token && (
+                <Fragment>
+                  <Route exact path={`/login`} element={<LogIn />} />
+                  <Route exact path={`/:region?/signup`} element={<SignUp />} />
+                  {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}
+                </Fragment>
+              )}
+
+              <Route exact path="/:region?" element={<Home />} />
+              <Route path="*" element={<Error404 />} />
+            </Routes>
+          </CampaignLayout>
         </Suspense>
       </GlobalError>
     </BrowserRouter>

@@ -8,18 +8,25 @@ import { selectIsAuth } from "../../../redux/user";
 import { useLocation } from "react-router-dom";
 import Slider from "react-slick";
 import { slickDot2 } from "../../../page-demo/script";
+import { CAMPAIGNS } from "../../../util/defines/CAMPAIGNS";
 
 const NewsList = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const isAuth = useSelector(selectIsAuth);
 
+  const activeCampaignNews = CAMPAIGNS.filter((c) => c?.modal.active).map(
+    (c) => c.news
+  );
+
   const NEWS = [
+    ...activeCampaignNews,
     {
       image: "/assets/images/news/internships.jpg",
       title: "BGSNL Internships",
-      description: "Fancy am entry job or an internship? Check out what are organization has to offer in our member-exclusive section and sign for your area of interest!",
-      link: "/user#internships",
+      description:
+        "Fancy am entry job or an internship? Check out what are organization has to offer in our member-exclusive section and sign for your area of interest!",
+      links: [{ name: "", href: "/user#internships", isExternal: false }],
       action: ``,
       isForMember: false,
     },
@@ -29,7 +36,7 @@ const NewsList = () => {
       title: "Support our mission",
       description:
         "Want to help but do not how? Our Support system is now live with GoFundMe integration!",
-      link: "",
+      links: [{ name: "", href: "", isExternal: false }],
       action: () => dispatch(showModal(DONATION_MODAL)),
       isForMember: false,
     },
@@ -37,7 +44,13 @@ const NewsList = () => {
       image: "/assets/images/profile/from-bg-to-nl/1.webp",
       title: "From Bulgaria To The Netherlands",
       description: "Why are more and more young people emigrating?",
-      link: "/articles/from-bulgaria-to-the-netherlands",
+      links: [
+        {
+          name: "",
+          href: "/articles/from-bulgaria-to-the-netherlands",
+          isExternal: false,
+        },
+      ],
       action: ``,
       isForMember: true,
     },
@@ -45,7 +58,7 @@ const NewsList = () => {
       image: "/assets/images/bg/bg-image-9.webp",
       title: "Sign up!",
       description: "Membership 2024-2025 are officially open.",
-      link: "/signup",
+      links: [{ name: "", href: "/signup", isExternal: false }],
       action: ``,
       isForMember: false,
     },
@@ -54,7 +67,7 @@ const NewsList = () => {
       title: "Web recruit",
       description:
         "Contribute to this amazing platform and support the society. Apply now!",
-      link: "",
+      links: [{ name: "", href: "", isExternal: false }],
       action: () => dispatch(showModal(WEB_DEV_MODAL)),
       isForMember: true,
     },
