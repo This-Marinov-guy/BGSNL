@@ -30,6 +30,7 @@ import {
   TICKETS,
   USER_STATUSES,
 } from "../../util/defines/enum";
+import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
 
 const User = () => {
   const [isPageLoading, setIsPageLoading] = useState(true);
@@ -50,6 +51,10 @@ const User = () => {
   const routePath = location.pathname + location.hash;
 
   const scrollRef = useRef(null);
+
+  const campaignUserActions = CAMPAIGNS.find(
+    (c) => c.userAction.active ?? false
+  );  
 
   useEffect(() => {
     if (!user.token) {
@@ -283,6 +288,16 @@ const User = () => {
         </div>
       </div>
       {/* End Info Area */}
+
+      {/* Start Campaigns */}
+      {campaignUserActions && React.cloneElement(
+        campaignUserActions.userAction.component,
+        {
+          calendarImage: currentUser.mmmCampaign2025.calendarImage, // props
+        }
+      )}
+      {/* End Campaigns */}
+
       {/* <Greeting /> */}
       {/* Start User Collection */}
       <div ref={scrollRef} className="btn_row row">

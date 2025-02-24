@@ -1,3 +1,5 @@
+import React from "react";
+import ValidateCalendarSubscription from "../../elements/banners/ValidateCalendarSubscription";
 import { isTodayInRange } from "../functions/helpers";
 
 export const CAMPAIGNS = [
@@ -47,6 +49,10 @@ export const CAMPAIGNS = [
         { name: "Validate", href: "/user", isExternal: false },
         { name: "Explain", href: "instagram.com", isExternal: true },
       ],
+    },
+    userAction: {
+      active: isTodayInRange("03-01", "03-31"),
+      component: <ValidateCalendarSubscription/>
     },
   },
 ];

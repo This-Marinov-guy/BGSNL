@@ -7,7 +7,7 @@ Blog Styles
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding : 6% 2%;
+  padding: 6% 2%;
 }
 
 .payment_form {
@@ -17,14 +17,14 @@ Blog Styles
   justify-content: center;
 }
 
-
 .currency-symbol {
   font-size: 30px;
   position: absolute;
   top: 60%;
   right: 10%;
   transform: translateY(-50%);
-  pointer-events: none;}
+  pointer-events: none;
+}
 
 .blog-style--1 {
   position: relative;
@@ -162,6 +162,12 @@ Blog Styles
   font-size: 20px;
   font-weight: 300;
   color: #f80707;
+}
+
+.body_emphasis {
+  font-size: 20px;
+  font-weight: 700;
+  color: $body-color;
 }
 
 .error-border {

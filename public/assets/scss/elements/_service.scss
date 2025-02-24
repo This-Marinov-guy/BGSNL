@@ -478,8 +478,8 @@
   flex-direction: column;
   height: 250px;
   width: 250px;
-  min-width: 250px; /* Ensures the minimum width is 250px */
-  max-width: 800px; /* Keeps your existing max-width */
+  // min-width: 250px; 
+  // max-width: 800px; 
   border: 1px solid #d4d4d4;
   border-radius: 7%;
 
@@ -490,6 +490,11 @@
     max-height: 100%;
     width: auto;
     height: auto;
+  }
+
+  @media #{$large-mobile} {
+    max-height: 180px;
+    max-width: 180px;
   }
 }
 

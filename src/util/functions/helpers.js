@@ -329,9 +329,9 @@ export const getGeoLocation = () => {
 // NOTE: use like isTodayInRange("06-01", "08-31") A.K.A mm-dd
 export function isTodayInRange(start, end) {
   // Always show if we are on dev 
-  // if (!isProd()) {
-  //   return true;
-  // }
+  if (!isProd()) {
+    return true;
+  }
 
   const today = new Date();
   const currentYear = today.getFullYear();

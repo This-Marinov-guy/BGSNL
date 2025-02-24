@@ -25,9 +25,10 @@ export const useHttpClient = (withPageLoading = false) => {
     method = "GET",
     data = null,
     headers = {},
-    withError = true
+    withError = true,
+    withLoading = true,
   ) => {
-    if (!loading) forceStartLoading();
+    if (withLoading && !loading) forceStartLoading();
     if (withPageLoading) dispatch(startPageLoading());
 
     if (user && !!user.token) {
@@ -58,7 +59,7 @@ export const useHttpClient = (withPageLoading = false) => {
         );
       }
     } finally {
-      dispatch(stopLoading());
+      if (withLoading) dispatch(stopLoading());
       if (withPageLoading) dispatch(stopPageLoading());
     }
   };
