@@ -243,9 +243,7 @@ const EventDetails = () => {
                 </div>
                 {/* End Contact Map  */}
                 <br />
-                {!user?.token && (
-                  <CampaignBanner campaignKey="membership_month_march" />
-                )}
+                <CampaignBanner campaignKey="membership_month_march" />
                 <SponsoredBySmall />
                 <div className="portfolio-thumb-inner row">
                   {selectedEvent.images?.length > 0 &&
