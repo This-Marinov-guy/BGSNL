@@ -4,7 +4,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 const Loader = () => {
   return (
     <div
-      style={{ margin: "auto", width: "2.6em" }}
+      style={{ margin: "auto" }}
       className="d-flex align-items-center justify-content-center g--3 disabled"
     >
       <span style={{ fontSize: "18px" }}>Loading </span>
