@@ -6,8 +6,8 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
   {
     id: 1,
     title: "6-months Member",
+    description: "Support a great cause and enjoy a memorable experience",
     icon: <FiUser />,
-    description: "",
     price: 6,
     itemId: MEMBERSHIP_PRICES_IDS["6-months Member"].start,
     renewItemId: MEMBERSHIP_PRICES_IDS["6-months Member"].renewal,
@@ -16,9 +16,13 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
   {
     id: 2,
     title: "Annual Member",
+    description: "Support a great cause and enjoy a memorable experience",
+    label: {
+      color: "#e5b80b",
+      text: "Best Value",
+    },
+    borderColor: "#e5b80b",
     icon: <FiUserPlus />,
-    description:
-      "Be part of the society. Pay yearly for the journey with benefits such as:",
     price: 10,
     itemId: MEMBERSHIP_PRICES_IDS["12-months Member"].start,
     renewItemId: MEMBERSHIP_PRICES_IDS["12-months Member"].renewal,
@@ -27,5 +31,5 @@ export const REGIONS_MEMBERSHIP_SPECIFICS = [
 ];
 
 export function findMembershipByProperty(property, value) {
-    return REGIONS_MEMBERSHIP_SPECIFICS.find(item => item[property] === value);
+  return REGIONS_MEMBERSHIP_SPECIFICS.find((item) => item[property] === value);
 }

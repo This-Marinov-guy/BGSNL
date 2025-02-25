@@ -858,3 +858,10 @@ Portfolio Style Three
 .custom-arrow:hover {
   background: #bbb;
 }
+
+.benefit-point {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15em;
+}

@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import moment from "moment";
+import { Badge } from "primereact/badge";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Password } from "primereact/password";
 import { FiCheck, FiChevronLeft } from "react-icons/fi";
@@ -151,83 +152,96 @@ const SignUp = (props) => {
       break;
     case 1:
       stepComp = (
-        <div className="service-area ptb--60">
+        <div className="service-area ptb--40">
           <div className="container">
             <div className="center_div mb--20">
-              {selectedMembershipIndex !== null ? (
+              <div className="d-flex flex-column align-items-center justify-content-center">
+                {selectedMembershipIndex !== null && (
+                  <h3 className="mb--20">
+                    Current choice is:{" "}
+                    {
+                      REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
+                        .title
+                    }{" "}
+                  </h3>
+                )}
+
                 <p>
-                  You have selected:{" "}
-                  {REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title}{" "}
+                  Membership plans distinguish only by the price and the billing
+                  period. By becoming a member you receive benefits like:
                 </p>
-              ) : (
-                <p>Select one of the options by clicking it</p>
-              )}
+                <ul className="row list-style--1 mb--20">
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Exclusive member events
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Discounts for events
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Premium collection of event tickets
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Internship opportunities worldwide
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Many more to be explored...
+                  </li>
+                </ul>
+                <p style={{ fontSize: "15px" }}>
+                  *You will automatically be billed on the end of the period,
+                  except if you cancel the subscription from your profile or the
+                  funds in your bank account are insufficient
+                </p>
+              </div>
             </div>
-            <div
-              className="row service-one-wrapper center_div"
-              style={{ gap: "20px" }}
-            >
+            <div className="d-flex flex-column flex-md-row justify-content-around service-one-wrapper center_div" style={{ gap: "20px" }}>
               {REGIONS_MEMBERSHIP_SPECIFICS.map((val, i) => (
-                <div key={i}>
-                  <button
-                    style={
-                      selectedMembershipIndex !== null &&
-                      val.title ===
-                        REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
-                          .title
-                        ? { backgroundColor: "#017363" }
-                        : {}
-                    }
-                    className="service service__style--2"
-                    onClick={() => {
-                      setSelectedMembershipIndex(i);
-                      setActiveStep(2);
-                    }}
-                  >
-                    <div className="hor_section">
-                      <div className="icon">{val.icon}</div>
-                      <h3 style={{ width: "40%" }}>
-                        {val.price}&#8364; every {val.period} months
-                      </h3>
-                    </div>
-                    <div className="content">
-                      <h3>{val.title}</h3>
-                      <p>
-                        {val.description ||
-                          "Be part of the society. With this membership you get:"}
-                      </p>
-                      <div className="pricing-body">
-                        <ul
-                          style={{ textAlign: "start" }}
-                          className="list-style--1"
-                        >
-                          <li>
-                            <FiCheck />
-                            Exclusive member events
-                          </li>
-                          <li>
-                            <FiCheck />
-                            Discounts for events
-                          </li>
-                          <li>
-                            <FiCheck />
-                            Premium collection of event tickets
-                          </li>
-                          <li>
-                            <FiCheck />
-                            Internship opportunities worldwide
-                          </li>
-                        </ul>
-                      </div>
-                      <p style={{ fontSize: "15px" }}>
-                        *You will automatically be billed on the end of the
-                        period, except if you cancel the subscription from your
-                        profile or the funds in your bank account are
-                        insufficient
-                      </p>
-                    </div>
-                  </button>
-                </div>
+                <button
+                  key={i}
+                  style={
+                    selectedMembershipIndex !== null &&
+                    val.title ===
+                      REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
+                        .title
+                      ? {
+                          backgroundColor: "#017363",
+                          border: `2px solid ${val.borderColor ?? "black"}`,
+                        }
+                      : { border: `2px solid ${val.borderColor ?? "black"}` }
+                  }
+                  className="service service__style--2"
+                  onClick={() => {
+                    setSelectedMembershipIndex(i);
+                    setActiveStep(2);
+                  }}
+                >
+                  {val?.label?.text && (
+                    <Badge
+                      style={{
+                        position: "absolute",
+                        top: "-10px",
+                        right: "-10px",
+                        backgroundColor: val.label.color,
+                      }}
+                      value={val.label.text}
+                    />
+                  )}
+                  <div className="hor_section">
+                    <div className="icon">{val.icon}</div>
+                    <h5 style={{ width: "40%" }}>
+                      {val.price}&#8364; every {val.period} months
+                    </h5>
+                  </div>
+                  <div className="content">
+                    <h3>{val.title}</h3>
+                    <p>{val.description}</p>
+                  </div>
+                </button>
               ))}
             </div>
           </div>
@@ -453,7 +467,7 @@ const SignUp = (props) => {
                         <div className="rn-form-group">
                           <PhoneInput
                             placeholder="WhatsApp Phone "
-                            onChange={(value) => setFieldValue('phone', value)}
+                            onChange={(value) => setFieldValue("phone", value)}
                           />
 
                           <ErrorMessage
