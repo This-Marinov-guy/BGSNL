@@ -67,9 +67,9 @@ const MemberPurchase = () => {
 
   const buyFreeTicket = async (formData) => {
     await sendRequest("event/purchase-ticket/member", "POST", formData);
-    sessionStorage.setItem("prevUrl", window.location.href);
-
-    navigate("/success");
+    sessionStorage.setItem("prevUrl", window.location.href).then(() => {
+      navigate("/success");
+    });
   };
 
   useEffect(() => {
@@ -283,8 +283,11 @@ const MemberPurchase = () => {
                 );
 
                 if (responseData.url) {
-                  sessionStorage.setItem("prevUrl", window.location.href);
-                  window.location.assign(responseData.url);
+                  sessionStorage
+                    .setItem("prevUrl", window.location.href)
+                    .then(() => {
+                      window.location.assign(responseData.url);
+                    });
                 }
               } catch (err) {
               } finally {

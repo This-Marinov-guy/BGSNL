@@ -71,9 +71,10 @@ const GuestPurchase = () => {
 
   const buyFreeTicket = async (formData) => {
     await sendRequest("event/purchase-ticket/guest", "POST", formData);
-    sessionStorage.setItem("prevUrl", window.location.href);
-
-    navigate("/success");
+    
+    sessionStorage.setItem("prevUrl", window.location.href).then(() => {
+      navigate("/success");
+    });
   };
 
   const handleErrorMsg = (errors) => {
@@ -317,9 +318,13 @@ const GuestPurchase = () => {
                       "POST",
                       formData
                     );
+
                     if (responseData.url) {
-                      sessionStorage.setItem("prevUrl", window.location.href);
-                      window.location.assign(responseData.url);
+                      sessionStorage
+                        .setItem("prevUrl", window.location.href)
+                        .then(() => {
+                          window.location.assign(responseData.url);
+                        });
                     }
                   } catch (err) {
                     // console.log(err)

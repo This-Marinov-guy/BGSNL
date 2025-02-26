@@ -174,9 +174,9 @@ const HeaderContent = (props) => {
               {!user.token ? (
                 <button
                   onClick={() => {
-                    navigate("/login");
-                    if (routePath !== "/")
-                      sessionStorage.setItem("prevUrl", routePath);
+                    sessionStorage.setItem("prevUrl", routePath).then(() => {
+                      navigate("/login");
+                    });
                   }}
                   className="rn-button-style--2 rn-btn-reverse-green"
                 >

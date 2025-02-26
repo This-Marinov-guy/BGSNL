@@ -54,12 +54,13 @@ const User = () => {
 
   const campaignUserActions = CAMPAIGNS.find(
     (c) => c.userAction.active ?? false
-  );  
+  );
 
   useEffect(() => {
     if (!user.token) {
-      sessionStorage.setItem("prevUrl", routePath);
-      return navigate("/login");
+      return sessionStorage.setItem("prevUrl", routePath).then(() => {
+        navigate("/login");
+      });
     }
 
     const fetchCurrentUser = async () => {
@@ -290,12 +291,10 @@ const User = () => {
       {/* End Info Area */}
 
       {/* Start Campaigns */}
-      {campaignUserActions && React.cloneElement(
-        campaignUserActions.userAction.component,
-        {
+      {campaignUserActions &&
+        React.cloneElement(campaignUserActions.userAction.component, {
           calendarImage: currentUser.mmmCampaign2025.calendarImage, // props
-        }
-      )}
+        })}
       {/* End Campaigns */}
 
       {/* <Greeting /> */}
