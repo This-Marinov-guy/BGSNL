@@ -318,11 +318,8 @@ const GuestPurchase = () => {
                     );
 
                     if (responseData.url) {
-                      sessionStorage
-                        .setItem("prevUrl", window.location.href)
-                        .then(() => {
-                          window.location.assign(responseData.url);
-                        });
+                      sessionStorage.setItem("prevUrl", window.location.href);
+                      window.location.assign(responseData.url);
                     }
                   } catch (err) {
                     // console.log(err)

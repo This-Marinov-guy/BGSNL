@@ -9,10 +9,7 @@ const CampaignBanner = (props) => {
 
   const campaign = CAMPAIGNS.find(
     (c) => c.key === (campaignKey ?? "")
-  );
-
-  console.log(campaign);
-  
+  );  
 
   if (!campaign || !campaign?.banner?.active || !campaign?.banner) {
     return null;
