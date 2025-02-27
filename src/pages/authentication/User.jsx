@@ -58,9 +58,9 @@ const User = () => {
 
   useEffect(() => {
     if (!user.token) {
-      return sessionStorage.setItem("prevUrl", routePath).then(() => {
-        navigate("/login");
-      });
+      sessionStorage.setItem("prevUrl", routePath);
+      navigate("/login");
+      return;
     }
 
     const fetchCurrentUser = async () => {

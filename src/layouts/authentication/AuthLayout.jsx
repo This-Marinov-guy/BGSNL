@@ -26,17 +26,17 @@ const AuthLayout = ({ children, access = [] }) => {
       const routePath = location.pathname + location.hash + location.search;
 
       if (!isAuth) {
-        return sessionStorage.setItem("prevUrl", routePath).then(() => {
-          dispatch(
-            showNotification({
-              severity: "warn",
-              detail: "Please log in to your account to proceed to the page!",
-            })
-          );
-          setIsActive(false);
-          setIsLoading(false);
-          navigate("/login");
-        });
+        sessionStorage.setItem("prevUrl", routePath);
+        dispatch(
+          showNotification({
+            severity: "warn",
+            detail: "Please log in to your account to proceed to the page!",
+          })
+        );
+        setIsActive(false);
+        setIsLoading(false);
+        navigate("/login");
+        return;
       }
 
       const token =

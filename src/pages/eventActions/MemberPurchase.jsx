@@ -67,9 +67,8 @@ const MemberPurchase = () => {
 
   const buyFreeTicket = async (formData) => {
     await sendRequest("event/purchase-ticket/member", "POST", formData);
-    sessionStorage.setItem("prevUrl", window.location.href).then(() => {
-      navigate("/success");
-    });
+    sessionStorage.setItem("prevUrl", window.location.href);
+    navigate("/success");
   };
 
   useEffect(() => {

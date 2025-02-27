@@ -71,10 +71,8 @@ const GuestPurchase = () => {
 
   const buyFreeTicket = async (formData) => {
     await sendRequest("event/purchase-ticket/guest", "POST", formData);
-    
-    sessionStorage.setItem("prevUrl", window.location.href).then(() => {
-      navigate("/success");
-    });
+    sessionStorage.setItem("prevUrl", window.location.href);
+    navigate("/success");
   };
 
   const handleErrorMsg = (errors) => {
