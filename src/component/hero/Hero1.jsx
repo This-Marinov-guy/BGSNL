@@ -4,6 +4,7 @@ import { selectUser } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import SnowBackground from "../../elements/ui/backgrounds/SnowBackground";
+import { HOLIDAYS } from "../../util/configs/common";
 
 const Hero1 = () => {
   const user = useSelector(selectUser);
@@ -26,7 +27,7 @@ const Hero1 = () => {
       style={{ height: "100vh" }}
       className="slider-activation slider-creative-agency"
     >
-      <SnowBackground />
+      {HOLIDAYS.isWinter && <SnowBackground />}
       <ImageFb
         src={`/assets/images/bg/paralax/${region || "netherlands"}.webp`}
         fallback={`/assets/images/bg/paralax/${region || "netherlands"}.jpg`}

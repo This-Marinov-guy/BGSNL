@@ -1,4 +1,4 @@
 export const HOLIDAYS = {
-  isWinter: true,
+  isWinter: false,
   isChristmas: false,
 };
