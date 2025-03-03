@@ -92,7 +92,6 @@ const Login = () => {
       navigate(sessionStorage.getItem("prevUrl") ?? `/${responseData.region}`);
       sessionStorage.removeItem("prevUrl");
     } catch (err) {
-      return dispatch(showNotification(GENERAL_ERROR));
     }
   };
 
@@ -110,7 +109,7 @@ const Login = () => {
       />
       <div
         className="container team_member_border-3 "
-        style={{ maxWidth: "600px", marginTop: "25vh", padding: '50px 0' }}
+        style={{ maxWidth: "600px", marginTop: "18vh", padding: '50px 0' }}
       >
         <h3 style={{ fontSize: "0.8em" }} className="center_text">
           Log in your account
