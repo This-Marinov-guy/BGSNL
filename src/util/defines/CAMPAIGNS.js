@@ -7,7 +7,7 @@ export const CAMPAIGNS = [
     name: "Membership Month March",
     key: "membership_month_march",
     modal: {
-      active: isTodayInRange("04-03", "03-31"),
+      active: isTodayInRange("03-04", "03-31"),
       title: "Join our MMM campaign",
       description: `Want to travel in Netherlands and also go on an event for absolutely FREE?
         
@@ -32,7 +32,7 @@ export const CAMPAIGNS = [
       ],
     },
     news: {
-      active: isTodayInRange("04-03", "03-31"),
+      active: isTodayInRange("03-04", "03-31"),
       title: "Join our MMM campaign",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
@@ -40,7 +40,7 @@ export const CAMPAIGNS = [
       links: [{ name: "", href: "", isExternal: false }],
     },
     banner: {
-      active: isTodayInRange("04-03", "03-31"),
+      active: isTodayInRange("03-04", "03-31"),
       title: "Join our MMM campaign",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
@@ -51,7 +51,7 @@ export const CAMPAIGNS = [
       ],
     },
     userAction: {
-      active: isTodayInRange("04-03", "03-31"),
+      active: isTodayInRange("03-04", "03-31"),
       component: <ValidateCalendarSubscription/>
     },
   },
