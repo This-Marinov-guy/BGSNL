@@ -67,7 +67,7 @@ const ValidateCalendarSubscription = (props) => {
       >
         <h5 className="mt--20">March is Membership Month {calendarImage && <FiCheck style={{color: "green", fontSize: '2em'}}/>}</h5>
         <p className="information center_text">
-          Submit a proof that you have subscribed to one of our calendars and
+          Tag a travel buddy in the comments of BGSNL campaign post (click below on "Explain") and submit a proof here that you have subscribed to one of our calendars and
           enter a giveway to win 2 free tickets to any BGSNL event and 2 two-way
           train tickets for the event. You have time until{" "}
           <span className="body_emphasis">31st of March</span>. Do not waste
