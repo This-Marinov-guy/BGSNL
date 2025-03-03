@@ -5,6 +5,7 @@ export const modalSlice = createSlice({
   initialState: {
     modal: [],
     warning: [],
+    localStorageIndex: 0,
   },
   reducers: {
     showModal: (state, action) => {
@@ -19,12 +20,21 @@ export const modalSlice = createSlice({
     removeWarning: (state) => {
       state.warning = state.warning.filter((w) => w !== action.payload);
     },
+    changeLocalStorageIndex: (state) => {
+      state.localStorageIndex = state.localStorageIndex + 1;
+    },
   },
 });
 
 export const selectModal = (state) => state.modal.modal;
 export const selectWarning = (state) => state.modal.warning;
+export const selectLocalStorageIndex = (state) => state.modal.localStorageIndex;
 
-export const { removeModal, showModal, showWarning, removeWarning } =
-  modalSlice.actions;
+export const {
+  removeModal,
+  showModal,
+  showWarning,
+  removeWarning,
+  changeLocalStorageIndex,
+} = modalSlice.actions;
 export default modalSlice.reducer;

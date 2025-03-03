@@ -3,9 +3,13 @@ import { CAMPAIGNS } from "../util/defines/CAMPAIGNS";
 import { Dialog } from "primereact/dialog";
 import ImageFb from "../elements/ui/media/ImageFb";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectLocalStorageIndex } from "../redux/modal";
 
 const CampaignLayout = ({ children }) => {
   const [openModals, setOpenModals] = useState({});
+
+  const localStorageIndex = useSelector(selectLocalStorageIndex);
 
   // Load campaign visibility from localStorage after component mounts
   useEffect(() => {
@@ -19,7 +23,7 @@ const CampaignLayout = ({ children }) => {
     }, {});
 
     setOpenModals(storedModals);
-  }, []);
+  }, [localStorageIndex]);
 
   const closeModal = (key) => {
     setOpenModals((prev) => ({ ...prev, [key]: false }));
@@ -38,7 +42,7 @@ const CampaignLayout = ({ children }) => {
             header={campaign.modal.title}
             visible={openModals[campaign.key]}
             onHide={() => closeModal(campaign.key)}
-            style={{ maxWidth: "80vw", overflowY: 'auto' }}
+            style={{ maxWidth: "80vw", overflowY: "auto" }}
             dismissableMask
           >
             {campaign.modal.images[0] && (
@@ -61,6 +65,23 @@ const CampaignLayout = ({ children }) => {
                 fallback="/assets/images/logo/logo.jpg"
                 alt="Campaign Image"
               />
+            )}
+
+            {campaign.modal.sponsors.length > 0 && (
+              <div className="d-flex justify-content-center">
+                <h5>
+                  Powered by:{" "}
+                  {campaign.modal.sponsors.map((sponsor) => (
+                    <a href={sponsor.link} target="_blank">
+                      <ImageFb
+                        style={{ height: "4em", margin: "2px" }}
+                        src={sponsor.image}
+                        fallback={sponsor.image}
+                      />
+                    </a>
+                  ))}
+                </h5>
+              </div>
             )}
 
             {campaign.modal.links.length > 0 && (

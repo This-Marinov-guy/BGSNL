@@ -65,7 +65,7 @@ const ValidateCalendarSubscription = (props) => {
         style={{ paddingRight: 0, paddingLeft: 0 }}
         className="col-lg-8 col-md-6 col-12 text-center"
       >
-        <h5 className="mt--20">MMM Campaign {calendarImage && <FiCheck style={{color: "green", fontSize: '2em'}}/>}</h5>
+        <h5 className="mt--20">March is Membership Month {calendarImage && <FiCheck style={{color: "green", fontSize: '2em'}}/>}</h5>
         <p className="information center_text">
           Submit a proof that you have subscribed to one of our calendars and
           enter a giveway to win 2 free tickets to any BGSNL event and 2 two-way

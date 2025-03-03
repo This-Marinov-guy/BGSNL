@@ -43,8 +43,8 @@
 
 .logo {
   border-radius: 50%;
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
 
   @media #{$md-layout} {
     width: 110px;
@@ -73,17 +73,9 @@
 
 .header-area {
   display: block;
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 25px;
+  padding-right: 25px;
   z-index: 999;
-  @media #{$lg-layout} {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-  @media #{$sm-layout} {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
 
   &.header--transparent {
     position: absolute;
@@ -414,6 +406,7 @@
       padding: 5px 20px;
       background-color: $theme-color-3;
       border-bottom-left-radius: 10px;
+      z-index: 10;
     }
   }
   &.header-green {
@@ -825,4 +818,24 @@
 }
 .header-wrapper.menu-open .humberger-menu span {
   opacity: 0;
+}
+
+.nav-strap {
+  position: sticky;
+  text-align: center;
+  font-size: 18px;
+  // color: #fff;
+  background-color: $label-color;
+  width: 100%;
+  height: auto;
+  z-index: 9999;
+
+  @media #{$sm-layout} {
+    font-size: 14px;
+  }
+
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }

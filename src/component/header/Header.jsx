@@ -6,11 +6,14 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import HeaderContent from "./HeaderContent";
 import { HOLIDAYS } from "../../util/configs/common";
+import { getActiveStrap } from "../../util/defines/CAMPAIGNS";
 
 const Header = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
 
   const region = props.forceRegion ?? useParams().region;
+
+  const activeStrap = getActiveStrap();
 
   var elements = document.querySelectorAll(".has-dropdown > a");
   for (var i in elements) {
@@ -46,16 +49,16 @@ const Header = (props) => {
   return (
     <Fragment>
       <header
-        className={`header-area formobile-menu header--transparent default-color`}
+        className={`header-area formobile-menu header--transparent default-color ${activeStrap && 'm--25'}`}
       >
         <div
           className={(isMenuOpened && "menu-open") + " header-wrapper"}
           id="header-wrapper"
         >
           <div className="header-left">
-              <Link className="logo" to={region ? `/${region}` : "/"}>
-                {logoUrl}
-              </Link>
+            <Link className="logo" to={region ? `/${region}` : "/"}>
+              {logoUrl}
+            </Link>
           </div>
           <div className="header-right">
             <HeaderContent />

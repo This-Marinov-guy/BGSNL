@@ -13,12 +13,16 @@ import DonationModal from "../elements/ui/modals/DonationModal";
 import { useArticlesLoad } from "../hooks/common/api-hooks";
 import CookiesModal from "../elements/ui/modals/CookiesModal";
 import GoogleCalendarModal from "../elements/ui/modals/GoogleCalendarModal";
+import { getActiveStrap } from "../util/defines/CAMPAIGNS";
+import Strap from "../elements/banners/Strap";
 
 const MainLayout = ({ children }) => {
   const toast = useRef(null);
 
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
+
+  const activeStrap = getActiveStrap();
 
   const { reloadArticles } = useArticlesLoad();
 
@@ -27,11 +31,11 @@ const MainLayout = ({ children }) => {
   }, [window.location.pathname]);
 
   useEffect(() => {
-    if (process.env.REACT_APP_CLARITY_ENABLE == '1') {
+    if (process.env.REACT_APP_CLARITY_ENABLE == "1") {
       clarityTrack();
     }
 
-    if (process.env.REACT_APP_GTM_ENABLE == '1') {
+    if (process.env.REACT_APP_GTM_ENABLE == "1") {
       gaTrack();
     }
 
@@ -60,10 +64,8 @@ const MainLayout = ({ children }) => {
       <BirthdayModal />
       <CookiesModal />
       <GoogleCalendarModal />
-      <Toast
-        ref={toast}
-        position={notification.position ?? "top-center"}
-      />
+      <Toast ref={toast} position={notification.position ?? "top-center"} />
+      <Strap strap={activeStrap} />
       {children}
     </>
   );

@@ -1,16 +1,47 @@
-import React, { useState, Fragment } from "react";
-import { Link} from "react-router-dom";
+import React, { useState, Fragment, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FiX, FiMenu } from "react-icons/fi";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import HeaderContent from "./HeaderContent";
 import { HOLIDAYS } from "../../util/configs/common";
+import { getActiveStrap } from "../../util/defines/CAMPAIGNS";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
 
   const region = props.forceRegion ?? useParams().region;
+
+  const activeStrap = getActiveStrap();
+
+  // strap
+  useEffect(() => {
+    const redHeader = document.querySelector(".header-red");
+    
+    if (activeStrap) {
+      const initBannerHeight = document.querySelector(".nav-strap").clientHeight;
+      redHeader.style.top = initBannerHeight + "px";
+
+      window.addEventListener("scroll", function () {
+        const scrollPosition = window.scrollY;
+        const bannerHeight = initBannerHeight; 
+
+        if (scrollPosition >= bannerHeight) {
+          redHeader.style.top = "0px";
+        } else {
+          // Banner is still partially visible, calculate position
+          // This creates a smooth transition as you scroll
+          const newPosition = bannerHeight - scrollPosition;
+          redHeader.style.top = newPosition + "px";
+        }
+      });
+    }
+
+    return () => {
+      window.removeEventListener("scroll", function () {});
+    };
+  }, []);
 
   //droupdown
   var elements = document.querySelectorAll(".has-dropdown > a");
@@ -26,12 +57,16 @@ const HeaderTwo = (props) => {
     <ImageFb
       className="logo"
       src={`/assets/images/logo/${
-        region && REGIONS.includes(region) ? region : HOLIDAYS.isWinter
+        region && REGIONS.includes(region)
+          ? region
+          : HOLIDAYS.isWinter
           ? "logo-xmas"
           : "logo"
       }.webp`}
       fallback={`/assets/images/logo/${
-        region && REGIONS.includes(region) ? region : HOLIDAYS.isWinter
+        region && REGIONS.includes(region)
+          ? region
+          : HOLIDAYS.isWinter
           ? "logo-xmas"
           : "logo"
       }.jpg`}
@@ -42,7 +77,9 @@ const HeaderTwo = (props) => {
   return (
     <Fragment>
       <header
-        className={`header-area formobile-menu header--transparent default-color}`}
+        className={`header-area formobile-menu header--transparent default-color ${
+          activeStrap && "m--25"
+        }`}
       >
         <div
           className={(isMenuOpened && "menu-open") + " header-wrapper"}

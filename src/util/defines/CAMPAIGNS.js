@@ -8,32 +8,43 @@ export const CAMPAIGNS = [
     key: "membership_month_march",
     modal: {
       active: isTodayInRange("03-04", "03-31"),
-      title: "Join our MMM campaign",
-      description: `Want to travel in Netherlands and also go on an event for absolutely FREE?
-        
-        All members of BGSNL can win 2 round-trip train tickets and 2 event tickets of their choice from BGSNL!
+      title: "Join March Membership Month",
+      description: `Want to travel across the Netherlands and attend an event for FREE?
 
-        Winners will be drawn from each city!
+All BGSNL members have a chance to win 2 round-trip train tickets and 2 event tickets of their choice from BGSNL!
 
-        How to participate?
+Winners will be selected from each city!
 
-	    1.	You must have an active an paid membership for any of our cities
-	    2.	You must have followed our Event Calendar that can be found in the list of future events
-
-        Winners will be announced around the start of April. Good luck!
-        `,
+How to participate:
+1.⁠ ⁠You must have an active and paid membership for any of our cities.
+2.⁠ ⁠You must follow our Event Calendar, which can be found in the list of upcoming events.
+Winners will be announced at the beginning of April. Good luck!
+`,
       images: [
         "/assets/images/campaigns/mmm/cover.png",
         // "/assets/images/campaigns/mmm/award.png",
       ],
       links: [
-        { name: "Validate", href: "/user", isExternal: false },
+        { name: "Join", href: "/user", isExternal: false },
         { name: "Explain", href: "instagram.com", isExternal: true },
       ],
+      sponsors: [
+        {
+          image: "/assets/images/brand/brand-07.png",
+          link: "https://domakin.nl/",
+        },
+      ],
+    },
+    navStrap: {
+      active: isTodayInRange("03-04", "03-31"),
+      // one liner please
+      title: "March is Membership Month - join and win!",
+      modal: "membership_month_march",
+      links: [{ name: "", href: "", isExternal: false }],
     },
     news: {
       active: isTodayInRange("03-04", "03-31"),
-      title: "Join our MMM campaign",
+      title: "March is Membership Month",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
       image: "/assets/images/campaigns/mmm/cover.png",
@@ -41,18 +52,32 @@ export const CAMPAIGNS = [
     },
     banner: {
       active: isTodayInRange("03-04", "03-31"),
-      title: "Join our MMM campaign",
+      title: "Join March Membership Month",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
       image: "",
       links: [
-        { name: "Validate", href: "/user", isExternal: false },
+        { name: "Join", href: "/user", isExternal: false },
         { name: "Explain", href: "instagram.com", isExternal: true },
       ],
     },
     userAction: {
       active: isTodayInRange("03-04", "03-31"),
-      component: <ValidateCalendarSubscription/>
+      component: <ValidateCalendarSubscription />,
     },
   },
 ];
+
+export const getActiveStrap = () => {
+  const activeCampaign = CAMPAIGNS.find(
+    (campaign) => campaign?.navStrap?.active
+  );
+
+  const activeStrap = activeCampaign?.navStrap ?? null;
+
+  if (activeStrap) {
+    return activeStrap;
+  } else {
+    return null;
+  }
+};
