@@ -102,6 +102,7 @@ const CampaignLayout = ({ children }) => {
                     <Link
                       key={i}
                       to={link.href}
+                      onClick={() => closeModal(campaign.key)}
                       className={`center_text rn-button-style--2 rn-btn-solid-green`}
                     >
                       {link.name}
