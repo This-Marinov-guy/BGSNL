@@ -52,8 +52,8 @@
   }
 
   @media #{$sm-layout} {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
   }
 }
 
@@ -831,7 +831,11 @@
   z-index: 9999;
 
   @media #{$sm-layout} {
-    font-size: 14px;
+    font-size: 16px;
+  }
+
+  @media only screen and (max-width: 355px) {
+    font-size: 12px;
   }
 
   a {
