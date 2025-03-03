@@ -43,7 +43,19 @@ const teamMembers = [
         url: "https://www.linkedin.com/in/kaloyan-kulov/",
       },
     ],
-  }
+  },
+  {
+    id: 4,
+    name: "Ivelina Yanachkova",
+    title: "UI/UX Designer",
+    imgSrc: "/assets/images/developers/ivelina.jpeg",
+    socialLinks: [
+      {
+        platform: "linkedin",
+        url: "https://www.linkedin.com/in/ivelina-yanachkova-44718b22a",
+      },
+    ],
+  },
 ];
 
 const Devs = () => {
