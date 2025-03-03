@@ -86,9 +86,9 @@ const ValidateCalendarSubscription = (props) => {
             >
               <span className="">Submit</span>
             </button>
-            <Link to="" className="rn-button-style--2 rn-btn-green center_text">
+            <a href='https://www.instagram.com/p/DGvu4Dftnwg' target="_blank" rel="noreferrer" className="rn-button-style--2 rn-btn-green center_text">
               <span className="">Explain</span>
-            </Link>
+            </a>
           </div>
         )}
       </div>

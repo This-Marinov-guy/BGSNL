@@ -7,7 +7,7 @@ export const CAMPAIGNS = [
     name: "Membership Month March",
     key: "membership_month_march",
     modal: {
-      active: isTodayInRange("03-04", "03-31"),
+      active: isTodayInRange("03-03", "03-31"),
       title: "Join March Membership Month",
       description: `Want to travel across the Netherlands and attend an event for FREE?
 
@@ -26,7 +26,11 @@ Winners will be announced at the beginning of April. Good luck!
       ],
       links: [
         { name: "Join", href: "/user", isExternal: false },
-        { name: "Explain", href: "instagram.com", isExternal: true },
+        {
+          name: "Explain",
+          href: "https://www.instagram.com/p/DGvu4Dftnwg",
+          isExternal: true,
+        },
       ],
       sponsors: [
         {
@@ -36,33 +40,43 @@ Winners will be announced at the beginning of April. Good luck!
       ],
     },
     navStrap: {
-      active: isTodayInRange("03-04", "03-31"),
+      active: isTodayInRange("03-03", "03-31"),
       // one liner please
       title: "March is Membership Month - join and win!",
       modal: "membership_month_march",
       links: [{ name: "", href: "", isExternal: false }],
     },
     news: {
-      active: isTodayInRange("03-04", "03-31"),
+      active: isTodayInRange("03-03", "03-31"),
       title: "March is Membership Month",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
       image: "/assets/images/campaigns/mmm/cover.png",
-      links: [{ name: "", href: "", isExternal: false }],
+      links: [
+        {
+          name: "Learn more",
+          href: "https://www.instagram.com/p/DGvu4Dftnwg",
+          isExternal: false,
+        },
+      ],
     },
     banner: {
-      active: isTodayInRange("03-04", "03-31"),
+      active: isTodayInRange("03-03", "03-31"),
       title: "Join March Membership Month",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
       image: "",
       links: [
         { name: "Join", href: "/user", isExternal: false },
-        { name: "Explain", href: "instagram.com", isExternal: true },
+        {
+          name: "Explain",
+          href: "https://www.instagram.com/p/DGvu4Dftnwg",
+          isExternal: true,
+        },
       ],
     },
     userAction: {
-      active: isTodayInRange("03-04", "03-31"),
+      active: isTodayInRange("03-03", "03-31"),
       component: <ValidateCalendarSubscription />,
     },
   },
