@@ -18,6 +18,8 @@ Winners will be selected from each city!
 How to participate:
 1.⁠ ⁠You must have an active and paid membership for any of our cities.
 2.⁠ ⁠You must follow our Event Calendar, which can be found in the list of upcoming events.
+3. Leave a comment on the BGSNL campaign's Instagram post with a tag of a buddy you want to travel with. 
+
 Winners will be announced at the beginning of April. Good luck!
 `,
       images: [
