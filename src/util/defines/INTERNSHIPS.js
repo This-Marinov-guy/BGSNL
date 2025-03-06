@@ -104,7 +104,7 @@ export const INTERNSHIPS_LIST = [
       "Ability to work onsite (applies for Real Estate Agent only)",
     ],
     contactMail: `domakin.nl@gmail.com`,
-    website: "domakin.nl",
+    website: "https://www.domakin.nl",
   },
   {
     logo: "https://careers.silverstar.bg/wp-content/uploads/2024/03/channels4_profile.jpg.webp",
