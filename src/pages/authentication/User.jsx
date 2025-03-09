@@ -1,5 +1,10 @@
 import React, { useState, useEffect, Fragment, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { useSelector, useDispatch } from "react-redux";
 import { FiChevronUp, FiArrowRight } from "react-icons/fi";
@@ -20,7 +25,7 @@ import UserCard from "../../elements/ui/cards/UserCard";
 import BirthdayBanner from "../../elements/banners/BirthdayBanner";
 import Christmas from "../../elements/special/Christmas";
 import { isProd } from "../../util/functions/helpers";
-import { BGSNL_INTERNSHIP_MAIL_SUBJECT } from "../../util/defines/common";
+import { Paginator } from "primereact/paginator";
 import NewsList from "../../elements/ui/lists/NewsList";
 import {
   ACCOUNT_TABS,
@@ -31,14 +36,40 @@ import {
   USER_STATUSES,
 } from "../../util/defines/enum";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
+import InternshipCard from "../../elements/ui/cards/InternshipCard";
 
 const User = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
   const [tab, setTab] = useState(
     window.location.hash.substring(1).split("?")[0]
   );
+
+  const INIT_ITEMS_PER_PAGE = 6;
+  const [first, setFirst] = useState(
+    (searchParams.get("page") ? searchParams.get("page") - 1 : 0) *
+      INIT_ITEMS_PER_PAGE
+  );
+  const [rows, setRows] = useState(INIT_ITEMS_PER_PAGE);
+
+  const onPageChange = (event) => {
+    setFirst(event.first);
+    setRows(event.rows);
+
+    const currentHash = window.location.hash; // e.g., "#internships"
+
+    setSearchParams({ page: event.page + 1 });
+
+    if (currentHash) {
+      setTimeout(() => {
+        window.location.hash = currentHash;
+      }, 0);
+    }
+  };
+
   const [disableScroll, setDisableScroll] = useState(false);
 
   const { sendRequest } = useHttpClient();
@@ -134,7 +165,7 @@ const User = () => {
     case INTERNSHIPS:
       menuContent = (
         <Fragment>
-          <div className="container">
+          <div style={{ padding: "2%" }}>
             <div className="row">
               <div className="col-lg-12">
                 <div className="mb--30 mb_sm--0">
@@ -144,90 +175,21 @@ const User = () => {
                     positions. Check the section frequently as we aim to add
                     exclusive internships for our members only!
                   </p>
-                  {INTERNSHIPS_LIST.map((i, index) => {
-                    return (
-                      <div key={index} className="row mt--20">
-                        <div className="col-lg-8 col-md-6 col-12 reading">
-                          <h3>Company: </h3>
-                          <p>{i.company}</p>
-                          <h3>Specialty: </h3>
-                          <p>{i.specialty}</p>
-                          <h3>Location: </h3>
-                          <p>{i.location}</p>
-                          <h3>Duration: </h3>
-                          <p>{i.duration}</p>
-                          {i.bonuses.length > 0 && (
-                            <>
-                              <h3>Bonuses: </h3>
-                              <p>{i.bonuses.join(" | ")}</p>
-                            </>
-                          )}
-
-                          {i.requirements.length > 0 && (
-                            <>
-                              <h3>Requirements: </h3>
-                              <p>{i.requirements.join(" | ")}</p>
-                            </>
-                          )}
-                          <h3>Description: </h3>
-                          <p>{i.description}</p>
-                        </div>
-                        <div
-                          className="col-lg-4 col-md-6 col-12"
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          {i.logo &&
-                            (i.website ? (
-                              <a
-                                className="center_div_col"
-                                href={i.website}
-                                target="_blank"
-                                alt="website"
-                                rel="noreferrer"
-                              >
-                                <img
-                                  src={i.logo}
-                                  className={
-                                    "responsive_img " + i.logoClass ?? ""
-                                  }
-                                  style={{ maxWidth: "300px" }}
-                                  alt="Company Logo"
-                                ></img>
-                                <small>*Click and go to the website</small>
-                              </a>
-                            ) : (
-                              <img
-                                src={i.logo}
-                                className={
-                                  "responsive_img " + i.logoClass ?? ""
-                                }
-                                style={{ maxWidth: "300px" }}
-                                alt="Company Logo"
-                              ></img>
-                            ))}
-                          <a
-                            href={
-                              i.contactMail
-                                ? `mailto:${i.contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`
-                                : i.website
-                            }
-                            target="_blank"
-                            className="mt--20"
-                            style={{ fontSize: "30px" }}
-                            rel="noreferrer"
-                          >
-                            <span>Contact internship</span>
-                            <FiArrowRight />
-                          </a>
-                        </div>
-                        <hr />
-                      </div>
-                    );
-                  })}
+                  <div className="d-flex justify-content-between flex-wrap gap-3">
+                    {INTERNSHIPS_LIST.slice(first, first + rows).map(
+                      (i, index) => {
+                        return <InternshipCard key={index} internship={i} />;
+                      }
+                    )}
+                  </div>
+                  <Paginator
+                    className="col-12"
+                    first={first}
+                    rows={rows}
+                    totalRecords={INTERNSHIPS_LIST.length ?? 0}
+                    rowsPerPageOptions={[INIT_ITEMS_PER_PAGE, 10, 15]}
+                    onPageChange={onPageChange}
+                  />
                 </div>
               </div>
             </div>

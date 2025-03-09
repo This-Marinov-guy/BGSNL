@@ -385,3 +385,14 @@ label {
 .p-progress-spinner {
   margin: 0 !important;
 }
+
+.dot {
+  border-radius: 50%;
+  height: 0.3em;
+  width: 0.3em;
+}
+
+.text-break {
+  white-space: normal; 
+  word-wrap: break-word;
+}

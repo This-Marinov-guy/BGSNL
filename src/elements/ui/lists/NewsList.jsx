@@ -25,7 +25,7 @@ const NewsList = () => {
       image: "/assets/images/news/internships.jpg",
       title: "BGSNL Internships",
       description:
-        "Fancy am entry job or an internship? Check out what are organization has to offer in our member-exclusive section and sign for your area of interest!",
+        "Fancy an entry job or an internship? Check out what are organization has to offer in our member-exclusive section and sign for your area of interest!",
       links: [{ name: "", href: "/user#internships", isExternal: false }],
       action: ``,
       isForMember: false,

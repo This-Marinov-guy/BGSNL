@@ -76,7 +76,8 @@
 }
 
 .m--a {
-  margin: auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .pl--0 {
@@ -473,10 +474,6 @@
   }
 }
 
-.m--a {
-  margin: auto !important;
-}
-
 .center_text {
   text-align: center !important;
 }
@@ -664,8 +661,9 @@
 }
 
 .responsive_img {
-  height: auto;
-  width: auto;
+  margin: 5px;
+  max-height: 4em;
+  max-width: 6em;
   object-fit: contain;
   @media #{$md-layout} {
     max-height: 5em;

@@ -160,6 +160,28 @@ a {
       }
     }
 
+    &.rn-btn-solid-red {
+      border: 2px solid $theme-color-3;
+      background: $theme-color-3;
+      color: #fff;
+      &:hover {
+        border: 2px solid $theme-color-3;
+        background: $theme-color-3;
+        color: #fff;
+      }
+    }
+
+    &.rn-btn-reverse-red {
+      border: 2px solid $theme-color-3;
+      background: $theme-color-3;
+      color: #fff;
+      &:hover {
+        border: 2px solid $theme-color-3;
+        background: #fff;
+        color: $theme-color-3;
+      }
+    }
+
     &.border-opacity-half {
       border-color: rgba(31, 31, 37, 0.1);
     }
@@ -459,7 +481,7 @@ a {
   h4 {
     text-align: center;
   }
-  
+
   &.card-active {
     background-color: $label-color;
     border-color: $heading-color;
@@ -470,5 +492,13 @@ a {
     border-color: $heading-color;
     cursor: pointer;
     transition: all 0.3s ease;
+  }
+}
+
+.intern-card {
+  padding: 8px;
+
+  @media #{$sm-layout} {
+    margin: 10px auto;
   }
 }

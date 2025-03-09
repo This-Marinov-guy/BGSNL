@@ -6,6 +6,8 @@ import {
 import { decryptData } from "../../util/functions/helpers";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import CardInputs from "../../elements/inputs/common/CardInputs";
+import InternshipCard from "../../elements/ui/cards/InternshipCard";
+import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 
 const TEST = [
   {
@@ -75,19 +77,18 @@ const BloggerPost = ({ blogId, postId }) => {
   }
 
   return (
-    <div className="contaner" >
+    <div className="contaner">
       <h1 dangerouslySetInnerHTML={{ __html: postData.title.rendered }} />
-      {postData._embedded &&
-        postData._embedded["wp:featuredmedia"] && (
-          <img
-            src={postData._embedded["wp:featuredmedia"][0].source_url}
-            alt={
-              postData._embedded["wp:featuredmedia"][0].alt_text ||
-              "Featured image"
-            }
-            style={{ maxWidth: "100%", height: "auto" }}
-          />
-        )}
+      {postData._embedded && postData._embedded["wp:featuredmedia"] && (
+        <img
+          src={postData._embedded["wp:featuredmedia"][0].source_url}
+          alt={
+            postData._embedded["wp:featuredmedia"][0].alt_text ||
+            "Featured image"
+          }
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      )}
       <div
         className="post-content wp-content"
         dangerouslySetInnerHTML={{
@@ -99,45 +100,14 @@ const BloggerPost = ({ blogId, postId }) => {
 };
 
 const TicketComponent = () => {
-  const [ticketDataUrl, setTicketDataUrl] = useState(null);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const generateTicket = async () => {
-      const ticketImage =
-        "https://res.cloudinary.com/dqwcx5zyh/image/upload/v1731839045/groningen_Card%20Players_28%20Nov%206:30%20pm/ticket.jpg"; // Update this to the correct path
-      const name = "John";
-      const surname = "Doe";
-      const qrLink = createQrCodeCheckGuest({
-        eventId: "66f1337cd435689ec6ec0f4c",
-        quantity: 2,
-      });
-
-      try {
-        const { ticketUrl } = await createCustomerTicket(
-          ticketImage,
-          name,
-          surname,
-          "#faf9f6",
-          qrLink,
-          true,
-          2
-        );
-        setTicketDataUrl(ticketUrl);
-      } catch (err) {
-        setError(err);
-      }
-    };
-
-    generateTicket();
-  }, []);
-
   return (
-    <>
-      <div className="container">
-        <CardInputs items={TEST} />
+    <div style={{ padding: "20px" }}>
+      <div className="d-flex justify-content-between flex-wrap gap-3">
+        <InternshipCard internship={INTERNSHIPS_LIST[0]} />
+        <InternshipCard internship={INTERNSHIPS_LIST[0]} />
+        <InternshipCard internship={INTERNSHIPS_LIST[0]} />
       </div>
-    </>
+    </div>
   );
 };
 

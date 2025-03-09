@@ -91,6 +91,16 @@
   border-image-repeat: stretch; 
 }
 
+.border-1 {
+  border: 1px solid #000000;
+  border-radius: 10px;
+}
+
+.bg-1 {
+  background-color: #D9D9D9;
+  border-radius: 10px;
+}
+
 .team_img {
   margin: 70px 0px;
   object-fit: cover;
