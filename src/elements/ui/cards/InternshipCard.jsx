@@ -23,7 +23,7 @@ const InternshipCard = (props) => {
     >
       <div
         style={{ width: "20em" }}
-        className="d-flex justify-content-between mb--10"
+        className="d-flex justify-content-between mb--10 text-right"
       >
         <img
           src={
@@ -37,7 +37,7 @@ const InternshipCard = (props) => {
           <h3>{company}</h3>
           <div className="d-flex align-items-center justify-content-evenly g--3">
             <div style={{ backgroundColor: "green" }} className="dot" />
-            <h4 className="mt--10 ">{specialty}</h4>
+            <h5 className="mt--10 text-break" style={{maxWidth: '8em'}}>{specialty}</h5>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@ const InternshipCard = (props) => {
           <p style={{ padding: "10px", minWidth: '5em' }}>{location}</p>
         </div>
 
-        <div className="bg-1 text-break">
+        <div className="bg-1 text-break ">
           <p style={{ padding: "10px", minWidth: '7em' }}>
             DURATION:
             <br /> {duration}

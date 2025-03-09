@@ -662,8 +662,8 @@
 
 .responsive_img {
   margin: 5px;
-  max-height: 4em;
-  max-width: 6em;
+  max-height: 3em;
+  max-width: 4em;
   object-fit: contain;
   @media #{$md-layout} {
     max-height: 5em;

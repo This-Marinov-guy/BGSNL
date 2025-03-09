@@ -48,7 +48,7 @@ const User = () => {
     window.location.hash.substring(1).split("?")[0]
   );
 
-  const INIT_ITEMS_PER_PAGE = 6;
+  const INIT_ITEMS_PER_PAGE = 3;
   const [first, setFirst] = useState(
     (searchParams.get("page") ? searchParams.get("page") - 1 : 0) *
       INIT_ITEMS_PER_PAGE
