@@ -12,7 +12,7 @@ const teamMembers = [
     id: 1,
     name: "Vladislav Marinov",
     title: "Web Developer",
-    imgSrc: "/assets/images/developers/vladislav.png",
+    imgSrc: "/assets/images/developers/vladislav.jpg",
     socialLinks: [
       {
         platform: "linkedin",
