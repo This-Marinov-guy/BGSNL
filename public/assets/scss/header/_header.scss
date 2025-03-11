@@ -828,7 +828,7 @@
   background-color: $label-color;
   width: 100%;
   height: auto;
-  z-index: 9999;
+  z-index: 101;
 
   @media #{$sm-layout} {
     font-size: 16px;
