@@ -61,6 +61,7 @@ Winners will be announced at the beginning of April. Good luck!
           isExternal: false,
         },
       ],
+      isForMember: true,
     },
     banner: {
       active: isTodayInRange("03-03", "03-31"),

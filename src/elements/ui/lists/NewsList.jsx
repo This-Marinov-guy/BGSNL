@@ -28,7 +28,7 @@ const NewsList = () => {
         "Fancy an entry job or an internship? Check out what are organization has to offer in our member-exclusive section and sign for your area of interest!",
       links: [{ name: "", href: "/user#internships", isExternal: false }],
       action: ``,
-      isForMember: false,
+      isForMember: true,
     },
     {
       image:
@@ -38,7 +38,7 @@ const NewsList = () => {
         "Want to help but do not how? Our Support system is now live with GoFundMe integration!",
       links: [{ name: "", href: "", isExternal: false }],
       action: () => dispatch(showModal(DONATION_MODAL)),
-      isForMember: false,
+      isForMember: true,
     },
     {
       image: "/assets/images/profile/from-bg-to-nl/1.webp",
@@ -60,7 +60,7 @@ const NewsList = () => {
       description: "Membership 2024-2025 are officially open.",
       links: [{ name: "", href: "/signup", isExternal: false }],
       action: ``,
-      isForMember: false,
+      isForMember: true,
     },
     {
       image: "/assets/images/news/designer.png",
