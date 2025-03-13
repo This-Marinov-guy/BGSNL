@@ -697,7 +697,7 @@ const SignUp = (props) => {
                       </div>
                       {/* <div
                       style={{ borderWidth: "30px" }}
-                      className="col-lg-6 col-md-6 col-12 mt--60 mb--60 center_div team_member_border-1"
+                      className="col-lg-6 col-md-6 col-12 mt--60 mb--60 center_div team_member_border_1"
                     >
                       <div className="rn-form-group">
                         <h3 className="center_text">

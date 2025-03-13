@@ -29,7 +29,7 @@ const Team = () => {
     //             <div
     //               className={
     //                 value.id % 2 !== 0
-    //                   ? "team_member_border-1"
+    //                   ? "team_member_border_1"
     //                   : "team_member_border_2"
     //               }
     //             >
