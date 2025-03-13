@@ -19,7 +19,7 @@ const MarketingForm = (props) => {
     return (
         <div className="inner" style={{ padding: "2%" }}>
             <form id="form">
-                <div className="row container team_member_border-3 mt--40">
+                <div className="row container team_member_border_1 mt--40">
                     <h3 className="center_text">
                         Please fill the form for marketing purposes
                     </h3>

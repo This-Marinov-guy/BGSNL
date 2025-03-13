@@ -10,7 +10,7 @@ const TeamTwo = (props) => {
     // return (
     //     <Fragment>
     //         {(REGION_COMMITTEE_MEMBERS[region] && props.teamPhoto) && <div style={{ margin: 'auto', width: '80%' }} className='center_div'>
-    //             <ImageFb className='team_member_border-2 mb--80' src={`/assets/images/team/${region}/${props.folder}/full.webp`} fallback={`/assets/images/team/${props.folder}/com-full.jpg`} alt='Committee' />
+    //             <ImageFb className='team_member_border_2 mb--80' src={`/assets/images/team/${region}/${props.folder}/full.webp`} fallback={`/assets/images/team/${props.folder}/com-full.jpg`} alt='Committee' />
     //         </div>}
     //         <div className='container committee_container'>
     //             {REGION_COMMITTEE_MEMBERS[region] ? props.target.map((value) => {

@@ -13,47 +13,27 @@
   justify-content: space-between;
 }
 
-.team_member_border-1 {
+.team_member_border_1 {
   padding: 1em;
   // border: 37px solid transparent;
-  border-image-source: url(/public/assets/images/borders/border-1.webp);
+  border-image-source: url(/public/assets/images/borders/border-red.webp);
   border-image-slice: 181 188 170 181;
   border-image-width: 50px 50px 50px 50px;
   border-image-outset: 0px 0px 0px 0px;
   border-image-repeat: stretch stretch;
 }
 
-.team_member_border-2 {
+.team_member_border_2 {
   padding: 1em;
   // border: 37px solid transparent;
-  border-image-source: url(/public/assets/images/borders/border-2.webp);
+  border-image-source: url(/public/assets/images/borders/border-green.webp);
   border-image-slice: 162 162 166 159;
   border-image-width: 50px 50px 50px 50px;
   border-image-outset: 0px 0px 0px 0px;
   border-image-repeat: stretch stretch;
 }
 
-.team_member_border-3 {
-  padding: 1em;
-  // border: 37px solid transparent;
-  border-image-source: url(/public/assets/images/borders/border-3.webp);
-  border-image-slice: 162 162 166 159;
-  border-image-width: 50px 50px 50px 50px;
-  border-image-outset: 0px 0px 0px 0px;
-  border-image-repeat: stretch stretch;
-}
-
-.team_member_border-4 {
-  padding: 1em;
-  // border: 37px solid transparent;
-  border-image-source: url(/public/assets/images/borders/border-4.webp);
-  border-image-slice: 162 162 166 159;
-  border-image-width: 50px 50px 50px 50px;
-  border-image-outset: 0px 0px 0px 0px;
-  border-image-repeat: stretch stretch;
-}
-
-.team_member_border-5 {
+.team_member_border_5 {
   padding: 80px 0 !important;
   border-image: url(/public/assets/images/borders/profile-border.png);
   border-image-slice: 162 175 106 900;

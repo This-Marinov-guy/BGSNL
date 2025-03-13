@@ -69,7 +69,7 @@ const ArticlesPage = () => {
         <div className="row g--5">
           <img
             src={firstArticle.thumbnail}
-            className="col main team_member_border-3"
+            className="col main team_member_border_1"
           />
           <div className="col">
             <h3 className="mb--20">{firstArticle.title}</h3>

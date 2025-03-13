@@ -30,7 +30,7 @@ const Team = () => {
     //               className={
     //                 value.id % 2 !== 0
     //                   ? "team_member_border-1"
-    //                   : "team_member_border-2"
+    //                   : "team_member_border_2"
     //               }
     //             >
     //               <h2 className="title">{value.name}</h2>

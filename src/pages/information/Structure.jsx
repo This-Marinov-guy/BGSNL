@@ -99,8 +99,8 @@ const Structure = () => {
                     style={{ width: "400px", padding: "40px" }}
                     className={
                       index % 2 !== 0
-                        ? "team_member_border-3 mb--20"
-                        : "team_member_border-4 mb--20"
+                        ? "team_member_border_1 mb--20"
+                        : "team_member_border_2 mb--20"
                     }
                     preview
                     src={`/assets/images/team/${img.id}.jpg`}

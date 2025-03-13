@@ -16,7 +16,7 @@ const GREETING = {
 const Greeting = () => {
     return (
         <div
-            className="container team_member_border-3 greeting_card mt--100 mb--100"
+            className="container team_member_border_1 greeting_card mt--100 mb--100"
         >
             <LazyLoadImage className="card_img" src={GREETING.img} alt='News' />
             <div className="card_text">
