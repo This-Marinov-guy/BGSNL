@@ -51,10 +51,10 @@ module.exports = {
           from: paths.public + '/assets',
           to: 'assets',
         },
-        {
-          from: paths.public + '/assets/js/main.js',
-          to: paths.build + '/static/assets/js/main.js',
-        },
+        // {
+        //   from: paths.public + '/assets/js/main.js',
+        //   to: paths.build + '/static/assets/js/main.js',
+        // },
         {
           from: paths.public + '/manifest.json',
           to: paths.build + '/static/manifest.json',
