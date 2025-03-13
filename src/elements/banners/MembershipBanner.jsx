@@ -6,7 +6,7 @@ const MembershipBanner = ({border = 3}) => {
     const routePath = location.pathname;
 
     return (
-        <div className={`team_member_border-${border} center_section`} style={{ maxWidth: '500px', margin: '40px auto' }} >
+        <div className={`team_member_border_${border} center_section`} style={{ maxWidth: '500px', margin: '40px auto' }} >
             <p className="information center_text">
                 You do not want to miss a discount, fill the info manually or miss a ticket for your collection - become a member to enjoy these benefits!
             </p>

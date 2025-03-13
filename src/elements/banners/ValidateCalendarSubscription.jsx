@@ -49,7 +49,7 @@ const ValidateCalendarSubscription = (props) => {
 
   return (
     <div
-      className={`team_member_border-${border} row align-items-center container`}
+      className={`team_member_border_${border} row align-items-center container`}
       style={{
         margin: "20px auto",
       }}

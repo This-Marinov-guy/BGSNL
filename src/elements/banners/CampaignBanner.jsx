@@ -17,7 +17,7 @@ const CampaignBanner = (props) => {
 
   return (
     <div
-      className={`team_member_border-${border} center_section`}
+      className={`team_member_border_${border} center_section`}
       style={{ margin: "mb--20 auto" }}
     >
       <p className="center_text">{campaign.banner.description}</p>
