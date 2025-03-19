@@ -1,12 +1,46 @@
 export const INTERNSHIPS_LIST = [
   {
+    logo: "https://www.pwc.bg/etc.clientlibs/pwc/clientlibs/rebrand-clientlibs/components-colors/resources/images/slim-header-v2/PwC-logo.svg",
+    company: "PwC Bulgaria",
+    specialty: "Junior Sustainability Audit Analyst",
+    location: "Sofia, Bulgaria",
+    duration: "Full-time",
+    description:
+      "Conduct financial and sustainability audits for the largest companies in Europe, ensuring compliance with ESRS, IFRS, and other reporting standards.",
+    bonuses:
+      "Experience in sustainability auditing and exposure to major European corporations.",
+    requirements:
+      "Degree in Accounting, Finance, Sustainability, or related field, Strong analytical and problem-solving abilities, Excellent communication and teamwork skills",
+    languages: "Bulgarian, English",
+    contactMail: "bg_pwc@pwc.com",
+    website:
+      "https://jobs-cee.pwc.com/ce/en/job/589706WD/Junior-Consultant-in-Audit-Finance",
+  },
+  {
+    logo: "https://www.pwc.bg/etc.clientlibs/pwc/clientlibs/rebrand-clientlibs/components-colors/resources/images/slim-header-v2/PwC-logo.svg",
+    company: "PwC Bulgaria",
+    specialty: "Junior Consultant in Audit & Finance",
+    location: "Sofia, Bulgaria",
+    duration: "Full-time",
+    description:
+      "Perform financial analysis and data collection, including reviewing financial statements and drafting recommendations for improvements. Develop skills in strategic thinking by assisting clients in aligning their financial operations with their business objectives.",
+    bonuses:
+      "Gain valuable experience and expand your professional network by working with diverse clients across various industries.",
+    requirements:
+      "A solid understanding of accounting principles and practices, Previous experience in auditing or a strong interest in developing auditing skills.",
+    languages: "Bulgarian, English",
+    contactMail: "bg_pwc@pwc.com",
+    website:
+      "https://jobs-cee.pwc.com/ce/en/job/589706WD/Junior-Consultant-in-Audit-Finance",
+  },
+  {
     logo: "https://www.bgstart.nl/bg/wp-content/uploads/2019/01/favicon.png",
     company: "BG Start",
     specialty: "Accountancy",
     location: "Amsterdam (Hybrid)",
     duration: "Flexible",
     description: `Assisting with data entry, processing, and recording transactions. Financial Reporting: Helping prepare financial reports, budgets, and invoices. Administrative Support: Assisting with audits, fact-checking, and maintaining financial documents.`,
-    bonuses: "Experience & networking",
+    bonuses: "Experience & networking, Valuable mentoring opportunities",
     requirements: "Accounting knowledge, auditing experience",
     languages: "Bulgarian, English, Dutch (advantage)",
     contactMail: "lschroot@bgstart.nl",
