@@ -1,5 +1,20 @@
 export const INTERNSHIPS_LIST = [
   {
+    logo: "https://neterra.net/images/upload/brands/logo-neterra_1.svg",
+    company: "Neterra",
+    specialty: "Junior Product Intern",
+    location: "Sofia, Bulgaria / Hybrid",
+    duration: "3/6 months",
+    description:
+      "As a Product Intern, you will play a key role in driving our quantitative and market analysis efforts. You’ll work closely with experienced professionals in a collaborative environment where your contributions will make a real impact",
+    bonuses: "Meaningful, hands-on experience, ",
+    requirements:
+      "TBD, depending on your skillset and background, diverse team in a global company and an opportunity for career advancement ",
+    languages: "Bulgarian, English",
+    contactMail: "cv@neterra.net",
+    website: "https://neterra.net/",
+  },
+  {
     logo: "https://www.pwc.bg/etc.clientlibs/pwc/clientlibs/rebrand-clientlibs/components-colors/resources/images/slim-header-v2/PwC-logo.svg",
     company: "PwC Bulgaria",
     specialty: "Junior Sustainability Audit Analyst",
@@ -17,6 +32,19 @@ export const INTERNSHIPS_LIST = [
       "https://jobs-cee.pwc.com/ce/en/job/589706WD/Junior-Consultant-in-Audit-Finance",
   },
   {
+    logo: "https://www.bgstart.nl/bg/wp-content/uploads/2019/01/favicon.png",
+    company: "BG Start",
+    specialty: "Accountancy",
+    location: "Amsterdam (Hybrid)",
+    duration: "Flexible",
+    description: `Assisting with data entry, processing, and recording transactions. Financial Reporting: Helping prepare financial reports, budgets, and invoices. Administrative Support: Assisting with audits, fact-checking, and maintaining financial documents.`,
+    bonuses: "Experience & networking, Valuable mentoring opportunities",
+    requirements: "Accounting knowledge, auditing experience",
+    languages: "Bulgarian, English, Dutch (advantage)",
+    contactMail: "lschroot@bgstart.nl",
+    website: "https://www.bgstart.nl",
+  },
+  {
     logo: "https://www.pwc.bg/etc.clientlibs/pwc/clientlibs/rebrand-clientlibs/components-colors/resources/images/slim-header-v2/PwC-logo.svg",
     company: "PwC Bulgaria",
     specialty: "Junior Consultant in Audit & Finance",
@@ -32,19 +60,6 @@ export const INTERNSHIPS_LIST = [
     contactMail: "bg_pwc@pwc.com",
     website:
       "https://jobs-cee.pwc.com/ce/en/job/589706WD/Junior-Consultant-in-Audit-Finance",
-  },
-  {
-    logo: "https://www.bgstart.nl/bg/wp-content/uploads/2019/01/favicon.png",
-    company: "BG Start",
-    specialty: "Accountancy",
-    location: "Amsterdam (Hybrid)",
-    duration: "Flexible",
-    description: `Assisting with data entry, processing, and recording transactions. Financial Reporting: Helping prepare financial reports, budgets, and invoices. Administrative Support: Assisting with audits, fact-checking, and maintaining financial documents.`,
-    bonuses: "Experience & networking, Valuable mentoring opportunities",
-    requirements: "Accounting knowledge, auditing experience",
-    languages: "Bulgarian, English, Dutch (advantage)",
-    contactMail: "lschroot@bgstart.nl",
-    website: "https://www.bgstart.nl",
   },
   {
     logo: "",
