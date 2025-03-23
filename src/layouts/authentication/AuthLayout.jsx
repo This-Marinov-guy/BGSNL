@@ -27,12 +27,12 @@ const AuthLayout = ({ children, access = [] }) => {
 
       if (!isAuth) {
         sessionStorage.setItem("prevUrl", routePath);
-        dispatch(
-          showNotification({
-            severity: "warn",
-            detail: "Please log in to your account to proceed to the page!",
-          })
-        );
+        // dispatch(
+        //   showNotification({
+        //     severity: "warn",
+        //     detail: "Please log in to your account to proceed to the page!",
+        //   })
+        // );
         setIsActive(false);
         setIsLoading(false);
         navigate("/login");
