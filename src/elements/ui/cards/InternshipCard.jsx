@@ -13,14 +13,13 @@ const InternshipCard = (props) => {
     description,
     bonuses,
     requirements,
-    contactMail,
+    contactMail = '',
+    applyLink = '',
     website,
   } = props.internship;
 
   return (
-    <div
-      className="col-lg-4 col-md-6 col-12 row border-1 intern-card mt--10"
-    >
+    <div className="col-lg-4 col-md-6 col-12 row border-1 intern-card mt--10">
       <div
         style={{ width: "20em" }}
         className="d-flex justify-content-between mb--10 text-right"
@@ -37,25 +36,27 @@ const InternshipCard = (props) => {
           <h3>{company}</h3>
           <div className="d-flex align-items-center justify-content-evenly g--3">
             <div style={{ backgroundColor: "green" }} className="dot" />
-            <h5 className="mt--10 text-break" style={{maxWidth: '8em'}}>{specialty}</h5>
+            <h5 className="mt--10 text-break" style={{ maxWidth: "8em" }}>
+              {specialty}
+            </h5>
           </div>
         </div>
       </div>
 
       <div className=" d-flex justify-content-evenly text-break g--2">
         <div className="bg-1">
-          <p style={{ padding: "10px", minWidth: '5em' }}>{location}</p>
+          <p style={{ padding: "10px", minWidth: "5em" }}>{location}</p>
         </div>
 
         <div className="bg-1 text-break ">
-          <p style={{ padding: "10px", minWidth: '7em' }}>
+          <p style={{ padding: "10px", minWidth: "7em" }}>
             DURATION:
             <br /> {duration}
           </p>
         </div>
 
         <div className="bg-1 text-break">
-          <p style={{ padding: "10px", minWidth: '5em' }}>{bonuses}</p>
+          <p style={{ padding: "10px", minWidth: "5em" }}>{bonuses}</p>
         </div>
       </div>
 
@@ -87,13 +88,25 @@ const InternshipCard = (props) => {
       </div>
 
       <div style={{ width: "100%" }}>
-        <a
-          href={`mailto:${contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`}
-          style={{ width: "100%", textAlign: "center" }}
-          className="rn-button-style--2 rn-btn-solid-red"
-        >
-          Contact Internship
-        </a>
+        {contactMail ? (
+          <a
+            href={`mailto:${contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`}
+            style={{ width: "100%", textAlign: "center" }}
+            className="rn-button-style--2 rn-btn-solid-red"
+          >
+            Contact Internship
+          </a>
+        ) : (
+          <a
+            href={applyLink}
+            target="_blank"
+            rel="noreferrer"
+            style={{ width: "100%", textAlign: "center" }}
+            className="rn-button-style--2 rn-btn-solid-red"
+          >
+            Apply for Internship
+          </a>
+        )}
       </div>
     </div>
   );

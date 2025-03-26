@@ -1,5 +1,24 @@
 export const INTERNSHIPS_LIST = [
   {
+    logo: "https://big4accountingfirms.com/wp-content/uploads/Deloitte.svg.png",
+    company: "Deloitte",
+    specialty: "Summer Business Camp",
+    location: "Sofia, Bulgaria",
+    duration: "16 - 27 June 2025",
+    description:
+      "A two-week internship program where participants explore business fields like audit, finance, tax, legal, consulting, and advisory through workshops, case studies, and networking with industry professionals.",
+    bonuses:
+      "Certificate of completion, networking opportunities, potential for a permanent employment offer.",
+    requirements:
+      "Second-year university students or above, fluent in Bulgarian and English, curious and eager to learn, available in Sofia for the internship duration.",
+    languages: "Bulgarian, English",
+    contactMail: "", 
+    applyLink:
+      "https://apply.deloittece.com/en_US/careers/ApplicationMethods?jobId=16533",
+    website:
+      "https://apply.deloittece.com/en_US/careers/JobDetail/Summer-Business-Camp/16533",
+  },
+  {
     logo: "https://neterra.net/images/upload/brands/logo-neterra_1.svg",
     company: "Neterra",
     specialty: "Junior Product Intern",
