@@ -366,6 +366,15 @@ label {
   color: #017363;
 }
 
+.p-dropdown-custom {
+  width: 100%;
+  border: 2px solid #aaa;
+  border-radius: 10px;
+  span {
+    justify-content: flex-start;
+  }
+}
+
 .phone_code {
   height: 1.5em;
   display: flex;
@@ -393,6 +402,6 @@ label {
 }
 
 .text-break {
-  white-space: normal; 
+  white-space: normal;
   word-wrap: break-word;
 }

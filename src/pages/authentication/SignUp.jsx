@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
+import { Dropdown } from "primereact/dropdown";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
 import {
   encryptData,
@@ -34,6 +35,11 @@ import {
 import { Calendar } from "../../elements/inputs/common/Calendar";
 import { showNotification } from "../../redux/notification";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import {
+  reorderUniversitiesByCode,
+  UNIVERSITIES_BY_CITY,
+} from "../../util/defines/UNIVERSITIES";
+import { render } from "react-dom";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -89,25 +95,35 @@ const schema = yup.object().shape({
   memberKey: yup.string(),
 });
 
+const stepConfig = [
+  {
+    label: "Region",
+  },
+  {
+    label: "Type",
+  },
+  {
+    label: "Details",
+  },
+  {
+    label: "Payment",
+  },
+];
+
+const groupedItemTemplate = (option) => {
+  return (
+    <div className="flex align-items-center">
+      <div>{option.label}</div>
+    </div>
+  );
+};
+
 const SignUp = (props) => {
   const { region } = useParams();
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
 
-  const stepConfig = [
-    {
-      label: "Region",
-    },
-    {
-      label: "Type",
-    },
-    {
-      label: "Details",
-    },
-    {
-      label: "Payment",
-    },
-  ];
+  const uniOptions = reorderUniversitiesByCode(UNIVERSITIES_BY_CITY, region);
 
   const handleSelectStep = (e) => {
     const newIndex = e.index;
@@ -199,7 +215,10 @@ const SignUp = (props) => {
                 </p>
               </div>
             </div>
-            <div className="d-flex flex-column flex-md-row justify-content-around service-one-wrapper center_div" style={{ gap: "20px" }}>
+            <div
+              className="d-flex flex-column flex-md-row justify-content-around service-one-wrapper center_div"
+              style={{ gap: "20px" }}
+            >
               {REGIONS_MEMBERSHIP_SPECIFICS.map((val, i) => (
                 <button
                   key={i}
@@ -480,11 +499,21 @@ const SignUp = (props) => {
                     </div>
                     <div className="row mt--40">
                       <div className="col-lg-6 col-md-12 col-12">
-                        <Field
-                          type="text"
+                        <Dropdown
+                          value={values.university}
+                          filter
+                          onChange={(e) => {
+                            setFieldValue("university", e.value);
+                          }}
+                          options={uniOptions}
                           name="university"
+                          className="p-dropdown-custom"
                           placeholder="State your University"
-                        ></Field>
+                          optionLabel="label"
+                          optionGroupLabel="label"
+                          optionGroupChildren="items"
+                          optionGroupTemplate={groupedItemTemplate}
+                        />
                         <ErrorMessage
                           className="error"
                           name="university"
