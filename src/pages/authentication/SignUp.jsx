@@ -112,7 +112,7 @@ const stepConfig = [
 
 const groupedItemTemplate = (option) => {
   return (
-    <div className="flex align-items-center">
+    <div className="flex align-items-start justify-content-start">
       <div>{option.label}</div>
     </div>
   );
