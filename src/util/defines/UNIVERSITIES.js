@@ -5,10 +5,13 @@ export const UNIVERSITIES_BY_CITY = [
     items: [
       { label: "University of Amsterdam", value: "University of Amsterdam" },
       { label: "VU Amsterdam", value: "VU Amsterdam" },
-      { label: "Hogeschool van Amsterdam", value: "Hogeschool van Amsterdam" },
       {
         label: "Amsterdam University of Applied Sciences",
         value: "Amsterdam University of Applied Sciences",
+      },
+      {
+        label: "Inholland University of Applied Sciences",
+        value: "Inholland University of Applied Sciences",
       },
     ],
   },
@@ -31,6 +34,7 @@ export const UNIVERSITIES_BY_CITY = [
         label: "Eindhoven University of Technology",
         value: "Eindhoven University of Technology",
       },
+      { label: "Fontys", value: "Fontys" },
     ],
   },
   {
@@ -38,7 +42,6 @@ export const UNIVERSITIES_BY_CITY = [
     code: "groningen",
     items: [
       { label: "University of Groningen", value: "University of Groningen" },
-      { label: "Hanze", value: "Hanze" },
       {
         label: "Hanzehogeschool Groningen",
         value: "Hanzehogeschool Groningen",
@@ -64,9 +67,19 @@ export const UNIVERSITIES_BY_CITY = [
         value: "Erasmus University Rotterdam",
       },
       { label: "Hogeschool Rotterdam", value: "Hogeschool Rotterdam" },
+    ],
+  },
+  {
+    label: "The Hague",
+    code: "hague",
+    items: [
       {
-        label: "Rotterdam Business School",
-        value: "Rotterdam Business School",
+        label: "The Hague University of Applied Sciences",
+        value: "The Hague University of Applied Sciences",
+      },
+      {
+        label: "Inholland University of Applied Sciences",
+        value: "Inholland University of Applied Sciences",
       },
     ],
   },
@@ -82,25 +95,16 @@ export const UNIVERSITIES_BY_CITY = [
       { label: "Wageningen University", value: "Wageningen University" },
       { label: "Utrecht University", value: "Utrecht University" },
       { label: "Leiden University", value: "Leiden University" },
-      { label: "Fontys", value: "Fontys" },
       { label: "Tilburg University", value: "Tilburg University" },
       {
         label: "HZ University of Applied Sciences",
         value: "HZ University of Applied Sciences",
-      },
-      {
-        label: "The Hague University of Applied Sciences",
-        value: "The Hague University of Applied Sciences",
       },
       { label: "Hogeschool Utrecht", value: "Hogeschool Utrecht" },
       { label: "Windesheim", value: "Windesheim" },
       {
         label: "ArtEZ University of the Arts",
         value: "ArtEZ University of the Arts",
-      },
-      {
-        label: "Inholland University of Applied Science",
-        value: "Inholland University of Applied Science",
       },
       {
         label: "Nyenrode Business Universiteit",
@@ -111,9 +115,15 @@ export const UNIVERSITIES_BY_CITY = [
         value: "University College Utrecht",
       },
       {
-        label: "Other university",
-        value: "other",
+        label: "HAN University of Applied Sciences",
+        value: "HAN University of Applied Sciences",
       },
+      {
+        label: "Rotterdam Business School",
+        value: "Rotterdam Business School",
+      },
+      { label: "Hogeschool van Amsterdam", value: "Hogeschool van Amsterdam" },
+      { label: "Other university", value: "other" },
     ],
   },
 ];
