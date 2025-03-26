@@ -206,3 +206,16 @@ export const INTERNSHIPS_LIST = [
     website: "https://nikiaviation.com/",
   },
 ];
+
+export const GOOGLE_FORM_APPLICATION = (
+  company = "",
+  specialty = "",
+  user = {
+    name: "",
+    surname: "",
+    region: "",
+    email: "",
+    phone: "",
+  }
+) =>
+  `https://docs.google.com/forms/d/e/1FAIpQLSdtA4BKxFyAr6veADoN-F6xiNZnJlUOtIq9_0kAnanzR8DzcA/viewform?usp=pp_url&entry.1352553752=${company}&entry.1469541182=${specialty}&entry.1671432341=${user.name}&entry.1629488041=${user.surname}&entry.1526397372=${user.email}&entry.1093414160=${user.email}&entry.747940554=${user.region}&entry.1203011269=${user.phone}`;

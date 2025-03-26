@@ -1,5 +1,6 @@
 import React from "react";
 import { BGSNL_INTERNSHIP_MAIL_SUBJECT } from "../../../util/defines/common";
+import { GOOGLE_FORM_APPLICATION } from "../../../util/defines/INTERNSHIPS";
 
 const InternshipCard = (props) => {
   const {
@@ -13,10 +14,11 @@ const InternshipCard = (props) => {
     description,
     bonuses,
     requirements,
-    contactMail = '',
-    applyLink = '',
+    contactMail = "",
+    applyLink = "",
     website,
   } = props.internship;
+  const { user } = props;
 
   return (
     <div className="col-lg-4 col-md-6 col-12 row border-1 intern-card mt--10">
@@ -88,7 +90,7 @@ const InternshipCard = (props) => {
       </div>
 
       <div style={{ width: "100%" }}>
-        {contactMail ? (
+        {/*  {contactMail ? (
           <a
             href={`mailto:${contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`}
             style={{ width: "100%", textAlign: "center" }}
@@ -96,17 +98,17 @@ const InternshipCard = (props) => {
           >
             Contact Internship
           </a>
-        ) : (
-          <a
-            href={applyLink}
-            target="_blank"
-            rel="noreferrer"
-            style={{ width: "100%", textAlign: "center" }}
-            className="rn-button-style--2 rn-btn-solid-red"
-          >
-            Apply for Internship
-          </a>
-        )}
+        ) : ( */}
+        <a
+          href={GOOGLE_FORM_APPLICATION(company, specialty, user)}
+          target="_blank"
+          rel="noreferrer"
+          style={{ width: "100%", textAlign: "center" }}
+          className="rn-button-style--2 rn-btn-solid-red"
+        >
+          Apply for Internship
+        </a>
+        {/* )} */}
       </div>
     </div>
   );

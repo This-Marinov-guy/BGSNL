@@ -179,7 +179,7 @@ const User = () => {
                   <div className="d-flex justify-content-between flex-wrap gap-3">
                     {INTERNSHIPS_LIST.slice(first, first + rows).map(
                       (i, index) => {
-                        return <InternshipCard key={index} internship={i} />;
+                        return <InternshipCard key={index} internship={i} user={currentUser}/>;
                       }
                     )}
                   </div>
