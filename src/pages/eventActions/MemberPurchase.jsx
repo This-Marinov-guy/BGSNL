@@ -318,7 +318,7 @@ const MemberPurchase = () => {
                         {estimatePriceByEvent(
                           selectedEvent,
                           { ...currentUser, token: user.token ?? "" },
-                          normalTicket
+                          { withIncludedText: false, blockDiscounts: normalTicket }
                         )}
                         {
                           <DynamicTicketBadge

@@ -444,6 +444,8 @@ a {
   border-radius: 10px;
   font-size: 6px;
   color: $white;
+  white-space: pre-line;
+  max-width: 15em;
 
   &.new-badge {
     color: #f92820;
