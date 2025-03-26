@@ -126,13 +126,15 @@ export const estimatePriceByEvent = (
   const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
   const isMemberDataFull = user?.name && user?.surname && user?.email;
 
-  const includedText = options.withIncludedText && (isMember
-    ? selectedEvent?.memberIncluding
-      ? `(including ${selectedEvent.memberIncluding})`
-      : ""
-    : selectedEvent?.entryIncluding
-    ? `(including ${selectedEvent.entryIncluding})`
-    : "");
+  const includedText =
+    options.withIncludedText &&
+    (isMember
+      ? selectedEvent?.memberIncluding
+        ? `(including ${selectedEvent.memberIncluding})`
+        : ""
+      : selectedEvent?.entryIncluding
+      ? `(including ${selectedEvent.entryIncluding})`
+      : "");
 
   if (selectedEvent.isFree || (isMember && selectedEvent.isMemberFree)) {
     return "FREE";
@@ -147,7 +149,7 @@ export const estimatePriceByEvent = (
       <div className="d-flex justify-center align-items-center items-center g--4">
         {product.activeMember.price} euro {includedText}
         {!isNaN(product.activeMember.price) && (
-          <SolidBadge color="#add8e6" text="discounted" />
+          <SolidBadge color="#e5b80b" text="extra discounted" />
         )}{" "}
       </div>
     );
@@ -160,7 +162,7 @@ export const estimatePriceByEvent = (
       <div className="d-flex justify-center align-items-center items-center g--4">
         {product.member.price} euro {includedText}
         {!isNaN(product.member.price) && (
-          <SolidBadge color="#e5b80b" text="extra discounted" />
+          <SolidBadge color="#add8e6" text="discounted" />
         )}{" "}
       </div>
     );
