@@ -27,14 +27,17 @@ export const UNIVERSITIES_BY_CITY = [
     ],
   },
   {
-    label: "Eindhoven",
-    code: "eindhoven",
+    label: "The Hague",
+    code: "the-hague",
     items: [
       {
-        label: "Eindhoven University of Technology",
-        value: "Eindhoven University of Technology",
+        label: "The Hague University of Applied Sciences",
+        value: "The Hague University of Applied Sciences",
       },
-      { label: "Fontys", value: "Fontys" },
+      {
+        label: "Inholland University of Applied Sciences",
+        value: "Inholland University of Applied Sciences",
+      },
     ],
   },
   {
@@ -49,14 +52,14 @@ export const UNIVERSITIES_BY_CITY = [
     ],
   },
   {
-    label: "Leeuwarden",
-    code: "leeuwarden",
-    items: [{ label: "NHL Stenden", value: "NHL Stenden" }],
-  },
-  {
     label: "Maastricht",
     code: "maastricht",
     items: [{ label: "Maastricht University", value: "Maastricht University" }],
+  },
+  {
+    label: "Leeuwarden",
+    code: "leeuwarden",
+    items: [{ label: "NHL Stenden", value: "NHL Stenden" }],
   },
   {
     label: "Rotterdam",
@@ -70,17 +73,14 @@ export const UNIVERSITIES_BY_CITY = [
     ],
   },
   {
-    label: "The Hague",
-    code: "hague",
+    label: "Eindhoven",
+    code: "eindhoven",
     items: [
       {
-        label: "The Hague University of Applied Sciences",
-        value: "The Hague University of Applied Sciences",
+        label: "Eindhoven University of Technology",
+        value: "Eindhoven University of Technology",
       },
-      {
-        label: "Inholland University of Applied Sciences",
-        value: "Inholland University of Applied Sciences",
-      },
+      { label: "Fontys", value: "Fontys" },
     ],
   },
   {
@@ -91,38 +91,33 @@ export const UNIVERSITIES_BY_CITY = [
         label: "Delft University of Technology",
         value: "Delft University of Technology",
       },
-      { label: "Saxion", value: "Saxion" },
-      { label: "Wageningen University", value: "Wageningen University" },
-      { label: "Utrecht University", value: "Utrecht University" },
-      { label: "Leiden University", value: "Leiden University" },
       { label: "Tilburg University", value: "Tilburg University" },
+      { label: "Utrecht University", value: "Utrecht University" },
+      {
+        label: "University College Utrecht",
+        value: "University College Utrecht",
+      },
+      { label: "Hogeschool Utrecht", value: "Hogeschool Utrecht" },
+      { label: "Leiden University", value: "Leiden University" },
       {
         label: "HZ University of Applied Sciences",
         value: "HZ University of Applied Sciences",
       },
-      { label: "Hogeschool Utrecht", value: "Hogeschool Utrecht" },
+      { label: "Wageningen University", value: "Wageningen University" },
       { label: "Windesheim", value: "Windesheim" },
+      { label: "Saxion", value: "Saxion" },
       {
         label: "ArtEZ University of the Arts",
         value: "ArtEZ University of the Arts",
-      },
-      {
-        label: "Nyenrode Business Universiteit",
-        value: "Nyenrode Business Universiteit",
-      },
-      {
-        label: "University College Utrecht",
-        value: "University College Utrecht",
       },
       {
         label: "HAN University of Applied Sciences",
         value: "HAN University of Applied Sciences",
       },
       {
-        label: "Rotterdam Business School",
-        value: "Rotterdam Business School",
+        label: "Nyenrode Business Universiteit",
+        value: "Nyenrode Business Universiteit",
       },
-      { label: "Hogeschool van Amsterdam", value: "Hogeschool van Amsterdam" },
       { label: "Other university", value: "other" },
     ],
   },
