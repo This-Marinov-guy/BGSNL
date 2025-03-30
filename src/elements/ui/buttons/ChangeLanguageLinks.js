@@ -26,7 +26,7 @@ const ChangeLanguageLinks = ({ post }) => {
   }));
 
   return (
-    <div className="mt--20">
+    <div>
       <ul className="brand-style-2">
         {btnText.map((b, index) => {
           return (
