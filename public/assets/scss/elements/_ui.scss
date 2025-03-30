@@ -8,6 +8,52 @@
   flex-direction: column;
   justify-content: center;
   padding: 10px 5%;
+
+  img {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    object-fit: contain;
+    margin: 20px auto !important;
+    max-height: 400px !important;
+    width: auto;
+  }
+
+  figure {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    margin: 20px auto !important;
+  }
+
+  p {
+    max-width: 50em;
+    margin: auto;
+  }
+
+  h1 {
+    font-size: 2.4rem; /* 48px */
+  }
+
+  h2 {
+    font-size: 2rem; /* 36px */
+  }
+
+  h3 {
+    font-size: 1.6rem; /* 30px */
+  }
+
+  h4 {
+    font-size: 1.4rem; /* 24px */
+  }
+
+  h5 {
+    font-size: 1.2rem; /* 20px */
+  }
+
+  h6 {
+    font-size: 1rem; /* 16px */
+  }
 }
 
 .iframe-container {
