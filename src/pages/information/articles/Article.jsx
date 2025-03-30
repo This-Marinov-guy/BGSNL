@@ -51,11 +51,11 @@ const Article = () => {
       {/* Start Article  Details */}
       <style>{selectedArticle.styles}</style>
       <div className="wordpress-embedded-container">
+        {selectedArticle.withTranslation && <ChangeLanguageLinks post={selectedArticle} />}
         <h1
           className="mb--20"
           dangerouslySetInnerHTML={{ __html: selectedArticle.title }}
         />
-        {selectedArticle.withTranslation && <ChangeLanguageLinks post={selectedArticle} />}
         <div
           dangerouslySetInnerHTML={{
             __html: selectedArticle.content,
