@@ -45,17 +45,20 @@ const Article = () => {
         logoname="logo.png"
       />
       {/* Start Breadcrump Area */}
-      <Breadcrumb title={selectedArticle.title} category="Articles" />
+      <Breadcrumb
+        title={selectedArticle.title}
+        category="Articles"
+        extraElement={
+          selectedArticle.withTranslation && (
+            <ChangeLanguageLinks post={selectedArticle} />
+          )
+        }
+      />
       {/* End Breadcrump Area */}
 
       {/* Start Article  Details */}
       <style>{selectedArticle.styles}</style>
       <div className="wordpress-embedded-container">
-        {selectedArticle.withTranslation && <ChangeLanguageLinks post={selectedArticle} />}
-        <h1
-          className="mb--20"
-          dangerouslySetInnerHTML={{ __html: selectedArticle.title }}
-        />
         <div
           dangerouslySetInnerHTML={{
             __html: selectedArticle.content,

@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 class Breadcrumb extends Component {
 
     render() {
-        const { title, category, parent } = this.props;
+        const { title, category, parent, extraElement } = this.props;
         const imageUrl = `/assets/images/bg/bg-image-1.webp`;
 
         return (
             <React.Fragment>
-                <div className="breadcrumb-area rn-bg-color ptb--80 bg_image" style={{ backgroundImage: `url(${imageUrl})` }}
+                <div className="breadcrumb-area rn-bg-color ptb--50 bg_image" style={{ backgroundImage: `url(${imageUrl})` }}
                     data-black-overlay="6">
                     <div className="container">
                         <div className="row">
@@ -24,6 +24,11 @@ class Breadcrumb extends Component {
                                     </ul>
                                 </div>
                             </div>
+                            {extraElement && (
+                                <div className="col-lg-12 mt--20">
+                                        {extraElement}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
