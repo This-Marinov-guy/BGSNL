@@ -20,7 +20,7 @@ const PortfolioList2 = (props) => {
           </div>
           <div className="content">
             <div className="inner">
-              <p>{value.description}</p>
+              {/* <p>{value.description}</p> */}
               <h4>
                 <Link to={link}>{value.title}</Link>
               </h4>
