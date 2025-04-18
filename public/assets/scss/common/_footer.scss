@@ -80,25 +80,25 @@ Footer Styles
         line-height: 51px;
       }
     }
-    a {
-      &.rn-button-style--2 {
-        margin-top: 30px;
-        border-color: #ffffff;
-        color: #ffffff;
-        @media #{$sm-layout} {
-          margin-top: 10px;
-          padding: 10px 23px;
-        }
-        @media #{$large-mobile} {
-          padding: 7px 16px;
-        }
-        &:hover {
-          background: #fff;
-          border-color: #fff;
-          color: $theme-color;
-        }
-      }
-    }
+    // a {
+    //   &.rn-button-style--2 {
+    //     margin-top: 30px;
+    //     border-color: #ffffff;
+    //     color: #ffffff;
+    //     @media #{$sm-layout} {
+    //       margin-top: 10px;
+    //       padding: 10px 23px;
+    //     }
+    //     @media #{$large-mobile} {
+    //       padding: 7px 16px;
+    //     }
+    //     &:hover {
+    //       background: #fff;
+    //       border-color: #fff;
+    //       color: $theme-color;
+    //     }
+    //   }
+    // }
   }
 }
 

@@ -46,10 +46,11 @@ const FooterTwo = ({ forceRegion }) => {
                     >
                       Support us
                     </button>
-                    <Link style={{ height: "73px" }} to="/developers">
-                      <button className="rn-button-style--2 rn-btn-reverse-green">
-                        Developers
-                      </button>
+                    <Link
+                      className="rn-button-style--2 rn-btn-reverse-green"
+                      to="/developers"
+                    >
+                      Developers
                     </Link>
                   </div>
                 </div>

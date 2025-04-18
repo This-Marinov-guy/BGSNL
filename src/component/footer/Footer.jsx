@@ -1,12 +1,18 @@
 import React, { Fragment } from "react";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "react-router-dom";
-import { REGION_EMAIL, REGION_MAIN_COLOR, REGION_SECOND_COLOR, REGION_SOCIALS, KVK } from "../../util/defines/REGIONS_DESIGN";
+import {
+  REGION_EMAIL,
+  REGION_MAIN_COLOR,
+  REGION_SECOND_COLOR,
+  REGION_SOCIALS,
+  KVK,
+} from "../../util/defines/REGIONS_DESIGN";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../redux/modal";
 import { DONATION_MODAL } from "../../util/defines/common";
 
-const Footer = ({forceRegion}) => {
+const Footer = ({ forceRegion }) => {
   const region = forceRegion ?? useParams().region;
 
   const dispatch = useDispatch();
@@ -38,10 +44,11 @@ const Footer = ({forceRegion}) => {
                     >
                       Support us
                     </button>
-                    <Link style={{ height: "73px" }} to="/developers">
-                      <button className="rn-button-style--2 rn-btn-reverse-green">
-                        Developers
-                      </button>
+                    <Link
+                      className="rn-button-style--2 rn-btn-reverse-green"
+                      to="/developers"
+                    >
+                      Developers
                     </Link>
                   </div>
                 </div>
@@ -129,6 +136,6 @@ const Footer = ({forceRegion}) => {
       </footer>
     </Fragment>
   );
-}
+};
 
 export default Footer;

@@ -391,6 +391,9 @@
   align-items: center;
   flex-wrap: wrap;
   .header-btn {
+    display: flex;
+    align-items: center;
+    height: 100%;
     @media #{$large-mobile} {
       margin-left: 0;
     }
