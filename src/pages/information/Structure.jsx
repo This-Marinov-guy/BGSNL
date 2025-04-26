@@ -96,11 +96,11 @@ const Structure = () => {
               <div key={index} className="col-lg-6 col-md-6 col-12 m--a">
                 <div className="mb--30 mb_sm--0 center_section">
                   <Image
-                    style={{ width: "400px", padding: "40px" }}
                     className={
-                      index % 2 !== 0
+                      `${index % 2 !== 0
                         ? "team_member_border_1 mb--20"
-                        : "team_member_border_2 mb--20"
+                        : "team_member_border_2 mb--20"} grid-image`
+                        
                     }
                     preview
                     src={`/assets/images/team/${img.id}.jpg`}

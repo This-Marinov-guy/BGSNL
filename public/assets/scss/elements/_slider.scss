@@ -195,7 +195,7 @@ Slider Default Style
           }
 
           @media #{$md-layout} {
-            font-size: 2,3em;
+            font-size: 2, 3em;
             margin-bottom: 18px;
           }
           @media #{$sm-layout} {
@@ -871,4 +871,21 @@ Custom Animation
 .box-model .inner {
   text-align: center;
   margin-bottom: 60px;
+}
+
+.grid-image {
+  padding: 40px !important;
+  width: 450px;
+
+  @media #{$lg-layout} {
+    width: 400px;
+  }
+
+  @media #{$md-layout} {
+    width: 320px;
+  }
+
+  @media #{$sm-layout} {
+    width: 300px;
+  }
 }
