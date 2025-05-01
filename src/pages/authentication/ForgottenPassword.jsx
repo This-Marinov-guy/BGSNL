@@ -179,7 +179,7 @@ const ForgottenPassword = (props) => {
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
                     <p>
-                        We have sent an email containing the token. <br /> In order to verify it is you, we will need some extra information!
+                        We have sent an email containing the token. <br /> In order to verify it is you, we will need it back!
                     </p>
                     <h4 className="col-12 center_div">Verification Token</h4>
                     <InputOtp
