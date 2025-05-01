@@ -85,7 +85,7 @@ const AccountLocked = () => {
           Your account is locked!
         </h3>
         <p>
-          To continue using the benefits of a member please make the subscription payment (cancel anytime)! Otherwise, log out of your account.
+          To continue using the benefits of a member please fix your payment details or renew the payment! Otherwise, log out of your account.
         </p>
         {actionButtons}
         <button onClick={() => navigate(-1)} className="rn-button-style--2 rn-btn-reverse mt--40">
