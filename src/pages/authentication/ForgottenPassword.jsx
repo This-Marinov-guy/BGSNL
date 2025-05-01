@@ -194,7 +194,8 @@ const ForgottenPassword = (props) => {
                         integerOnly
                         length={6}
                         className="col-12 mt--10" />
-                    <h4 className="col-12 center_div mt--10">Additional Information</h4>
+                        {/* Remove the need of birth and phone verification */}
+                    {/* <h4 className="col-12 center_div mt--10">Additional Information</h4>
                     <div className="col-12" style={{ padding: '0' }}>
                         <Calendar
                             value={formValues.birth}
@@ -215,7 +216,7 @@ const ForgottenPassword = (props) => {
                         placeholder="Enter your phone (with + and country code)"
                         className="col-12 mt--10"
                         onChange={(event) => changeFormInputHandler(event)}
-                    />
+                    /> */}
                 </div>
                 {loading ? <Loader /> :
                     <div className="center_div mt--60">
