@@ -461,3 +461,15 @@ label {
   white-space: normal;
   word-wrap: break-word;
 }
+
+.text-sm-center {
+  display: flex;
+  align-items: center;
+  justify-content: start !important;
+  text-align: left !important;
+
+  @media #{$sm-layout} {
+      justify-content: center !important;
+    text-align: center !important;
+  }
+}

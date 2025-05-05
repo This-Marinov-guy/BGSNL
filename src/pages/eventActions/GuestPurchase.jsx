@@ -151,25 +151,49 @@ const GuestPurchase = () => {
                 className="title_img"
               />
               <h2 className="mt--40">Event Details</h2>
-              <p>Name: {selectedEvent.title}</p>
-              <p>
-                Date:{" "}
-                {selectedEvent.correctedDate
-                  ? moment(selectedEvent.correctedDate).format(
-                      MOMENT_DATE_TIME
-                    ) + " Updated!"
-                  : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
-              </p>
-              <p>Address: {selectedEvent.location}</p>
-              <p>
-                <span className="center_div justify-content-sm-start">
-                  Price :{" "}
-                  {selectedEvent.isFree
-                    ? " FREE"
-                    : selectedEvent.product?.guest.price + " euro"}
-                  {<DynamicTicketBadge product={selectedEvent?.product} />}
-                </span>
-              </p>
+              <div className="container information-container m-auto">
+                <div className="row mb-2">
+                  <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
+                    Name:
+                  </div>
+                  <div className="col-sm-8 text-sm-center">
+                    {selectedEvent.title}
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
+                    Date:
+                  </div>
+                  <div className="col-sm-8 text-sm-center">
+                    {selectedEvent.correctedDate
+                      ? moment(selectedEvent.correctedDate).format(
+                          MOMENT_DATE_TIME
+                        ) + " Updated!"
+                      : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
+                    Address:
+                  </div>
+                  <div className="col-sm-8 text-sm-center">
+                    {selectedEvent.location}
+                  </div>
+                </div>
+                <div className="row mb-2">
+                  <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
+                    Price:
+                  </div>
+                  <div className="col-sm-8 text-sm-center d-flex g--5">
+                    <p className="mb-0">
+                      {selectedEvent.isFree
+                        ? "FREE"
+                        : selectedEvent.product?.guest.price + " euro"}{" "}
+                    </p>
+                    <DynamicTicketBadge product={selectedEvent?.product} />
+                  </div>
+                </div>
+              </div>
               <SponsoredBySmall />
             </div>
           </div>

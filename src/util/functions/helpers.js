@@ -119,6 +119,7 @@ export const estimatePriceByEvent = (
   options = {
     withIncludedText: true,
     blockDiscounts: false,
+    withMemberBadge: true,
   }
 ) => {
   const { product } = selectedEvent;
@@ -148,8 +149,8 @@ export const estimatePriceByEvent = (
     return (
       <div className="d-flex justify-center align-items-center items-center g--4">
         {product.activeMember.price} euro {includedText}
-        {!isNaN(product.activeMember.price) && (
-          <SolidBadge color="#e5b80b" text="extra discounted" />
+        {!isNaN(product.activeMember.price) && options.withMemberBadge && (
+          <SolidBadge color="#e5b80b" text="Extra discounted" />
         )}{" "}
       </div>
     );
@@ -161,8 +162,8 @@ export const estimatePriceByEvent = (
     ) : (
       <div className="d-flex justify-center align-items-center items-center g--4">
         {product.member.price} euro {includedText}
-        {!isNaN(product.member.price) && (
-          <SolidBadge color="#add8e6" text="discounted" />
+        {!isNaN(product.member.price) && options.withMemberBadge && (
+          <SolidBadge color="#add8e6" text="Discounted" />
         )}{" "}
       </div>
     );
@@ -353,7 +354,9 @@ export function isTodayInRange(start, end) {
   const [endMonth, endDay] = end.split("-").map(Number);
 
   // Create Date objects for the start and end dates
-  const startDate = !isProd() ? new Date(currentYear, startMonth - 1, startDay) : new Date(); // Months are 0-based
+  const startDate = !isProd()
+    ? new Date(currentYear, startMonth - 1, startDay)
+    : new Date(); // Months are 0-based
   let endDate = new Date(currentYear, endMonth - 1, endDay);
 
   // If the end date is in the next year, adjust it
