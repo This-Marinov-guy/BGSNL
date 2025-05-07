@@ -145,7 +145,7 @@ const MemberPurchase = () => {
             className="title_img"
           />
         </div>
-        <div className="row team_member_border_1 mt--80 purchase_panel">
+        <div className="row team_member_border_1 team_border_long_add_on mt--80 purchase_panel">
           <Formik
             validationSchema={schema}
             onSubmit={async (values) => {

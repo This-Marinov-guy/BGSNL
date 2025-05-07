@@ -14,28 +14,26 @@
 }
 
 .team_member_border_1 {
-  padding: 1em 1.5em;
+  padding: 1em;
   // border: 37px solid transparent;
   border-image-source: url(/public/assets/images/borders/border-red.webp);
   border-image-slice: 181 188 170 181;
   border-image-width: 50px 50px 50px 50px;
   border-image-outset: 0px 0px 0px 0px;
   border-image-repeat: stretch stretch;
-
-  @media #{$sm-layout} {
-    padding: 1.7em 0.3em;
-  }
 }
 
 .team_member_border_2 {
-  padding: 1em 1.5em;
+  padding: 1em;
   // border: 37px solid transparent;
   border-image-source: url(/public/assets/images/borders/border-green.webp);
   border-image-slice: 162 162 166 159;
   border-image-width: 50px 50px 50px 50px;
   border-image-outset: 0px 0px 0px 0px;
   border-image-repeat: stretch stretch;
+}
 
+.team_border_long_add_on {
   @media #{$sm-layout} {
     padding: 1.7em 0.3em;
   }
