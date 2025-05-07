@@ -108,8 +108,7 @@ const Login = () => {
         onHide={() => setIsVisible(false)}
       />
       <div
-        className="container team_member_border_1 "
-        style={{ maxWidth: "600px", marginTop: "18vh", padding: '50px 0' }}
+        className="container team_member_border_1 login_screen"
       >
         <h3 style={{ fontSize: "0.8em" }} className="center_text">
           Log in your account
