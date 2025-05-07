@@ -1,13 +1,17 @@
 import { hasOverlap } from "./helpers";
 
 export const decodeJWT = (token) => {
-    const [header, payload, signature] = token.split('.');
-
-    const decodedPayload = atob(payload);
-
-    const decodedPayloadJSON = JSON.parse(decodedPayload);
-
-    return decodedPayloadJSON;
+    try {
+        const [header, payload, signature] = token.split('.');
+    
+        const decodedPayload = atob(payload);
+    
+        const decodedPayloadJSON = JSON.parse(decodedPayload);
+    
+        return decodedPayloadJSON;
+    } catch (err) {
+        return null;
+    }
 }
 
 export const isTokenExpired = (token) => {
@@ -21,8 +25,10 @@ export const checkAuthorization = (token, roles) => {
     if (!token) {
         return false;
     }
+
+    const user = decodeJWT(token);
     
-    const userRoles = decodeJWT(token)['roles'];
+    const userRoles = user?.roles ?? [];
 
     if (userRoles && hasOverlap(userRoles, roles)) {
         return true;
