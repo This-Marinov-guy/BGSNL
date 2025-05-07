@@ -4,9 +4,9 @@ import { LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT } 
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    token: 'dsadsad',
-    status: 'active',
-    isSubscribed: true,
+    token: null,
+    status: '',
+    isSubscribed: false,
   },
   reducers: {
     login: {
