@@ -222,14 +222,6 @@ const User = () => {
         <div className="container">
           <div className="row service-one-wrapper">
             <div className="col-lg-5 col-md-12 col-12 center_div_col">
-              {!isProd() || currentUser.subscription ? (
-                <SubscriptionManage
-                  userId={currentUser.id}
-                  subscription={currentUser.subscription}
-                />
-              ) : (
-                <div className="mt--60" />
-              )}
               <div className="service">
                 {hasBirthday && (
                   <img
