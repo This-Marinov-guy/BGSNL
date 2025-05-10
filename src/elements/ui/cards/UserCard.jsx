@@ -68,7 +68,7 @@ const UserCard = ({ user }) => {
               </li>
             )}
           </ul>
-          {!isProd() || currentUser.subscription ? (
+          {!isProd() || user.subscription ? (
             <SubscriptionManage
               userId={user.id}
               subscription={user.subscription}
