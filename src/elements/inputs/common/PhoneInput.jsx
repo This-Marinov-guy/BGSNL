@@ -5,23 +5,40 @@ import { EUROPEAN_COUNTRIES } from "../../../util/defines/COUNTRIES";
 import { getGeoLocation } from "../../../util/functions/helpers";
 import { LOCAL_STORAGE_LOCATION } from "../../../util/defines/common";
 
-const PhoneInput = ({ className, style, onChange, placeholder }) => {
+const PhoneInput = ({
+  className,
+  style = {},
+  onChange,
+  placeholder,
+  initialValue,
+}) => {
+  let initialPrefix = "";
+  let initialNumber = "";
+  if (initialValue && initialValue.includes(" ")) {
+    const split = initialValue.split(" ");
+    initialPrefix = split[0] || "";
+    initialNumber = split[1] || "";
+  }
+
   const [selectedCode, setSelectedCode] = useState(
     EUROPEAN_COUNTRIES.find(
-      (c) => c.iso2.toUpperCase() === getGeoLocation()
+      (c) => c.iso2.toUpperCase() === initialPrefix || getGeoLocation()
     )
   );
 
-  const [value, setValue] = useState(undefined);
+  const [value, setValue] = useState(initialNumber);
 
   useEffect(() => {
     if (onChange && selectedCode && value) {
-      onChange(selectedCode.phoneCode + ' ' + value);
+      onChange(selectedCode.phoneCode + " " + value);
     }
   }, [selectedCode, value]);
 
   return (
-    <div className={"phone_code " + className} style={style}>
+    <div
+      style={{ ...style, marginTop: "15px" }}
+      className={"phone_code " + className}
+    >
       <Dropdown
         value={selectedCode}
         filter
