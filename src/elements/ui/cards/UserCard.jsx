@@ -63,7 +63,19 @@ const UserCard = ({ user }) => {
                   href={REGION_WHATSAPP[user.region]}
                   target="_blank"
                 >
-                  Click here to join the Member Chat
+                  Click here to join the Regional Member Chat
+                </a>
+              </li>
+            )}
+            {REGION_WHATSAPP["netherlands"] && (
+              <li>
+                <FiCheckCircle style={{ fontSize: "14px" }} />
+                <a
+                  style={{ color: "#017363" }}
+                  href={REGION_WHATSAPP["netherlands"]}
+                  target="_blank"
+                >
+                  Click here to join the National Member Chat
                 </a>
               </li>
             )}
