@@ -67,12 +67,25 @@ const ArticlesPage = () => {
         <p className="center_text">Stay updated with our latest insights</p>
         <label className="center_div mt--40 mb--40">Latest Article</label>
         <div className="row g--5">
-          <img
-            src={firstArticle.thumbnail}
-            className="col main team_member_border_2"
-          />
+          <Link
+            to={`/articles/${firstArticle.id}/${encodeForURL(
+              firstArticle.title
+            )}`}
+          >
+            <img
+              src={firstArticle.thumbnail}
+              className="col main team_member_border_2"
+            />
+          </Link>
           <div className="col">
-            <h3 className="mb--20">{firstArticle.title}</h3>
+            <Link
+              to={`/articles/${firstArticle.id}/${encodeForURL(
+                firstArticle.title
+              )}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <h3 className="mb--20">{firstArticle.title}</h3>
+            </Link>
             <p>{firstArticle.description}</p>
             <Link
               className="main-link"
