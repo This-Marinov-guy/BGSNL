@@ -29,6 +29,8 @@ import { useAppInitialization } from "./hooks/session/app-init";
 import { useAuthSession } from "./hooks/session/auth-session";
 import { selectUser } from "./redux/user";
 import CampaignLayout from "./layouts/CampaignLayout";
+import AlumniSignUp from "./pages/alumni/AlumniSignUp";
+import AlumniInfoPage from "./pages/alumni/AlumniInfoPage";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -131,6 +133,9 @@ const Root = () => {
                 path={`/board-and-committee`}
                 element={<Structure />}
               />
+
+              <Route exact path={`/alumni/info`} element={<AlumniInfoPage />} />
+
               <Route exact path={`/developers`} element={<Developers />} />
               <Route exact path={`/terms-and-legals`} element={<Policy />} />
 
@@ -273,6 +278,7 @@ const Root = () => {
                 <Fragment>
                   <Route exact path={`/login`} element={<LogIn />} />
                   <Route exact path={`/:region?/signup`} element={<SignUp />} />
+                  <Route exact path={`/alumni/register`} element={<AlumniSignUp />} />
                   {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}
                 </Fragment>
               )}

@@ -107,9 +107,7 @@ const Login = () => {
         visible={isVisible}
         onHide={() => setIsVisible(false)}
       />
-      <div
-        className="container team_member_border_1 login_screen"
-      >
+      <div className="container team_member_border_1 login_screen">
         <h3 style={{ fontSize: "0.8em" }} className="center_text">
           Log in your account
         </h3>
@@ -165,6 +163,13 @@ const Login = () => {
             to="/signup"
           >
             Not a member? Register now!
+          </Link>
+          <Link
+            style={{ fontSize: "0.9em" }}
+            className="rn-button-style--1 center_text"
+            to="/alumni/register"
+          >
+            Rather be an Alumni? Register now!
           </Link>
         </div>
       </div>
