@@ -44,9 +44,7 @@ const Hero1 = () => {
                 <div className={`inner ${value.textPosition}`}>
                   {value.category ? <span>{value.category}</span> : ""}
                   {value.title ? (
-                    <h1 className="title theme-gradient">
-                      {value.title}
-                    </h1>
+                    <h1 className="title theme-gradient">{value.title}</h1>
                   ) : (
                     ""
                   )}
@@ -55,15 +53,36 @@ const Hero1 = () => {
                   ) : (
                     ""
                   )}
-                  {value.buttonText && (
+                  {user.token ? (
                     <div className="slide-btn">
                       <Link
                         style={{ fontSize: "24px" }}
-                        className={"rn-button-style--2" + value.style}
-                        to={value.buttonLink}
+                        className={"rn-button-style--2 rn-btn-reverse-green"}
+                        to={`/user`}
                       >
-                        {value.buttonText}
+                        Go to Profile
                       </Link>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="slide-btn">
+                        <Link
+                          style={{ fontSize: "24px" }}
+                          className={"rn-button-style--2 rn-btn-reverse-green"}
+                          to={"/signup"}
+                        >
+                          Become a Member
+                        </Link>
+                      </div>
+                      <div className="slide-btn">
+                        <Link
+                          style={{ fontSize: "24px" }}
+                          className={"rn-button-style--2 rn-btn-reverse-red"}
+                          to={"/alumni/register"}
+                        >
+                          Become an Alumni
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>

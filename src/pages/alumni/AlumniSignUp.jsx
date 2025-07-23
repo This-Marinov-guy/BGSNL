@@ -18,7 +18,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
-import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
+import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../util/defines/ALUMNI";
 import {
   encryptData,
   isObjectEmpty,
@@ -97,9 +97,6 @@ const schema = yup.object().shape({
 
 const stepConfig = [
   {
-    label: "Region",
-  },
-  {
     label: "Type",
   },
   {
@@ -118,7 +115,7 @@ const groupedItemTemplate = (option) => {
   );
 };
 
-const SignUp = (props) => {
+const AlumniSignUp = (props) => {
   const { region } = useParams();
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
@@ -150,23 +147,11 @@ const SignUp = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (region && !REGIONS.includes(region)) {
-      navigate("/signup");
-    }
-
-    setSelectedMembershipIndex(null);
-  }, [region]);
-
   let stepComp;
   let stepButtons;
 
   switch (activeStep) {
     case 0:
-      stepComp = <RegionOptions2 to="signup" />;
-      stepButtons = null;
-      break;
-    case 1:
       stepComp = (
         <div className="service-area ptb--40">
           <div className="container">
@@ -176,13 +161,13 @@ const SignUp = (props) => {
                   <h3 className="mb--20">
                     Current choice is:{" "}
                     {
-                      REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
+                      ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
                         .title
                     }{" "}
                   </h3>
                 )}
 
-                <p>
+                {/* <p>
                   Membership plans distinguish only by the price and the billing
                   period. By becoming a member you receive benefits like:
                 </p>
@@ -212,33 +197,44 @@ const SignUp = (props) => {
                   *You will automatically be billed on the end of the period,
                   except if you cancel the subscription from your profile or the
                   funds in your bank account are insufficient
-                </p>
+                </p> */}
               </div>
             </div>
             <div
-              className="d-flex flex-column flex-md-row justify-content-around service-one-wrapper center_div"
-              style={{ gap: "20px" }}
+              className="d-flex flex-column flex-md-row justify-content-center service-one-wrapper center_div"
+              style={{ gap: "20px", flexWrap: "wrap" }}
             >
-              {REGIONS_MEMBERSHIP_SPECIFICS.map((val, i) => (
-                <button
+              {ALUMNI_MEMBERSHIP_SPECIFICS.map((val, i) => (
+                <div
                   key={i}
-                  style={
-                    selectedMembershipIndex !== null &&
-                    val.title ===
-                      REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
-                        .title
-                      ? {
-                          backgroundColor: "#017363",
-                          border: `2px solid ${val.borderColor ?? "black"}`,
-                        }
-                      : { border: `2px solid ${val.borderColor ?? "black"}` }
-                  }
-                  className="service service__style--2"
-                  onClick={() => {
-                    setSelectedMembershipIndex(i);
-                    setActiveStep(2);
+                  style={{ 
+                    width: "calc(50% - 10px)", 
+                    minWidth: "300px",
+                    maxWidth: "400px"
                   }}
                 >
+                  <button
+                    style={
+                      selectedMembershipIndex !== null &&
+                      val.title ===
+                        ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
+                          .title
+                        ? {
+                            backgroundColor: "#017363",
+                            border: `2px solid ${val.borderColor ?? "black"}`,
+                            width: "100%"
+                          }
+                        : { 
+                            border: `2px solid ${val.borderColor ?? "black"}`,
+                            width: "100%"
+                          }
+                    }
+                    className="service service__style--2"
+                    onClick={() => {
+                      setSelectedMembershipIndex(i);
+                      setActiveStep(2);
+                    }}
+                  >
                   {val?.label?.text && (
                     <Badge
                       style={{
@@ -253,33 +249,31 @@ const SignUp = (props) => {
                   <div className="hor_section">
                     <div className="icon">{val.icon}</div>
                     <h5 style={{ width: "40%" }}>
-                      {val.price}&#8364; every {val.period} months
+                      {val.price}&#8364; every {val.period === 1 ? 'month' : `${val.period} months`}
                     </h5>
                   </div>
                   <div className="content">
                     <h3>{val.title}</h3>
-                    <p>{val.description}</p>
+                    {val?.description && <p>{val.description}</p>}
+                                         {val?.benefits && <ul className="list-style--2">
+                        {val.benefits.map((benefit, index) => (
+                          <li style={{textDecoration: benefit.strike ? "line-through" : "none"}} key={index}>
+                            {benefit.icon && <FontAwesomeIcon icon={benefit.icon} />}
+                            {benefit.text}
+                          </li>
+                        ))}
+                      </ul>}
                   </div>
                 </button>
+                </div>
               ))}
             </div>
           </div>
         </div>
       );
-      stepButtons = (
-        <div className="center_div mb--20">
-          <p
-            onClick={() => setActiveStep((prevProps) => prevProps - 1)}
-            className="information"
-            style={{ cursor: "pointer", margin: "auto" }}
-          >
-            <FiChevronLeft />
-            Back
-          </p>
-        </div>
-      );
+      stepButtons = null;
       break;
-    case 2:
+    case 1:
       stepComp = (
         <div className="blog-comment-form pb--120 bg_color--1">
           {selectedMembershipIndex !== null && (
@@ -302,11 +296,11 @@ const SignUp = (props) => {
                   }
                   formData.append(
                     "period",
-                    REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].period
+                    ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].period
                   );
                   formData.append(
                     "itemId",
-                    REGIONS_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].itemId
+                    ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].itemId
                   );
                   formData.append("origin_url", window.location.origin);
                   formData.append("method", "signup");
@@ -800,14 +794,13 @@ const SignUp = (props) => {
       />
 
       <h3 className="center_text mt--150">
-        Become a Member{" "}
-        <br />
+        Become an Alumni <br />
         <Link
           style={{ fontSize: "0.7em" }}
           className="rn-button-style--1 center_text"
-          to="/alumni/register"
+          to="/signup"
         >
-          (or rather be an Alumni)
+          (or rather be a Member)
         </Link>
       </h3>
 
@@ -833,4 +826,4 @@ const SignUp = (props) => {
   );
 };
 
-export default SignUp;
+export default AlumniSignUp;
