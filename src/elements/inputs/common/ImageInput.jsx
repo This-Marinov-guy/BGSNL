@@ -86,6 +86,7 @@ const ImageInput = (props) => {
           name="image"
           accept=".png,.jpg,.jpeg"
           style={{ display: "none" }}
+          style={{ display: "none" }}
         />
         {!previewUrl ? (
           <div style={{ textAlign: "center" }}>
@@ -114,12 +115,17 @@ const ImageInput = (props) => {
         )}
       </div>
       <div style={{ textAlign: "center", marginTop: "10px" }}>
-        {props.errorRequired}
-        {!isValid && (
-          <p className="error" style={{ fontSize: "0.8rem", margin: "5px 0" }}>
-            The file is not supported, please try again
-          </p>
-        )}
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
+          {props.errorRequired}
+          {!isValid && (
+            <p
+              className="error"
+              style={{ fontSize: "0.8rem", margin: "5px 0" }}
+            >
+              The file is not supported, please try again
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
