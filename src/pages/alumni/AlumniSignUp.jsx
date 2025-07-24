@@ -160,10 +160,7 @@ const AlumniSignUp = (props) => {
                 {selectedMembershipIndex !== null && (
                   <h3 className="mb--20">
                     Current choice is:{" "}
-                    {
-                      ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
-                        .title
-                    }{" "}
+                    {ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title}{" "}
                   </h3>
                 )}
 
@@ -207,10 +204,10 @@ const AlumniSignUp = (props) => {
               {ALUMNI_MEMBERSHIP_SPECIFICS.map((val, i) => (
                 <div
                   key={i}
-                  style={{ 
-                    width: "calc(50% - 10px)", 
-                    minWidth: "300px",
-                    maxWidth: "400px"
+                  style={{
+                    width: "calc(25% - 15px)",
+                    minWidth: "250px",
+                    maxWidth: "300px",
                   }}
                 >
                   <button
@@ -222,49 +219,61 @@ const AlumniSignUp = (props) => {
                         ? {
                             backgroundColor: "#017363",
                             border: `2px solid ${val.borderColor ?? "black"}`,
-                            width: "100%"
+                            width: "100%",
                           }
-                        : { 
+                        : {
                             border: `2px solid ${val.borderColor ?? "black"}`,
-                            width: "100%"
+                            width: "100%",
                           }
                     }
                     className="service service__style--2"
                     onClick={() => {
                       setSelectedMembershipIndex(i);
-                      setActiveStep(2);
+                      setActiveStep(1);
                     }}
                   >
-                  {val?.label?.text && (
-                    <Badge
-                      style={{
-                        position: "absolute",
-                        top: "-10px",
-                        right: "-10px",
-                        backgroundColor: val.label.color,
-                      }}
-                      value={val.label.text}
-                    />
-                  )}
-                  <div className="hor_section">
-                    <div className="icon">{val.icon}</div>
-                    <h5 style={{ width: "40%" }}>
-                      {val.price}&#8364; every {val.period === 1 ? 'month' : `${val.period} months`}
-                    </h5>
-                  </div>
-                  <div className="content">
-                    <h3>{val.title}</h3>
-                    {val?.description && <p>{val.description}</p>}
-                                         {val?.benefits && <ul className="list-style--2">
-                        {val.benefits.map((benefit, index) => (
-                          <li style={{textDecoration: benefit.strike ? "line-through" : "none"}} key={index}>
-                            {benefit.icon && <FontAwesomeIcon icon={benefit.icon} />}
-                            {benefit.text}
-                          </li>
-                        ))}
-                      </ul>}
-                  </div>
-                </button>
+                    {val?.label?.text && (
+                      <Badge
+                        style={{
+                          position: "absolute",
+                          top: "-10px",
+                          right: "-10px",
+                          backgroundColor: val.label.color,
+                        }}
+                        value={val.label.text}
+                      />
+                    )}
+                    <div className="hor_section">
+                      <div className="icon">{val.icon}</div>
+                      <h5 style={{ width: "40%" }}>
+                        {val.price}&#8364; every{" "}
+                        {val.period === 1 ? "month" : `${val.period} months`}
+                      </h5>
+                    </div>
+                    <div className="content">
+                      <h3>{val.title}</h3>
+                      {val?.description && <p>{val.description}</p>}
+                      {val?.benefits && (
+                        <ul className="list-style--2">
+                          {val.benefits.map((benefit, index) => (
+                            <li
+                              style={{
+                                textDecoration: benefit.strike
+                                  ? "line-through"
+                                  : "none",
+                              }}
+                              key={index}
+                            >
+                              {benefit.icon && (
+                                <FontAwesomeIcon icon={benefit.icon} />
+                              )}
+                              {benefit.text}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </button>
                 </div>
               ))}
             </div>
@@ -491,92 +500,7 @@ const AlumniSignUp = (props) => {
                         </div>
                       </div>
                     </div>
-                    <div className="row mt--40">
-                      <div className="col-lg-6 col-md-12 col-12">
-                        <Dropdown
-                          value={values.university}
-                          filter
-                          onChange={(e) => {
-                            setFieldValue("university", e.value);
-                          }}
-                          options={uniOptions}
-                          name="university"
-                          className="p-dropdown-custom"
-                          placeholder="State your University"
-                          optionLabel="label"
-                          optionGroupLabel="label"
-                          optionGroupChildren="items"
-                          optionGroupTemplate={groupedItemTemplate}
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="university"
-                          component="div"
-                        />
-                      </div>
-                      {values.university === "other" && (
-                        <div className="col-lg-6 col-md-12 col-12">
-                          <div className="rn-form-group">
-                            <Field
-                              type="text"
-                              placeholder="State the university"
-                              name="otherUniversityName"
-                            ></Field>
-                            <ErrorMessage
-                              className="error"
-                              name="otherUniversityName"
-                              component="div"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      {values.university !== "working" && (
-                        <Fragment>
-                          <div className="col-lg-6 col-md-12 col-12">
-                            <Field
-                              type="number"
-                              min="2020"
-                              max="2050"
-                              placeholder="Graduation Year"
-                              name="graduationDate"
-                            ></Field>
-                            <ErrorMessage
-                              className="error"
-                              name="graduationDate"
-                              component="div"
-                            />
-                          </div>
-                          <div className="col-lg-6 col-md-12 col-12">
-                            <div className="rn-form-group">
-                              <Field
-                                type="text"
-                                placeholder="Study Program"
-                                name="course"
-                              ></Field>
-                              <ErrorMessage
-                                className="error"
-                                name="course"
-                                component="div"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-lg-6 col-md-12 col-12">
-                            <div className="rn-form-group">
-                              <Field
-                                type="text"
-                                placeholder="Student Number"
-                                name="studentNumber"
-                              ></Field>
-                              <ErrorMessage
-                                className="error"
-                                name="studentNumber"
-                                component="div"
-                              />
-                            </div>
-                          </div>
-                        </Fragment>
-                      )}
-                    </div>
+
                     <h3 className="mt--30 label center_text">Login details</h3>
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
