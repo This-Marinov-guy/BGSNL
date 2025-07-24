@@ -43,7 +43,7 @@ const AlumniInfoPage = () => {
                   Netherlands and gain exclusive benefits in return.
                 </p>
                 <Link
-                  to="/alumni/signup"
+                  to="/alumni/register"
                   className="rn-button-style--2 rn-btn-green"
                   style={{
                     display: "inline-block",
