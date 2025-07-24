@@ -17,14 +17,30 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     benefits: [
       {
         text: "Access to events",
+        strike: false,
+      },
+      {
+        text: "Account Tickets Collection",
+        strike: false,
+      },
+      {
+        text: "Hall of Fame entry",
+        strike: false,
+      },
+      {
+        text: "Discounts and Promotions",
         strike: true,
       },
       {
-        text: "Access to events",
+        text: "First Access to News and Events",
         strike: true,
       },
       {
-        text: "Access to events",
+        text: "Voting Rights in the community",
+        strike: true,
+      },
+      {
+        text: "Personalized Merchandise",
         strike: true,
       },
     ],
@@ -50,14 +66,30 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     benefits: [
       {
         text: "Access to events",
+        strike: false,
+      },
+      {
+        text: "Account Tickets Collection",
+        strike: false,
+      },
+      {
+        text: "Hall of Fame upper entry",
+        strike: false,
+      },
+      {
+        text: "Discounts and Promotions",
+        strike: false,
+      },
+      {
+        text: "First Access to News and Events",
         strike: true,
       },
       {
-        text: "Access to events",
+        text: "Voting Rights in the community",
         strike: true,
       },
       {
-        text: "Access to events",
+        text: "Personalized Merchandise",
         strike: true,
       },
     ],
@@ -82,15 +114,31 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     title: "Tier III",
     benefits: [
       {
-        text: "Access to events",
+        text: "Access to EXCLUSIVE events",
+        strike: false,
+      },
+      {
+        text: "Account Tickets Collection",
+        strike: false,
+      },
+      {
+        text: "Hall of Fame top entry + personal quote",
+        strike: false,
+      },
+      {
+        text: "Discounts and Promotions",
+        strike: false,
+      },
+      {
+        text: "First Access to News and Events",
+        strike: false,
+      },
+      {
+        text: "Voting Rights in the community",
         strike: true,
       },
       {
-        text: "Access to events",
-        strike: true,
-      },
-      {
-        text: "Access to events",
+        text: "Personalized Merchandise",
         strike: true,
       },
     ],
@@ -120,16 +168,32 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     title: "Tier IV",
     benefits: [
       {
-        text: "Access to events",
-        strike: true,
+        text: "Access to EXCLUSIVE events",
+        strike: false,
       },
       {
-        text: "Access to events",
-        strike: true,
+        text: "Account Tickets Collection",
+        strike: false,
       },
       {
-        text: "Access to events",
-        strike: true,
+        text: "Hall of Fame top entry + personal quote",
+        strike: false,
+      },
+      {
+        text: "Discounts and Promotions",
+        strike: false,
+      },
+      {
+        text: "First Access to News and Events",
+        strike: false,
+      },
+      {
+        text: "Voting Rights in the community",
+        strike: false,
+      },
+      {
+        text: "Personalized Merchandise",
+        strike: false,
       },
     ],
     label: {
