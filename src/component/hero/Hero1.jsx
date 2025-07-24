@@ -78,7 +78,7 @@ const Hero1 = () => {
                         <Link
                           style={{ fontSize: "24px" }}
                           className={"rn-button-style--2 rn-btn-reverse-red"}
-                          to={"/alumni/register"}
+                          to={"/welcome-to-alumni"}
                         >
                           Become an Alumni
                         </Link>

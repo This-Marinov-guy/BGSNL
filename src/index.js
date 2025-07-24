@@ -29,8 +29,6 @@ import { useAppInitialization } from "./hooks/session/app-init";
 import { useAuthSession } from "./hooks/session/auth-session";
 import { selectUser } from "./redux/user";
 import CampaignLayout from "./layouts/CampaignLayout";
-import AlumniSignUp from "./pages/alumni/AlumniSignUp";
-import AlumniInfoPage from "./pages/alumni/AlumniInfoPage";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -75,6 +73,10 @@ const MemberPurchase = lazy(() =>
 );
 const ContestRegister = lazy(() =>
   import("./pages/eventActions/ContestRegister")
+);
+const AlumniSignUp = lazy(() => import("./pages/alumni/AlumniSignUp"));
+const AlumniInfoPage = lazy(() =>
+  import("./pages/alumni/AlumniInfoPage")
 );
 
 const AddEvent = lazy(() => import("./pages/userActions/AddEvent"));
@@ -134,7 +136,7 @@ const Root = () => {
                 element={<Structure />}
               />
 
-              <Route exact path={`/alumni/info`} element={<AlumniInfoPage />} />
+              <Route exact path={`/welcome-to-alumni`} element={<AlumniInfoPage />} />
 
               <Route exact path={`/developers`} element={<Developers />} />
               <Route exact path={`/terms-and-legals`} element={<Policy />} />
