@@ -71,10 +71,10 @@ const Hero1 = () => {
                           className={"rn-button-style--2 rn-btn-reverse-green"}
                           to={"/signup"}
                         >
-                          Become a Member
+                          Join the society
                         </Link>
                       </div>
-                      <div className="slide-btn">
+                      {/* <div className="slide-btn">
                         <Link
                           style={{ fontSize: "24px" }}
                           className={"rn-button-style--2 rn-btn-reverse-red"}
@@ -82,7 +82,7 @@ const Hero1 = () => {
                         >
                           Become an Alumni
                         </Link>
-                      </div>
+                      </div> */}
                     </div>
                   )}
                 </div>
