@@ -16,11 +16,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     title: "Tier I",
     benefits: [
       {
-        text: "Access to events",
-        strike: false,
-      },
-      {
-        text: "Account Tickets Collection",
+        text: "Exclusive Alumni Events",
         strike: false,
       },
       {
@@ -32,7 +28,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: true,
       },
       {
-        text: "First Access to News and Events",
+        text: "Access to private channel",
         strike: true,
       },
       {
@@ -65,11 +61,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     title: "Tier II",
     benefits: [
       {
-        text: "Access to events",
-        strike: false,
-      },
-      {
-        text: "Account Tickets Collection",
+        text: "Exclusive Alumni Events",
         strike: false,
       },
       {
@@ -81,7 +73,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "First Access to News and Events",
+        text: "Access to private channel",
         strike: true,
       },
       {
@@ -114,11 +106,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     title: "Tier III",
     benefits: [
       {
-        text: "Access to EXCLUSIVE events",
-        strike: false,
-      },
-      {
-        text: "Account Tickets Collection",
+        text: "Exclusive Alumni Events",
         strike: false,
       },
       {
@@ -130,7 +118,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "First Access to News and Events",
+        text: "Access to private channel",
         strike: false,
       },
       {
@@ -168,11 +156,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     title: "Tier IV",
     benefits: [
       {
-        text: "Access to EXCLUSIVE events",
-        strike: false,
-      },
-      {
-        text: "Account Tickets Collection",
+        text: "Exclusive Alumni Events",
         strike: false,
       },
       {
@@ -184,7 +168,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "First Access to News and Events",
+        text: "Access to private channel",
         strike: false,
       },
       {
