@@ -132,7 +132,7 @@ const JoinTheSociety = () => {
           </div>
 
           {/* Additional Info Section */}
-          <div className="row mt--80">
+          <div className="row mt--80 team_member_border_1">
             <div className="col-lg-12">
               <div className="text-center">
                 <h4>Still Not Sure?</h4>
