@@ -113,12 +113,18 @@ const HeaderContent = (props) => {
                 <a style={{ cursor: "pointer" }}>About</a>
                 <ul className="submenu">
                   <li>
+                    <Link to="/join-the-society">How to join</Link>
+                  </li>
+                  <li>
                     <Link to="/about">About the society</Link>
                   </li>
                   <li>
                     <Link to={`/board-and-committee`}>
                       Meet the Board & Committee
                     </Link>
+                  </li>
+                  <li>
+                    <Link to={`/welcome-to-alumni`}>Alumni Program</Link>
                   </li>
                 </ul>
               </li>
