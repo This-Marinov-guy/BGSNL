@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import moment from "moment";
 import { Badge } from "primereact/badge";
-import { Slider } from "primereact/slider";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Password } from "primereact/password";
 import { FiCheck, FiChevronLeft } from "react-icons/fi";
@@ -41,19 +40,6 @@ import {
   UNIVERSITIES_BY_CITY,
 } from "../../util/defines/UNIVERSITIES";
 import { render } from "react-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChessRook,
-  faHome,
-  faUser,
-  faChessPawn,
-  faChessBishop,
-  faChessKing,
-  faHeart,
-  faStar,
-  faCrown,
-  faGem,
-} from "@fortawesome/free-solid-svg-icons";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -133,147 +119,23 @@ const AlumniSignUp = (props) => {
   const { region } = useParams();
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
-  const [sliderValue, setSliderValue] = useState(25);
 
   const uniOptions = reorderUniversitiesByCode(UNIVERSITIES_BY_CITY, region);
-
-  // Function to get membership details based on slider value
-  const getMembershipFromPrice = (price) => {
-    if (price <= 10) {
-      return {
-        id: 1,
-        title: "Student Tier",
-        benefits: [
-          { text: "Basic Alumni Events", strike: false },
-          { text: "Hall of Fame entry", strike: false },
-          { text: "Event Discounts", strike: true },
-          { text: "Private Channel Access", strike: true },
-          { text: "Voting Rights", strike: true },
-          { text: "Personalized Merchandise", strike: true },
-        ],
-        icon: (
-          <FontAwesomeIcon
-            style={{ fontSize: "26px", color: "#6c757d", height: "75px" }}
-            icon={faChessPawn}
-          />
-        ),
-        price: price,
-        period: 1,
-        description: "Perfect for students and new graduates",
-        borderColor: "#6c757d",
-      };
-    } else if (price <= 25) {
-      return {
-        id: 2,
-        title: "Professional Tier",
-        benefits: [
-          { text: "Exclusive Alumni Events", strike: false },
-          { text: "Hall of Fame upper entry", strike: false },
-          { text: "Event Discounts & Promotions", strike: false },
-          { text: "Private Channel Access", strike: true },
-          { text: "Voting Rights", strike: true },
-          { text: "Personalized Merchandise", strike: true },
-        ],
-        icon: (
-          <FontAwesomeIcon
-            style={{ fontSize: "28px", color: "#17a2b8", height: "75px" }}
-            icon={faChessBishop}
-          />
-        ),
-        price: price,
-        period: 3,
-        description: "Great for working professionals",
-        borderColor: "#17a2b8",
-      };
-    } else if (price <= 50) {
-      return {
-        id: 3,
-        title: "Premium Tier",
-        benefits: [
-          { text: "VIP Alumni Events", strike: false },
-          { text: "Hall of Fame top entry + quote", strike: false },
-          { text: "Maximum Event Discounts", strike: false },
-          { text: "Private Channel Access", strike: false },
-          { text: "Voting Rights", strike: false },
-          { text: "Personalized Merchandise", strike: true },
-        ],
-        label: { color: "#28a745", text: "Popular" },
-        icon: (
-          <FontAwesomeIcon
-            style={{ fontSize: "30px", color: "#28a745", height: "75px" }}
-            icon={faChessRook}
-          />
-        ),
-        price: price,
-        period: 6,
-        description: "Most popular choice with great benefits",
-        borderColor: "#28a745",
-      };
-    } else if (price <= 75) {
-      return {
-        id: 4,
-        title: "Elite Tier",
-        benefits: [
-          { text: "Exclusive VIP Events", strike: false },
-          { text: "Hall of Fame premium entry", strike: false },
-          { text: "All Event Discounts", strike: false },
-          { text: "Private Channel Access", strike: false },
-          { text: "Full Voting Rights", strike: false },
-          { text: "Premium Merchandise", strike: false },
-        ],
-        label: { color: "#ffc107", text: "Best Value" },
-        icon: (
-          <FontAwesomeIcon
-            style={{ fontSize: "32px", color: "#ffc107", height: "75px" }}
-            icon={faCrown}
-          />
-        ),
-        price: price,
-        period: 12,
-        description: "Elite benefits for serious alumni",
-        borderColor: "#ffc107",
-      };
-    } else {
-      return {
-        id: 5,
-        title: "Platinum Tier",
-        benefits: [
-          { text: "All Alumni Events", strike: false },
-          { text: "Hall of Fame platinum entry", strike: false },
-          { text: "Maximum Discounts", strike: false },
-          { text: "Private Channel Access", strike: false },
-          { text: "Board Voting Rights", strike: false },
-          { text: "Exclusive Merchandise", strike: false },
-        ],
-        label: { color: "#dc3545", text: "Ultimate" },
-        icon: (
-          <FontAwesomeIcon
-            style={{ fontSize: "34px", color: "#dc3545", height: "75px" }}
-            icon={faGem}
-          />
-        ),
-        price: price,
-        period: 12,
-        description: "Ultimate alumni experience",
-        borderColor: "#dc3545",
-      };
-    }
-  };
-
-  const currentMembership = getMembershipFromPrice(sliderValue);
 
   const handleSelectStep = (e) => {
     const newIndex = e.index;
 
     if (
       newIndex < activeStep ||
-      (region && (newIndex < 2 || currentMembership))
+      (region && (newIndex < 2 || selectedMembershipIndex))
     ) {
       setActiveStep(newIndex);
     }
   };
 
   const { loading, sendRequest } = useHttpClient();
+
+  const [selectedMembershipIndex, setSelectedMembershipIndex] = useState(null);
 
   const navigate = useNavigate();
 
@@ -293,104 +155,127 @@ const AlumniSignUp = (props) => {
       stepComp = (
         <div className="service-area ptb--40">
           <div className="container">
-            <div className="center_div mb--40">
+            <div className="center_div mb--20">
               <div className="d-flex flex-column align-items-center justify-content-center">
-                <h3 className="mb--30">Choose Your Membership Level</h3>
-                <p className="mb--40 text-center" style={{ maxWidth: "600px" }}>
-                  Select your monthly contribution amount using the slider below. 
-                  Different levels unlock various benefits and privileges within our alumni community.
-                </p>
-                
-                {/* Price Slider */}
-                <div style={{ width: "100%", maxWidth: "500px", marginBottom: "30px" }}>
-                  <div className="d-flex justify-content-between align-items-center mb--20">
-                    <span>€0</span>
-                    <h4 style={{ margin: 0 }}>€{sliderValue}</h4>
-                    <span>€100</span>
-                  </div>
-                  <Slider
-                    value={sliderValue}
-                    onChange={(e) => setSliderValue(e.value)}
-                    min={0}
-                    max={100}
-                    step={5}
-                    className="w-100"
-                    style={{ 
-                      height: "8px",
-                      background: "linear-gradient(to right, #6c757d, #17a2b8, #28a745, #ffc107, #dc3545)"
-                    }}
-                  />
-                  <div className="d-flex justify-content-between mt--10" style={{ fontSize: "12px", color: "#666" }}>
-                    <span>Student</span>
-                    <span>Professional</span>
-                    <span>Premium</span>
-                    <span>Elite</span>
-                    <span>Platinum</span>
-                  </div>
-                </div>
+                {selectedMembershipIndex !== null && (
+                  <h3 className="mb--20">
+                    Current choice is:{" "}
+                    {ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title}{" "}
+                  </h3>
+                )}
 
-                {/* Selected Membership Display */}
-                <div 
-                  className="service service__style--2"
+                {/* <p>
+                  Membership plans distinguish only by the price and the billing
+                  period. By becoming a member you receive benefits like:
+                </p>
+                <ul className="row list-style--1 mb--20">
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Exclusive member events
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Discounts for events
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Premium collection of event tickets
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Internship opportunities worldwide
+                  </li>
+                  <li className="col-lg-4 col-md-6 col-12">
+                    <FiCheck />
+                    Many more to be explored...
+                  </li>
+                </ul>
+                <p style={{ fontSize: "15px" }}>
+                  *You will automatically be billed on the end of the period,
+                  except if you cancel the subscription from your profile or the
+                  funds in your bank account are insufficient
+                </p> */}
+              </div>
+            </div>
+            <div
+              className="d-flex flex-column flex-md-row justify-content-center service-one-wrapper center_div"
+              style={{ gap: "20px", flexWrap: "wrap" }}
+            >
+              {ALUMNI_MEMBERSHIP_SPECIFICS.map((val, i) => (
+                <div
+                  key={i}
                   style={{
-                    border: `3px solid ${currentMembership.borderColor}`,
-                    width: "100%",
-                    maxWidth: "500px",
-                    position: "relative",
-                    backgroundColor: "#f8f9fa"
+                    width: "calc(25% - 15px)",
+                    minWidth: "250px",
+                    maxWidth: "300px",
                   }}
                 >
-                  {currentMembership?.label?.text && (
-                    <Badge
-                      style={{
-                        position: "absolute",
-                        top: "-10px",
-                        right: "-10px",
-                        backgroundColor: currentMembership.label.color,
-                      }}
-                      value={currentMembership.label.text}
-                    />
-                  )}
-                  
-                  <div className="hor_section">
-                    <div className="icon">{currentMembership.icon}</div>
-                    <div style={{ flex: 1 }}>
-                      <h4>€{currentMembership.price} / month</h4>
-                      <small>Billed every {currentMembership.period === 1 ? "month" : `${currentMembership.period} months`}</small>
-                    </div>
-                  </div>
-                  
-                  <div className="content">
-                    <h3>{currentMembership.title}</h3>
-                    <p>{currentMembership.description}</p>
-                    {currentMembership?.benefits && (
-                      <ul className="list-style--2">
-                        {currentMembership.benefits.map((benefit, index) => (
-                          <li
-                            style={{
-                              textDecoration: benefit.strike ? "line-through" : "none",
-                              color: benefit.strike ? "#999" : "inherit"
-                            }}
-                            key={index}
-                          >
-                            <FiCheck style={{ marginRight: "8px", color: benefit.strike ? "#999" : "#28a745" }} />
-                            {benefit.text}
-                          </li>
-                        ))}
-                      </ul>
+                  <button
+                    style={
+                      selectedMembershipIndex !== null &&
+                      val.title ===
+                        ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
+                          .title
+                        ? {
+                            backgroundColor: "#017363",
+                            border: `2px solid ${val.borderColor ?? "black"}`,
+                            width: "100%",
+                          }
+                        : {
+                            border: `2px solid ${val.borderColor ?? "black"}`,
+                            width: "100%",
+                          }
+                    }
+                    className="service service__style--2"
+                    onClick={() => {
+                      setSelectedMembershipIndex(i);
+                      setActiveStep(1);
+                    }}
+                  >
+                    {val?.label?.text && (
+                      <Badge
+                        style={{
+                          position: "absolute",
+                          top: "-10px",
+                          right: "-10px",
+                          backgroundColor: val.label.color,
+                        }}
+                        value={val.label.text}
+                      />
                     )}
-                  </div>
+                    <div className="hor_section">
+                      <div className="icon">{val.icon}</div>
+                      <h5 style={{ width: "40%" }}>
+                        {val.price}&#8364; every{" "}
+                        {'month'}
+                      </h5>
+                    </div>
+                    <div className="content">
+                      <h3>{val.title}</h3>
+                      {val?.description && <p>{val.description}</p>}
+                      {val?.benefits && (
+                        <ul className="list-style--2">
+                          {val.benefits.map((benefit, index) => (
+                            <li
+                              style={{
+                                textDecoration: benefit.strike
+                                  ? "line-through"
+                                  : "none",
+                              }}
+                              key={index}
+                            >
+                              {benefit.icon && (
+                                <FontAwesomeIcon icon={benefit.icon} />
+                              )}
+                              {benefit.text}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </button>
                 </div>
-
-                {/* Continue Button */}
-                <button
-                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
-                  onClick={() => setActiveStep(1)}
-                  style={{ minWidth: "200px" }}
-                >
-                  Continue with {currentMembership.title}
-                </button>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -400,7 +285,7 @@ const AlumniSignUp = (props) => {
     case 1:
       stepComp = (
         <div className="blog-comment-form pb--120 bg_color--1">
-          {currentMembership && (
+          {selectedMembershipIndex !== null && (
             <div className="container">
               <Formik
                 className="inner"
@@ -418,9 +303,14 @@ const AlumniSignUp = (props) => {
                   } else {
                     formData.append("image", null);
                   }
-                  formData.append("period", currentMembership.period);
-                  formData.append("price", currentMembership.price);
-                  formData.append("membershipId", currentMembership.id);
+                  formData.append(
+                    "period",
+                    ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].period
+                  );
+                  formData.append(
+                    "itemId",
+                    ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].itemId
+                  );
                   formData.append("origin_url", window.location.origin);
                   formData.append("method", "signup");
                   formData.append("region", region);
