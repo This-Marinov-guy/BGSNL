@@ -81,7 +81,36 @@ const JoinTheSociety = () => {
 
             {/* Alumni Card */}
             <div className="col-lg-5 col-md-6 col-sm-6 col-12">
-              <div className="service service__style--2 bg-color-blackest radius text-center">
+              <div className="service service__style--2 bg-color-blackest radius text-center" style={{ position: "relative" }}>
+                {/* Learn More Button */}
+                <Link
+                  to="/welcome-to-alumni"
+                  style={{
+                    position: "absolute",
+                    top: "15px",
+                    right: "15px",
+                    backgroundColor: "rgba(229, 184, 11, 0.1)",
+                    border: "1px solid #e5b80b",
+                    borderRadius: "20px",
+                    padding: "6px 12px",
+                    fontSize: "12px",
+                    color: "#e5b80b",
+                    textDecoration: "none",
+                    transition: "all 0.3s ease",
+                    zIndex: 10,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = "#e5b80b";
+                    e.target.style.color = "white";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "rgba(229, 184, 11, 0.1)";
+                    e.target.style.color = "#e5b80b";
+                  }}
+                >
+                  Learn More
+                </Link>
+                
                 <div className="icon">
                   <img
                     src="/assets/images/alumni/alumni.jpeg"

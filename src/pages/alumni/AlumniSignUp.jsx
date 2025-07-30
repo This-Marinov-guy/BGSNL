@@ -280,7 +280,7 @@ const AlumniSignUp = (props) => {
                                   flexShrink: 0
                                 }} />
                               )}
-                              <span>{benefit.text}</span>
+                              <span style={{ textAlign: "left" }}>{benefit.text}</span>
                             </li>
                           ))}
                         </ul>
@@ -741,7 +741,7 @@ const AlumniSignUp = (props) => {
         </Link>
       </h3>
 
-      {/* Back Button */}
+      {/* Back Button
       <div className="container">
         <div className="row">
           <div className="col-12">
@@ -773,7 +773,7 @@ const AlumniSignUp = (props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <Steps
         model={stepConfig}
