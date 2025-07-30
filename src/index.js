@@ -75,9 +75,8 @@ const ContestRegister = lazy(() =>
   import("./pages/eventActions/ContestRegister")
 );
 const AlumniSignUp = lazy(() => import("./pages/alumni/AlumniSignUp"));
-const AlumniInfoPage = lazy(() =>
-  import("./pages/alumni/AlumniInfoPage")
-);
+const AlumniInfoPage = lazy(() => import("./pages/alumni/AlumniInfoPage"));
+const JoinTheSociety = lazy(() => import("./pages/information/JoinTheSociety"));
 
 const AddEvent = lazy(() => import("./pages/userActions/AddEvent"));
 const EditEvent = lazy(() => import("./pages/userActions/EditEvent"));
@@ -136,7 +135,16 @@ const Root = () => {
                 element={<Structure />}
               />
 
-              <Route exact path={`/welcome-to-alumni`} element={<AlumniInfoPage />} />
+              <Route
+                exact
+                path={`/welcome-to-alumni`}
+                element={<AlumniInfoPage />}
+              />
+              <Route
+                exact
+                path={`/join-the-society`}
+                element={<JoinTheSociety />}
+              />
 
               <Route exact path={`/developers`} element={<Developers />} />
               <Route exact path={`/terms-and-legals`} element={<Policy />} />
@@ -280,7 +288,11 @@ const Root = () => {
                 <Fragment>
                   <Route exact path={`/login`} element={<LogIn />} />
                   <Route exact path={`/:region?/signup`} element={<SignUp />} />
-                  <Route exact path={`/alumni/register`} element={<AlumniSignUp />} />
+                  <Route
+                    exact
+                    path={`/alumni/register`}
+                    element={<AlumniSignUp />}
+                  />
                   {/* NOTE: purchase ticket is moved to a dynamic check in the auth routes */}
                 </Fragment>
               )}
