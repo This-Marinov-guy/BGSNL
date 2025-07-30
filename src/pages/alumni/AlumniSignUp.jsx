@@ -4,7 +4,7 @@ import moment from "moment";
 import { Badge } from "primereact/badge";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Password } from "primereact/password";
-import { FiCheck, FiChevronLeft } from "react-icons/fi";
+import { FiCheck, FiChevronLeft, FiArrowLeft, FiX } from "react-icons/fi";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useHttpClient } from "../../hooks/common/http-hook";
@@ -258,16 +258,29 @@ const AlumniSignUp = (props) => {
                           {val.benefits.map((benefit, index) => (
                             <li
                               style={{
-                                textDecoration: benefit.strike
-                                  ? "line-through"
-                                  : "none",
+                                color: benefit.strike ? "#999" : "inherit",
+                                display: "flex",
+                                alignItems: "center",
+                                marginBottom: "8px"
                               }}
                               key={index}
                             >
-                              {benefit.icon && (
-                                <FontAwesomeIcon icon={benefit.icon} />
+                              {benefit.strike ? (
+                                <FiX style={{ 
+                                  marginRight: "8px", 
+                                  color: "#dc3545", 
+                                  fontSize: "16px",
+                                  flexShrink: 0
+                                }} />
+                              ) : (
+                                <FiCheck style={{ 
+                                  marginRight: "8px", 
+                                  color: "#28a745", 
+                                  fontSize: "16px",
+                                  flexShrink: 0
+                                }} />
                               )}
-                              {benefit.text}
+                              <span>{benefit.text}</span>
                             </li>
                           ))}
                         </ul>
@@ -727,6 +740,40 @@ const AlumniSignUp = (props) => {
           (or rather be a Member)
         </Link>
       </h3>
+
+      {/* Back Button */}
+      <div className="container">
+        <div className="row">
+          <div className="col-12">
+            <div className="d-flex justify-content-start align-items-center mt--30 mb--20">
+              <button
+                onClick={() => navigate(-1)}
+                className="d-flex align-items-center"
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#017363",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  padding: "8px 12px",
+                  borderRadius: "4px",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = "#f8f9fa";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = "transparent";
+                }}
+              >
+                <FiArrowLeft style={{ marginRight: "8px", fontSize: "16px" }} />
+                <span className="d-none d-sm-inline">Back to Previous Page</span>
+                <span className="d-inline d-sm-none">Back</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <Steps
         model={stepConfig}
