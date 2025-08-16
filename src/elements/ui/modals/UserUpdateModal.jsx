@@ -134,7 +134,7 @@ const UserUpdateModal = ({ currentUser }) => {
               <FiX className="x_icon" onClick={closeHandler} />
             </div>
             <div className="row mb--40 mt--40">
-              <div className="col-lg-12 col-md-12 col-12">
+              <div className="col-lg-12 col-md-12 col-12 d-flex flex-column" style={{ gap: "10px" }}>
                 <ImageInput
                   onChange={(event) => {
                     setFieldValue("image", event.target.files[0]);
@@ -148,6 +148,7 @@ const UserUpdateModal = ({ currentUser }) => {
                     />
                   }
                 />
+                <p className="information">Click on the image to change it</p>
               </div>
             </div>
             <div className="row">
