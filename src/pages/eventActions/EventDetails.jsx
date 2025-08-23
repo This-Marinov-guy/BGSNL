@@ -139,7 +139,7 @@ const EventDetails = () => {
                   </div>
                   {
                     //for links to subEvent
-                    selectedEvent?.subEvent.description &&
+                    selectedEvent?.subEvent?.description &&
                       selectedEvent?.subEvent.links.length > 0 && (
                         <div className="mt--40 mb--40 team_member_border_1 center_section">
                           <h3 className="center_text">
