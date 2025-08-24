@@ -130,11 +130,11 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: true,
       },
     ],
-    label: {
-      color: "#00acee",
-      text: "Best Price",
-    },
-    borderColor: "#00acee",
+    // label: {
+    //   color: "#00acee",
+    //   text: "Best Price",
+    // },
+    // borderColor: "#00acee",
     icon: (
       <FontAwesomeIcon
         style={{

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import * as yup from "yup";
 import moment from "moment";
 import { Badge } from "primereact/badge";
@@ -17,64 +17,24 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
-import { Dropdown } from "primereact/dropdown";
 import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../util/defines/ALUMNI";
 import {
   encryptData,
   isObjectEmpty,
   removeSpacesAndLowercase,
 } from "../../util/functions/helpers";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from "primereact/steps";
-import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import { showModal } from "../../redux/modal";
 import {
   BIRTHDAY_MODAL,
   INCORRECT_MISSING_DATA,
 } from "../../util/defines/common";
-import { Calendar } from "../../elements/inputs/common/Calendar";
 import { showNotification } from "../../redux/notification";
-import PhoneInput from "../../elements/inputs/common/PhoneInput";
-import {
-  reorderUniversitiesByCode,
-  UNIVERSITIES_BY_CITY,
-} from "../../util/defines/UNIVERSITIES";
-import { render } from "react-dom";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   surname: yup.string().required("Surname is required"),
-  birth: yup.string().required("Date of birth is required"),
-  phone: yup
-    .string()
-    .min(8, "Phone number is not full")
-    .required("Phone is required"),
   email: yup.string().email("Please enter a valid email").required(),
-  university: yup.string().required("Your university is required"),
-  otherUniversityName: yup.string().when("university", {
-    is: "other",
-    then: () => yup.string().required("Please state which university"),
-    otherwise: () => yup.string(),
-  }),
-  graduationDate: yup.number().when("university", {
-    is: true,
-    then: () =>
-      yup
-        .number()
-        .required("Graduation year is required")
-        .max(2050, "Graduation Year should not exceed 2050"),
-    otherwise: () => yup.number(),
-  }),
-  course: yup.string().when("university", {
-    is: true,
-    then: () => yup.string().required("Your course is required"),
-    otherwise: () => yup.string(),
-  }),
-  studentNumber: yup.string().when("university", {
-    is: true,
-    then: () => yup.string().required("Your student number is required"),
-    otherwise: () => yup.string(),
-  }),
   password: yup
     .string()
     .min(8, "Password must be at least 8 characters long")
@@ -87,11 +47,7 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords do not match")
     .required("Passwords do not match"),
-  notificationTypeTerms: yup.string(),
-  notificationTerms: yup.bool(),
   policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  dataTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   memberKey: yup.string(),
 });
 
@@ -119,8 +75,6 @@ const AlumniSignUp = (props) => {
   const { region } = useParams();
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
-
-  const uniOptions = reorderUniversitiesByCode(UNIVERSITIES_BY_CITY, region);
 
   const handleSelectStep = (e) => {
     const newIndex = e.index;
@@ -246,8 +200,7 @@ const AlumniSignUp = (props) => {
                     <div className="hor_section">
                       <div className="icon">{val.icon}</div>
                       <h5 style={{ width: "40%" }}>
-                        {val.price}&#8364; every{" "}
-                        {'month'}
+                        {val.price}&#8364; every {"month"}
                       </h5>
                     </div>
                     <div className="content">
@@ -261,26 +214,32 @@ const AlumniSignUp = (props) => {
                                 color: benefit.strike ? "#999" : "inherit",
                                 display: "flex",
                                 alignItems: "center",
-                                marginBottom: "8px"
+                                marginBottom: "8px",
                               }}
                               key={index}
                             >
                               {benefit.strike ? (
-                                <FiX style={{ 
-                                  marginRight: "8px", 
-                                  color: "#dc3545", 
-                                  fontSize: "16px",
-                                  flexShrink: 0
-                                }} />
+                                <FiX
+                                  style={{
+                                    marginRight: "8px",
+                                    color: "#dc3545",
+                                    fontSize: "16px",
+                                    flexShrink: 0,
+                                  }}
+                                />
                               ) : (
-                                <FiCheck style={{ 
-                                  marginRight: "8px", 
-                                  color: "#28a745", 
-                                  fontSize: "16px",
-                                  flexShrink: 0
-                                }} />
+                                <FiCheck
+                                  style={{
+                                    marginRight: "8px",
+                                    color: "#28a745",
+                                    fontSize: "16px",
+                                    flexShrink: 0,
+                                  }}
+                                />
                               )}
-                              <span style={{ textAlign: "left" }}>{benefit.text}</span>
+                              <span style={{ textAlign: "left" }}>
+                                {benefit.text}
+                              </span>
                             </li>
                           ))}
                         </ul>
@@ -324,27 +283,16 @@ const AlumniSignUp = (props) => {
                     "itemId",
                     ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].itemId
                   );
+                  formData.append(
+                    "tier",
+                    ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].id
+                  );
                   formData.append("origin_url", window.location.origin);
-                  formData.append("method", "signup");
-                  formData.append("region", region);
+                  formData.append("method", "alumni-signup");
                   formData.append("name", values.name);
                   formData.append("surname", values.surname);
-                  formData.append("birth", values.birth);
-                  formData.append("phone", values.phone);
                   formData.append("email", values.email);
-                  formData.append("university", values.university);
-                  formData.append(
-                    "otherUniversityName",
-                    values.otherUniversityName
-                  );
-                  formData.append("graduationDate", values.graduationDate);
-                  formData.append("course", values.course);
-                  formData.append("studentNumber", values.studentNumber);
                   formData.append("password", encryptData(values.password));
-                  formData.append(
-                    "notificationTypeTerms",
-                    values.notificationTypeTerms
-                  );
                   const responseData = await sendRequest(
                     "security/check-email",
                     "POST",
@@ -366,7 +314,7 @@ const AlumniSignUp = (props) => {
 
                     if (checkMember?.status === true) {
                       const responseData = await sendRequest(
-                        `security/signup`,
+                        `security/alumni-signup`,
                         "POST",
                         formData
                       );
@@ -381,9 +329,8 @@ const AlumniSignUp = (props) => {
                       dispatch(
                         showNotification({
                           severity: "success",
-                          summary: "Welcome to the Society",
-                          detail:
-                            "Hop in the User section to see your tickets, news and your information",
+                          summary: "Welcome to the Alumni Society",
+                          detail: "Hop in the User section to see your details",
                           life: 7000,
                         })
                       );
@@ -392,10 +339,7 @@ const AlumniSignUp = (props) => {
                         dispatch(showModal(BIRTHDAY_MODAL));
                       }
 
-                      navigate(
-                        sessionStorage.getItem("prevUrl") ??
-                          `/${responseData.region}`
-                      );
+                      navigate(sessionStorage.getItem("prevUrl") ?? `/`);
                       sessionStorage.removeItem("prevUrl");
                     } else {
                       const responseData = await sendRequest(
@@ -413,21 +357,10 @@ const AlumniSignUp = (props) => {
                 initialValues={{
                   name: "",
                   surname: "",
-                  phone: "",
-                  birth: "",
                   email: "",
-                  university: "",
-                  otherUniversityName: "",
-                  graduationDate: "",
-                  course: "",
-                  studentNumber: "",
                   password: "",
                   confirmPassword: "",
                   policyTerms: false,
-                  dataTerms: false,
-                  notificationTerms: false,
-                  notificationTypeTerms: "",
-                  payTerms: false,
                   memberKey: "",
                 }}
               >
@@ -477,37 +410,6 @@ const AlumniSignUp = (props) => {
                           <ErrorMessage
                             className="error"
                             name="surname"
-                            component="div"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-lg-6 col-md-12 col-12">
-                        <div className="rn-form-group">
-                          <Calendar
-                            onSelect={(value) => {
-                              setFieldValue("birth", value);
-                            }}
-                            placeholder="Select your Birth Date"
-                          />
-                          <ErrorMessage
-                            className="error"
-                            name="birth"
-                            component="div"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6 col-md-12 col-12">
-                        <div className="rn-form-group">
-                          <PhoneInput
-                            placeholder="WhatsApp Phone "
-                            onChange={(value) => setFieldValue("phone", value)}
-                          />
-
-                          <ErrorMessage
-                            className="error"
-                            name="phone"
                             component="div"
                           />
                         </div>
@@ -575,7 +477,7 @@ const AlumniSignUp = (props) => {
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-lg-6 col-md-6 col-12">
+                      <div className="col-12">
                         <div className="hor_section_nospace mt--40">
                           <Field
                             style={{ maxWidth: "30px" }}
@@ -598,63 +500,8 @@ const AlumniSignUp = (props) => {
                           name="policyTerms"
                           component="div"
                         />
+                      </div>
 
-                        <div className="hor_section_nospace mt--40">
-                          <Field
-                            style={{ maxWidth: "30px" }}
-                            type="checkbox"
-                            name="dataTerms"
-                          ></Field>
-                          <p className="information">
-                            I consent to my data being processed confidentially
-                            for the purposes of the organization
-                          </p>
-                        </div>
-                        <ErrorMessage
-                          className="error"
-                          name="dataTerms"
-                          component="div"
-                        />
-                        <div className="hor_section_nospace mt--40">
-                          <Field
-                            style={{ maxWidth: "30px" }}
-                            type="checkbox"
-                            name="payTerms"
-                          ></Field>
-                          <p className="information">
-                            I consent BGSNL to deduct the membership fee at the
-                            agreed period in order to keep my benefits as a
-                            member and I keep my rights to cancel or update my
-                            payment methods.
-                          </p>
-                        </div>
-                      </div>
-                      <div className="col-lg-6 col-md-6 col-12">
-                        <div className="hor_section_nospace mt--40">
-                          <Field
-                            style={{ maxWidth: "30px" }}
-                            type="checkbox"
-                            name="notificationTerms"
-                          ></Field>
-                          <p className="information">
-                            I consent to being notified by BGSNL about events
-                            and discounts from us and our sponsors
-                          </p>
-                        </div>
-                        <Field as="select" name="notificationTypeTerms">
-                          <option value="" disabled>
-                            Contact By
-                          </option>
-                          <option value="Email">Email</option>
-                          <option value="WhatsApp">WhatsApp</option>
-                          <option value="Email & WhatsApp">Both</option>
-                        </Field>
-                        <ErrorMessage
-                          className="error"
-                          name="payTerms"
-                          component="div"
-                        />
-                      </div>
                       {/* <div
                       style={{ borderWidth: "30px" }}
                       className="col-lg-6 col-md-6 col-12 mt--60 mb--60 center_div team_member_border_1"
