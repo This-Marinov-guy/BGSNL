@@ -14,7 +14,7 @@ import { Link, useParams } from "react-router-dom";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import GalaMembers from "../information/GalaMembers";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import { estimatePriceByEvent } from "../../util/functions/helpers";
+import { estimatePriceByEvent, isMember } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
@@ -129,7 +129,7 @@ const EventDetails = () => {
                         Entry fee{" "}
                         {
                           <DynamicTicketBadge
-                            isMember={!!user?.token}
+                            isMember={isMember(user)}
                             product={selectedEvent?.product}
                           />
                         }
