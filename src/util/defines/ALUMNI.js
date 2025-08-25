@@ -51,9 +51,9 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         icon={faChessPawn}
       />
     ),
-    price: 5,
-    itemId: MEMBERSHIP_PRICES_IDS["6-months Member"].start,
-    renewItemId: MEMBERSHIP_PRICES_IDS["6-months Member"].renewal,
+    price: 3,
+    itemId: "price_1Rx1XKAShinXgMFZqWsg4V0D",
+    renewItemId: "price_1Rx1XKAShinXgMFZqWsg4V0D",
     period: 1,
   },
   {
@@ -96,10 +96,10 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         icon={faChessBishop}
       />
     ),
-    price: 14,
-    itemId: MEMBERSHIP_PRICES_IDS["12-months Member"].start,
-    renewItemId: MEMBERSHIP_PRICES_IDS["12-months Member"].renewal,
-    period: 3,
+    price: 5,
+    itemId: "price_1Rx1XYAShinXgMFZSTH9nEvo",
+    renewItemId: "price_1Rx1XYAShinXgMFZSTH9nEvo",
+    period: 1,
   },
   {
     id: 3,
@@ -146,10 +146,10 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         icon={faChessRook}
       />
     ),
-    price: 25,
-    itemId: MEMBERSHIP_PRICES_IDS["12-months Member"].start,
-    renewItemId: MEMBERSHIP_PRICES_IDS["12-months Member"].renewal,
-    period: 6,
+    price: 7,
+    itemId: "price_1Rx1Y7AShinXgMFZzqTEzqHz",
+    renewItemId: "price_1Rx1Y7AShinXgMFZzqTEzqHz",
+    period: 1,
   },
   {
     id: 4,
@@ -197,9 +197,9 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         className="icon-chess"
       />
     ),
-    price: "above 10",
-    itemId: MEMBERSHIP_PRICES_IDS["12-months Member"].start,
-    renewItemId: MEMBERSHIP_PRICES_IDS["12-months Member"].renewal,
+    price: "10",
+    itemId: "price_1Rx1YOAShinXgMFZITzXRuam",
+    renewItemId: "price_1Rx1YOAShinXgMFZITzXRuam",
     period: 1,
   },
 ];
