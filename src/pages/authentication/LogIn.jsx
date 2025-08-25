@@ -26,7 +26,9 @@ const Login = () => {
 
   const [isVisible, setIsVisible] = useState(false);
 
-  const { loading, sendRequest } = useHttpClient();
+  const { sendRequest } = useHttpClient();
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -40,6 +42,7 @@ const Login = () => {
 
   const loginHandler = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
       const responseData = await sendRequest(`security/login`, "POST", {
         email: loginFormValues.email,
@@ -92,6 +95,8 @@ const Login = () => {
       navigate(sessionStorage.getItem("prevUrl") ?? `/${responseData.region}`);
       sessionStorage.removeItem("prevUrl");
     } catch (err) {
+    } finally {
+      setLoading(false);
     }
   };
 
