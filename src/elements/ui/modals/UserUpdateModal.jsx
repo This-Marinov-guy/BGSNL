@@ -8,8 +8,13 @@ import Loader from "../../../elements/ui/loading/Loader";
 import ImageInput from "../../inputs/common/ImageInput";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { USER_UPDATE_MODAL } from "../../../util/defines/common";
+import { ALUMNI, USER_UPDATE_MODAL } from "../../../util/defines/common";
 import PhoneInput from "../../inputs/common/PhoneInput";
+import {
+  reorderUniversitiesByCode,
+  UNIVERSITIES_BY_CITY,
+} from "../../../util/defines/UNIVERSITIES";
+import { Dropdown } from "primereact/dropdown";
 
 const schema = yup.object().shape({
   name: yup.string(),
@@ -35,6 +40,14 @@ const schema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Passwords do not match"),
 });
 
+const groupedItemTemplate = (option) => {
+  return (
+    <div className="flex align-items-start justify-content-start">
+      <div>{option.label}</div>
+    </div>
+  );
+};
+
 const UserUpdateModal = ({ currentUser }) => {
   const { loading, sendRequest } = useHttpClient();
 
@@ -45,6 +58,13 @@ const UserUpdateModal = ({ currentUser }) => {
   const closeHandler = () => {
     dispatch(removeModal(USER_UPDATE_MODAL));
   };
+
+  const uniOptions = reorderUniversitiesByCode(
+    UNIVERSITIES_BY_CITY,
+    currentUser?.region
+  );
+
+  const isAlumni = currentUser.roles.includes(ALUMNI);
 
   return (
     <ModalWindow show={modal.includes(USER_UPDATE_MODAL)}>
@@ -134,7 +154,10 @@ const UserUpdateModal = ({ currentUser }) => {
               <FiX className="x_icon" onClick={closeHandler} />
             </div>
             <div className="row mb--40 mt--40">
-              <div className="col-lg-12 col-md-12 col-12 d-flex flex-column" style={{ gap: "10px" }}>
+              <div
+                className="col-lg-12 col-md-12 col-12 d-flex flex-column"
+                style={{ gap: "10px" }}
+              >
                 <ImageInput
                   onChange={(event) => {
                     setFieldValue("image", event.target.files[0]);
@@ -173,23 +196,25 @@ const UserUpdateModal = ({ currentUser }) => {
                 </div>
               </div>
 
-              <div className="col-lg-6 col-md-12 col-12">
-                <div className="rn-form-group">
-                  <PhoneInput
-                    placeholder="WhatsApp Phone "
-                    initialValue={values.phone}
-                    onChange={(value) => setFieldValue("phone", value)}
-                  ></PhoneInput>
-                  <p className="information">
-                    Please type your number with + and country code
-                  </p>
-                  <ErrorMessage
-                    className="error"
-                    name="phone"
-                    component="div"
-                  />
+              {!isAlumni && (
+                <div className="col-lg-6 col-md-12 col-12">
+                  <div className="rn-form-group">
+                    <PhoneInput
+                      placeholder="WhatsApp Phone "
+                      initialValue={values.phone}
+                      onChange={(value) => setFieldValue("phone", value)}
+                    ></PhoneInput>
+                    <p className="information">
+                      Please type your number with + and country code
+                    </p>
+                    <ErrorMessage
+                      className="error"
+                      name="phone"
+                      component="div"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
@@ -201,22 +226,31 @@ const UserUpdateModal = ({ currentUser }) => {
                   />
                 </div>
               </div>
-              <div className="col-lg-6 col-md-12 col-12">
-                <Field as="select" name="university">
-                  <option value="" disabled>
-                    Select your university
-                  </option>
-                  <option value="RUG">RUG</option>
-                  <option value="Hanze">Hanze</option>
-                  <option value="other">Other university</option>
-                  <option value="working">Working</option>
-                </Field>
-                <ErrorMessage
-                  className="error"
-                  name="university"
-                  component="div"
-                />
-              </div>
+
+              {!isAlumni && (
+                <div className="col-lg-6 col-md-12 col-12">
+                  <Dropdown
+                    value={values.university}
+                    filter
+                    onChange={(e) => {
+                      setFieldValue("university", e.value);
+                    }}
+                    options={uniOptions}
+                    name="university"
+                    className="p-dropdown-custom"
+                    placeholder="State your University"
+                    optionLabel="label"
+                    optionGroupLabel="label"
+                    optionGroupChildren="items"
+                    optionGroupTemplate={groupedItemTemplate}
+                  />
+                  <ErrorMessage
+                    className="error"
+                    name="university"
+                    component="div"
+                  />
+                </div>
+              )}
 
               <div className="col-lg-6 col-md-12 col-12">
                 {values.university === "other" && (
@@ -234,7 +268,7 @@ const UserUpdateModal = ({ currentUser }) => {
                   </div>
                 )}
               </div>
-              {values.university !== "working" && (
+              {values.university !== "working" && !isAlumni && (
                 <Fragment>
                   <div className="col-lg-6 col-md-12 col-12">
                     <Field

@@ -43,7 +43,7 @@ const HeaderContent = (props) => {
                 <Link to="/">Netherlands</Link>
               </li>
               {REGIONS.map((region, index) => {
-                if (region === "eindhoven") {
+                {/* if (region === "eindhoven") {
                   return (
                     <li key={index}>
                       <Link to={"/" + region}>
@@ -54,7 +54,7 @@ const HeaderContent = (props) => {
                       </Link>
                     </li>
                   );
-                }
+                } */}
 
                 return (
                   <li key={index}>
