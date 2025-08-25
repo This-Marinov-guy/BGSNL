@@ -66,6 +66,7 @@ export const REGION_WHATSAPP = {
   maastricht: "https://chat.whatsapp.com/LsKBaRLhH9K8m5TiJG1ChR",
   eindhoven: "https://chat.whatsapp.com/LkIMSw3esBECQBftaCc1YW",
   netherlands: "https://chat.whatsapp.com/LBQReQJoAyRDfdjcyV4SQ0",
+  alumni: "https://chat.whatsapp.com/LrHWIHDfqX59zNtlQ1dBAR",
 };
 
 export const REGION_FLICKER = {
