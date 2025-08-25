@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
 import { PrimeReactProvider } from "primereact/api";
-import { isProd } from "./util/functions/helpers";
+import { isMember, isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { removeLogsOnProd } from "./util/functions/helpers";
@@ -225,7 +225,7 @@ const Root = () => {
                 path={"/:region/purchase-ticket/:eventId"}
                 element={
                   <RegionLayout>
-                    {user && !!user.token ? (
+                    {isMember(user) ? (
                       <MemberPurchase />
                     ) : (
                       <GuestPurchase />

@@ -24,7 +24,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { encryptData, isObjectEmpty } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
@@ -41,6 +41,7 @@ import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import CardInputs from "../../elements/inputs/common/CardInputs";
+import { selectUser } from "../../redux/user";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -62,8 +63,11 @@ const GuestPurchase = () => {
   const [normalTicket, setNormalTicket] = useState(false);
   const [schema, setSchema] = useState(null);
   const [schemaFields, setSchemaFields] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const { region, eventId } = useParams();
+
+  const user = useSelector(selectUser);
 
   const dispatch = useDispatch();
 
@@ -83,6 +87,16 @@ const GuestPurchase = () => {
 
   useEffect(() => {
     setLoadingPage(true);
+
+    const fetchCurrentUser = async () => {
+      try {
+        const responseData = await sendRequest(`user/current`);
+        setCurrentUser(responseData.user);
+      } catch (err) {
+        // do nothing
+      }
+    };
+
     const getEventDetails = async () => {
       try {
         const responseData = await sendRequest(
@@ -110,6 +124,7 @@ const GuestPurchase = () => {
     };
 
     getEventDetails();
+    fetchCurrentUser();
   }, []);
 
   if (loadingPage) {
@@ -352,10 +367,10 @@ const GuestPurchase = () => {
                   }
                 }}
                 initialValues={{
-                  name: "",
-                  surname: "",
-                  email: "",
-                  phone: "",
+                  name: currentUser?.name ?? "",
+                  surname: currentUser?.surname ?? "",
+                  email: currentUser?.email ?? "",
+                  phone: currentUser?.phone ?? "",
                   policyTerms: false,
                   payTerms: false,
                   ...constructInitialExtraFormValues(

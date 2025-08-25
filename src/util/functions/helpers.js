@@ -4,7 +4,7 @@ import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
 import CryptoJS from "crypto-js";
 import { checkAuthorization } from "./authorization";
-import { ACCESS_3, ACCESS_4, LOCAL_STORAGE_LOCATION } from "../defines/common";
+import { ACCESS_3, ACCESS_4, ALUMNI, LOCAL_STORAGE_LOCATION } from "../defines/common";
 import SolidBadge from "../../elements/ui/badges/SolidBadge";
 
 export const isProd = () => {
@@ -123,7 +123,7 @@ export const estimatePriceByEvent = (
   }
 ) => {
   const { product } = selectedEvent;
-  const isMember = !!user?.token;
+  const isMember = isMember(user);
   const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
   const isMemberDataFull = user?.name && user?.surname && user?.email;
 
@@ -373,3 +373,7 @@ export function isTodayInRange(start, end) {
   // Check if today's date is within the range
   return adjustedToday >= startDate && adjustedToday <= endDate;
 }
+
+export const isMember = (user) => {
+  return !!user?.token && !user?.roles?.includes(ALUMNI);
+};
