@@ -32,24 +32,24 @@ const UserCard = ({ user }) => {
               <span className="bold">Full Name: </span>
               {user.name + " " + user.surname}
             </li>
-            <li>
+            {user?.birth && <li>
               <span className="bold">Date of Birth: </span>
               {moment(user.birth).format("D MMM YYYY")}
-            </li>
+            </li>}
             <li>
               <span className="bold">Email: </span>
               {user.email}
             </li>
-            <li>
+            {user?.phone && <li>
               <span className="bold">Phone: </span>
               {user.phone}
-            </li>
-            <li>
+            </li>}
+            {user?.university && <li>
               <span className="bold">University: </span>
               {user.university === "other"
                 ? user.otherUniversityName
                 : user.university}
-            </li>
+            </li>}
 
             {/* <li style={{ fontWeight: "bold" }}>
                         <FiCircle style={{ fontSize: "14px" }} /> Membership
