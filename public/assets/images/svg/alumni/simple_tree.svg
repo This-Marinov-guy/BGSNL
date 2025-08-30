@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Cartoon Team Tree</title>
+  <desc id="desc">A scalable cartoon-style tree with branches and avatar slots for profile images, including a top three at the crown.</desc>
+
+  <defs>
+    <!-- Bark gradient for a soft, cartoon feel -->
+    <linearGradient id="bark" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7a4f2b"/>
+      <stop offset="100%" stop-color="#5b3a1e"/>
+    </linearGradient>
+
+    <!-- Subtle trunk/branch highlight -->
+    <linearGradient id="barkHighlight" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#8c5b35"/>
+      <stop offset="100%" stop-color="#6a4526"/>
+    </linearGradient>
+
+    <!-- Leaf gradient & shadow -->
+    <linearGradient id="leafFill" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#79c36a"/>
+      <stop offset="100%" stop-color="#4f9d5a"/>
+    </linearGradient>
+
+    <filter id="leaf-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Placeholder trunk (add rest of tree details later) -->
+  <rect x="580" y="400" width="40" height="600" fill="url(#bark)" stroke="#3e2919" stroke-width="6"/>
+  <ellipse cx="600" cy="1000" rx="300" ry="40" fill="#d9e2ec"/>
+
+  <!-- Placeholder leaf -->
+  <circle cx="600" cy="300" r="100" fill="url(#leafFill)" filter="url(#leaf-shadow)"/>
+
+</svg>

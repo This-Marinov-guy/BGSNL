@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { motion } from "framer-motion";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
@@ -9,37 +10,42 @@ import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { Dialog } from "primereact/dialog";
 
-// Styled borders based on tier
+// Styled borders based on tier - using SVG files from alumni directory
 const tierBorders = {
   platinum: {
-    borderImage: "url('/assets/images/borders/platinum-border.svg') 30 round",
+    borderImage: "none",
     className: "border-platinum",
-    size: "200px",
-    borderWidth: "10px"
+    size: "180px",
+    borderWidth: "0",
+    svgPath: "assets/images/svg/alumni/tier-1.svg"
   },
   gold: {
-    borderImage: "url('/assets/images/borders/1.svg') 30 round",
+    borderImage: "none",
     className: "border-gold",
-    size: "180px",
-    borderWidth: "8px"
+    size: "160px",
+    borderWidth: "0",
+    svgPath: "assets/images/svg/alumni/tier-2.svg"
   },
   silver: {
-    borderImage: "url('/assets/images/borders/2.svg') 30 round",
+    borderImage: "none",
     className: "border-silver",
-    size: "160px",
-    borderWidth: "6px"
+    size: "140px",
+    borderWidth: "0",
+    svgPath: "assets/images/svg/alumni/tier-3.svg"
   },
   bronze: {
-    borderImage: "url('/assets/images/borders/3.svg') 30 round",
+    borderImage: "none",
     className: "border-bronze",
-    size: "140px",
-    borderWidth: "5px"
+    size: "120px",
+    borderWidth: "0",
+    svgPath: "assets/images/svg/alumni/tier-4.svg"
   },
   standard: {
     borderImage: "none",
     className: "border-standard",
-    size: "120px",
-    borderWidth: "4px"
+    size: "100px",
+    borderWidth: "0",
+    svgPath: "assets/images/svg/alumni/tier-4.svg" // Using tier-4 for standard as well
   }
 };
 
@@ -122,12 +128,12 @@ const sampleUsers = [
   }
 ];
 
-const UserAvatar = ({ user, onClick }) => {
+const UserAvatar = ({ user, onClick, className }) => {
   const tierStyle = tierBorders[user.tier];
   
   return (
     <motion.div
-      className="hall-of-fame-avatar"
+      className={`hall-of-fame-avatar ${className || ""}`}
       whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.3 }}
       onClick={onClick}
@@ -140,25 +146,58 @@ const UserAvatar = ({ user, onClick }) => {
         style={{
           width: tierStyle.size,
           height: tierStyle.size,
-          borderWidth: tierStyle.borderWidth,
-          borderStyle: "solid",
-          borderImage: tierStyle.borderImage,
           position: "relative",
-          borderRadius: tierStyle.borderImage === "none" ? "50%" : "0",
-          overflow: "hidden",
-          margin: "0 auto"
+          margin: "0 auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
         }}
       >
-        <img
-          src={user.avatar}
-          alt={user.name}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            borderRadius: tierStyle.borderImage === "none" ? "50%" : "0",
-          }}
-        />
+        {/* SVG Border */}
+        <div style={{
+          position: "absolute",
+          top: "-10%",
+          left: "-10%",
+          width: "120%",
+          height: "120%",
+          zIndex: 1,
+          pointerEvents: "none" // Ensures clicks pass through to the avatar
+        }}>
+          <img 
+            src={tierStyle.svgPath} 
+            alt="" 
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
+            }}
+            />
+        </div>
+        
+        {/* User Avatar */}
+        <div style={{
+          width: "68%",
+          height: "68%",
+          overflow: "hidden",
+          borderRadius: "50%",
+          position: "relative",
+          zIndex: 0,
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+          backgroundColor: "#fff"
+        }}>
+          <img
+            src={user.avatar}
+            alt={user.name}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover"
+            }}
+          />
+        </div>
       </div>
       <h5 className="mt--20 text-center">{user.name}</h5>
       {(user.tier === "platinum" || user.tier === "gold") && (
@@ -179,7 +218,7 @@ const UserAvatar = ({ user, onClick }) => {
 };
 
 const HallOfFame = () => {
-  const { loading, sendRequest } = useHttpClient();
+  const { loading } = useHttpClient(); // sendRequest will be used when API integration is implemented
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -217,8 +256,7 @@ const HallOfFame = () => {
       />
       
       {/* Start Breadcrump Area */}
-      
-      <div className="rn-page-title-area pt--60 pb--120 bg_image bg_image--15" data-black-overlay="6">
+      <div className="rn-page-title-area pt--120 pb--190 bg_image bg_image--15" data-black-overlay="6">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -252,56 +290,76 @@ const HallOfFame = () => {
           ) : (
             <div className="hall-of-fame-tree">
               {/* Platinum Tier */}
-              <div className="row justify-content-center mb--60">
+              <div className="row platinum-tier-row justify-content-center mb--60">
                 {users
                   .filter(user => user.tier === "platinum")
                   .map(user => (
                     <div key={user.id} className="col-lg-4 col-md-6 col-12">
-                      <UserAvatar user={user} onClick={() => handleUserClick(user)} />
+                      <UserAvatar 
+                        user={user} 
+                        onClick={() => handleUserClick(user)}
+                        className="platinum-connection"
+                      />
                     </div>
                   ))}
               </div>
               
               {/* Gold Tier */}
-              <div className="row justify-content-center mb--60">
+              <div className="row gold-tier-row justify-content-center mb--60">
                 {users
                   .filter(user => user.tier === "gold")
                   .map(user => (
                     <div key={user.id} className="col-lg-3 col-md-4 col-sm-6 col-12">
-                      <UserAvatar user={user} onClick={() => handleUserClick(user)} />
+                      <UserAvatar 
+                        user={user} 
+                        onClick={() => handleUserClick(user)}
+                        className="gold-connection"
+                      />
                     </div>
                   ))}
               </div>
               
               {/* Silver Tier */}
-              <div className="row justify-content-center mb--60">
+              <div className="row silver-tier-row justify-content-center mb--60">
                 {users
                   .filter(user => user.tier === "silver")
                   .map(user => (
                     <div key={user.id} className="col-lg-2 col-md-3 col-sm-6 col-12">
-                      <UserAvatar user={user} onClick={() => handleUserClick(user)} />
+                      <UserAvatar 
+                        user={user} 
+                        onClick={() => handleUserClick(user)}
+                        className="silver-connection"
+                      />
                     </div>
                   ))}
               </div>
               
               {/* Bronze Tier */}
-              <div className="row justify-content-center mb--60">
+              <div className="row bronze-tier-row justify-content-center mb--60">
                 {users
                   .filter(user => user.tier === "bronze")
                   .map(user => (
                     <div key={user.id} className="col-lg-2 col-md-3 col-sm-4 col-12">
-                      <UserAvatar user={user} onClick={() => handleUserClick(user)} />
+                      <UserAvatar 
+                        user={user} 
+                        onClick={() => handleUserClick(user)}
+                        className="bronze-connection"
+                      />
                     </div>
                   ))}
               </div>
               
               {/* Standard Tier */}
-              <div className="row justify-content-center">
+              <div className="row standard-tier-row justify-content-center">
                 {users
                   .filter(user => user.tier === "standard")
                   .map(user => (
                     <div key={user.id} className="col-lg-2 col-md-3 col-sm-4 col-6">
-                      <UserAvatar user={user} onClick={() => handleUserClick(user)} />
+                      <UserAvatar 
+                        user={user} 
+                        onClick={() => handleUserClick(user)}
+                        className="standard-connection"
+                      />
                     </div>
                   ))}
               </div>
@@ -341,7 +399,7 @@ const HallOfFame = () => {
               borderRadius: "4px"
             }}>
               <blockquote className="mb-0">
-                "{selectedUser.quote}"
+                &ldquo;{selectedUser.quote}&rdquo;
               </blockquote>
             </div>
             
@@ -359,6 +417,20 @@ const HallOfFame = () => {
       </div>
     </React.Fragment>
   );
+};
+
+// PropTypes for the UserAvatar component
+UserAvatar.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+    tier: PropTypes.oneOf(["platinum", "gold", "silver", "bronze", "standard"]).isRequired,
+    quote: PropTypes.string,
+    joinDate: PropTypes.string
+  }).isRequired,
+  onClick: PropTypes.func.isRequired,
+  className: PropTypes.string
 };
 
 export default HallOfFame;

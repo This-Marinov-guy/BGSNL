@@ -1,0 +1,27 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="gold" x1="0" x2="1">
+<stop offset="0%" stop-color="#FFD76B" />
+<stop offset="100%" stop-color="#FFB84D" />
+</linearGradient>
+</defs>
+<circle cx="128" cy="128" r="120" fill="none" stroke="url(#gold)" stroke-width="14" />
+<g transform="translate(128,128)">
+<g id="orchid" transform="translate(0,-98)">
+<path d="M-14,4 C-2,-20 2,-20 14,4 C24,18 8,36 0,34 C-8,36 -24,18 -14,4 Z" fill="#E18BFF" />
+<circle r="6" fill="#FFD76B" cx="0" cy="4" />
+</g>
+<use href="#orchid" transform="rotate(90)"/>
+<use href="#orchid" transform="rotate(180)"/>
+<use href="#orchid" transform="rotate(270)"/>
+<g transform="rotate(0) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(-20)"/></g>
+<g transform="rotate(45) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(20)"/></g>
+<g transform="rotate(90) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(-20)"/></g>
+<g transform="rotate(135) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(20)"/></g>
+<g transform="rotate(180) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(-20)"/></g>
+<g transform="rotate(225) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(20)"/></g>
+<g transform="rotate(270) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(-20)"/></g>
+<g transform="rotate(315) translate(0,-72)"><rect x="-3" y="-8" width="6" height="16" rx="3" fill="#3EC6A8" transform="rotate(20)"/></g>
+</g>
+<circle cx="128" cy="128" r="72" fill="none" stroke="#FFFFFF" stroke-width="6" />
+</svg>
