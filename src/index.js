@@ -76,6 +76,7 @@ const ContestRegister = lazy(() =>
 );
 const AlumniSignUp = lazy(() => import("./pages/alumni/AlumniSignUp"));
 const AlumniInfoPage = lazy(() => import("./pages/alumni/AlumniInfoPage"));
+const HallOfFame = lazy(() => import("./pages/information/HallOfFame"));
 const JoinTheSociety = lazy(() => import("./pages/information/JoinTheSociety"));
 
 const AddEvent = lazy(() => import("./pages/userActions/AddEvent"));
@@ -144,6 +145,11 @@ const Root = () => {
                 exact
                 path={`/join-the-society`}
                 element={<JoinTheSociety />}
+              />
+              <Route
+                exact
+                path={`/hall-of-fame`}
+                element={<HallOfFame />}
               />
 
               <Route exact path={`/developers`} element={<Developers />} />

@@ -126,6 +126,9 @@ const HeaderContent = (props) => {
                   <li>
                     <Link to={`/welcome-to-alumni`}>Alumni Program</Link>
                   </li>
+                  <li>
+                    <Link to={`/hall-of-fame`}>Hall of Fame</Link>
+                  </li>
                 </ul>
               </li>
             </Fragment>
