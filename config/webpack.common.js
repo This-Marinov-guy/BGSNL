@@ -3,35 +3,35 @@
  * @description Common configuration for webpack.
  */
 
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
-const webpack = require('webpack')
-
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
+const webpack = require("webpack");
 
 // Common configuration files
-const paths = require('./paths');
+const paths = require("./paths");
 
 module.exports = {
   /**
    * Entry point(s) for the application.
    */
-  entry: [paths.src + '/index.js'],
+  entry: [paths.src + "/index.js"],
 
   /**
    * Plugins used by Webpack.
    */
   plugins: [
     new webpack.ProvidePlugin({
-      process: 'process/browser',
+      process: "process/browser",
+      Buffer: ["buffer", "Buffer"],
     }),
     /**
-   * Plugins for env 
-   */
+     * Plugins for env
+     */
     new Dotenv({
-      systemvars: true
+      systemvars: true,
     }),
     /**
      * Plugin to clean the output directory before each build.
@@ -48,20 +48,20 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: paths.public + '/assets',
-          to: 'assets',
+          from: paths.public + "/assets",
+          to: "assets",
         },
         // {
         //   from: paths.public + '/assets/js/main.js',
         //   to: paths.build + '/static/assets/js/main.js',
         // },
         {
-          from: paths.public + '/manifest.json',
-          to: paths.build + '/static/manifest.json',
+          from: paths.public + "/manifest.json",
+          to: paths.build + "/static/manifest.json",
         },
         {
-          from: paths.public + '/favicon.ico',
-          to: paths.build + '/static/favicon.ico',
+          from: paths.public + "/favicon.ico",
+          to: paths.build + "/static/favicon.ico",
         },
       ],
     }),
@@ -72,10 +72,10 @@ module.exports = {
      * @type {HtmlWebpackPlugin}
      */
     new HtmlWebpackPlugin({
-      favicon: path.resolve(__dirname, '../public/favicon.ico'),
-      template: path.resolve(__dirname, '../public/index.html'),
-      manifest: path.resolve(__dirname, '../public/manifest.json'),
-      filename: 'index.html',
+      favicon: path.resolve(__dirname, "../public/favicon.ico"),
+      template: path.resolve(__dirname, "../public/index.html"),
+      manifest: path.resolve(__dirname, "../public/manifest.json"),
+      filename: "index.html",
     }),
   ],
 
@@ -86,43 +86,38 @@ module.exports = {
     /**
      * File extensions to be resolved automatically.
      */
-    extensions: ['.js', '.jsx'],
+    extensions: [".js", ".jsx"],
 
     /**
      * Fallback options for resolving modules.
      */
     fallback: {
       fs: false,
-      assert: require.resolve('assert'),
-      buffer: false,
-      console: false,
-      constants: require.resolve('constants-browserify'),
-      crypto: false,
+      process: require.resolve("process/browser"),
+      assert: require.resolve("assert"),
+      buffer: require.resolve("buffer"),
+      constants: require.resolve("constants-browserify"),
+      crypto: require.resolve("crypto-browserify"),
       domain: false,
-      events: false,
-      http: false,
-      https: false,
-      os: false,
-      path: require.resolve('path-browserify'),
-      punycode: false,
-      process: require.resolve('process/browser'),
-      querystring: false,
-      stream: false,
-      string_decoder: false,
+      events: require.resolve("events"),
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
+      os: require.resolve("os-browserify/browser"),
+      path: require.resolve("path-browserify"),
+      punycode: require.resolve("punycode"),
+      stream: require.resolve("stream-browserify"),
+      string_decoder: require.resolve("string_decoder"),
       sys: false,
-      timers: false,
-      tty: false,
-      url: false,
-      util: require.resolve('util'),
-      vm: false,
-      zlib: false,
+      url: require.resolve("url"),
+      util: require.resolve("util"),
     },
 
     /**
      * Aliases for module resolution.
      */
     alias: {
-      '@assets': path.resolve(__dirname, '../public/assets/'),
+      "@assets": path.resolve(__dirname, "../public/assets/"),
+      "process/browser": require.resolve("process/browser.js"), // ← THIS LINE ADDED
     },
   },
 
@@ -141,9 +136,9 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env'],
+            presets: ["@babel/preset-env"],
           },
         },
       },
@@ -152,14 +147,14 @@ module.exports = {
          * Rule for transforming HTML files.
          */
         test: /\.html$/,
-        use: ['html-loader'],
+        use: ["html-loader"],
       },
       {
         /**
          * Rule for handling font files.
          */
         test: /\.(woff(2)|ttf|eot)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
       // {
       //   /**
