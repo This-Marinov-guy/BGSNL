@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="petalGradient1" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e0e0e0"/>
+      <stop offset="100%" stop-color="#b0b0b0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Main frame - just a rounded corner square -->
+  <rect x="10" y="10" width="480" height="480" fill="none" stroke="#c0c0c0" stroke-width="1" rx="250" ry="250"/>
+  
+  <!-- Very simple corner flower at top-left -->
+  <g transform="translate(10, 10)">
+    <circle cx="0" cy="0" r="2" fill="white"/>
+    <path d="M0,0 C-5,-3 -3,-10 0,-13 C3,-10 5,-3 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C-3,-5 -10,-3 -13,0 C-10,3 -3,5 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C-5,3 -3,10 0,13 C3,10 5,3 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C3,5 10,3 13,0 C10,-3 3,-5 0,0" fill="url(#petalGradient1)"/>
+  </g>
+</svg>

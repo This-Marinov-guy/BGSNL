@@ -1,0 +1,41 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="g1" cx="50%" cy="40%">
+<stop offset="0%" stop-color="#FFD9F0" />
+<stop offset="100%" stop-color="#FDE9FF" />
+</radialGradient>
+<linearGradient id="leaf1" x1="0" x2="1">
+<stop offset="0%" stop-color="#A8E6A1" />
+<stop offset="100%" stop-color="#5FB77A" />
+</linearGradient>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+<feGaussianBlur stdDeviation="1.2" result="b" />
+<feBlend in="SourceGraphic" in2="b" />
+</filter>
+</defs>
+<circle cx="128" cy="128" r="122" fill="none" stroke="url(#g1)" stroke-width="10" opacity="0.9" />
+<g transform="translate(128,128)">
+<g id="petalGroup" transform="translate(0,-96)">
+<g filter="url(#soft)">
+<ellipse rx="9" ry="14" fill="#FFB6D5" transform="rotate(-20)"/>
+<ellipse rx="9" ry="14" fill="#FFD3EA" transform="rotate(20)"/>
+<circle r="6" fill="#FFF4A6" cx="0" cy="2" />
+</g>
+<path d="M-4,18 C-10,28 -6,36 0,34 C6,36 10,28 4,18 Z" fill="url(#leaf1)" opacity="0.95" transform="translate(0,10) scale(0.9)"/>
+</g>
+<!-- place 12 copies -->
+<use href="#petalGroup" transform="rotate(0)"/>
+<use href="#petalGroup" transform="rotate(30)"/>
+<use href="#petalGroup" transform="rotate(60)"/>
+<use href="#petalGroup" transform="rotate(90)"/>
+<use href="#petalGroup" transform="rotate(120)"/>
+<use href="#petalGroup" transform="rotate(150)"/>
+<use href="#petalGroup" transform="rotate(180)"/>
+<use href="#petalGroup" transform="rotate(210)"/>
+<use href="#petalGroup" transform="rotate(240)"/>
+<use href="#petalGroup" transform="rotate(270)"/>
+<use href="#petalGroup" transform="rotate(300)"/>
+<use href="#petalGroup" transform="rotate(330)"/>
+</g>
+<circle cx="128" cy="128" r="74" fill="none" stroke="#fff" stroke-width="5" />
+</svg>

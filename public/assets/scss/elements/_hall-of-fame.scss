@@ -2,32 +2,78 @@
     Hall of Fame Styles 
 ====================*/
 
+// Connection colors
+$twig-color: #a27e5c;
+$leaf-color: rgba(1, 115, 99, 0.25);
+
 .hall-of-fame-tree {
   position: relative;
   padding-top: 60px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 400px 300px;
+  min-height: 600px;
+  margin-bottom: 60px;
   
-  // Tree connection lines
+  // Enable infinite repetition
+  background-repeat: repeat;
+
+  // Ensure the tree scales properly on all devices
+  background-attachment: local;
+
+  // Add a subtle overlay to make content more readable
   &::before {
-    content: '';
+    content: "";
     position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: calc(100% - 150px);
-    background-color: rgba(1, 115, 99, 0.2);
-    z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
   }
-  
-  // Horizontal connector lines for tiers
-  .row::before {
-    content: '';
-    position: absolute;
-    left: 25%;
-    right: 25%;
-    height: 1px;
-    background-color: rgba(1, 115, 99, 0.15);
-    z-index: 0;
+
+  // Remove old trunk and branch pseudo-elements
+  .row::before,
+  .row::after {
+    content: none;
+  }
+
+  // Position tiers at appropriate branch heights
+  .platinum-tier-row {
+    margin-top: 80px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .gold-tier-row {
+    margin-top: 120px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .silver-tier-row {
+    margin-top: 160px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .bronze-tier-row {
+    margin-top: 160px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .standard-tier-row {
+    margin-top: 160px;
+    position: relative;
+    z-index: 2;
   }
 }
 
@@ -38,31 +84,124 @@
   align-items: center;
   position: relative;
   z-index: 2;
-  
+
   .avatar-container {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
-  
+
   &:hover .avatar-container {
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
+
+  // No need for connection elements anymore since the SVG has its own
+  &::before,
+  &::after {
+    content: none;
+  }
+
+  // Animation for the avatars to make them feel more dynamic
+  animation: float-avatar 5s ease-in-out infinite;
+
+  // Add a subtle connection to the tree branches
+  &::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, rgba(139, 69, 19, 0.3), transparent);
+    z-index: 1;
+  }
+
+  &:nth-child(2n) {
+    animation-delay: 1.5s;
+  }
+
+  &:nth-child(3n) {
+    animation-delay: 3s;
+  }
+
+  // Different hover effects for each tier
+  &.platinum-connection .avatar-container {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(229, 228, 226, 0.5);
+
+    &:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(229, 228, 226, 0.7);
+    }
+  }
+
+  &.gold-connection .avatar-container {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 215, 0, 0.3);
+
+    &:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(255, 215, 0, 0.5);
+    }
+  }
+
+  &.silver-connection .avatar-container {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 8px rgba(192, 192, 192, 0.3);
+
+    &:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+        0 0 15px rgba(192, 192, 192, 0.5);
+    }
+  }
+
+  &.bronze-connection .avatar-container {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), 0 0 5px rgba(205, 127, 50, 0.3);
+
+    &:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(205, 127, 50, 0.5);
+    }
+  }
+
+  &.standard-connection .avatar-container {
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+// Gentle floating animation for avatars
+@keyframes float-avatar {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
 
 // Tier-specific styles
 .border-platinum {
   position: relative;
-  
+
   // Glowing effect for platinum tier
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -5px;
     left: -5px;
     right: -5px;
     bottom: -5px;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(229, 228, 226, 0.5) 0%, rgba(229, 228, 226, 0) 70%);
+    background: radial-gradient(
+      ellipse at center,
+      rgba(229, 228, 226, 0.5) 0%,
+      rgba(229, 228, 226, 0) 70%
+    );
     z-index: -1;
     animation: platinum-glow 3s infinite alternate;
   }
@@ -70,17 +209,21 @@
 
 .border-gold {
   position: relative;
-  
+
   // Subtle shimmer for gold tier
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -3px;
     left: -3px;
     right: -3px;
     bottom: -3px;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0) 70%);
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 215, 0, 0.3) 0%,
+      rgba(255, 215, 0, 0) 70%
+    );
     z-index: -1;
     animation: gold-shimmer 4s infinite alternate;
   }
@@ -107,14 +250,50 @@
   }
 }
 
-// Responsive adjustments
-@media (max-width: 991px) {
-  .hall-of-fame-tree::before {
-    display: none; // Hide vertical line on mobile
+// Add responsive styling
+@media (max-width: 767px) {
+  .hall-of-fame-tree {
+    background-size: 300px 225px;
+    min-height: 800px;
+
+    // Adjust tier positioning for mobile
+    .platinum-tier-row {
+      margin-top: 80px;
+    }
+    .gold-tier-row {
+      margin-top: 120px;
+    }
+    .silver-tier-row,
+    .bronze-tier-row,
+    .standard-tier-row {
+      margin-top: 140px;
+    }
   }
-  
-  .row::before {
-    display: none; // Hide horizontal lines on mobile
+}
+
+// Additional responsive adjustments
+@media (max-width: 991px) {
+  .hall-of-fame-tree {
+    background-size: 350px 262px;
+  }
+
+  .hall-of-fame-avatar {
+    margin-bottom: 30px;
+  }
+
+  // Adjust spacing for different tiers
+  .platinum-tier-row {
+    margin-top: 40px;
+  }
+
+  .gold-tier-row {
+    margin-top: 40px;
+  }
+
+  .silver-tier-row,
+  .bronze-tier-row,
+  .standard-tier-row {
+    margin-top: 30px;
   }
 }
 
@@ -122,24 +301,24 @@
 .quote-dialog {
   .quote-container {
     position: relative;
-    
+
     &::before {
       content: '"';
       position: absolute;
       top: 10px;
       left: 20px;
       font-size: 60px;
-      color: rgba(0,0,0,0.1);
+      color: rgba(0, 0, 0, 0.1);
       font-family: Georgia, serif;
       z-index: 0;
     }
-    
+
     blockquote {
       position: relative;
       z-index: 1;
       font-style: italic;
       font-size: 18px;
-      line-height: 1.6;
+      line-height: 1.6; 
       color: #555;
     }
   }

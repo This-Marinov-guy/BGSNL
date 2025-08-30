@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="petalGradient1" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+      <stop offset="0%" stop-color="#f7e7ce"/>
+      <stop offset="50%" stop-color="#cd7f32"/>
+      <stop offset="100%" stop-color="#a56b2f"/>
+    </radialGradient>
+    <radialGradient id="petalGradient2" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+      <stop offset="0%" stop-color="#f7e7ce"/>
+      <stop offset="50%" stop-color="#b87333"/>
+      <stop offset="100%" stop-color="#8e562e"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Main frame -->
+  <rect x="10" y="10" width="480" height="480" fill="none" stroke="#cd7f32" stroke-width="2" rx="30" ry="30"/>
+  
+  <!-- Corner flowers -->
+  <!-- Top Left -->
+  <g transform="translate(10, 10)">
+    <!-- Large flower -->
+    <circle cx="0" cy="0" r="3" fill="#f7e7ce"/>
+    <path d="M0,0 C-10,-7 -7,-20 0,-27 C7,-20 10,-7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C-7,-10 -20,-7 -27,0 C-20,7 -7,10 0,0" fill="url(#petalGradient2)"/>
+    <path d="M0,0 C-10,7 -7,20 0,27 C7,20 10,7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C7,10 20,7 27,0 C20,-7 7,-10 0,0" fill="url(#petalGradient2)"/>
+    
+    <!-- Vines -->
+    <path d="M0,0 C10,10 15,15 20,20" stroke="#cd7f32" fill="none" stroke-width="1"/>
+  </g>
+  
+  <!-- Top Right -->
+  <g transform="translate(490, 10) scale(-1, 1)">
+    <!-- Large flower -->
+    <circle cx="0" cy="0" r="3" fill="#f7e7ce"/>
+    <path d="M0,0 C-10,-7 -7,-20 0,-27 C7,-20 10,-7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C-7,-10 -20,-7 -27,0 C-20,7 -7,10 0,0" fill="url(#petalGradient2)"/>
+    <path d="M0,0 C-10,7 -7,20 0,27 C7,20 10,7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C7,10 20,7 27,0 C20,-7 7,-10 0,0" fill="url(#petalGradient2)"/>
+    
+    <!-- Vines -->
+    <path d="M0,0 C10,10 15,15 20,20" stroke="#cd7f32" fill="none" stroke-width="1"/>
+  </g>
+  
+  <!-- Bottom Left -->
+  <g transform="translate(10, 490) scale(1, -1)">
+    <!-- Large flower -->
+    <circle cx="0" cy="0" r="3" fill="#f7e7ce"/>
+    <path d="M0,0 C-10,-7 -7,-20 0,-27 C7,-20 10,-7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C-7,-10 -20,-7 -27,0 C-20,7 -7,10 0,0" fill="url(#petalGradient2)"/>
+    <path d="M0,0 C-10,7 -7,20 0,27 C7,20 10,7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C7,10 20,7 27,0 C20,-7 7,-10 0,0" fill="url(#petalGradient2)"/>
+    
+    <!-- Vines -->
+    <path d="M0,0 C10,10 15,15 20,20" stroke="#cd7f32" fill="none" stroke-width="1"/>
+  </g>
+  
+  <!-- Bottom Right -->
+  <g transform="translate(490, 490) scale(-1, -1)">
+    <!-- Large flower -->
+    <circle cx="0" cy="0" r="3" fill="#f7e7ce"/>
+    <path d="M0,0 C-10,-7 -7,-20 0,-27 C7,-20 10,-7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C-7,-10 -20,-7 -27,0 C-20,7 -7,10 0,0" fill="url(#petalGradient2)"/>
+    <path d="M0,0 C-10,7 -7,20 0,27 C7,20 10,7 0,0" fill="url(#petalGradient1)"/>
+    <path d="M0,0 C7,10 20,7 27,0 C20,-7 7,-10 0,0" fill="url(#petalGradient2)"/>
+    
+    <!-- Vines -->
+    <path d="M0,0 C10,10 15,15 20,20" stroke="#cd7f32" fill="none" stroke-width="1"/>
+  </g>
+</svg>
