@@ -534,3 +534,17 @@ a {
     font-size: 18px;
   }
 }
+
+/* Alumni Modal Styles */
+.alumni-modal {
+  /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  
+  /* Hide scrollbar for IE and Edge */
+  -ms-overflow-style: none;
+}

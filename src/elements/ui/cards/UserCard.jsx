@@ -11,12 +11,14 @@ import {
 } from "../../../util/defines/common";
 import moment from "moment";
 import SubscriptionManage from "../buttons/SubscriptionManage";
+import AlumniModal from "../modals/AlumniModal";
 import { isProd } from "../../../util/functions/helpers";
 import PropTypes from "prop-types";
 
 const UserCard = ({ user }) => {
   const dispatch = useDispatch();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAlumniModalOpen, setIsAlumniModalOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const isAlumni = user.roles.includes(ALUMNI);
@@ -197,7 +199,7 @@ const UserCard = ({ user }) => {
           <div style={{ marginTop: "20px", textAlign: "center" }}>
             <button
               className="alumni-button"
-              onClick={() => window.location.href = "/alumni/register"}
+              onClick={() => setIsAlumniModalOpen(true)}
             >
               <span className="alumni-icon">🎓</span>
               Become an Alumni
@@ -207,6 +209,13 @@ const UserCard = ({ user }) => {
         
         {(!isProd() || user.subscription) && <div className="mt--60" />}
       </div>
+
+      {/* Alumni Program Modal */}
+      <AlumniModal
+        isOpen={isAlumniModalOpen}
+        onClose={() => setIsAlumniModalOpen(false)}
+        onJoinNow={() => window.location.href = "/alumni/register"}
+      />
     </div>
   );
 };
