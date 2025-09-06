@@ -191,6 +191,20 @@ const UserCard = ({ user }) => {
             </li>
           )}
         </ul>
+        
+        {/* Become an Alumni Button */}
+        {!isAlumni && (
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <button
+              className="alumni-button"
+              onClick={() => window.location.href = "/alumni/register"}
+            >
+              <span className="alumni-icon">🎓</span>
+              Become an Alumni
+            </button>
+          </div>
+        )}
+        
         {(!isProd() || user.subscription) && <div className="mt--60" />}
       </div>
     </div>
