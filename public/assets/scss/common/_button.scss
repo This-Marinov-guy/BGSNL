@@ -505,3 +505,46 @@ a {
     margin: 10px auto;
   }
 }
+
+/* Alumni Button Styles */
+.alumni-button {
+  background-color: #FFD700;
+  color: #000;
+  border: 2px solid #FFA500;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  justify-content: center;
+
+  &:hover {
+    background-color: #FFA500;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+  }
+
+  .alumni-icon {
+    font-size: 18px;
+  }
+}
+
+/* Alumni Modal Styles */
+.alumni-modal {
+  /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  
+  /* Hide scrollbar for IE and Edge */
+  -ms-overflow-style: none;
+}
