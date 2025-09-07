@@ -1,0 +1,194 @@
+/*===================
+    User tree Styles 
+====================*/
+
+.user-tree-section {
+	// SVG gradient stops for tree
+	.tree-stop1 {
+		stop-color: #d2b48c;
+	}
+	.tree-stop2 {
+		stop-color: #8b4513;
+	}
+
+	// Tier-specific leaf colors
+	// Platinum tier - bright gold/yellow
+	.tree-leaf-stop1-platinum {
+		stop-color: #ffd700;
+	}
+	.tree-leaf-stop2-platinum {
+		stop-color: #b8860b;
+	}
+
+	// Gold tier - warm gold
+	.tree-leaf-stop1-gold {
+		stop-color: #ffb347;
+	}
+	.tree-leaf-stop2-gold {
+		stop-color: #cd853f;
+	}
+
+	// Silver tier - silver/gray
+	.tree-leaf-stop1-silver {
+		stop-color: #c0c0c0;
+	}
+	.tree-leaf-stop2-silver {
+		stop-color: #808080;
+	}
+
+	// Bronze tier - bronze/copper
+	.tree-leaf-stop1-bronze {
+		stop-color: #cd7f32;
+	}
+	.tree-leaf-stop2-bronze {
+		stop-color: #8b4513;
+	}
+
+	// Standard tier - default green
+	.tree-leaf-stop1-standard {
+		stop-color: #7fcf5b;
+	}
+	.tree-leaf-stop2-standard {
+		stop-color: #3e8f2a;
+	}
+	min-height: 280px;
+	padding-bottom: 140px;
+
+	/* Styling for the tree component */
+	#tree-container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+	svg {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+	.tree-branch {
+		fill: url(#branchGrad);
+		stroke: rgba(0, 0, 0, 0.08);
+		stroke-width: 1;
+	}
+	.tree-leaf {
+		stroke-width: 0.5;
+	}
+
+	// Tier-specific leaf fills and strokes
+	.tree-leaf-platinum {
+		fill: url(#leafGrad-platinum);
+		stroke: #b8860b;
+	}
+	.tree-leaf-gold {
+		fill: url(#leafGrad-gold);
+		stroke: #cd853f; 
+	}
+	.tree-leaf-silver {
+		fill: url(#leafGrad-silver);
+		stroke: #696969;
+	}
+	.tree-leaf-bronze {
+		fill: url(#leafGrad-bronze);
+		stroke: #8b4513;
+	}
+	.tree-leaf-standard {
+		fill: url(#leafGrad-standard);
+		stroke: #2f7a23;
+	}
+	.tree-leaf-stem {
+		stroke: #2f7a23;
+		stroke-width: 0.8;
+		fill: none;
+	}
+	.avatar-ring {
+		fill: #ffffff;
+		stroke-width: 3;
+		transition: stroke 0.2s;
+	}
+
+	/* Tier-based avatar ring stroke colors */
+	.tree-leaf-platinum ~ .avatar-ring,
+	.avatar-ring.avatar-ring-platinum {
+		// stroke: #ffd700;
+		stroke: #b95323;
+	}
+	.tree-leaf-gold ~ .avatar-ring,
+	.avatar-ring.avatar-ring-gold {
+		// stroke: #ffb347;
+		stroke: #ff47b8;
+	}
+	.tree-leaf-silver ~ .avatar-ring,
+	.avatar-ring.avatar-ring-silver {
+		// stroke: #c0c0c0;
+		stroke: #7d44d8;
+	}
+	.tree-leaf-bronze ~ .avatar-ring,
+	.avatar-ring.avatar-ring-bronze {
+		// stroke: #cd7f32;
+		stroke: #dbba29;
+	}
+	.tree-leaf-standard ~ .avatar-ring,
+	.avatar-ring.avatar-ring-standard {
+		// stroke: #5ed64b;
+		stroke: #4bd6b8;
+	}
+
+	g.avatar-hover > .avatar-ring {
+		stroke: #7a8499;
+	}
+	.node-label {
+		font-size: 12px;
+		text-anchor: middle;
+		fill: #333;
+		font-weight: 700;
+		font-family: "Roboto", sans-serif;
+	}
+	.node-tier-label {
+		font-size: 10px;
+		text-anchor: middle;
+		fill: #666;
+		font-weight: 500;
+		font-family: "Roboto", sans-serif;
+	}
+	.tree-container-wrapper {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+	g.avatar-hover > image {
+		cursor: pointer;
+		transition: transform 0.2s ease-in-out;
+		transform: scale(1.05);
+	}
+	.node-label-card {
+		fill: #ffffff;
+		stroke: #e0e3ea;
+		stroke-width: 1;
+		filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.07));
+		opacity: 0.8;
+	}
+	g.avatar-hover > .node-label-card {
+		opacity: 1;
+		transition: transform 0.2s ease-in-out;
+		transform: scale(1.05);
+	}
+	g.avatar-hover > .node-label {
+		transition: transform 0.2s ease-in-out;
+		transform: scale(1.05);
+	}
+}
+
+@media (max-width: 767px) {
+	.user-tree-section {
+		padding-bottom: 80px;
+	}
+}
+
+// Additional responsive adjustments
+@media (max-width: 991px) {
+	.user-tree-section {
+		padding-bottom: 40px;
+		margin-left: -40px;
+		margin-right: -40px;
+	}
+}
