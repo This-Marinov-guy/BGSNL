@@ -75,8 +75,8 @@ function addChild(parent, count, levelCounts, users, userIndexRef) {
 		const user = users[userIndexRef.current++];
 		parent.children.push({
 			id: user.id,
-			name: user.name,
-			avatarUrl: user.avatar,
+			name: user.name + " " + user.surname,
+			avatarUrl: user.image,
 			tier: user.tier,
 			quote: user.quote,
 			joinDate: user.joinDate,
@@ -168,8 +168,8 @@ export default function Tree({ style, users = [], onUserClick }) {
 
 		// Set root node to first user
 		root.id = users[0].id;
-		root.name = users[0].name;
-		root.avatarUrl = users[0].avatar;
+		root.name = users[0].name + " " + users[0].surname;
+		root.avatarUrl = users[0].image;
 		root.tier = users[0].tier;
 		root.quote = users[0].quote;
 		root.joinDate = users[0].joinDate;
