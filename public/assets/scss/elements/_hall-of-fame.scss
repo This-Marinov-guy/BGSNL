@@ -185,49 +185,49 @@ $leaf-color: rgba(1, 115, 99, 0.25);
 }
 
 // Tier-specific styles
-.border-platinum {
-  position: relative;
+// .border-platinum {
+//   position: relative;
 
-  // Glowing effect for platinum tier
-  &::after {
-    content: "";
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    border-radius: 50%;
-    background: radial-gradient(
-      ellipse at center,
-      rgba(229, 228, 226, 0.5) 0%,
-      rgba(229, 228, 226, 0) 70%
-    );
-    z-index: -1;
-    animation: platinum-glow 3s infinite alternate;
-  }
-}
+//   // Glowing effect for platinum tier
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     top: -5px;
+//     left: -5px;
+//     right: -5px;
+//     bottom: -5px;
+//     border-radius: 50%;
+//     background: radial-gradient(
+//       ellipse at center,
+//       rgba(229, 228, 226, 0.5) 0%,
+//       rgba(229, 228, 226, 0) 70%
+//     );
+//     z-index: -1;
+//     animation: platinum-glow 3s infinite alternate;
+//   }
+// }
 
-.border-gold {
-  position: relative;
+// .border-gold {
+//   position: relative;
 
-  // Subtle shimmer for gold tier
-  &::after {
-    content: "";
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border-radius: 50%;
-    background: radial-gradient(
-      ellipse at center,
-      rgba(255, 215, 0, 0.3) 0%,
-      rgba(255, 215, 0, 0) 70%
-    );
-    z-index: -1;
-    animation: gold-shimmer 4s infinite alternate;
-  }
-}
+//   // Subtle shimmer for gold tier
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     top: -3px;
+//     left: -3px;
+//     right: -3px;
+//     bottom: -3px;
+//     border-radius: 50%;
+//     background: radial-gradient(
+//       ellipse at center,
+//       rgba(255, 215, 0, 0.3) 0%,
+//       rgba(255, 215, 0, 0) 70%
+//     );
+//     z-index: -1;
+//     animation: gold-shimmer 4s infinite alternate;
+//   }
+// }
 
 // Animations
 @keyframes platinum-glow {
@@ -298,28 +298,28 @@ $leaf-color: rgba(1, 115, 99, 0.25);
 }
 
 // Quote dialog styling
-.quote-dialog {
-  .quote-container {
-    position: relative;
+// .quote-dialog {
+//   .quote-container {
+//     position: relative;
 
-    &::before {
-      content: '"';
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 60px;
-      color: rgba(0, 0, 0, 0.1);
-      font-family: Georgia, serif;
-      z-index: 0;
-    }
+//     &::before {
+//       content: '"';
+//       position: absolute;
+//       top: 10px;
+//       left: 20px;
+//       font-size: 60px;
+//       color: rgba(0, 0, 0, 0.1);
+//       font-family: Georgia, serif;
+//       z-index: 0;
+//     }
 
-    blockquote {
-      position: relative;
-      z-index: 1;
-      font-style: italic;
-      font-size: 18px;
-      line-height: 1.6; 
-      color: #555;
-    }
-  }
-}
+//     blockquote {
+//       position: relative;
+//       z-index: 1;
+//       font-style: italic;
+//       font-size: 18px;
+//       line-height: 1.6; 
+//       color: #555;
+//     }
+//   }
+// }
