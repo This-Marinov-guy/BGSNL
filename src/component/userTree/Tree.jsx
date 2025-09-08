@@ -318,12 +318,20 @@ export default function Tree({ style, users = [], onUserClick }) {
       });
       gNodes.appendChild(group);
 
-      const ring = document.createElementNS(svg.namespaceURI, "circle");
-      const ringTierClass = node.tier
-        ? `avatar-ring avatar-ring-${node.tier}`
-        : "avatar-ring";
+       const ring = document.createElementNS(svg.namespaceURI, "circle");
+       // Map tier numbers to tier names for CSS classes
+       let tierName = "standard";
+       if (node.tier) {
+         const tierNum = parseInt(node.tier);
+         if (tierNum >= 4) tierName = "platinum";
+         else if (tierNum >= 3) tierName = "gold";
+         else if (tierNum >= 2) tierName = "silver";
+         else if (tierNum >= 1) tierName = "bronze";
+         else tierName = "standard";
+       }
+       const ringTierClass = `avatar-ring avatar-ring-${tierName}`;
 
-      ring.setAttribute("class", ringTierClass);
+       ring.setAttribute("class", ringTierClass);
       ring.setAttribute("r", String(avatarR + 2));
       ring.setAttribute("cx", "0");
       ring.setAttribute("cy", "0");
@@ -377,15 +385,19 @@ export default function Tree({ style, users = [], onUserClick }) {
       });
       group.appendChild(img);
 
-      // Estimate card width based on text length
-      const minCardWidth = 90;
-      const charWidth = 6.5; // average px per character for font-size: 13px
-      const nameLen = node.name ? node.name.length : 0;
-      let tierText = "";
-      if (node.tier && node.tier !== "standard") {
-        tierText =
-          'Tier ' + node.tier;
-      }
+       // Estimate card width based on text length
+       const minCardWidth = 90;
+       const charWidth = 6.5; // average px per character for font-size: 13px
+       const nameLen = node.name ? node.name.length : 0;
+       let tierText = "";
+       if (node.tier) {
+         const tierNum = parseInt(node.tier);
+         if (tierNum >= 4) tierText = "Platinum Member";
+         else if (tierNum >= 3) tierText = "Gold Member";
+         else if (tierNum >= 2) tierText = "Silver Member";
+         else if (tierNum >= 1) tierText = "Bronze Member";
+         else tierText = "Standard Member";
+       }
       const tierLen = tierText.length;
       const maxLen = Math.max(nameLen, tierLen);
       const estWidth = Math.ceil(maxLen * charWidth) + 6; // padding
@@ -464,10 +476,21 @@ export default function Tree({ style, users = [], onUserClick }) {
           "d",
           `M ${baseX},${baseY} Q ${c1x},${c1y} ${tipX},${tipY} Q ${c2x},${c2y} ${baseX},${baseY} Z`
         );
-        leaf.setAttribute(
-          "class",
-          `tree-leaf tree-leaf-${node.tier || "standard"}`
-        );
+         // Map tier numbers to tier names for leaf colors
+         let leafTierName = "standard";
+         if (node.tier) {
+           const tierNum = parseInt(node.tier);
+           if (tierNum >= 4) leafTierName = "platinum";
+           else if (tierNum >= 3) leafTierName = "gold";
+           else if (tierNum >= 2) leafTierName = "silver";
+           else if (tierNum >= 1) leafTierName = "bronze";
+           else leafTierName = "standard";
+         }
+
+         leaf.setAttribute(
+           "class",
+           `tree-leaf tree-leaf-${leafTierName}`
+         );
         leaf.setAttribute("pointer-events", "none");
         gLeaves.appendChild(leaf);
       }
