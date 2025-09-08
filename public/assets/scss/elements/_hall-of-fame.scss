@@ -229,6 +229,138 @@ $leaf-color: rgba(1, 115, 99, 0.25);
 //   }
 // }
 
+// Tree leaf colors for different tiers
+.tree-leaf {
+  fill: url(#leafGrad-standard);
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  will-change: opacity, transform;
+}
+
+.tree-leaf-platinum {
+  fill: url(#leafGrad-platinum);
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(229, 228, 226, 0.3));
+}
+
+.tree-leaf-gold {
+  fill: url(#leafGrad-gold);
+  opacity: 0.85;
+  filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3));
+}
+
+.tree-leaf-silver {
+  fill: url(#leafGrad-silver);
+  opacity: 0.8;
+  filter: drop-shadow(0 1px 3px rgba(192, 192, 192, 0.3));
+}
+
+.tree-leaf-bronze {
+  fill: url(#leafGrad-bronze);
+  opacity: 0.75;
+  filter: drop-shadow(0 1px 3px rgba(205, 127, 50, 0.3));
+}
+
+.tree-leaf-standard {
+  fill: url(#leafGrad-standard);
+  opacity: 0.7;
+  filter: drop-shadow(0 1px 2px rgba(1, 115, 99, 0.3));
+}
+
+// Hover effects for leaves
+.avatar-hover .tree-leaf {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.avatar-hover .tree-leaf-platinum {
+  filter: drop-shadow(0 3px 6px rgba(229, 228, 226, 0.5));
+}
+
+.avatar-hover .tree-leaf-gold {
+  filter: drop-shadow(0 3px 6px rgba(255, 215, 0, 0.5));
+}
+
+.avatar-hover .tree-leaf-silver {
+  filter: drop-shadow(0 2px 5px rgba(192, 192, 192, 0.5));
+}
+
+.avatar-hover .tree-leaf-bronze {
+  filter: drop-shadow(0 2px 5px rgba(205, 127, 50, 0.5));
+}
+
+.avatar-hover .tree-leaf-standard {
+  filter: drop-shadow(0 2px 4px rgba(1, 115, 99, 0.5));
+}
+
+// Tree branch colors
+.tree-branch {
+  fill: url(#branchGrad);
+  stroke: none;
+}
+
+.tree-stop1 {
+  stop-color: #8B4513;
+  stop-opacity: 1;
+}
+
+.tree-stop2 {
+  stop-color: #A0522D;
+  stop-opacity: 1;
+}
+
+// Leaf gradient stops for different tiers
+.tree-leaf-stop1-platinum {
+  stop-color: #E5E4E2;
+  stop-opacity: 0.9;
+}
+
+.tree-leaf-stop2-platinum {
+  stop-color: #C0C0C0;
+  stop-opacity: 0.7;
+}
+
+.tree-leaf-stop1-gold {
+  stop-color: #FFD700;
+  stop-opacity: 0.8;
+}
+
+.tree-leaf-stop2-gold {
+  stop-color: #FFA500;
+  stop-opacity: 0.6;
+}
+
+.tree-leaf-stop1-silver {
+  stop-color: #C0C0C0;
+  stop-opacity: 0.8;
+}
+
+.tree-leaf-stop2-silver {
+  stop-color: #A8A8A8;
+  stop-opacity: 0.6;
+}
+
+.tree-leaf-stop1-bronze {
+  stop-color: #CD7F32;
+  stop-opacity: 0.8;
+}
+
+.tree-leaf-stop2-bronze {
+  stop-color: #B87333;
+  stop-opacity: 0.6;
+}
+
+.tree-leaf-stop1-standard {
+  stop-color: #017363;
+  stop-opacity: 0.7;
+}
+
+.tree-leaf-stop2-standard {
+  stop-color: #015A4F;
+  stop-opacity: 0.5;
+}
+
 // Animations
 @keyframes platinum-glow {
   0% {
@@ -248,6 +380,92 @@ $leaf-color: rgba(1, 115, 99, 0.25);
     opacity: 0.7;
     transform: scale(1.05);
   }
+}
+
+// Tree container styling
+.tree-container-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  contain: layout style paint;
+  transform: translateZ(0); // Force hardware acceleration
+}
+
+#tree-container {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+}
+
+// Node label styling
+.node-label-card {
+  fill: rgba(255, 255, 255, 0.95);
+  stroke: rgba(0, 0, 0, 0.1);
+  stroke-width: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.node-label {
+  font-family: 'Arial', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  fill: #333;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.node-tier-label {
+  font-size: 10px;
+  font-weight: 500;
+  fill: #666;
+}
+
+// Avatar ring styling
+.avatar-ring {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.avatar-ring-platinum {
+  stroke: #e5e4e2;
+  stroke-width: 3;
+  opacity: 1;
+  filter: drop-shadow(0 0 8px rgba(229, 228, 226, 0.5));
+}
+
+.avatar-ring-gold {
+  stroke: #FFD700;
+  stroke-width: 3;
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4));
+}
+
+.avatar-ring-silver {
+  stroke: #C0C0C0;
+  stroke-width: 2.5;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 4px rgba(192, 192, 192, 0.3));
+}
+
+.avatar-ring-bronze {
+  stroke: #CD7F32;
+  stroke-width: 2.5;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 4px rgba(205, 127, 50, 0.3));
+}
+
+.avatar-ring-standard {
+  stroke: #017363;
+  stroke-width: 2;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 3px rgba(1, 115, 99, 0.3));
 }
 
 // Add responsive styling

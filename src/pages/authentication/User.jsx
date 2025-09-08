@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { useSelector, useDispatch } from "react-redux";
-import { FiChevronUp, FiArrowRight } from "react-icons/fi";
+import { FiChevronUp, FiArrowRight, FiLock } from "react-icons/fi";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import Tooltip from "react-bootstrap/Tooltip";
@@ -135,6 +135,9 @@ const User = () => {
       menuContent = <NewsList />;
       break;
     case TICKETS:
+      // Check if user is tier 0 alumni
+      const isTier0Alumni = true; // currentUser?.tier === 0 && currentUser?.roles?.includes('alumni');
+      
       menuContent = (
         <div className="container">
           <div className="row">
@@ -142,7 +145,71 @@ const User = () => {
               <div className="mb--30 mb_sm--0">
                 <h2 className="title">Ticket Collection</h2>
                 <p>*Click one to expand it</p>
-                {currentUser && currentUser.tickets?.length > 0 ? (
+
+                {isTier0Alumni ? (
+                  <div
+                    className="tier-0-restriction"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "column",
+                      padding: "40px 20px",
+                      backgroundColor: "#f8f9fa",
+                      borderRadius: "8px",
+                      border: "1px solid #e9ecef",
+                      margin: "20px 0",
+                    }}
+                  >
+                    <FiLock
+                      style={{
+                        fontSize: "48px",
+                        color: "#6c757d",
+                        marginBottom: "16px",
+                      }}
+                    />
+                    <h4
+                      style={{
+                        color: "#6c757d",
+                        marginBottom: "8px",
+                        textAlign: "center",
+                      }}
+                    >
+                      Tickets Not Available
+                    </h4>
+                    <p
+                      style={{
+                        color: "#6c757d",
+                        textAlign: "center",
+                        margin: "0 0 20px 0",
+                      }}
+                    >
+                      Ticket collection is not supported for Tier 0 alumni
+                      members. Upgrade your membership to gain access to exclusive
+                      ticket collection.
+                    </p>
+                    <button
+                      className="rn-button-style--2 rn-btn-reverse-red"
+                      style={{
+                        padding: "12px 24px",
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        borderRadius: "6px",
+                        border: "none",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        textDecoration: "none",
+                        display: "inline-block",
+                      }}
+                      onClick={() => {
+                        // Navigate to alumni upgrade page or open modal
+                        navigate("/alumni/register");
+                      }}
+                    >
+                      Upgrade Tier
+                    </button>
+                  </div>
+                ) : currentUser && currentUser.tickets?.length > 0 ? (
                   <div className="row">
                     {currentUser.tickets.map((ticket, i) => (
                       <Image
