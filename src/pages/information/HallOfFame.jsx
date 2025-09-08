@@ -8,6 +8,7 @@ import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { Dialog } from "primereact/dialog";
 import Tree from "../../component/userTree/Tree";
+import { Link } from "react-router-dom";
 
 const HallOfFame = () => {
   const { sendRequest } = useHttpClient();
@@ -76,9 +77,10 @@ const HallOfFame = () => {
               <div className="section-title text-center mb--30">
                 <h3 className="title">Alumni Tree</h3>
                 <p className="description">
-                  Our alumni members are arranged by their membership tier.
+                  Click on members to read their inspiring quotes or see details
+                  for them.
                   <br />
-                  Click on premium members to read their inspiring quotes.
+				  Want to join them? <a href="/alumni/register" className="link-hover-red" target="_blank" rel="noreferrer">Do not waste a minute!</a>
                 </p>
               </div>
             </div>
