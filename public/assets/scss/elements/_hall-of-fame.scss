@@ -107,6 +107,49 @@
   }
 }
 
+// Avatar ring styling
+.avatar-ring {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.avatar-ring-platinum {
+  stroke: #e5e4e2;
+  stroke-width: 3;
+  opacity: 1;
+  filter: drop-shadow(0 0 8px rgba(229, 228, 226, 0.5));
+}
+
+.avatar-ring-gold {
+  stroke: #FFD700;
+  stroke-width: 3;
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4));
+}
+
+.avatar-ring-silver {
+  stroke: #C0C0C0;
+  stroke-width: 2.5;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 4px rgba(192, 192, 192, 0.3));
+}
+
+.avatar-ring-bronze {
+  stroke: #CD7F32;
+  stroke-width: 2.5;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 4px rgba(205, 127, 50, 0.3));
+}
+
+.avatar-ring-standard {
+  stroke: #017363;
+  stroke-width: 2;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 3px rgba(1, 115, 99, 0.3));
+}
+
 // Responsive adjustments
 @media (max-width: 991px) {
   .hall-of-fame-tree::before {
