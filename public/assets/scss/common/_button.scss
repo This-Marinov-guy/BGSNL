@@ -548,3 +548,80 @@ a {
   /* Hide scrollbar for IE and Edge */
   -ms-overflow-style: none;
 }
+
+/* Reusable Link Styles */
+.link-hover-red {
+  color: #017363;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: #dc3545; // Bootstrap red color
+    text-decoration: none;
+  }
+  
+  &:focus {
+    color: #dc3545;
+    text-decoration: none;
+    outline: none;
+  }
+  
+  &:visited {
+    color: #017363;
+  }
+}
+
+/* User Modal Styles */
+.user-modal {
+  /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+  
+  /* Hide scrollbar for IE and Edge */
+  -ms-overflow-style: none;
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+}

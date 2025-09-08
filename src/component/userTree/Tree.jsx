@@ -7,6 +7,7 @@ import {
 	perNodeChildCapForLevel,
 } from "./layout";
 import PropTypes from "prop-types";
+import AlumniUserModal from "./AlumniUserModal";
 
 function branchPath(x1, y1, x2, y2, w1, w2) {
 	const vx = x2 - x1,
@@ -160,8 +161,20 @@ export default function Tree({ style, users = [], onUserClick }) {
 		children: [],
 		depth: 0,
 	}));
+	const [selectedUser, setSelectedUser] = useState(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isClosing, setIsClosing] = useState(false);
 	const rng = useMemo(() => createRng(seed), [seed]);
 	const svgRef = useRef(null);
+
+	const handleCloseModal = () => {
+		setIsClosing(true);
+		setTimeout(() => {
+			setIsModalOpen(false);
+			setIsClosing(false);
+			setSelectedUser(null);
+		}, 300); // Match animation duration
+	};
 
 	useEffect(() => {
 		if (!users || users.length === 0) return;
@@ -340,21 +353,26 @@ export default function Tree({ style, users = [], onUserClick }) {
 			img.setAttribute("clip-path", `url(#${clipId})`);
 			img.setAttribute("pointer-events", "auto");
 
-			// Add click event to fire onUserClick
-			if (typeof onUserClick === "function") {
-				img.style.cursor = node.quote ? "pointer" : "default";
-				img.addEventListener("click", (e) => {
-					e.stopPropagation();
-					onUserClick({
-						id: node.id,
-						name: node.name,
-						avatar: node.avatarUrl,
-						tier: node.tier,
-						quote: node.quote,
-						joinDate: node.joinDate,
-					});
-				});
-			}
+			// Add click event to open modal
+			img.style.cursor = "pointer";
+			img.addEventListener("click", (e) => {
+				e.stopPropagation();
+				const userData = {
+					id: node.id,
+					name: node.name,
+					avatar: node.avatarUrl,
+					tier: node.tier,
+					quote: node.quote,
+					joinDate: node.joinDate,
+				};
+				setSelectedUser(userData);
+				setIsModalOpen(true);
+				
+				// Also call the original onUserClick if provided
+				if (typeof onUserClick === "function") {
+					onUserClick(userData);
+				}
+			});
 			group.appendChild(img);
 
 			// Estimate card width based on text length
@@ -494,15 +512,25 @@ export default function Tree({ style, users = [], onUserClick }) {
 	}, [root, totalUsers, seed, onUserClick]);
 
 	return (
-		<div
-			className="tree-container-wrapper"
-			style={style}
-		>
+		<>
 			<div
-				id="tree-container"
-				ref={svgRef}
+				className="tree-container-wrapper"
+				style={style}
+			>
+				<div
+					id="tree-container"
+					ref={svgRef}
+				/>
+			</div>
+
+			{/* User Modal */}
+			<AlumniUserModal
+				isOpen={isModalOpen}
+				isClosing={isClosing}
+				user={selectedUser}
+				onClose={handleCloseModal}
 			/>
-		</div>
+		</>
 	);
 }
 
