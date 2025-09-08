@@ -2,78 +2,32 @@
     Hall of Fame Styles 
 ====================*/
 
-// Connection colors
-$twig-color: #a27e5c;
-$leaf-color: rgba(1, 115, 99, 0.25);
-
 .hall-of-fame-tree {
   position: relative;
   padding-top: 60px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 400px 300px;
-  min-height: 600px;
-  margin-bottom: 60px;
   
-  // Enable infinite repetition
-  background-repeat: repeat;
-
-  // Ensure the tree scales properly on all devices
-  background-attachment: local;
-
-  // Add a subtle overlay to make content more readable
+  // Tree connection lines
   &::before {
-    content: "";
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.1) 0%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(255, 255, 255, 0.1) 100%
-    );
-    pointer-events: none;
-    z-index: 1;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: calc(100% - 150px);
+    background-color: rgba(1, 115, 99, 0.2);
+    z-index: 0;
   }
-
-  // Remove old trunk and branch pseudo-elements
-  .row::before,
-  .row::after {
-    content: none;
-  }
-
-  // Position tiers at appropriate branch heights
-  .platinum-tier-row {
-    margin-top: 80px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .gold-tier-row {
-    margin-top: 120px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .silver-tier-row {
-    margin-top: 160px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .bronze-tier-row {
-    margin-top: 160px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .standard-tier-row {
-    margin-top: 160px;
-    position: relative;
-    z-index: 2;
+  
+  // Horizontal connector lines for tiers
+  .row::before {
+    content: '';
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    background-color: rgba(1, 115, 99, 0.15);
+    z-index: 0;
   }
 }
 
@@ -84,281 +38,52 @@ $leaf-color: rgba(1, 115, 99, 0.25);
   align-items: center;
   position: relative;
   z-index: 2;
-
+  
   .avatar-container {
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
   }
-
+  
   &:hover .avatar-container {
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    transform: translateY(-5px);
-  }
-
-  // No need for connection elements anymore since the SVG has its own
-  &::before,
-  &::after {
-    content: none;
-  }
-
-  // Animation for the avatars to make them feel more dynamic
-  animation: float-avatar 5s ease-in-out infinite;
-
-  // Add a subtle connection to the tree branches
-  &::after {
-    content: "";
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 20px;
-    background: linear-gradient(to bottom, rgba(139, 69, 19, 0.3), transparent);
-    z-index: 1;
-  }
-
-  &:nth-child(2n) {
-    animation-delay: 1.5s;
-  }
-
-  &:nth-child(3n) {
-    animation-delay: 3s;
-  }
-
-  // Different hover effects for each tier
-  &.platinum-connection .avatar-container {
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(229, 228, 226, 0.5);
-
-    &:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(229, 228, 226, 0.7);
-    }
-  }
-
-  &.gold-connection .avatar-container {
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(255, 215, 0, 0.3);
-
-    &:hover {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(255, 215, 0, 0.5);
-    }
-  }
-
-  &.silver-connection .avatar-container {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 0 8px rgba(192, 192, 192, 0.3);
-
-    &:hover {
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
-        0 0 15px rgba(192, 192, 192, 0.5);
-    }
-  }
-
-  &.bronze-connection .avatar-container {
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), 0 0 5px rgba(205, 127, 50, 0.3);
-
-    &:hover {
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3),
-        0 0 10px rgba(205, 127, 50, 0.5);
-    }
-  }
-
-  &.standard-connection .avatar-container {
-    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    }
-  }
-}
-
-// Gentle floating animation for avatars
-@keyframes float-avatar {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
   }
 }
 
 // Tier-specific styles
-// .border-platinum {
-//   position: relative;
-
-//   // Glowing effect for platinum tier
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     top: -5px;
-//     left: -5px;
-//     right: -5px;
-//     bottom: -5px;
-//     border-radius: 50%;
-//     background: radial-gradient(
-//       ellipse at center,
-//       rgba(229, 228, 226, 0.5) 0%,
-//       rgba(229, 228, 226, 0) 70%
-//     );
-//     z-index: -1;
-//     animation: platinum-glow 3s infinite alternate;
-//   }
-// }
-
-// .border-gold {
-//   position: relative;
-
-//   // Subtle shimmer for gold tier
-//   &::after {
-//     content: "";
-//     position: absolute;
-//     top: -3px;
-//     left: -3px;
-//     right: -3px;
-//     bottom: -3px;
-//     border-radius: 50%;
-//     background: radial-gradient(
-//       ellipse at center,
-//       rgba(255, 215, 0, 0.3) 0%,
-//       rgba(255, 215, 0, 0) 70%
-//     );
-//     z-index: -1;
-//     animation: gold-shimmer 4s infinite alternate;
-//   }
-// }
-
-// Tree leaf colors for different tiers
-.tree-leaf {
-  fill: url(#leafGrad-standard);
-  opacity: 0.8;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-  will-change: opacity, transform;
+.border-platinum {
+  position: relative;
+  
+  // Glowing effect for platinum tier
+  &::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(229, 228, 226, 0.5) 0%, rgba(229, 228, 226, 0) 70%);
+    z-index: -1;
+    animation: platinum-glow 3s infinite alternate;
+  }
 }
 
-.tree-leaf-platinum {
-  fill: url(#leafGrad-platinum);
-  opacity: 0.9;
-  filter: drop-shadow(0 2px 4px rgba(229, 228, 226, 0.3));
-}
-
-.tree-leaf-gold {
-  fill: url(#leafGrad-gold);
-  opacity: 0.85;
-  filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3));
-}
-
-.tree-leaf-silver {
-  fill: url(#leafGrad-silver);
-  opacity: 0.8;
-  filter: drop-shadow(0 1px 3px rgba(192, 192, 192, 0.3));
-}
-
-.tree-leaf-bronze {
-  fill: url(#leafGrad-bronze);
-  opacity: 0.75;
-  filter: drop-shadow(0 1px 3px rgba(205, 127, 50, 0.3));
-}
-
-.tree-leaf-standard {
-  fill: url(#leafGrad-standard);
-  opacity: 0.7;
-  filter: drop-shadow(0 1px 2px rgba(1, 115, 99, 0.3));
-}
-
-// Hover effects for leaves
-.avatar-hover .tree-leaf {
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-.avatar-hover .tree-leaf-platinum {
-  filter: drop-shadow(0 3px 6px rgba(229, 228, 226, 0.5));
-}
-
-.avatar-hover .tree-leaf-gold {
-  filter: drop-shadow(0 3px 6px rgba(255, 215, 0, 0.5));
-}
-
-.avatar-hover .tree-leaf-silver {
-  filter: drop-shadow(0 2px 5px rgba(192, 192, 192, 0.5));
-}
-
-.avatar-hover .tree-leaf-bronze {
-  filter: drop-shadow(0 2px 5px rgba(205, 127, 50, 0.5));
-}
-
-.avatar-hover .tree-leaf-standard {
-  filter: drop-shadow(0 2px 4px rgba(1, 115, 99, 0.5));
-}
-
-// Tree branch colors
-.tree-branch {
-  fill: url(#branchGrad);
-  stroke: none;
-}
-
-.tree-stop1 {
-  stop-color: #8B4513;
-  stop-opacity: 1;
-}
-
-.tree-stop2 {
-  stop-color: #A0522D;
-  stop-opacity: 1;
-}
-
-// Leaf gradient stops for different tiers
-.tree-leaf-stop1-platinum {
-  stop-color: #E5E4E2;
-  stop-opacity: 0.9;
-}
-
-.tree-leaf-stop2-platinum {
-  stop-color: #C0C0C0;
-  stop-opacity: 0.7;
-}
-
-.tree-leaf-stop1-gold {
-  stop-color: #FFD700;
-  stop-opacity: 0.8;
-}
-
-.tree-leaf-stop2-gold {
-  stop-color: #FFA500;
-  stop-opacity: 0.6;
-}
-
-.tree-leaf-stop1-silver {
-  stop-color: #C0C0C0;
-  stop-opacity: 0.8;
-}
-
-.tree-leaf-stop2-silver {
-  stop-color: #A8A8A8;
-  stop-opacity: 0.6;
-}
-
-.tree-leaf-stop1-bronze {
-  stop-color: #CD7F32;
-  stop-opacity: 0.8;
-}
-
-.tree-leaf-stop2-bronze {
-  stop-color: #B87333;
-  stop-opacity: 0.6;
-}
-
-.tree-leaf-stop1-standard {
-  stop-color: #017363;
-  stop-opacity: 0.7;
-}
-
-.tree-leaf-stop2-standard {
-  stop-color: #015A4F;
-  stop-opacity: 0.5;
+.border-gold {
+  position: relative;
+  
+  // Subtle shimmer for gold tier
+  &::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0) 70%);
+    z-index: -1;
+    animation: gold-shimmer 4s infinite alternate;
+  }
 }
 
 // Animations
@@ -382,162 +107,40 @@ $leaf-color: rgba(1, 115, 99, 0.25);
   }
 }
 
-// Tree container styling
-.tree-container-wrapper {
-  position: relative;
-  width: 100%;
-  min-height: 600px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  contain: layout style paint;
-  transform: translateZ(0); // Force hardware acceleration
-}
-
-#tree-container {
-  width: 100%;
-  height: 100%;
-  min-height: 500px;
-}
-
-// Node label styling
-.node-label-card {
-  fill: rgba(255, 255, 255, 0.95);
-  stroke: rgba(0, 0, 0, 0.1);
-  stroke-width: 1;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.node-label {
-  font-family: 'Arial', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  fill: #333;
-  text-anchor: middle;
-  dominant-baseline: middle;
-}
-
-.node-tier-label {
-  font-size: 10px;
-  font-weight: 500;
-  fill: #666;
-}
-
-// Avatar ring styling
-.avatar-ring {
-  fill: none;
-  stroke: #ddd;
-  stroke-width: 2;
-  opacity: 0.8;
-}
-
-.avatar-ring-platinum {
-  stroke: #e5e4e2;
-  stroke-width: 3;
-  opacity: 1;
-  filter: drop-shadow(0 0 8px rgba(229, 228, 226, 0.5));
-}
-
-.avatar-ring-gold {
-  stroke: #FFD700;
-  stroke-width: 3;
-  opacity: 1;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4));
-}
-
-.avatar-ring-silver {
-  stroke: #C0C0C0;
-  stroke-width: 2.5;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 4px rgba(192, 192, 192, 0.3));
-}
-
-.avatar-ring-bronze {
-  stroke: #CD7F32;
-  stroke-width: 2.5;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 4px rgba(205, 127, 50, 0.3));
-}
-
-.avatar-ring-standard {
-  stroke: #017363;
-  stroke-width: 2;
-  opacity: 0.8;
-  filter: drop-shadow(0 0 3px rgba(1, 115, 99, 0.3));
-}
-
-// Add responsive styling
-@media (max-width: 767px) {
-  .hall-of-fame-tree {
-    background-size: 300px 225px;
-    min-height: 800px;
-
-    // Adjust tier positioning for mobile
-    .platinum-tier-row {
-      margin-top: 80px;
-    }
-    .gold-tier-row {
-      margin-top: 120px;
-    }
-    .silver-tier-row,
-    .bronze-tier-row,
-    .standard-tier-row {
-      margin-top: 140px;
-    }
-  }
-}
-
-// Additional responsive adjustments
+// Responsive adjustments
 @media (max-width: 991px) {
-  .hall-of-fame-tree {
-    background-size: 350px 262px;
+  .hall-of-fame-tree::before {
+    display: none; // Hide vertical line on mobile
   }
-
-  .hall-of-fame-avatar {
-    margin-bottom: 30px;
-  }
-
-  // Adjust spacing for different tiers
-  .platinum-tier-row {
-    margin-top: 40px;
-  }
-
-  .gold-tier-row {
-    margin-top: 40px;
-  }
-
-  .silver-tier-row,
-  .bronze-tier-row,
-  .standard-tier-row {
-    margin-top: 30px;
+  
+  .row::before {
+    display: none; // Hide horizontal lines on mobile
   }
 }
 
 // Quote dialog styling
-// .quote-dialog {
-//   .quote-container {
-//     position: relative;
-
-//     &::before {
-//       content: '"';
-//       position: absolute;
-//       top: 10px;
-//       left: 20px;
-//       font-size: 60px;
-//       color: rgba(0, 0, 0, 0.1);
-//       font-family: Georgia, serif;
-//       z-index: 0;
-//     }
-
-//     blockquote {
-//       position: relative;
-//       z-index: 1;
-//       font-style: italic;
-//       font-size: 18px;
-//       line-height: 1.6; 
-//       color: #555;
-//     }
-//   }
-// }
+.quote-dialog {
+  .quote-container {
+    position: relative;
+    
+    &::before {
+      content: '"';
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 60px;
+      color: rgba(0,0,0,0.1);
+      font-family: Georgia, serif;
+      z-index: 0;
+    }
+    
+    blockquote {
+      position: relative;
+      z-index: 1;
+      font-style: italic;
+      font-size: 18px;
+      line-height: 1.6;
+      color: #555;
+    }
+  }
+}

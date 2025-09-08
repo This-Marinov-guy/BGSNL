@@ -25,7 +25,7 @@ const HallOfFame = () => {
         setError(null);
         const response = await sendRequest("user/active-alumni", "GET");
         setUsers(response.alumniMembers);
-		setLoading(false);
+        setLoading(false);
       } catch (err) {
         setError("Failed to load alumni data. Using sample data.");
       }
@@ -80,7 +80,15 @@ const HallOfFame = () => {
                   Click on members to read their inspiring quotes or see details
                   for them.
                   <br />
-				  Want to join them? <a href="/alumni/register" className="link-hover-red" target="_blank" rel="noreferrer">Do not waste a minute!</a>
+                  Want to join them?{" "}
+                  <a
+                    href="/alumni/register"
+                    className="link-hover-red"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Do not waste a minute!
+                  </a>
                 </p>
               </div>
             </div>
@@ -113,66 +121,6 @@ const HallOfFame = () => {
         </div>
       </div>
       {/* End Hall of Fame Area */}
-
-      {/* Quote Dialog */}
-      <Dialog
-        header={selectedUser?.name}
-        visible={visible}
-        style={{ width: "50vw" }}
-        onHide={() => setVisible(false)}
-        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-      >
-        {selectedUser && (
-          <div className="quote-dialog">
-            <div className="d-flex align-items-center mb--20">
-              <div
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  overflow: "hidden",
-                  borderRadius: "50%",
-                  marginRight: "20px",
-                }}
-              >
-                <img
-                  src={selectedUser.image}
-                  alt={selectedUser.name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <div>
-                <h4>{selectedUser.name + " " + selectedUser.surname}</h4>
-                <p style={{ margin: 0 }}>
-                  {selectedUser.tier.charAt(0).toUpperCase() +
-                    selectedUser.tier.slice(1)}{" "}
-                  Member
-                </p>
-              </div>
-            </div>
-
-            <div
-              className="quote-container p--30 mb--20"
-              style={{
-                background: "#f9f9f9",
-                borderLeft: `4px solid ${
-                  selectedUser.tier === "platinum" ? "#e5e4e2" : "#FFD700"
-                }`,
-                borderRadius: "4px",
-              }}
-            >
-              <blockquote className="mb-0">
-                &ldquo;{selectedUser.quote}&rdquo;
-              </blockquote>
-            </div>
-
-            <p className="text-right">
-              {`Member since ${new Date(
-                selectedUser.joinDate
-              ).toLocaleDateString()}`}
-            </p>
-          </div>
-        )}
-      </Dialog>
 
       <FooterTwo />
 
