@@ -75,10 +75,10 @@ function addChild(parent, count, levelCounts, users, userIndexRef) {
 		parent.children = parent.children || [];
 		const user = users[userIndexRef.current++];
 		parent.children.push({
-			id: user.id,
+			id: parseInt(user.id) || user.id,
 			name: user.name + " " + user.surname,
 			avatarUrl: user.image,
-			tier: user.tier,
+			tier: user.tier || "standard",
 			quote: user.quote,
 			joinDate: user.joinDate,
 			children: [],
@@ -180,10 +180,10 @@ export default function Tree({ style, users = [], onUserClick }) {
 		if (!users || users.length === 0) return;
 
 		// Set root node to first user
-		root.id = users[0].id;
+		root.id = parseInt(users[0].id) || users[0].id;
 		root.name = users[0].name + " " + users[0].surname;
 		root.avatarUrl = users[0].image;
-		root.tier = users[0].tier;
+		root.tier = users[0].tier || "standard";
 		root.quote = users[0].quote;
 		root.joinDate = users[0].joinDate;
 		seedTree(root, users);
@@ -380,8 +380,8 @@ export default function Tree({ style, users = [], onUserClick }) {
 			const charWidth = 6.5; // average px per character for font-size: 13px
 			const nameLen = node.name ? node.name.length : 0;
 			let tierText = "";
-			if (node.tier && node.tier !== "standard") {
-				tierText = node.tier.charAt(0).toUpperCase() + node.tier.slice(1) + " Member";
+			if (node.tier && node.tier !== "standard" && typeof node.tier === "string") {
+				tierText = 'Tier: ' + node.tier;
 			}
 			const tierLen = tierText.length;
 			const maxLen = Math.max(nameLen, tierLen);
@@ -534,23 +534,23 @@ export default function Tree({ style, users = [], onUserClick }) {
 	);
 }
 
-Tree.propTypes = {
-	style: PropTypes.object,
-	users: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-			avatar: PropTypes.string.isRequired,
-			tier: PropTypes.oneOf([
-				"platinum",
-				"gold",
-				"silver",
-				"bronze",
-				"standard",
-			]).isRequired,
-			quote: PropTypes.string, // optional, since not all objects have it
-			joinDate: PropTypes.string.isRequired, // ISO date string
-		})
-	),
-	onUserClick: PropTypes.func,
-};
+// Tree.propTypes = {
+// 	style: PropTypes.object,
+// 	users: PropTypes.arrayOf(
+// 		PropTypes.shape({
+// 			id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+// 			name: PropTypes.string.isRequired,
+// 			avatar: PropTypes.string.isRequired,
+// 			tier: PropTypes.oneOf([
+// 				"platinum",
+// 				"gold",
+// 				"silver",
+// 				"bronze",
+// 				"standard",
+// 			]),
+// 			quote: PropTypes.string, // optional, since not all objects have it
+// 			joinDate: PropTypes.string.isRequired, // ISO date string
+// 		})
+// 	),
+// 	onUserClick: PropTypes.func,
+// };
