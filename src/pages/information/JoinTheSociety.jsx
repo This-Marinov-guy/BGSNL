@@ -137,7 +137,7 @@ const JoinTheSociety = () => {
                   {/* <div className="feature-list mt--30">
                     <ul className="list-style--1">
                       <li>Premium alumni events</li>
-                      <li>Hall of Fame entry</li>
+                      <li>Allumni Tree entry</li>
                       <li>Voting rights</li>
                       <li>Personalized merchandise</li>
                     </ul>

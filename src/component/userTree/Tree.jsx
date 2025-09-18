@@ -121,34 +121,55 @@ function seedTree(root, users) {
   // The first user is the root, so start from index 1
   const userIndexRef = { current: 1 };
   let remaining = Math.max(0, users.length - 1);
+
+  // Level 2
   const wantL2 = Math.min(levelCap(2), remaining);
   const remL2 = distributeChildren([root], wantL2, 1, users, userIndexRef);
   const placedL2 = wantL2 - remL2;
-
   remaining -= placedL2;
 
+  // Level 3
   const L2nodes = root.children || [];
   const wantL3 = Math.min(levelCap(3), remaining);
   const remL3 = distributeChildren(L2nodes, wantL3, 2, users, userIndexRef);
   const placedL3 = wantL3 - remL3;
-
   remaining -= placedL3;
 
+  // Level 4
   const L3nodes = [];
-
   L2nodes.forEach((p) => p.children?.forEach((c) => L3nodes.push(c)));
-
   const wantL4 = Math.min(levelCap(4), remaining);
   const remL4 = distributeChildren(L3nodes, wantL4, 3, users, userIndexRef);
   const placedL4 = wantL4 - remL4;
-
   remaining -= placedL4;
 
+  // Level 5 (NEW)
   const L4nodes = [];
   L3nodes.forEach((p) => p.children?.forEach((c) => L4nodes.push(c)));
+  const wantL5 = Math.min(levelCap(5), remaining);
+  const remL5 = distributeChildren(L4nodes, wantL5, 4, users, userIndexRef);
+  const placedL5 = wantL5 - remL5;
+  remaining -= placedL5;
 
-  if (remaining > 0)
-    distributeChildren(L4nodes, remaining, 4, users, userIndexRef);
+  // If still have remaining users, try to place them at the deepest level
+  if (remaining > 0) {
+    const L5nodes = [];
+    L4nodes.forEach((p) => p.children?.forEach((c) => L5nodes.push(c)));
+    distributeChildren(L5nodes, remaining, 5, users, userIndexRef);
+  }
+
+  console.log("Tree distribution:", {
+    total: users.length,
+    placed: users.length - remaining,
+    remaining: remaining,
+    levels: {
+      L1: 1,
+      L2: placedL2,
+      L3: placedL3,
+      L4: placedL4,
+      L5: placedL5,
+    },
+  });
 }
 
 export default function Tree({ style, users = [], onUserClick }) {

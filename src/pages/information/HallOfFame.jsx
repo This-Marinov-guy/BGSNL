@@ -42,7 +42,7 @@ const HallOfFame = () => {
 
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Hall of Fame" />
+      <PageHelmet pageTitle="Allumni Tree" />
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"
@@ -58,7 +58,7 @@ const HallOfFame = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">Hall of Fame</h2>
+                <h2 className="title theme-gradient">Allumni Tree</h2>
                 <p>
                   Our esteemed alumni members who make our society exceptional
                 </p>
@@ -69,13 +69,12 @@ const HallOfFame = () => {
       </div>
       {/* End Breadcrump Area */}
 
-      {/* Start Hall of Fame Area */}
+      {/* Start Allumni Tree Area */}
       <div className="rn-alumni-area mt--100 rn-section-gap">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
               <div className="section-title text-center mb--30">
-                <h3 className="title">Alumni Tree</h3>
                 <p className="description">
                   Click on members to read their inspiring quotes or see details
                   for them.
@@ -120,7 +119,7 @@ const HallOfFame = () => {
           )}
         </div>
       </div>
-      {/* End Hall of Fame Area */}
+      {/* End Allumni Tree Area */}
 
       <FooterTwo />
 
