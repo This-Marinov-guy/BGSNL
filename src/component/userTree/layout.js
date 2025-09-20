@@ -1,5 +1,5 @@
 // Organic layout and collision separation exported as pure functions
-export const MAX_DEPTH = 5; // Increased from 4 to 5
+export const MAX_DEPTH = 100;
 
 export function levelCap(level) {
   // Increased capacity to handle 114+ users
@@ -21,7 +21,7 @@ export function perNodeChildCapForLevel(level) {
 }
 
 export function computeOrganic(root, opts = {}) {
-  const depthGap = opts.depthGap ?? 140; // Reduced from 170 to fit more levels
+  const depthGap = opts.depthGap ?? 220; // NOTE: increase space
   const centerX = opts.centerX ?? 700;
   const rng = opts.rng ?? (() => Math.random());
 
@@ -157,8 +157,8 @@ export function computeOrganic(root, opts = {}) {
   const avatarR = 28;
   const keepOut = (n) => {
     const d = n.depth || 0;
-    const gap = d === 0 ? 8 : d <= 2 ? 6 : 5; // Tighter spacing for deeper levels
-    const leafLen = d === 0 ? 28 : d === 1 ? 24 : d <= 3 ? 20 : 18;
+    const gap = d === 0 ? 8 : d <= 2 ? 10 : 9; // NOTE: increase space
+    const leafLen = d === 0 ? 28 : d === 1 ? 24 : d <= 3 ? 30 : 28;
     return avatarR + gap + leafLen;
   };
   for (let it = 0; it < 12; it++) {
