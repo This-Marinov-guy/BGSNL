@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import emailjs from "emailjs-com";
+import { useLocation, useParams } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const Result = () => {
   return (
@@ -8,38 +10,47 @@ const Result = () => {
     </p>
   );
 };
-function ContactForm(props) {
-  const [result, showresult] = useState(false);
 
-  const sendEmail = (e) => {
+const FailResult = () => {
+  return (
+    <p className="fail-message">
+      Your Message could not be sent. Please try again.
+    </p>
+  );
+};
+function ContactForm(props) {
+  const [result, showresult] = useState(null);
+  const { region = "netherlands" } = useParams();
+
+  const sendEmail = async (e) => {
     e.preventDefault();
-    emailjs
-      .sendForm(
-        process.env.REACT_APP_SERVICE,
-        process.env.REACT_APP_TEMPLATE,
-        e.target,
-        process.env.REACT_APP_PUBLIC_KEY
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-    e.target.reset();
-    showresult(true);
+    const serviceID = process.env.REACT_APP_SERVICE || "default_service";
+    const templateID = process.env.REACT_APP_TEMPLATE || "default_template";
+    const userID = process.env.REACT_APP_PUBLIC_KEY || "default_key";
+
+    await emailjs.sendForm(serviceID, templateID, e.target, userID).then(
+      (result) => {
+        console.log(result.text);
+
+        e.target.reset();
+        showresult("success");
+      },
+      (error) => {
+        console.log(error.text);
+
+        showresult("fail");
+      }
+    );
   };
 
   setTimeout(() => {
-    showresult(false);
+    showresult(null);
   }, 10000);
 
   return (
     <form action="" onSubmit={sendEmail}>
       <div className="rn-form-group">
-        <input type="text" name="fullname" placeholder="Your Name" required />
+        <input type="text" name="name" placeholder="Your Name" required />
       </div>
 
       <div className="rn-form-group">
@@ -47,12 +58,26 @@ function ContactForm(props) {
       </div>
 
       <div className="rn-form-group">
-        <input readOnly={!!props.subject} type="text" name="subject" value={props.subject} placeholder="Subject" required />
+        <input
+          readOnly={!!props.subject}
+          type="text"
+          name="subject"
+          value={props.subject}
+          placeholder="Subject"
+          required
+        />
       </div>
 
       <div className="rn-form-group">
-        <textarea name="message" placeholder={props.placeholderMessage || "Your Message"} required></textarea>
+        <textarea
+          name="message"
+          placeholder={props.placeholderMessage || "Your Message"}
+          required
+        ></textarea>
       </div>
+
+      {/* Hidden field for region */}
+      <input type="hidden" name="region" value={region} />
 
       <div className="rn-form-group">
         <button
@@ -66,8 +91,17 @@ function ContactForm(props) {
         </button>
       </div>
 
-      <div className="rn-form-group">{result ? <Result /> : null}</div>
+      {result && (
+        <div className="rn-form-group">
+          {result === "success" ? <Result /> : <FailResult />}
+        </div>
+      )}
     </form>
   );
 }
+ContactForm.propTypes = {
+  subject: PropTypes.string,
+  placeholderMessage: PropTypes.string,
+};
+
 export default ContactForm;
