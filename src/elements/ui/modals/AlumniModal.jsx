@@ -245,7 +245,8 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
             flexWrap: "wrap",
           }}
         >
-          <button
+          {/* // TODO: Add join now button */}
+          {/* <button
             onClick={() => {
               onClose();
               onJoinNow();
@@ -255,7 +256,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
           >
             <span className="alumni-icon">🎓</span>
             Join Now
-          </button>
+          </button> */}
           <a
             href="/welcome-to-alumni"
             target="_blank"
@@ -292,7 +293,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
 AlumniModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onJoinNow: PropTypes.func.isRequired
+  onJoinNow: PropTypes.func.isRequired,
 };
 
 export default AlumniModal;
