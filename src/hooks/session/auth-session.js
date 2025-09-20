@@ -10,6 +10,7 @@ import {
   LOCAL_STORAGE_SESSION_LIFE,
   SESSION_TIMEOUT,
   WARNING_THRESHOLD,
+  PERSISTENT_SESSION,
 } from "../../util/defines/common";
 
 export const useAuthSession = () => {
@@ -24,10 +25,27 @@ export const useAuthSession = () => {
   const { refreshJWTinAPI } = useJWTRefresh();
 
   const resetInactivityTimeout = useCallback(() => {
-    targetRef.current = Date.now() + SESSION_TIMEOUT;
-    dispatch(removeModal(INACTIVITY_MODAL));
+    // Clear any existing timeouts/intervals
     clearTimeout(inactivityTimeoutRef.current);
     clearInterval(intervalCheckRef.current);
+    dispatch(removeModal(INACTIVITY_MODAL));
+
+    // If persistent sessions are enabled, don't set up automatic expiration
+    if (PERSISTENT_SESSION) {
+      // Set a very long timeout (effectively never expires)
+      targetRef.current = Date.now() + (365 * 24 * 60 * 60 * 1000); // 1 year
+      timeRemainingRef.current = targetRef.current;
+      
+      // Still set up JWT refresh timer for token renewal
+      refreshJWTinAPITimerRef.current = setTimeout(() => {
+        refreshJWTinAPI();
+      }, JWT_RESET_TIMER);
+      
+      return;
+    }
+
+    // Original timeout logic for non-persistent sessions
+    targetRef.current = Date.now() + SESSION_TIMEOUT;
     timeRemainingRef.current = SESSION_TIMEOUT;
 
     inactivityTimeoutRef.current = setTimeout(() => {
@@ -48,7 +66,7 @@ export const useAuthSession = () => {
         clearInterval(intervalCheckRef.current);
       }
     }, 1000);
-  }, [dispatch]);
+  }, [dispatch, refreshJWTinAPI]);
 
   const handleUserActivity = useCallback(() => {
     localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, targetRef.current);

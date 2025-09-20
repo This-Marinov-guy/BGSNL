@@ -7,6 +7,7 @@ import { isObjectEmpty } from "../../util/functions/helpers";
 import {
   LOCAL_STORAGE_SESSION_LIFE,
   LOCAL_STORAGE_USER_DATA,
+  PERSISTENT_SESSION,
 } from "../../util/defines/common";
 import { isTokenExpired } from "../../util/functions/authorization";
 
@@ -30,7 +31,7 @@ export const useAppInitialization = () => {
       if (
         !isObjectEmpty(storedUser) &&
         storedUser.token &&
-        expirationTime > Date.now()
+        (PERSISTENT_SESSION || expirationTime > Date.now())
       ) {
         await loginUser(storedUser.token);
       } else {

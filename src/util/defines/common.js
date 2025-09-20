@@ -15,9 +15,10 @@ export const LOCAL_STORAGE_LOCATION = "BGSNL_location";
 export const LOCAL_STORAGE_COOKIE_CONSENT = "BGSNL_cookie_consent";
 
 // authentication
-export const SESSION_TIMEOUT = (isProd() ? 15 : 60) * 60 * 1000 // minutes in milliseconds
-export const WARNING_THRESHOLD = 30 * 1000; // 30 seconds in milliseconds
+export const SESSION_TIMEOUT = 0; // Disabled - no automatic expiration
+export const WARNING_THRESHOLD = 0; // Disabled - no warning threshold
 export const JWT_RESET_TIMER = 14.5 * 60 * 1000; // 14minutes 30secs in milliseconds
+export const PERSISTENT_SESSION = true; // Enable persistent sessions
 
 // member roles
 export const SUPER_ADMIN = 'super_admin';
