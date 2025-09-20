@@ -63,11 +63,11 @@
       
       .status-active {
         color: var(--color-success);
-        &:before {
-          content: '•';
-          display: inline-block;
-          margin-right: 5px;
-        }
+        // &:before {
+        //   content: '•';
+        //   display: inline-block;
+        //   margin-right: 5px;
+        // }
       }
       
       .status-inactive {
@@ -269,7 +269,7 @@
   
   .user-profile-header {
     flex-direction: column;
-    text-align: center;
+    text-align: left;
     
     .profile-header-image {
       margin-bottom: 20px;
