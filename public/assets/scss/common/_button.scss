@@ -519,10 +519,10 @@ a {
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 8px;
   margin: 0 auto;
-  justify-content: center;
+  justify-content: start;
 
   &:hover {
     background-color: #FFA500;

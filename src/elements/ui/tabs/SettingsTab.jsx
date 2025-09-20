@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   FaCog,
   FaUser,
-  FaBell,
-  FaShieldAlt,
-  FaPalette,
   FaSignOutAlt,
+  FaGraduationCap,
 } from "react-icons/fa";
 import { showModal } from "../../../redux/modal";
 import { useDispatch } from "react-redux";
-import { USER_UPDATE_MODAL } from "../../../util/defines/common";
+import { USER_UPDATE_MODAL, ALUMNI } from "../../../util/defines/common";
 import SubscriptionManage from "../buttons/SubscriptionManage";
 import { isProd } from "../../../util/functions/helpers";
 import { logout } from "../../../redux/user";
+import AlumniModal from "../modals/AlumniModal";
 
-const SettingsTab = ({ onLogout, user }) => {
+const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
+  const [isAlumniModalOpen, setIsAlumniModalOpen] = useState(false);
+
+  const isAlumni = user?.roles?.includes(ALUMNI);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -50,6 +52,29 @@ const SettingsTab = ({ onLogout, user }) => {
               </button>
             </div>
           </div>
+
+          {/* Alumni Program */}
+          {!isAlumni && (
+            <div className="settings-card alumni-card">
+              <div className="settings-card-header">
+                <FaGraduationCap className="settings-icon" />
+                <h3>Alumni Program</h3>
+              </div>
+              <div className="settings-card-body">
+                <p>
+                  Join our exclusive alumni program to access special benefits,
+                  networking opportunities, and exclusive events.
+                </p>
+                <button
+                  className="rn-button-style--2 rn-btn-green alumni-button"
+                  onClick={() => setIsAlumniModalOpen(true)}
+                >
+                  <span className="alumni-icon">🎓</span>
+                  Become an Alumni
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Notification Settings */}
           {/* <div className="settings-card">
@@ -133,12 +158,18 @@ const SettingsTab = ({ onLogout, user }) => {
           </div>
         </div>
       </div>
+
+      {/* Alumni Program Modal */}
+      <AlumniModal
+        isOpen={isAlumniModalOpen}
+        onClose={() => setIsAlumniModalOpen(false)}
+        onJoinNow={() => (window.location.href = "/alumni/register")}
+      />
     </div>
   );
 };
 
 SettingsTab.propTypes = {
-  onLogout: PropTypes.func,
   user: PropTypes.object,
 };
 

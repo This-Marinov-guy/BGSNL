@@ -1,18 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { FiCheckCircle } from "react-icons/fi";
-import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import {
   ALUMNI,
-  formatRole,
 } from "../../../util/defines/common";
 import moment from "moment";
-import AlumniModal from "../modals/AlumniModal";
 import PropTypes from "prop-types";
 
 const UserCard = ({ user }) => {
-  const [isAlumniModalOpen, setIsAlumniModalOpen] = useState(false);
-
   const isAlumni = user.roles.includes(ALUMNI);
 
   return (
@@ -107,26 +102,8 @@ const UserCard = ({ user }) => {
           </div>
         </div>
 
-        {/* Become an Alumni Button */}
-        {!isAlumni && (
-          <div style={{ marginTop: "20px", textAlign: "center" }}>
-            <button
-              className="alumni-button"
-              onClick={() => setIsAlumniModalOpen(true)}
-            >
-              <span className="alumni-icon">🎓</span>
-              Become an Alumni
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* Alumni Program Modal */}
-      <AlumniModal
-        isOpen={isAlumniModalOpen}
-        onClose={() => setIsAlumniModalOpen(false)}
-        onJoinNow={() => (window.location.href = "/alumni/register")}
-      />
     </div>
   );
 };
