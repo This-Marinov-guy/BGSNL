@@ -110,6 +110,7 @@ module.exports = {
       sys: false,
       url: require.resolve("url"),
       util: require.resolve("util"),
+      vm: false,
     },
 
     /**
