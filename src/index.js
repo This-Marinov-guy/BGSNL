@@ -45,6 +45,7 @@ const About = lazy(() => import("./pages/information/About"));
 const Structure = lazy(() => import("./pages/information/Structure"));
 const Developers = lazy(() => import("./pages/information/Developers"));
 const Contact = lazy(() => import("./pages/information/Contact"));
+const Internships = lazy(() => import("./pages/information/Internships"));
 const Policy = lazy(() => import("./pages/information/Policy"));
 const Error404 = lazy(() => import("./pages/Error404"));
 const Maintenance = lazy(() => import("./pages/Maintenance"));
@@ -153,6 +154,7 @@ const Root = () => {
               />
 
               <Route exact path={`/developers`} element={<Developers />} />
+              <Route exact path={`/internships`} element={<Internships />} />
               <Route exact path={`/terms-and-legals`} element={<Policy />} />
 
               <Route exact path={`/articles`} element={<ArticlesPage />} />

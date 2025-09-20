@@ -143,7 +143,7 @@ const HeaderContent = (props) => {
 
           <li>
             <SolidBadge className="absolute-badge" text="New" color="green" />
-            <Link to={`/user#internships`}>Internships</Link>
+            <Link to={`/internships`}>Internships</Link>
           </li>
 
           <li>

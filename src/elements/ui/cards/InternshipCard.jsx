@@ -1,5 +1,5 @@
 import React from "react";
-import { BGSNL_INTERNSHIP_MAIL_SUBJECT } from "../../../util/defines/common";
+import PropTypes from "prop-types";
 import { GOOGLE_FORM_APPLICATION } from "../../../util/defines/INTERNSHIPS";
 
 const InternshipCard = (props) => {
@@ -14,11 +14,9 @@ const InternshipCard = (props) => {
     description,
     bonuses,
     requirements,
-    contactMail = "",
-    applyLink = "",
     website,
   } = props.internship;
-  const { user } = props;
+  const { user, isPreview = false } = props;
 
   return (
     <div className="row border-1 intern-card mt--10 mr--10">
@@ -31,7 +29,7 @@ const InternshipCard = (props) => {
             logo ||
             "https://t2.uc.ltmcdn.com/en/posts/2/8/0/how_do_internships_work_11082_orig.jpg"
           }
-          className={"responsive_img " + logoClass ?? ""}
+          className={"responsive_img " + (logoClass || "")}
           alt="Company Logo"
         ></img>
         <div className="d-flex flex-column align-items-end justify-content-center">
@@ -89,29 +87,59 @@ const InternshipCard = (props) => {
         </a>
       </div>
 
-      <div style={{ width: "100%" }}>
-        {/*  {contactMail ? (
+      {!isPreview && (
+        <div style={{ width: "100%" }}>
+          {/*  {contactMail ? (
+            <a
+              href={`mailto:${contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`}
+              style={{ width: "100%", textAlign: "center" }}
+              className="rn-button-style--2 rn-btn-solid-red"
+            >
+              Contact Internship
+            </a>
+          ) : ( */}
           <a
-            href={`mailto:${contactMail}?${BGSNL_INTERNSHIP_MAIL_SUBJECT}`}
+            href={GOOGLE_FORM_APPLICATION(company, specialty, user)}
+            target="_blank"
+            rel="noreferrer"
             style={{ width: "100%", textAlign: "center" }}
             className="rn-button-style--2 rn-btn-solid-red"
           >
-            Contact Internship
+            Apply for Internship
           </a>
-        ) : ( */}
-        <a
-          href={GOOGLE_FORM_APPLICATION(company, specialty, user)}
-          target="_blank"
-          rel="noreferrer"
-          style={{ width: "100%", textAlign: "center" }}
-          className="rn-button-style--2 rn-btn-solid-red"
-        >
-          Apply for Internship
-        </a>
-        {/* )} */}
-      </div>
+          {/* )} */}
+        </div>
+      )}
+      
+      {isPreview && (
+        <div style={{ width: "100%" }}>
+          <div className="preview-notice">
+            <p>🔒 <strong>Join our community to apply for this and other opportunities</strong></p>
+          </div>
+        </div>
+      )}
     </div>
   );
+};
+
+InternshipCard.propTypes = {
+  internship: PropTypes.shape({
+    logo: PropTypes.string,
+    company: PropTypes.string.isRequired,
+    specialty: PropTypes.string.isRequired,
+    location: PropTypes.string.isRequired,
+    logoClass: PropTypes.string,
+    duration: PropTypes.string.isRequired,
+    languages: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    bonuses: PropTypes.string.isRequired,
+    requirements: PropTypes.string.isRequired,
+    contactMail: PropTypes.string,
+    applyLink: PropTypes.string,
+    website: PropTypes.string.isRequired,
+  }).isRequired,
+  user: PropTypes.object,
+  isPreview: PropTypes.bool,
 };
 
 export default InternshipCard;

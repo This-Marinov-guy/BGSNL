@@ -1,3 +1,5 @@
+import { name } from "file-loader";
+
 export const INTERNSHIPS_LIST = [
   {
     logo: "https://big4accountingfirms.com/wp-content/uploads/Deloitte.svg.png",
@@ -12,7 +14,7 @@ export const INTERNSHIPS_LIST = [
     requirements:
       "Second-year university students or above, fluent in Bulgarian and English, curious and eager to learn, available in Sofia for the internship duration.",
     languages: "Bulgarian, English",
-    contactMail: "", 
+    contactMail: "",
     applyLink:
       "https://apply.deloittece.com/en_US/careers/ApplicationMethods?jobId=16533",
     website:
@@ -208,6 +210,7 @@ export const INTERNSHIPS_LIST = [
 ];
 
 export const GOOGLE_FORM_APPLICATION = (
+  name = "",
   company = "",
   specialty = "",
   user = {
