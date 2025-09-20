@@ -208,7 +208,7 @@ export default function Tree({ style, users = [], onUserClick }) {
     root.quote = users[0].quote;
     root.joinDate = users[0].joinDate;
     seedTree(root, users);
-    computeOrganic(root, { rng });
+    computeOrganic(root, { rng, depthGap: 180 }); // Increased depthGap for more spacing
 
     // draw inside effect
     const container = svgRef.current;
@@ -339,20 +339,20 @@ export default function Tree({ style, users = [], onUserClick }) {
       });
       gNodes.appendChild(group);
 
-       const ring = document.createElementNS(svg.namespaceURI, "circle");
-       // Map tier numbers to tier names for CSS classes
-       let tierName = "standard";
-       if (node.tier) {
-         const tierNum = parseInt(node.tier);
-         if (tierNum >= 4) tierName = "platinum";
-         else if (tierNum >= 3) tierName = "gold";
-         else if (tierNum >= 2) tierName = "silver";
-         else if (tierNum >= 1) tierName = "bronze";
-         else tierName = "standard";
-       }
-       const ringTierClass = `avatar-ring avatar-ring-${tierName}`;
+      const ring = document.createElementNS(svg.namespaceURI, "circle");
+      // Map tier numbers to tier names for CSS classes
+      let tierName = "standard";
+      if (node.tier) {
+        const tierNum = parseInt(node.tier);
+        if (tierNum >= 4) tierName = "platinum";
+        else if (tierNum >= 3) tierName = "gold";
+        else if (tierNum >= 2) tierName = "silver";
+        else if (tierNum >= 1) tierName = "bronze";
+        else tierName = "standard";
+      }
+      const ringTierClass = `avatar-ring avatar-ring-${tierName}`;
 
-       ring.setAttribute("class", ringTierClass);
+      ring.setAttribute("class", ringTierClass);
       ring.setAttribute("r", String(avatarR + 2));
       ring.setAttribute("cx", "0");
       ring.setAttribute("cy", "0");
@@ -375,17 +375,28 @@ export default function Tree({ style, users = [], onUserClick }) {
       group.appendChild(defs);
 
       const img = document.createElementNS(svg.namespaceURI, "image");
-
       img.setAttribute("href", node.avatarUrl);
-      img.setAttribute("x", String(-avatarR));
-      img.setAttribute("y", String(-avatarR));
-      img.setAttribute("width", String(avatarR * 2));
-      img.setAttribute("height", String(avatarR * 2));
+
+      // Create a larger image that will be clipped to fill the circle
+      const imgSize = avatarR * 2.5; // Make image larger than the circle
+      img.setAttribute("x", String(-imgSize / 2));
+      img.setAttribute("y", String(-imgSize / 2));
+      img.setAttribute("width", String(imgSize));
+      img.setAttribute("height", String(imgSize));
       img.setAttribute("clip-path", `url(#${clipId})`);
       img.setAttribute("pointer-events", "auto");
+      img.setAttribute("preserveAspectRatio", "xMidYMid slice");
+      img.style.cursor = "pointer";
+
+      // Add error handling for broken images
+      img.addEventListener("error", () => {
+        img.setAttribute(
+          "href",
+          'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23e5e7eb"/><text x="50" y="50" text-anchor="middle" dy=".35em" fill="%23666" font-size="24">👤</text></svg>'
+        );
+      });
 
       // Add click event to open modal
-      img.style.cursor = "pointer";
       img.addEventListener("click", (e) => {
         e.stopPropagation();
         const userData = {
@@ -406,19 +417,19 @@ export default function Tree({ style, users = [], onUserClick }) {
       });
       group.appendChild(img);
 
-       // Estimate card width based on text length
-       const minCardWidth = 90;
-       const charWidth = 6.5; // average px per character for font-size: 13px
-       const nameLen = node.name ? node.name.length : 0;
-       let tierText = "";
-       if (node.tier) {
-         const tierNum = parseInt(node.tier);
-         if (tierNum >= 4) tierText = "Platinum Member";
-         else if (tierNum >= 3) tierText = "Gold Member";
-         else if (tierNum >= 2) tierText = "Silver Member";
-         else if (tierNum >= 1) tierText = "Bronze Member";
-         else tierText = "Standard Member";
-       }
+      // Estimate card width based on text length
+      const minCardWidth = 90;
+      const charWidth = 6.5; // average px per character for font-size: 13px
+      const nameLen = node.name ? node.name.length : 0;
+      let tierText = "";
+      if (node.tier) {
+        const tierNum = parseInt(node.tier);
+        if (tierNum >= 4) tierText = "Platinum Member";
+        else if (tierNum >= 3) tierText = "Gold Member";
+        else if (tierNum >= 2) tierText = "Silver Member";
+        else if (tierNum >= 1) tierText = "Bronze Member";
+        else tierText = "Standard Member";
+      }
       const tierLen = tierText.length;
       const maxLen = Math.max(nameLen, tierLen);
       const estWidth = Math.ceil(maxLen * charWidth) + 6; // padding
@@ -497,21 +508,18 @@ export default function Tree({ style, users = [], onUserClick }) {
           "d",
           `M ${baseX},${baseY} Q ${c1x},${c1y} ${tipX},${tipY} Q ${c2x},${c2y} ${baseX},${baseY} Z`
         );
-         // Map tier numbers to tier names for leaf colors
-         let leafTierName = "standard";
-         if (node.tier) {
-           const tierNum = parseInt(node.tier);
-           if (tierNum >= 4) leafTierName = "platinum";
-           else if (tierNum >= 3) leafTierName = "gold";
-           else if (tierNum >= 2) leafTierName = "silver";
-           else if (tierNum >= 1) leafTierName = "bronze";
-           else leafTierName = "standard";
-         }
+        // Map tier numbers to tier names for leaf colors
+        let leafTierName = "standard";
+        if (node.tier) {
+          const tierNum = parseInt(node.tier);
+          if (tierNum >= 4) leafTierName = "platinum";
+          else if (tierNum >= 3) leafTierName = "gold";
+          else if (tierNum >= 2) leafTierName = "silver";
+          else if (tierNum >= 1) leafTierName = "bronze";
+          else leafTierName = "standard";
+        }
 
-         leaf.setAttribute(
-           "class",
-           `tree-leaf tree-leaf-${leafTierName}`
-         );
+        leaf.setAttribute("class", `tree-leaf tree-leaf-${leafTierName}`);
         leaf.setAttribute("pointer-events", "none");
         gLeaves.appendChild(leaf);
       }
@@ -556,7 +564,7 @@ export default function Tree({ style, users = [], onUserClick }) {
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     container.appendChild(svg);
-  }, [root, totalUsers, seed, onUserClick]);
+  }, [root, totalUsers, seed, onUserClick, rng, users]);
 
   return (
     <>
