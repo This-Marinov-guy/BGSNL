@@ -1,0 +1,148 @@
+/* User Tab Content Styles */
+
+.tab-content-wrapper {
+  margin-top: 20px;
+}
+
+.tab-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 18px;
+  
+  h2 {
+    font-size: 28px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--color-heading);
+  }
+  
+  p {
+    font-size: 17px;
+    color: var(--color-body);
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+}
+
+.tab-body {
+  padding: 10px 0;
+}
+
+/* Ticket Section Styles */
+.tickets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  
+  .ticket-item {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .ticket-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+/* Internship Section Styles */
+.internships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.pagination-container {
+  margin-top: 30px;
+}
+
+/* Empty State and Restriction Cards */
+.empty-state {
+  text-align: center;
+  padding: 50px 24px;
+  background-color: #f8f9fa;
+  border-radius: 14px;
+  
+  .empty-icon {
+    font-size: 60px;
+    margin-bottom: 18px;
+  }
+  
+  h3 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: #6c757d;
+  }
+  
+  p {
+    color: #6c757d;
+    font-size: 17px;
+  }
+}
+
+.tier-restriction-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px 24px;
+  background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  
+  .restriction-icon {
+    font-size: 60px;
+    color: #6c757d;
+    margin-bottom: 24px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(108, 117, 125, 0.1);
+    border-radius: 50%;
+  }
+  
+  h4 {
+    font-size: 26px;
+    margin-bottom: 14px;
+    color: #495057;
+  }
+  
+  p {
+    color: #6c757d;
+    max-width: 550px;
+    margin: 0 auto 30px;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  
+  button {
+    padding: 14px 28px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+  .tickets-grid,
+  .internships-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tab-header h2 {
+    font-size: 22px;
+  }
+}

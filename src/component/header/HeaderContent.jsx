@@ -4,6 +4,7 @@ import { selectUser } from "../../redux/user";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import ImageFb from "../../elements/ui/media/ImageFb";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
@@ -24,6 +25,8 @@ const HeaderContent = (props) => {
 
   const articles = useSelector(selectArticles);
 
+  const profileImage = user ? decodeJWT(user.token).image : '';
+  
   const region = props.forceRegion ?? useParams().region;
 
   const navigate = useNavigate();
@@ -149,7 +152,19 @@ const HeaderContent = (props) => {
           {user.token && (
             <>
               <li className="has-dropdown">
-                <a style={{ cursor: "pointer" }}>Profile</a>
+                <a style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}>
+                  {profileImage ? <LazyLoadImage
+                    src={profileImage}
+                    alt="Profile"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      objectFit: "fit",
+                      border: "2px solid #fff"
+                    }}
+                  /> : <span>Profile</span>}
+                </a>
                 <ul className="submenu">
                   <li>
                     <Link to={`/user`}>My details</Link>

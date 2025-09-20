@@ -4,6 +4,7 @@ import { LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT } 
 export const userSlice = createSlice({
   name: "user",
   initialState: {
+    image: '',
     token: null,
     status: '',
     isSubscribed: false,
@@ -11,7 +12,8 @@ export const userSlice = createSlice({
   reducers: {
     login: {
       reducer(state, action) {
-        const { token, status, isSubscribed } = action.payload;
+        const { token, status, isSubscribed, image } = action.payload;
+        state.image = image;
         state.token = token;
         state.status = status;
         state.isSubscribed = isSubscribed;
@@ -33,6 +35,7 @@ export const userSlice = createSlice({
     },
 
     logout: (state) => {
+      state.image = '';
       state.token = null;
       state.status = '';
       state.isSubscribed = false;
