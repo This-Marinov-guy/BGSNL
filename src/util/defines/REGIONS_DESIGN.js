@@ -16,6 +16,7 @@ export const REGIONS = [
   "breda",
   "eindhoven",
   "groningen",
+  "leiden_hague",
   "leeuwarden",
   "maastricht",
   "rotterdam",
@@ -29,6 +30,7 @@ export const REGION_MAIN_COLOR = {
   amsterdam: "#014CB2",
   maastricht: "#FBBF54",
   eindhoven: "#FF914D",
+  leiden_hague: "#9ea703",
 };
 
 export const REGION_SECOND_COLOR = {
@@ -39,6 +41,7 @@ export const REGION_SECOND_COLOR = {
   amsterdam: "#007862",
   maastricht: "#381096",
   eindhoven: "#24632D",
+  leiden_hague: "#034189",
 };
 
 export const REGION_EMAIL = {
@@ -51,6 +54,7 @@ export const REGION_EMAIL = {
   amsterdam: "bulgariansociety.ams@gmail.com",
   maastricht: "bulgariansociety.maas@gmail.com",
   eindhoven: "bulgariansociety.eind@gmail.com",
+  leiden_hague: "bulgariansociety.leiden.hague@gmail.com",
 };
 
 export const REGION_GO_FUND_ME = {
@@ -67,6 +71,7 @@ export const REGION_WHATSAPP = {
   eindhoven: "https://chat.whatsapp.com/LkIMSw3esBECQBftaCc1YW",
   netherlands: "https://chat.whatsapp.com/LBQReQJoAyRDfdjcyV4SQ0",
   alumni: "https://chat.whatsapp.com/LrHWIHDfqX59zNtlQ1dBAR",
+  leiden_hague: '',
 };
 
 export const REGION_FLICKER = {
@@ -78,6 +83,7 @@ export const REGION_FLICKER = {
   amsterdam: "",
   maastricht: "",
   eindhoven: "",
+  leiden_hague: "",
 };
 
 export const REGION_INSTAGRAM = {
@@ -89,7 +95,7 @@ export const REGION_INSTAGRAM = {
   amsterdam: "https://www.instagram.com/bulgariansociety.ams",
   maastricht: "https://www.instagram.com/bulgariansociety.maas",
   eindhoven: "https://www.instagram.com/bulgariansociety.ein",
-  netherlands: "https://www.instagram.com/bulgariansociety.netherlands",
+  leiden_hague: "https://www.instagram.com/bulgariansociety.leidhag",
 };
 
 export const REGION_SOCIALS = {
@@ -125,6 +131,16 @@ export const REGION_SOCIALS = {
     {
       Social: <FaFlickr />,
       link: "https://flickr.com/photos/197725983@N03/albums",
+    },
+    {
+      Social: <FaDollarSign />,
+      link: REGION_GO_FUND_ME.netherlands,
+    },
+  ],
+  leiden_hague: [
+    {
+      Social: <FaInstagram />,
+      link: "https://www.instagram.com/bulgariansociety.leidhag",
     },
     {
       Social: <FaDollarSign />,
@@ -204,4 +220,8 @@ export const REGION_SOCIALS = {
 export const KVK = {
   netherlands: "95335048",
   groningen: "88233855",
+  eindhoven: "95634444",
+  leeuwarden: "97572861",
+  amsterdam: "93582242",
+  rotterdam: "93872992",
 };

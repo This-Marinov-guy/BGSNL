@@ -11,7 +11,7 @@ const RegionOptions2 = (props) => {
                 return <div key={index} className='col-lg-4 col-md-6 col-12 mb--20' style={{maxWidth: '13em'}}>
                     <Card 
                         title={<div className='hor_section'>
-                            {capitalizeFirstLetter(r)}
+                            {capitalizeFirstLetter(r, true)}
                             <Link
                                 to={`/${r}/${props.to}`}
                                 className="rn-button-style--2 rn-btn-green"
