@@ -52,6 +52,7 @@ const HallOfFame = () => {
       {/* Start Breadcrump Area */}
       <div
         className="rn-page-title-area pt--120 pb--190 bg_image bg_image--15"
+        style={{ backgroundImage: `url(/assets/images/bg/bg-image-29.webp)` }}
         data-black-overlay="6"
       >
         <div className="container">

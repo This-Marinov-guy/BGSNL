@@ -131,7 +131,7 @@ const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
             marginBottom: "0"
           }}>
             {user.tier ? 
-              `Tier ${user.tier.charAt(0).toUpperCase() + user.tier.slice(1)} Alumni` : 
+              `Tier ${user.tier} Alumni` : 
               "Alumni"
             }
           </p>
