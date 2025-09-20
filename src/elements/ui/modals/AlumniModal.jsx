@@ -6,7 +6,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="modal-overlay"
       style={{
         position: "fixed",
@@ -19,7 +19,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 10000,
-        padding: "20px"
+        padding: "20px",
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -27,7 +27,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
         }
       }}
     >
-      <div 
+      <div
         className="alumni-modal"
         style={{
           backgroundColor: "white",
@@ -62,7 +62,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            transition: "all 0.2s ease"
+            transition: "all 0.2s ease",
           }}
           onMouseEnter={(e) => {
             e.target.style.backgroundColor = "#f5f5f5";
@@ -79,19 +79,23 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
         {/* Modal Content */}
         <div style={{ textAlign: "center", marginBottom: "25px" }}>
           <div style={{ fontSize: "48px", marginBottom: "15px" }}>🎓</div>
-          <h2 style={{ 
-            color: "#017363", 
-            marginBottom: "10px",
-            fontSize: "28px",
-            fontWeight: "bold"
-          }}>
+          <h2
+            style={{
+              color: "#017363",
+              marginBottom: "10px",
+              fontSize: "28px",
+              fontWeight: "bold",
+            }}
+          >
             Join Our Alumni Program
           </h2>
-          <p style={{ 
-            color: "#666", 
-            fontSize: "16px",
-            marginBottom: "0"
-          }}>
+          <p
+            style={{
+              color: "#666",
+              fontSize: "16px",
+              marginBottom: "0",
+            }}
+          >
             Connect with fellow graduates and stay involved in our community
           </p>
         </div>
@@ -105,9 +109,9 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
               width: "100%",
               maxWidth: "400px",
               height: "250px",
-              objectFit: "cover",
+              objectFit: "contain",
               borderRadius: "8px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             }}
             onError={(e) => {
               e.target.style.display = "none";
@@ -117,94 +121,130 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
 
         {/* Program Benefits */}
         <div style={{ marginBottom: "25px" }}>
-          <h3 style={{ 
-            color: "#017363", 
-            marginBottom: "15px",
-            fontSize: "20px",
-            fontWeight: "600"
-          }}>
+          <h3
+            style={{
+              color: "#017363",
+              marginBottom: "15px",
+              fontSize: "20px",
+              fontWeight: "600",
+            }}
+          >
             Alumni Benefits
           </h3>
-          <ul style={{ 
-            listStyle: "none", 
-            padding: 0,
-            textAlign: "left"
-          }}>
-            <li style={{ 
-              marginBottom: "10px", 
-              display: "flex", 
-              alignItems: "center",
-              fontSize: "15px"
-            }}>
-              <span style={{ 
-                color: "#017363", 
-                marginRight: "10px",
-                fontSize: "18px"
-              }}>✓</span>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              textAlign: "left",
+            }}
+          >
+            <li
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+                fontSize: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#017363",
+                  marginRight: "10px",
+                  fontSize: "18px",
+                }}
+              >
+                ✓
+              </span>
               Access to exclusive alumni events and networking opportunities
             </li>
-            <li style={{ 
-              marginBottom: "10px", 
-              display: "flex", 
-              alignItems: "center",
-              fontSize: "15px"
-            }}>
-              <span style={{ 
-                color: "#017363", 
-                marginRight: "10px",
-                fontSize: "18px"
-              }}>✓</span>
+            <li
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+                fontSize: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#017363",
+                  marginRight: "10px",
+                  fontSize: "18px",
+                }}
+              >
+                ✓
+              </span>
               Mentorship programs for current students
             </li>
-            <li style={{ 
-              marginBottom: "10px", 
-              display: "flex", 
-              alignItems: "center",
-              fontSize: "15px"
-            }}>
-              <span style={{ 
-                color: "#017363", 
-                marginRight: "10px",
-                fontSize: "18px"
-              }}>✓</span>
+            <li
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+                fontSize: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#017363",
+                  marginRight: "10px",
+                  fontSize: "18px",
+                }}
+              >
+                ✓
+              </span>
               Career development resources and job opportunities
             </li>
-            <li style={{ 
-              marginBottom: "10px", 
-              display: "flex", 
-              alignItems: "center",
-              fontSize: "15px"
-            }}>
-              <span style={{ 
-                color: "#017363", 
-                marginRight: "10px",
-                fontSize: "18px"
-              }}>✓</span>
+            <li
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+                fontSize: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#017363",
+                  marginRight: "10px",
+                  fontSize: "18px",
+                }}
+              >
+                ✓
+              </span>
               Special discounts on events and merchandise
             </li>
-            <li style={{ 
-              marginBottom: "10px", 
-              display: "flex", 
-              alignItems: "center",
-              fontSize: "15px"
-            }}>
-              <span style={{ 
-                color: "#017363", 
-                marginRight: "10px",
-                fontSize: "18px"
-              }}>✓</span>
+            <li
+              style={{
+                marginBottom: "10px",
+                display: "flex",
+                alignItems: "center",
+                fontSize: "15px",
+              }}
+            >
+              <span
+                style={{
+                  color: "#017363",
+                  marginRight: "10px",
+                  fontSize: "18px",
+                }}
+              >
+                ✓
+              </span>
               Alumni directory and networking platform
             </li>
           </ul>
         </div>
 
         {/* Action Buttons */}
-        <div style={{ 
-          display: "flex", 
-          gap: "15px", 
-          justifyContent: "center",
-          flexWrap: "wrap"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "15px",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <button
             onClick={() => {
               onClose();
@@ -216,7 +256,10 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
             <span className="alumni-icon">🎓</span>
             Join Now
           </button>
-          <button
+          <a
+            href="/welcome-to-alumni"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={onClose}
             style={{
               backgroundColor: "transparent",
@@ -227,7 +270,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
               fontSize: "16px",
               fontWeight: "500",
               cursor: "pointer",
-              transition: "all 0.3s ease"
+              transition: "all 0.3s ease",
             }}
             onMouseEnter={(e) => {
               e.target.style.backgroundColor = "#f5f5f5";
@@ -239,7 +282,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
             }}
           >
             Learn More
-          </button>
+          </a>
         </div>
       </div>
     </div>

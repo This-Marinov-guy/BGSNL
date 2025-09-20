@@ -152,18 +152,29 @@ const HeaderContent = (props) => {
           {user.token && (
             <>
               <li className="has-dropdown">
-                <a style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "8px" }}>
-                  {profileImage ? <LazyLoadImage
-                    src={profileImage}
-                    alt="Profile"
-                    style={{
-                      width: "48px",
-                      height: "48px",
-                      borderRadius: "50%",
-                      objectFit: "fit",
-                      border: "2px solid #fff"
-                    }}
-                  /> : <span>Profile</span>}
+                <a
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  {profileImage ? (
+                    <LazyLoadImage
+                      src={profileImage}
+                      alt="Profile"
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "50%",
+                        objectFit: "fit",
+                        border: "2px solid #fff",
+                      }}
+                    />
+                  ) : (
+                    <span>Profile</span>
+                  )}
                 </a>
                 <ul className="submenu">
                   <li>
@@ -174,6 +185,9 @@ const HeaderContent = (props) => {
                   </li>
                   <li>
                     <Link to={`/user#tickets`}>Tickets</Link>
+                  </li>
+                  <li>
+                    <Link to={`/user#settings`}>Settings</Link>
                   </li>
                 </ul>
               </li>

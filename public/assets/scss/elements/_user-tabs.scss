@@ -297,6 +297,40 @@
   }
 }
 
+/* Alumni Card Styles */
+.alumni-card {
+  border-left: 4px solid #ffc107;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+  
+  .settings-icon {
+    color: #ffc107;
+  }
+  
+  .alumni-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, #ffc107, #ff8c00) !important;
+    border: none !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+    }
+    
+    .alumni-icon {
+      font-size: 18px;
+    }
+  }
+}
+
 /* Responsive Adjustments */
 @media (max-width: 767px) {
   .tickets-grid,
