@@ -61,7 +61,6 @@ const SubscriptionManage = ({ onAction }) => {
                     onClick={handleManage}
                     disabled={loading}
                 >
-                    <span className="btn-icon">💳</span>
                     <span>Payment Details</span>
                 </button>
                 <button 
@@ -69,7 +68,6 @@ const SubscriptionManage = ({ onAction }) => {
                     onClick={confirm1}
                     disabled={loading}
                 >
-                    <span className="btn-icon">❌</span>
                     <span>Cancel Subscription</span>
                 </button>
             </div>

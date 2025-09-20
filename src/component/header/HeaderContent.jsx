@@ -25,7 +25,7 @@ const HeaderContent = (props) => {
 
   const articles = useSelector(selectArticles);
 
-  const profileImage = user ? decodeJWT(user.token).image : '';
+  const profileImage = user.token ? decodeJWT(user.token).image : '';
   
   const region = props.forceRegion ?? useParams().region;
 
