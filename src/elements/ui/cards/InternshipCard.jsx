@@ -21,7 +21,7 @@ const InternshipCard = (props) => {
   const { user } = props;
 
   return (
-    <div className="col-lg-4 col-md-6 col-12 row border-1 intern-card mt--10">
+    <div className="row border-1 intern-card mt--10 mr--10">
       <div
         style={{ width: "20em" }}
         className="d-flex justify-content-between mb--10 text-right"
