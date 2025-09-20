@@ -55,7 +55,7 @@ const UserSidebar = ({
             alt={`${currentUser.name} profile`}
             className="sidebar-profile-image"
           />
-          <h3 className="sidebar-user-name">{currentUser.name}</h3>
+          <h2 className="sidebar-user-name">{currentUser.name}</h2>
           <p className="sidebar-user-status">
             <span className="status-active">
               {formatRole(currentUser.roles)}{" "}
