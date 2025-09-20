@@ -43,23 +43,23 @@ const HeaderContent = (props) => {
                 <Link to="/">Netherlands</Link>
               </li>
               {REGIONS.map((region, index) => {
-                {/* if (region === "eindhoven") {
+                if (region === "leiden_hague") {
                   return (
                     <li key={index}>
                       <Link to={"/" + region}>
                         <div className="hor_section">
-                          {capitalizeFirstLetter(region)}
+                          {capitalizeFirstLetter(region, true)}
                           <NewBadge />
                         </div>
                       </Link>
                     </li>
                   );
-                } */}
+                }
 
                 return (
                   <li key={index}>
                     <Link to={"/" + region}>
-                      {capitalizeFirstLetter(region)}
+                      {capitalizeFirstLetter(region, true)}
                     </Link>
                   </li>
                 );

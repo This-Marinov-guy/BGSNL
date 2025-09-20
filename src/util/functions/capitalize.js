@@ -1,17 +1,30 @@
-export const capitalizeFirstLetter = (string) => {    
-    if (!string) return "";
+export const capitalizeFirstLetter = (string, replaceUnderscore = false) => {
+  if (!string) return "";
 
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+  if (replaceUnderscore) {
+    string = string
+      .replace(/_/g, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  } else {
+    string = string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  return string;
+};
 
 export const capitalizeAfterSpace = (string) => {
-    if (!string) return "";
+  if (!string) return "";
 
-    return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-}
+  return string
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 export const replaceSpaceWithNewLine = (string) => {
-    if (!string) return "";
-    
-    return string.replace(/ /g, '\n');
-}
+  if (!string) return "";
+
+  return string.replace(/_/g, " ");
+};

@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import SnowBackground from "../../elements/ui/backgrounds/SnowBackground";
 import { HOLIDAYS } from "../../util/configs/common";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
 const Hero1 = () => {
   const user = useSelector(selectUser);
@@ -14,7 +15,7 @@ const Hero1 = () => {
     {
       textPosition: "text-center",
       category: "",
-      title: `Bulgarian Society ${region || "Netherlands"}`,
+      title: `Bulgarian Society ${capitalizeFirstLetter(region, true) || "Netherlands"}`,
       description: "",
       buttonText: user.token ? "Go To Profile" : "Become a Member",
       style: " rn-btn-reverse-green",
