@@ -135,14 +135,128 @@
   }
 }
 
+/* Settings Grid */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.settings-card {
+  background: var(--color-white);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  
+  &.danger-card {
+    border-left: 4px solid #dc3545;
+    
+    .settings-icon {
+      color: #dc3545;
+    }
+  }
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  
+  .settings-icon {
+    font-size: 24px;
+    margin-right: 12px;
+    color: var(--color-primary);
+  }
+  
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-heading);
+  }
+}
+
+.settings-card-body {
+  p {
+    color: var(--color-body);
+    margin-bottom: 20px;
+    line-height: 1.5;
+    font-size: 15px;
+  }
+  
+  button {
+    width: 100%;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+}
+
+/* Subscription Actions */
+.subscription-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+  .subscription-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 48px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .btn-icon {
+      font-size: 16px;
+      margin-right: 4px;
+    }
+  }
+}
+
 /* Responsive Adjustments */
 @media (max-width: 767px) {
   .tickets-grid,
-  .internships-grid {
+  .internships-grid,
+  .settings-grid {
     grid-template-columns: 1fr;
   }
   
   .tab-header h2 {
     font-size: 22px;
+  }
+  
+  .settings-card {
+    padding: 20px;
+  }
+  
+  .subscription-actions {
+    .subscription-btn {
+      font-size: 13px;
+      padding: 8px 16px;
+      min-height: 44px;
+    }
   }
 }
