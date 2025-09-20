@@ -6,30 +6,20 @@ import {
 } from "react-router-dom";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { useSelector } from "react-redux";
-import { FiChevronUp, FiLock } from "react-icons/fi";
+import { FiChevronUp } from "react-icons/fi";
 import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { selectUser } from "../../redux/user";
-import { Image } from "primereact/image";
-import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
-import UserCard from "../../elements/ui/cards/UserCard";
+import UserProfileHeader from "../../elements/ui/headers/UserProfileHeader";
+import TabContent from "../../elements/ui/tabs/TabContent";
 import Christmas from "../../elements/special/Christmas";
-import { Paginator } from "primereact/paginator";
-import NewsList from "../../elements/ui/lists/NewsList";
-import {
-  ACCOUNT_TABS,
-  INTERNSHIPS,
-  NEWS,
-  TICKETS,
-} from "../../util/defines/enum";
+import { ACCOUNT_TABS } from "../../util/defines/enum";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
-import InternshipCard from "../../elements/ui/cards/InternshipCard";
 
 const User = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -134,115 +124,6 @@ const User = () => {
     // Update tab on hash change
   }, [tab, currentUser]);
 
-  let menuContent = null;
-
-  // Determine content based on current tab
-  if (tab === "" || tab === NEWS) {
-    menuContent = (
-      <div className="tab-content-wrapper">
-        <div className="tab-header">
-          <h2>Latest News & Updates</h2>
-          <p>Stay updated with the latest announcements and news from BGSNL.</p>
-        </div>
-        <div className="tab-body">
-          <NewsList />
-        </div>
-      </div>
-    );
-  } else if (tab === TICKETS) {
-    // Check if user is tier 0 alumni
-    const isTier0Alumni = true; // currentUser?.tier === 0 && currentUser?.roles?.includes('alumni');
-    
-    menuContent = (
-      <div className="tab-content-wrapper">
-        <div className="tab-header">
-          <h2>Ticket Collection</h2>
-          <p>View and manage your purchased event tickets.</p>
-        </div>
-        <div className="tab-body">
-          {isTier0Alumni ? (
-            <div className="tier-restriction-card">
-              <div className="restriction-icon">
-                <FiLock />
-              </div>
-              <h4>Tickets Not Available</h4>
-              <p>
-                Ticket collection is not supported for Tier 0 alumni
-                members. Upgrade your membership to gain access to exclusive
-                ticket collection.
-              </p>
-              <button
-                className="rn-button-style--2 rn-btn-reverse-red"
-                onClick={() => navigate("/alumni/register")}
-              >
-                Upgrade Tier
-              </button>
-            </div>
-          ) : currentUser && currentUser.tickets?.length > 0 ? (
-            <div className="tickets-grid">
-              {currentUser.tickets.map((ticket, i) => (
-                <div className="ticket-item" key={i}>
-                  <Image
-                    src={ticket.image}
-                    alt={`Ticket ${i+1}`}
-                    preview
-                    className="ticket-image"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-icon">{"🎫"}</div>
-              <h3>No Tickets Found</h3>
-              <p>You haven't purchased any tickets yet.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  } else if (tab === INTERNSHIPS) {
-    menuContent = (
-      <div className="tab-content-wrapper">
-        <div className="tab-header">
-          <h2>Available Internships</h2>
-          <p>
-            Exclusive internship opportunities for BGSNL members. New positions are added regularly.
-          </p>
-        </div>
-        <div className="tab-body">
-          {INTERNSHIPS_LIST.length > 0 ? (
-            <>
-              <div className="internships-grid">
-                {INTERNSHIPS_LIST.slice(first, first + rows).map((i, index) => (
-                  <InternshipCard key={index} internship={i} user={currentUser}/>
-                ))}
-              </div>
-              
-              <div className="pagination-container">
-                <Paginator
-                  first={first}
-                  rows={rows}
-                  totalRecords={INTERNSHIPS_LIST.length ?? 0}
-                  rowsPerPageOptions={[INIT_ITEMS_PER_PAGE, 10, 15]}
-                  onPageChange={onPageChange}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-icon">{"💼"}</div>
-              <h3>No Internships Available</h3>
-              <p>Check back soon for new opportunities.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  } else {
-    menuContent = null;
-  }
-
   if (isPageLoading) {
     return <HeaderLoadingError />;
   }
@@ -277,25 +158,10 @@ const User = () => {
         <div className="user-content-area">
           <div className="content-container">
             {/* User Profile Header */}
-            <div className="user-profile-header">
-              <div>
-                {hasBirthday && (
-                  <img
-                    src="/assets/images/special/birthday-hat.png"
-                    alt="hat"
-                    className="birthday-hat"
-                  />
-                )}
-                <LazyLoadImage
-                  src={currentUser.image}
-                  alt="profile"
-                  className="profile-image"
-                />
-              </div>
-              <div className="profile-header-info">
-                <UserCard user={currentUser} />
-              </div>
-            </div>
+            <UserProfileHeader 
+              currentUser={currentUser} 
+              hasBirthday={hasBirthday} 
+            />
             
             {/* Campaign Section */}
             {campaignUserActions &&
@@ -305,7 +171,15 @@ const User = () => {
             
             {/* Tab Content */}
             <div ref={scrollRef}>
-              {menuContent !== null && menuContent}
+              <TabContent
+                tab={tab}
+                currentUser={currentUser}
+                navigate={navigate}
+                first={first}
+                rows={rows}
+                onPageChange={onPageChange}
+                INIT_ITEMS_PER_PAGE={INIT_ITEMS_PER_PAGE}
+              />
             </div>
           </div>
         </div>

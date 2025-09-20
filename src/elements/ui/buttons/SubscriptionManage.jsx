@@ -56,43 +56,22 @@ const SubscriptionManage = ({ onAction }) => {
         loading ? <div className='center_div'><CustomSpinner/></div> :
             <div className="subscription-actions">
                 <ConfirmPopup />
-                <div 
-                    className="dropdown-item"
+                <button 
+                    className="rn-button-style--2 rn-btn-green subscription-btn"
                     onClick={handleManage}
-                    style={{
-                        padding: '12px 16px',
-                        cursor: loading ? 'not-allowed' : 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        transition: 'background-color 0.2s ease',
-                        opacity: loading ? 0.6 : 1
-                    }}
-                    onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#f5f5f5')}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    disabled={loading}
                 >
-                    <span style={{ fontSize: '16px' }}>💳</span>
+                    <span className="btn-icon">💳</span>
                     <span>Payment Details</span>
-                </div>
-                <div style={{ borderTop: '1px solid #e0e0e0', margin: '4px 0' }} />
-                <div 
-                    className="dropdown-item"
+                </button>
+                <button 
+                    className="rn-button-style--2 rn-btn-reverse-red subscription-btn"
                     onClick={confirm1}
-                    style={{
-                        padding: '12px 16px',
-                        cursor: loading ? 'not-allowed' : 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        transition: 'background-color 0.2s ease',
-                        opacity: loading ? 0.6 : 1
-                    }}
-                    onMouseEnter={(e) => !loading && (e.target.style.backgroundColor = '#f5f5f5')}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    disabled={loading}
                 >
-                    <span style={{ fontSize: '16px' }}>❌</span>
+                    <span className="btn-icon">❌</span>
                     <span>Cancel Subscription</span>
-                </div>
+                </button>
             </div>
     )
 }

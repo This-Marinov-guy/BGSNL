@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { FaNewspaper, FaTicketAlt, FaBriefcase, FaTimes, FaBars, FaUser } from "react-icons/fa";
-import { FiUser } from "react-icons/fi";
+import { FaNewspaper, FaTicketAlt, FaBriefcase, FaTimes, FaBars, FaUser, FaCog } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
 import { formatRole } from "../../../util/defines/common";
@@ -23,6 +22,8 @@ const UserSidebar = ({
         return <FaTicketAlt size={22} />;
       case 'internships':
         return <FaBriefcase size={22} />;
+      case 'settings':
+        return <FaCog size={22} />;
       default:
         return <FaUser size={22} />;
     }
@@ -91,13 +92,6 @@ const UserSidebar = ({
             ))}
           </ul>
         </nav>
-
-        {/* Additional Info */}
-        <div className="sidebar-footer">
-          <Link to="/settings" className="settings-link">
-            Account Settings
-          </Link>
-        </div>
       </div>
     </>
   );

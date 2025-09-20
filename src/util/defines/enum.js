@@ -24,8 +24,9 @@ export const USER_STATUSES = {
 export const TICKETS = "tickets";
 export const NEWS = "news";
 export const INTERNSHIPS = "internships";
+export const SETTINGS = "settings";
 
-export const ACCOUNT_TABS = [NEWS, TICKETS, INTERNSHIPS];
+export const ACCOUNT_TABS = [NEWS, TICKETS, INTERNSHIPS, SETTINGS];
 
 // TIMER TYPES
 export const END_TIMER = 1;
