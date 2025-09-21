@@ -495,7 +495,7 @@ const EventForm = (props) => {
                     {REGIONS.map((val, index) => {
                       return (
                         <option value={val} key={index}>
-                          {capitalizeFirstLetter(val)}
+                          {capitalizeFirstLetter(val, true)}
                         </option>
                       );
                     })}
