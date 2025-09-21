@@ -47,7 +47,7 @@ const UserSidebar = ({
           onClick={toggleSidebar}
           aria-label="Toggle Sidebar"
         >
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          {isSidebarOpen ? <FaTimes size={24}/> : <FaBars size={24}/>}
         </button>
       )}
 
