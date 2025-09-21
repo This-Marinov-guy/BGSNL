@@ -121,9 +121,9 @@ export const estimatePriceByEvent = (
     blockDiscounts: false,
     withMemberBadge: true,
   }
-) => {
+) => {  
   const { product } = selectedEvent;
-  const isMember = isMember(user);
+  const isMember = !!user?.token;
   const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
   const isMemberDataFull = user?.name && user?.surname && user?.email;
 
