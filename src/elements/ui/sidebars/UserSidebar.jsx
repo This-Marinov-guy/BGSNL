@@ -5,8 +5,6 @@ import {
   FaNewspaper,
   FaTicketAlt,
   FaBriefcase,
-  FaTimes,
-  FaBars,
   FaUser,
   FaCog,
 } from "react-icons/fa";
@@ -43,11 +41,22 @@ const UserSidebar = ({
       {/* Mobile Sidebar Toggle Button */}
       {isMobile && (
         <button
-          className="sidebar-toggle-btn"
+          className={`sidebar-toggle-btn ${isSidebarOpen ? 'sidebar-open' : ''}`}
           onClick={toggleSidebar}
           aria-label="Toggle Sidebar"
         >
-          {isSidebarOpen ? <FaTimes size={22}/> : <FaBars size={22}/>}
+          {isSidebarOpen ? (
+            <span className="close-icon">
+              <span className="close-line"></span>
+              <span className="close-line"></span>
+            </span>
+          ) : (
+            <span className="hamburger-icon">
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </span>
+          )}
         </button>
       )}
 
