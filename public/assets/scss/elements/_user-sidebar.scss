@@ -189,14 +189,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 22px;
-    height: 16px;
+    width: 24px;
+    height: 18px;
 
     .hamburger-line {
       width: 100%;
-      height: 2px;
+      height: 3px;
       background-color: currentColor;
-      border-radius: 1px;
+      border-radius: 2px;
       transition: all 0.3s ease;
     }
   }
@@ -237,6 +237,35 @@
 // Move the button down when sidebar is open
 .sidebar-toggle-btn.sidebar-open {
   bottom: 10px; // Move the button down when sidebar is open
+}
+
+// Mobile-specific adjustments for better visibility
+@media (max-width: 767px) {
+  .sidebar-toggle-btn {
+    // Ensure better visibility on mobile
+    .hamburger-icon {
+      width: 26px;
+      height: 20px;
+
+      .hamburger-line {
+        height: 3.5px;
+        background-color: currentColor;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.3); // Add subtle shadow for better visibility
+      }
+    }
+
+    .close-icon {
+      width: 24px;
+      height: 24px;
+
+      .close-line {
+        width: 20px;
+        height: 3.5px;
+        background-color: currentColor;
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.3); // Add subtle shadow for better visibility
+      }
+    }
+  }
 }
 
 .user-content-area {
