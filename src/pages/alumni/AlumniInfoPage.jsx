@@ -351,7 +351,7 @@ const AlumniInfoPage = () => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp />
+          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
         </ScrollToTop>
       </div>
     </React.Fragment>

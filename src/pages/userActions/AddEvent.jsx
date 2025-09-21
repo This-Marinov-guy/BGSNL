@@ -19,7 +19,7 @@ const AddEvent = (props) => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp />
+          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
