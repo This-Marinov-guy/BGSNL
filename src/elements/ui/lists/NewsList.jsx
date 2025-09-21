@@ -79,7 +79,7 @@ const NewsList = () => {
     isAuth && location.pathname === "/user" ? MEMBER_NEWS : NEWS;
 
   return (
-    <div className="rn-featured-service-area bg_color--5 pb--40">
+    <div className="rn-featured-service-area pb--40">
       <div className="container">
         <div className="row">
           {/* Start Single Service  */}

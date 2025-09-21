@@ -13,7 +13,7 @@ const InternshipsTab = ({ currentUser, first, rows, onPageChange, INIT_ITEMS_PER
           Exclusive internship opportunities for BGSNL members. New positions are added regularly.
         </p>
       </div>
-      <div className="tab-body">
+      <div>
         {INTERNSHIPS_LIST.length > 0 ? (
           <>
             <div className="internships-grid">
