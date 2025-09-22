@@ -65,38 +65,100 @@
   }
 }
 
-// Mobile-specific styling for the line and layout
-@media (max-width: 1267px) {
+// Responsive design for GuestPurchase form
+@media (max-width: 1200px) {
   .line {
     display: none !important;
-    margin: 20px auto;
-    height: 20px;
-    width: 80%;
-    background-repeat: repeat-x;
-    background-size: contain;
-    transform: none;
-    rotate: 0deg;
-    display: block;
   }
   
-  // Make the line container take full width on mobile
+  // Hide the line container on smaller screens
   .col-lg-4[style*="width: 20%"] {
-    width: 100% !important;
-    margin: 20px 0;
+    display: none !important;
   }
   
-  // Improve overall mobile layout
+  // Adjust form layout for medium screens
   .guest-purchase-container {
     .row {
+      .col-lg-4 {
+        width: 50% !important;
+        margin-bottom: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  // Mobile-specific styling
+  .guest-purchase-container {
+    .container {
+      padding: 0 15px;
+    }
+    
+    .row {
       flex-direction: column;
+      margin: 0;
       
       .col-lg-4 {
         width: 100% !important;
         margin-bottom: 20px;
+        padding: 0 10px;
       }
     }
     
-    // Form styling improvements
+    // Main heading
+    h2.center_text {
+      font-size: 24px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    // Event details section
+    .information-container {
+      font-size: 14px;
+      padding: 15px;
+      margin: 0;
+      background: #f8f9fa;
+      border-radius: 8px;
+      
+      .row {
+        margin-bottom: 10px;
+        
+        .col-sm-4 {
+          font-size: 13px;
+          padding: 5px 0;
+          font-weight: 600;
+        }
+        
+        .col-sm-8 {
+          font-size: 14px;
+          padding: 5px 0;
+        }
+      }
+    }
+    
+    // Event image
+    .title_img {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    
+    // Form section
+    .container {
+      padding: 0;
+    }
+    
+    // Form heading
+    h3 {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    
+    // Form fields
     .rn-form-group {
       margin-bottom: 15px;
       
@@ -109,11 +171,17 @@
         border-radius: 8px;
         width: 100%;
         box-sizing: border-box;
+        background: #fff;
         
         &:focus {
           border-color: var(--color-primary, #007bff);
           outline: none;
           box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        &::placeholder {
+          color: #999;
+          font-size: 14px;
         }
       }
       
@@ -130,6 +198,7 @@
         margin-top: 5px;
         padding: 0 5px;
         color: #f80707;
+        font-weight: 500;
       }
     }
     
@@ -144,6 +213,7 @@
           border-radius: 8px;
           width: 100%;
           box-sizing: border-box;
+          background: #fff;
           
           &:focus {
             border-color: var(--color-primary, #007bff);
@@ -156,6 +226,7 @@
           border: 2px solid #e9e9e9;
           border-radius: 8px 0 0 8px;
           background: #f8f9fa;
+          height: 45px;
         }
       }
     }
@@ -166,6 +237,9 @@
       align-items: flex-start;
       gap: 10px;
       margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
       
       input[type="checkbox"] {
         width: 20px;
@@ -173,6 +247,7 @@
         margin: 0;
         flex-shrink: 0;
         margin-top: 2px;
+        accent-color: var(--color-primary, #007bff);
       }
       
       .information {
@@ -183,6 +258,7 @@
         a {
           color: #017363;
           text-decoration: underline;
+          font-weight: 500;
         }
       }
     }
@@ -192,10 +268,15 @@
       flex-direction: column;
       gap: 15px;
       text-align: center;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-top: 20px;
       
       h3 {
         font-size: 16px;
         margin: 0;
+        color: #333;
       }
       
       .p-inputnumber {
@@ -207,11 +288,14 @@
           height: 45px;
           font-size: 16px;
           text-align: center;
+          border: 2px solid #e9e9e9;
+          border-radius: 8px;
         }
         
         .p-button {
           height: 45px;
           width: 45px;
+          border-radius: 8px;
         }
       }
     }
@@ -223,49 +307,93 @@
         height: 50px;
         font-size: 16px;
         margin-top: 20px;
+        border-radius: 8px;
+        font-weight: 600;
       }
     }
     
-    // Event details improvements
-    .information-container {
-      font-size: 14px;
-      padding: 15px;
-      margin: 0;
+    // Add-ons section
+    .col-12.mt--40 {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
       
-      .row {
+      h3 {
+        font-size: 16px;
         margin-bottom: 10px;
-        
-        .col-sm-4 {
-          font-size: 13px;
-          padding: 5px 0;
+        text-align: center;
+      }
+      
+      small {
+        font-size: 12px;
+        margin-bottom: 15px;
+        display: block;
+        text-align: center;
+      }
+    }
+    
+    // Warning message
+    .p-message {
+      font-size: 13px;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    
+    // Sponsored by section
+    .sponsored-by {
+      margin-top: 20px;
+      text-align: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  // Extra small screens
+  .guest-purchase-container {
+    .container {
+      padding: 0 10px;
+    }
+    
+    h2.center_text {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .information-container {
+      padding: 10px;
+      font-size: 13px;
+    }
+    
+    .rn-form-group {
+      input[type="text"],
+      input[type="email"] {
+        height: 40px;
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+    }
+    
+    .phone-input-container {
+      .react-tel-input {
+        .form-control {
+          height: 40px;
+          font-size: 14px;
+          padding: 10px 12px 10px 45px;
         }
         
-        .col-sm-8 {
-          font-size: 14px;
-          padding: 5px 0;
+        .flag-dropdown {
+          height: 40px;
         }
       }
     }
     
-    // Event image
-    .title_img {
-      max-width: 100%;
-      width: 100%;
-      height: auto;
-      margin-bottom: 20px;
-    }
-    
-    // Form heading
-    h3 {
-      font-size: 18px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    
-    // Main heading
-    h2.center_text {
-      font-size: 24px;
-      margin-bottom: 30px;
+    .center_div_col {
+      .rn-button-style--2 {
+        height: 45px;
+        font-size: 14px;
+      }
     }
   }
 }
