@@ -89,8 +89,10 @@ const GuestPurchase = () => {
     setLoadingPage(true);
 
     const fetchCurrentUser = async () => {
+      if (!user?.token) return;
+      
       try {
-        const responseData = await sendRequest(`user/current`);
+        const responseData = await sendRequest(`user/current`, 'GET', null, {}, false, false);
         setCurrentUser(responseData.user);
       } catch (err) {
         // do nothing
@@ -215,7 +217,7 @@ const GuestPurchase = () => {
           <div style={{ width: "20%" }} className="col-lg-4 col-md-12 col-12">
             <div className="line" />
           </div>
-          <div style={{ width: "40%" }} className="col-lg-4 col-md-12 col-12">
+          <div className="col-lg-4 col-md-12 col-12">
             <div className="container">
               <Formik
                 validationSchema={schema}
@@ -430,7 +432,7 @@ const GuestPurchase = () => {
                         </div>
                       </div>
                       <div className="col-lg-12 col-md-12 col-12">
-                        <div className="rn-form-group">
+                        <div className="rn-form-group phone-input-container">
                           <PhoneInput
                             onChange={(value) => setFieldValue("phone", value)}
                           />{" "}

@@ -65,6 +65,211 @@
   }
 }
 
+// Mobile-specific styling for the line and layout
+@media (max-width: 1267px) {
+  .line {
+    display: none !important;
+    margin: 20px auto;
+    height: 20px;
+    width: 80%;
+    background-repeat: repeat-x;
+    background-size: contain;
+    transform: none;
+    rotate: 0deg;
+    display: block;
+  }
+  
+  // Make the line container take full width on mobile
+  .col-lg-4[style*="width: 20%"] {
+    width: 100% !important;
+    margin: 20px 0;
+  }
+  
+  // Improve overall mobile layout
+  .guest-purchase-container {
+    .row {
+      flex-direction: column;
+      
+      .col-lg-4 {
+        width: 100% !important;
+        margin-bottom: 20px;
+      }
+    }
+    
+    // Form styling improvements
+    .rn-form-group {
+      margin-bottom: 15px;
+      
+      input[type="text"],
+      input[type="email"] {
+        height: 45px;
+        font-size: 16px;
+        padding: 12px 15px;
+        border: 2px solid #e9e9e9;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        
+        &:focus {
+          border-color: var(--color-primary, #007bff);
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+      }
+      
+      .information {
+        font-size: 13px;
+        color: #666;
+        margin-top: 8px;
+        line-height: 1.4;
+        padding: 0 5px;
+      }
+      
+      .error {
+        font-size: 13px;
+        margin-top: 5px;
+        padding: 0 5px;
+        color: #f80707;
+      }
+    }
+    
+    // Phone input styling
+    .phone-input-container {
+      .react-tel-input {
+        .form-control {
+          height: 45px;
+          font-size: 16px;
+          padding: 12px 15px 12px 50px;
+          border: 2px solid #e9e9e9;
+          border-radius: 8px;
+          width: 100%;
+          box-sizing: border-box;
+          
+          &:focus {
+            border-color: var(--color-primary, #007bff);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+          }
+        }
+        
+        .flag-dropdown {
+          border: 2px solid #e9e9e9;
+          border-radius: 8px 0 0 8px;
+          background: #f8f9fa;
+        }
+      }
+    }
+    
+    // Checkbox styling
+    .hor_section_nospace {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 20px;
+      
+      input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      
+      .information {
+        font-size: 13px;
+        line-height: 1.4;
+        margin: 0;
+        
+        a {
+          color: #017363;
+          text-decoration: underline;
+        }
+      }
+    }
+    
+    // Quantity section
+    .col-lg-12.col-md-12.col-12.mt--20 {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+      
+      h3 {
+        font-size: 16px;
+        margin: 0;
+      }
+      
+      .p-inputnumber {
+        width: 100% !important;
+        max-width: 200px;
+        margin: 0 auto;
+        
+        .p-inputnumber-input {
+          height: 45px;
+          font-size: 16px;
+          text-align: center;
+        }
+        
+        .p-button {
+          height: 45px;
+          width: 45px;
+        }
+      }
+    }
+    
+    // Payment button
+    .center_div_col {
+      .rn-button-style--2 {
+        width: 100%;
+        height: 50px;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+    }
+    
+    // Event details improvements
+    .information-container {
+      font-size: 14px;
+      padding: 15px;
+      margin: 0;
+      
+      .row {
+        margin-bottom: 10px;
+        
+        .col-sm-4 {
+          font-size: 13px;
+          padding: 5px 0;
+        }
+        
+        .col-sm-8 {
+          font-size: 14px;
+          padding: 5px 0;
+        }
+      }
+    }
+    
+    // Event image
+    .title_img {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    
+    // Form heading
+    h3 {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    // Main heading
+    h2.center_text {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+  }
+}
+
 .file-input {
   input {
     border: none;
