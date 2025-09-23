@@ -4,12 +4,12 @@ import Event from './Event'
 import { useSelector } from 'react-redux';
 import { selectEvents } from '../../../../redux/events';
 import Filter from '../Filter';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { useLoadEvents } from '../../../../hooks/common/api-hooks';
 import EventsLoading from '../../../ui/loading/EventsLoading';
 import { selectUser } from '../../../../redux/user';
 import { checkAuthorization, decodeJWT } from '../../../../util/functions/authorization';
-import { ACCESS_2 } from '../../../../util/defines/common';
+import { ACCESS_2, ACCESS_4 } from '../../../../util/defines/common';
 import { hasOverlap } from '../../../../util/functions/helpers';
 
 const EventList = () => {
@@ -18,6 +18,7 @@ const EventList = () => {
     const user = useSelector(selectUser);
     const { roles, region } = decodeJWT(user.token);
     const isAuthorized = hasOverlap(roles, ACCESS_2);
+    const canAddEvents = hasOverlap(roles, ACCESS_4);
 
     const [searchParams, setSearchParams] = useSearchParams();
     const regionParam = REGIONS.includes(searchParams.get("region")) ? searchParams.get("region") : '';
@@ -35,7 +36,17 @@ const EventList = () => {
 
     return (
         <>
-        <h3 className='center_text'>Administration Dashboard</h3>
+        <div className="d-flex justify-content-between align-items-center mb--20">
+            <h3 className='center_text'>Administration Dashboard</h3>
+            {canAddEvents && (
+                <Link
+                    to="/user/add-event"
+                    className="rn-button-style--2 rn-btn-green"
+                >
+                    <span>Add Event</span>
+                </Link>
+            )}
+        </div>
             {isAuthorized  && <Filter />}
             {eventsLoading ? <EventsLoading /> : <div className='mt--10'>
                 {regionList.map((region, index) => {

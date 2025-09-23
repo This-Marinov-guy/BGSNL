@@ -109,7 +109,7 @@ export const Calendar = (props) => {
   return (
     <div
       className="rn-form-group center_div"
-      style={{ marginTop: "15px" }}
+      style={{ marginTop: "15px", position: "relative" }}
       ref={calendarRef}
     >
       <input
@@ -128,7 +128,22 @@ export const Calendar = (props) => {
         }}
       />
       {isOpen && (
-        <div className="calendar" style={{ marginBlockEnd: "1em" }}>
+        <div
+          className="calendar"
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: "0",
+            right: "0",
+            zIndex: 1000,
+            backgroundColor: "white",
+            border: "1px solid #e9ecef",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            marginTop: "4px",
+            padding: "0",
+          }}
+        >
           <DayPicker
             mode="single"
             locale="en-nl"
@@ -322,7 +337,7 @@ export const CalendarWithClock = (props) => {
   return (
     <div
       className="rn-form-group center_div"
-      style={{ marginTop: "7px" }}
+      style={{ marginTop: "7px", position: "relative" }}
       ref={calendarRef}
     >
       <input
@@ -347,25 +362,49 @@ export const CalendarWithClock = (props) => {
       </div>
 
       {isOpen && (
-        <div className="calendar" style={{ marginBlockEnd: "1em" }}>
+        <div
+          className="calendar"
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: "0",
+            right: "0",
+            zIndex: 1000,
+            backgroundColor: "white",
+            border: "1px solid #e9ecef",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            marginTop: "4px",
+            padding: "0",
+          }}
+        >
           <input
             type="time"
             value={timeValue}
             onChange={handleTimeChange}
-            style={{ margin: "0 10px 10px", width: "6em" }}
+            style={{
+              margin: "8px 8px 4px 8px",
+              width: "calc(100% - 16px)",
+              maxWidth: "120px",
+              padding: "4px 6px",
+              border: "1px solid #e9ecef",
+              borderRadius: "4px",
+            }}
           />
-          <DayPicker
-            mode="single"
-            locale="en-nl"
-            captionLayout="dropdown"
-            selected={selected}
-            onSelect={handleDaySelect}
-            disabled={
-              props.min && {
-                before: props.min,
+          <div style={{ padding: "0" }}>
+            <DayPicker
+              mode="single"
+              locale="en-nl"
+              captionLayout="dropdown"
+              selected={selected}
+              onSelect={handleDaySelect}
+              disabled={
+                props.min && {
+                  before: props.min,
+                }
               }
-            }
-          />
+            />
+          </div>
         </div>
       )}
     </div>

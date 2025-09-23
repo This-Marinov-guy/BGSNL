@@ -34,6 +34,8 @@ import AdditionalPrices from "../../inputs/AdditionalPrices";
 import { START_TIMER } from "../../../util/defines/enum";
 import PromotionalPrices from "../../inputs/PromotionalPrice";
 import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
+import { FiAnchor } from "react-icons/fi";
+import { Tooltip } from "primereact/tooltip";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -135,7 +137,7 @@ const EventForm = (props) => {
   const schema = yup.object().shape({
     region: yup.string().required("Region is required"),
     title: yup.string().required("Title is required"),
-    description: yup.string().required("Description is required"),
+    description: yup.string(),
     date: yup.string().required("Date is required"),
     location: yup.string().required("Location is required"),
     ticketTimer: yup.string().required("Ticket Timer is required"),
@@ -360,7 +362,10 @@ const EventForm = (props) => {
             });
 
             Object.entries(values).forEach(([key, val]) => {
-              if (isPlainObject(val) || ["extraInputsForm", "addOns"].includes(key)) {
+              if (
+                isPlainObject(val) ||
+                ["extraInputsForm", "addOns"].includes(key)
+              ) {
                 formData.append(key, JSON.stringify(val));
               } else if (Array.isArray(val)) {
                 val.forEach((v, i) => {
@@ -1087,17 +1092,38 @@ const EventForm = (props) => {
                 </div>
               </div>
               <div className="col-lg-6 col-12">
-                <CalendarWithClock
-                  mode="single"
-                  locale="en-nl"
-                  placeholder="Ticket Timer"
-                  captionLayout="dropdown"
-                  min={values.date ? new Date(values.date) : new Date()}
-                  initialValue={values.ticketTimer}
-                  onSelect={(value) => {
-                    setFieldValue("ticketTimer", value);
-                  }}
-                />
+                <div className="rn-form-group">
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="flex-grow-1">
+                      <CalendarWithClock
+                        mode="single"
+                        locale="en-nl"
+                        placeholder="Ticket Timer"
+                        captionLayout="dropdown"
+                        min={values.date ? new Date(values.date) : new Date()}
+                        initialValue={values.ticketTimer}
+                        onSelect={(value) => {
+                          setFieldValue("ticketTimer", value);
+                        }}
+                      />
+                    </div>
+
+                    <Tooltip target=".anchor_icon" />
+
+                    <FiAnchor
+                      className="'btn-icon-frame green anchor_icon"
+                      onClick={() => {
+                        if (values.date) {
+                          const eventDate = new Date(values.date);
+                          const ticketTimerDate = new Date(eventDate.getTime() + 60 * 60 * 1000); // Add 1 hour
+                          setFieldValue("ticketTimer", ticketTimerDate);
+                        }
+                      }}
+                      data-pr-tooltip="Click to set as event date + 1 hour"
+                      data-pr-position="left"
+                    />
+                  </div>
+                </div>
                 <ErrorMessage
                   className="error"
                   name="ticketTimer"
