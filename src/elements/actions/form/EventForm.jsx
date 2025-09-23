@@ -1110,18 +1110,18 @@ const EventForm = (props) => {
 
                     <Tooltip target=".anchor_icon" />
 
-                    <FiAnchor
+                    {/* <FiAnchor
                       className="'btn-icon-frame green anchor_icon"
                       onClick={() => {
-                        if (values.date) {
-                          const eventDate = new Date(values.date);
-                          const ticketTimerDate = new Date(eventDate.getTime() + 60 * 60 * 1000); // Add 1 hour
-                          setFieldValue("ticketTimer", ticketTimerDate);
-                        }
+                        const eventDate = new Date(values.date);
+                        const ticketTimerDate = new Date(
+                          eventDate.getTime() + 60 * 60 * 1000
+                        ); // Add 1 hour
+                        setFieldValue("ticketTimer", ticketTimerDate);
                       }}
                       data-pr-tooltip="Click to set as event date + 1 hour"
                       data-pr-position="left"
-                    />
+                    /> */}
                   </div>
                 </div>
                 <ErrorMessage
