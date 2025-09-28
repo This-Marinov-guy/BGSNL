@@ -10,6 +10,9 @@ import PageLoading from "../loading/PageLoading";
 import { ACTIVE, LOCKED, SUSPENDED, USER_STATUSES } from "../../../util/defines/enum";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/user";
+import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
+import { ALUMNI } from "../../../util/defines/common";
+import { decodeJWT } from "../../../util/functions/authorization";
 
 const AccountLocked = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -17,7 +20,11 @@ const AccountLocked = () => {
   const navigate = useNavigate();
 
   const user = useSelector(selectUser);
-  const { isSubscribed, status, region } = user;
+  const { isSubscribed, status, region, roles } = user;
+  
+  // Check if user is already an alumni
+  const isAlumni = roles?.includes(ALUMNI) || 
+    (user?.token && (decodeJWT(user.token)["userId"] ?? '').includes(ALUMNI));
 
   const handleManageSubscription = async () => {
     try {
@@ -31,7 +38,9 @@ const AccountLocked = () => {
       if (responseData.url) {
         window.location.assign(responseData.url);
       }
-    } catch (err) { }
+    } catch (err) { 
+      !isProd() && console.log(err);
+    }
   }
 
   const handleCreateSubscription = async (id = 1) => {
@@ -55,6 +64,32 @@ const AccountLocked = () => {
     } catch (err) {
       !isProd() && console.log(err);
     }
+  };
+
+  // Render Alumni button only if user is not already an alumni
+  const renderAlumniButton = () => {
+    if (isAlumni) {
+      return null;
+    }
+    
+    return (
+      <div className="mt--20">
+        <p className="center_text">Or join our Alumni program:</p>
+        <AlumniRegistrationButton 
+          className="rn-button-style--2"
+          asLink={false}
+          style={{ 
+            marginTop: "10px",
+            backgroundColor: "#e5b80b",
+            color: "white",
+            border: "2px solid #e5b80b",
+            boxShadow: "0 4px 8px rgba(229, 184, 11, 0.3)"
+          }}
+        >
+          Become an Alumni
+        </AlumniRegistrationButton>
+      </div>
+    );
   };
 
   const actionButtons = isSubscribed ?
@@ -88,6 +123,8 @@ const AccountLocked = () => {
           To continue using the benefits of a member please fix your payment details or renew the payment! Otherwise, log out of your account.
         </p>
         {actionButtons}
+        {renderAlumniButton()}
+        
         <button onClick={() => navigate(-1)} className="rn-button-style--2 rn-btn-reverse mt--40">
           Back
         </button>
@@ -102,6 +139,8 @@ const AccountLocked = () => {
         <p>
           <span>We have noticed some violation from your side. Unfortunately, we will need to block your account until further notice. Please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>
         </p>
+        {renderAlumniButton()}
+        
         <button onClick={() => navigate(-1)} className="rn-button-style--2 rn-btn-reverse mt--40">
           Back
         </button>
@@ -116,6 +155,8 @@ const AccountLocked = () => {
         <p>
           <span>We are resolving an issue with your account. Except our apologies and please contact: <a href={`mailto:${REGION_EMAIL['support']}`}>{REGION_EMAIL['support']}</a></span>
         </p>
+        {renderAlumniButton()}
+        
         <button onClick={() => navigate(-1)} className="rn-button-style--2 rn-btn-reverse mt--40">
           Back
         </button>
