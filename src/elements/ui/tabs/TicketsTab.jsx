@@ -2,10 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { FiLock } from "react-icons/fi";
 import { Image } from "primereact/image";
+import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
+import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 
 const TicketsTab = ({ currentUser, navigate }) => {
   // Check if user is tier 0 alumni
   const isTier0Alumni = true; // currentUser?.tier === 0 && currentUser?.roles?.includes('alumni');
+  const { handleAlumniRegistrationClick } = useAlumniRegistration();
   
   return (
     <div className="tab-content-wrapper">
@@ -25,12 +28,12 @@ const TicketsTab = ({ currentUser, navigate }) => {
               members. Upgrade your membership to gain access to exclusive
               ticket collection.
             </p>
-            <button
+            <AlumniRegistrationButton
               className="rn-button-style--2 rn-btn-reverse-red"
-              onClick={() => navigate("/alumni/register")}
+              asLink={false}
             >
               Upgrade Tier
-            </button>
+            </AlumniRegistrationButton>
           </div>
         ) : currentUser && currentUser.tickets?.length > 0 ? (
           <div className="tickets-grid">

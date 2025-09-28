@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiX } from "react-icons/fi";
 import PropTypes from "prop-types";
+import AlumniTypeModal from "./AlumniTypeModal";
 
 const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
   if (!isOpen) return null;
@@ -78,7 +79,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
 
         {/* Modal Content */}
         <div style={{ textAlign: "center", marginBottom: "25px" }}>
-          <div style={{ fontSize: "48px", marginBottom: "15px" }}>🎓</div>
+          {/* <div style={{ fontSize: "48px", marginBottom: "15px" }}>🎓</div> */}
           <h2
             style={{
               color: "#017363",
@@ -236,57 +237,89 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
           </ul>
         </div>
 
-        {/* Action Buttons */}
-        <div
+        {/* Modal content ends here */}
+      </div>
+
+      {/* Fixed Footer */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          borderTop: "1px solid #e9ecef",
+          padding: "15px 20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "15px",
+          zIndex: 10001,
+          boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.1)",
+          flexWrap: "wrap",
+        }}
+      >
+        <button
+          onClick={onJoinNow}
+          className="alumni-button"
+          style={{ margin: 0 }}
+        >
+          <span className="alumni-icon">🎓</span>
+          Join Now
+        </button>
+        <a
+          href="/welcome-to-alumni"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClose}
           style={{
-            display: "flex",
-            gap: "15px",
-            justifyContent: "center",
-            flexWrap: "wrap",
+            backgroundColor: "transparent",
+            color: "#666",
+            border: "2px solid #ddd",
+            borderRadius: "8px",
+            padding: "12px 24px",
+            fontSize: "16px",
+            fontWeight: "500",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = "#f5f5f5";
+            e.target.style.borderColor = "#999";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.borderColor = "#ddd";
           }}
         >
-          {/* // TODO: Add join now button */}
-          {/* <button
-            onClick={() => {
-              onClose();
-              onJoinNow();
-            }}
-            className="alumni-button"
-            style={{ margin: 0 }}
-          >
-            <span className="alumni-icon">🎓</span>
-            Join Now
-          </button> */}
-          <a
-            href="/welcome-to-alumni"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onClose}
-            style={{
-              backgroundColor: "transparent",
-              color: "#666",
-              border: "2px solid #ddd",
-              borderRadius: "8px",
-              padding: "12px 24px",
-              fontSize: "16px",
-              fontWeight: "500",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#f5f5f5";
-              e.target.style.borderColor = "#999";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "transparent";
-              e.target.style.borderColor = "#ddd";
-            }}
-          >
-            Learn More
-          </a>
-        </div>
+          Learn More
+        </a>
       </div>
     </div>
+  );
+};
+
+// Wrapper component that handles both modals
+const AlumniModalWithTypeSelection = ({ isOpen, onClose }) => {
+  const [showTypeModal, setShowTypeModal] = useState(false);
+  
+  return (
+    <>
+      {isOpen && (
+        <AlumniModal 
+          isOpen={isOpen && !showTypeModal}
+          onClose={onClose}
+          onJoinNow={() => setShowTypeModal(true)}
+        />
+      )}
+      <AlumniTypeModal 
+        isOpen={showTypeModal} 
+        onClose={() => {
+          setShowTypeModal(false);
+          onClose();
+        }} 
+      />
+    </>
   );
 };
 
@@ -296,4 +329,9 @@ AlumniModal.propTypes = {
   onJoinNow: PropTypes.func.isRequired,
 };
 
-export default AlumniModal;
+AlumniModalWithTypeSelection.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+export default AlumniModalWithTypeSelection;

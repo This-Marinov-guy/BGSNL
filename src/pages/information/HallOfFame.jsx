@@ -9,6 +9,7 @@ import Loader from "../../elements/ui/loading/Loader";
 import { Dialog } from "primereact/dialog";
 import Tree from "../../component/userTree/Tree";
 import { Link } from "react-router-dom";
+import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
 
 const HallOfFame = () => {
   const { sendRequest } = useHttpClient();
@@ -81,14 +82,12 @@ const HallOfFame = () => {
                   for them.
                   <br />
                   Want to join them?{" "}
-                  <a
-                    href="/alumni/register"
+                  <AlumniRegistrationButton
                     className="link-hover-red"
-                    target="_blank"
-                    rel="noreferrer"
+                    linkStyle={{ display: "inline" }}
                   >
                     Do not waste a minute!
-                  </a>
+                  </AlumniRegistrationButton>
                 </p>
               </div>
             </div>

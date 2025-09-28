@@ -135,7 +135,7 @@ const MemberPurchase = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div className="container mt--140 mb--120">
+      <div className="member-purchase-container container mt--140 mb--120">
         <h2 className="center_text mb--80">Purchase a Ticket</h2>
 
         <div className="row slide-down center_div">

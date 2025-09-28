@@ -90,9 +90,6 @@ const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
           <div
             style={{
               width: "120px",
-              height: "120px",
-              overflow: "hidden",
-              borderRadius: "50%",
               margin: "0 auto 20px",
               border: `4px solid ${
                 user.tier === "platinum" ? "#e5e4e2" :
@@ -101,7 +98,9 @@ const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
                 user.tier === "bronze" ? "#CD7F32" :
                 "#017363"
               }`,
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
+              borderRadius: "8px",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              overflow: "hidden"
             }}
           >
             <img
@@ -109,8 +108,8 @@ const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
               alt={user.name}
               style={{ 
                 width: "100%", 
-                height: "100%", 
-                objectFit: "cover" 
+                height: "auto", 
+                display: "block"
               }}
               onError={(e) => {
                 e.target.style.display = "none";

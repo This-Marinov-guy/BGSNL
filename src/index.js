@@ -7,6 +7,7 @@ import { store } from "./redux/store";
 import { PrimeReactProvider } from "primereact/api";
 import { isMember, isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
+import GlobalModals from "./elements/ui/modals/GlobalModals";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { removeLogsOnProd } from "./util/functions/helpers";
 import AuthLayout from "./layouts/authentication/AuthLayout";
@@ -124,6 +125,7 @@ const Root = () => {
       {modal.includes(INACTIVITY_MODAL) && (
         <InactivityModal timeRemaining={getTimeRemaining()} />
       )}
+      <GlobalModals />
       <GlobalError>
         <Suspense fallback={<PageLoading />}>
           <CampaignLayout>

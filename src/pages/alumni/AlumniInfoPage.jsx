@@ -11,6 +11,7 @@ import {
   faHandHoldingHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
 
 const AlumniInfoPage = () => {
   return (
@@ -42,8 +43,7 @@ const AlumniInfoPage = () => {
                   success. Be a pillar of the Bulgarian community in the
                   Netherlands and gain exclusive benefits in return.
                 </p>
-                <Link
-                  to="/alumni/register"
+                <AlumniRegistrationButton
                   className="rn-button-style--2 rn-btn-green"
                   style={{
                     display: "inline-block",
@@ -54,7 +54,7 @@ const AlumniInfoPage = () => {
                   }}
                 >
                   Become an Alumni Now!
-                </Link>
+                </AlumniRegistrationButton>
               </div>
             </div>
             <div className="col-lg-6 col-md-12 col-12">
@@ -317,8 +317,7 @@ const AlumniInfoPage = () => {
                 Join our big network by following a 2 minute registration. If
                 you have an account it will take you a few seconds.
               </p>
-              <Link
-                to="/alumni/register"
+              <AlumniRegistrationButton
                 className="rn-button-style--2 rn-btn-green"
                 style={{
                   display: "inline-block",
@@ -329,7 +328,7 @@ const AlumniInfoPage = () => {
                 }}
               >
                 Register
-              </Link>
+              </AlumniRegistrationButton>
               <Link
                 to="/login"
                 className="rn-button-style--1"

@@ -13,10 +13,12 @@ import SubscriptionManage from "../buttons/SubscriptionManage";
 import { isProd } from "../../../util/functions/helpers";
 import { logout } from "../../../redux/user";
 import AlumniModal from "../modals/AlumniModal";
+import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
   const [isAlumniModalOpen, setIsAlumniModalOpen] = useState(false);
+  const { handleAlumniRegistrationClick } = useAlumniRegistration();
 
   const isAlumni = user?.roles?.includes(ALUMNI);
 
@@ -163,7 +165,7 @@ const SettingsTab = ({ user }) => {
       <AlumniModal
         isOpen={isAlumniModalOpen}
         onClose={() => setIsAlumniModalOpen(false)}
-        onJoinNow={() => (window.location.href = "/alumni/register")}
+        onJoinNow={handleAlumniRegistrationClick}
       />
     </div>
   );

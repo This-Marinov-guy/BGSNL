@@ -157,19 +157,6 @@ function seedTree(root, users) {
     L4nodes.forEach((p) => p.children?.forEach((c) => L5nodes.push(c)));
     distributeChildren(L5nodes, remaining, 5, users, userIndexRef);
   }
-
-  console.log("Tree distribution:", {
-    total: users.length,
-    placed: users.length - remaining,
-    remaining: remaining,
-    levels: {
-      L1: 1,
-      L2: placedL2,
-      L3: placedL3,
-      L4: placedL4,
-      L5: placedL5,
-    },
-  });
 }
 
 export default function Tree({ style, users = [], onUserClick }) {

@@ -5,6 +5,7 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
 import { FiChevronUp, FiUsers, FiAward } from "react-icons/fi";
+import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
 
 const JoinTheSociety = () => {
   return (
@@ -144,8 +145,7 @@ const JoinTheSociety = () => {
                   </div> */}
                 </div>
                 <div className="service-button mt--30">
-                  <Link
-                    to="/alumni/register"
+                  <AlumniRegistrationButton
                     className="rn-button-style--2"
                     style={{
                       backgroundColor: "#e5b80b",
@@ -154,7 +154,7 @@ const JoinTheSociety = () => {
                     }}
                   >
                     Join as Alumni
-                  </Link>
+                  </AlumniRegistrationButton>
                 </div>
               </div>
             </div>
