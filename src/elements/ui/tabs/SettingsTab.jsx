@@ -14,6 +14,8 @@ import { isProd } from "../../../util/functions/helpers";
 import { logout } from "../../../redux/user";
 import AlumniModal from "../modals/AlumniModal";
 import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
+import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
+import { FiArrowUp } from "react-icons/fi";
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
@@ -78,6 +80,35 @@ const SettingsTab = ({ user }) => {
             </div>
           )}
 
+          {/* Tier 0 Alumni Upgrade */}
+          {isAlumni && user?.tier === 0 && (
+            <div className="settings-card tier-upgrade-card" style={{ border: "2px solid #ff6b35", backgroundColor: "#fff5f2" }}>
+              <div className="settings-card-header">
+                <FiArrowUp className="settings-icon" style={{ color: "#ff6b35" }} />
+                <h3 style={{ color: "#ff6b35" }}>Upgrade Your Tier</h3>
+              </div>
+              <div className="settings-card-body">
+                <p>
+                  As a tier 0 alumni, you&apos;re missing out on exclusive benefits and features. 
+                  Upgrade your subscription to unlock premium alumni perks, special events, and more.
+                </p>
+                <AlumniRegistrationButton
+                  className="rn-button-style--2 rn-btn-green"
+                  asLink={false}
+                  style={{ 
+                    fontSize: "14px", 
+                    padding: "10px 20px",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                    fontWeight: "bold"
+                  }}
+                >
+                  <FiArrowUp size={16} style={{ marginRight: "8px" }} />
+                  Upgrade Tier
+                </AlumniRegistrationButton>
+              </div>
+            </div>
+          )}
+
           {/* Notification Settings */}
           {/* <div className="settings-card">
             <div className="settings-card-header">
@@ -132,7 +163,7 @@ const SettingsTab = ({ user }) => {
             <div className="settings-card-body">
               <p>Manage your membership, payment information and invoices.</p>
               {(!isProd() || user?.subscription) && (
-                <div style={{ marginBottom: "15px" }}>
+                <div className="subscription-actions">
                   <SubscriptionManage />
                 </div>
               )}

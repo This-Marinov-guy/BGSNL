@@ -6,11 +6,15 @@ import { Badge } from "primereact/badge";
 import { useNavigate } from "react-router-dom";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../loading/Loader";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../../../redux/notification";
 
 const AlumniTypeModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { loading, sendRequest } = useHttpClient();
   const [processingTier, setProcessingTier] = useState(null);
+
+  const dispatch = useDispatch();
 
   if (!isOpen) return null;
 
@@ -38,6 +42,13 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
         window.location.assign(response.url);
       } 
     } catch (error) {
+      dispatch(
+        showNotification({
+          severity: "error",
+          summary: "You got an error :(",
+          detail: "Something went wrong. Please try again later or contact support.",
+        })
+      );
       console.error("Error processing alumni migration:", error);
     } finally {
       setProcessingTier(null);

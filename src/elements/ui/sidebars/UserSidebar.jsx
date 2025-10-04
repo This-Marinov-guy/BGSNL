@@ -12,6 +12,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
 import { formatRole } from "../../../util/defines/common";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
+import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
+import { FiArrowUp } from "react-icons/fi";
 
 const UserSidebar = ({
   currentUser,
@@ -41,7 +43,9 @@ const UserSidebar = ({
       {/* Mobile Sidebar Toggle Button */}
       {isMobile && (
         <button
-          className={`sidebar-toggle-btn ${isSidebarOpen ? 'sidebar-open' : ''}`}
+          className={`sidebar-toggle-btn ${
+            isSidebarOpen ? "sidebar-open" : ""
+          }`}
           onClick={toggleSidebar}
           aria-label="Toggle Sidebar"
         >
@@ -77,8 +81,21 @@ const UserSidebar = ({
           <p className="sidebar-user-status">
             <span className="status-active">
               {formatRole(currentUser.roles)}{" "}
+              {currentUser?.tier !== undefined && `Tier ${currentUser.tier}`}
+              
             </span>
           </p>
+          {currentUser?.tier === 0 && (
+            <div style={{ marginTop: "10px", textAlign: "center" }}>
+              <AlumniRegistrationButton
+                className="rn-button-style--2 rn-btn-green"
+                asLink={false}
+                style={{ fontSize: "12px", padding: "8px 16px" }}
+              >
+                <FiArrowUp size={16} style={{ marginBottom: "5px" }}/> Update Tier
+              </AlumniRegistrationButton>
+            </div>
+          )}
           <p className="sidebar-user-status">
             <span className="status-active">
               {capitalizeFirstLetter(currentUser.region, true)} <br />{" "}

@@ -20,6 +20,8 @@ import TabContent from "../../elements/ui/tabs/TabContent";
 import Christmas from "../../elements/special/Christmas";
 import { ACCOUNT_TABS } from "../../util/defines/enum";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
+import { Message } from "primereact/message";
+import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
 
 const User = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -139,11 +141,11 @@ const User = () => {
       />
       <UserUpdateModal currentUser={currentUser} />
       <Christmas currentUser={currentUser} />
-      
+
       {/* Start User Page Container with Sidebar */}
       <div className="user-page-container">
         {/* Sidebar */}
-        <UserSidebar 
+        <UserSidebar
           currentUser={currentUser}
           activeTab={tab || ACCOUNT_TABS[0]}
           onTabChange={(newTab) => {
@@ -153,22 +155,28 @@ const User = () => {
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
         />
-        
+
         {/* Main Content Area */}
         <div className="user-content-area">
+          {currentUser?.tier === 0 && <Message 
+            severity="info"
+            text="As a tier 0 alumni, you are not eligible to any bonuses from the alumni program. Please upgrade your subscription from the settings tab."
+            className="center_div mb--20"
+           />}
+
           <div className="content-container">
             {/* User Profile Header */}
-            <UserProfileHeader 
-              currentUser={currentUser} 
-              hasBirthday={hasBirthday} 
+            <UserProfileHeader
+              currentUser={currentUser}
+              hasBirthday={hasBirthday}
             />
-            
+
             {/* Campaign Section */}
             {campaignUserActions &&
               React.cloneElement(campaignUserActions.userAction.component, {
                 calendarImage: currentUser.mmmCampaign2025?.calendarImage,
               })}
-            
+
             {/* Tab Content */}
             <div ref={scrollRef}>
               <TabContent
@@ -192,7 +200,7 @@ const User = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

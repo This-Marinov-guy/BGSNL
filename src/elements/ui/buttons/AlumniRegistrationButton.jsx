@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
 
 const AlumniRegistrationButton = ({ 
@@ -11,16 +10,16 @@ const AlumniRegistrationButton = ({
   asLink = true,
   onClick
 }) => {
-  const {
-    showTypeModal,
-    setShowTypeModal,
-    showErrorModal,
-    setShowErrorModal,
-    handleAlumniRegistrationClick
-  } = useAlumniRegistration();
+  const { setShowTypeModal } = useAlumniRegistration();
 
   const handleClick = (e) => {
-    handleAlumniRegistrationClick(e);
+    if (e) {
+      e.preventDefault();
+    }
+    
+    // Always show the type modal when button is clicked
+    setShowTypeModal(true);
+    
     if (onClick) onClick(e);
   };
 

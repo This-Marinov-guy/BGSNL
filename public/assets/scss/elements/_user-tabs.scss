@@ -150,6 +150,9 @@
   padding: 25px;
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   
   &:hover {
     transform: translateY(-2px);
@@ -185,11 +188,16 @@
 }
 
 .settings-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  
   p {
     color: var(--color-body);
     margin-bottom: 20px;
     line-height: 1.5;
     font-size: 18px;
+    flex: 1;
   }
   
   button {
@@ -199,6 +207,7 @@
     font-weight: 600 !important;
     border-radius: 8px !important;
     transition: all 0.3s ease !important;
+    margin-top: auto;
     
     &:hover {
       transform: translateY(-1px);
@@ -211,6 +220,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin-top: auto;
   
   .subscription-btn {
     display: flex;
