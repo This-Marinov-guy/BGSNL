@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import HeaderTwo from '../header/HeaderTwo';
 import { AXIOM_DATASET, getAxiomEndpoint, isAxiomLoggingEnabled } from '../../util/configs/axiom';
+import { LOCAL_STORAGE_USER_DATA } from '../../util/defines/common';
 
 // Custom fallback component
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
@@ -48,6 +49,25 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
     );
 };
 
+// Function to get user data from localStorage
+const getUserData = () => {
+    try {
+        const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA);
+        if (userData) {
+            return JSON.parse(userData);
+        }
+        return null;
+    } catch (e) {
+        return null;
+    }
+};
+
+// Function to check if user is logged in
+const isUserLoggedIn = () => {
+    const userData = getUserData();
+    return !!(userData && userData.token);
+};
+
 // Function to log errors to Axiom
 const logErrorToAxiom = (error, componentStack, errorInfo) => {
     // Don't log if Axiom logging is disabled
@@ -55,6 +75,10 @@ const logErrorToAxiom = (error, componentStack, errorInfo) => {
         console.log('Axiom logging disabled. Error not sent to Axiom.');
         return;
     }
+    
+    // Get user data
+    const userData = getUserData();
+    const userToken = userData?.token;
     
     // Create the payload for Axiom
     const errorPayload = {
@@ -69,6 +93,8 @@ const logErrorToAxiom = (error, componentStack, errorInfo) => {
             url: window.location.href,
             path: window.location.pathname,
             userAgent: navigator.userAgent,
+            logged_in: !!userToken,
+            ...(userToken && { token: userToken }),
             screenSize: {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -120,6 +146,77 @@ const handleError = (error, info) => {
 
 const GlobalError = ({ children }) => {
     const location = useLocation();
+
+    useEffect(() => {
+        // Capture console errors
+        const originalConsoleError = console.error;
+        
+        console.error = (...args) => {
+            // Call original console.error
+            originalConsoleError(...args);
+            
+            // Only log to Axiom if logging is enabled
+            if (isAxiomLoggingEnabled()) {
+                try {
+                    // Extract meaningful error message
+                    const errorMessage = args.map(arg => {
+                        if (arg instanceof Error) {
+                            return `${arg.name}: ${arg.message}\nStack: ${arg.stack}`;
+                        } else if (typeof arg === 'object') {
+                            return JSON.stringify(arg, null, 2);
+                        } else {
+                            return String(arg);
+                        }
+                    }).join(' ');
+
+                    // Get user data
+                    const userData = getUserData();
+                    const userToken = userData?.token;
+
+                    // Create payload for console errors
+                    const errorPayload = {
+                        dataset: AXIOM_DATASET,
+                        timestamp: new Date().toISOString(),
+                        type: 'console_error',
+                        data: {
+                            message: errorMessage,
+                            url: window.location.href,
+                            path: window.location.pathname,
+                            userAgent: navigator.userAgent,
+                            logged_in: !!userToken,
+                            ...(userToken && { token: userToken }),
+                            screenSize: {
+                                width: window.innerWidth,
+                                height: window.innerHeight,
+                            }
+                        }
+                    };
+
+                    // Send to Axiom
+                    const AXIOM_API_TOKEN = process.env.REACT_APP_AXIOM_API_TOKEN;
+                    const AXIOM_ENDPOINT = getAxiomEndpoint();
+                    
+                    if (AXIOM_API_TOKEN) {
+                        axios.post(AXIOM_ENDPOINT, [errorPayload], {
+                            headers: {
+                                'Authorization': `Bearer ${AXIOM_API_TOKEN}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }).catch(err => {
+                            originalConsoleError('Failed to log console error to Axiom:', err);
+                        });
+                    }
+                } catch (loggingError) {
+                    originalConsoleError('Error during console error Axiom logging:', loggingError);
+                }
+            }
+        };
+
+        // Cleanup on unmount
+        return () => {
+            console.error = originalConsoleError;
+        };
+    }, []);
 
     return (
         <ErrorBoundary

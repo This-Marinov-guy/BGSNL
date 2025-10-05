@@ -16,20 +16,20 @@ const LogoutAlert = ({ visible, onHide }) => {
     <Alert className="logout_alert" variant="danger">
       <p>Continue logging out?</p>
       <button
-        className="rn-btn mr--10"
+        className="rn-button-style--2 rn-btn-reverse-red mr--10"
         onClick={() => {
           dispatch(logout());
           onHide();
           navigate(0);
         }}
       >
-        Log out
+        LOG OUT
       </button>
       <button
         className="rn-button-style--2 rn-btn-reverse-green"
         onClick={onHide}
       >
-        Stay
+        STAY
       </button>
     </Alert>
   );
