@@ -7,7 +7,7 @@ import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 
 const TicketsTab = ({ currentUser, navigate }) => {
   // Check if user is tier 0 alumni
-  const isTier0Alumni = true; // currentUser?.tier === 0 && currentUser?.roles?.includes('alumni');
+  const isTier0Alumni = currentUser?.tier === 0;
   const { handleAlumniRegistrationClick } = useAlumniRegistration();
   
   return (
