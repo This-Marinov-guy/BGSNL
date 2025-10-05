@@ -43,7 +43,11 @@ const MainLayout = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // Always clear existing toasts first
+    toast.current.clear();
+    
     if (notification.severity) {
+      // Wait a bit for clear to complete, then show new notification
       setTimeout(() => {
         toast.current.show({
           ...notification,
@@ -51,9 +55,7 @@ const MainLayout = ({ children }) => {
           sticky: !(notification.closable ?? true),
           life: notification.life ?? 8000,
         });
-      }, 200);
-    } else {
-      toast.current.clear();
+      }, 100);
     }
   }, [notificationIndex]);
 
