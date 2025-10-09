@@ -23,6 +23,7 @@ const SettingsTab = ({ user }) => {
   const { handleAlumniRegistrationClick } = useAlumniRegistration();
 
   const isAlumni = user?.roles?.includes(ALUMNI);
+  const isFreeAlumni = isAlumni && user?.tier === 0;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -81,25 +82,35 @@ const SettingsTab = ({ user }) => {
           )}
 
           {/* Tier 0 Alumni Upgrade */}
-          {isAlumni && user?.tier === 0 && (
-            <div className="settings-card tier-upgrade-card" style={{ border: "2px solid #ff6b35", backgroundColor: "#fff5f2" }}>
+          {isFreeAlumni && (
+            <div
+              className="settings-card tier-upgrade-card"
+              style={{
+                border: "2px solid #ff6b35",
+                backgroundColor: "#fff5f2",
+              }}
+            >
               <div className="settings-card-header">
-                <FiArrowUp className="settings-icon" style={{ color: "#ff6b35" }} />
+                <FiArrowUp
+                  className="settings-icon"
+                  style={{ color: "#ff6b35" }}
+                />
                 <h3 style={{ color: "#ff6b35" }}>Upgrade Your Tier</h3>
               </div>
               <div className="settings-card-body">
                 <p>
-                  As a tier 0 alumni, you&apos;re missing out on exclusive benefits and features. 
-                  Upgrade your subscription to unlock premium alumni perks, special events, and more.
+                  As a tier 0 alumni, you&apos;re missing out on exclusive
+                  benefits and features. Upgrade your subscription to unlock
+                  premium alumni perks, special events, and more.
                 </p>
                 <AlumniRegistrationButton
                   className="rn-button-style--2 rn-btn-green"
                   asLink={false}
-                  style={{ 
-                    fontSize: "14px", 
+                  style={{
+                    fontSize: "14px",
                     padding: "10px 20px",
                     boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                    fontWeight: "bold"
+                    fontWeight: "bold",
                   }}
                 >
                   <FiArrowUp size={16} style={{ marginRight: "8px" }} />
@@ -155,7 +166,7 @@ const SettingsTab = ({ user }) => {
           </div> */}
 
           {/* Subscription Management */}
-          <div className="settings-card">
+          {!isFreeAlumni && <div className="settings-card">
             <div className="settings-card-header">
               <FaCog className="settings-icon" />
               <h3>Subscription Management</h3>
@@ -164,14 +175,14 @@ const SettingsTab = ({ user }) => {
               <p>Manage your membership, payment information and invoices.</p>
               {(!isProd() || user?.subscription) && (
                 <div className="subscription-actions">
-                  <SubscriptionManage />
+                  <SubscriptionManage isAlumni={isAlumni}/>
                 </div>
               )}
               {/* <button className="rn-button-style--2 rn-btn-green">
                 Subscription Settings
               </button> */}
             </div>
-          </div>
+          </div>}
 
           {/* Logout */}
           <div className="settings-card danger-card">

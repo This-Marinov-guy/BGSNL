@@ -5,8 +5,9 @@ import { useDispatch } from 'react-redux';
 import { showNotification } from '../../../redux/notification';
 import CustomSpinner from '../loading/CustomSpinner';
 import PropTypes from 'prop-types';
+import { ALUMNI, MEMBER } from '../../../util/defines/common';
 
-const SubscriptionManage = ({ onAction }) => {
+const SubscriptionManage = ({ onAction, isAlumni }) => {
     const { loading, sendRequest } = useHttpClient();
 
     const dispatch = useDispatch();
@@ -25,11 +26,12 @@ const SubscriptionManage = ({ onAction }) => {
     async function handleManage() {
         try {
             const responseData = await sendRequest(
-                "payment/subscription/customer-portal",
-                "POST",
-                {
-                    url: window.location.href,
-                },
+              "payment/subscription/customer-portal",
+              "POST",
+              {
+                url: window.location.href,
+                type: isAlumni ? ALUMNI : MEMBER,
+              }
             );
             if (responseData.url) {
                 window.location.assign(responseData.url);
