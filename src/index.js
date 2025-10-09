@@ -1,6 +1,12 @@
 // React and Redux Required
 import React, { useEffect, lazy, Suspense, Fragment } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import { Provider, useSelector } from "react-redux";
 import { store } from "./redux/store";
@@ -149,11 +155,7 @@ const Root = () => {
                 path={`/join-the-society`}
                 element={<JoinTheSociety />}
               />
-              <Route
-                exact
-                path={`/hall-of-fame`}
-                element={<HallOfFame />}
-              />
+              <Route exact path={`/hall-of-fame`} element={<HallOfFame />} />
 
               <Route exact path={`/developers`} element={<Developers />} />
               <Route exact path={`/internships`} element={<Internships />} />
@@ -294,7 +296,26 @@ const Root = () => {
               </Fragment>
 
               {/* Un-auth pages */}
-              {!user?.token && (
+              {/* Redirect authenticated users from auth pages */}
+              {user?.token ? (
+                <Fragment>
+                  {/* <Route
+                    exact
+                    path={`/login`}
+                    element={<Navigate to="/user" replace />}
+                  /> */}
+                  <Route
+                    exact
+                    path={`/:region?/signup`}
+                    element={<Navigate to="/user" replace />}
+                  />
+                  <Route
+                    exact
+                    path={`/alumni/register`}
+                    element={<Navigate to="/user" replace />}
+                  />
+                </Fragment>
+              ) : (
                 <Fragment>
                   <Route exact path={`/login`} element={<LogIn />} />
                   <Route exact path={`/:region?/signup`} element={<SignUp />} />

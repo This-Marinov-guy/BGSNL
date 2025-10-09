@@ -21,7 +21,6 @@ import {
   checkAuthorization,
   decodeJWT,
 } from "../../util/functions/authorization";
-import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
@@ -135,17 +134,41 @@ const MemberPurchase = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div className="member-purchase-container container mt--140 mb--120">
-        <h2 className="center_text mb--80">Purchase a Ticket</h2>
+      <div
+        className="member-purchase-container container mt--140 mb--120"
+        style={{
+          paddingLeft: "clamp(15px, 3vw, 20px)",
+          paddingRight: "clamp(15px, 3vw, 20px)",
+        }}
+      >
+        <h2
+          className="center_text mb--60 mb_md--40 mb_sm--30"
+          style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)" }}
+        >
+          Purchase a Ticket
+        </h2>
 
-        <div className="row slide-down center_div">
-          <ImageFb
-            src={`${selectedEvent.poster}`}
-            alt="Event"
-            className="title_img"
-          />
+        <div className="row slide-down center_div mb--60 mb_md--40 mb_sm--30">
+          <div className="col-12 d-flex justify-content-center">
+            <ImageFb
+              src={`${selectedEvent.poster}`}
+              alt="Event"
+              className="title_img"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                maxHeight: "400px",
+                objectFit: "contain",
+              }}
+            />
+          </div>
         </div>
-        <div className="row team_member_border_1 team_border_long_add_on mt--80 purchase_panel">
+        <div
+          className="row team_member_border_1 team_border_long_add_on purchase_panel"
+          style={{
+            padding: "clamp(15px, 4vw, 40px)",
+          }}
+        >
           <Formik
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -298,82 +321,117 @@ const MemberPurchase = () => {
             }}
           >
             {({ values, setFieldValue }) => (
-              <Form id="form" encType="multipart/form-data" className="row">
-                <div className="col-lg-6 col-md-12 col-12">
+              <Form id="form" encType="multipart/form-data" className="row g-4">
+                <div className="col-12">
                   <div className="event_details">
-                    <h2 className="mt--40">Event Details</h2>
-                    <div className="container information-container m-auto">
-                      <div className="row mb-2">
-                        <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
-                          Name:
+                    <h2
+                      className="mt--20 mb--30 text-center text-md-start"
+                      style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)" }}
+                    >
+                      Event Details
+                    </h2>
+                      <div className="row g-3 mb-3 information-container">
+                        <div className="col-12 col-sm-6 col-md-4">
+                          <div className="detail-item text-center">
+                            <strong
+                              className="d-block mb-1"
+                              style={{ color: "#017363" }}
+                            >
+                              Name:
+                            </strong>
+                            <span>{selectedEvent.title}</span>
+                          </div>
                         </div>
-                        <div className="col-sm-8 text-sm-center">
-                          {selectedEvent.title}
+                        <div className="col-12 col-sm-6 col-md-4">
+                          <div className="detail-item text-center">
+                            <strong
+                              className="d-block mb-1"
+                              style={{ color: "#017363" }}
+                            >
+                              Date:
+                            </strong>
+                            <span>
+                              {selectedEvent.correctedDate
+                                ? moment(selectedEvent.correctedDate).format(
+                                    MOMENT_DATE_TIME
+                                  ) + " Updated!"
+                                : moment(selectedEvent.date).format(
+                                    MOMENT_DATE_TIME
+                                  )}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="row mb-2">
-                        <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
-                          Date:
+                        <div className="col-12 col-sm-6 col-md-4">
+                          <div className="detail-item text-center">
+                            <strong
+                              className="d-block mb-1"
+                              style={{ color: "#017363" }}
+                            >
+                              Address:
+                            </strong>
+                            <span style={{ wordBreak: "break-word" }}>
+                              {selectedEvent.location}
+                            </span>
+                          </div>
                         </div>
-                        <div className="col-sm-8 text-sm-center">
-                          {selectedEvent.correctedDate
-                            ? moment(selectedEvent.correctedDate).format(
-                                MOMENT_DATE_TIME
-                              ) + " Updated!"
-                            : moment(selectedEvent.date).format(
-                                MOMENT_DATE_TIME
-                              )}
-                        </div>
-                      </div>
-                      <div className="row mb-2">
-                        <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
-                          Address:
-                        </div>
-                        <div className="col-sm-8 text-sm-center">
-                          {selectedEvent.location}
-                        </div>
-                      </div>
-                      <div className="row mb-2">
-                        <div className="col-sm-4 fw-bold text-sm-center font-weight-bold">
-                          Price:
-                        </div>
-                        <div className="col-sm-8 text-sm-center d-flex g--5">
-                          <p className="mb-0">
-                            {estimatePriceByEvent(
-                              selectedEvent,
-                              { ...currentUser, token: user.token ?? "" },
-                              {
-                                withIncludedText: false,
-                                blockDiscounts: normalTicket,
-                                withMemberBadge: true,
-                              }
-                            )}
-                          </p>
-                          <DynamicTicketBadge
-                            product={selectedEvent?.product}
-                          />
+                        <div className="col-12 col-sm-6 col-md-12">
+                          <div className="detail-item text-center">
+                            <strong
+                              className="d-block mb-1"
+                              style={{ color: "#017363" }}
+                            >
+                              Price:
+                            </strong>
+                            <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
+                              <span>
+                                {estimatePriceByEvent(
+                                  selectedEvent,
+                                  { ...currentUser, token: user.token ?? "" },
+                                  {
+                                    withIncludedText: false,
+                                    blockDiscounts: normalTicket,
+                                    withMemberBadge: true,
+                                  }
+                                )}
+                              </span>
+                              <DynamicTicketBadge
+                                product={selectedEvent?.product}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                     <SponsoredBySmall />
                   </div>
-                </div>
                 {selectedEvent.extraInputsForm?.length > 0 && (
-                  <div className="col-lg-6 col-md-12 col-12 row container mt--40">
+                  <div className="col-12">
+                    <h3
+                      className="mb--30 text-center text-md-start"
+                      style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)" }}
+                    >
+                      Additional Information
+                    </h3>
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>
                 )}
                 {selectedEvent?.addOns?.isEnabled &&
                   selectedEvent.addOns?.items?.length > 0 && (
-                    <div className="col-lg-6 col-md-6 col-12 mt--40">
-                      <h3 className="text-center">
+                    <div className="col-12">
+                      <h3
+                        className="text-center mb--20"
+                        style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)" }}
+                      >
                         {selectedEvent.addOns.title}
                       </h3>
-                      <small className="d-flex justify-content-center">
+                      <p
+                        className="text-center mb--30"
+                        style={{ fontSize: "0.875rem", color: "#666" }}
+                      >
                         {selectedEvent.addOns?.multi
                           ? "*You can add one or more"
                           : "*You can add only one"}
-                      </small>
+                      </p>
                       <CardInputs
                         multi={selectedEvent.addOns?.multi}
                         items={selectedEvent.addOns?.items}
@@ -382,33 +440,80 @@ const MemberPurchase = () => {
                       />
                     </div>
                   )}
-                <div className="m--a" style={{ maxWidth: "10em" }}>
-                  <WithBackBtn>
+
+                <div className="col-12">
+                  {normalTicket && (
+                    <Message
+                      severity="warn"
+                      className="mb--20"
+                      text="You already have redeemed your discount - if you proceed, you will pay the full ticket price"
+                    />
+                  )}
+
+                  <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30">
                     <button
                       disabled={isLoading}
                       type="submit"
                       className="rn-button-style--2 rn-btn-reverse-green"
+                      style={{
+                        width: "100%",
+                        maxWidth: "300px",
+                        minWidth: "clamp(150px, 40vw, 200px)",
+                        padding:
+                          "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+                      }}
                     >
-                      {isLoading ? <Loader /> : <span>Payment</span>}
+                      {isLoading ? <Loader /> : <span>Proceed to Payment</span>}
                     </button>
-                  </WithBackBtn>
-                  {normalTicket && (
-                    <Message
-                      severity="warn"
-                      className="center_div mt--20"
-                      text="You already have redeemed your discount - if you proceed, you will pay the full ticket price"
-                    />
-                  )}
+
+                    <button
+                      type="button"
+                      onClick={() => navigate(-1)}
+                      className="rn-button-style--2 rn-btn-reverse-red"
+                      style={{
+                        width: "100%",
+                        maxWidth: "300px",
+                        minWidth: "clamp(150px, 40vw, 200px)",
+                        padding:
+                          "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+                      }}
+                    >
+                      <span>Back</span>
+                    </button>
+                  </div>
                 </div>
-                <p className="information mt--40">
-                  The information for purchasing this ticket will be taken from
-                  your account. Be sure it is accurate as it can be used as a
-                  proof of your identity on the entry!
-                </p>
-                <p className="information mt--10">
-                  *Special discounted price for board and committee members may
-                  apply
-                </p>
+
+                <div className="col-12 mt--40">
+                  <div
+                    className="information-notices"
+                    style={{
+                      background: "#f9f9f9",
+                      padding: "clamp(12px, 3vw, 20px)",
+                      borderRadius: "8px",
+                      borderLeft: "4px solid #017363",
+                    }}
+                  >
+                    <p
+                      className="mb--20"
+                      style={{ fontSize: "0.875rem", lineHeight: "1.6" }}
+                    >
+                      ℹ️ The information for purchasing this ticket will be
+                      taken from your account. Be sure it is accurate as it can
+                      be used as a proof of your identity on the entry!
+                    </p>
+                    <p
+                      className="mb--0"
+                      style={{
+                        fontSize: "0.875rem",
+                        lineHeight: "1.6",
+                        color: "#666",
+                      }}
+                    >
+                      *Special discounted price for board and committee members
+                      may apply
+                    </p>
+                  </div>
+                </div>
               </Form>
             )}
           </Formik>
@@ -417,7 +522,7 @@ const MemberPurchase = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
