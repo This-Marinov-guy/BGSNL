@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-const MembershipBanner = ({border = 1}) => {
+const MembershipBanner = ({border = 2}) => {
     const location = useLocation();
     const routePath = location.pathname;
 

@@ -148,25 +148,10 @@ const MemberPurchase = () => {
           Purchase a Ticket
         </h2>
 
-        <div className="row slide-down center_div mb--60 mb_md--40 mb_sm--30">
-          <div className="col-12 d-flex justify-content-center">
-            <ImageFb
-              src={`${selectedEvent.poster}`}
-              alt="Event"
-              className="title_img"
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-                maxHeight: "400px",
-                objectFit: "contain",
-              }}
-            />
-          </div>
-        </div>
         <div
           className="row team_member_border_1 team_border_long_add_on purchase_panel"
           style={{
-            padding: "clamp(15px, 4vw, 40px)",
+            padding: "clamp(10px, 4vw, 40px)",
           }}
         >
           <Formik
@@ -321,82 +306,108 @@ const MemberPurchase = () => {
             }}
           >
             {({ values, setFieldValue }) => (
-              <Form id="form" encType="multipart/form-data" className="row g-4">
+              <Form
+                id="form"
+                encType="multipart/form-data"
+              >
                 <div className="col-12">
                   <div className="event_details">
-                    <h2
-                      className="mt--20 mb--30 text-center text-md-start"
-                      style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)" }}
-                    >
-                      Event Details
-                    </h2>
-                      <div className="row g-3 mb-3 information-container">
-                        <div className="col-12 col-sm-6 col-md-4">
-                          <div className="detail-item text-center">
-                            <strong
-                              className="d-block mb-1"
-                              style={{ color: "#017363" }}
-                            >
-                              Name:
-                            </strong>
-                            <span>{selectedEvent.title}</span>
-                          </div>
+                    <div className="row g-4 align-items-center mb--40">
+                      {/* Event Poster */}
+                      <div className="col-12 col-md-4 col-lg-3">
+                        <div className="d-flex justify-content-center">
+                          <ImageFb
+                            src={`${selectedEvent.poster}`}
+                            alt="Event"
+                            className="title_img"
+                            style={{
+                              maxWidth: "100%",
+                              height: "auto",
+                              maxHeight: "250px",
+                              objectFit: "contain",
+                              borderRadius: "8px",
+                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                            }}
+                          />
                         </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                          <div className="detail-item text-center">
-                            <strong
-                              className="d-block mb-1"
-                              style={{ color: "#017363" }}
-                            >
-                              Date:
-                            </strong>
-                            <span>
-                              {selectedEvent.correctedDate
-                                ? moment(selectedEvent.correctedDate).format(
-                                    MOMENT_DATE_TIME
-                                  ) + " Updated!"
-                                : moment(selectedEvent.date).format(
-                                    MOMENT_DATE_TIME
-                                  )}
-                            </span>
+                      </div>
+
+                      {/* Event Details */}
+                      <div className="col-12 col-md-8 col-lg-9">
+                        <h2
+                          className="mb--30 text-center text-md-start"
+                          style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)" }}
+                        >
+                          Event Details
+                        </h2>
+                        <div className="row g-3 information-container">
+                          <div className="col-12 col-sm-6 col-md-4">
+                            <div className="detail-item text-center">
+                              <strong
+                                className="d-block mb-1"
+                                style={{ color: "#017363" }}
+                              >
+                                Name:
+                              </strong>
+                              <span>{selectedEvent.title}</span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-4">
-                          <div className="detail-item text-center">
-                            <strong
-                              className="d-block mb-1"
-                              style={{ color: "#017363" }}
-                            >
-                              Address:
-                            </strong>
-                            <span style={{ wordBreak: "break-word" }}>
-                              {selectedEvent.location}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="col-12 col-sm-6 col-md-12">
-                          <div className="detail-item text-center">
-                            <strong
-                              className="d-block mb-1"
-                              style={{ color: "#017363" }}
-                            >
-                              Price:
-                            </strong>
-                            <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
+                          <div className="col-12 col-sm-6 col-md-4">
+                            <div className="detail-item text-center">
+                              <strong
+                                className="d-block mb-1"
+                                style={{ color: "#017363" }}
+                              >
+                                Date:
+                              </strong>
                               <span>
-                                {estimatePriceByEvent(
-                                  selectedEvent,
-                                  { ...currentUser, token: user.token ?? "" },
-                                  {
-                                    withIncludedText: false,
-                                    blockDiscounts: normalTicket,
-                                    withMemberBadge: true,
-                                  }
-                                )}
+                                {selectedEvent.correctedDate
+                                  ? moment(selectedEvent.correctedDate).format(
+                                      MOMENT_DATE_TIME
+                                    ) + " Updated!"
+                                  : moment(selectedEvent.date).format(
+                                      MOMENT_DATE_TIME
+                                    )}
                               </span>
-                              <DynamicTicketBadge
-                                product={selectedEvent?.product}
-                              />
+                            </div>
+                          </div>
+                          <div className="col-12 col-sm-6 col-md-4">
+                            <div className="detail-item text-center">
+                              <strong
+                                className="d-block mb-1"
+                                style={{ color: "#017363" }}
+                              >
+                                Address:
+                              </strong>
+                              <span style={{ wordBreak: "break-word" }}>
+                                {selectedEvent.location}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="col-12 col-sm-6 col-md-12">
+                            <div className="detail-item text-center">
+                              <strong
+                                className="d-block mb-1"
+                                style={{ color: "#017363" }}
+                              >
+                                Price:
+                              </strong>
+                              <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
+                                <span>
+                                  {estimatePriceByEvent(
+                                    selectedEvent,
+                                    { ...currentUser, token: user.token ?? "" },
+                                    {
+                                      withIncludedText: false,
+                                      blockDiscounts: normalTicket,
+                                      withMemberBadge: true,
+                                    }
+                                  )}
+                                </span>
+                                <DynamicTicketBadge
+                                  product={selectedEvent?.product}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -404,6 +415,7 @@ const MemberPurchase = () => {
                     </div>
                     <SponsoredBySmall />
                   </div>
+                </div>
                 {selectedEvent.extraInputsForm?.length > 0 && (
                   <div className="col-12">
                     <h3
