@@ -6,11 +6,22 @@ const Success = () => {
   const prevUrl = sessionStorage.getItem('prevUrl')
 
   return (
-    <Alert
-      className="center_section"
-      style={{ margin: "50px" }}
-      variant="success"
+    <div 
+      className="d-flex justify-content-center align-items-center" 
+      style={{ minHeight: "100vh", padding: "20px" }}
     >
+      <Alert
+        className="center_section"
+        style={{ margin: "0", maxWidth: "800px", width: "100%" }}
+        variant="success"
+      >
+      <div className="d-flex justify-content-center mb--40">
+        <img 
+          src="/assets/icons/svgs/success.svg" 
+          alt="Success" 
+          style={{ width: "100px", height: "100px" }}
+        />
+      </div>
       <p>
         Your payment was Successful! Check your email for the invoice and enjoy&nbsp;&nbsp;your purchase! Hope to see you soon!
       </p>
@@ -28,7 +39,8 @@ const Success = () => {
         If you have been mischarged, have not received your invoice or you face
         any other problems, do not hesitate to contact us!
       </p>
-    </Alert>
+      </Alert>
+    </div>
   );
 };
 
