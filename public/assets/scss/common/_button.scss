@@ -129,6 +129,26 @@ a {
       }
     }
 
+    &.rn-btn-gold {
+      border: 2px solid #e5b80b;
+      color: #e5b80b;
+      &:hover {
+        background: #e5b80b;
+        color: #fff;
+      }
+    }
+
+    &.rn-btn-solid-gold {
+      border: 2px solid #e5b80b;
+      background: #e5b80b;
+      color: #fff;
+      &:hover {
+        border: 2px solid #e5b80b;
+        background: #e5b80b;
+        color: #fff;
+      }
+    }
+
     &.rn-btn-reverse {
       border: 2px solid $theme-color;
       color: $theme-color;

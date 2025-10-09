@@ -83,6 +83,66 @@ Winners will be announced at the beginning of April. Good luck!
       component: <ValidateCalendarSubscription />,
     },
   },
+  {
+    name: "Alumni Campaign 2025",
+    key: "alumni_campaign_2025",
+    modal: {
+      active: isTodayInRange("10-01", "12-31"),
+      title: "Join the BGSNL Alumni Network",
+      description: `Graduated and want to stay connected with the Bulgarian community?
+
+Join our Alumni Network and continue being part of the BGSNL family!
+
+Benefits:
+1. Access to exclusive alumni events and networking opportunities
+2. Mentorship programs to guide current students
+3. Stay connected with fellow Bulgarian graduates across the Netherlands
+4. Special benefits the bigger the tier
+`,
+      images: ["/assets/images/alumni/alumni-campaign-2.jpg"],
+      links: [
+        { name: "Join Alumni", href: "/alumni/register", isExternal: false },
+        { name: "Learn More", href: "/welcome-to-alumni", isExternal: false },
+      ],
+      sponsors: [],
+    },
+    navStrap: {
+      active: isTodayInRange("10-01", "12-31"),
+      color: "#e5b80b",
+      title: "Our BGSNL Alumni Network is now opened!",
+      link: { name: "Visit", href: "/welcome-to-alumni", isExternal: false },
+    },
+    news: {
+      active: isTodayInRange("10-01", "12-31"),
+      title: "Alumni Network now Opened",
+      description:
+        "Graduated and want to stay connected? Join our Alumni Network for exclusive events, mentorship opportunities, and stay part of the BGSNL family!",
+      image: "/assets/images/alumni/alumni-campaign-2.jpg",
+      links: [
+        {
+          name: "Learn more",
+          href: "/welcome-to-alumni",
+          isExternal: false,
+        },
+      ],
+      isForMember: false,
+    },
+    banner: {
+      active: isTodayInRange("10-01", "12-31"),
+      title: "Join the BGSNL Alumni Network",
+      description:
+        "Graduated and want to stay connected? Join our Alumni Network for exclusive events, mentorship opportunities, and networking with fellow Bulgarian graduates!",
+      image: "",
+      links: [
+        { name: "Join Alumni", href: "/alumni/register", isExternal: false },
+        { name: "Learn More", href: "/welcome-to-alumni", isExternal: false },
+      ],
+    },
+    userAction: {
+      active: isTodayInRange("10-01", "12-31"),
+      component: null,
+    },
+  },
 ];
 
 export const getActiveStrap = () => {

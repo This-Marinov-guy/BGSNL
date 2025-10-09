@@ -58,7 +58,9 @@ const JoinTheSociety = () => {
                     Become a Member
                   </h3>
                   <p>
-                    Join the society during your academic years, meet new people, explore internship options and get the chance to enter a society's committee or a board.
+                    Join the society during your academic years, meet new
+                    people, explore internship options and get the chance to
+                    enter a society's committee or a board.
                   </p>
                   {/* <div className="feature-list mt--30">
                     <ul className="list-style--1">
@@ -82,7 +84,10 @@ const JoinTheSociety = () => {
 
             {/* Alumni Card */}
             <div className="col-lg-5 col-md-6 col-sm-6 col-12">
-              <div className="service service__style--2 bg-color-blackest radius text-center" style={{ position: "relative" }}>
+              <div
+                className="service service__style--2 bg-color-blackest radius text-center"
+                style={{ position: "relative" }}
+              >
                 {/* Learn More Button */}
                 <Link
                   to="/welcome-to-alumni"
@@ -111,7 +116,7 @@ const JoinTheSociety = () => {
                 >
                   Learn More
                 </Link>
-                
+
                 <div className="icon">
                   <img
                     src="/assets/images/alumni/alumni.jpeg"
@@ -133,7 +138,9 @@ const JoinTheSociety = () => {
                     Become an Alumni
                   </h3>
                   <p>
-                    Perfect for our graduates who want to be part of the society. This program enables you to networking opportunities and alumni events.
+                    Perfect for our graduates who want to be part of the
+                    society. This program enables you to networking
+                    opportunities and alumni events.
                   </p>
                   {/* <div className="feature-list mt--30">
                     <ul className="list-style--1">
@@ -145,16 +152,12 @@ const JoinTheSociety = () => {
                   </div> */}
                 </div>
                 <div className="service-button mt--30">
-                  <AlumniRegistrationButton
-                    className="rn-button-style--2"
-                    style={{
-                      backgroundColor: "#e5b80b",
-                      borderColor: "#e5b80b",
-                      color: "white",
-                    }}
+                  <Link
+                    to="/alumni/register"
+                    className="rn-button-style--2 rn-btn-solid-gold"
                   >
                     Join as Alumni
-                  </AlumniRegistrationButton>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -185,7 +188,7 @@ const JoinTheSociety = () => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
     </>
