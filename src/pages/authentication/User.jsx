@@ -89,7 +89,7 @@ const User = () => {
   };
 
   const campaignUserActions = CAMPAIGNS.find(
-    (c) => c.userAction.active ?? false
+    (c) => c.userAction?.active ?? false
   );
 
   useEffect(() => {

@@ -137,11 +137,7 @@ Benefits:
         { name: "Join Alumni", href: "/alumni/register", isExternal: false },
         { name: "Learn More", href: "/welcome-to-alumni", isExternal: false },
       ],
-    },
-    userAction: {
-      active: isTodayInRange("10-01", "12-31"),
-      component: null,
-    },
+    }
   },
 ];
 
