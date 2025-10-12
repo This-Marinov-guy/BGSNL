@@ -8,16 +8,17 @@ export const userSlice = createSlice({
     token: null,
     status: '',
     isSubscribed: false,
+    isAlumni: false,
   },
   reducers: {
     login: {
       reducer(state, action) {
-        const { token, status, isSubscribed, image } = action.payload;
+        const { token, status, isSubscribed, isAlumni, image } = action.payload;
         state.image = image;
         state.token = token;
         state.status = status;
         state.isSubscribed = isSubscribed;
-        
+        state.isAlumni = isAlumni;
         // Set session expiration based on persistent session setting
         const sessionExpiry = PERSISTENT_SESSION 
           ? Date.now() + (365 * 24 * 60 * 60 * 1000) // 1 year for persistent sessions
@@ -45,6 +46,7 @@ export const userSlice = createSlice({
       state.token = null;
       state.status = '';
       state.isSubscribed = false;
+      state.isAlumni = false;
       localStorage.removeItem(LOCAL_STORAGE_USER_DATA);
       localStorage.removeItem(LOCAL_STORAGE_SESSION_LIFE);
     },

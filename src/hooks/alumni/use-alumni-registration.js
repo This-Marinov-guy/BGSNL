@@ -53,6 +53,7 @@ export const useAlumniRegistration = () => {
 
     // Check if user is already an alumni
     if (
+      user?.isAlumni ||
       user?.roles?.includes(ALUMNI) ||
      ( decodeJWT(user?.token)["userId"] ?? '').includes(ALUMNI)
     ) {
@@ -81,6 +82,6 @@ export const useAlumniRegistration = () => {
     setShowErrorModal: setGlobalShowErrorModal,
     handleAlumniRegistrationClick,
     isUserLoggedIn: !!user?.token,
-    isUserAlumni: user?.roles?.includes(ALUMNI),
+    isUserAlumni: user?.isAlumni || user?.roles?.includes(ALUMNI),
   };
 };
