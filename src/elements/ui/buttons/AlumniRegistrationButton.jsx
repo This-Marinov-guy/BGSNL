@@ -10,15 +10,15 @@ const AlumniRegistrationButton = ({
   asLink = true,
   onClick
 }) => {
-  const { setShowTypeModal } = useAlumniRegistration();
+  const { handleAlumniRegistrationClick } = useAlumniRegistration();
 
   const handleClick = (e) => {
     if (e) {
       e.preventDefault();
     }
     
-    // Always show the type modal when button is clicked
-    setShowTypeModal(true);
+    // Use the registration handler which checks if user is already alumni
+    handleAlumniRegistrationClick(e);
     
     if (onClick) onClick(e);
   };

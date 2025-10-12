@@ -22,7 +22,7 @@ const SettingsTab = ({ user }) => {
   const [isAlumniModalOpen, setIsAlumniModalOpen] = useState(false);
   const { handleAlumniRegistrationClick } = useAlumniRegistration();
 
-  const isAlumni = user?.roles?.includes(ALUMNI);
+  const isAlumni = user?.isAlumni || user?.roles?.includes(ALUMNI);
   const isFreeAlumni = isAlumni && user?.tier === 0;
 
   const handleLogout = () => {

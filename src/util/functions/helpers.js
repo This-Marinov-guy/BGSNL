@@ -375,7 +375,7 @@ export function isTodayInRange(start, end) {
 }
 
 export const isMember = (user) => {
-  return !!user?.token && !user?.roles?.includes(ALUMNI);
+  return !!user?.token && !user?.isAlumni && !user?.roles?.includes(ALUMNI);
 };
 
 export function modifyHeading(text) {

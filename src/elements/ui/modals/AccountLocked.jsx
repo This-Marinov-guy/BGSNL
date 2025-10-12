@@ -20,10 +20,10 @@ const AccountLocked = () => {
   const navigate = useNavigate();
 
   const user = useSelector(selectUser);
-  const { isSubscribed, status, region, roles } = user;
+  const { isSubscribed, status, region, roles, isAlumni: isAlumniUser } = user;
   
   // Check if user is already an alumni
-  const isAlumni = roles?.includes(ALUMNI) || 
+  const isAlumni = isAlumniUser || roles?.includes(ALUMNI) || 
     (user?.token && (decodeJWT(user.token)["userId"] ?? '').includes(ALUMNI));
 
   const handleManageSubscription = async () => {

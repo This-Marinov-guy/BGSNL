@@ -37,7 +37,7 @@ const Strap = (props) => {
   }
 
   return (
-    <div className="nav-strap" style={{ zIndex: '99999', backgroundColor: strap?.color }}>
+    <div className="nav-strap" style={{ backgroundColor: strap?.color }}>
       {strap.title} {dynamicButton}
     </div>
   );
