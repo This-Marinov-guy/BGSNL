@@ -312,7 +312,7 @@ const MemberPurchase = () => {
               >
                 <div className="col-12">
                   <div className="event_details">
-                    <div className="row g-4 align-items-center mb--40">
+                    <div className="row g-4 align-items-center mt--30 mb--40">
                       {/* Event Poster */}
                       <div className="col-12 col-md-4 col-lg-3">
                         <div className="d-flex justify-content-center">

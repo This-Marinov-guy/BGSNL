@@ -178,7 +178,7 @@ const GuestPurchase = () => {
             padding: "clamp(10px, 4vw, 40px)",
           }}
         >
-          <div className="col-12 mb--40">
+          <div className="col-12 mt--30 mb--40">
             <div className="row g-4 align-items-center">
               {/* Event Poster */}
               <div className="col-12 col-md-4 col-lg-3">
