@@ -19,7 +19,16 @@ const Strap = (props) => {
           localStorage.removeItem("BGSNL_hide_" + strap.modal);
           dispatch(changeLocalStorageIndex());
         }}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            localStorage.removeItem("BGSNL_hide_" + strap.modal);
+            dispatch(changeLocalStorageIndex());
+          }
+        }}
+        role="button"
+        tabIndex={0}
         className="ml-2 underline"
+        aria-label="Visit the page"
       >
         Visit
       </a>
@@ -29,6 +38,7 @@ const Strap = (props) => {
       <a
         href={process.env.REACT_APP_PUBLIC_URL + strap?.link?.href}
         target="_blank"
+        rel="noopener noreferrer"
         className="ml-2 underline"
       >
         {strap?.link?.name ?? "Visit"}

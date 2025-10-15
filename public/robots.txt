@@ -3,7 +3,13 @@ Disallow: /user/
 Disallow: /login
 Disallow: /signup
 Disallow: /alumni/register
-Disallow: */purchase-ticket/
+Disallow: /amsterdam/purchase-ticket/
+Disallow: /breda/purchase-ticket/
+Disallow: /eindhoven/purchase-ticket/
+Disallow: /groningen/purchase-ticket/
+Disallow: /leiden_hague/purchase-ticket/
+Disallow: /leeuwarden/purchase-ticket/
+Disallow: /maastricht/purchase-ticket/
+Disallow: /rotterdam/purchase-ticket/
 
-# Sitemap
 Sitemap: https://www.bulgariansociety.nl/sitemap.xml

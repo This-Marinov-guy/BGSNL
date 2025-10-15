@@ -9,6 +9,7 @@ import {
   REGION_SOCIALS,
   KVK,
 } from "../../util/defines/REGIONS_DESIGN";
+import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
 import { showModal } from "../../redux/modal";
 import { DONATION_MODAL } from "../../util/defines/common";
 import { useDispatch } from "react-redux";
@@ -87,7 +88,7 @@ const FooterTwo = ({ forceRegion }) => {
                           <Link to={`/${region}/contact`}>Contact</Link>
                         </li>
                         <li>
-                          <Link to="/terms-and-legals" target="_blank">
+                          <Link to="/terms-and-legals" target="_blank" rel="noopener noreferrer">
                             Terms and policy
                           </Link>
                         </li>
@@ -111,7 +112,14 @@ const FooterTwo = ({ forceRegion }) => {
                         <ul className="social-share social-style--2 d-flex justify-content-start liststyle mt--15">
                           {REGION_SOCIALS[`netherlands`].map((val, i) => (
                             <li key={i}>
-                              <a href={`${val.link}`}>{val.Social}</a>
+                              <a 
+                                href={`${val.link}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={getSocialAriaLabel(val.link, 'Netherlands')}
+                              >
+                                {val.Social}
+                              </a>
                             </li>
                           ))}
                         </ul>

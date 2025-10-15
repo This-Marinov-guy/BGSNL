@@ -12,6 +12,7 @@ import { FiMail } from "react-icons/fi";
 import { FaLink } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { REGION_SOCIALS, REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
+import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
 
 
 const Contact = () => {
@@ -68,7 +69,14 @@ const Contact = () => {
                     {REGION_SOCIALS[region ?? "netherlands"] ? (
                       REGION_SOCIALS[region ?? "netherlands"].filter(val => !val.special).map((val, i) => (
                         <div key={i}>
-                          <a href={`${val.link}`}>{val.Social}</a>
+                          <a 
+                            href={`${val.link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={getSocialAriaLabel(val.link, region)}
+                          >
+                            {val.Social}
+                          </a>
                         </div>
                       ))
                     ) : (
