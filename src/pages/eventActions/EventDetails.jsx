@@ -21,6 +21,7 @@ import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import CampaignBanner from "../../elements/banners/CampaignBanner";
+import EventStructuredData from "../../component/common/EventStructuredData";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -62,9 +63,21 @@ const EventDetails = () => {
       ? selectedEvent.bgImageExtra
       : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
 
+  const eventTitle = selectedEvent.newTitle || selectedEvent.title;
+  const eventDescription = selectedEvent.description || selectedEvent.text?.substring(0, 160);
+  const eventUrl = `https://www.bulgariansociety.nl/${region}/event-details/${eventId}`;
+
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Event Details" />
+      <PageHelmet 
+        pageTitle={eventTitle}
+        description={eventDescription}
+        image={selectedEvent.bgImageExtra || `https://www.bulgariansociety.nl${imageUrl}`}
+        type="event"
+        canonicalUrl={eventUrl}
+        keywords={`${eventTitle}, Bulgarian event, ${region}, BGSNL event, Bulgarian Society`}
+      />
+      <EventStructuredData event={selectedEvent} region={region} />
 
       <Header
         headertransparent="header--transparent"
@@ -184,7 +197,8 @@ const EventDetails = () => {
                                     : {}
                                 }
                                 href={selectedEvent.ticketLink}
-                                selectedEvent="_blank"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="rn-button-style--2 rn-btn-reverse-green mt--80"
                               >
                                 {eventClosed ? "Sold out" : "Buy Ticket"}

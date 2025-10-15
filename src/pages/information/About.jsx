@@ -12,7 +12,12 @@ import FooterTwo from "../../component/footer/FooterTwo";
 const About = React.memo(() => {
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="About" />
+      <PageHelmet 
+        pageTitle="About Us" 
+        description="Learn about Bulgarian Society Netherlands (BGSNL) - a vibrant network supporting and empowering Bulgarians to succeed academically, professionally, and personally in the Netherlands."
+        keywords="about BGSNL, Bulgarian Society, who we are, our mission, Bulgarian students, Netherlands"
+        canonicalUrl="https://www.bulgariansociety.nl/about"
+      />
       <Header
         headertransparent="header--transparent"
         colorblack="color--black"

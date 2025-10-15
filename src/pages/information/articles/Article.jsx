@@ -15,6 +15,7 @@ import PageLoading from "../../../elements/ui/loading/PageLoading";
 import ImageFb from "../../../elements/ui/media/ImageFb";
 import NoArticleFound from "../../../elements/ui/errors/NoArticleFound";
 import ChangeLanguageLinks from "../../../elements/ui/buttons/ChangeLanguageLinks";
+import ArticleStructuredData from "../../../component/common/ArticleStructuredData";
 
 const Article = () => {
   const { articleId } = useParams();
@@ -36,9 +37,21 @@ const Article = () => {
     return <NoArticleFound />;
   }
 
+  const articleDescription = selectedArticle.excerpt || selectedArticle.description || 
+    (selectedArticle.content ? selectedArticle.content.replace(/<[^>]*>/g, '').substring(0, 160) : '');
+  const articleUrl = `https://www.bulgariansociety.nl/articles/${articleId}/${selectedArticle.slug || ''}`;
+
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Articles" />
+      <PageHelmet 
+        pageTitle={selectedArticle.title}
+        description={articleDescription}
+        image={selectedArticle.featured_image || selectedArticle.image}
+        type="article"
+        canonicalUrl={articleUrl}
+        keywords={`${selectedArticle.title}, Bulgarian article, BGSNL, Bulgarian Society`}
+      />
+      <ArticleStructuredData article={selectedArticle} />
       <Header
         headertransparent="header--transparent"
         colorblack="color--black"

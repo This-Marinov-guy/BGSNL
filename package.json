@@ -72,7 +72,9 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config config/webpack.dev.js --open",
-    "build": "npm version patch && webpack --config config/webpack.prod.js",
+    "build": "npm version patch && npm run generate-sitemap && webpack --config config/webpack.prod.js",
+    "build:no-version": "npm run generate-sitemap && webpack --config config/webpack.prod.js",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
     "lint": "eslint ."
   },
   "eslintConfig": {

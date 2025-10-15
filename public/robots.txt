@@ -1,2 +1,9 @@
 User-agent: *
 Disallow: /user/
+Disallow: /login
+Disallow: /signup
+Disallow: /alumni/register
+Disallow: */purchase-ticket/
+
+# Sitemap
+Sitemap: https://www.bulgariansociety.nl/sitemap.xml
