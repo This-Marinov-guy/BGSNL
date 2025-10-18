@@ -52,11 +52,7 @@ export const useAlumniRegistration = () => {
     }
 
     // Check if user is already an alumni
-    if (
-      user?.isAlumni ||
-      user?.roles?.includes(ALUMNI) ||
-     ( decodeJWT(user?.token)["userId"] ?? '').includes(ALUMNI)
-    ) {
+    if (user?.isAlumni && user?.tier > 0) {
       updateAllModals(false, true); // Show error modal
 
       return;
