@@ -110,7 +110,7 @@ Benefits:
       active: isTodayInRange("10-01", "12-31"),
       color: "#e5b80b",
       title: "Our BGSNL Alumni Network is now opened!",
-      link: { name: "Visit", href: "/welcome-to-alumni", isExternal: false },
+      // link: { name: "Visit", href: "/welcome-to-alumni", isExternal: false },
     },
     news: {
       active: isTodayInRange("10-01", "12-31"),

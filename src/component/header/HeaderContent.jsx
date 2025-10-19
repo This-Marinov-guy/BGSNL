@@ -130,7 +130,7 @@ const HeaderContent = (props) => {
                     <Link to={`/welcome-to-alumni`}>Alumni Program</Link>
                   </li>
                   <li>
-                    <Link to={`/hall-of-fame`}>Allumni Tree</Link>
+                    <Link to={`/hall-of-fame`}>Alumni Tree</Link>
                   </li>
                 </ul>
               </li>

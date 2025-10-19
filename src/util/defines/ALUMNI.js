@@ -20,7 +20,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "Allumni Tree entry",
+        text: "Alumni Tree entry",
         strike: false,
       },
       {
@@ -65,7 +65,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "Allumni Tree upper entry",
+        text: "Alumni Tree upper entry",
         strike: false,
       },
       {
@@ -110,7 +110,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "Allumni Tree top entry + personal quote",
+        text: "Alumni Tree top entry + personal quote",
         strike: false,
       },
       {
@@ -160,7 +160,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: false,
       },
       {
-        text: "Allumni Tree top entry + personal quote",
+        text: "Alumni Tree top entry + personal quote",
         strike: false,
       },
       {
