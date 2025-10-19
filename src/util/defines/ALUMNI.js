@@ -97,8 +97,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
       />
     ),
     price: 5,
-    itemId: "price_1Rx1XYAShinXgMFZSTH9nEvo",
-    renewItemId: "price_1Rx1XYAShinXgMFZSTH9nEvo",
+    itemId: "price_1SGEBBAShinXgMFZuC6fiOqf",
+    renewItemId: "price_1SGEBBAShinXgMFZuC6fiOqf",
     period: 1,
   },
   {
@@ -147,8 +147,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
       />
     ),
     price: 7,
-    itemId: "price_1Rx1Y7AShinXgMFZzqTEzqHz",
-    renewItemId: "price_1Rx1Y7AShinXgMFZzqTEzqHz",
+    itemId: "price_1SGEFLAShinXgMFZcWsbLjeE",
+    renewItemId: "price_1SGEFLAShinXgMFZcWsbLjeE",
     period: 1,
   },
   {
@@ -198,8 +198,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
       />
     ),
     price: "10",
-    itemId: "price_1Rx1YOAShinXgMFZITzXRuam",
-    renewItemId: "price_1Rx1YOAShinXgMFZITzXRuam",
+    itemId: "price_1SGEFoAShinXgMFZZzo95PeT",
+    renewItemId: "price_1SGEFoAShinXgMFZZzo95PeT",
     period: 1,
   },
 ];
