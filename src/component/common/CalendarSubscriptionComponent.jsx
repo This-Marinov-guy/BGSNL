@@ -1,17 +1,28 @@
 import React from "react";
 import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
 import "../../../public/assets/scss/elements/_calendarSubscriptionComponent.scss";
-import { googleCalendarIframeSrc, googleCalendarPublicLink, icsLink, outlookWebLink } from "../../util/configs/google";
+import {
+  googleCalendarIframeSrc,
+  googleCalendarPublicLink,
+  icsLink,
+  outlookWebLink,
+} from "../../util/configs/google";
+import ImageFb from "../../elements/ui/media/ImageFb";
 
 const CalendarSubscriptionComponent = () => {
-  
-
   return (
     <div className="calendar-subscription__area">
       <div className="rn-slick-dot">
         <div className="calendar-subscription__container">
           <h2 className="calendar-subscription__header">
-            📅 Subscribe to Our Calendar
+            <ImageFb
+              className="calendar-subscription__header-icon"
+              style={{ width: 52, height: 52 }}
+              src={"/assets/images/svg/3d/calendar-3d.png"}
+              fallback={"/assets/images/svg/3d/calendar-3d.png"}
+              alt="Calendar"
+            />{" "}
+            Subscribe to Our Calendar
           </h2>
           <p className="calendar-subscription__description">
             Stay connected and never miss an event! Subscribe to our calendar on
