@@ -3,7 +3,9 @@ import PageHelmet from "../../component/common/Helmet";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import ScrollToTop from "react-scroll-up";
 import { Tooltip } from "primereact/tooltip";
-import { FiCalendar, FiChevronUp } from "react-icons/fi";
+import { FiChevronUp } from "react-icons/fi";
+import Lottie from "react-lottie-player";
+import calendarMotion from "../../../public/assets/images/svg/motion/calendar-motion.json";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";
@@ -60,11 +62,15 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                 <div className="d-flex align-items-center justify-content-between">
                   <h3 className="title">Future Events</h3>
                   <Tooltip target=".google_calendar" />
-                  <FiCalendar
-                    className="pointer swing google_calendar"
+                  <Lottie
+                    className="pointer google_calendar"
                     onClick={() => dispatch(showModal(GOOGLE_CALENDAR_MODAL))}
                     data-pr-tooltip="Click to see our Cloud Calendar"
                     data-pr-position="top"
+                    animationData={calendarMotion}
+                    play
+                    loop
+                    style={{ width: 50, height: 50 }}
                   />
                 </div>
                 <p className="mt--10">
