@@ -1,0 +1,108 @@
+// Sticky Button Footer Styles
+
+.button-container-original {
+  // This is just a wrapper for the ref, no special styling needed
+}
+
+.sticky-button-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  z-index: 999;
+  animation: slideUp 0.3s ease-out;
+  display: none; // Hidden by default
+
+  @media (max-width: 768px) {
+    display: block; // Only show on mobile
+  }
+
+  &-content {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    // Override button styles for sticky footer
+    .d-flex {
+      flex-direction: column !important;
+      gap: 0.75rem !important;
+      margin: 0 !important;
+      
+      button,
+      a {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+
+    // Handle purchase-btn wrapper
+    .purchase-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin: 0 !important;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      button,
+      a {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+    }
+
+    // Handle direct button children
+    > button,
+    > a {
+      width: 100%;
+      margin: 0;
+    }
+
+    // Hide information text in sticky footer
+    .information,
+    p.information {
+      display: none;
+    }
+
+    // Handle loader container
+    .hor_section_nospace,
+    .center_div {
+      justify-content: center;
+    }
+
+    // Hide countdown in sticky footer
+    [class*="countdown"] {
+      display: none;
+    }
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Add padding to body when sticky footer is visible to prevent content overlap
+body.sticky-footer-visible {
+  @media (max-width: 768px) {
+    padding-bottom: 120px;
+  }
+}
+

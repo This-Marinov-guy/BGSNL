@@ -90,6 +90,9 @@
     .purchase-btn {
       margin-top: 2rem;
       text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 1rem !important;
       
       @media (max-width: 768px) {
         margin-top: 1.5rem;

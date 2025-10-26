@@ -43,6 +43,7 @@ import {
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import CardInputs from "../../elements/inputs/common/CardInputs";
+import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 
 const MemberPurchase = () => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -459,37 +460,39 @@ const MemberPurchase = () => {
                     />
                   )}
 
-                  <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30">
-                    <button
-                      disabled={isLoading}
-                      type="submit"
-                      className="rn-button-style--2 rn-btn-reverse-green"
-                      style={{
-                        width: "100%",
-                        maxWidth: "300px",
-                        minWidth: "clamp(150px, 40vw, 200px)",
-                        padding:
-                          "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                      }}
-                    >
-                      {isLoading ? <Loader /> : <span>Proceed to Payment</span>}
-                    </button>
+                  <StickyButtonFooter>
+                    <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30">
+                      <button
+                        disabled={isLoading}
+                        type="submit"
+                        className="rn-button-style--2 rn-btn-reverse-green"
+                        style={{
+                          width: "100%",
+                          maxWidth: "300px",
+                          minWidth: "clamp(150px, 40vw, 200px)",
+                          padding:
+                            "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+                        }}
+                      >
+                        {isLoading ? <Loader /> : <span>Proceed to Payment</span>}
+                      </button>
 
-                    <button
-                      type="button"
-                      onClick={() => navigate(-1)}
-                      className="rn-button-style--2 rn-btn-reverse-red"
-                      style={{
-                        width: "100%",
-                        maxWidth: "300px",
-                        minWidth: "clamp(150px, 40vw, 200px)",
-                        padding:
-                          "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                      }}
-                    >
-                      <span>Back</span>
-                    </button>
-                  </div>
+                      <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="rn-button-style--2 rn-btn-reverse-red"
+                        style={{
+                          width: "100%",
+                          maxWidth: "300px",
+                          minWidth: "clamp(150px, 40vw, 200px)",
+                          padding:
+                            "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+                        }}
+                      >
+                        <span>Back</span>
+                      </button>
+                    </div>
+                  </StickyButtonFooter>
                 </div>
 
                 <div className="col-12 mt--40">

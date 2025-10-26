@@ -41,6 +41,7 @@ import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import CardInputs from "../../elements/inputs/common/CardInputs";
 import { selectUser } from "../../redux/user";
+import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 
 const defaultSchema = yup.object().shape({
   name: yup.string().required(),
@@ -62,7 +63,12 @@ const GuestPurchase = () => {
   const [normalTicket, setNormalTicket] = useState(false);
   const [schema, setSchema] = useState(null);
   const [schemaFields, setSchemaFields] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    phone: "",
+  });
 
   const { region, eventId } = useParams();
 
@@ -429,10 +435,10 @@ const GuestPurchase = () => {
                   }
                 }}
                 initialValues={{
-                  name: currentUser?.name ?? "",
-                  surname: currentUser?.surname ?? "",
-                  email: currentUser?.email ?? "",
-                  phone: currentUser?.phone ?? "",
+                  name: currentUser?.name,
+                  surname: currentUser?.surname,
+                  email: currentUser?.email,
+                  phone: currentUser?.phone,
                   policyTerms: false,
                   payTerms: false,
                   ...constructInitialExtraFormValues(
@@ -632,42 +638,44 @@ const GuestPurchase = () => {
                         />
                       )}
 
-                      <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30 mb--50">
-                        <button
-                          onClick={() => handleErrorMsg(errors)}
-                          disabled={isLoading}
-                          type="submit"
-                          className="rn-button-style--2 rn-btn-reverse-green"
-                          style={{
-                            width: "100%",
-                            maxWidth: "300px",
-                            minWidth: "clamp(150px, 40vw, 200px)",
-                            padding:
-                              "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                          }}
-                        >
-                          {isLoading ? (
-                            <Loader />
-                          ) : (
-                            <span>Proceed to Payment</span>
-                          )}
-                        </button>
+                      <StickyButtonFooter>
+                        <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30 mb--50">
+                          <button
+                            onClick={() => handleErrorMsg(errors)}
+                            disabled={isLoading}
+                            type="submit"
+                            className="rn-button-style--2 rn-btn-reverse-green"
+                            style={{
+                              width: "100%",
+                              maxWidth: "300px",
+                              minWidth: "clamp(150px, 40vw, 200px)",
+                              padding:
+                                "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+                            }}
+                          >
+                            {isLoading ? (
+                              <Loader />
+                            ) : (
+                              <span>Proceed to Payment</span>
+                            )}
+                          </button>
 
-                        <button
-                          type="button"
-                          onClick={() => navigate(-1)}
-                          className="rn-button-style--2 rn-btn-reverse-red"
-                          style={{
-                            width: "100%",
-                            maxWidth: "300px",
-                            minWidth: "clamp(150px, 40vw, 200px)",
-                            padding:
-                              "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                          }}
-                        >
-                          <span>Back</span>
-                        </button>
-                      </div>
+                          <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                            className="rn-button-style--2 rn-btn-reverse-red"
+                            style={{
+                              width: "100%",
+                              maxWidth: "300px",
+                              minWidth: "clamp(150px, 40vw, 200px)",
+                              padding:
+                                "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
+                            }}
+                          >
+                            <span>Back</span>
+                          </button>
+                        </div>
+                      </StickyButtonFooter>
                     </div>
                   </Form>
                 )}

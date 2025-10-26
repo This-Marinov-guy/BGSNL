@@ -10,20 +10,15 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import Countdown from "../../elements/ui/functional/Countdown";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
-import { Link, useParams } from "react-router-dom";
-import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
-import { useNavigate } from "react-router-dom";
-import GalaMembers from "../information/GalaMembers";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent, isMember } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
-import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
-import CampaignBanner from "../../elements/banners/CampaignBanner";
 import EventStructuredData from "../../component/common/EventStructuredData";
-import EventImageCarousel from "../../elements/ui/EventImageCarousel";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -32,6 +27,7 @@ const EventDetails = () => {
   const user = useSelector(selectUser);
 
   const { region, eventId } = useParams();
+  const navigate = useNavigate();
 
   const { loading, sendRequest } = useHttpClient();
 
@@ -66,7 +62,8 @@ const EventDetails = () => {
       : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
 
   const eventTitle = selectedEvent.newTitle || selectedEvent.title;
-  const eventDescription = selectedEvent.description || selectedEvent.text?.substring(0, 160);
+  const eventDescription =
+    selectedEvent.description || selectedEvent.text?.substring(0, 160);
   const eventUrl = `https://www.bulgariansociety.nl/${region}/event-details/${eventId}`;
 
   return (
@@ -198,11 +195,44 @@ const EventDetails = () => {
                         <Loader />
                       </div>
                     ) : (
-                      <div className="purchase-btn">
-                        {selectedEvent.ticketLink ? (
-                          <div>
-                            <WithBackBtn>
-                              <a
+                      <StickyButtonFooter>
+                        <div className="purchase-btn">
+                          {selectedEvent.ticketLink ? (
+                            <div>
+                              <div className="purchase-btn" style={{justifyContent: "center"}}>
+                                <a
+                                  style={
+                                    eventClosed
+                                      ? {
+                                          pointerEvents: "none",
+                                          backgroundColor: "#ccc",
+                                          borderColor: "white",
+                                        }
+                                      : {}
+                                  }
+                                  href={selectedEvent.ticketLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="rn-button-style--2 rn-btn-reverse-green"
+                                >
+                                  {eventClosed ? "Sold out" : "Buy Ticket"}
+                                </a>
+                                <button
+                                  type="button"
+                                  onClick={() => navigate(-1)}
+                                  className="rn-button-style--2 rn-btn-reverse-red"
+                                >
+                                  <span>Back</span>
+                                </button>
+                              </div>
+                              <p className="information mt--20">
+                                *Tickets are purchased from an outside platform!
+                                Click the button to be redirected
+                              </p>
+                            </div>
+                          ) : (
+                            <>
+                              <Link
                                 style={
                                   eventClosed
                                     ? {
@@ -212,46 +242,29 @@ const EventDetails = () => {
                                       }
                                     : {}
                                 }
-                                href={selectedEvent.ticketLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="rn-button-style--2 rn-btn-reverse-green mt--80"
+                                to={`/${region}/purchase-ticket/${eventId}`}
+                                className="rn-button-style--2 rn-btn-reverse-green"
                               >
                                 {eventClosed ? "Sold out" : "Buy Ticket"}
-                              </a>
-                            </WithBackBtn>
-                            <p className="information mt--20">
-                              *Tickets are purchased from an outside platform!
-                              Click the button to be redirected
-                            </p>
-                          </div>
-                        ) : (
-                          <WithBackBtn>
-                            <Link
-                              style={
-                                eventClosed
-                                  ? {
-                                      pointerEvents: "none",
-                                      backgroundColor: "#ccc",
-                                      borderColor: "white",
-                                    }
-                                  : {}
-                              }
-                              to={`/${region}/purchase-ticket/${eventId}`}
-                              className="rn-button-style--2 rn-btn-reverse-green"
-                            >
-                              {eventClosed ? "Sold out" : "Buy Ticket"}
-                            </Link>
-                          </WithBackBtn>
-                        )}
-                        {selectedEvent.ticketTimer && (
-                          <Countdown
-                            targetTime={selectedEvent.ticketTimer}
-                            eventClosed={eventClosed}
-                            setEventClosed={setEventClosed}
-                          />
-                        )}
-                      </div>
+                              </Link>
+                              <button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                                className="rn-button-style--2 rn-btn-reverse-red"
+                              >
+                                <span>Back</span>
+                              </button>
+                            </>
+                          )}
+                          {selectedEvent.ticketTimer && (
+                            <Countdown
+                              targetTime={selectedEvent.ticketTimer}
+                              eventClosed={eventClosed}
+                              setEventClosed={setEventClosed}
+                            />
+                          )}
+                        </div>
+                      </StickyButtonFooter>
                     ))}
                 </div>
               </div>
