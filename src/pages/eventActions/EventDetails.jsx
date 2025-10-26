@@ -199,7 +199,10 @@ const EventDetails = () => {
                         <div className="purchase-btn">
                           {selectedEvent.ticketLink ? (
                             <div>
-                              <div className="purchase-btn" style={{justifyContent: "center"}}>
+                              <div
+                                className="purchase-btn"
+                                style={{ justifyContent: "center" }}
+                              >
                                 <a
                                   style={
                                     eventClosed
@@ -232,21 +235,14 @@ const EventDetails = () => {
                             </div>
                           ) : (
                             <>
-                              <Link
-                                style={
-                                  eventClosed
-                                    ? {
-                                        pointerEvents: "none",
-                                        backgroundColor: "#ccc",
-                                        borderColor: "white",
-                                      }
-                                    : {}
-                                }
-                                to={`/${region}/purchase-ticket/${eventId}`}
-                                className="rn-button-style--2 rn-btn-reverse-green"
-                              >
-                                {eventClosed ? "Sold out" : "Buy Ticket"}
-                              </Link>
+                              {!eventClosed && (
+                                <Link
+                                  to={`/${region}/purchase-ticket/${eventId}`}
+                                  className="rn-button-style--2 rn-btn-reverse-green"
+                                >
+                                  Buy Ticket
+                                </Link>
+                              )}
                               <button
                                 type="button"
                                 onClick={() => navigate(-1)}

@@ -20,6 +20,10 @@
     display: block; // Only show on mobile
   }
 
+  .purchase-btn {
+    display: flex;
+  }
+
   &-content {
     max-width: 600px;
     margin: 0 auto;
@@ -32,7 +36,7 @@
       flex-direction: column !important;
       gap: 0.75rem !important;
       margin: 0 !important;
-      
+
       button,
       a {
         width: 100% !important;
@@ -43,7 +47,6 @@
 
     // Handle purchase-btn wrapper
     .purchase-btn {
-      display: flex;
       flex-direction: column;
       gap: 0.75rem;
       margin: 0 !important;
@@ -105,4 +108,3 @@ body.sticky-footer-visible {
     padding-bottom: 120px;
   }
 }
-
