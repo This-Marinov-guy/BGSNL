@@ -306,10 +306,7 @@ const MemberPurchase = () => {
             }}
           >
             {({ values, setFieldValue }) => (
-              <Form
-                id="form"
-                encType="multipart/form-data"
-              >
+              <Form id="form" encType="multipart/form-data">
                 <div className="col-12">
                   <div className="event_details">
                     <div className="row g-4 align-items-center mt--30 mb--40">
@@ -509,9 +506,18 @@ const MemberPurchase = () => {
                       className="mb--20"
                       style={{ fontSize: "0.875rem", lineHeight: "1.6" }}
                     >
-                      ℹ️ The information for purchasing this ticket will be
-                      taken from your account. Be sure it is accurate as it can
-                      be used as a proof of your identity on the entry!
+                      <ImageFb
+                        className="calendar-subscription__header-icon"
+                        style={{ width: 42, height: 42 }}
+                        src={"/assets/images/svg/3d/information-3d.png"}
+                        fallback={
+                          "/assets/images/svg/information/calendar-3d.png"
+                        }
+                        alt="Calendar"
+                      />{" "}
+                      The information for purchasing this ticket will be taken
+                      from your account. Be sure it is accurate as it can be
+                      used as a proof of your identity on the entry!
                     </p>
                     <p
                       className="mb--0"
@@ -519,7 +525,7 @@ const MemberPurchase = () => {
                         fontSize: "0.875rem",
                         lineHeight: "1.6",
                         color: "#666",
-                    }}
+                      }}
                     >
                       *Special discounted price for board and committee members
                       may apply
