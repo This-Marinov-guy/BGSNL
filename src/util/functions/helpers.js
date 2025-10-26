@@ -381,3 +381,7 @@ export const isMember = (user) => {
 export function modifyHeading(text) {
   return text.replace(/_/g, " ");
 }
+
+export const cn = (...classes) => {
+  return classes.filter(Boolean).join(" ");
+};

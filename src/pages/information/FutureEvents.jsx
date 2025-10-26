@@ -19,7 +19,7 @@ import {
   checkObjectOfArraysEmpty,
   hasNonEmptyValues,
 } from "../../util/functions/helpers";
-import PortfolioList2 from "../../elements/portfolio/PortfolioList2";
+import FocusCards from "../../elements/ui/FocusCards";
 import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
 import { showModal } from "../../redux/modal";
 import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
@@ -84,47 +84,45 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
               eventsLoading ? (
                 <EventsLoading />
               ) : (
-                REGIONS.map((region, index) => {
-                  // Skip regions that have no events
-                  if (!events[region] || !events[region].length) {
-                    return null;
-                  };
+                <div className="col-lg-12">
+                  <div className="row">
+                    {REGIONS.map((regionName, index) => {
+                      // Skip regions that have no events
+                      if (!events[regionName] || !events[regionName].length) {
+                        return null;
+                      }
 
-                  return (
-                    <div
-                      className="col-lg-4 col-md-6 col-12 mt--20"
-                      key={index}
-                    >
-                      <h4 className="col-12 archive">{region.toUpperCase()}</h4>
-                      <PortfolioList2
-                        style="society"
-                        target={events[region]}
-                        styevariation="text-center"
-                        column="col-12"
-                      />
-                    </div>
-                  );
-                })
+                      return (
+                        <div
+                          className="col-lg-6 col-md-6 col-sm-12 mt--40"
+                          key={index}
+                        >
+                          <h4 className="archive mb--30">{regionName.toUpperCase()}</h4>
+                          <FocusCards
+                            cards={events[regionName]}
+                            region={regionName}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               )
             ) : (
               <div className="col-lg-12">
-                <div className="row slick-space-gutter--15 slickdot--20">
-                  {eventsLoading ? (
-                    <EventsLoading />
-                  ) : events && events.length > 0 ? (
-                    <PortfolioList2
-                      style="society"
-                      target={events}
-                      styevariation="text-center"
-                      column="col-lg-4 col-md-5 col-sm-6"
-                    />
-                  ) : (
-                    <p className="col-lg-6 mt--20 mb--20">
-                      Currently there are no upcoming other events. Follow us
-                      for updates!
-                    </p>
-                  )}
-                </div>
+                {eventsLoading ? (
+                  <EventsLoading />
+                ) : events && events.length > 0 ? (
+                  <FocusCards
+                    cards={events}
+                    region={region}
+                  />
+                ) : (
+                  <p className="col-lg-6 mt--20 mb--20">
+                    Currently there are no upcoming other events. Follow us
+                    for updates!
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -149,22 +147,17 @@ const FutureOtherEventsContent = () => {
           </div>
           <div className="row mb--40">
             <div className="col-lg-12">
-              <div className="slick-space-gutter--15 slickdot--20">
-                {OTHER_EVENTS && OTHER_EVENTS.length > 0 ? (
-                  <PortfolioList2
-                    style="other"
-                    target={OTHER_EVENTS}
-                    styevariation="text-center"
-                    column="col-lg-4 col-md-6 col-sm-6 col-12"
-                    special
-                  />
-                ) : (
-                  <p className="col-lg-6 mt--20 mb--20">
-                    Currently there are no upcoming other events. Follow us for
-                    updates!
-                  </p>
-                )}
-              </div>
+              {OTHER_EVENTS && OTHER_EVENTS.length > 0 ? (
+                <FocusCards
+                  cards={OTHER_EVENTS}
+                  region="other"
+                />
+              ) : (
+                <p className="col-lg-6 mt--20 mb--20">
+                  Currently there are no upcoming other events. Follow us for
+                  updates!
+                </p>
+              )}
             </div>
           </div>
         </div>

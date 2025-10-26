@@ -12,6 +12,7 @@ import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { Link, useParams } from "react-router-dom";
 import WithBackBtn from "../../elements/ui/functional/WithBackBtn";
+import { useNavigate } from "react-router-dom";
 import GalaMembers from "../information/GalaMembers";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent, isMember } from "../../util/functions/helpers";
@@ -22,6 +23,7 @@ import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import CampaignBanner from "../../elements/banners/CampaignBanner";
 import EventStructuredData from "../../component/common/EventStructuredData";
+import EventImageCarousel from "../../elements/ui/EventImageCarousel";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -69,10 +71,13 @@ const EventDetails = () => {
 
   return (
     <React.Fragment>
-      <PageHelmet 
+      <PageHelmet
         pageTitle={eventTitle}
         description={eventDescription}
-        image={selectedEvent.bgImageExtra || `https://www.bulgariansociety.nl${imageUrl}`}
+        image={
+          selectedEvent.bgImageExtra ||
+          `https://www.bulgariansociety.nl${imageUrl}`
+        }
         type="event"
         canonicalUrl={eventUrl}
         keywords={`${eventTitle}, Bulgarian event, ${region}, BGSNL event, Bulgarian Society`}
@@ -110,11 +115,21 @@ const EventDetails = () => {
       <div className="rn-portfolio-details ptb--120 bg_color--1">
         <div className="container">
           <div className="row">
-            <div className="col-lg-12">
+            <div className="col-lg-5 col-md-12 mb--40">
+              {/* Event Poster */}
+              <div className="event-poster-wrapper">
+                <ImageFb
+                  src={selectedEvent.poster}
+                  alt={eventTitle}
+                  className="event-poster-image"
+                />
+              </div>
+            </div>
+
+            <div className="col-lg-7 col-md-12">
               <div className="portfolio-details">
                 <div className="inner">
-                  <h2>About</h2>
-                  <p className="subtitle">{selectedEvent.title}</p>
+                  <h3>About</h3>
                   <p style={{ whiteSpace: "pre-line" }}>{selectedEvent.text}</p>
                   <div className="portfolio-view-list d-flex flex-wrap">
                     <div className="port-view">
@@ -159,9 +174,10 @@ const EventDetails = () => {
                             {selectedEvent.subEvent.description}
                           </h3>
                           <div className="row">
-                            {selectedEvent.subEvent.links.map((link) => {
+                            {selectedEvent.subEvent.links.map((link, idx) => {
                               return (
                                 <a
+                                  key={idx}
                                   className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
                                   href={link.href}
                                 >
@@ -238,40 +254,6 @@ const EventDetails = () => {
                       </div>
                     ))}
                 </div>
-                {/* Start Contact Map  */}
-                <div className="container">
-                  <div className="rn-contact-map-area position-relative">
-                    {/* <div style={{ height: "450px", width: "100%" }}>
-                      <GoogleMapReact
-                        defaultCenter={eventDetails[0].center}
-                        defaultZoom={eventDetails[0].zoom}
-                      >
-                        <AnyReactComponent
-                          lat={59.955413}
-                          lng={30.337844}
-                          text="My Marker"
-                        />
-                      </GoogleMapReact>
-                    </div> */}
-                  </div>
-                </div>
-                {/* End Contact Map  */}
-                <br />
-                <CampaignBanner campaignKey="membership_month_march" />
-                <SponsoredBySmall />
-                <div className="portfolio-thumb-inner row">
-                  {selectedEvent.images?.length > 0 &&
-                    selectedEvent.images.map((value, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="col-lg-6 col-md-12 col-12 thumb center_div mb--30"
-                        >
-                          <ImageFb src={`${value}`} alt="Portfolio Images" />
-                        </div>
-                      );
-                    })}
-                </div>
               </div>
             </div>
           </div>
@@ -282,7 +264,7 @@ const EventDetails = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

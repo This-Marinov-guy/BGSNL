@@ -519,7 +519,7 @@ const MemberPurchase = () => {
                         fontSize: "0.875rem",
                         lineHeight: "1.6",
                         color: "#666",
-                      }}
+                    }}
                     >
                       *Special discounted price for board and committee members
                       may apply
