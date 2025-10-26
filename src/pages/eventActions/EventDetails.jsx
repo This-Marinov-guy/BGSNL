@@ -196,7 +196,7 @@ const EventDetails = () => {
                       </div>
                     ) : (
                       <StickyButtonFooter>
-                        <div className="purchase-btn">
+                        <div className="purchase-btn gap-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                           {selectedEvent.ticketLink ? (
                             <div>
                               <div
