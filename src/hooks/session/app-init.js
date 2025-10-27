@@ -57,7 +57,8 @@ export const useAppInitialization = () => {
         "user/get-subscription-status",
         "GET",
         {},
-        { Authorization: `Bearer ${jwtToken}` }
+        { Authorization: `Bearer ${jwtToken}` },
+        false
       );
 
       if (!Object.prototype.hasOwnProperty.call(responseData, 'status') || !Object.prototype.hasOwnProperty.call(responseData, 'isSubscribed')) {
