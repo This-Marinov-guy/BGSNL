@@ -76,7 +76,24 @@ const Terms = () => {
           These Terms and Conditions are governed by Dutch law. Any disputes arising from the use of this website shall be subject to the exclusive jurisdiction of the courts in the Netherlands.
         </p>
 
-        <h3>8. Changes to the terms and conditions</h3>
+        <h3>8. Refund Policy</h3>
+        <p className="ml--20">
+          <strong>Event Ticket Refunds:</strong> Refunds for event tickets are possible only when requested at least 48 hours before the scheduled start time of the event. Refunds must be explicitly requested by the ticket holder.
+        </p>
+        
+        <p className="ml--20">
+          <strong>Exceptions to the 48-Hour Rule:</strong> In cases where the organizers make last-minute changes to the event (such as date, time, location, or cancellation), the 48-hour requirement does not apply, and refund requests will be considered on a case-by-case basis.
+        </p>
+        
+        <p className="ml--20">
+          <strong>No Automatic Refunds:</strong> Refunds are only executed upon explicit request. Failure to request a refund within the applicable timeframe will result in forfeiture of the ticket fee.
+        </p>
+        
+        <p className="ml--20">
+          <strong>Processing:</strong> Approved refunds will be processed using the same payment method used for the original purchase and may take 5-10 business days to reflect in your account.
+        </p>
+
+        <h3>9. Changes to the terms and conditions</h3>
         <p className="ml--20">
           These Terms and Conditions are regularly updated to reflect the current legal situation. By using this website, you agree to adhere to the terms and conditions. Any updates will be reflected on the website accordingly.
         </p>

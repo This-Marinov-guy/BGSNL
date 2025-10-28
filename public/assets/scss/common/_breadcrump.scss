@@ -2,15 +2,22 @@
     Breadcrump Area 
 ======================*/
 .watermark {
-  background-image: url(/public/assets/images/watermark.jpg);
-  background-size: contain;
+  background-image: url(/public/assets/images/watermark.png);
+  background-size: fit;
   background-repeat: repeat-y;
   background-position: center;
 }
 
+
 @media (min-width: 1200px){
     .container {
         max-width: 1260px;
+    }
+}
+
+@media #{$sm-layout} {
+    .watermark {
+        background-size: contain;
     }
 }
 
