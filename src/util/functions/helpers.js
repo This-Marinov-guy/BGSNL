@@ -123,8 +123,8 @@ export const estimatePriceByEvent = (
   }
 ) => {  
   const { product } = selectedEvent;
-  const isMember = !!user?.token;
-  const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
+  const isMember = !user?.isAlumni && !!user?.token;
+  const isActiveMember =  isMember && checkAuthorization(user.token, ACCESS_4);
   const isMemberDataFull = user?.name && user?.surname && user?.email;
 
   const includedText =
