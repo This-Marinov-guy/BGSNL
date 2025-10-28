@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import emailjs from "emailjs-com";
 import { useLocation, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
+import Loader from "../ui/loading/Loader";
 
 const Result = () => {
   return (
@@ -21,8 +22,12 @@ const FailResult = () => {
 function ContactForm(props) {
   const [result, showresult] = useState(null);
   const { region = "netherlands" } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const sendEmail = async (e) => {
+    setIsLoading(true);
+
     e.preventDefault();
     const serviceID = process.env.REACT_APP_SERVICE || "default_service";
     const templateID = process.env.REACT_APP_TEMPLATE || "default_template";
@@ -32,12 +37,14 @@ function ContactForm(props) {
       (result) => {
         console.log(result.text);
 
+        setIsSubmitted(true);
         e.target.reset();
         showresult("success");
       },
       (error) => {
         console.log(error.text);
 
+        setIsLoading(false);
         showresult("fail");
       }
     );
@@ -77,19 +84,27 @@ function ContactForm(props) {
       </div>
 
       {/* Hidden field for region */}
-      <input type="hidden" name="region" value={region} />
+      <input type="hidden" name="region" value={region ?? 'netherlands'} />
 
-      <div className="rn-form-group">
-        <button
-          className="rn-button-style--2 rn-btn-reverse-green"
-          type="submit"
-          value="submit"
-          name="submit"
-          id="mc-embedded-subscribe"
-        >
-          Submit Now
-        </button>
-      </div>
+      {!isLoading && !isSubmitted && (
+        <div className="rn-form-group">
+          <button
+            className="rn-button-style--2 rn-btn-reverse-green"
+            type="submit"
+            value="submit"
+            name="submit"
+            id="mc-embedded-subscribe"
+          >
+            Submit Now
+          </button>
+        </div>
+      )}
+
+      {isLoading && !isSubmitted && (
+        <div className="rn-form-group">
+          <Loader />
+        </div>
+      )}
 
       {result && (
         <div className="rn-form-group">
