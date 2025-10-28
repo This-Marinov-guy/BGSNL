@@ -194,7 +194,6 @@ const AccountLocked = () => {
               </a>
             </span>
           </p>
-          {renderAlumniButton()}
 
           <button
             onClick={() => navigate(-1)}
@@ -211,8 +210,8 @@ const AccountLocked = () => {
         <div className="d-flex justify-content-center align-items-center mb-3">
           <ImageFb
             src="/assets/images/svg/3d/card.png"
-            width={120}
-            height={120}
+            width={84}
+            height={84}
             alt="Lock"
           />
 
@@ -233,8 +232,8 @@ const AccountLocked = () => {
           </svg>
           <ImageFb
             src="/assets/images/svg/3d/pig-bank.png"
-            width={120}
-            height={120}
+            width={84}
+            height={84}
             alt="Lock"
           />
         </div>
@@ -286,7 +285,6 @@ const AccountLocked = () => {
               </a>
             </span>
           </p>
-          {renderAlumniButton()}
 
           <button
             onClick={() => navigate(-1)}
