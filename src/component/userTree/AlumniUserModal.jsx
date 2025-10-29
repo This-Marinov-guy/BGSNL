@@ -1,6 +1,7 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
 import PropTypes from "prop-types";
+import moment from "moment";
 
 const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
   if (!isOpen || !user) return null;
@@ -144,7 +145,7 @@ const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
               fontSize: "14px",
               margin: 0
             }}>
-              Member since {new Date(user.joinDate).toLocaleDateString()}
+              Member since {moment(user.joinDate).format("DD MMM YYYY")}
             </p>
           </div>
         )}
