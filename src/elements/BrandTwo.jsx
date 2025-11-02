@@ -66,7 +66,7 @@ class BrandTwo extends Component {
           </li>
 
           <li>
-            <a href="https://www.pwc.bg/" target="_blank">
+            <a href="https://bulgariawantsyou.com/en" target="_blank">
               <img
                 src="https://bulgariawantsyou.com/themes/custom/bwy/logo.svg"
                 style={{ scale: "2" }}
