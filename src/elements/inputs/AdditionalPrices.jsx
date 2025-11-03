@@ -17,6 +17,7 @@ const AdditionalPrices = ({
   }
 
   const prefix = toCamelCase(label);
+  
 
   return (
     <>
@@ -44,7 +45,7 @@ const AdditionalPrices = ({
                 />
                 <ErrorMessage
                   className="error"
-                  name={`${prefix}["at-least-one-limit"]`}
+                  name={`${prefix}.at-least-one-limit`}
                   component="div"
                 />
               </div>
@@ -62,6 +63,11 @@ const AdditionalPrices = ({
               captionLayout="dropdown"
               min={new Date()}
               initialValue={initialCalendarValue}
+              name={
+                timerType === END_TIMER
+                  ? `${prefix}["ticketTimer"]`
+                  : `${prefix}["startTimer"]`
+              }
               onSelect={(value) => {
                 setFieldValue(
                   timerType === END_TIMER
@@ -71,11 +77,23 @@ const AdditionalPrices = ({
                 );
               }}
             />
-            <ErrorMessage
-              className="error"
-              name={`${prefix}["at-least-one-limit"]`}
-              component="div"
-            />
+            {withLimit ? (
+              <ErrorMessage
+                className="error"
+                name={`${prefix}.at-least-one-limit`}
+                component="div"
+              />
+            ) : (
+              <ErrorMessage
+                className="error"
+                name={
+                  timerType === END_TIMER
+                    ? `${prefix}["ticketTimer"]`
+                    : `${prefix}["startTimer"]`
+                }
+                component="div"
+              />
+            )}
           </div>
         </div>
       </div>

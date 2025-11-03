@@ -206,54 +206,53 @@ const EventForm = (props) => {
         "at-least-one-limit",
         "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
         function (values) {
-          return (
-            !values.isEnabled ||
-            values.ticketLimit != null ||
-            values.ticketTimer != "" ||
-            values.startTimer != ""
-          );
+          if (!values.isEnabled) return true;
+          const hasValidLimit =
+            values.ticketLimit != null && values.ticketLimit > 0;
+          const hasValidTimer =
+            values.ticketTimer != null && values.ticketTimer !== "";
+          if (!hasValidLimit && !hasValidTimer) {
+            return this.createError({
+              message:
+                "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
+              path: "at-least-one-limit",
+            });
+          }
+          return true;
         }
       ),
 
-    lateBird: yup
-      .object()
-      .shape({
-        isEnabled: yup.boolean().required(),
-        price: yup.number().when("isEnabled", {
-          is: true,
-          then: () =>
-            yup
-              .number()
-              .required(
-                "Late Bird Price is required when Late Bird is enabled"
-              ),
-          otherwise: () => yup.number().nullable(),
-        }),
-        memberPrice: yup.number().when("isEnabled", {
-          is: true,
-          then: () =>
-            yup
-              .number()
-              .required(
-                "Late Bird Member Price is required when Late Bird is enabled"
-              ),
-          otherwise: () => yup.number().nullable(),
-        }),
-        ticketLimit: yup.number().nullable(),
-        ticketTimer: yup.string().nullable(),
-      })
-      .test(
-        "at-least-one-limit",
-        "Either Ticket Limit or Ticket Timer must be provided when Late Bird is enabled",
-        function (values) {
-          return (
-            !values.isEnabled ||
-            values.ticketLimit != null ||
-            values.ticketTimer != "" ||
-            values.startTimer != ""
-          );
-        }
-      ),
+    lateBird: yup.object().shape({
+      isEnabled: yup.boolean().required(),
+      price: yup.number().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .number()
+            .required("Late Bird Price is required when Late Bird is enabled"),
+        otherwise: () => yup.number().nullable(),
+      }),
+      memberPrice: yup.number().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .number()
+            .required(
+              "Late Bird Member Price is required when Late Bird is enabled"
+            ),
+        otherwise: () => yup.number().nullable(),
+      }),
+      startTimer: yup.string().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .string()
+            .required(
+              "Late Bird Start Timer is required when Late Bird is enabled"
+            ),
+        otherwise: () => yup.string().nullable(),
+      }),
+    }),
 
     guestPromotion: yup.object().shape({
       isEnabled: yup.boolean().required(),
@@ -442,7 +441,6 @@ const EventForm = (props) => {
           bgImageSelection: initialData?.bgImageSelection ?? 1,
           earlyBird: initialData?.earlyBird ?? {
             ticketLimit: undefined,
-            startTimer: "",
             ticketTimer: "",
             price: undefined,
             memberPrice: undefined,
@@ -450,9 +448,7 @@ const EventForm = (props) => {
             excludeMembers: false,
           },
           lateBird: initialData?.lateBird ?? {
-            ticketLimit: undefined,
             startTimer: "",
-            ticketTimer: "",
             price: undefined,
             memberPrice: undefined,
             isEnabled: false,
@@ -739,10 +735,7 @@ const EventForm = (props) => {
                       visible={values.earlyBird.isEnabled}
                       label="Early Bird"
                       setFieldValue={setFieldValue}
-                      initialCalendarValue={
-                        values.earlyBird.ticketTimer ||
-                        values.earlyBird.startTimer
-                      }
+                      initialCalendarValue={values.earlyBird.ticketTimer}
                     />
                   </div>
                   <div className="col-12">
@@ -758,10 +751,7 @@ const EventForm = (props) => {
                       visible={values.lateBird.isEnabled}
                       label="Late Bird"
                       setFieldValue={setFieldValue}
-                      initialCalendarValue={
-                        values.lateBird.ticketTimer ||
-                        values.lateBird.startTimer
-                      }
+                      initialCalendarValue={values.lateBird.startTimer}
                       withLimit={false}
                       timerType={START_TIMER}
                     />
