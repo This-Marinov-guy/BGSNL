@@ -150,16 +150,15 @@ const EventDetails = () => {
                     </div>
 
                     <div className="port-view">
-                      <span className="center_div j-start">
-                        Entry fee{" "}
-                        {
-                          <DynamicTicketBadge
-                            isMember={isMember(user)}
-                            product={selectedEvent?.product}
-                          />
-                        }
-                      </span>
-                      <h4>{price}</h4>
+                      <span>Entry fee</span>
+                      <h4 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        {price}
+                        <DynamicTicketBadge
+                          isMember={isMember(user)}
+                          product={selectedEvent?.product}
+                          event={selectedEvent}
+                        />
+                      </h4>
                     </div>
                   </div>
                   {
