@@ -1,11 +1,10 @@
-import { name } from "file-loader";
-
 export const INTERNSHIPS_LIST = [
   {
     logo: "https://big4accountingfirms.com/wp-content/uploads/Deloitte.svg.png",
     company: "Deloitte",
     specialty: "Summer Business Camp",
     location: "Sofia, Bulgaria",
+    label: "Bulgarian",
     duration: "16 - 27 June 2025",
     description:
       "A two-week internship program where participants explore business fields like audit, finance, tax, legal, consulting, and advisory through workshops, case studies, and networking with industry professionals.",
@@ -21,10 +20,45 @@ export const INTERNSHIPS_LIST = [
       "https://apply.deloittece.com/en_US/careers/JobDetail/Summer-Business-Camp/16533",
   },
   {
+    logo: "",
+    company: "Acady",
+    specialty: "Internships (see roles on the site)",
+    location: "Hybrid / Remote | Netherlands",
+    label: "International & Remote",
+    duration: "3–6 months (flexible)",
+    description:
+      "Join Acady and contribute across marketing, operations and product support. Work in a fast-moving environment and help scale impactful initiatives.",
+    bonuses: "Hands-on experience, mentorship, flexible schedule",
+    requirements:
+      "Motivated student or recent graduate with strong communication and organizational skills",
+    languages: "English (Dutch is a plus)",
+    contactMail: "",
+    website: "https://acady.nl/join-our-team",
+  },
+  {
+    logo: "",
+    company: "Pepperminds",
+    specialty: "Face-to-Face Fundraising Ambassador",
+    location: "On-site | Netherlands (multiple cities)",
+    label: "International & Remote",
+    duration: "Part-time / Flexible",
+    description:
+      "Work with a fun team to recruit face-to-face ambassadors for leading brands and charities such as CliniClowns, Staatsloterij, KIKA, Rode Kruis, UNICEF and KWF. Flexible shifts and strong growth opportunities.",
+    bonuses:
+      "Attractive base + bonus structure; average €150–€250 per shift; recruitment bonuses up to €300; masterclasses and events",
+    requirements:
+      "Communicative, proactive, and eager to develop sales skills; flexible availability; 16+",
+    languages: "Dutch, English",
+    contactMail: "werken@pepperminds.nl",
+    website:
+      "https://www.pepperminds.nl/makeithappen/?mkt=LZ&utm_source=viavia&utm_medium=crewapp&utm_campaign=makeithappen",
+  },
+  {
     logo: "https://neterra.net/images/upload/brands/logo-neterra_1.svg",
     company: "Neterra",
     specialty: "Junior Product Intern",
     location: "Sofia, Bulgaria / Hybrid",
+    label: "Bulgarian",
     duration: "3/6 months",
     description:
       "As a Product Intern, you will play a key role in driving our quantitative and market analysis efforts. You’ll work closely with experienced professionals in a collaborative environment where your contributions will make a real impact",
@@ -40,6 +74,7 @@ export const INTERNSHIPS_LIST = [
     company: "PwC Bulgaria",
     specialty: "Junior Sustainability Audit Analyst",
     location: "Sofia, Bulgaria",
+    label: "Bulgarian",
     duration: "Full-time",
     description:
       "Conduct financial and sustainability audits for the largest companies in Europe, ensuring compliance with ESRS, IFRS, and other reporting standards.",
@@ -57,6 +92,7 @@ export const INTERNSHIPS_LIST = [
     company: "BG Start",
     specialty: "Accountancy",
     location: "Amsterdam (Hybrid)",
+    label: "International & Remote",
     duration: "Flexible",
     description: `Assisting with data entry, processing, and recording transactions. Financial Reporting: Helping prepare financial reports, budgets, and invoices. Administrative Support: Assisting with audits, fact-checking, and maintaining financial documents.`,
     bonuses: "Experience & networking, Valuable mentoring opportunities",
@@ -70,6 +106,7 @@ export const INTERNSHIPS_LIST = [
     company: "PwC Bulgaria",
     specialty: "Junior Consultant in Audit & Finance",
     location: "Sofia, Bulgaria",
+    label: "Bulgarian",
     duration: "Full-time",
     description:
       "Perform financial analysis and data collection, including reviewing financial statements and drafting recommendations for improvements. Develop skills in strategic thinking by assisting clients in aligning their financial operations with their business objectives.",
@@ -87,6 +124,7 @@ export const INTERNSHIPS_LIST = [
     company: "MASTER OOD",
     specialty: "Engineering and Mechanical",
     location: "Bulgaria, Ruse",
+    label: "Bulgarian",
     duration: "1-3 months",
     description: "Engineering and mechanical work in a workshop",
     bonuses: "Hands-on experience",
@@ -100,6 +138,7 @@ export const INTERNSHIPS_LIST = [
     company: "Study Buddy Ltd.",
     specialty: "Marketing, Social Media",
     location: "Remote",
+    label: "International & Remote",
     duration: "2-3 months",
     description: `We are looking for interns to manage our Instagram and TikTok. Candidates should be outgoing, communicative, and comfortable producing video content.`,
     bonuses: "Networking & exposure",
@@ -114,6 +153,7 @@ export const INTERNSHIPS_LIST = [
     company: "Cool Travel Bulgaria",
     specialty: "Marketing, Management, Research",
     location: "Hybrid | Bulgaria, Sofia, Plovdiv, Varna, Burgas",
+    label: "Bulgarian",
     duration: "TBD",
     description:
       "Internships available in various fields, with potential full-time opportunities. Contact Stefan Popov at popov@cooltravel.bg",
@@ -128,6 +168,7 @@ export const INTERNSHIPS_LIST = [
     company: "Groningen Mail",
     specialty: "Content Creation, PR, Marketing",
     location: "Remote",
+    label: "International & Remote",
     duration: "Various (some unlimited)",
     description:
       "Contribute content and assist operations for one of the top English news sources in Groningen.",
@@ -142,6 +183,7 @@ export const INTERNSHIPS_LIST = [
     company: "Domakin",
     specialty: "Real Estate, Digital Marketing",
     location: "On-site, Hybrid, Remote | Netherlands",
+    label: "International & Remote",
     duration: "4-10 months",
     description:
       "Student-run company helping navigate the Dutch real estate market. Join us for hands-on experience.",
@@ -156,6 +198,7 @@ export const INTERNSHIPS_LIST = [
     company: "Silver Star",
     specialty: "Marketing, Sales, Engineering",
     location: "On-site | Bulgaria, Plovdiv",
+    label: "Bulgarian",
     duration: "Varies",
     description: "Internships with career growth potential at Silver Star.",
     bonuses: "Paid internship",
@@ -169,6 +212,7 @@ export const INTERNSHIPS_LIST = [
     company: "Southwestern Advantage",
     specialty: "Management, Sales, Communication",
     location: "On-site | USA",
+    label: "International & Remote",
     duration: "4-6 months",
     description:
       "Summer work & travel program for students, providing sales, leadership, and entrepreneurial experience.",
@@ -183,6 +227,7 @@ export const INTERNSHIPS_LIST = [
     company: "Cargotec Bulgaria",
     specialty: "Finance, HR, Procurement",
     location: "Hybrid | Bulgaria, Sofia",
+    label: "Bulgarian",
     duration: "4-6 months",
     description:
       "Year-long internship program in Finance, HR, and Procurement at Cargotec Bulgaria.",
@@ -198,6 +243,7 @@ export const INTERNSHIPS_LIST = [
     company: "NIKI Rotor Aviation",
     specialty: "Aviation",
     location: "On-site | Bulgaria, Pravets",
+    label: "Bulgarian",
     duration: "4-6 months",
     description:
       "Internship opportunities at Bulgaria’s first and only gyrocopter manufacturer.",
@@ -210,7 +256,6 @@ export const INTERNSHIPS_LIST = [
 ];
 
 export const GOOGLE_FORM_APPLICATION = (
-  name = "",
   company = "",
   specialty = "",
   user = {

@@ -17,7 +17,7 @@ const Internships = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -36,9 +36,7 @@ const Internships = () => {
     };
 
     fetchCurrentUser();
-  }, [user.token, sendRequest]);
-
-
+  }, [user.token]);
 
   if (loading) {
     return <Loader />;

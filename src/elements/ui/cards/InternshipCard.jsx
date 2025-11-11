@@ -8,6 +8,7 @@ const InternshipCard = (props) => {
     company,
     specialty,
     location,
+    label,
     logoClass,
     duration,
     languages,
@@ -40,6 +41,22 @@ const InternshipCard = (props) => {
               {specialty}
             </h5>
           </div>
+          {label && (
+            <span
+              style={{
+                marginTop: "6px",
+                backgroundColor: "#eef2ff",
+                color: "#374151",
+                borderRadius: "9999px",
+                padding: "4px 10px",
+                fontSize: "12px",
+                fontWeight: 600,
+                lineHeight: 1
+              }}
+            >
+              {label}
+            </span>
+          )}
         </div>
       </div>
 
@@ -128,6 +145,7 @@ InternshipCard.propTypes = {
     company: PropTypes.string.isRequired,
     specialty: PropTypes.string.isRequired,
     location: PropTypes.string.isRequired,
+    label: PropTypes.string,
     logoClass: PropTypes.string,
     duration: PropTypes.string.isRequired,
     languages: PropTypes.string.isRequired,
