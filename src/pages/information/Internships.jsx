@@ -219,9 +219,9 @@ const Internships = () => {
                   {user.token ? (
                     <button
                       className="rn-button-style--2 rn-btn-green"
-                      onClick={() => navigate("/user#news")}
+                      onClick={() => navigate("/user#internships")}
                     >
-                      View Member News
+                      View All internships
                     </button>
                   ) : (
                     <>

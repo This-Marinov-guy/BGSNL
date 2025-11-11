@@ -20,7 +20,7 @@ export const INTERNSHIPS_LIST = [
       "https://apply.deloittece.com/en_US/careers/JobDetail/Summer-Business-Camp/16533",
   },
   {
-    logo: "",
+    logo: "https://acady.nl/wp-content/uploads/2022/09/Acady-Logo-Final-01.png",
     company: "Acady",
     specialty: "Internships (see roles on the site)",
     location: "Hybrid / Remote | Netherlands",
@@ -36,7 +36,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://acady.nl/join-our-team",
   },
   {
-    logo: "",
+    logo: "https://www.studentjobsrotterdam.nl/_next/image?url=%2Flogos%2Fpepperminds.jpeg&w=96&q=75",
     company: "Pepperminds",
     specialty: "Face-to-Face Fundraising Ambassador",
     location: "On-site | Netherlands (multiple cities)",
@@ -49,7 +49,7 @@ export const INTERNSHIPS_LIST = [
     requirements:
       "Communicative, proactive, and eager to develop sales skills; flexible availability; 16+",
     languages: "Dutch, English",
-    contactMail: "werken@pepperminds.nl",
+    contactMail: "",
     website:
       "https://www.pepperminds.nl/makeithappen/?mkt=LZ&utm_source=viavia&utm_medium=crewapp&utm_campaign=makeithappen",
   },
@@ -223,7 +223,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://southwesternadvantage.com",
   },
   {
-    logo: "https://www.cargotec.com/Static/img/cargotec-logo.svg",
+    logo: "https://assets.jobs.bg/assets/logo/2025-04-02/s_48b2f26d4b260d90e27860b24550c8f1.jpg",
     company: "Cargotec Bulgaria",
     specialty: "Finance, HR, Procurement",
     location: "Hybrid | Bulgaria, Sofia",

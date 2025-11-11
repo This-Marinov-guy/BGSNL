@@ -5,13 +5,20 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { INTERNSHIPS_LIST } from "../../../util/defines/INTERNSHIPS";
 import InternshipCard from "../cards/InternshipCard";
 
-const InternshipsTab = ({ currentUser, first, rows, onPageChange, INIT_ITEMS_PER_PAGE }) => {
+const InternshipsTab = ({ currentUser, INIT_ITEMS_PER_PAGE }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  
+  // Separate pagination state for each tab
+  const [bulgarianFirst, setBulgarianFirst] = useState(0);
+  const [bulgarianRows, setBulgarianRows] = useState(INIT_ITEMS_PER_PAGE);
+  
+  const [internationalFirst, setInternationalFirst] = useState(0);
+  const [internationalRows, setInternationalRows] = useState(INIT_ITEMS_PER_PAGE);
 
   const bulgarianList = INTERNSHIPS_LIST.filter(i => i.label === "Bulgarian");
   const internationalList = INTERNSHIPS_LIST.filter(i => i.label === "International & Remote");
 
-  const renderList = (list) => {
+  const renderList = (list, first, rows, onPageChange) => {
     return (
       <>
         <div className="internships-grid">
@@ -33,6 +40,16 @@ const InternshipsTab = ({ currentUser, first, rows, onPageChange, INIT_ITEMS_PER
     );
   };
 
+  const handleBulgarianPageChange = (event) => {
+    setBulgarianFirst(event.first);
+    setBulgarianRows(event.rows);
+  };
+
+  const handleInternationalPageChange = (event) => {
+    setInternationalFirst(event.first);
+    setInternationalRows(event.rows);
+  };
+
   return (
     <div className="tab-content-wrapper">
       <div className="tab-header">
@@ -44,16 +61,11 @@ const InternshipsTab = ({ currentUser, first, rows, onPageChange, INIT_ITEMS_PER
       <div>
         <TabView
           activeIndex={activeIndex}
-          onTabChange={(e) => {
-            setActiveIndex(e.index);
-            if (onPageChange) {
-              onPageChange({ first: 0, rows });
-            }
-          }}
+          onTabChange={(e) => setActiveIndex(e.index)}
         >
-          <TabPanel header="Bulgarian">
+          <TabPanel header={`Bulgarian (${bulgarianList.length})`}>
             {bulgarianList.length > 0 ? (
-              renderList(bulgarianList)
+              renderList(bulgarianList, bulgarianFirst, bulgarianRows, handleBulgarianPageChange)
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">{"💼"}</div>
@@ -62,9 +74,9 @@ const InternshipsTab = ({ currentUser, first, rows, onPageChange, INIT_ITEMS_PER
               </div>
             )}
           </TabPanel>
-          <TabPanel header="International & Remote">
+          <TabPanel header={`International & Remote (${internationalList.length})`}>
             {internationalList.length > 0 ? (
-              renderList(internationalList)
+              renderList(internationalList, internationalFirst, internationalRows, handleInternationalPageChange)
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">{"💼"}</div>
@@ -81,9 +93,6 @@ const InternshipsTab = ({ currentUser, first, rows, onPageChange, INIT_ITEMS_PER
 
 InternshipsTab.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  first: PropTypes.number.isRequired,
-  rows: PropTypes.number.isRequired,
-  onPageChange: PropTypes.func.isRequired,
   INIT_ITEMS_PER_PAGE: PropTypes.number.isRequired,
 };
 
