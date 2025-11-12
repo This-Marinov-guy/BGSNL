@@ -3,3 +3,23 @@
 @import '@assets/scss/style.scss';
 @import '~slick-carousel/slick/slick.css';
 @import '~slick-carousel/slick/slick-theme.css';
+
+/* Override PrimeReact default Inter font with our custom fonts */
+:root {
+  --font-family: "Roboto", sans-serif !important;
+}
+
+.p-component {
+  font-family: "Roboto", sans-serif !important;
+}
+
+/* Override PrimeReact headings and labels to use LeagueSpartan */
+.p-dialog-title,
+.p-tabview-title,
+.p-panel-title,
+.p-fieldset-legend,
+.p-accordion-header,
+.p-card-title,
+.p-menuitem-text {
+  font-family: "LeagueSpartan", "Roboto", sans-serif !important;
+}

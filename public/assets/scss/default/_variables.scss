@@ -43,13 +43,13 @@ $white: #F8F8F8;
   src: url(/public/assets/fonts/Archive-Regular.ttf) format("truetype");
 }
 
-$body-font: "Roboto";
-$heading-font: "Roboto";
+$body-font: "Roboto", sans-serif;
+$heading-font: "LeagueSpartan", "Roboto", sans-serif;
 
 // Heading Font List
-$font-1: "Roboto";
+$font-1: "LeagueSpartan", sans-serif;
 $fontList: $font-1;
-$title-font: "Archive";
+$title-font: "Archive", serif;
 
 /*===============================
     Color Variation 

@@ -38,6 +38,11 @@ body {
   font-weight: $body-font-weight;
 }
 
+p,
+span {
+  font-family: $body-font;
+}
+
 .reading span {
   font-weight: 80 !important;
 }

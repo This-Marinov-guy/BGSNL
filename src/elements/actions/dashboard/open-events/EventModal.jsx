@@ -44,23 +44,21 @@ const EventModal = (props) => {
     const InfoRow = ({ label, value, highlight = false }) => (
         <div className="info-row" style={{ 
             display: 'flex', 
-            padding: '8px 0', 
+            padding: '10px 0', 
             borderBottom: '1px solid #f0f0f0',
             alignItems: 'center'
         }}>
             <span style={{ 
                 fontWeight: 600, 
-                minWidth: '140px',
-                color: '#374151',
-                fontSize: '14px'
+                minWidth: '160px',
+                color: '#374151'
             }}>
                 {label}:
             </span>
             <span style={{ 
                 flex: 1,
                 color: highlight ? '#059669' : '#6b7280',
-                fontWeight: highlight ? 600 : 400,
-                fontSize: '14px'
+                fontWeight: highlight ? 600 : 400
             }}>
                 {value}
             </span>
@@ -78,7 +76,6 @@ const EventModal = (props) => {
         }}>
             <h4 style={{ 
                 marginBottom: '15px',
-                fontSize: '16px',
                 fontWeight: 700,
                 color: '#111827',
                 paddingBottom: '10px',
@@ -107,10 +104,10 @@ const EventModal = (props) => {
             <Dialog 
                 header={
                     <div>
-                        <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '4px' }}>
+                        <div style={{ fontWeight: 700, marginBottom: '4px' }}>
                             {props.event.title}
                         </div>
-                        <div style={{ fontSize: '13px', color: '#6b7280', fontWeight: 400 }}>
+                        <div style={{ color: '#6b7280', fontWeight: 400 }}>
                             {capitalizeFirstLetter(props.event.region)} • {moment(props.event.date).format(MOMENT_DATE_TIME)}
                         </div>
                     </div>
@@ -209,7 +206,7 @@ const EventModal = (props) => {
                                 
                                 {props.event.product?.guest && (
                                     <>
-                                        <div style={{ marginTop: '12px', marginBottom: '8px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>
+                                        <div style={{ marginTop: '12px', marginBottom: '8px', fontWeight: 600, color: '#374151' }}>
                                             Guest Pricing
                                         </div>
                                         <InfoRow label="Price" value={`€${props.event.product.guest.price}`} highlight />
@@ -220,7 +217,7 @@ const EventModal = (props) => {
 
                                 {!props.event.isMemberFree && props.event.product?.member && (
                                     <>
-                                        <div style={{ marginTop: '12px', marginBottom: '8px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>
+                                        <div style={{ marginTop: '12px', marginBottom: '8px', fontWeight: 600, color: '#374151' }}>
                                             Member Pricing
                                         </div>
                                         <InfoRow label="Price" value={`€${props.event.product.member.price}`} highlight />
@@ -229,7 +226,7 @@ const EventModal = (props) => {
                                         
                                         {props.event.product?.activeMember && (
                                             <>
-                                                <div style={{ marginTop: '8px', marginBottom: '8px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>
+                                                <div style={{ marginTop: '8px', marginBottom: '8px', fontWeight: 600, color: '#374151' }}>
                                                     Active Member
                                                 </div>
                                                 <InfoRow label="Price" value={`€${props.event.product.activeMember.price}`} highlight />
@@ -241,7 +238,7 @@ const EventModal = (props) => {
 
                                 {(props.event.freePass?.length > 0 || props.event.discountPass?.length > 0) && (
                                     <>
-                                        <div style={{ marginTop: '12px', marginBottom: '8px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>
+                                        <div style={{ marginTop: '12px', marginBottom: '8px', fontWeight: 600, color: '#374151' }}>
                                             Special Access
                                         </div>
                                         {props.event.freePass?.length > 0 && (
@@ -264,7 +261,6 @@ const EventModal = (props) => {
                             borderRadius: '6px',
                             lineHeight: '1.6',
                             color: '#374151',
-                            fontSize: '14px',
                             whiteSpace: 'pre-wrap'
                         }}>
                             {props.event.text || 'No description provided'}
@@ -277,7 +273,7 @@ const EventModal = (props) => {
                         <div className='row' style={{ gap: '15px 0' }}>
                             <div className='col-lg-4 col-md-6 col-12'>
                                 <div style={{ textAlign: 'center' }}>
-                                    <p style={{ fontWeight: 600, marginBottom: '8px', fontSize: '14px' }}>Ticket</p>
+                                    <p style={{ fontWeight: 600, marginBottom: '8px' }}>Ticket</p>
                                     <Image 
                                         src={props.event.ticketImg} 
                                         width='100%' 
@@ -290,7 +286,7 @@ const EventModal = (props) => {
 
                             <div className='col-lg-4 col-md-6 col-12'>
                                 <div style={{ textAlign: 'center' }}>
-                                    <p style={{ fontWeight: 600, marginBottom: '8px', fontSize: '14px' }}>Poster</p>
+                                    <p style={{ fontWeight: 600, marginBottom: '8px' }}>Poster</p>
                                     <Image 
                                         src={props.event.poster} 
                                         width='100%' 
@@ -303,8 +299,8 @@ const EventModal = (props) => {
 
                             <div className='col-lg-4 col-md-6 col-12'>
                                 <div style={{ textAlign: 'center' }}>
-                                    <p style={{ fontWeight: 600, marginBottom: '8px', fontSize: '14px' }}>
-                                        Background <FiInfo className='image-info' data-pr-tooltip="Click to expand" data-pr-position="top" style={{ fontSize: '12px' }} />
+                                    <p style={{ fontWeight: 600, marginBottom: '8px' }}>
+                                        Background <FiInfo className='image-info' data-pr-tooltip="Click to expand" data-pr-position="top" />
                                     </p>
                                     {(props.event.bgImageExtra && props.event?.bgImageSelection === 2) ?
                                         <Image 
@@ -327,8 +323,8 @@ const EventModal = (props) => {
 
                             {props.event.images?.length > 0 && (
                                 <div className='col-12'>
-                                    <p style={{ fontWeight: 600, marginBottom: '12px', fontSize: '14px' }}>
-                                        Additional Images <FiInfo className='image-info' data-pr-tooltip="Click to expand" data-pr-position="top" style={{ fontSize: '12px' }} />
+                                    <p style={{ fontWeight: 600, marginBottom: '12px' }}>
+                                        Additional Images <FiInfo className='image-info' data-pr-tooltip="Click to expand" data-pr-position="top" />
                                     </p>
                                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
                                         {props.event.images.map((img, index) => (
