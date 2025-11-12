@@ -41,11 +41,11 @@ const AdditionalPrices = ({
                   placeholder="Ticket Limit"
                   name={`${prefix}.ticketLimit`}
                   min={1}
-                  step="0.01"
+                  step={1}
                 />
                 <ErrorMessage
                   className="error"
-                  name={`${prefix}.at-least-one-limit`}
+                  name={`${prefix}.ticketLimit`}
                   component="div"
                 />
               </div>
@@ -77,13 +77,7 @@ const AdditionalPrices = ({
                 );
               }}
             />
-            {withLimit ? (
-              <ErrorMessage
-                className="error"
-                name={`${prefix}.at-least-one-limit`}
-                component="div"
-              />
-            ) : (
+            {!withLimit && (
               <ErrorMessage
                 className="error"
                 name={
@@ -97,6 +91,18 @@ const AdditionalPrices = ({
           </div>
         </div>
       </div>
+
+      {withLimit && (
+        <div className="row">
+          <div className="col-12">
+            <ErrorMessage
+              className="error center_text"
+              name={`${prefix}.at-least-one-limit`}
+              component="div"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="row">
         <div className="col-lg-6 col-12">

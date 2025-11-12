@@ -186,7 +186,8 @@ const EventForm = (props) => {
               .number()
               .required(
                 "Early Bird Price is required when Early Bird is enabled"
-              ),
+              )
+              .min(1, "Must be greater than 0"),
           otherwise: () => yup.number().nullable(),
         }),
         memberPrice: yup.number().when("isEnabled", {
@@ -196,28 +197,31 @@ const EventForm = (props) => {
               .number()
               .required(
                 "Early Bird Member Price is required when Early Bird is enabled"
-              ),
+              )
+              .min(1, "Must be greater than 0"),
           otherwise: () => yup.number().nullable(),
         }),
-        ticketLimit: yup.number().nullable(),
+        ticketLimit: yup.number().nullable().min(1, "Must be greater than 0"),
         ticketTimer: yup.string().nullable(),
+        excludeMembers: yup.boolean(),
       })
       .test(
         "at-least-one-limit",
         "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
-        function (values) {
-          if (!values.isEnabled) return true;
-          const hasValidLimit =
-            values.ticketLimit != null && values.ticketLimit > 0;
-          const hasValidTimer =
-            values.ticketTimer != null && values.ticketTimer !== "";
+        function (value) {
+          const { isEnabled, ticketLimit, ticketTimer } = value;
+          if (!isEnabled) return true;
+          
+          const hasValidLimit = ticketLimit != null && ticketLimit > 0;
+          const hasValidTimer = ticketTimer != null && ticketTimer !== "";
+          
           if (!hasValidLimit && !hasValidTimer) {
             return this.createError({
-              message:
-                "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
-              path: "at-least-one-limit",
+              path: "earlyBird.at-least-one-limit",
+              message: "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
             });
           }
+          
           return true;
         }
       ),
@@ -229,7 +233,8 @@ const EventForm = (props) => {
         then: () =>
           yup
             .number()
-            .required("Late Bird Price is required when Late Bird is enabled"),
+            .required("Late Bird Price is required when Late Bird is enabled")
+            .min(1, "Must be greater than 0"),
         otherwise: () => yup.number().nullable(),
       }),
       memberPrice: yup.number().when("isEnabled", {
@@ -239,7 +244,8 @@ const EventForm = (props) => {
             .number()
             .required(
               "Late Bird Member Price is required when Late Bird is enabled"
-            ),
+            )
+            .min(1, "Must be greater than 0"),
         otherwise: () => yup.number().nullable(),
       }),
       startTimer: yup.string().when("isEnabled", {
@@ -252,6 +258,7 @@ const EventForm = (props) => {
             ),
         otherwise: () => yup.string().nullable(),
       }),
+      excludeMembers: yup.boolean(),
     }),
 
     guestPromotion: yup.object().shape({
@@ -1128,7 +1135,7 @@ const EventForm = (props) => {
                     placeholder="Ticket Limit"
                     name="ticketLimit"
                     min={1}
-                    step="0.01"
+                    step={1}
                   />
                   <ErrorMessage
                     className="error"
