@@ -26,17 +26,31 @@ const Event = (props) => {
         <>
             <Tooltip target=".price_info" />
             <EventModal show={show} setShow={setShow} event={props.event} loadData={props.loadData}/>
-            <div onClick={() => setShow(true)} style={expired ? { backgroundColor: '#ff4d4d' } : {}} className='service service__style--2 common-border-2 flex'>
-                <div>
-                    <p>Title: {props.event.title}</p>
-                    <p>Date: {moment(props.event.date).format(MOMENT_DATE_TIME)}</p>
-                    <p>Location: {props.event.location}</p>
-                    <p>Price <FiInfo className='price_info tooltip_info'
-                        data-pr-tooltip="Guest / Member / Active Member"
-                        data-pr-position="top" /> : {price}</p>
-                    <p>Status: {expired ? <span className='error'>Expired</span> : props.event.status}</p>
+            <div
+                onClick={() => setShow(true)}
+                style={expired ? { backgroundColor: '#ff4d4d' } : {}}
+                className='service service__style--2 common-border-2 event-card'
+            >
+                <div className='event-card__poster'>
+                    <img src={props.event.poster} alt='Poster' />
                 </div>
-                <img style={{ maxWidth: '150px', objectFit: 'contain' }} src={props.event.poster} alt='Poster' />
+                <div className='event-card__content'>
+                    <h5 className='event-card__title'>{props.event.title}</h5>
+                    <div className='event-card__details'>
+                        <p><strong>Date:</strong> {moment(props.event.date).format(MOMENT_DATE_TIME)}</p>
+                        <p><strong>Location:</strong> {props.event.location}</p>
+                        <p>
+                            <strong>Price</strong>
+                            <FiInfo className='price_info tooltip_info'
+                                data-pr-tooltip="Guest / Member / Active Member"
+                                data-pr-position="top" />
+                            : {price}
+                        </p>
+                        <p>
+                            <strong>Status:</strong> {expired ? <span className='error'>Expired</span> : props.event.status}
+                        </p>
+                    </div>
+                </div>
             </div>
         </>
 

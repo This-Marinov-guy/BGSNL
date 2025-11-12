@@ -11,6 +11,7 @@ import { selectUser } from '../../../../redux/user';
 import { checkAuthorization, decodeJWT } from '../../../../util/functions/authorization';
 import { ACCESS_2, ACCESS_4 } from '../../../../util/defines/common';
 import { hasOverlap } from '../../../../util/functions/helpers';
+import { capitalizeAfterSpace, capitalizeFirstLetter } from '../../../../util/functions/capitalize';
 
 const EventList = () => {
     const { reloadEvents, eventsLoading } = useLoadEvents();
@@ -36,8 +37,8 @@ const EventList = () => {
 
     return (
         <>
-        <div className="d-flex justify-content-between align-items-center mb--20">
-            <h3 className='center_text'>Administration Dashboard</h3>
+        <div className="d-flex justify-content-between align-items-center mb--30 flex-wrap" style={{ gap: '15px' }}>
+            <h3 className='center_text' style={{ margin: 0 }}>Administration Dashboard</h3>
             {canAddEvents && (
                 <Link
                     to="/user/add-event"
@@ -48,16 +49,24 @@ const EventList = () => {
             )}
         </div>
             {isAuthorized  && <Filter />}
-            {eventsLoading ? <EventsLoading /> : <div className='mt--10'>
+            {eventsLoading ? <EventsLoading /> : <div className='mt--20'>
                 {regionList.map((region, index) => {
-                    return <div className='row' key={index}>
-                        <h4 className='col-12 archive'>{region.toUpperCase()}</h4>
-                        <div className='col-12 grid'>
-                            {events[region].length ? events[region].map((event, i) => {
-                                return <Event key={i} event={event} loadData={() => reloadEvents(true)} />
-                            }) : <p>No current events for the region</p>}
+                    return <div className='region-section' key={index}>
+                        <div className='row'>
+                            <div className='col-12'>
+                                <h4 className='archive region-title'>{capitalizeFirstLetter(region, true)}</h4>
+                            </div>
                         </div>
-                        <hr />
+                        <div className='row'>
+                            <div className='col-12'>
+                                <div className='grid events-grid'>
+                                    {events[region].length ? events[region].map((event, i) => {
+                                        return <Event key={i} event={event} loadData={() => reloadEvents(true)} />
+                                    }) : <p className='no-events-message'>No current events for the region</p>}
+                                </div>
+                            </div>
+                        </div>
+                        {index < regionList.length - 1 && <hr className='region-divider' />}
                     </div>
 
                 })}

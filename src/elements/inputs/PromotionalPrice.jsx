@@ -25,14 +25,14 @@ const PromotionalPrices = ({
             <Field
               type="number"
               placeholder={label ? `${label} Discount %` : "Discount %"}
-              name={`${parent ?? ""}${prefix}["discount"]`}
+              name={`${parent ?? ""}${prefix}.discount`}
               min={5}
               max={95}
               step="1"
             />
             <ErrorMessage
               className="error"
-              name={`${parent ?? ""}${prefix}["discount"]`}
+              name={`${parent ?? ""}${prefix}.discount`}
               component="div"
             />
             <small>
@@ -53,12 +53,12 @@ const PromotionalPrices = ({
               captionLayout="dropdown"
               initialValue={initialStartValue}
               onSelect={(value) => {
-                setFieldValue(`${parent ?? ""}${prefix}["startTimer"]`, value);
+                setFieldValue(`${parent ?? ""}${prefix}.startTimer`, value);
               }}
             />
             <ErrorMessage
               className="error"
-              name={`${parent ?? ""}${prefix}["startTimer"]`}
+              name={`${parent ?? ""}${prefix}.startTimer`}
               component="div"
             />
           </div>
@@ -72,12 +72,12 @@ const PromotionalPrices = ({
               captionLayout="dropdown"
               initialValue={initialEndValue}
               onSelect={(value) => {
-                setFieldValue(`${parent ?? ""}${prefix}["endTimer"]`, value);
+                setFieldValue(`${parent ?? ""}${prefix}.endTimer`, value);
               }}
             />
             <ErrorMessage
               className="error"
-              name={`${parent ?? ""}${prefix}["endTimer"]`}
+              name={`${parent ?? ""}${prefix}.endTimer`}
               component="div"
             />
           </div>

@@ -29,7 +29,7 @@ const AdditionalPrices = ({
                 <Field
                   style={{ maxWidth: "30px" }}
                   type="checkbox"
-                  name={`${prefix}["excludeMembers"]`}
+                  name={`${prefix}.excludeMembers`}
                 />
                 <p className="information">Exclude Member Tickets from count</p>
               </div>
@@ -39,7 +39,7 @@ const AdditionalPrices = ({
                 <Field
                   type="number"
                   placeholder="Ticket Limit"
-                  name={`${prefix}["ticketLimit"]`}
+                  name={`${prefix}.ticketLimit`}
                   min={1}
                   step="0.01"
                 />
@@ -65,14 +65,14 @@ const AdditionalPrices = ({
               initialValue={initialCalendarValue}
               name={
                 timerType === END_TIMER
-                  ? `${prefix}["ticketTimer"]`
-                  : `${prefix}["startTimer"]`
+                  ? `${prefix}.ticketTimer`
+                  : `${prefix}.startTimer`
               }
               onSelect={(value) => {
                 setFieldValue(
                   timerType === END_TIMER
-                    ? `${prefix}["ticketTimer"]`
-                    : `${prefix}["startTimer"]`,
+                    ? `${prefix}.ticketTimer`
+                    : `${prefix}.startTimer`,
                   value
                 );
               }}
@@ -88,8 +88,8 @@ const AdditionalPrices = ({
                 className="error"
                 name={
                   timerType === END_TIMER
-                    ? `${prefix}["ticketTimer"]`
-                    : `${prefix}["startTimer"]`
+                    ? `${prefix}.ticketTimer`
+                    : `${prefix}.startTimer`
                 }
                 component="div"
               />
@@ -104,13 +104,13 @@ const AdditionalPrices = ({
             <Field
               type="number"
               placeholder={label ? `${label} Price` : "Price"}
-              name={`${prefix}["price"]`}
+              name={`${prefix}.price`}
               min={1}
               step="0.01"
             />
             <ErrorMessage
               className="error"
-              name={`${prefix}["price"]`}
+              name={`${prefix}.price`}
               component="div"
             />
           </div>
@@ -120,13 +120,13 @@ const AdditionalPrices = ({
             <Field
               type="number"
               placeholder={label ? `${label} Member Price` : "Member Price"}
-              name={`${prefix}["memberPrice"]`}
+              name={`${prefix}.memberPrice`}
               min={1}
               step="0.01"
             />
             <ErrorMessage
               className="error"
-              name={`${prefix}["memberPrice"]`}
+              name={`${prefix}.memberPrice`}
               component="div"
             />
           </div>

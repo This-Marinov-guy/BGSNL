@@ -512,3 +512,139 @@
   object-fit: contain;
   max-height: 300px;
 }
+
+// Event Card Styles for Dashboard
+.event-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+
+  &__poster {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 10px 10px 0 0;
+    background-color: #f5f5f5;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    @media #{$sm-layout} {
+      height: 150px;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 0 0 0;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    color: inherit;
+    transition: color 0.3s ease;
+
+    @media #{$sm-layout} {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+  }
+
+  &__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      strong {
+        font-weight: 600;
+        min-width: 60px;
+      }
+
+      @media #{$sm-layout} {
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  &:hover {
+    .event-card__poster img {
+      transform: scale(1.05);
+    }
+  }
+
+  // Override service__style--2 flex for event cards
+  &.service__style--2 {
+    &.flex {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+// Region Section Styles
+.region-section {
+  margin-bottom: 40px;
+
+  @media #{$sm-layout} {
+    margin-bottom: 30px;
+  }
+}
+
+.region-title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  @media #{$sm-layout} {
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+  }
+}
+
+.region-divider {
+  margin: 30px 0;
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+
+  @media #{$sm-layout} {
+    margin: 20px 0;
+  }
+}
+
+.events-grid {
+  min-height: 50px;
+}
+
+.no-events-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(29, 29, 36, 0.5);
+  font-size: 1.1rem;
+  font-style: italic;
+
+  @media #{$sm-layout} {
+    padding: 30px 20px;
+    font-size: 1rem;
+  }
+}

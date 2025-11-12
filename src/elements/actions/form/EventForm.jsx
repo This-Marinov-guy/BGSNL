@@ -266,7 +266,7 @@ const EventForm = (props) => {
             .max(95, "Cannot exceed 95%"),
         otherwise: () => yup.number().nullable(),
       }),
-      startTimer: yup.number().when("isEnabled", {
+      startTimer: yup.string().when("isEnabled", {
         is: true,
         then: () =>
           yup
@@ -296,28 +296,51 @@ const EventForm = (props) => {
             .max(95, "Cannot exceed 95%"),
         otherwise: () => yup.number().nullable(),
       }),
-      startTimer: yup.number().when("isEnabled", {
+      startTimer: yup.string().when("isEnabled", {
         is: true,
         then: () =>
           yup
-            .number()
-            .required("Please enter a start point of the guest promotion"),
-        otherwise: () => yup.number().nullable(),
+            .string()
+            .required("Please enter a start point of the member promotion"),
+        otherwise: () => yup.string().nullable(),
       }),
       endTimer: yup.string().when("isEnabled", {
         is: true,
         then: () =>
           yup
-            .number()
-            .required("Please enter an end point of the guest promotion"),
-        otherwise: () => yup.number().nullable(),
+            .string()
+            .required("Please enter an end point of the member promotion"),
+        otherwise: () => yup.string().nullable(),
       }),
     }),
 
     addOns: yup.object().shape({
       isEnabled: yup.boolean(),
-      title: yup.string().nullable(),
+      multi: yup.boolean(),
+      title: yup.string().when("isEnabled", {
+        is: true,
+        then: () => yup.string().required("Add-ons main title is required"),
+        otherwise: () => yup.string().nullable(),
+      }),
       description: yup.string().nullable(),
+      items: yup.array().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .array()
+            .of(
+              yup.object().shape({
+                title: yup.string().required("Item title is required"),
+                description: yup.string().nullable(),
+                price: yup
+                  .number()
+                  .required("Item price is required")
+                  .min(0, "Price must be 0 or greater"),
+              })
+            )
+            .min(1, "At least one add-on item is required"),
+        otherwise: () => yup.array().nullable(),
+      }),
     }),
 
     ticketLink: yup.string().when("isTicketLink", {
@@ -417,15 +440,21 @@ const EventForm = (props) => {
           isSaleClosed: initialData?.isSaleClosed ?? false,
           isFree: initialData?.isFree ?? false,
           isMemberFree: initialData?.isMemberFree ?? false,
-          guestPrice: !isNaN(initialData?.product?.guest?.price)
-            ? initialData.product?.guest?.price
-            : undefined,
-          memberPrice: !isNaN(initialData?.product?.member?.price)
-            ? initialData.product?.member?.price
-            : undefined,
-          activeMemberPrice: !isNaN(initialData?.product?.activeMember?.price)
-            ? initialData.product?.activeMember?.price
-            : undefined,
+          guestPrice:
+            initialData?.product?.guest?.price !== undefined &&
+            !isNaN(initialData.product.guest.price)
+              ? initialData.product.guest.price
+              : undefined,
+          memberPrice:
+            initialData?.product?.member?.price !== undefined &&
+            !isNaN(initialData.product.member.price)
+              ? initialData.product.member.price
+              : undefined,
+          activeMemberPrice:
+            initialData?.product?.activeMember?.price !== undefined &&
+            !isNaN(initialData.product.activeMember.price)
+              ? initialData.product.activeMember.price
+              : undefined,
           entryIncluding: initialData?.entryIncluding ?? "",
           memberIncluding: initialData?.memberIncluding ?? "",
           ticketLink: initialData?.ticketLink ?? "",
@@ -439,43 +468,70 @@ const EventForm = (props) => {
           bgImage: initialData?.bgImage ?? 1,
           bgImageExtra: initialData?.bgImageExtra ?? null,
           bgImageSelection: initialData?.bgImageSelection ?? 1,
-          earlyBird: initialData?.earlyBird ?? {
-            ticketLimit: undefined,
-            ticketTimer: "",
-            price: undefined,
-            memberPrice: undefined,
-            isEnabled: false,
-            excludeMembers: false,
+          earlyBird: {
+            ticketLimit:
+              initialData?.earlyBird?.ticketLimit !== undefined &&
+              !isNaN(initialData.earlyBird.ticketLimit)
+                ? initialData.earlyBird.ticketLimit
+                : undefined,
+            ticketTimer: initialData?.earlyBird?.ticketTimer ?? "",
+            price:
+              initialData?.earlyBird?.price !== undefined &&
+              !isNaN(initialData.earlyBird.price)
+                ? initialData.earlyBird.price
+                : undefined,
+            memberPrice:
+              initialData?.earlyBird?.memberPrice !== undefined &&
+              !isNaN(initialData.earlyBird.memberPrice)
+                ? initialData.earlyBird.memberPrice
+                : undefined,
+            isEnabled: initialData?.earlyBird?.isEnabled ?? false,
+            excludeMembers: initialData?.earlyBird?.excludeMembers ?? false,
           },
-          lateBird: initialData?.lateBird ?? {
-            startTimer: "",
-            price: undefined,
-            memberPrice: undefined,
-            isEnabled: false,
-            excludeMembers: false,
+          lateBird: {
+            startTimer: initialData?.lateBird?.startTimer ?? "",
+            price:
+              initialData?.lateBird?.price !== undefined &&
+              !isNaN(initialData.lateBird.price)
+                ? initialData.lateBird.price
+                : undefined,
+            memberPrice:
+              initialData?.lateBird?.memberPrice !== undefined &&
+              !isNaN(initialData.lateBird.memberPrice)
+                ? initialData.lateBird.memberPrice
+                : undefined,
+            isEnabled: initialData?.lateBird?.isEnabled ?? false,
+            excludeMembers: initialData?.lateBird?.excludeMembers ?? false,
           },
           guestPromotion: {
-            ...(initialData?.promotion?.guest ?? {
-              isEnabled: false,
-              startTimer: "",
-              endTimer: "",
-              discount: undefined,
-            }),
+            isEnabled: initialData?.promotion?.guest?.isEnabled ?? false,
+            startTimer: initialData?.promotion?.guest?.startTimer ?? "",
+            endTimer: initialData?.promotion?.guest?.endTimer ?? "",
+            discount:
+              initialData?.promotion?.guest?.discount !== undefined &&
+              !isNaN(initialData.promotion.guest.discount)
+                ? initialData.promotion.guest.discount
+                : undefined,
           },
           memberPromotion: {
-            ...(initialData?.promotion?.member ?? {
-              isEnabled: false,
-              startTimer: "",
-              endTimer: "",
-              discount: undefined,
-            }),
+            isEnabled: initialData?.promotion?.member?.isEnabled ?? false,
+            startTimer: initialData?.promotion?.member?.startTimer ?? "",
+            endTimer: initialData?.promotion?.member?.endTimer ?? "",
+            discount:
+              initialData?.promotion?.member?.discount !== undefined &&
+              !isNaN(initialData.promotion.member.discount)
+                ? initialData.promotion.member.discount
+                : undefined,
           },
-          addOns: initialData?.addOns ?? {
-            isEnabled: false,
-            multi: false,
-            title: "",
-            description: "",
-            items: [{ title: "", description: "", price: undefined }],
+          addOns: {
+            isEnabled: initialData?.addOns?.isEnabled ?? false,
+            multi: initialData?.addOns?.multi ?? false,
+            title: initialData?.addOns?.title ?? "",
+            description: initialData?.addOns?.description ?? "",
+            items:
+              initialData?.addOns?.items && initialData.addOns.items.length > 0
+                ? initialData.addOns.items
+                : [{ title: "", description: "", price: undefined }],
           },
         }}
       >
@@ -727,7 +783,7 @@ const EventForm = (props) => {
                       <Field
                         style={{ maxWidth: "30px" }}
                         type="checkbox"
-                        name="earlyBird[isEnabled]"
+                        name="earlyBird.isEnabled"
                       ></Field>
                       <p>Add Early Bird Price</p>
                     </div>
@@ -743,7 +799,7 @@ const EventForm = (props) => {
                       <Field
                         style={{ maxWidth: "30px" }}
                         type="checkbox"
-                        name="lateBird[isEnabled]"
+                        name="lateBird.isEnabled"
                       ></Field>
                       <p>Add Late Bird Price</p>
                     </div>
@@ -764,7 +820,7 @@ const EventForm = (props) => {
                       <Field
                         style={{ maxWidth: "30px" }}
                         type="checkbox"
-                        name="guestPromotion[isEnabled]"
+                        name="guestPromotion.isEnabled"
                       ></Field>
                       <p>Add Guest Promotion</p>
                     </div>
@@ -782,7 +838,7 @@ const EventForm = (props) => {
                       <Field
                         style={{ maxWidth: "30px" }}
                         type="checkbox"
-                        name="memberPromotion[isEnabled]"
+                        name="memberPromotion.isEnabled"
                       ></Field>
                       <p>Add Member Promotion</p>
                     </div>
@@ -803,7 +859,7 @@ const EventForm = (props) => {
                       <Field
                         style={{ maxWidth: "30px" }}
                         type="checkbox"
-                        name="addOns[isEnabled]"
+                        name="addOns.isEnabled"
                       ></Field>
                       <p>Enable add-ons</p>
                     </div>
