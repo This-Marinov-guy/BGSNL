@@ -23,7 +23,7 @@ const Filter = () => {
                             All
                         </option>
                         {REGIONS.map((val, index) => {
-                            return <option value={val} key={index}>{capitalizeFirstLetter(val)}</option>
+                            return <option value={val} key={index}>{capitalizeFirstLetter(val, true)}</option>
                         })}
                     </select>
                 </div>
