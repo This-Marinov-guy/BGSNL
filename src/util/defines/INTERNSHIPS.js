@@ -25,10 +25,11 @@ export const INTERNSHIPS_LIST = [
     specialty: "Internships (see roles on the site)",
     location: "Hybrid / Remote | Netherlands",
     label: "International & Remote",
-    duration: "3–6 months (flexible)",
+    duration: "full-time/flexible",
     description:
       "Join Acady and contribute across marketing, operations and product support. Work in a fast-moving environment and help scale impactful initiatives.",
-    bonuses: "Hands-on experience, mentorship, flexible schedule",
+    bonuses:
+      "Hands-on experience, mentorship, flexible schedule, competitive base salary + high performance bonuses",
     requirements:
       "Motivated student or recent graduate with strong communication and organizational skills",
     languages: "English (Dutch is a plus)",
@@ -39,7 +40,7 @@ export const INTERNSHIPS_LIST = [
     logo: "https://www.studentjobsrotterdam.nl/_next/image?url=%2Flogos%2Fpepperminds.jpeg&w=96&q=75",
     company: "Pepperminds",
     specialty: "Face-to-Face Fundraising Ambassador",
-    location: "On-site | Netherlands (multiple cities)",
+    location: "Groningen & Amstetrdam",
     label: "International & Remote",
     duration: "Part-time / Flexible",
     description:
@@ -48,7 +49,7 @@ export const INTERNSHIPS_LIST = [
       "Attractive base + bonus structure; average €150–€250 per shift; recruitment bonuses up to €300; masterclasses and events",
     requirements:
       "Communicative, proactive, and eager to develop sales skills; flexible availability; 16+",
-    languages: "Dutch, English",
+    languages: "English",
     contactMail: "",
     website:
       "https://www.pepperminds.nl/makeithappen/?mkt=LZ&utm_source=viavia&utm_medium=crewapp&utm_campaign=makeithappen",
