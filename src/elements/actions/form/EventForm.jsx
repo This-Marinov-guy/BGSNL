@@ -211,55 +211,80 @@ const EventForm = (props) => {
         function (value) {
           const { isEnabled, ticketLimit, ticketTimer } = value;
           if (!isEnabled) return true;
-          
+
           const hasValidLimit = ticketLimit != null && ticketLimit > 0;
           const hasValidTimer = ticketTimer != null && ticketTimer !== "";
-          
+
           if (!hasValidLimit && !hasValidTimer) {
             return this.createError({
               path: "earlyBird.at-least-one-limit",
-              message: "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
+              message:
+                "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
             });
           }
-          
+
           return true;
         }
       ),
 
-    lateBird: yup.object().shape({
-      isEnabled: yup.boolean().required(),
-      price: yup.number().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .number()
-            .required("Late Bird Price is required when Late Bird is enabled")
-            .min(1, "Must be greater than 0"),
-        otherwise: () => yup.number().nullable(),
-      }),
-      memberPrice: yup.number().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .number()
-            .required(
-              "Late Bird Member Price is required when Late Bird is enabled"
-            )
-            .min(1, "Must be greater than 0"),
-        otherwise: () => yup.number().nullable(),
-      }),
-      startTimer: yup.string().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .string()
-            .required(
-              "Late Bird Start Timer is required when Late Bird is enabled"
-            ),
-        otherwise: () => yup.string().nullable(),
-      }),
-      excludeMembers: yup.boolean(),
-    }),
+    lateBird: yup
+      .object()
+      .shape({
+        isEnabled: yup.boolean().required(),
+        price: yup.number().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .number()
+              .required("Late Bird Price is required when Late Bird is enabled")
+              .min(1, "Must be greater than 0"),
+          otherwise: () => yup.number().nullable(),
+        }),
+        memberPrice: yup.number().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .number()
+              .required(
+                "Late Bird Member Price is required when Late Bird is enabled"
+              )
+              .min(1, "Must be greater than 0"),
+          otherwise: () => yup.number().nullable(),
+        }),
+        ticketLimit: yup.number().nullable().min(1, "Must be greater than 0"),
+        startTimer: yup.string().when("isEnabled", {
+          is: true,
+          then: () =>
+            yup
+              .string()
+              .required(
+                "Late Bird Start Timer is required when Late Bird is enabled"
+              ),
+          otherwise: () => yup.string().nullable(),
+        }),
+        excludeMembers: yup.boolean(),
+      })
+      .test(
+        "at-least-one-limit",
+        "Either Ticket Limit or Ticket Timer must be provided when Late Bird is enabled",
+        function (value) {
+          const { isEnabled, ticketLimit, startTimer } = value;
+          if (!isEnabled) return true;
+
+          const hasValidLimit = ticketLimit != null && ticketLimit > 0;
+          const hasValidTimer = startTimer != null && startTimer !== "";
+
+          if (!hasValidLimit && !hasValidTimer) {
+            return this.createError({
+              path: "lateBird.at-least-one-limit",
+              message:
+                "Either Ticket Limit or Ticket Timer must be provided when Late Bird is enabled",
+            });
+          }
+
+          return true;
+        }
+      ),
 
     guestPromotion: yup.object().shape({
       isEnabled: yup.boolean().required(),
@@ -496,6 +521,11 @@ const EventForm = (props) => {
             excludeMembers: initialData?.earlyBird?.excludeMembers ?? false,
           },
           lateBird: {
+            ticketLimit:
+              initialData?.lateBird?.ticketLimit !== undefined &&
+              !isNaN(initialData.lateBird.ticketLimit)
+                ? initialData.lateBird.ticketLimit
+                : undefined,
             startTimer: initialData?.lateBird?.startTimer ?? "",
             price:
               initialData?.lateBird?.price !== undefined &&
@@ -815,7 +845,6 @@ const EventForm = (props) => {
                       label="Late Bird"
                       setFieldValue={setFieldValue}
                       initialCalendarValue={values.lateBird.startTimer}
-                      withLimit={false}
                       timerType={START_TIMER}
                     />
                   </div>

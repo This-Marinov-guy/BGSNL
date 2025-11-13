@@ -3,6 +3,8 @@ import { Field, ErrorMessage } from "formik";
 import { Calendar, CalendarWithClock } from "./common/Calendar";
 import { toCamelCase } from "../../util/functions/helpers";
 import { END_TIMER } from "../../util/defines/enum";
+import { Tooltip } from "primereact/tooltip";
+import { FiInfo } from "react-icons/fi";
 
 const AdditionalPrices = ({
   label,
@@ -21,6 +23,7 @@ const AdditionalPrices = ({
 
   return (
     <>
+      <Tooltip target=".ticket-limit-info" />
       <div className="row">
         {withLimit && (
           <>
@@ -36,13 +39,29 @@ const AdditionalPrices = ({
             </div>
             <div className="col-lg-6 col-12">
               <div className="rn-form-group">
-                <Field
-                  type="number"
-                  placeholder="Ticket Limit"
-                  name={`${prefix}.ticketLimit`}
-                  min={1}
-                  step={1}
-                />
+                <div style={{ position: "relative" }}>
+                  <Field
+                    type="number"
+                    placeholder="Ticket Limit"
+                    name={`${prefix}.ticketLimit`}
+                    min={1}
+                    step={1}
+                    style={{ paddingRight: "35px" }}
+                  />
+                  <FiInfo
+                    className="ticket-limit-info"
+                    data-pr-tooltip="The count to reach in order to start these prices (can exclude members from the count if the checkbox above is checked)"
+                    data-pr-position="top"
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "help",
+                      color: "#666"
+                    }}
+                  />
+                </div>
                 <ErrorMessage
                   className="error"
                   name={`${prefix}.ticketLimit`}
