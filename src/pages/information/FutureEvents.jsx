@@ -23,6 +23,7 @@ import FocusCards from "../../elements/ui/FocusCards";
 import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
 import { showModal } from "../../redux/modal";
 import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
 const FutureEventsContent = ({ displayAll, nullable = true }) => {
   const { region } = useParams();
@@ -97,7 +98,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                           className="col-lg-6 col-md-6 col-sm-12 mt--40"
                           key={index}
                         >
-                          <h4 className="archive mb--30">{regionName.toUpperCase()}</h4>
+                          <h4 className="archive mb--30">{capitalizeFirstLetter(regionName, true).toUpperCase()}</h4>
                           <FocusCards
                             cards={events[regionName]}
                             region={regionName}
