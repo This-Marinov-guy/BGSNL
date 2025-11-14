@@ -112,6 +112,47 @@ const EventDetails = () => {
       <div className="rn-portfolio-details ptb--120 bg_color--1">
         <div className="container">
           <div className="row">
+            <div className="col-12 mb--20">
+              <div className="portfolio-view-list d-flex flex-wrap" style={{justifyContent: "space-between"}}>
+                <div className="port-view">
+                  <h3 style={{ fontSize: "24px" }}>When</h3>
+                  <p style={{}}>
+                    {moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
+                  </p>
+                  {selectedEvent.correctedDate && (
+                    <p style={{ color: "#f80707" }} className="error">
+                      {"Updated Date/Time -> " +
+                        moment(selectedEvent.correctedDate).format(
+                          "Do MMM YY hh:mm"
+                        )}
+                    </p>
+                  )}
+                </div>
+
+                <div className="port-view">
+                  <h3 style={{ fontSize: "24px" }}>Where</h3>
+                  <p style={{}}>{selectedEvent.location}</p>
+                </div>
+
+                <div className="port-view">
+                  <h3 style={{ fontSize: "24px" }}>Entry fee</h3>
+                  <p
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    {price}
+                    <DynamicTicketBadge
+                      isMember={isMember(user)}
+                      product={selectedEvent?.product}
+                      event={selectedEvent}
+                    />
+                  </p>
+                </div>
+              </div>
+            </div>
             <div className="col-lg-5 col-md-12 mb--40">
               {/* Event Poster */}
               <div className="event-poster-wrapper">
@@ -126,41 +167,9 @@ const EventDetails = () => {
             <div className="col-lg-7 col-md-12">
               <div className="portfolio-details">
                 <div className="inner">
-                  <h3>About</h3>
+                  <h3 style={{ fontSize: "24px" }}>About</h3>
                   <p style={{ whiteSpace: "pre-line" }}>{selectedEvent.text}</p>
-                  <div className="portfolio-view-list d-flex flex-wrap">
-                    <div className="port-view">
-                      <span>When</span>
-                      <h4>
-                        {moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
-                      </h4>
-                      {selectedEvent.correctedDate && (
-                        <p style={{ color: "#f80707" }} className="error">
-                          {"Updated Date/Time -> " +
-                            moment(selectedEvent.correctedDate).format(
-                              "Do MMM YY hh:mm"
-                            )}
-                        </p>
-                      )}
-                    </div>
 
-                    <div className="port-view">
-                      <span>Where</span>
-                      <h4>{selectedEvent.location}</h4>
-                    </div>
-
-                    <div className="port-view">
-                      <span>Entry fee</span>
-                      <h4 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                        {price}
-                        <DynamicTicketBadge
-                          isMember={isMember(user)}
-                          product={selectedEvent?.product}
-                          event={selectedEvent}
-                        />
-                      </h4>
-                    </div>
-                  </div>
                   {
                     //for links to subEvent
                     selectedEvent?.subEvent?.description &&
@@ -195,7 +204,14 @@ const EventDetails = () => {
                       </div>
                     ) : (
                       <StickyButtonFooter>
-                        <div className="purchase-btn gap-3" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div
+                          className="purchase-btn gap-3"
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
                           {selectedEvent.ticketLink ? (
                             <div>
                               <div
