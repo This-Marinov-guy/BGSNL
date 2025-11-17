@@ -27,7 +27,7 @@ const AlumniInfoPage = () => {
       <div className="pt--160 pb--80 bg_color--1">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-lg-6 col-md-12 col-12">
+            <div className="col-lg-6 col-md-12 col-12 mb--20">
               <div className="content">
                 <h1
                   className="mb--20"
