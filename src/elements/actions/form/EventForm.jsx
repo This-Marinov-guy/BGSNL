@@ -1016,11 +1016,18 @@ const EventForm = (props) => {
             <h3 className="mt--30 label">Images</h3>
             <div className="row">
               <div className="col-lg-4 col-md-6 col-12 mt--20">
-                <hr />
-                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
-                  <h5 className="center_text" style={{ margin: 0 }}>
-                    Poster Image <span style={{ color: "#dc3545" }}>*</span>
-                  </h5>
+                <div style={{
+                  border: "1px solid #e9ecef",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                }}>
+                  <hr />
+                  <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
+                    <h5 className="center_text" style={{ margin: 0 }}>
+                      Poster Image <span style={{ color: "#dc3545" }}>*</span>
+                    </h5>
                   <Tooltip target=".poster-tooltip" />
                   <FiInfo
                     className="poster-tooltip"
@@ -1040,13 +1047,21 @@ const EventForm = (props) => {
                   name="poster"
                   component="div"
                 />
+                </div>
               </div>
               <div className="col-lg-4 col-md-6 col-12 mt--20">
-                <hr />
-                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
-                  <h5 className="center_text" style={{ margin: 0 }}>
-                    Ticket Image <span style={{ color: "#dc3545" }}>*</span>
-                  </h5>
+                <div style={{
+                  border: "1px solid #e9ecef",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                }}>
+                  <hr />
+                  <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
+                    <h5 className="center_text" style={{ margin: 0 }}>
+                      Ticket Image <span style={{ color: "#dc3545" }}>*</span>
+                    </h5>
                   <Tooltip target=".ticket-img-tooltip" />
                   <FiInfo
                     className="ticket-img-tooltip"
@@ -1150,13 +1165,21 @@ const EventForm = (props) => {
                     </div>
                   </div>
                 </div>
+                </div>
               </div>
               <div className="col-lg-4 col-md-6 col-12 mt--20">
-                <hr />
-                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
-                  <h5 className="center_text" style={{ margin: 0 }}>
-                    Background Image <span style={{ color: "#dc3545" }}>*</span>
-                  </h5>
+                <div style={{
+                  border: "1px solid #e9ecef",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                }}>
+                  <hr />
+                  <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
+                    <h5 className="center_text" style={{ margin: 0 }}>
+                      Background Image <span style={{ color: "#dc3545" }}>*</span>
+                    </h5>
                   <Tooltip target=".bg-image-tooltip" />
                   <FiInfo
                     className="bg-image-tooltip"
@@ -1212,6 +1235,7 @@ const EventForm = (props) => {
                       </div>
                     </div>
                   )}
+                </div>
                 </div>
               </div>
             </div>
