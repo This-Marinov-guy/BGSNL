@@ -35,7 +35,7 @@ import { START_TIMER } from "../../../util/defines/enum";
 import PromotionalPrices from "../../inputs/PromotionalPrice";
 import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
 import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
-import { FiAnchor } from "react-icons/fi";
+import { FiInfo } from "react-icons/fi";
 import { Tooltip } from "primereact/tooltip";
 
 const EventForm = (props) => {
@@ -648,10 +648,32 @@ const EventForm = (props) => {
             id="form"
             style={{ padding: "2%" }}
           >
+            {/* ========== REQUIRED SECTIONS ========== */}
+            <div style={{
+              backgroundColor: "#fff9f0",
+              padding: "20px",
+              borderRadius: "8px",
+              border: "2px solid #ffc107",
+              marginBottom: "40px"
+            }}>
+              <div className="d-flex align-items-center" style={{ gap: "8px", marginBottom: "20px" }}>
+                <h2 style={{ margin: 0, color: "#dc3545", fontSize: "24px" }}>Required Information</h2>
+                <small style={{ color: "#6c757d", fontStyle: "italic" }}>All fields marked with * are mandatory</small>
+              </div>
+
             <h3 className="label">Basic Information</h3>
             <div className="row">
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    Region <span style={{ color: "#dc3545" }}>*</span>
+                  </label>
                   <Field disabled={props.edit} as="select" name="region">
                     <option value="" disabled>
                       Select Region
@@ -672,24 +694,44 @@ const EventForm = (props) => {
                 </div>
               </div>
               <div className="col-lg-6 col-md-12 col-12">
-                <Field
-                  type="text"
-                  placeholder="Location of event"
-                  name="location"
-                ></Field>
-                <ErrorMessage
-                  className="error"
-                  name="location"
-                  component="div"
-                />
+                <div className="rn-form-group">
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    Location <span style={{ color: "#dc3545" }}>*</span>
+                  </label>
+                  <Field
+                    type="text"
+                    placeholder="e.g., De Nieuwe Kantine, Amsterdam"
+                    name="location"
+                  ></Field>
+                  <ErrorMessage
+                    className="error"
+                    name="location"
+                    component="div"
+                  />
+                </div>
               </div>
             </div>
             <div className="row">
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    Event Name <span style={{ color: "#dc3545" }}>*</span>
+                  </label>
                   <Field
                     type="text"
-                    placeholder="Event Name"
+                    placeholder="e.g., Summer Beach Party 2024"
                     name="title"
                   ></Field>
                   <ErrorMessage
@@ -701,9 +743,19 @@ const EventForm = (props) => {
               </div>
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                      color: "#6c757d",
+                    }}
+                  >
+                    Sub-Title
+                  </label>
                   <Field
                     type="text"
-                    placeholder="Sub-Title"
+                    placeholder="e.g., An unforgettable night by the sea"
                     name="description"
                   ></Field>
                   <ErrorMessage
@@ -716,29 +768,51 @@ const EventForm = (props) => {
             </div>
             <div className="row">
               <div className="col-lg-12 col-md-12 col-12">
-                <CalendarWithClock
-                  mode="single"
-                  locale="en-nl"
-                  placeholder="Date and Time"
-                  captionLayout="dropdown"
-                  initialValue={values.date}
-                  min={new Date()}
-                  onSelect={(value) => {
-                    setFieldValue("date", value);
-                  }}
-                />
-                <ErrorMessage className="error" name="date" component="div" />
+                <div className="rn-form-group">
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    Date and Time <span style={{ color: "#dc3545" }}>*</span>
+                  </label>
+                  <CalendarWithClock
+                    mode="single"
+                    locale="en-nl"
+                    placeholder="Select event date and time"
+                    captionLayout="dropdown"
+                    initialValue={values.date}
+                    min={new Date()}
+                    onSelect={(value) => {
+                      setFieldValue("date", value);
+                    }}
+                  />
+                  <ErrorMessage className="error" name="date" component="div" />
+                </div>
               </div>
             </div>
             <div className="row mt--20">
               <div className="col-lg-12 col-md-12 col-12">
-                <Field
-                  as="textarea"
-                  placeholder="Full Description"
-                  name="text"
-                  rows={6}
-                />
-                <ErrorMessage className="error" name="text" component="div" />
+                <div className="rn-form-group">
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    Full Description <span style={{ color: "#dc3545" }}>*</span>
+                  </label>
+                  <Field
+                    as="textarea"
+                    placeholder="Describe your event in detail..."
+                    name="text"
+                    rows={6}
+                  />
+                  <ErrorMessage className="error" name="text" component="div" />
+                </div>
               </div>
             </div>
             <h3 className="mt--30 label">Price Details</h3>
@@ -782,15 +856,23 @@ const EventForm = (props) => {
               (values.isTicketLink ? (
                 <div className="row">
                   <div className="col-12">
-                    <h5 className="mt--10"></h5>
                     <div className="rn-form-group">
+                      <label
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        External Platform Ticket Link <span style={{ color: "#dc3545" }}>*</span>
+                      </label>
                       <Field
                         type="text"
-                        placeholder="External Platform Ticket Link"
+                        placeholder="e.g., https://ticketmaster.com/event/12345"
                         name="ticketLink"
                       />
-                      <small>
-                        *Link will redirect the client outside the website
+                      <small style={{ color: "#6c757d" }}>
+                        Link will redirect users to external ticket platform
                       </small>
                       <ErrorMessage
                         className="error"
@@ -805,9 +887,18 @@ const EventForm = (props) => {
                   <div className="col-lg-4 col-md-6 col-12">
                     <h5 className="mt--10">Basic Price</h5>
                     <div className="rn-form-group">
+                      <label
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          marginBottom: "5px",
+                        }}
+                      >
+                        Guest Price (€) <span style={{ color: "#dc3545" }}>*</span>
+                      </label>
                       <Field
                         type="number"
-                        placeholder="Price"
+                        placeholder="e.g., 15.00"
                         name="guestPrice"
                         min={1}
                         step="0.01"
@@ -819,9 +910,19 @@ const EventForm = (props) => {
                       />
                     </div>
                     <div className="rn-form-group">
+                      <label
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          marginBottom: "5px",
+                          color: "#6c757d",
+                        }}
+                      >
+                        Including
+                      </label>
                       <Field
                         type="text"
-                        placeholder="Including"
+                        placeholder="e.g., 2 drinks, coat check"
                         name="entryIncluding"
                       />
                       <ErrorMessage
@@ -836,9 +937,18 @@ const EventForm = (props) => {
                       <div className="col-lg-4 col-md-6 col-12">
                         <h5 className="mt--10">Member Price</h5>
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Member Price (€) <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Field
                             type="number"
-                            placeholder="Member Price"
+                            placeholder="e.g., 10.00"
                             name="memberPrice"
                             min={1}
                             step="0.01"
@@ -850,9 +960,19 @@ const EventForm = (props) => {
                           />
                         </div>
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                              color: "#6c757d",
+                            }}
+                          >
+                            Including
+                          </label>
                           <Field
                             type="text"
-                            placeholder="Including"
+                            placeholder="e.g., 3 drinks, coat check"
                             name="memberIncluding"
                           />
                           <ErrorMessage
@@ -865,9 +985,19 @@ const EventForm = (props) => {
                       <div className="col-lg-4 col-md-6 col-12">
                         <h5 className="mt--10">Active Member Price</h5>
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                              color: "#6c757d",
+                            }}
+                          >
+                            Active Member Price (€)
+                          </label>
                           <Field
                             type="number"
-                            placeholder="Active Member Price"
+                            placeholder="e.g., 8.00"
                             name="activeMemberPrice"
                             min={1}
                             step="0.01"
@@ -881,125 +1011,24 @@ const EventForm = (props) => {
                       </div>
                     </>
                   )}
-                  <div className="col-12">
-                    <h3 className="mt--30 label">
-                      Variable Price Options (Change price based on demand and
-                      time)
-                    </h3>
-                    <div className="hor_section_nospace mt--20 mb--20">
-                      <Field
-                        style={{ maxWidth: "30px" }}
-                        type="checkbox"
-                        name="earlyBird.isEnabled"
-                      ></Field>
-                      <p>Add Early Bird Price</p>
-                    </div>
-                    <AdditionalPrices
-                      visible={values.earlyBird.isEnabled}
-                      label="Early Bird"
-                      setFieldValue={setFieldValue}
-                      initialCalendarValue={values.earlyBird.ticketTimer}
-                    />
-                  </div>
-                  <div className="col-12">
-                    <div className="hor_section_nospace mt--20 mb--20">
-                      <Field
-                        style={{ maxWidth: "30px" }}
-                        type="checkbox"
-                        name="lateBird.isEnabled"
-                      ></Field>
-                      <p>Add Late Bird Price</p>
-                    </div>
-                    <AdditionalPrices
-                      visible={values.lateBird.isEnabled}
-                      label="Late Bird"
-                      setFieldValue={setFieldValue}
-                      initialCalendarValue={values.lateBird.startTimer}
-                      timerType={START_TIMER}
-                    />
-                  </div>
-                  <div className="col-12">
-                    <h3 className="mt--30 label">
-                      Promotions (deduct % from the price)
-                    </h3>
-                    <div className="hor_section_nospace mt--20 mb--20">
-                      <Field
-                        style={{ maxWidth: "30px" }}
-                        type="checkbox"
-                        name="guestPromotion.isEnabled"
-                      ></Field>
-                      <p>Add Guest Promotion</p>
-                    </div>
-                    <PromotionalPrices
-                      visible={values.guestPromotion.isEnabled}
-                      label="Guest Promotion"
-                      setFieldValue={setFieldValue}
-                      initialStartValue={values.guestPromotion.startTimer}
-                      initialEndValue={values.guestPromotion.endTimer}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    <div className="hor_section_nospace mt--20 mb--20">
-                      <Field
-                        style={{ maxWidth: "30px" }}
-                        type="checkbox"
-                        name="memberPromotion.isEnabled"
-                      ></Field>
-                      <p>Add Member Promotion</p>
-                    </div>
-                    <PromotionalPrices
-                      visible={values.memberPromotion.isEnabled}
-                      label="Member Promotion"
-                      setFieldValue={setFieldValue}
-                      initialStartValue={values.memberPromotion.startTimer}
-                      initialEndValue={values.memberPromotion.endTimer}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    <h3 className="mt--30 label">
-                      Add-Ons (additional services or products to the ticket)
-                    </h3>
-                    <div className="hor_section_nospace mt--20 mb--20">
-                      <Field
-                        style={{ maxWidth: "30px" }}
-                        type="checkbox"
-                        name="addOns.isEnabled"
-                      ></Field>
-                      <p>Enable add-ons</p>
-                    </div>
-                    <AddOnsBuilder
-                      onChange={(input) => setFieldValue("addOns", input)}
-                      value={values.addOns}
-                    />
-                  </div>
-
-                  <div className="col-12">
-                    <h3 className="mt--30 label">
-                      Promo Codes (discount codes customers can apply)
-                    </h3>
-                    <div className="hor_section_nospace mt--20 mb--20">
-                      <Field
-                        style={{ maxWidth: "30px" }}
-                        type="checkbox"
-                        name="promoCodes.isEnabled"
-                      ></Field>
-                      <p>Enable promo codes</p>
-                    </div>
-                    <PromoCodesBuilder
-                      onChange={(codes) => setFieldValue("promoCodes.codes", codes)}
-                      value={values.promoCodes.codes}
-                      isEnabled={values.promoCodes.isEnabled}
-                    />
-                  </div>
                 </div>
               ))}
             <h3 className="mt--30 label">Images</h3>
             <div className="row">
-              <div className="col-lg-6 col-md-6 col-12 mt--20">
+              <div className="col-lg-4 col-md-6 col-12 mt--20">
                 <hr />
-                <h5 className="center_text">Poster Image</h5>
+                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
+                  <h5 className="center_text" style={{ margin: 0 }}>
+                    Poster Image <span style={{ color: "#dc3545" }}>*</span>
+                  </h5>
+                  <Tooltip target=".poster-tooltip" />
+                  <FiInfo
+                    className="poster-tooltip"
+                    style={{ cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Main promotional image for your event (displayed on event page)"
+                    data-pr-position="right"
+                  />
+                </div>
                 <ImageInput
                   initialImage={values.poster}
                   onChange={(event) => {
@@ -1012,9 +1041,20 @@ const EventForm = (props) => {
                   component="div"
                 />
               </div>
-              <div className="col-lg-6 col-md-6 col-12 mt--20">
+              <div className="col-lg-4 col-md-6 col-12 mt--20">
                 <hr />
-                <h5 className="center_text">Ticket Image</h5>
+                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
+                  <h5 className="center_text" style={{ margin: 0 }}>
+                    Ticket Image <span style={{ color: "#dc3545" }}>*</span>
+                  </h5>
+                  <Tooltip target=".ticket-img-tooltip" />
+                  <FiInfo
+                    className="ticket-img-tooltip"
+                    style={{ cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Background image for digital tickets (must be 300:97 ratio, e.g., 1500x485px)"
+                    data-pr-position="right"
+                  />
+                </div>
                 <ImageInput
                   initialImage={values.ticketImg}
                   onChange={(event) => {
@@ -1111,42 +1151,20 @@ const EventForm = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="row center_text">
-              <div className="col-lg-6 col-12 mt--20">
+              <div className="col-lg-4 col-md-6 col-12 mt--20">
                 <hr />
-                <h5 className="mt--30">
-                  Extra Description Images (Pictures to see at the bottom of the
-                  page - poster is automatically assigned)
-                </h5>
-                <FileUpload
-                  name="extraImages"
-                  onInput={inputHandler}
-                  multiple
-                  accept="image/*"
-                  maxFileSize={100000000000}
-                  emptyTemplate={
-                    <h4 className="m-0">
-                      Drag and drop files to here to upload.
-                    </h4>
-                  }
-                />
-                <p>
-                  <small>* Submit no more than 3</small>
-                  <br />
-                  <small>* Any extra images will not be received</small>
-                  <br />
-                </p>
-                {!isValidFiles && (
-                  <p style={{ color: "red" }}>
-                    The file is not supported, please try again
-                  </p>
-                )}
-              </div>
-              <div className="col-lg-6 col-12 mt--20">
-                <hr />
-                <h5 className="mt--30">Background Image (hover for preview)</h5>
+                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px" }}>
+                  <h5 className="center_text" style={{ margin: 0 }}>
+                    Background Image <span style={{ color: "#dc3545" }}>*</span>
+                  </h5>
+                  <Tooltip target=".bg-image-tooltip" />
+                  <FiInfo
+                    className="bg-image-tooltip"
+                    style={{ cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Choose a background image for the event page (default or custom)"
+                    data-pr-position="right"
+                  />
+                </div>
                 <div
                   className="rn-form-group"
                   style={{ margin: "auto", width: "250px" }}
@@ -1197,7 +1215,142 @@ const EventForm = (props) => {
                 </div>
               </div>
             </div>
-            <h3 className="label mt--20">Additional Settings</h3>
+
+            <h3 className="label mt--20">Ticket Settings</h3>
+            <div className="row">
+              <div className="col-lg-6 col-12">
+                <div className="rn-form-group">
+                  <div className="d-flex align-items-center" style={{ gap: "8px", marginBottom: "5px" }}>
+                    <label
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        margin: 0,
+                      }}
+                    >
+                      Ticket Limit <span style={{ color: "#dc3545" }}>*</span>
+                    </label>
+                    <Tooltip target=".ticket-limit-tooltip" />
+                    <FiInfo
+                      className="ticket-limit-tooltip"
+                      style={{ cursor: "help", color: "#6c757d" }}
+                      data-pr-tooltip="Maximum number of tickets available for sale"
+                      data-pr-position="right"
+                    />
+                  </div>
+                  <Field
+                    type="number"
+                    placeholder="e.g., 100"
+                    name="ticketLimit"
+                    min={1}
+                    step={1}
+                  />
+                  <ErrorMessage
+                    className="error"
+                    name="ticketLimit"
+                    component="div"
+                  />
+                </div>
+              </div>
+              <div className="col-lg-6 col-12">
+                <div className="rn-form-group">
+                  <div className="d-flex align-items-center" style={{ gap: "8px", marginBottom: "5px" }}>
+                    <label
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        margin: 0,
+                      }}
+                    >
+                      Ticket Timer <span style={{ color: "#dc3545" }}>*</span>
+                    </label>
+                    <Tooltip target=".ticket-timer-tooltip" />
+                    <FiInfo
+                      className="ticket-timer-tooltip"
+                      style={{ cursor: "help", color: "#6c757d" }}
+                      data-pr-tooltip="Deadline for ticket sales (sales stop at this date/time)"
+                      data-pr-position="right"
+                    />
+                  </div>
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="flex-grow-1">
+                      <CalendarWithClock
+                        mode="single"
+                        locale="en-nl"
+                        placeholder="Select ticket sales deadline"
+                        captionLayout="dropdown"
+                        min={values.date ? new Date(values.date) : new Date()}
+                        initialValue={values.ticketTimer}
+                        onSelect={(value) => {
+                          setFieldValue("ticketTimer", value);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <ErrorMessage
+                  className="error"
+                  name="ticketTimer"
+                  component="div"
+                />
+              </div>
+            </div>
+            </div>
+            {/* End of Required Sections */}
+
+            {/* ========== OPTIONAL SECTIONS ========== */}
+            <div style={{
+              backgroundColor: "#f0f8ff",
+              padding: "20px",
+              borderRadius: "8px",
+              border: "2px dashed #17a2b8",
+              marginBottom: "40px"
+            }}>
+              <div className="d-flex align-items-center" style={{ gap: "8px", marginBottom: "20px" }}>
+                <h2 style={{ margin: 0, color: "#17a2b8", fontSize: "24px" }}>Optional Settings</h2>
+                <small style={{ color: "#6c757d", fontStyle: "italic" }}>Customize your event with these additional options</small>
+              </div>
+
+            <div className="row">
+              <div className="col-lg-6 col-12 mt--20">
+                <div className="d-flex align-items-center" style={{ gap: "8px", marginBottom: "10px" }}>
+                  <h5 style={{ margin: 0, color: "#6c757d" }}>Discount Emails</h5>
+                  <Tooltip target=".discount-emails-tooltip" />
+                  <FiInfo
+                    className="discount-emails-tooltip"
+                    style={{ cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Email addresses that receive member pricing (in addition to active members)"
+                    data-pr-position="right"
+                  />
+                </div>
+                <StringDynamicInputs
+                  name="discountPass"
+                  onChange={(inputs) => setFieldValue("discountPass", inputs)}
+                  initialValues={values.discountPass}
+                  placeholder="e.g., guest@example.com"
+                />
+              </div>
+              <div className="col-lg-6 col-12 mt--20">
+                <div className="d-flex align-items-center" style={{ gap: "8px", marginBottom: "10px" }}>
+                  <h5 style={{ margin: 0, color: "#6c757d" }}>Free Pass Emails</h5>
+                  <Tooltip target=".freepass-emails-tooltip" />
+                  <FiInfo
+                    className="freepass-emails-tooltip"
+                    style={{ cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Email addresses that can register for free (e.g., sponsors, VIPs)"
+                    data-pr-position="right"
+                  />
+                </div>
+                <StringDynamicInputs
+                  name="freePass"
+                  onChange={(inputs) => setFieldValue("freePass", inputs)}
+                  initialValues={values.freePass}
+                  placeholder="e.g., vip@example.com"
+                />
+              </div>
+            </div>
+
+            <h3 className="label mt--40">Additional Settings</h3>
             <div className="row mt--20">
               <div className="col-lg-6 col-12">
                 <div className="hor_section_nospace mt--20">
@@ -1209,6 +1362,13 @@ const EventForm = (props) => {
                   <p className="information">
                     Close Sale of Tickets (only display event)
                   </p>
+                  <Tooltip target=".sale-closed-tooltip" />
+                  <FiInfo
+                    className="sale-closed-tooltip"
+                    style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Disable ticket purchases but keep event visible for information"
+                    data-pr-position="right"
+                  />
                 </div>
               </div>
               <div className="col-lg-6 col-12">
@@ -1219,9 +1379,15 @@ const EventForm = (props) => {
                     name="memberOnly"
                   ></Field>
                   <p className="information">
-                    Make event only purchasable by members (Still visible for
-                    non-members)
+                    Make event only purchasable by members
                   </p>
+                  <Tooltip target=".member-only-tooltip" />
+                  <FiInfo
+                    className="member-only-tooltip"
+                    style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Only members can purchase tickets (event still visible to non-members)"
+                    data-pr-position="right"
+                  />
                 </div>
                 <ErrorMessage
                   className="error"
@@ -1237,92 +1403,202 @@ const EventForm = (props) => {
                     name="hidden"
                   ></Field>
                   <p className="information">
-                    Hide event from News section (only accessible from url or
-                    subevent link)
+                    Hide event from News section
                   </p>
+                  <Tooltip target=".hidden-event-tooltip" />
+                  <FiInfo
+                    className="hidden-event-tooltip"
+                    style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Event only accessible via direct URL or subevent link (not shown in listings)"
+                    data-pr-position="right"
+                  />
                 </div>
                 <ErrorMessage className="error" name="hidden" component="div" />
               </div>
             </div>
 
-            <div className="row">
-              <div className="col-lg-6 col-12">
-                <div className="rn-form-group">
-                  <Field
-                    type="number"
-                    placeholder="Ticket Limit"
-                    name="ticketLimit"
-                    min={1}
-                    step={1}
-                  />
-                  <ErrorMessage
-                    className="error"
-                    name="ticketLimit"
-                    component="div"
+            <h3 className="label mt--40">Extra Images</h3>
+            <div className="row center_text">
+              <div className="col-12 mt--20">
+                <div className="d-flex align-items-center justify-content-center" style={{ gap: "8px", marginBottom: "10px" }}>
+                  <h5 style={{ margin: 0, color: "#6c757d" }}>Extra Description Images</h5>
+                  <Tooltip target=".extra-images-tooltip" />
+                  <FiInfo
+                    className="extra-images-tooltip"
+                    style={{ cursor: "help", color: "#6c757d" }}
+                    data-pr-tooltip="Additional images to display at the bottom of the event page (poster is already included)"
+                    data-pr-position="right"
                   />
                 </div>
-              </div>
-              <div className="col-lg-6 col-12">
-                <div className="rn-form-group">
-                  <div className="d-flex align-items-center gap-3">
-                    <div className="flex-grow-1">
-                      <CalendarWithClock
-                        mode="single"
-                        locale="en-nl"
-                        placeholder="Ticket Timer"
-                        captionLayout="dropdown"
-                        min={values.date ? new Date(values.date) : new Date()}
-                        initialValue={values.ticketTimer}
-                        onSelect={(value) => {
-                          setFieldValue("ticketTimer", value);
-                        }}
-                      />
-                    </div>
-
-                    <Tooltip target=".anchor_icon" />
-
-                    {/* <FiAnchor
-                      className="'btn-icon-frame green anchor_icon"
-                      onClick={() => {
-                        const eventDate = new Date(values.date);
-                        const ticketTimerDate = new Date(
-                          eventDate.getTime() + 60 * 60 * 1000
-                        ); // Add 1 hour
-                        setFieldValue("ticketTimer", ticketTimerDate);
-                      }}
-                      data-pr-tooltip="Click to set as event date + 1 hour"
-                      data-pr-position="left"
-                    /> */}
-                  </div>
-                </div>
-                <ErrorMessage
-                  className="error"
-                  name="ticketTimer"
-                  component="div"
+                <FileUpload
+                  name="extraImages"
+                  onInput={inputHandler}
+                  multiple
+                  accept="image/*"
+                  maxFileSize={100000000000}
+                  emptyTemplate={
+                    <h4 className="m-0">
+                      Drag and drop files to here to upload.
+                    </h4>
+                  }
                 />
+                <p>
+                  <small>* Submit no more than 3</small>
+                  <br />
+                  <small>* Any extra images will not be received</small>
+                  <br />
+                </p>
+                {!isValidFiles && (
+                  <p style={{ color: "red" }}>
+                    The file is not supported, please try again
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="row">
-              <div className="col-lg-6 col-12 mt--20">
-                <h5>Discount emails (extra from the active members)</h5>
-                <StringDynamicInputs
-                  name="discountPass"
-                  onChange={(inputs) => setFieldValue("discountPass", inputs)}
-                  initialValues={values.discountPass}
-                  placeholder="Add email"
-                />
-              </div>
-              <div className="col-lg-6 col-12 mt--20">
-                <h5>Free Pass emails (for those who need a free ticket)</h5>
-                <StringDynamicInputs
-                  name="freePass"
-                  onChange={(inputs) => setFieldValue("freePass", inputs)}
-                  initialValues={values.freePass}
-                  placeholder="Add email"
-                />
-              </div>
+            <h3 className="label mt--40">Variable Price Options</h3>
+            <small style={{ color: "#6c757d", display: "block", marginBottom: "15px" }}>Change price based on demand and time</small>
+
+            <div className="hor_section_nospace mt--20 mb--20">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name="earlyBird.isEnabled"
+              ></Field>
+              <p>Add Early Bird Price</p>
+              <Tooltip target=".early-bird-tooltip" />
+              <FiInfo
+                className="early-bird-tooltip"
+                style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                data-pr-tooltip="Discounted pricing for early ticket purchases. Set either a ticket limit or end date."
+                data-pr-position="right"
+              />
             </div>
+            <AdditionalPrices
+              visible={values.earlyBird.isEnabled}
+              label="Early Bird"
+              setFieldValue={setFieldValue}
+              initialCalendarValue={values.earlyBird.ticketTimer}
+            />
+
+            <div className="hor_section_nospace mt--20 mb--20">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name="lateBird.isEnabled"
+              ></Field>
+              <p>Add Late Bird Price</p>
+              <Tooltip target=".late-bird-tooltip" />
+              <FiInfo
+                className="late-bird-tooltip"
+                style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                data-pr-tooltip="Increased pricing that activates closer to the event date. Requires a start date."
+                data-pr-position="right"
+              />
+            </div>
+            <AdditionalPrices
+              visible={values.lateBird.isEnabled}
+              label="Late Bird"
+              setFieldValue={setFieldValue}
+              initialCalendarValue={values.lateBird.startTimer}
+              timerType={START_TIMER}
+            />
+
+            <h3 className="label mt--40">Promotions</h3>
+            <small style={{ color: "#6c757d", display: "block", marginBottom: "15px" }}>Deduct % from the price</small>
+
+            <div className="hor_section_nospace mt--20 mb--20">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name="guestPromotion.isEnabled"
+              ></Field>
+              <p>Add Guest Promotion</p>
+              <Tooltip target=".guest-promo-tooltip" />
+              <FiInfo
+                className="guest-promo-tooltip"
+                style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                data-pr-tooltip="Time-limited percentage discount for guest tickets. Set start and end dates."
+                data-pr-position="right"
+              />
+            </div>
+            <PromotionalPrices
+              visible={values.guestPromotion.isEnabled}
+              label="Guest Promotion"
+              setFieldValue={setFieldValue}
+              initialStartValue={values.guestPromotion.startTimer}
+              initialEndValue={values.guestPromotion.endTimer}
+            />
+
+            <div className="hor_section_nospace mt--20 mb--20">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name="memberPromotion.isEnabled"
+              ></Field>
+              <p>Add Member Promotion</p>
+              <Tooltip target=".member-promo-tooltip" />
+              <FiInfo
+                className="member-promo-tooltip"
+                style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                data-pr-tooltip="Time-limited percentage discount for member tickets. Set start and end dates."
+                data-pr-position="right"
+              />
+            </div>
+            <PromotionalPrices
+              visible={values.memberPromotion.isEnabled}
+              label="Member Promotion"
+              setFieldValue={setFieldValue}
+              initialStartValue={values.memberPromotion.startTimer}
+              initialEndValue={values.memberPromotion.endTimer}
+            />
+
+            <h3 className="label mt--40">Add-Ons</h3>
+            <small style={{ color: "#6c757d", display: "block", marginBottom: "15px" }}>Additional services or products to the ticket</small>
+
+            <div className="hor_section_nospace mt--20 mb--20">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name="addOns.isEnabled"
+              ></Field>
+              <p>Enable add-ons</p>
+              <Tooltip target=".addons-tooltip" />
+              <FiInfo
+                className="addons-tooltip"
+                style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                data-pr-tooltip="Extra items customers can purchase with their ticket (e.g., drinks, merchandise, food)."
+                data-pr-position="right"
+              />
+            </div>
+            <AddOnsBuilder
+              onChange={(input) => setFieldValue("addOns", input)}
+              value={values.addOns}
+            />
+
+            <h3 className="label mt--40">Promo Codes</h3>
+            <small style={{ color: "#6c757d", display: "block", marginBottom: "15px" }}>Discount codes customers can apply</small>
+
+            <div className="hor_section_nospace mt--20 mb--20">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name="promoCodes.isEnabled"
+              ></Field>
+              <p>Enable promo codes</p>
+              <Tooltip target=".promocodes-tooltip" />
+              <FiInfo
+                className="promocodes-tooltip"
+                style={{ marginLeft: "8px", cursor: "help", color: "#6c757d" }}
+                data-pr-tooltip="Create custom discount codes for customers to use at checkout."
+                data-pr-position="right"
+              />
+            </div>
+            <PromoCodesBuilder
+              onChange={(codes) => setFieldValue("promoCodes.codes", codes)}
+              value={values.promoCodes.codes}
+              isEnabled={values.promoCodes.isEnabled}
+            />
 
             <SubEventBuilder
               onChange={(input) => setFieldValue("subEvent", input)}
@@ -1334,6 +1610,8 @@ const EventForm = (props) => {
               onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
               initialValues={values.extraInputsForm}
             />
+            </div>
+            {/* End of Optional Sections */}
 
             <ConfirmDialog />
             <div className="mt--40 mb--20 center_div">
