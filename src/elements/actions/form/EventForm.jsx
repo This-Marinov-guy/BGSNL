@@ -34,6 +34,7 @@ import AdditionalPrices from "../../inputs/AdditionalPrices";
 import { START_TIMER } from "../../../util/defines/enum";
 import PromotionalPrices from "../../inputs/PromotionalPrice";
 import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
+import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
 import { FiAnchor } from "react-icons/fi";
 import { Tooltip } from "primereact/tooltip";
 
@@ -375,6 +376,50 @@ const EventForm = (props) => {
       }),
     }),
 
+    promoCodes: yup.object().shape({
+      isEnabled: yup.boolean(),
+      codes: yup.array().when("isEnabled", {
+        is: true,
+        then: () =>
+          yup
+            .array()
+            .of(
+              yup.object().shape({
+                id: yup.string().nullable(),
+                code: yup.string().required("Promo code is required"),
+                discountType: yup
+                  .number()
+                  .required("Discount type is required")
+                  .oneOf([1, 2], "Must be 1 (fixed) or 2 (percentage)"),
+                discount: yup
+                  .number()
+                  .required("Discount amount is required")
+                  .when("discountType", {
+                    is: 2,
+                    then: () =>
+                      yup
+                        .number()
+                        .min(1, "Percentage must be at least 1%")
+                        .max(100, "Percentage cannot exceed 100%"),
+                    otherwise: () =>
+                      yup.number().min(0.01, "Amount must be greater than 0"),
+                  }),
+                useLimit: yup
+                  .number()
+                  .nullable()
+                  .min(1, "Use limit must be at least 1"),
+                timeLimit: yup.string().nullable(),
+                minAmount: yup
+                  .number()
+                  .nullable()
+                  .min(0.01, "Minimum amount must be greater than 0"),
+              })
+            )
+            .min(1, "At least one promo code is required when enabled"),
+        otherwise: () => yup.array().nullable(),
+      }),
+    }),
+
     ticketLink: yup.string().when("isTicketLink", {
       is: (isTicketLink) => isTicketLink,
       then: () =>
@@ -416,7 +461,18 @@ const EventForm = (props) => {
             });
 
             Object.entries(values).forEach(([key, val]) => {
-              if (
+              if (key === "promoCodes") {
+                // Only send promoCodes array if enabled
+                if (val.isEnabled && val.codes && val.codes.length > 0) {
+                  // Filter out empty promo codes and format properly
+                  const validPromoCodes = val.codes.filter(
+                    (code) => code.code && code.code.trim() !== ""
+                  );
+                  if (validPromoCodes.length > 0) {
+                    formData.append(key, JSON.stringify(validPromoCodes));
+                  }
+                }
+              } else if (
                 isPlainObject(val) ||
                 ["extraInputsForm", "addOns"].includes(key)
               ) {
@@ -569,6 +625,20 @@ const EventForm = (props) => {
               initialData?.addOns?.items && initialData.addOns.items.length > 0
                 ? initialData.addOns.items
                 : [{ title: "", description: "", price: undefined }],
+          },
+          promoCodes: {
+            isEnabled: initialData?.promoCodes?.isEnabled ?? false,
+            codes:
+              initialData?.promoCodes?.codes && initialData.promoCodes.codes.length > 0
+                ? initialData.promoCodes.codes
+                : [{
+                    code: "",
+                    discountType: 2,
+                    discount: undefined,
+                    useLimit: undefined,
+                    timeLimit: "",
+                    minAmount: undefined,
+                  }],
           },
         }}
       >
@@ -902,6 +972,25 @@ const EventForm = (props) => {
                     <AddOnsBuilder
                       onChange={(input) => setFieldValue("addOns", input)}
                       value={values.addOns}
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <h3 className="mt--30 label">
+                      Promo Codes (discount codes customers can apply)
+                    </h3>
+                    <div className="hor_section_nospace mt--20 mb--20">
+                      <Field
+                        style={{ maxWidth: "30px" }}
+                        type="checkbox"
+                        name="promoCodes.isEnabled"
+                      ></Field>
+                      <p>Enable promo codes</p>
+                    </div>
+                    <PromoCodesBuilder
+                      onChange={(codes) => setFieldValue("promoCodes.codes", codes)}
+                      value={values.promoCodes.codes}
+                      isEnabled={values.promoCodes.isEnabled}
                     />
                   </div>
                 </div>
