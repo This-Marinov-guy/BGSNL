@@ -38,6 +38,10 @@ export const UNIVERSITIES_BY_CITY = [
         label: "Inholland University of Applied Sciences",
         value: "Inholland University of Applied Sciences",
       },
+      {
+        label: "Hotelschool The Hague",
+        value: "Hotelschool The Hague",
+      },
     ],
   },
   {
