@@ -10,7 +10,7 @@ const NewsTab = () => {
         <p>Stay updated with the latest announcements and news from BGSNL.</p>
       </div>
       <div className="tab-body">
-        <NewsList />
+        <NewsList withTitle={false} />
       </div>
     </div>
   );

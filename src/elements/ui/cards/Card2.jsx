@@ -22,7 +22,7 @@ const Card2 = (props) => {
               e.target.onerror = null;
               e.target.src = fallbackImage;
             }}
-            style={{ height: "5em", objectFit: "contain" }}
+            style={{ height: "5em" }}
             alt="Corporate Images"
           />
         </div>

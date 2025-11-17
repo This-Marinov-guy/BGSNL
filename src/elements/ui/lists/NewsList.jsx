@@ -7,10 +7,10 @@ import { REGION_INSTAGRAM } from "../../../util/defines/REGIONS_DESIGN";
 import { selectIsAuth } from "../../../redux/user";
 import { useLocation } from "react-router-dom";
 import Slider from "react-slick";
-import { slickDot2 } from "../../../page-demo/script";
 import { CAMPAIGNS } from "../../../util/defines/CAMPAIGNS";
+import "./NewsList.css";
 
-const NewsList = () => {
+const NewsList = ({ withTitle = true }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const isAuth = useSelector(selectIsAuth);
@@ -78,45 +78,112 @@ const NewsList = () => {
   const newsArray =
     isAuth && location.pathname === "/user" ? MEMBER_NEWS : NEWS;
 
+  const arcCarouselSettings = {
+    centerMode: true,
+    centerPadding: "0",
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    speed: 600,
+    arrows: true,
+    dots: true,
+    focusOnSelect: true,
+    pauseOnHover: true,
+    pauseOnFocus: true,
+    pauseOnDotsHover: true,
+    swipeToSlide: true,
+    touchThreshold: 10,
+    cssEase: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+    lazyLoad: "progressive",
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+          centerPadding: "0",
+          speed: 500,
+        },
+      },
+      {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 2,
+          centerPadding: "20px",
+          centerMode: true,
+          speed: 500,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: "40px",
+          centerMode: true,
+          speed: 400,
+          arrows: false,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          centerPadding: "20px",
+          centerMode: true,
+          speed: 400,
+          arrows: false,
+        },
+      },
+    ],
+  };
+
   return (
-    <div className="rn-featured-service-area pb--40">
-      <div className="container">
-        <div className="row">
+    <div className="rn-featured-service-area pb--10">
+      <div className="container-fluid news-full-width-container">
+        <div className="row g-0">
           {/* Start Single Service  */}
-          <div className="col-lg-3 col-md-6 col-12 mt--30">
-            <div className="section-title">
-              <h2 className="title">News</h2>
-              <p>
-                Find everything recent with the society here or on our social
-                media channels.
-              </p>
-              <div className="service-btn">
-                {/* //add link */}
-                <a
-                  className="btn-transparent rn-btn-dark"
-                  href={REGION_INSTAGRAM["netherlands"] ?? ""}
-                  target="_blank"
-                >
-                  <span className="text">Social media</span>
-                </a>
+          {withTitle && (
+            <div className="col-12">
+              <div className="section-title text-center mb--10">
+                <h2 className="title">Latest News</h2>
+                <p className="subtitle">
+                  Stay updated with everything happening in our community
+                </p>
+                <div className="service-btn-center">
+                  <a
+                    className="btn-transparent rn-btn-dark"
+                    href={REGION_INSTAGRAM["netherlands"] ?? ""}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="text">Follow us on Social Media</span>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           {/* End Single Service  */}
 
-          {/* Start Single Service  */}
-          <div className="col-lg-9">
+          {/* Start Arc Carousel - Full Width */}
+          <div className="col-12">
             {newsArray.length ? (
-              <Slider {...slickDot2} className="pl--20 pr--20">
-                {newsArray.map((value, index) => (
-                  <Card2 key={index} {...value} />
-                ))}
-              </Slider>
+              <div className="news-arc-carousel-wrapper">
+                <Slider {...arcCarouselSettings} className="news-arc-carousel">
+                  {newsArray.map((value, index) => (
+                    <div key={index} className="arc-slide-wrapper">
+                      <Card2 {...value} />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
             ) : (
-              <p>No recent news - stay tuned for updates!</p>
+              <p className="text-center">
+                No recent news - stay tuned for updates!
+              </p>
             )}
           </div>
-          {/* End Single Service  */}
+          {/* End Arc Carousel  */}
         </div>
       </div>
     </div>
