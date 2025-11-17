@@ -32,16 +32,25 @@ const Card2 = (props) => {
           </h3>
           <p>{description}</p>
           {action ? (
-            <a className="btn-transparent rn-btn-dark" onClick={action}>
+            <a
+              className="rn-button-style--2 rn-btn-reverse button-small"
+              onClick={action}
+            >
               <span className="text pointer">Click here</span>
             </a>
           ) : links[0].href ? (
             isInsideLink ? (
-              <Link className="btn-transparent rn-btn-dark" to={links[0].href}>
+              <Link
+                className="rn-button-style--2 rn-btn-reverse button-small"
+                to={links[0].href}
+              >
                 <span className="text">{links[0].name || "Read more"}</span>
               </Link>
             ) : (
-              <a className="btn-transparent rn-btn-dark" href={links[0].href}>
+              <a
+                className="rn-button-style--2 rn-btn-reverse button-small"
+                href={links[0].href}
+              >
                 <span className="text"> {links[0].name || "Read more"}</span>
               </a>
             )

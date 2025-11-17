@@ -607,6 +607,87 @@ a {
   -ms-overflow-style: none;
 }
 
+/* Button Size Modifiers */
+/* These classes override default button sizes when applied */
+
+// Small size buttons
+button,
+a {
+  &.btn-small,
+  &.rn-btn-small-size,
+  &.button-small {
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    letter-spacing: 1px !important;
+    line-height: 1.4 !important;
+    height: auto !important;
+
+    @media #{$sm-layout} {
+      padding: 5px 10px !important;
+      font-size: 12px !important;
+    }
+  }
+}
+
+// Medium size buttons (slightly larger than default)
+button,
+a {
+  &.btn-medium,
+  &.rn-btn-medium-size,
+  &.button-medium {
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+    letter-spacing: 1.5px !important;
+    line-height: 1.5 !important;
+    height: auto !important;
+
+    @media #{$sm-layout} {
+      padding: 10px 18px !important;
+      font-size: 15px !important;
+    }
+  }
+}
+
+// Large size buttons
+button,
+a {
+  &.btn-large,
+  &.rn-btn-large-size,
+  &.button-large {
+    padding: 16px 36px !important;
+    font-size: 18px !important;
+    letter-spacing: 2px !important;
+    line-height: 1.6 !important;
+    height: auto !important;
+    font-weight: 600 !important;
+
+    @media #{$sm-layout} {
+      padding: 14px 28px !important;
+      font-size: 16px !important;
+    }
+  }
+}
+
+// Extra large size buttons
+button,
+a {
+  &.btn-xlarge,
+  &.rn-btn-xlarge-size,
+  &.button-xlarge {
+    padding: 20px 48px !important;
+    font-size: 20px !important;
+    letter-spacing: 2.5px !important;
+    line-height: 1.7 !important;
+    height: auto !important;
+    font-weight: 700 !important;
+
+    @media #{$sm-layout} {
+      padding: 16px 32px !important;
+      font-size: 18px !important;
+    }
+  }
+}
+
 /* Modal Animations */
 @keyframes fadeIn {
   from {
