@@ -23,7 +23,7 @@ const Success = () => {
         />
       </div>
       <p>
-        Your payment was Successful! Check your email for the invoice and enjoy&nbsp;&nbsp;your purchase! Hope to see you soon!
+        Your payment was Successful! Check your email for the invoice and enjoy your purchase! Hope to see you soon!
       </p>
       <div className="d-flex justify-content-center align-items-center g--5 mb--40">
         {prevUrl && <Link onClick={() => sessionStorage.removeItem('prevUrl')
