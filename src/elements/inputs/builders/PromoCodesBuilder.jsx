@@ -11,6 +11,7 @@ const PromoCodesBuilder = (props) => {
     useLimit: undefined,
     timeLimit: "",
     minAmount: undefined,
+    active: true,
   };
 
   const [promoCodes, setPromoCodes] = useState(
@@ -67,11 +68,61 @@ const PromoCodesBuilder = (props) => {
             >
               <div className="d-flex justify-content-between align-items-center mb--20">
                 <h5 style={{ margin: 0 }}>Promo Code #{index + 1}</h5>
-                {promoCode.id && (
-                  <small style={{ color: "#6c757d", fontSize: "12px" }}>
-                    ID: {promoCode.id}
-                  </small>
-                )}
+                <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+                  {/* {promoCode.id && (
+                    <small style={{ color: "#6c757d", fontSize: "12px" }}>
+                      ID: {promoCode.id}
+                    </small>
+                  )} */}
+                  <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+                    <span style={{ 
+                      fontSize: "13px", 
+                      fontWeight: "500",
+                      color: promoCode.active ? "#28a745" : "#dc3545" 
+                    }}>
+                      {promoCode.active ? "Active" : "Inactive"}
+                    </span>
+                    <label style={{ 
+                      position: "relative", 
+                      display: "inline-block", 
+                      width: "44px", 
+                      height: "24px",
+                      margin: 0
+                    }}>
+                      <input
+                        type="checkbox"
+                        checked={promoCode.active}
+                        onChange={(e) =>
+                          handlePromoCodeChange(index, "active", e.target.checked)
+                        }
+                        style={{ opacity: 0, width: 0, height: 0 }}
+                      />
+                      <span style={{
+                        position: "absolute",
+                        cursor: "pointer",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: promoCode.active ? "#28a745" : "#ccc",
+                        transition: "0.4s",
+                        borderRadius: "24px",
+                      }}>
+                        <span style={{
+                          position: "absolute",
+                          content: "",
+                          height: "18px",
+                          width: "18px",
+                          left: promoCode.active ? "23px" : "3px",
+                          bottom: "3px",
+                          backgroundColor: "white",
+                          transition: "0.4s",
+                          borderRadius: "50%",
+                        }} />
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
 
               {/* REQUIRED FIELDS */}
@@ -82,7 +133,6 @@ const PromoCodesBuilder = (props) => {
                     marginBottom: "15px",
                     fontSize: "13px",
                     fontWeight: "600",
-                    textTransform: "uppercase",
                   }}
                 >
                   Required Fields
@@ -107,10 +157,9 @@ const PromoCodesBuilder = (props) => {
                       handlePromoCodeChange(
                         index,
                         "code",
-                        e.target.value.toUpperCase()
+                        e.target.value
                       )
                     }
-                    style={{ textTransform: "uppercase" }}
                   />
                 </div>
 
@@ -205,7 +254,6 @@ const PromoCodesBuilder = (props) => {
                     marginBottom: "15px",
                     fontSize: "13px",
                     fontWeight: "600",
-                    textTransform: "uppercase",
                   }}
                 >
                   Optional Settings
