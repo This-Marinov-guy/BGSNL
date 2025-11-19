@@ -71,7 +71,7 @@ export const REGION_WHATSAPP = {
   eindhoven: "https://chat.whatsapp.com/LkIMSw3esBECQBftaCc1YW",
   netherlands: "https://chat.whatsapp.com/LBQReQJoAyRDfdjcyV4SQ0",
   alumni: "https://chat.whatsapp.com/LrHWIHDfqX59zNtlQ1dBAR",
-  leiden_hague: '',
+  leiden_hague: "https://chat.whatsapp.com/HVUyFx418j40e5rABP1aBH",
 };
 
 export const REGION_FLICKER = {
