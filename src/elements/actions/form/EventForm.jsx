@@ -350,6 +350,7 @@ const EventForm = (props) => {
     addOns: yup.object().shape({
       isEnabled: yup.boolean(),
       multi: yup.boolean(),
+      isMandatory: yup.boolean(),
       title: yup.string().when("isEnabled", {
         is: true,
         then: () => yup.string().required("Add-ons main title is required"),
@@ -619,6 +620,7 @@ const EventForm = (props) => {
           },
           addOns: {
             isEnabled: initialData?.addOns?.isEnabled ?? false,
+            isMandatory: initialData?.addOns?.isMandatory ?? false,
             multi: initialData?.addOns?.multi ?? false,
             title: initialData?.addOns?.title ?? "",
             description: initialData?.addOns?.description ?? "",

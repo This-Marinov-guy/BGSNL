@@ -50,6 +50,7 @@ const defaultSchema = yup.object().shape({
   email: yup.string().email("Please enter a valid email").required(),
   policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+  addOns: yup.array(),
 });
 
 const GuestPurchase = () => {
@@ -123,14 +124,28 @@ const GuestPurchase = () => {
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
+        let finalSchema = defaultSchema;
+
         if (responseData.event.hasOwnProperty("extraInputsForm")) {
           const { schema, schemaFields } = buildSchemaExtraInputs(
             responseData.event?.extraInputsForm ?? null,
             defaultSchema
           );
-          setSchema(schema);
+          finalSchema = schema;
           setSchemaFields(schemaFields);
         }
+
+        // Add mandatory add-ons validation
+        if (responseData.event?.addOns?.isMandatory) {
+          finalSchema = finalSchema.shape({
+            addOns: yup
+              .array()
+              .min(1, "Please choose an option")
+              .required("Please choose an option"),
+          });
+        }
+
+        setSchema(finalSchema);
       } catch (err) {
       } finally {
         setLoadingPage(false);
@@ -532,7 +547,7 @@ const GuestPurchase = () => {
 
                     {selectedEvent?.addOns?.isEnabled &&
                       selectedEvent.addOns?.items?.length > 0 && (
-                        <div className="col-12">
+                        <div className="col-lg-12">
                           <h3
                             className="text-center mb--20"
                             style={{
@@ -540,20 +555,33 @@ const GuestPurchase = () => {
                             }}
                           >
                             {selectedEvent.addOns.title}
+                            {selectedEvent.addOns?.isMandatory && (
+                              <span style={{ color: "#dc3545" }}> *</span>
+                            )}
                           </h3>
                           <p
                             className="text-center mb--30"
                             style={{ fontSize: "0.875rem", color: "#666" }}
                           >
+                            {selectedEvent.addOns?.isMandatory && (
+                              <span style={{ color: "#dc3545", fontWeight: "600" }}>
+                                *Required - {" "}
+                              </span>
+                            )}
                             {selectedEvent.addOns?.multi
-                              ? "*You can add one or more"
-                              : "*You can add only one"}
+                              ? "You can add one or more"
+                              : "You can add only one"}
                           </p>
                           <CardInputs
                             multi={selectedEvent.addOns?.multi}
                             items={selectedEvent.addOns?.items}
                             values={values.addOns}
                             onSelect={(value) => setFieldValue("addOns", value)}
+                          />
+                          <ErrorMessage
+                            className="error center_text"
+                            name="addOns"
+                            component="div"
                           />
                         </div>
                       )}

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import PlusButton from "../../ui/buttons/PlusButton";
 import XButton from "../../ui/buttons/XButton";
+import ToggleSwitch from "../../ui/ToggleSwitch";
 
 const AddOnsBuilder = (props) => {
   const emptyInputObj = {
     isEnabled: false,
     multi: false,
+    isMandatory: false,
     title: "",
     items: [{ title: "", description: "", price: undefined }],
   };
@@ -83,6 +85,17 @@ const AddOnsBuilder = (props) => {
             <option value="true">Yes</option>
             <option value="false">No</option>
           </select>
+          <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+            <span style={{ fontSize: "14px", fontWeight: "500", color: "#6c757d" }}>
+              Mandatory:
+            </span>
+            <ToggleSwitch
+              checked={input.isMandatory}
+              onChange={(e) => handleValueChange("isMandatory", e.target.checked)}
+              activeLabel="Yes"
+              inactiveLabel="No"
+            />
+          </div>
         </div>
         <div className="row mt--10 mb--10">
           {input.items.map((item, itemIndex) => (

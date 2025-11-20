@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PlusButton from "../../ui/buttons/PlusButton";
 import XButton from "../../ui/buttons/XButton";
 import { CalendarWithClock } from "../common/Calendar";
+import ToggleSwitch from "../../ui/ToggleSwitch";
 
 const PromoCodesBuilder = (props) => {
   const emptyPromoCode = {
@@ -74,54 +75,12 @@ const PromoCodesBuilder = (props) => {
                       ID: {promoCode.id}
                     </small>
                   )} */}
-                  <div className="d-flex align-items-center" style={{ gap: "8px" }}>
-                    <span style={{ 
-                      fontSize: "13px", 
-                      fontWeight: "500",
-                      color: promoCode.active ? "#28a745" : "#dc3545" 
-                    }}>
-                      {promoCode.active ? "Active" : "Inactive"}
-                    </span>
-                    <label style={{ 
-                      position: "relative", 
-                      display: "inline-block", 
-                      width: "44px", 
-                      height: "24px",
-                      margin: 0
-                    }}>
-                      <input
-                        type="checkbox"
-                        checked={promoCode.active}
-                        onChange={(e) =>
-                          handlePromoCodeChange(index, "active", e.target.checked)
-                        }
-                        style={{ opacity: 0, width: 0, height: 0 }}
-                      />
-                      <span style={{
-                        position: "absolute",
-                        cursor: "pointer",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: promoCode.active ? "#28a745" : "#ccc",
-                        transition: "0.4s",
-                        borderRadius: "24px",
-                      }}>
-                        <span style={{
-                          position: "absolute",
-                          content: "",
-                          height: "18px",
-                          width: "18px",
-                          left: promoCode.active ? "23px" : "3px",
-                          bottom: "3px",
-                          backgroundColor: "white",
-                          transition: "0.4s",
-                          borderRadius: "50%",
-                        }} />
-                      </span>
-                    </label>
-                  </div>
+                  <ToggleSwitch
+                    checked={promoCode.active}
+                    onChange={(e) =>
+                      handlePromoCodeChange(index, "active", e.target.checked)
+                    }
+                  />
                 </div>
               </div>
 

@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
+import * as yup from "yup";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -95,12 +96,34 @@ const MemberPurchase = () => {
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
+        let finalSchema = null;
+
         if (responseData.event?.extraInputsForm) {
           const { schema, schemaFields } = buildSchemaExtraInputs(
             responseData.event.extraInputsForm
           );
-          setSchema(schema);
+          finalSchema = schema;
           setSchemaFields(schemaFields);
+        }
+
+        // Add mandatory add-ons validation
+        if (responseData.event?.addOns?.isMandatory) {
+          const addOnsSchema = yup.object().shape({
+            addOns: yup
+              .array()
+              .min(1, "Please choose an option")
+              .required("Please choose an option"),
+          });
+
+          if (finalSchema) {
+            finalSchema = finalSchema.concat(addOnsSchema);
+          } else {
+            finalSchema = addOnsSchema;
+          }
+        }
+
+        if (finalSchema) {
+          setSchema(finalSchema);
         }
       } catch (err) {
         // do nothing
@@ -433,20 +456,33 @@ const MemberPurchase = () => {
                         style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)" }}
                       >
                         {selectedEvent.addOns.title}
+                        {selectedEvent.addOns?.isMandatory && (
+                          <span style={{ color: "#dc3545" }}> *</span>
+                        )}
                       </h3>
                       <p
                         className="text-center mb--30"
                         style={{ fontSize: "0.875rem", color: "#666" }}
                       >
+                        {selectedEvent.addOns?.isMandatory && (
+                          <span style={{ color: "#dc3545", fontWeight: "600" }}>
+                            *Required - {" "}
+                          </span>
+                        )}
                         {selectedEvent.addOns?.multi
-                          ? "*You can add one or more"
-                          : "*You can add only one"}
+                          ? "You can add one or more"
+                          : "You can add only one"}
                       </p>
                       <CardInputs
                         multi={selectedEvent.addOns?.multi}
                         items={selectedEvent.addOns?.items}
                         values={values.addOns}
                         onSelect={(value) => setFieldValue("addOns", value)}
+                      />
+                      <ErrorMessage
+                        className="error center_text"
+                        name="addOns"
+                        component="div"
                       />
                     </div>
                   )}
