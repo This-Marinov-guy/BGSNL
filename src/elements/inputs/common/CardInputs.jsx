@@ -23,6 +23,9 @@ const CardItem = ({
 
       <div className="d-flex flex-column justify-content-center align-items-center">
         <h4>{item.title}</h4>
+        {item.description && (
+          <h6>{item.description}</h6>
+        )}
         <h4>{item?.price ? `+ ${item.price} euro` : "Free"}</h4>
       </div>
     </div>
