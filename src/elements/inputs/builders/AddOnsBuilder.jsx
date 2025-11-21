@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ErrorMessage } from "formik";
 import PlusButton from "../../ui/buttons/PlusButton";
 import XButton from "../../ui/buttons/XButton";
 import ToggleSwitch from "../../ui/ToggleSwitch";
@@ -67,12 +68,19 @@ const AddOnsBuilder = (props) => {
     <div className="row">
       <div className="col-12 mt--20">
         <div className="d-flex justify-content-around align-items-center g--5 mb--20">
-          <input
-            type="text"
-            placeholder="Main Title"
-            onChange={(e) => handleValueChange("title", e.target.value)}
-            value={input.title}
-          />
+          <div style={{ flex: 1 }}>
+            <input
+              type="text"
+              placeholder="Main Title"
+              onChange={(e) => handleValueChange("title", e.target.value)}
+              value={input.title}
+            />
+            <ErrorMessage
+              className="error"
+              name="addOns.title"
+              component="div"
+            />
+          </div>
           <select
             value={input.multi}
             onChange={(e) =>
@@ -97,6 +105,11 @@ const AddOnsBuilder = (props) => {
             />
           </div>
         </div>
+        <ErrorMessage
+          className="error center_text"
+          name="addOns.items"
+          component="div"
+        />
         <div className="row mt--10 mb--10">
           {input.items.map((item, itemIndex) => (
             <div className="center_div_col col-4 mb--10" key={itemIndex}>
@@ -108,6 +121,11 @@ const AddOnsBuilder = (props) => {
                   handleItemChange(itemIndex, "title", e.target.value)
                 }
               />
+              <ErrorMessage
+                className="error"
+                name={`addOns.items[${itemIndex}].title`}
+                component="div"
+              />
               <input
                 type="text"
                 placeholder="Description"
@@ -116,6 +134,11 @@ const AddOnsBuilder = (props) => {
                   handleItemChange(itemIndex, "description", e.target.value)
                 }
               />
+              <ErrorMessage
+                className="error"
+                name={`addOns.items[${itemIndex}].description`}
+                component="div"
+              />
               <input
                 type="number"
                 placeholder="Price"
@@ -123,6 +146,11 @@ const AddOnsBuilder = (props) => {
                 onChange={(e) =>
                   handleItemChange(itemIndex, "price", e.target.value)
                 }
+              />
+              <ErrorMessage
+                className="error"
+                name={`addOns.items[${itemIndex}].price`}
+                component="div"
               />
               <div className="mt--10 center_div">
                 <XButton onClick={() => removeItem(itemIndex)} />

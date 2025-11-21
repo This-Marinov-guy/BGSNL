@@ -366,10 +366,7 @@ const EventForm = (props) => {
               yup.object().shape({
                 title: yup.string().required("Item title is required"),
                 description: yup.string().nullable(),
-                price: yup
-                  .number()
-                  .required("Item price is required")
-                  .min(0, "Price must be 0 or greater"),
+                price: yup.number().nullable(),
               })
             )
             .min(1, "At least one add-on item is required"),
@@ -1147,13 +1144,13 @@ const EventForm = (props) => {
                       name="ticketImg"
                       component="div"
                     />
-                    <div className="row">
+                    <div className="row" style={{justifyContent: "start", alignItems: "start"}}>
                       <div
-                        className="col-lg-6 col-md-6 col-6"
+                        className="col-lg-4 col-md-6 col-6"
                         style={{ margin: "auto" }}
                       >
                         <h5 className="center_text">Name on ticket color</h5>
-                        <div className="center_div" style={{ gap: "50px" }}>
+                        <div className="center_div_col">
                           <p className="center_div">
                             <Field
                               type="radio"
@@ -1173,11 +1170,11 @@ const EventForm = (props) => {
                         </div>
                       </div>
                       <div
-                        className="col-lg-6 col-md-6 col-6"
+                        className="col-lg-4 col-md-6 col-6"
                         style={{ margin: "auto" }}
                       >
                         <h5 className="center_text">With Guest Name</h5>
-                        <div className="center_div" style={{ gap: "50px" }}>
+                        <div className="center_div_col">
                           <p className="center_div">
                             <Field
                               type="radio"
@@ -1197,11 +1194,11 @@ const EventForm = (props) => {
                         </div>
                       </div>
                       <div
-                        className="col-lg-6 col-md-6 col-6"
+                        className="col-lg-4 col-md-6 col-6"
                         style={{ margin: "auto" }}
                       >
                         <h5 className="center_text">With QR</h5>
-                        <div className="center_div" style={{ gap: "50px" }}>
+                        <div className="center_div_col">
                           <p className="center_div">
                             <Field
                               type="radio"
