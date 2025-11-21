@@ -10,11 +10,6 @@ class BrandTwo extends Component {
         <h3 style={{ textAlign: "center", fontFamily: "Archive" }}>Partners</h3>
         <ul className="brand-style-2">
           <li>
-            <a href="https://sunnybeach-groningen.nl" target="_blank">
-              <img src="/assets/images/brand/brand-10.png" alt="Logo Images" />
-            </a>
-          </li>
-          <li>
             <a href="https://www.cooltravel.bg/" target="_blank">
               <img
                 className="splash-li"
@@ -50,9 +45,27 @@ class BrandTwo extends Component {
               <img src="/assets/images/brand/brand-11.png" alt="Logo Images" />
             </a>
           </li>
+          <li className="mt--20 mb--10">
+            <a href="https://bulgariawantsyou.com/en" target="_blank">
+              <img
+                src="https://bulgariawantsyou.com/themes/custom/bwy/logo.svg"
+                style={{
+                  scale: "1.5",
+                  backgroundColor: "#BFBFBF",
+                  padding: "10px",
+                  borderRadius: "10px",
+                }}
+                alt="Logo Images"
+              />
+            </a>
+          </li>
           <li>
             <a href="https://www.societasbulgarica.org/" target="_blank">
-              <img src="/assets/images/brand/brand-12.png" alt="Logo Images" />
+              <img
+                src="/assets/images/brand/brand-12.png"
+                style={{ scale: "0.6" }}
+                alt="Logo Images"
+              />
             </a>
           </li>
           <li>
@@ -64,12 +77,11 @@ class BrandTwo extends Component {
               />
             </a>
           </li>
-
           <li>
-            <a href="https://bulgariawantsyou.com/en" target="_blank">
+            <a href="https://sunnybeach-groningen.nl" target="_blank">
               <img
-                src="https://bulgariawantsyou.com/themes/custom/bwy/logo.svg"
-                style={{ scale: "2" }}
+                src="/assets/images/brand/brand-10.png"
+                style={{ scale: "0.7" }}
                 alt="Logo Images"
               />
             </a>
