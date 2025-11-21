@@ -1458,9 +1458,9 @@ const EventForm = (props) => {
                 </div>
               </div>
 
-              <h3 className="label mt--40">Additional Settings</h3>
+              <h3 className="label mt--40">Manage Sales</h3>
               <div className="row mt--20">
-                <div className="col-lg-6 col-12">
+                <div className="col-lg-4 col-md-6 col-12">
                   <div className="hor_section_nospace mt--20">
                     <Field
                       style={{ maxWidth: "30px" }}
@@ -1483,7 +1483,7 @@ const EventForm = (props) => {
                     />
                   </div>
                 </div>
-                <div className="col-lg-6 col-12">
+                <div className="col-lg-4 col-md-6 col-12">
                   <div className="hor_section_nospace mt--20">
                     <Field
                       style={{ maxWidth: "30px" }}
@@ -1511,7 +1511,7 @@ const EventForm = (props) => {
                     component="div"
                   />
                 </div>
-                <div className="col-lg-6 col-12">
+                <div className="col-lg-4 col-md-6 col-12">
                   <div className="hor_section_nospace mt--20">
                     <Field
                       style={{ maxWidth: "30px" }}

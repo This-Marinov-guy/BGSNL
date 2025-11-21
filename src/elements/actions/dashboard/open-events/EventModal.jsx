@@ -108,7 +108,7 @@ const EventModal = (props) => {
                             {props.event.title}
                         </div>
                         <div style={{ color: '#6b7280', fontWeight: 400 }}>
-                            {capitalizeFirstLetter(props.event.region)} • {moment(props.event.date).format(MOMENT_DATE_TIME)}
+                            {capitalizeFirstLetter(props.event.region, true)} • {moment(props.event.date).format(MOMENT_DATE_TIME)}
                         </div>
                     </div>
                 }

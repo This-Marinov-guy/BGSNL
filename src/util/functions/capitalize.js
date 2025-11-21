@@ -1,4 +1,4 @@
-export const capitalizeFirstLetter = (string, replaceUnderscore = false) => {
+export const capitalizeFirstLetter = (string, replaceUnderscore = true) => {
   if (!string) return "";
 
   if (replaceUnderscore) {
