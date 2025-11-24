@@ -410,7 +410,7 @@ const SignUp = (props) => {
                   policyTerms: false,
                   dataTerms: false,
                   notificationTerms: false,
-                  notificationTypeTerms: "",
+                  notificationTypeTerms: "whatsapp & email",
                   payTerms: false,
                   memberKey: "",
                 }}
@@ -427,11 +427,13 @@ const SignUp = (props) => {
                     <div className="center_div row mb--40 mt--40">
                       <div className="col-lg-12 col-md-6 col-12">
                         <h3 className="center_text label">Profile picture</h3>
-                        <ImageInput
-                          onChange={(event) => {
-                            setFieldValue("image", event.target.files[0]);
-                          }}
-                        />
+                        <div className="center_div">
+                          <ImageInput
+                            onChange={(event) => {
+                              setFieldValue("image", event.target.files[0]);
+                            }}
+                          />
+                        </div>
                         <p className="mt--10 information center_text">
                           *optional - we will assign you a cool avatar
                         </p>
@@ -443,7 +445,20 @@ const SignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
-                          <Field type="text" placeholder="Name" name="name" />
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Name <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
+                          <Field
+                            type="text"
+                            placeholder="e.g., John"
+                            name="name"
+                          />
                           <ErrorMessage
                             className="error"
                             name="name"
@@ -453,9 +468,18 @@ const SignUp = (props) => {
                       </div>
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Surname <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Field
                             type="text"
-                            placeholder="Surname"
+                            placeholder="e.g., Doe"
                             name="surname"
                           ></Field>
                           <ErrorMessage
@@ -469,6 +493,16 @@ const SignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Date of Birth{" "}
+                            <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Calendar
                             onSelect={(value) => {
                               setFieldValue("birth", value);
@@ -484,11 +518,20 @@ const SignUp = (props) => {
                       </div>
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Phone Number{" "}
+                            <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <PhoneInput
-                            placeholder="WhatsApp Phone "
+                            placeholder="WhatsApp Phone"
                             onChange={(value) => setFieldValue("phone", value)}
                           />
-
                           <ErrorMessage
                             className="error"
                             name="phone"
@@ -499,33 +542,55 @@ const SignUp = (props) => {
                     </div>
                     <div className="row mt--40">
                       <div className="col-lg-6 col-md-12 col-12">
-                        <Dropdown
-                          value={values.university}
-                          filter
-                          onChange={(e) => {
-                            setFieldValue("university", e.value);
-                          }}
-                          options={uniOptions}
-                          name="university"
-                          className="p-dropdown-custom"
-                          placeholder="State your University"
-                          optionLabel="label"
-                          optionGroupLabel="label"
-                          optionGroupChildren="items"
-                          optionGroupTemplate={groupedItemTemplate}
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="university"
-                          component="div"
-                        />
+                        <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            University{" "}
+                            <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
+                          <Dropdown
+                            value={values.university}
+                            filter
+                            onChange={(e) => {
+                              setFieldValue("university", e.value);
+                            }}
+                            options={uniOptions}
+                            name="university"
+                            className="p-dropdown-custom"
+                            placeholder="Select your University"
+                            optionLabel="label"
+                            optionGroupLabel="label"
+                            optionGroupChildren="items"
+                            optionGroupTemplate={groupedItemTemplate}
+                          />
+                          <ErrorMessage
+                            className="error"
+                            name="university"
+                            component="div"
+                          />
+                        </div>
                       </div>
                       {values.university === "other" && (
                         <div className="col-lg-6 col-md-12 col-12">
                           <div className="rn-form-group">
+                            <label
+                              style={{
+                                fontSize: "14px",
+                                fontWeight: "500",
+                                marginBottom: "5px",
+                              }}
+                            >
+                              University Name{" "}
+                              <span style={{ color: "#dc3545" }}>*</span>
+                            </label>
                             <Field
                               type="text"
-                              placeholder="State the university"
+                              placeholder="e.g., University of Amsterdam"
                               name="otherUniversityName"
                             ></Field>
                             <ErrorMessage
@@ -539,24 +604,46 @@ const SignUp = (props) => {
                       {values.university !== "working" && (
                         <Fragment>
                           <div className="col-lg-6 col-md-12 col-12">
-                            <Field
-                              type="number"
-                              min="2020"
-                              max="2050"
-                              placeholder="Graduation Year"
-                              name="graduationDate"
-                            ></Field>
-                            <ErrorMessage
-                              className="error"
-                              name="graduationDate"
-                              component="div"
-                            />
+                            <div className="rn-form-group">
+                              <label
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "500",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Graduation Year{" "}
+                                <span style={{ color: "#dc3545" }}>*</span>
+                              </label>
+                              <Field
+                                type="number"
+                                min="2020"
+                                max="2050"
+                                placeholder="e.g., 2025"
+                                name="graduationDate"
+                              ></Field>
+                              <ErrorMessage
+                                className="error"
+                                name="graduationDate"
+                                component="div"
+                              />
+                            </div>
                           </div>
                           <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
+                              <label
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "500",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Study Program{" "}
+                                <span style={{ color: "#dc3545" }}>*</span>
+                              </label>
                               <Field
                                 type="text"
-                                placeholder="Study Program"
+                                placeholder="e.g., Computer Science"
                                 name="course"
                               ></Field>
                               <ErrorMessage
@@ -568,9 +655,19 @@ const SignUp = (props) => {
                           </div>
                           <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
+                              <label
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "500",
+                                  marginBottom: "5px",
+                                }}
+                              >
+                                Student Number{" "}
+                                <span style={{ color: "#dc3545" }}>*</span>
+                              </label>
                               <Field
                                 type="text"
-                                placeholder="Student Number"
+                                placeholder="e.g., 12345678"
                                 name="studentNumber"
                               ></Field>
                               <ErrorMessage
@@ -587,11 +684,24 @@ const SignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Email <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Field
                             type="email"
-                            placeholder="Email"
+                            placeholder="e.g., john.doe@example.com"
                             name="email"
                           />
+                          <p className="information">
+                            Please enter an email you have access to as the
+                            ticket will be sent through it
+                          </p>
                           <ErrorMessage
                             className="error"
                             name="email"
@@ -603,9 +713,18 @@ const SignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Password <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Password
                             autoComplete="off"
-                            placeholder="Password"
+                            placeholder="Enter your password"
                             name="password"
                             onChange={(e) =>
                               setFieldValue("password", e.target.value)
@@ -624,9 +743,19 @@ const SignUp = (props) => {
 
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Confirm Password{" "}
+                            <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Password
                             autoComplete="off"
-                            placeholder="Confirm Password"
+                            placeholder="Confirm your password"
                             name="confirmPassword"
                             onChange={(e) =>
                               setFieldValue("confirmPassword", e.target.value)
@@ -657,9 +786,11 @@ const SignUp = (props) => {
                               style={{ color: "#017363" }}
                               href="/terms-and-legals"
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               society's rules and regulations
                             </a>
+                            <span style={{ color: "#dc3545" }}> *</span>
                           </p>
                         </div>
                         <ErrorMessage
@@ -677,6 +808,7 @@ const SignUp = (props) => {
                           <p className="information">
                             I consent to my data being processed confidentially
                             for the purposes of the organization
+                            <span style={{ color: "#dc3545" }}> *</span>
                           </p>
                         </div>
                         <ErrorMessage
@@ -684,6 +816,8 @@ const SignUp = (props) => {
                           name="dataTerms"
                           component="div"
                         />
+                      </div>
+                      <div className="col-lg-6 col-md-6 col-12">
                         <div className="hor_section_nospace mt--40">
                           <Field
                             style={{ maxWidth: "30px" }}
@@ -695,10 +829,15 @@ const SignUp = (props) => {
                             agreed period in order to keep my benefits as a
                             member and I keep my rights to cancel or update my
                             payment methods.
+                            <span style={{ color: "#dc3545" }}> *</span>
                           </p>
                         </div>
-                      </div>
-                      <div className="col-lg-6 col-md-6 col-12">
+                        <ErrorMessage
+                          className="error"
+                          name="payTerms"
+                          component="div"
+                        />
+                        
                         <div className="hor_section_nospace mt--40">
                           <Field
                             style={{ maxWidth: "30px" }}
@@ -710,19 +849,14 @@ const SignUp = (props) => {
                             and discounts from us and our sponsors
                           </p>
                         </div>
-                        <Field as="select" name="notificationTypeTerms">
+                        {/* <Field as="select" name="notificationTypeTerms">
                           <option value="" disabled>
                             Contact By
                           </option>
                           <option value="Email">Email</option>
                           <option value="WhatsApp">WhatsApp</option>
                           <option value="Email & WhatsApp">Both</option>
-                        </Field>
-                        <ErrorMessage
-                          className="error"
-                          name="payTerms"
-                          component="div"
-                        />
+                        </Field> */}
                       </div>
                       {/* <div
                       style={{ borderWidth: "30px" }}
@@ -800,8 +934,7 @@ const SignUp = (props) => {
       />
 
       <h3 className="center_text mt--150">
-        Become a Member{" "}
-        <br />
+        Become a Member <br />
         <Link
           style={{ fontSize: "0.7em" }}
           className="rn-button-style--1 center_text"
@@ -825,7 +958,7 @@ const SignUp = (props) => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

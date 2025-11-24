@@ -392,7 +392,16 @@ const AlumniSignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
-                          <Field type="text" placeholder="Name" name="name" />
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Name <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
+                          <Field type="text" placeholder="e.g., John" name="name" />
                           <ErrorMessage
                             className="error"
                             name="name"
@@ -402,9 +411,18 @@ const AlumniSignUp = (props) => {
                       </div>
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Surname <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Field
                             type="text"
-                            placeholder="Surname"
+                            placeholder="e.g., Doe"
                             name="surname"
                           ></Field>
                           <ErrorMessage
@@ -420,11 +438,23 @@ const AlumniSignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Email <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Field
                             type="email"
-                            placeholder="Email"
+                            placeholder="e.g., john.doe@example.com"
                             name="email"
                           />
+                          <p className="information">
+                            Please enter an email you have access to as important notifications will be sent through it
+                          </p>
                           <ErrorMessage
                             className="error"
                             name="email"
@@ -436,9 +466,18 @@ const AlumniSignUp = (props) => {
                     <div className="row">
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Password <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Password
                             autoComplete="off"
-                            placeholder="Password"
+                            placeholder="Enter your password"
                             name="password"
                             onChange={(e) =>
                               setFieldValue("password", e.target.value)
@@ -457,9 +496,18 @@ const AlumniSignUp = (props) => {
 
                       <div className="col-lg-6 col-md-12 col-12">
                         <div className="rn-form-group">
+                          <label
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: "500",
+                              marginBottom: "5px",
+                            }}
+                          >
+                            Confirm Password <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
                           <Password
                             autoComplete="off"
-                            placeholder="Confirm Password"
+                            placeholder="Confirm your password"
                             name="confirmPassword"
                             onChange={(e) =>
                               setFieldValue("confirmPassword", e.target.value)
@@ -490,9 +538,11 @@ const AlumniSignUp = (props) => {
                               style={{ color: "#017363" }}
                               href="/terms-and-legals"
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               society's rules and regulations
                             </a>
+                            <span style={{ color: "#dc3545" }}> *</span>
                           </p>
                         </div>
                         <ErrorMessage
