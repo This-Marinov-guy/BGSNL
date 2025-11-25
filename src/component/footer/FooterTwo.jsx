@@ -41,12 +41,12 @@ const FooterTwo = ({ forceRegion }) => {
                     Netherlands
                   </h2>
                   <div className="button-container-2">
-                    {/* <button
+                    <button
                       className="rn-button-style--2 rn-btn-reverse-green"
                       onClick={() => dispatch(showModal(DONATION_MODAL))}
                     >
                       Support us
-                    </button> */}
+                    </button>
                     <Link
                       className="rn-button-style--2 rn-btn-reverse-green"
                       to="/developers"

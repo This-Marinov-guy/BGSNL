@@ -58,7 +58,7 @@ export const REGION_EMAIL = {
 };
 
 export const REGION_GO_FUND_ME = {
-  netherlands: "https://gofund.me/b34f3e36",
+  netherlands: "https://gofund.me/cb393ff65",
 };
 
 export const REGION_WHATSAPP = {
