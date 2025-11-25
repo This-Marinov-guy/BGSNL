@@ -22,7 +22,12 @@ const CounterOne = () => {
 
   const STATISTICS = [
     {
-      countNum: REGIONS.length,
+      countNum:
+        loading || !data.hasOwnProperty("cities") ? (
+          <CustomSpinner />
+        ) : (
+          data?.cities
+        ),
       countTitle: "Cities, part of our network",
     },
     {
@@ -43,6 +48,15 @@ const CounterOne = () => {
           data?.members
         ),
       countTitle: "Members, part of the society",
+    },
+    {
+      countNum:
+        loading || !data.hasOwnProperty("alumnis") ? (
+          <CustomSpinner />
+        ) : (
+          data?.alumnis
+        ),
+      countTitle: "Alumnis, supporters of the society",
     },
     // {
     //   countNum:
