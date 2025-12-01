@@ -5,7 +5,7 @@ import { FiChevronUp } from "react-icons/fi";
 import EventForm from '../../elements/actions/form/EventForm';
 import { useHttpClient } from '../../hooks/common/http-hook';
 import HeaderLoadingError from '../../elements/ui/errors/HeaderLoadingError';
-import { loadSingleEvent, selectSingleEvent } from '../../redux/events';
+import { loadSingleEventDashboard, selectSingleEventDashboard } from '../../redux/events';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const EditEvent = (props) => {
 
   const navigate = useNavigate();
 
-  const event = useSelector(selectSingleEvent);
+  const event = useSelector(selectSingleEventDashboard);
 
   const { eventId } = useParams();
 
@@ -31,7 +31,7 @@ const EditEvent = (props) => {
       try {
         setPageLoading(true);
         const responseData = await sendRequest(`future-event/full-event-details/${eventId}`);
-        dispatch(loadSingleEvent(responseData.event));
+        dispatch(loadSingleEventDashboard(responseData.event));
 
         if (!event) {
           navigate('/user/dashboard');
