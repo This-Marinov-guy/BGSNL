@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN'
 import Event from './Event'
 import { useSelector } from 'react-redux';
-import { selectEvents } from '../../../../redux/events';
+import { selectEventsDashboard } from '../../../../redux/events';
 import Filter from '../Filter';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useLoadEvents } from '../../../../hooks/common/api-hooks';
@@ -29,7 +29,7 @@ const EventList = () => {
         //only show region events
         REGIONS.filter((r) => r === region);
 
-    const events = useSelector(selectEvents);
+    const events = useSelector(selectEventsDashboard);
 
     useEffect(() => {
         reloadEvents(true);

@@ -5,7 +5,7 @@ import { Dialog } from 'primereact/dialog';
 import { FiInfo } from 'react-icons/fi';
 import { capitalizeFirstLetter } from '../../../../util/functions/capitalize';
 import { useDispatch } from 'react-redux';
-import { loadSingleEvent, removeEventFromAll } from '../../../../redux/events';
+import { loadSingleEventDashboard, removeEventFromAll } from '../../../../redux/events';
 import { useNavigate } from 'react-router-dom';
 import { Image } from 'primereact/image';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
@@ -138,7 +138,7 @@ const EventModal = (props) => {
                     </button>
                     <button
                         onClick={() => {
-                            dispatch(loadSingleEvent(props.event));
+                            dispatch(loadSingleEventDashboard(props.event));
                             navigate(`/user/edit-event/${props.event.id}`);
                         }}
                         className="rn-button-style--2 rn-btn-reverse-green"

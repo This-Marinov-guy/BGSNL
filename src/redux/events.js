@@ -11,7 +11,9 @@ export const eventsSlice = createSlice({
     name: "events",
     initialState: {
         all: regionObject,
+        allDashboard: regionObject,
         selected: null,
+        selectedDashboard: null,
     },
     reducers: {
         loadSingleEvent: (state, action) => {
@@ -21,17 +23,25 @@ export const eventsSlice = createSlice({
             state.all = regionObject;
             action.payload.forEach(event => state.all[event.region].push(event));
         },
+
+        // Dashboard reducers
+        loadSingleEventDashboard: (state, action) => {
+            state.selectedDashboard = action.payload;
+        },
+        loadEventsDashboard: (state, action) => {
+            state.allDashboard = regionObject;
+            action.payload.forEach(event => state.allDashboard[event.region].push(event));
+        },
         addEventToAll: (state, action) => {
             const event = action.payload;
 
-            state.all[event.region] = [...state.all[event.region], event];
+            state.allDashboard[event.region] = [...state.allDashboard[event.region], event];
         },
         editEventFromAll: (state, action) => {
             const event = action.payload;
-            const index = state.all[event.region].findIndex(e => e.id === event.id);
-
+            const index = state.allDashboard[event.region].findIndex(e => e.id === event.id);
             if (index !== -1) {
-                state.all[event.region][index] = event;
+                state.allDashboard[event.region][index] = event;
             }
         },
 
@@ -39,7 +49,7 @@ export const eventsSlice = createSlice({
             reducer(state, action) {
                 const { region, eventId } = action.payload;
 
-                state.all[region] = state.all[region].filter(e => e.id !== eventId);
+                state.allDashboard[region] = state.allDashboard[region].filter(e => e.id !== eventId);
             },
             prepare(values) {
                 return {
@@ -54,5 +64,7 @@ export const eventsSlice = createSlice({
 
 export const selectEvents = (state) => state.events.all;
 export const selectSingleEvent = (state) => state.events.selected;
-export const { loadSingleEvent, loadEvents, addEventToAll, editEventFromAll, removeEventFromAll } = eventsSlice.actions;
+export const selectEventsDashboard = (state) => state.events.allDashboard;
+export const selectSingleEventDashboard = (state) => state.events.selectedDashboard;
+export const { loadSingleEventDashboard, loadEventsDashboard, loadSingleEvent, loadEvents, addEventToAll, editEventFromAll, removeEventFromAll } = eventsSlice.actions;
 export default eventsSlice.reducer;
