@@ -26,8 +26,14 @@ export const useLoadEvents = () => {
       const url = withFullData
         ? "future-event/full-data-events-list"
         : `event/events-list`;
+        
       const responseData = await sendRequest(url);
-      dispatch(withFullData ? loadEventsDashboard(responseData.events) : loadEvents(responseData.events));
+
+      if (withFullData) {
+        dispatch(loadEventsDashboard(responseData.events));
+      } else {
+        dispatch(loadEvents(responseData.events));
+      }
     } catch (err) {
     } finally {
       setEventsLoading(false);

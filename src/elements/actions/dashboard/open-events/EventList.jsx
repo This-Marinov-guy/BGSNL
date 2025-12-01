@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN'
 import Event from './Event'
 import { useSelector } from 'react-redux';
