@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHttpClient } from "./http-hook";
-import { loadEvents } from "../../redux/events";
+import { loadEvents, loadEventsDashboard } from "../../redux/events";
 import { refreshToken } from "../../redux/user";
 import axios from "axios";
-import { isProd } from "../../util/functions/helpers";
 import { serverEndpoint } from "../../util/defines/common";
 import { loadArticles, loadSingleArticle } from "../../redux/articles";
 import { startPageLoading, stopPageLoading } from "../../redux/loading";
@@ -26,14 +25,10 @@ export const useLoadEvents = () => {
       const url = withFullData
         ? "future-event/full-data-events-list"
         : `event/events-list`;
-        
-      const responseData = await sendRequest(url);
 
-      if (withFullData) {
-        dispatch(loadEventsDashboard(responseData.events));
-      } else {
-        dispatch(loadEvents(responseData.events));
-      }
+      const responseData = await sendRequest(url);
+      
+      dispatch(withFullData ? loadEventsDashboard(responseData.events) : loadEvents(responseData.events));
     } catch (err) {
     } finally {
       setEventsLoading(false);
