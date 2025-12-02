@@ -130,17 +130,25 @@
 }
 .special-icon {
   position: absolute;
-  scale: 0.3;
-  top: -90%;
-  margin-right: 30px;
-  transform: rotate(20deg);
+  top: -20px;
+  right: -50px;
+  width: auto;
+  height: 60px;
+  z-index: 10;
+  object-fit: contain;
+  transform: rotate(25deg);
+  scale: 1;
 
-  @media only screen and (min-width: 680px) and (max-width: 800px) {
-    top: -70%;
+  @media only screen and (min-width: 656px) and (max-width: 800px) {
+    height: 50px;
+    top: -20px;
+    right: -35px;
   }
 
-  @media only screen and (max-width: 600px) {
-    top: -50%;
+  @media only screen and (max-width: 655px) {
+    height: 45px;
+    top: -20px;
+    right: -35px;
   }
 }
 .gif-container {
@@ -474,14 +482,14 @@ label {
   text-align: left !important;
 
   @media #{$sm-layout} {
-      justify-content: center !important;
+    justify-content: center !important;
     text-align: center !important;
   }
 }
 
 .login_screen {
   max-width: 600px;
-  padding: 50px 0;;
+  padding: 50px 0;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
