@@ -41,24 +41,87 @@ const Christmas = (props) => {
     return (
         <Fragment>
             {showInbox && <ModalWindow show={showInbox}>
-                <div className="inner" style={{padding:'10px'}}>
-                <h3>Your Christmas 2023 cards</h3>
-                    <FiX className="x_icon" onClick={() => { setShowInbox(false) }} />
-                    {props.currentUser.christmas.length > 0 ? <div className="row mt--20" >
-                        {props.currentUser.christmas.map((card, index) => (
-                            <div key={index} className="col-lg-12 col-md-12 col-12 mt--10">
-                                <div className="card_panel">
-                                    <GifImage src={card.gif} />
-                                    <div className="card_text">
-                                        <p>From: {card.sender}</p>
-                                        <p>To: {card.receiver}</p>
-                                        <p>Text: {card.text}</p>
+                <div className="inner" style={{padding:'20px', maxHeight: '80vh', overflowY: 'auto'}}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px', borderBottom: '2px solid #e9ecef', paddingBottom: '15px' }}>
+                        <h3 style={{ margin: 0, color: '#017363', fontSize: '24px', fontWeight: '600' }}>Your Christmas Cards</h3>
+                        <FiX 
+                            className="x_icon" 
+                            onClick={() => { setShowInbox(false) }} 
+                            style={{ 
+                                cursor: 'pointer', 
+                                fontSize: '24px', 
+                                color: '#6c757d',
+                                transition: 'color 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => e.target.style.color = '#dc3545'}
+                            onMouseLeave={(e) => e.target.style.color = '#6c757d'}
+                        />
+                    </div>
+                    {props.currentUser.christmas.length > 0 ? (
+                        <div className="row mt--20" style={{ gap: '20px' }}>
+                            {props.currentUser.christmas.map((card, index) => (
+                                <div key={index} className="col-lg-12 col-md-12 col-12">
+                                    <div 
+                                        className="card_panel"
+                                        style={{
+                                            border: '1px solid #e9ecef',
+                                            borderRadius: '12px',
+                                            padding: '20px',
+                                            backgroundColor: '#ffffff',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                                            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                            marginBottom: '20px'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.12)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+                                        }}
+                                    >
+                                        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                                            <div style={{ flex: '0 0 auto' }}>
+                                                <GifImage src={card.gif} />
+                                            </div>
+                                            <div className="card_text" style={{ flex: '1', minWidth: '200px' }}>
+                                                <div style={{ marginBottom: '12px' }}>
+                                                    <strong style={{ color: '#017363', fontSize: '14px', display: 'block', marginBottom: '4px' }}>From:</strong>
+                                                    <p style={{ margin: 0, color: '#495057', fontSize: '16px' }}>{card.sender || 'Anonymous'}</p>
+                                                </div>
+                                                <div style={{ marginBottom: '12px' }}>
+                                                    <strong style={{ color: '#017363', fontSize: '14px', display: 'block', marginBottom: '4px' }}>To:</strong>
+                                                    <p style={{ margin: 0, color: '#495057', fontSize: '16px' }}>{card.receiver}</p>
+                                                </div>
+                                                <div>
+                                                    <strong style={{ color: '#017363', fontSize: '14px', display: 'block', marginBottom: '4px' }}>Message:</strong>
+                                                    <p style={{ margin: 0, color: '#495057', fontSize: '16px', lineHeight: '1.6' }}>{card.text}</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                        ))}
-                    </div> : <p style={{ margin: 'auto', padding: '50px 10px' }}>No cards yet - you can always send one to yourself :P</p>}
+                            ))}
+                        </div>
+                    ) : (
+                        <div style={{ 
+                            textAlign: 'center', 
+                            padding: '60px 20px',
+                            backgroundColor: '#f8f9fa',
+                            borderRadius: '12px',
+                            border: '2px dashed #dee2e6'
+                        }}>
+                            <p style={{ 
+                                margin: 0, 
+                                color: '#6c757d', 
+                                fontSize: '18px',
+                                fontStyle: 'italic'
+                            }}>
+                                No cards yet - you can always send one to yourself 😊
+                            </p>
+                        </div>
+                    )}
                 </div>
             </ModalWindow>}
             {showForm && <ModalWindow show={showForm}>
@@ -172,23 +235,81 @@ const Christmas = (props) => {
 
             <div className='holiday-special'>
                 <img src='/assets/images/special/christmas-hat.png' alt='hat' className="special-icon" />
-                <h3 style={{ color: 'white' }}>Holiday Special </h3>
-                <div className='holiday-special-btns'>
+                <h3 style={{ color: 'white', marginBottom: '25px', fontSize: '28px', fontWeight: '600' }}>Holiday Special</h3>
+                <div className='holiday-special-btns' style={{ 
+                    display: 'flex', 
+                    gap: '15px', 
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
                     <button
-                        className="rn-button-style--2"
                         onClick={() => {
                             setShowInbox(true)
                         }}
+                        style={{
+                            padding: '12px 28px',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            color: '#ffffff',
+                            backgroundColor: '#017363',
+                            border: '2px solid #017363',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 2px 8px rgba(1, 115, 99, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = '#015a4d';
+                            e.target.style.borderColor = '#015a4d';
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 4px 12px rgba(1, 115, 99, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = '#017363';
+                            e.target.style.borderColor = '#017363';
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 2px 8px rgba(1, 115, 99, 0.3)';
+                        }}
                     >
-                        Check your inbox       </button>
+                        📬 Check Inbox
+                    </button>
                     <button
-                        className="rn-button-style--2"
-
                         onClick={() => {
                             setShowForm(true)
                         }}
+                        style={{
+                            padding: '12px 28px',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            color: '#017363',
+                            backgroundColor: '#ffffff',
+                            border: '2px solid #ffffff',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 2px 8px rgba(255, 255, 255, 0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = '#f8f9fa';
+                            e.target.style.borderColor = '#ffffff';
+                            e.target.style.transform = 'translateY(-2px)';
+                            e.target.style.boxShadow = '0 4px 12px rgba(255, 255, 255, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = '#ffffff';
+                            e.target.style.borderColor = '#ffffff';
+                            e.target.style.transform = 'translateY(0)';
+                            e.target.style.boxShadow = '0 2px 8px rgba(255, 255, 255, 0.2)';
+                        }}
                     >
-                        Send a wish
+                        ✉️ Send a Wish
                     </button>
                 </div>
             </div>
