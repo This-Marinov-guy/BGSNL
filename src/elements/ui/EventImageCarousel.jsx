@@ -13,10 +13,14 @@ const EventImageCarousel = ({ images }) => {
 
   // Calculate max height from all images
   useEffect(() => {
+    let resizeTimer;
+    
     const calculateMaxHeight = () => {
       if (!containerRef.current || images.length === 0) return;
       
-      const containerWidth = containerRef.current.offsetWidth || 500;
+      const containerWidth = containerRef.current.offsetWidth;
+      if (!containerWidth) return;
+      
       const heights = [];
       
       const promises = images.map((src) => {
@@ -30,7 +34,9 @@ const EventImageCarousel = ({ images }) => {
             resolve();
           };
           img.onerror = () => {
-            heights.push(300); // Fallback height
+            // Fallback height based on screen size
+            const fallbackHeight = window.innerWidth < 768 ? 250 : 300;
+            heights.push(fallbackHeight);
             resolve();
           };
           img.src = src;
@@ -45,23 +51,27 @@ const EventImageCarousel = ({ images }) => {
       });
     };
 
-    // Small delay to ensure container is rendered
+    // Initial calculation with delay to ensure container is rendered
     const timer = setTimeout(() => {
       calculateMaxHeight();
-    }, 100);
+    }, 150);
     
-    // Recalculate on window resize
+    // Recalculate on window resize with debounce
     const handleResize = () => {
-      clearTimeout(timer);
-      setTimeout(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
         calculateMaxHeight();
-      }, 100);
+      }, 150);
     };
     
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+    
     return () => {
       clearTimeout(timer);
+      clearTimeout(resizeTimer);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
     };
   }, [images]);
 

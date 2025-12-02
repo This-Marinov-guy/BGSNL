@@ -2,6 +2,10 @@
 
 .event-carousel-container {
   margin-top: 1.5rem;
+  
+  @media (max-width: 768px) {
+    margin-top: 1rem;
+  }
 }
 
 .event-carousel-main {
@@ -12,6 +16,15 @@
   background: #000;
   min-height: 300px;
   
+  @media (max-width: 768px) {
+    min-height: 250px;
+    border-radius: 0.375rem;
+  }
+  
+  @media (max-width: 480px) {
+    min-height: 200px;
+  }
+  
   .carousel-image-wrapper {
     width: 100%;
     height: 100%;
@@ -20,6 +33,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent;
     
     .carousel-main-image {
       width: 100%;
@@ -47,10 +61,15 @@
         opacity: 0;
         transform: translateY(10px);
         transition: all 0.3s ease;
+        
+        @media (max-width: 768px) {
+          font-size: 0.875rem;
+        }
       }
     }
     
-    &:hover {
+    &:hover,
+    &:active {
       .carousel-main-image {
         transform: scale(1.05);
       }
@@ -60,6 +79,18 @@
         
         .carousel-preview-text {
           opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+    
+    @media (max-width: 768px) {
+      // Show overlay text on mobile tap
+      &:active .carousel-overlay {
+        background: rgba(0, 0, 0, 0.4);
+        
+        .carousel-preview-text {
+          opacity: 0.9;
           transform: translateY(0);
         }
       }
@@ -82,16 +113,23 @@
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   
   svg {
     width: 20px;
     height: 20px;
     color: #333;
+    pointer-events: none;
   }
   
   &:hover {
     background: #fff;
     transform: translateY(-50%) scale(1.1);
+  }
+  
+  &:active {
+    transform: translateY(-50%) scale(0.95);
   }
   
   &.carousel-btn-prev {
@@ -103,8 +141,32 @@
   }
   
   @media (max-width: 768px) {
-    width: 35px;
-    height: 35px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    
+    &.carousel-btn-prev {
+      left: 8px;
+    }
+    
+    &.carousel-btn-next {
+      right: 8px;
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    &:active {
+      background: #fff;
+      transform: translateY(-50%) scale(0.9);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
     
     svg {
       width: 18px;
@@ -119,6 +181,8 @@
   margin-top: 1rem;
   overflow-x: auto;
   padding: 0.5rem 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
   
   &::-webkit-scrollbar {
     height: 6px;
@@ -145,6 +209,8 @@
     cursor: pointer;
     border: 2px solid transparent;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
     
     img {
       width: 100%;
@@ -162,6 +228,10 @@
       }
     }
     
+    &:active {
+      transform: scale(0.95);
+    }
+    
     &.active {
       border-color: #f9004d;
       box-shadow: 0 4px 12px rgba(249, 0, 77, 0.3);
@@ -170,7 +240,20 @@
     @media (max-width: 768px) {
       flex: 0 0 70px;
       height: 50px;
+      border-width: 2px;
     }
+    
+    @media (max-width: 480px) {
+      flex: 0 0 60px;
+      height: 45px;
+      border-radius: 0.25rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.25rem;
   }
 }
 
@@ -245,12 +328,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+  
+  @media (max-width: 768px) {
+    max-width: 95vw;
+    max-height: 95vh;
+    padding: 0.5rem;
+  }
   
   .preview-image {
     max-width: 100%;
     max-height: 90vh;
     object-fit: contain;
     border-radius: 0.5rem;
+    
+    @media (max-width: 768px) {
+      max-height: 95vh;
+      border-radius: 0.375rem;
+    }
   }
 }
 

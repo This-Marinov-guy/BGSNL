@@ -57,7 +57,7 @@ const EventDetails = () => {
   }
 
   const price = estimatePriceByEvent(selectedEvent, user);
-  const imageUrl =
+  const bgImageUrl =
     selectedEvent.bgImageExtra && selectedEvent?.bgImageSelection == 2
       ? selectedEvent.bgImageExtra
       : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
@@ -74,10 +74,7 @@ const EventDetails = () => {
       <PageHelmet
         pageTitle={eventTitle}
         description={eventDescription}
-        image={
-          selectedEvent.bgImageExtra ||
-          `https://www.bulgariansociety.nl${imageUrl}`
-        }
+        image={bgImageUrl}
         type="event"
         canonicalUrl={eventUrl}
         keywords={`${eventTitle}, Bulgarian event, ${region}, BGSNL event, Bulgarian Society`}
@@ -93,7 +90,7 @@ const EventDetails = () => {
       {/* Start Breadcrump Area */}
       <div
         className={`rn-page-title-area pt--120 pb--190 bg_image`}
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        style={{ backgroundImage: `url(${bgImageUrl})` }}
         data-black-overlay="7"
       >
         <div className="container">
@@ -116,7 +113,10 @@ const EventDetails = () => {
         <div className="container">
           <div className="row">
             <div className="col-12 mb--20">
-              <div className="portfolio-view-list d-flex flex-wrap" style={{justifyContent: "space-between"}}>
+              <div
+                className="portfolio-view-list d-flex flex-wrap"
+                style={{ justifyContent: "space-between" }}
+              >
                 <div className="port-view">
                   <h3 style={{ fontSize: "24px" }}>When</h3>
                   <p style={{}}>
