@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ImageFb from "./media/ImageFb";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 
@@ -6,8 +6,64 @@ const EventImageCarousel = ({ images }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(null);
+  const containerRef = useRef(null);
 
   if (!images || images.length === 0) return null;
+
+  // Calculate max height from all images
+  useEffect(() => {
+    const calculateMaxHeight = () => {
+      if (!containerRef.current || images.length === 0) return;
+      
+      const containerWidth = containerRef.current.offsetWidth || 500;
+      const heights = [];
+      
+      const promises = images.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            // Calculate height based on container width while maintaining aspect ratio
+            const aspectRatio = img.height / img.width;
+            const calculatedHeight = containerWidth * aspectRatio;
+            heights.push(calculatedHeight);
+            resolve();
+          };
+          img.onerror = () => {
+            heights.push(300); // Fallback height
+            resolve();
+          };
+          img.src = src;
+        });
+      });
+
+      Promise.all(promises).then(() => {
+        if (heights.length > 0) {
+          const max = Math.max(...heights);
+          setMaxHeight(Math.ceil(max));
+        }
+      });
+    };
+
+    // Small delay to ensure container is rendered
+    const timer = setTimeout(() => {
+      calculateMaxHeight();
+    }, 100);
+    
+    // Recalculate on window resize
+    const handleResize = () => {
+      clearTimeout(timer);
+      setTimeout(() => {
+        calculateMaxHeight();
+      }, 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [images]);
 
   const handlePrevious = () => {
     setActiveIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -36,9 +92,12 @@ const EventImageCarousel = ({ images }) => {
 
   return (
     <>
-      <div className="event-carousel-container">
+      <div className="event-carousel-container" ref={containerRef}>
         {/* Main Carousel */}
-        <div className="event-carousel-main">
+        <div 
+          className="event-carousel-main"
+          style={maxHeight ? { height: `${maxHeight}px` } : {}}
+        >
           <div className="carousel-image-wrapper" onClick={() => openPreview(activeIndex)}>
             <ImageFb
               src={images[activeIndex]}

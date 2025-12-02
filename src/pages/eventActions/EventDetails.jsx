@@ -19,6 +19,7 @@ import moment from "moment";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import EventStructuredData from "../../component/common/EventStructuredData";
+import EventImageCarousel from "../../elements/ui/EventImageCarousel";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -65,6 +66,8 @@ const EventDetails = () => {
   const eventDescription =
     selectedEvent.description || selectedEvent.text?.substring(0, 160);
   const eventUrl = `https://www.bulgariansociety.nl/${region}/event-details/${eventId}`;
+
+  const eventImages = selectedEvent.images.filter(Boolean); // Remove any null/undefined values
 
   return (
     <React.Fragment>
@@ -154,14 +157,18 @@ const EventDetails = () => {
               </div>
             </div>
             <div className="col-lg-5 col-md-12 mb--40">
-              {/* Event Poster */}
-              <div className="event-poster-wrapper">
-                <ImageFb
-                  src={selectedEvent.poster}
-                  alt={eventTitle}
-                  className="event-poster-image"
-                />
-              </div>
+              {/* Event Images Carousel */}
+              {eventImages.length > 1 ? (
+                <EventImageCarousel images={eventImages} />
+              ) : (
+                <div className="event-poster-wrapper">
+                  <ImageFb
+                    src={selectedEvent.poster}
+                    alt={eventTitle}
+                    className="event-poster-image"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="col-lg-7 col-md-12">
