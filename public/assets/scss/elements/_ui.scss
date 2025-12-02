@@ -495,3 +495,114 @@ label {
   flex-grow: 1;
   margin-top: 25vh;
 }
+
+/* ============================= */
+/* 🎄 Christmas Inbox Cards */
+/* ============================= */
+
+.christmas-card-wrapper {
+  margin-bottom: 32px;
+}
+
+.christmas-card {
+  position: relative;
+  background: white;
+  border-radius: 20px;
+  padding: clamp(20px, 4vw, 30px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18),
+      0 4px 10px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* 🎀 Bow */
+.christmas-bow {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  width: clamp(70px, 10vw, 90px);
+  z-index: 5;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+/* Layout grid */
+.christmas-content-grid {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+  gap: clamp(20px, 4vw, 32px);
+  align-items: flex-start;
+
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* GIF */
+.christmas-gif {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Text section */
+.christmas-text {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* From / To row */
+.christmas-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media only screen and (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  p {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: $body-color;
+    word-break: break-word;
+  }
+}
+
+/* Labels */
+.christmas-card .label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+/* Message */
+.christmas-message {
+  p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #495057;
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid $body-color;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}

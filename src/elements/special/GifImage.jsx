@@ -27,8 +27,23 @@ const GifImage = (props) => {
     }, [])
 
     return (
-        <div className='image_input_window'>
-            <img src={props.src || gif} alt='gif'></img>
+        <div className={props.className} style={{
+            maxWidth: "200px",
+            display: "inline-block"
+        }}>
+            <img 
+                src={props.src || gif} 
+                alt='gif'
+                style={{
+                    display: "block",
+                    width: "100%",
+                    height: "auto",
+                    border: "none",
+                    borderRadius: "20px",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
+                    objectFit: "contain"
+                }}
+            ></img>
         </div>
     )
 }

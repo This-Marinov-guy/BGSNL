@@ -34,6 +34,19 @@ const Christmas = (props) => {
 
   const { loading, sendRequest } = useHttpClient();
 
+  // Array of bow images
+  const bowImages = [
+    "/assets/images/special/bows/bow-1.png",
+    "/assets/images/special/bows/bow-2.png",
+    "/assets/images/special/bows/bow-3.png",
+  ];
+
+  // Function to get a random bow for a card (consistent per card index)
+  const getRandomBow = (index) => {
+    // Use index to ensure consistent bow per card, but vary across cards
+    return bowImages[index % bowImages.length];
+  };
+
   if (!HOLIDAYS.isChristmas) {
     return;
   }
@@ -84,106 +97,37 @@ const Christmas = (props) => {
             {props.currentUser.christmas.length > 0 ? (
               <div className="row mt--20" style={{ gap: "20px" }}>
                 {props.currentUser.christmas.map((card, index) => (
-                  <div key={index} className="col-lg-12 col-md-12 col-12">
-                    <div
-                      className="card_panel"
-                      style={{
-                        border: "1px solid #e9ecef",
-                        borderRadius: "12px",
-                        padding: "20px",
-                        backgroundColor: "#ffffff",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                        marginBottom: "20px",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "translateY(-2px)";
-                        e.currentTarget.style.boxShadow =
-                          "0 4px 12px rgba(0,0,0,0.12)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "translateY(0)";
-                        e.currentTarget.style.boxShadow =
-                          "0 2px 8px rgba(0,0,0,0.08)";
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "20px",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <div style={{ flex: "0 0 auto" }}>
+                  <div key={index} className="christmas-card-wrapper">
+                    <div className="christmas-card">
+                      {/* Bow */}
+                      <img
+                        src={getRandomBow(index)}
+                        alt="bow decoration"
+                        className="christmas-bow"
+                      />
+
+                      <div className="christmas-content-grid">
+                        {/* GIF */}
+                        <div className="christmas-gif">
                           <GifImage src={card.gif} />
                         </div>
-                        <div
-                          className="card_text"
-                          style={{ flex: "1", minWidth: "200px" }}
-                        >
-                          <div style={{ marginBottom: "12px" }}>
-                            <strong
-                              style={{
-                                color: "#017363",
-                                fontSize: "14px",
-                                display: "block",
-                                marginBottom: "4px",
-                              }}
-                            >
-                              From:
-                            </strong>
-                            <p
-                              style={{
-                                margin: 0,
-                                color: "#495057",
-                                fontSize: "16px",
-                              }}
-                            >
-                              {card.sender || "Anonymous"}
-                            </p>
+
+                        {/* TEXT */}
+                        <div className="christmas-text">
+                          <div className="christmas-row">
+                            <div>
+                              <span className="label">From</span>
+                              <p>{card.sender || "Anonymous"}</p>
+                            </div>
+                            <div>
+                              <span className="label">To</span>
+                              <p>{card.receiver}</p>
+                            </div>
                           </div>
-                          <div style={{ marginBottom: "12px" }}>
-                            <strong
-                              style={{
-                                color: "#017363",
-                                fontSize: "14px",
-                                display: "block",
-                                marginBottom: "4px",
-                              }}
-                            >
-                              To:
-                            </strong>
-                            <p
-                              style={{
-                                margin: 0,
-                                color: "#495057",
-                                fontSize: "16px",
-                              }}
-                            >
-                              {card.receiver}
-                            </p>
-                          </div>
-                          <div>
-                            <strong
-                              style={{
-                                color: "#017363",
-                                fontSize: "14px",
-                                display: "block",
-                                marginBottom: "4px",
-                              }}
-                            >
-                              Message:
-                            </strong>
-                            <p
-                              style={{
-                                margin: 0,
-                                color: "#495057",
-                                fontSize: "16px",
-                                lineHeight: "1.6",
-                              }}
-                            >
-                              {card.text}
-                            </p>
+
+                          <div className="christmas-message">
+                            <span className="label">Message</span>
+                            <p>{card.text}</p>
                           </div>
                         </div>
                       </div>
@@ -268,7 +212,7 @@ const Christmas = (props) => {
             ) : (
               <Form id="form" style={{ padding: "5%" }}>
                 <div className="hor_section">
-                  <h3>Send a Christmas Card to a BGSG member</h3>
+                  <h3>Send a Christmas Card to a BGSNL member</h3>
                   <FiX
                     className="x_icon"
                     onClick={() => {
