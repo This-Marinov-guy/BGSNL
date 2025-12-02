@@ -627,7 +627,7 @@ const EventForm = (props) => {
                 : [{ title: "", description: "", price: undefined }],
           },
           promoCodes: {
-            isEnabled: initialData?.product.promoCodes?.length > 0,
+            isEnabled: initialData?.product?.promoCodes?.length > 0,
             codes:
               initialData?.product?.promoCodes?.length > 0
                 ? initialData?.product?.promoCodes?.map((code) => ({
