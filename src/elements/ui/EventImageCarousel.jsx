@@ -144,7 +144,15 @@ const EventImageCarousel = ({ images }) => {
               >
                 <img 
                   src="/assets/icons/svgs/arrow-left.svg" 
-                  alt="Previous" 
+                  alt="Previous"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    display: "block",
+                    minWidth: "20px",
+                    minHeight: "20px"
+                  }}
                 />
               </button>
               <button
@@ -154,7 +162,15 @@ const EventImageCarousel = ({ images }) => {
               >
                 <img 
                   src="/assets/icons/svgs/arrow-right.svg" 
-                  alt="Next" 
+                  alt="Next"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    display: "block",
+                    minWidth: "20px",
+                    minHeight: "20px"
+                  }}
                 />
               </button>
             </>
@@ -185,7 +201,15 @@ const EventImageCarousel = ({ images }) => {
           <button className="preview-close" onClick={closePreview}>
             <img 
               src="/assets/icons/svgs/x.svg" 
-              alt="Close" 
+              alt="Close"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                display: "block",
+                minWidth: "24px",
+                minHeight: "24px"
+              }}
             />
           </button>
 
@@ -207,7 +231,15 @@ const EventImageCarousel = ({ images }) => {
                 >
                   <img 
                     src="/assets/icons/svgs/arrow-left.svg" 
-                    alt="Previous" 
+                    alt="Previous"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      display: "block",
+                      minWidth: "24px",
+                      minHeight: "24px"
+                    }}
                   />
                 </button>
                 <button
@@ -216,7 +248,15 @@ const EventImageCarousel = ({ images }) => {
                 >
                   <img 
                     src="/assets/icons/svgs/arrow-right.svg" 
-                    alt="Next" 
+                    alt="Next"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      display: "block",
+                      minWidth: "24px",
+                      minHeight: "24px"
+                    }}
                   />
                 </button>
                 <div className="preview-counter">

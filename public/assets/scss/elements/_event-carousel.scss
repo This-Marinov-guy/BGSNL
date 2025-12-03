@@ -127,12 +127,16 @@
   img {
     width: 20px;
     height: 20px;
+    min-width: 20px;
+    min-height: 20px;
     pointer-events: none;
     display: block;
+    object-fit: contain;
   }
   
   img {
     filter: brightness(0) saturate(100%);
+    opacity: 1;
   }
   
   &:hover {
@@ -188,32 +192,48 @@
   }
   
   @media (max-width: 480px) {
-    width: 44px;
-    height: 44px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-    
-    svg {
-      width: 20px;
-      height: 20px;
-    }
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 1);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    z-index: 20;
     
     &.carousel-btn-prev {
-      left: 3px;
+      left: 5px;
     }
     
     &.carousel-btn-next {
-      right: 3px;
+      right: 5px;
     }
     
     svg,
     img {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       display: block;
+      min-width: 24px;
+      min-height: 24px;
     }
     
     img {
       filter: brightness(0) saturate(100%);
+      opacity: 1;
+    }
+  }
+  
+  // iPhone 12 and similar devices (390px - 428px width)
+  @media (max-width: 428px) and (min-width: 375px) {
+    width: 52px;
+    height: 52px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    
+    svg,
+    img {
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      min-height: 26px;
     }
   }
 }
@@ -351,12 +371,16 @@
   img {
     width: 24px;
     height: 24px;
+    min-width: 24px;
+    min-height: 24px;
     pointer-events: none;
     display: block;
+    object-fit: contain;
   }
   
   img {
     filter: brightness(0) saturate(100%);
+    opacity: 1;
   }
   
   &:hover {
@@ -368,22 +392,26 @@
   @media (max-width: 768px) {
     top: 10px;
     right: 10px;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     background: rgba(255, 255, 255, 1);
-    border: 2px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
     z-index: 10002;
     
     svg,
     img {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
       display: block;
+      object-fit: contain;
     }
     
     img {
       filter: brightness(0) saturate(100%);
+      opacity: 1;
     }
     
     &:active {
@@ -392,21 +420,40 @@
   }
   
   @media (max-width: 480px) {
-    top: 8px;
-    right: 8px;
-    width: 42px;
-    height: 42px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     
     svg,
     img {
-      width: 20px;
-      height: 20px;
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      min-height: 26px;
       display: block;
+      object-fit: contain;
     }
     
     img {
       filter: brightness(0) saturate(100%);
+      opacity: 1;
+    }
+  }
+  
+  // iPhone 12 and similar devices
+  @media (max-width: 428px) and (min-width: 375px) {
+    width: 52px;
+    height: 52px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    
+    svg,
+    img {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      min-height: 28px;
     }
   }
 }
@@ -465,12 +512,16 @@
   img {
     width: 24px;
     height: 24px;
+    min-width: 24px;
+    min-height: 24px;
     pointer-events: none;
     display: block;
+    object-fit: contain;
   }
   
   img {
     filter: brightness(0) saturate(100%);
+    opacity: 1;
   }
   
   &:hover {
@@ -497,18 +548,53 @@
   }
   
   @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 1);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
     
     svg,
     img {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
       display: block;
+      object-fit: contain;
     }
     
     img {
       filter: brightness(0) saturate(100%);
+      opacity: 1;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    
+    svg,
+    img {
+      width: 26px;
+      height: 26px;
+      min-width: 26px;
+      min-height: 26px;
+    }
+  }
+  
+  // iPhone 12 and similar devices
+  @media (max-width: 428px) and (min-width: 375px) {
+    width: 52px;
+    height: 52px;
+    
+    svg,
+    img {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      min-height: 28px;
     }
   }
 }
