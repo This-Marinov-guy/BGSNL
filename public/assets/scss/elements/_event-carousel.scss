@@ -123,11 +123,16 @@
   touch-action: manipulation;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   
-  svg {
+  svg,
+  img {
     width: 20px;
     height: 20px;
-    color: #333;
     pointer-events: none;
+    display: block;
+  }
+  
+  img {
+    filter: brightness(0) saturate(100%);
   }
   
   &:hover {
@@ -164,10 +169,15 @@
       right: 5px;
     }
     
-    svg {
+    svg,
+    img {
       width: 22px;
       height: 22px;
-      color: #000;
+      display: block;
+    }
+    
+    img {
+      filter: brightness(0) saturate(100%);
     }
     
     &:active {
@@ -193,6 +203,17 @@
     
     &.carousel-btn-next {
       right: 3px;
+    }
+    
+    svg,
+    img {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+    
+    img {
+      filter: brightness(0) saturate(100%);
     }
   }
 }
@@ -326,10 +347,16 @@
   z-index: 10001;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   
-  svg {
+  svg,
+  img {
     width: 24px;
     height: 24px;
-    color: #333;
+    pointer-events: none;
+    display: block;
+  }
+  
+  img {
+    filter: brightness(0) saturate(100%);
   }
   
   &:hover {
@@ -348,10 +375,15 @@
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
     z-index: 10002;
     
-    svg {
+    svg,
+    img {
       width: 22px;
       height: 22px;
-      color: #000;
+      display: block;
+    }
+    
+    img {
+      filter: brightness(0) saturate(100%);
     }
     
     &:active {
@@ -366,9 +398,15 @@
     height: 42px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     
-    svg {
+    svg,
+    img {
       width: 20px;
       height: 20px;
+      display: block;
+    }
+    
+    img {
+      filter: brightness(0) saturate(100%);
     }
   }
 }
@@ -423,10 +461,16 @@
   cursor: pointer;
   transition: all 0.3s ease;
   
-  svg {
+  svg,
+  img {
     width: 24px;
     height: 24px;
-    color: #333;
+    pointer-events: none;
+    display: block;
+  }
+  
+  img {
+    filter: brightness(0) saturate(100%);
   }
   
   &:hover {
@@ -456,9 +500,15 @@
     width: 40px;
     height: 40px;
     
-    svg {
+    svg,
+    img {
       width: 20px;
       height: 20px;
+      display: block;
+    }
+    
+    img {
+      filter: brightness(0) saturate(100%);
     }
   }
 }

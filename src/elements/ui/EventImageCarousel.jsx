@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import ImageFb from "./media/ImageFb";
-import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 
 const EventImageCarousel = ({ images }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -143,14 +142,20 @@ const EventImageCarousel = ({ images }) => {
                 onClick={handlePrevious}
                 aria-label="Previous image"
               >
-                <FiChevronLeft />
+                <img 
+                  src="/assets/icons/svgs/arrow-left.svg" 
+                  alt="Previous" 
+                />
               </button>
               <button
                 className="carousel-btn carousel-btn-next"
                 onClick={handleNext}
                 aria-label="Next image"
               >
-                <FiChevronRight />
+                <img 
+                  src="/assets/icons/svgs/arrow-right.svg" 
+                  alt="Next" 
+                />
               </button>
             </>
           )}
@@ -178,7 +183,10 @@ const EventImageCarousel = ({ images }) => {
       {previewOpen && (
         <div className="event-preview-modal" onClick={closePreview}>
           <button className="preview-close" onClick={closePreview}>
-            <FiX />
+            <img 
+              src="/assets/icons/svgs/x.svg" 
+              alt="Close" 
+            />
           </button>
 
           <div
@@ -197,13 +205,19 @@ const EventImageCarousel = ({ images }) => {
                   className="preview-btn preview-btn-prev"
                   onClick={handlePreviewPrevious}
                 >
-                  <FiChevronLeft />
+                  <img 
+                    src="/assets/icons/svgs/arrow-left.svg" 
+                    alt="Previous" 
+                  />
                 </button>
                 <button
                   className="preview-btn preview-btn-next"
                   onClick={handlePreviewNext}
                 >
-                  <FiChevronRight />
+                  <img 
+                    src="/assets/icons/svgs/arrow-right.svg" 
+                    alt="Next" 
+                  />
                 </button>
                 <div className="preview-counter">
                   {previewIndex + 1} / {images.length}
