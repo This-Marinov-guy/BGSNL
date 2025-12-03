@@ -444,14 +444,37 @@ const EventForm = (props) => {
 
             const formData = new FormData();
 
-            // Handle extra images - append new files
-            extraImagesData.newFiles.forEach((file, index) => {
-              let fileName = "image_" + index;
-              let readyFile = new File([file], fileName);
-              formData.append(`images`, readyFile, fileName);
+            // Handle extra images with correct order preservation
+            const orderedImages = extraImagesData.all || [];
+            
+            // Build ordered array: each item indicates if it's existing (by URL) or new (by file name)
+            // Format: [{ type: 'existing', url: '...' }, { type: 'new', fileName: 'image_0' }, ...]
+            const imagesOrder = [];
+            let newFileCounter = 0;
+            
+            orderedImages.forEach((img) => {
+              if (img.isExisting) {
+                imagesOrder.push({ type: 'existing', url: img.url });
+              } else {
+                const fileName = `image_${newFileCounter}`;
+                imagesOrder.push({ type: 'new', fileName });
+                newFileCounter++;
+              }
+            });
+            
+            formData.append("imagesOrder", JSON.stringify(imagesOrder));
+
+            // Append new files with matching file names
+            let fileIndex = 0;
+            orderedImages.forEach((img) => {
+              if (!img.isExisting && img.file) {
+                const fileName = `image_${fileIndex}`;
+                formData.append(`images`, img.file, fileName);
+                fileIndex++;
+              }
             });
 
-            // Handle existing images - append URLs if any remain
+            // Send existing image URLs (order doesn't matter here, order is in imagesOrder)
             if (extraImagesData.existing.length > 0) {
               formData.append("existingImages", JSON.stringify(extraImagesData.existing));
             }
