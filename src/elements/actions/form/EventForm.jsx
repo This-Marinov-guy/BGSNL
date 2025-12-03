@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FileUpload } from "primereact/fileupload";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../../ui/loading/Loader";
 import ImageInput from "../../inputs/common/ImageInput";
@@ -37,6 +36,7 @@ import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
 import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
 import { FiInfo } from "react-icons/fi";
 import { Tooltip } from "primereact/tooltip";
+import MultiImageUpload from "../../inputs/MultiImageUpload";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -44,8 +44,11 @@ const EventForm = (props) => {
   const [visible, setVisible] = useState(false);
   const [confirmResolver, setConfirmResolver] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [files, setFiles] = useState([]);
-  const [isValidFiles, setIsValidFiles] = useState(true);
+  const [extraImagesData, setExtraImagesData] = useState({
+    existing: [],
+    newFiles: [],
+    all: []
+  });
 
   const navigate = useNavigate();
 
@@ -58,7 +61,6 @@ const EventForm = (props) => {
     src: `/assets/images/bg/bg-image-${i + 1}.webp`,
     value: i + 1,
   }));
-  const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
 
   const preSubmitCheck = (errors) => {
     if (!isProd()) {
@@ -70,18 +72,8 @@ const EventForm = (props) => {
     }
   };
 
-  const inputHandler = (event) => {
-    const pickedFiles = Array.from(event.target.files);
-    const filteredFiles = pickedFiles.filter((file) =>
-      validFileTypes.includes(file.type)
-    );
-
-    if (filteredFiles.length > 0) {
-      setFiles(filteredFiles);
-      setIsValidFiles(true);
-    } else {
-      setIsValidFiles(false);
-    }
+  const handleExtraImagesChange = (data) => {
+    setExtraImagesData(data);
   };
 
   const isImageCorrectRatio = (file, margin = 0.01) => {
@@ -452,12 +444,17 @@ const EventForm = (props) => {
 
             const formData = new FormData();
 
-            files.forEach((file, index) => {
+            // Handle extra images - append new files
+            extraImagesData.newFiles.forEach((file, index) => {
               let fileName = "image_" + index;
-
               let readyFile = new File([file], fileName);
               formData.append(`images`, readyFile, fileName);
             });
+
+            // Handle existing images - append URLs if any remain
+            if (extraImagesData.existing.length > 0) {
+              formData.append("existingImages", JSON.stringify(extraImagesData.existing));
+            }
 
             Object.entries(values).forEach(([key, val]) => {
               if (key === "promoCodes") {
@@ -1542,44 +1539,14 @@ const EventForm = (props) => {
               <h3 className="label mt--40">Extra Images</h3>
               <div className="row center_text">
                 <div className="col-12 mt--20">
-                  <div
-                    className="d-flex align-items-center justify-content-center"
-                    style={{ gap: "8px", marginBottom: "10px" }}
-                  >
-                    <h5 style={{ margin: 0, color: "#6c757d" }}>
-                      Extra Description Images
-                    </h5>
-                    <Tooltip target=".extra-images-tooltip" />
-                    <FiInfo
-                      className="extra-images-tooltip"
-                      style={{ cursor: "help", color: "#6c757d" }}
-                      data-pr-tooltip="Additional images to display at the bottom of the event page (poster is already included)"
-                      data-pr-position="right"
-                    />
-                  </div>
-                  <FileUpload
+                  <MultiImageUpload
+                    existingImages={initialData?.images ?? []}
+                    onImagesChange={handleExtraImagesChange}
                     name="extraImages"
-                    onInput={inputHandler}
-                    multiple
-                    accept="image/*"
-                    maxFileSize={100000000000}
-                    emptyTemplate={
-                      <h4 className="m-0">
-                        Drag and drop files to here to upload.
-                      </h4>
-                    }
+                    label="Extra Description Images"
+                    tooltip="Additional images to display at the bottom of the event page (poster is already included)"
+                    maxImages={5}
                   />
-                  <p>
-                    <small>* Submit no more than 3</small>
-                    <br />
-                    <small>* Any extra images will not be received</small>
-                    <br />
-                  </p>
-                  {!isValidFiles && (
-                    <p style={{ color: "red" }}>
-                      The file is not supported, please try again
-                    </p>
-                  )}
                 </div>
               </div>
 
