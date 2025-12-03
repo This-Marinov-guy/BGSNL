@@ -613,6 +613,31 @@ label {
 
 .multi-image-upload {
   width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: visible;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+
+  @media (max-width: 768px) {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
 
   .upload-dropzone {
     border: 2px dashed #dee2e6;
@@ -622,6 +647,36 @@ label {
     cursor: pointer;
     transition: all 0.3s ease;
     background-color: #f8f9fa;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    visibility: visible;
+    opacity: 1;
+
+    @media (max-width: 768px) {
+      padding: 30px 15px;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      min-height: 120px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 25px 10px;
+      display: block;
+      visibility: visible;
+      opacity: 1;
+      min-height: 100px;
+      
+      p {
+        font-size: 14px !important;
+        margin: 8px 0 !important;
+      }
+      
+      svg {
+        font-size: 28px !important;
+      }
+    }
 
     &:hover {
       border-color: $body-color;
@@ -638,20 +693,34 @@ label {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
     margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
       gap: 10px;
+      margin-top: 12px;
     }
 
     .image-item {
       position: relative;
       aspect-ratio: 1;
       border-radius: 8px;
-      overflow: hidden;
+      overflow: visible;
       border: 2px solid #e9ecef;
       transition: all 0.3s ease;
       background: #f8f9fa;
+      width: 100%;
+
+      @media (max-width: 768px) {
+        border-radius: 6px;
+      }
 
       &:hover {
         border-color: $body-color;
@@ -669,14 +738,65 @@ label {
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
+        border-radius: 6px;
       }
 
       .remove-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(220, 53, 69, 0.95) !important;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 20;
+        color: white;
         transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+        @media (max-width: 768px) {
+          width: 32px;
+          height: 32px;
+          top: 3px;
+          right: 3px;
+          background: rgba(220, 53, 69, 1) !important;
+          border: 2px solid rgba(255, 255, 255, 1);
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+          z-index: 25;
+        }
+
+        @media (max-width: 480px) {
+          width: 30px;
+          height: 30px;
+          top: 2px;
+          right: 2px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+
+          @media (max-width: 768px) {
+            width: 18px;
+            height: 18px;
+          }
+        }
 
         &:hover {
           background: rgba(220, 53, 69, 1) !important;
-          transform: scale(1.1);
+          transform: scale(1.15);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        &:active {
+          transform: scale(0.95);
         }
       }
     }

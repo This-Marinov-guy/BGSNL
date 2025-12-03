@@ -445,24 +445,8 @@ const MultiImageUpload = ({
                   handleRemove(image.id);
                 }}
                 aria-label="Remove image"
-                style={{
-                  position: "absolute",
-                  top: "5px",
-                  right: "5px",
-                  background: "rgba(220, 53, 69, 0.9)",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "28px",
-                  height: "28px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  zIndex: 10,
-                  color: "white"
-                }}
               >
-                <FiX size={16} />
+                <FiX />
               </button>
               <div className="image-preview">
                 {image.isPdf ? (

@@ -1560,8 +1560,8 @@ const EventForm = (props) => {
               </div>
 
               <h3 className="label mt--40">Extra Images</h3>
-              <div className="row center_text">
-                <div className="col-12 mt--20">
+              <div className="row center_text" style={{ width: "100%", margin: 0 }}>
+                <div className="col-12 mt--20" style={{ width: "100%", padding: "0 15px", boxSizing: "border-box" }}>
                   <MultiImageUpload
                     existingImages={initialData?.images ?? []}
                     onImagesChange={handleExtraImagesChange}

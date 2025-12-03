@@ -7,15 +7,32 @@ const EventImageCarousel = ({ images }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [maxHeight, setMaxHeight] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
 
   if (!images || images.length === 0) return null;
 
-  // Calculate max height from all images
+  // Calculate max height from all images (only for mobile)
   useEffect(() => {
     let resizeTimer;
     
+    // Check if mobile on mount and resize
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 769;
+      setIsMobile(mobile);
+      return mobile;
+    };
+    
+    checkMobile(); // Initial check
+    
     const calculateMaxHeight = () => {
+      // Only calculate dynamic height on mobile devices
+      const mobile = checkMobile();
+      if (!mobile) {
+        setMaxHeight(null); // Use fixed height from CSS on desktop
+        return;
+      }
+      
       if (!containerRef.current || images.length === 0) return;
       
       const containerWidth = containerRef.current.offsetWidth;
@@ -34,8 +51,8 @@ const EventImageCarousel = ({ images }) => {
             resolve();
           };
           img.onerror = () => {
-            // Fallback height based on screen size
-            const fallbackHeight = window.innerWidth < 768 ? 250 : 300;
+            // Fallback height for mobile
+            const fallbackHeight = 250;
             heights.push(fallbackHeight);
             resolve();
           };
@@ -106,7 +123,7 @@ const EventImageCarousel = ({ images }) => {
         {/* Main Carousel */}
         <div 
           className="event-carousel-main"
-          style={maxHeight ? { height: `${maxHeight}px` } : {}}
+          style={maxHeight && isMobile ? { height: `${maxHeight}px` } : {}}
         >
           <div className="carousel-image-wrapper" onClick={() => openPreview(activeIndex)}>
             <ImageFb
