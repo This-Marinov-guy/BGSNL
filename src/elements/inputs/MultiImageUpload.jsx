@@ -45,7 +45,9 @@ const MultiImageUpload = ({
   });
   const [error, setError] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [touchStartIndex, setTouchStartIndex] = useState(null);
   const fileInputRef = useRef(null);
+  const gridRef = useRef(null);
   const tooltipId = `tooltip-${name}`;
 
   // Update images when existingImages prop changes
@@ -299,7 +301,7 @@ const MultiImageUpload = ({
     notifyChange(updatedImages);
   };
 
-  // Drag and drop reordering
+  // Drag and drop reordering (desktop)
   const handleDragStart = (index) => {
     if (enableReorder) {
       setDraggedIndex(index);
@@ -322,6 +324,73 @@ const MultiImageUpload = ({
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
+  };
+
+  // Touch-based reordering (mobile)
+  const handleTouchStart = (e, index) => {
+    if (!enableReorder) return;
+    e.stopPropagation();
+    setTouchStartIndex(index);
+    setDraggedIndex(index);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!enableReorder || touchStartIndex === null || !gridRef.current) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const touch = e.touches[0];
+    const grid = gridRef.current;
+    const gridRect = grid.getBoundingClientRect();
+    
+    // Calculate which item the touch is over based on Y position
+    const touchY = touch.clientY - gridRect.top;
+    const items = Array.from(grid.children);
+    
+    let targetIndex = -1;
+    for (let i = 0; i < items.length; i++) {
+      const itemRect = items[i].getBoundingClientRect();
+      const itemTop = itemRect.top - gridRect.top;
+      const itemBottom = itemRect.bottom - gridRect.top;
+      
+      if (touchY >= itemTop && touchY <= itemBottom) {
+        // Check if touch is in the middle half of the item (to avoid edge cases)
+        const itemMiddle = (itemTop + itemBottom) / 2;
+        if (touchY < itemMiddle) {
+          targetIndex = i;
+        } else {
+          targetIndex = Math.min(i + 1, items.length - 1);
+        }
+        break;
+      }
+    }
+    
+    // If touch is below all items, target the last item
+    if (targetIndex === -1 && touchY > gridRect.height) {
+      targetIndex = items.length - 1;
+    }
+    
+    // If touch is above all items, target the first item
+    if (targetIndex === -1 && touchY < 0) {
+      targetIndex = 0;
+    }
+    
+    if (targetIndex !== -1 && targetIndex !== touchStartIndex && targetIndex !== draggedIndex) {
+      const newImages = [...images];
+      const draggedItem = newImages[touchStartIndex];
+      newImages.splice(touchStartIndex, 1);
+      newImages.splice(targetIndex, 0, draggedItem);
+      setImages(newImages);
+      setTouchStartIndex(targetIndex);
+      setDraggedIndex(targetIndex);
+      notifyChange(newImages);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!enableReorder) return;
+    setDraggedIndex(null);
+    setTouchStartIndex(null);
   };
 
   // Notify parent of changes
@@ -423,7 +492,13 @@ const MultiImageUpload = ({
 
       {/* Images Grid */}
       {images.length > 0 && (
-        <div className="images-grid" style={{ marginTop: "20px" }}>
+        <div 
+          ref={gridRef} 
+          className="images-grid" 
+          style={{ marginTop: "20px" }}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           {images.map((image, index) => (
             <div
               key={image.id}
@@ -432,17 +507,26 @@ const MultiImageUpload = ({
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => handleDragOverItem(e, index)}
               onDragEnd={handleDragEnd}
+              onTouchStart={(e) => handleTouchStart(e, index)}
               style={{
                 position: "relative",
                 cursor: enableReorder ? "move" : "default",
-                opacity: draggedIndex === index ? 0.5 : 1
+                opacity: draggedIndex === index ? 0.5 : 1,
+                touchAction: enableReorder ? "none" : "auto",
+                userSelect: "none",
+                WebkitUserSelect: "none",
+                WebkitTouchCallout: "none"
               }}
             >
               <button
                 className="remove-btn"
                 onClick={(e) => {
                   e.stopPropagation();
+                  e.preventDefault();
                   handleRemove(image.id);
+                }}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
                 }}
                 aria-label="Remove image"
               >
