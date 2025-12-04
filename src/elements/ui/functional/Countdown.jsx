@@ -33,9 +33,9 @@ const Countdown = (props) => {
 
     if (props.eventClosed || remainingTime <= 0) {
         props.setEventClosed(true);
-        return <h3 style={{ color: 'red', marginTop: '10px' }}>Tickets sale is closed!</h3>;
+        return <h3 style={{ color: 'red', marginTop: '10px' }}>Online tickets sold out!</h3>;
     } else if (remainingTime <= 24 * 60 * 60 * 1000) {
-        return <h3 style={{fontSize: '1.2rem'}}>Online sale closes in: {formatTime(remainingTime)}</h3>;
+        return <h3 style={{fontSize: '1.2rem'}}>Online ticket sale closes in: {formatTime(remainingTime)}</h3>;
     } else {
         return null;
     }
