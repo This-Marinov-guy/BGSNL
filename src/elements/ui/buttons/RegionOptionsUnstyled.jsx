@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "../../../layouts/common/RegionLayout.module.css";
 import { REGIONS } from "../../../util/defines/REGIONS_DESIGN";
+import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 
 const RegionOptionsUnstyled = (props) => {
   const {withMain = false} = props;
@@ -26,7 +27,7 @@ const RegionOptionsUnstyled = (props) => {
               style={{ width: "100%" }}
               className={" rn-button-style--2 rn-btn-reverse-green"}
             >
-              {r}
+              {capitalizeFirstLetter(r, true)}
             </button>
           </a>
         );
