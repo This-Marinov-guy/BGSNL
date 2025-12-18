@@ -128,6 +128,7 @@
     "process": "^0.11.10",
     "react-loadable": "^5.5.0",
     "sass-loader": "^14.1.1",
+    "sharp": "^0.34.5",
     "style-loader": "^3.3.4",
     "terser-webpack-plugin": "^5.3.10",
     "url-loader": "^4.1.1",

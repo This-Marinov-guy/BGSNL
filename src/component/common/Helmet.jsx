@@ -52,6 +52,9 @@ class PageHelmet extends Component {
           <meta property="og:title" content={fullTitle} />
           <meta property="og:description" content={metaDescription} />
           <meta property="og:image" content={metaImage} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:image:type" content="image/png" />
           <meta property="og:site_name" content="Bulgarian Society Netherlands" />
           <meta property="og:locale" content="en_NL" />
 
