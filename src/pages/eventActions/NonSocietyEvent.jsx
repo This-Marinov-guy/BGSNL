@@ -202,16 +202,27 @@ const NonSocietyEvent = (props) => {
                   ></input>
                 </div>
               )}
-              <button
-                disabled={
-                  loading ||
-                  (formData.hasExtraGuest && !formData.extraGuestName)
-                }
-                onClick={submitMemberForm}
-                className="rn-button-style--2 rn-btn-reverse-green mt--30"
-              >
-                {loading ? <Loader /> : <span>Register</span>}
-              </button>
+              {target?.ticketLink ? (
+                <a
+                  href={target?.ticketLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
+                >
+                  <span>Register</span>
+                </a>
+              ) : (
+                <button
+                  disabled={
+                    loading ||
+                    (formData.hasExtraGuest && !formData.extraGuestName)
+                  }
+                  onClick={submitMemberForm}
+                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
+                >
+                  {loading ? <Loader /> : <span>Register</span>}
+                </button>
+              )}
             </div>
           ) : (
             <Loader center />
@@ -412,8 +423,13 @@ const NonSocietyEvent = (props) => {
                       <h4>Free</h4>
                     </div>
                   </div>
-                  {!block && (
-                    <button
+                  {!block && 
+                    target?.ticketLink ? (
+                      <a href={target?.ticketLink} target="_blank" rel="noopener noreferrer" className="rn-button-style--2 rn-btn-reverse-green mt--30">
+                        <span>Register</span>
+                      </a>
+                    ) : (
+                      <button
                       onClick={() => {
                         dispatch(showModal(NSE_REGISTRATION_MODAL));
                       }}
@@ -474,7 +490,7 @@ const NonSocietyEvent = (props) => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

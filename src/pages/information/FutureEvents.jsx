@@ -152,6 +152,7 @@ const FutureOtherEventsContent = () => {
                 <FocusCards
                   cards={OTHER_EVENTS}
                   region="other"
+                  isOtherEvent
                 />
               ) : (
                 <p className="col-lg-6 mt--20 mb--20">

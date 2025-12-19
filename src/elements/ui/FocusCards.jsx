@@ -4,7 +4,7 @@ import { cn } from "../../util/functions/helpers";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import moment from "moment";
 
-export const FocusCards = ({ cards, region }) => {
+export const FocusCards = ({ cards, region, isOtherEvent }) => {
   const [hovered, setHovered] = useState(null);
 
   return (
@@ -17,15 +17,18 @@ export const FocusCards = ({ cards, region }) => {
           hovered={hovered}
           setHovered={setHovered}
           region={region}
+          isOtherEvent={isOtherEvent}
         />
       ))}
     </div>
   );
 };
 
-const Card = ({ card, index, hovered, setHovered, region }) => {
-  const link = `/${card.region ?? region}/event-details/${card.id}`;
-
+const Card = ({ card, index, hovered, setHovered, region, isOtherEvent }) => {
+  const link = isOtherEvent
+    ? "/other-event-details/pwc-offer-day"
+    : `/${card.region ?? region}/event-details/${card.id}`;
+  
   return (
     <div
       onMouseEnter={() => setHovered(index)}
@@ -44,9 +47,9 @@ const Card = ({ card, index, hovered, setHovered, region }) => {
             <h3 className="focus-card-title">{card.title}</h3>
             <div className="focus-card-details">
               <div className="focus-card-datetime">
-                {moment(card.correctedDate ?? card.date).format(
+                {moment(card.date).isValid() ? moment(card.correctedDate ?? card.date).format(
                   MOMENT_DATE_TIME
-                )}
+                ) : card.date}
               </div>
             </div>
           </div>
