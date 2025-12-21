@@ -292,7 +292,7 @@ const AlumniSignUp = (props) => {
                   formData.append("name", values.name);
                   formData.append("surname", values.surname);
                   formData.append("email", values.email);
-                  formData.append("password", encryptData(values.password));
+                  formData.append("password", await encryptData(values.password));
                   const responseData = await sendRequest(
                     "security/check-email",
                     "POST",

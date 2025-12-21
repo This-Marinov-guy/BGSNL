@@ -2,10 +2,17 @@ import React from "react";
 import { clarity } from "react-microsoft-clarity";
 import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
+import { serverEndpoint } from "../defines/common";
 import CryptoJS from "crypto-js";
 import { checkAuthorization } from "./authorization";
-import { ACCESS_3, ACCESS_4, ALUMNI, LOCAL_STORAGE_LOCATION } from "../defines/common";
+import {
+  ACCESS_3,
+  ACCESS_4,
+  ALUMNI,
+  LOCAL_STORAGE_LOCATION,
+} from "../defines/common";
 import SolidBadge from "../../elements/ui/badges/SolidBadge";
+import axios from "axios";
 
 export const isProd = () => {
   return process.env.NODE_ENV === "production";
@@ -79,18 +86,22 @@ export const decodeFromURL = (url) => {
   return decodeURIComponent(decodedString);
 };
 
-export const encryptData = (data) => {
+export const encryptData = async (data) => {
   if (!data) {
     return "";
   }
 
   const stringifiedData = JSON.stringify(data);
-  const encryptedData = CryptoJS.AES.encrypt(
-    stringifiedData,
-    process.env.REACT_APP_ENCRYPTION_KEY
-  ).toString();
 
-  return encryptedData;
+  const response = await axios.post(`${serverEndpoint}security/encrypt-data`, {
+    data: stringifiedData,
+  });
+
+  if (!response?.data.hasOwnProperty("encryptedData")) {
+    return null;
+  }
+
+  return response.data.encryptedData;
 };
 
 export const decryptData = (string) => {
@@ -121,10 +132,10 @@ export const estimatePriceByEvent = (
     blockDiscounts: false,
     withMemberBadge: true,
   }
-) => {  
+) => {
   const { product } = selectedEvent;
   const isMember = !user?.isAlumni && !!user?.token;
-  const isActiveMember =  isMember && checkAuthorization(user.token, ACCESS_4);
+  const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
   const isMemberDataFull = user?.name && user?.surname && user?.email;
 
   const includedText =

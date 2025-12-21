@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
 import CustomSpinner from "../../../ui/loading/CustomSpinner";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
-import { encryptData } from "../../../../util/functions/helpers";
 import {
   createCustomerTicket,
   createQrCodeCheckGuest,

@@ -324,7 +324,7 @@ const SignUp = (props) => {
                   formData.append("graduationDate", values.graduationDate);
                   formData.append("course", values.course);
                   formData.append("studentNumber", values.studentNumber);
-                  formData.append("password", encryptData(values.password));
+                  formData.append("password", await encryptData(values.password));
                   formData.append(
                     "notificationTypeTerms",
                     values.notificationTypeTerms

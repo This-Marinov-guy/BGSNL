@@ -20,7 +20,7 @@ import FormExtras from "../../elements/ui/forms/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import { encryptData, isObjectEmpty } from "../../util/functions/helpers";
+import { isObjectEmpty } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
