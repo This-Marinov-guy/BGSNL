@@ -21,8 +21,8 @@ const AuthLayout = ({ children, access = [] }) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA);
-      const isAuth = !!(user && user.token) || !!userData;
+      const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA); 
+      const isAuth = !!(user && user.token) || !!userData || (user.version == process.env.REACT_APP_AUTH_VERSION);
       const routePath = location.pathname + location.hash + location.search;
 
       if (!isAuth) {

@@ -5,6 +5,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     image: '',
+    version: null,
     token: null,
     status: '',
     isSubscribed: false,
@@ -13,8 +14,9 @@ export const userSlice = createSlice({
   reducers: {
     login: {
       reducer(state, action) {
-        const { token, status, isSubscribed, isAlumni, image } = action.payload;
+        const { version,token, status, isSubscribed, isAlumni, image } = action.payload;
         state.image = image;
+        state.version = version;
         state.token = token;
         state.status = status;
         state.isSubscribed = isSubscribed;
@@ -43,6 +45,7 @@ export const userSlice = createSlice({
 
     logout: (state) => {
       state.image = '';
+      state.version = null;
       state.token = null;
       state.status = '';
       state.isSubscribed = false;

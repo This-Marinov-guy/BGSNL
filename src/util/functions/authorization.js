@@ -15,10 +15,11 @@ export const decodeJWT = (token) => {
 }
 
 export const isTokenExpired = (token) => {
-    const {exp} = decodeJWT(token);
+    const {exp, version} = decodeJWT(token);
 
     const currentTime = Math.floor(Date.now() / 1000); 
-    return exp < currentTime; 
+
+    return (exp < currentTime) && (version != process.env.REACT_APP_AUTH_VERSION); 
 }
 
 export const checkAuthorization = (token, roles) => {

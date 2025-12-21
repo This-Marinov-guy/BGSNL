@@ -9,7 +9,7 @@ import {
   LOCAL_STORAGE_USER_DATA,
   PERSISTENT_SESSION,
 } from "../../util/defines/common";
-import { isTokenExpired } from "../../util/functions/authorization";
+import { decodeJWT, isTokenExpired } from "../../util/functions/authorization";
 
 export const useAppInitialization = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,11 +27,18 @@ export const useAppInitialization = () => {
       );
       let expirationTime =
         localStorage.getItem(LOCAL_STORAGE_SESSION_LIFE) ?? Date.now();
+      let version = null;
+
+      if (storedUser) {
+        const decodedData = decodeJWT(storedUser.token ?? "");
+        version = decodedData?.version ?? null;
+      }
 
       if (
         !isObjectEmpty(storedUser) &&
         storedUser.token &&
-        (PERSISTENT_SESSION || expirationTime > Date.now())
+        (PERSISTENT_SESSION || expirationTime > Date.now()) &&
+        version == process.env.REACT_APP_AUTH_VERSION
       ) {
         await loginUser(storedUser.token);
       } else {
@@ -61,7 +68,10 @@ export const useAppInitialization = () => {
         false
       );
 
-      if (!Object.prototype.hasOwnProperty.call(responseData, 'status') || !Object.prototype.hasOwnProperty.call(responseData, 'isSubscribed')) {
+      if (
+        !Object.prototype.hasOwnProperty.call(responseData, "status") ||
+        !Object.prototype.hasOwnProperty.call(responseData, "isSubscribed")
+      ) {
         throw new Error("Server Error");
       }
 
