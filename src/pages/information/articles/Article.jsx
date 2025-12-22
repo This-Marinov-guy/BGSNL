@@ -71,6 +71,12 @@ const Article = () => {
 
       {/* Start Article  Details */}
       <style>{selectedArticle.styles}</style>
+      <style>{`
+        .wordpress-embedded-container a {
+          text-decoration: underline;
+          font-style: italic;
+        }
+      `}</style>
       <div className="wordpress-embedded-container">
         <div
           dangerouslySetInnerHTML={{
