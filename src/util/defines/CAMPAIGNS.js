@@ -42,14 +42,14 @@ Winners will be announced at the beginning of April. Good luck!
       ],
     },
     navStrap: {
-      active: isTodayInRange("03-03", "03-31"),
+      active: false,
       // one liner please
       title: "March is Membership Month - join and win!",
       modal: "membership_month_march",
       links: [{ name: "", href: "", isExternal: false }],
     },
     news: {
-      active: isTodayInRange("03-03", "03-31"),
+      active: false,
       title: "March is Membership Month",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
@@ -64,7 +64,7 @@ Winners will be announced at the beginning of April. Good luck!
       isForMember: true,
     },
     banner: {
-      active: isTodayInRange("03-03", "03-31"),
+      active: false,
       title: "Join March Membership Month",
       description:
         "Want to travel in Netherlands and also go on an event for absolutely FREE? March is membership month and we have a special offer for you!",
@@ -79,7 +79,7 @@ Winners will be announced at the beginning of April. Good luck!
       ],
     },
     userAction: {
-      active: isTodayInRange("03-03", "03-31"),
+      active: false,
       component: <ValidateCalendarSubscription />,
     },
   },
@@ -87,7 +87,7 @@ Winners will be announced at the beginning of April. Good luck!
     name: "Alumni Campaign 2025",
     key: "alumni_campaign_2025",
     modal: {
-      active: isTodayInRange("10-01", "12-31"),
+      active: true,
       title: "Join the BGSNL Alumni Network",
       description: `Graduated and want to stay connected with the Bulgarian community?
 
@@ -107,13 +107,13 @@ Benefits:
       sponsors: [],
     },
     navStrap: {
-      active: isTodayInRange("10-01", "12-31"),
+      active: true,
       color: "#e5b80b",
       title: "Our BGSNL Alumni Network is now opened!",
       // link: { name: "Visit", href: "/welcome-to-alumni", isExternal: false },
     },
     news: {
-      active: isTodayInRange("10-01", "12-31"),
+      active: true,
       title: "Alumni Network now Opened",
       description:
         "Graduated and want to stay connected? Join our Alumni Network for exclusive events, mentorship opportunities, and stay part of the BGSNL family!",
@@ -128,7 +128,7 @@ Benefits:
       isForMember: false,
     },
     banner: {
-      active: isTodayInRange("10-01", "12-31"),
+      active: true,
       title: "Join the BGSNL Alumni Network",
       description:
         "Graduated and want to stay connected? Join our Alumni Network for exclusive events, mentorship opportunities, and networking with fellow Bulgarian graduates!",
