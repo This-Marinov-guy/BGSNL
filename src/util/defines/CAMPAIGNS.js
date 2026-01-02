@@ -7,7 +7,7 @@ export const CAMPAIGNS = [
     name: "Membership Month March",
     key: "membership_month_march",
     modal: {
-      active: isTodayInRange("03-03", "03-31"),
+      active: false,
       title: "Join March Membership Month",
       description: `Want to travel across the Netherlands and attend an event for FREE?
 
