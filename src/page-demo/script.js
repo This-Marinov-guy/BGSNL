@@ -32,7 +32,6 @@ export const presentation = {
     infinite: true,
     autoplaySpeed: 5000,
     speed: 800,
-    infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     dots: false,

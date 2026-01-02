@@ -30,6 +30,10 @@ import InactivityModal from "./elements/ui/modals/InactivityModal";
 // Style
 import "./index.scss";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+// Components
 import MainLayout from "./layouts/MainLayout";
 import GlobalError from "./component/common/GlobalError";
 import { useAppInitialization } from "./hooks/session/app-init";

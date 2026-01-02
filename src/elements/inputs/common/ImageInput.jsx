@@ -86,7 +86,6 @@ const ImageInput = (props) => {
           name="image"
           accept=".png,.jpg,.jpeg"
           style={{ display: "none" }}
-          style={{ display: "none" }}
         />
         {!previewUrl ? (
           <div style={{ textAlign: "center" }}>

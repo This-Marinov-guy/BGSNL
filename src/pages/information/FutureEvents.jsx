@@ -5,7 +5,7 @@ import ScrollToTop from "react-scroll-up";
 import { Tooltip } from "primereact/tooltip";
 import { FiChevronUp } from "react-icons/fi";
 import Lottie from "react-lottie-player";
-import calendarMotion from "../../../public/assets/images/svg/motion/calendar-motion.json";
+import calendarMotion from "@assets/images/svg/motion/calendar-motion.json";
 import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import { useParams } from "react-router-dom";

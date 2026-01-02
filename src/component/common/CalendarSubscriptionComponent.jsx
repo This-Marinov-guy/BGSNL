@@ -1,6 +1,6 @@
 import React from "react";
 import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
-import "../../../public/assets/scss/elements/_calendarSubscriptionComponent.scss";
+import "@assets/scss/elements/_calendarSubscriptionComponent.scss";
 import {
   googleCalendarIframeSrc,
   googleCalendarPublicLink,

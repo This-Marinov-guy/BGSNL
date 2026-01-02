@@ -111,7 +111,7 @@
     background-size: cover;
     background-position: center;
     background-color: #0a0a0a;
-    // background-image: url(/public/assets/images/portfolio/portfolio-1.jpg); // unable to find image
+    // background-image: url(/assets/images/portfolio/portfolio-1.jpg); // unable to find image
     @extend %transition;
     transform: translateY(38px);
     opacity: 0;
@@ -490,7 +490,7 @@
         );
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#00000000',GradientType=1 );
         &::before {
-          // content: url(/public/assets/images/icons/slick-arrow-left.png); // unable to find image
+          // content: url(/assets/images/icons/slick-arrow-left.png); // unable to find image
         }
         @media #{$md-layout} {
           display: none !important;

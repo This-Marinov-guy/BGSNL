@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const IMAGE_PATH = path.join(__dirname, '../public/assets/images/splashscreens/welcome.png');
-const BACKUP_PATH = path.join(__dirname, '../public/assets/images/splashscreens/welcome-original.png');
+const IMAGE_PATH = path.join(__dirname, '../assets/images/splashscreens/welcome.png');
+const BACKUP_PATH = path.join(__dirname, '../assets/images/splashscreens/welcome-original.png');
 const TARGET_WIDTH = 1200;
 const TARGET_HEIGHT = 630;
 const QUALITY = 90; // PNG quality (0-100)
