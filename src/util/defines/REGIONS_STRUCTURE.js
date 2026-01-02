@@ -21,3 +21,7 @@ export const BOARD_AND_COMMITTEES_IMAGES = [
     text: "Leeuwarden with their Board, Social Committee and Culture Committee",
   },
 ];
+
+// Placeholder exports for commented-out functionality
+export const REGION_BOARD_MEMBERS = {};
+export const REGION_COMMITTEE_MEMBERS = {};

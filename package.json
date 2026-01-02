@@ -1,6 +1,6 @@
 {
   "name": "bgsnl",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "homepage": "https://bulgariansociety.nl",
   "private": true,
   "basename": "/",
@@ -20,6 +20,7 @@
     "axios": "^1.6.7",
     "bootstrap": "^5.3.8",
     "camelcase": "^5.2.0",
+    "chart.js": "^4.5.1",
     "crypto": "npm:crypto-browserify",
     "crypto-browserify": "^3.12.0",
     "crypto-js": "^4.2.0",
@@ -37,6 +38,7 @@
     "postcss": "^8.4.35",
     "primereact": "^10.7.0",
     "qrcode": "^1.5.3",
+    "quill": "^2.0.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-confetti": "^6.1.0",
