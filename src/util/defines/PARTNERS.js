@@ -6,11 +6,12 @@ export const PREMIUM_PARTNER = [
     since: "2024",
     style: { scale: "1.0" },
     description:
-      "PwC is a community of solvers combining human ingenuity, experience and technology innovation to deliver sustained outcomes and build trust. We are thrilled to have PwC Bulgaria as our premium partner, supporting our initiatives and providing valuable career opportunities for our members.",
+      "PwC provides industry-focused audit, tax, and consulting services. PwC’s core purpose is to build trust in society and help solve important problems. More than 370,000 people in 149 countries, working across the PwC network firms, share their ideas and expertise to develop new solutions and deliver practical advice to their clients.",
     features: [
-      "Career Opportunities",
-      "Professional Development",
-      "Community Support",
+      "Tax, audit, and consulting",
+      "Industry-focused services",
+      "Global presence",
+      "Sustainable solutions",
     ],
   },
   {
@@ -20,7 +21,7 @@ export const PREMIUM_PARTNER = [
     since: "2023",
     style: { borderRadius: "5%" },
     description:
-      "Domakin is your trusted partner in finding the perfect home. With a focus on ease and reliability, Domakin helps you navigate the housing market with confidence. We are proud to partner with Domakin to assist our community in finding comfortable and secure living arrangements.",
+      "Platform for helping with apartment searching the Netherlands. We offer doing the viewings for you, directly contacting you with a landlord or finding someone to take your room/apartment.",
     features: ["Housing Assistance", "Reliable Service", "Community Trusted"],
   },
 ];
