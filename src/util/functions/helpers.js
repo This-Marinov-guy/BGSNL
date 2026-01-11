@@ -10,6 +10,7 @@ import {
   ACCESS_4,
   ALUMNI,
   LOCAL_STORAGE_LOCATION,
+  LOCAL_STORAGE_COOKIE_CONSENT,
 } from "../defines/common";
 import SolidBadge from "../../elements/ui/badges/SolidBadge";
 import axios from "axios";
@@ -27,7 +28,8 @@ export const removeLogsOnProd = () => {
 };
 
 export const gaTrack = () => {
-  if (!isProd()) {
+  const consent = localStorage.getItem(LOCAL_STORAGE_COOKIE_CONSENT);
+  if (!isProd() || consent !== "1") {
     return;
   }
 
@@ -39,7 +41,8 @@ export const gaTrack = () => {
 };
 
 export const clarityTrack = () => {
-  if (!isProd()) {
+  const consent = localStorage.getItem(LOCAL_STORAGE_COOKIE_CONSENT);
+  if (!isProd() || consent !== "1") {
     return;
   }
 

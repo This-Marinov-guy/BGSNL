@@ -50,7 +50,6 @@ class BrandTwo extends Component {
               <img
                 src="https://bulgariawantsyou.com/themes/custom/bwy/logo.svg"
                 style={{
-                  scale: "1.5",
                   backgroundColor: "#BFBFBF",
                   padding: "10px",
                   borderRadius: "10px",
