@@ -1,5 +1,5 @@
 // React and Redux Required
-import React, { useEffect, lazy, Suspense, Fragment } from "react";
+import React, { useEffect, lazy, Suspense, Fragment, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -13,6 +13,7 @@ import { store } from "./redux/store";
 import { PrimeReactProvider } from "primereact/api";
 import { isMember, isProd } from "./util/functions/helpers";
 import PageLoading from "./elements/ui/loading/PageLoading";
+import InitialLoadingScreen from "./elements/ui/loading/InitialLoadingScreen";
 import GlobalModals from "./elements/ui/modals/GlobalModals";
 import RegionLayout from "./layouts/common/RegionLayout";
 import { removeLogsOnProd } from "./util/functions/helpers";
@@ -117,19 +118,50 @@ const Root = () => {
   // DO not change order!
   const { isLoading } = useAppInitialization();
   const { getTimeRemaining } = useAuthSession();
+  const [showInitialLoading, setShowInitialLoading] = useState(true);
+  const [isWindowLoaded, setIsWindowLoaded] = useState(false);
 
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
+
+  // Handle window load event
+  useEffect(() => {
+    const handleLoad = () => {
+      setIsWindowLoaded(true);
+    };
+
+    // Check if already loaded
+    if (document.readyState === "complete") {
+      setIsWindowLoaded(true);
+    } else {
+      window.addEventListener("load", handleLoad);
+    }
+
+    return () => {
+      window.removeEventListener("load", handleLoad);
+    };
+  }, []);
+
+  // Hide initial loading when both app is initialized and window is loaded
+  // Also ensure main content has time to render
+  useEffect(() => {
+    if (!isLoading && isWindowLoaded) {
+      // Give the main content a moment to render before starting fade-out
+      // The InitialLoadingScreen component will handle the fade-out timing
+    }
+  }, [isLoading, isWindowLoaded]);
+
+  const handleLoadingComplete = () => {
+    setShowInitialLoading(false);
+  };
 
   if (process.env.REACT_APP_MAINTENANCE == "1") {
     return <Maintenance />;
   }
 
-  if (isLoading) {
-    return <PageLoading />;
-  }
-
-  return (
+  // Render main content (it will be hidden behind loading screen if needed)
+  // Always render BrowserRouter so content is ready when loading screen fades out
+  const mainContent = (
     <BrowserRouter basename={"/"}>
       <PageNavigationFunc />
       {modal.includes(INACTIVITY_MODAL) && (
@@ -137,9 +169,12 @@ const Root = () => {
       )}
       <GlobalModals />
       <GlobalError>
-        <Suspense fallback={<PageLoading />}>
-          <CampaignLayout>
-            <Routes>
+        {isLoading ? (
+          <PageLoading />
+        ) : (
+          <Suspense fallback={<PageLoading />}>
+            <CampaignLayout>
+              <Routes>
               {/* The '/' route can be found in the separate Routes in order to work the current functionality */}
               <Route exact path="/404" element={<Error404 />} />
               <Route exact path={`/about`} element={<About />} />
@@ -334,11 +369,24 @@ const Root = () => {
 
               <Route exact path="/:region?" element={<Home />} />
               <Route path="*" element={<Error404 />} />
-            </Routes>
-          </CampaignLayout>
-        </Suspense>
+              </Routes>
+            </CampaignLayout>
+          </Suspense>
+        )}
       </GlobalError>
     </BrowserRouter>
+  );
+
+  return (
+    <>
+      {mainContent}
+      {showInitialLoading && (
+        <InitialLoadingScreen
+          onLoadComplete={handleLoadingComplete}
+          isReady={!isLoading && isWindowLoaded}
+        />
+      )}
+    </>
   );
 };
 
