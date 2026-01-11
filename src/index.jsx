@@ -163,7 +163,7 @@ const Root = () => {
   // Render main content (it will be hidden behind loading screen if needed)
   // Always render BrowserRouter so content is ready when loading screen fades out
   const mainContent = (
-    <BrowserRouter basename={"/"}>
+    <>
       <PageNavigationFunc />
       {modal.includes(INACTIVITY_MODAL) && (
         <InactivityModal timeRemaining={getTimeRemaining()} />
@@ -376,7 +376,7 @@ const Root = () => {
           </Suspense>
         )}
       </GlobalError>
-    </BrowserRouter>
+    </>
   );
 
   return (
@@ -399,9 +399,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <PrimeReactProvider>
-      <MainLayout>
-        <Root />
-      </MainLayout>
+      <BrowserRouter basename={"/"}>
+        <MainLayout>
+          <Root />
+        </MainLayout>
+      </BrowserRouter>
     </PrimeReactProvider>
   </Provider>
 );

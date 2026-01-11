@@ -20,7 +20,7 @@ const CookiesModal = () => {
     setVisible(false);
     // Reload to activate tracking scripts if needed, or rely on next visit/navigation
     // Ideally, we'd trigger the tracking initialization here, but a reload ensures clean state
-    window.location.reload(); 
+    // window.location.reload(); 
   };
 
   const handleMandatoryOnly = () => {

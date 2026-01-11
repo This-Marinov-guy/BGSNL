@@ -102,7 +102,7 @@ const Partners = () => {
                           </ul>
                         </div>
                       </div>
-                      <div className="read-more-btn mt--40">
+                      <div className="read-more-btn mt--40 text-center">
                         <a
                           className="rn-btn"
                           href={partner.url}
