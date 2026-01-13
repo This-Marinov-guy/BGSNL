@@ -224,4 +224,5 @@ export const KVK = {
   leeuwarden: "97572861",
   amsterdam: "93582242",
   rotterdam: "93872992",
+  laiden_hague: "99171562",
 };
