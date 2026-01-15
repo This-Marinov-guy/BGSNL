@@ -1,6 +1,22 @@
 export const INTERNSHIPS_LIST = [
   {
-    id: 1,
+    id: 17,
+    logo: "https://ilike.media/wp-content/uploads/2022/04/Logo-Black-200x50-1.png",
+    company: "iLike Media",
+    specialty: "Creative media internship",
+    location: "Remote",
+    label: "International & Remote",
+    duration: "Flexible",
+    description:
+      "A creative media production internship focused on social media, content creation, and the development of engaging media campaigns across digital platforms.",
+    bonuses: "Hands-on experience in digital media production, portfolio building opportunities, creative freedom, networking with industry professionals",
+    requirements: "Creative mindset, interest in social media and content creation, storytelling skills, video production and AI skills",
+    languages: "English",
+    contactMail: "",
+    website: "https://ilike.media/",
+  },
+  {
+    id: 16,
     logo: "https://big4accountingfirms.com/wp-content/uploads/Deloitte.svg.png",
     company: "Deloitte",
     specialty: "Summer Business Camp",
@@ -21,7 +37,7 @@ export const INTERNSHIPS_LIST = [
       "https://apply.deloittece.com/en_US/careers/JobDetail/Summer-Business-Camp/16533",
   },
   {
-    id: 2,
+    id: 15,
     logo: "https://acady.nl/wp-content/uploads/2022/09/Acady-Logo-Final-01.png",
     company: "Acady",
     specialty: "Internships (see roles on the site)",
@@ -39,7 +55,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://acady.nl/join-our-team",
   },
   {
-    id: 3,
+    id: 14,
     logo: "https://www.studentjobsrotterdam.nl/_next/image?url=%2Flogos%2Fpepperminds.jpeg&w=96&q=75",
     company: "Pepperminds",
     specialty: "Face-to-Face Fundraising Ambassador",
@@ -58,7 +74,7 @@ export const INTERNSHIPS_LIST = [
       "https://www.pepperminds.nl/makeithappen/?mkt=LZ&utm_source=viavia&utm_medium=crewapp&utm_campaign=makeithappen",
   },
   {
-    id: 4,
+    id: 13,
     logo: "https://neterra.net/images/upload/brands/logo-neterra_1.svg",
     company: "Neterra",
     specialty: "Junior Product Intern",
@@ -75,7 +91,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://neterra.net/",
   },
   {
-    id: 5,
+    id: 12,
     logo: "https://www.pwc.bg/etc.clientlibs/pwc/clientlibs/rebrand-clientlibs/components-colors/resources/images/slim-header-v2/PwC-logo.svg",
     company: "PwC Bulgaria",
     specialty: "Junior Sustainability Audit Analyst",
@@ -94,7 +110,7 @@ export const INTERNSHIPS_LIST = [
       "https://jobs-cee.pwc.com/ce/en/job/589706WD/Junior-Consultant-in-Audit-Finance",
   },
   {
-    id: 6,
+    id: 11,
     logo: "https://www.bgstart.nl/bg/wp-content/uploads/2019/01/favicon.png",
     company: "BG Start",
     specialty: "Accountancy",
@@ -109,7 +125,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://www.bgstart.nl",
   },
   {
-    id: 7,
+    id: 10,
     logo: "https://www.pwc.bg/etc.clientlibs/pwc/clientlibs/rebrand-clientlibs/components-colors/resources/images/slim-header-v2/PwC-logo.svg",
     company: "PwC Bulgaria",
     specialty: "Junior Consultant in Audit & Finance",
@@ -128,7 +144,7 @@ export const INTERNSHIPS_LIST = [
       "https://jobs-cee.pwc.com/ce/en/job/589706WD/Junior-Consultant-in-Audit-Finance",
   },
   {
-    id: 8,
+    id: 9,
     logo: "",
     company: "MASTER OOD",
     specialty: "Engineering and Mechanical",
@@ -143,7 +159,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://www.master-bg.com",
   },
   {
-    id: 9,
+    id: 8,
     logo: "/assets/images/brand/brand-04.png",
     company: "Study Buddy Ltd.",
     specialty: "Marketing, Social Media",
@@ -158,7 +174,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://studybuddy.bg",
   },
   {
-    id: 10,
+    id: 7,
     logo: "/assets/images/brand/brand-06.png",
     logoClass: "splash-li",
     company: "Cool Travel Bulgaria",
@@ -175,7 +191,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://www.cooltravel.bg",
   },
   {
-    id: 11,
+    id: 6,
     logo: "https://substackcdn.com/image/fetch/w_264,c_limit,f_webp,q_auto:best,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F196bf711-6a0e-4e4d-bef8-6d389e8b8fa3_1280x1280.png",
     company: "Groningen Mail",
     specialty: "Content Creation, PR, Marketing",
@@ -191,7 +207,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://www.groningenmail.com",
   },
   {
-    id: 12,
+    id: 5,
     logo: "https://www.domakin.nl/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-2.2290d784.png&w=1920&q=75",
     company: "Domakin",
     specialty: "Real Estate, Digital Marketing",
@@ -207,7 +223,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://www.domakin.nl",
   },
   {
-    id: 13,
+    id: 4,
     logo: "https://careers.silverstar.bg/wp-content/uploads/2024/03/channels4_profile.jpg.webp",
     company: "Silver Star",
     specialty: "Marketing, Sales, Engineering",
@@ -222,7 +238,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://careers.silverstar.bg/all-positions/",
   },
   {
-    id: 14,
+    id: 3,
     logo: "https://southwesternadvantage.com/wp-content/uploads/2022/08/SWA-logo.svg",
     company: "Southwestern Advantage",
     specialty: "Management, Sales, Communication",
@@ -238,7 +254,7 @@ export const INTERNSHIPS_LIST = [
     website: "https://southwesternadvantage.com",
   },
   {
-    id: 15,
+    id: 2,
     logo: "https://assets.jobs.bg/assets/logo/2025-04-02/s_48b2f26d4b260d90e27860b24550c8f1.jpg",
     company: "Cargotec Bulgaria",
     specialty: "Finance, HR, Procurement",
@@ -255,7 +271,7 @@ export const INTERNSHIPS_LIST = [
       "https://jobs.cargotec.com/search/?createNewAlert=false&q=&locationsearch=bulgaria&optionsFacetsDD_brand=&optionsFacetsDD_facility=&optionsFacetsDD_country=&optionsFacetsDD_city=",
   },
   {
-    id: 16,
+    id: 1,
     logo: "https://nikiaviation.com/wp-content/uploads/2020/09/logo_niki-rotor-aviation1_NEW_text-krivi-1.png",
     company: "NIKI Rotor Aviation",
     specialty: "Aviation",

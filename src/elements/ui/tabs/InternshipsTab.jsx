@@ -5,28 +5,40 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { INTERNSHIPS_LIST } from "../../../util/defines/INTERNSHIPS";
 import InternshipCard from "../cards/InternshipCard";
 
-const InternshipsTab = ({ currentUser, onUserRefresh, INIT_ITEMS_PER_PAGE }) => {
+const InternshipsTab = ({
+  currentUser,
+  onUserRefresh,
+  INIT_ITEMS_PER_PAGE,
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  
+
   // Separate pagination state for each tab
   const [bulgarianFirst, setBulgarianFirst] = useState(0);
   const [bulgarianRows, setBulgarianRows] = useState(INIT_ITEMS_PER_PAGE);
-  
-  const [internationalFirst, setInternationalFirst] = useState(0);
-  const [internationalRows, setInternationalRows] = useState(INIT_ITEMS_PER_PAGE);
 
-  const bulgarianList = INTERNSHIPS_LIST.filter(i => i.label === "Bulgarian");
-  const internationalList = INTERNSHIPS_LIST.filter(i => i.label === "International & Remote");
+  const [internationalFirst, setInternationalFirst] = useState(0);
+  const [internationalRows, setInternationalRows] =
+    useState(INIT_ITEMS_PER_PAGE);
+
+  const bulgarianList = INTERNSHIPS_LIST.filter((i) => i.label === "Bulgarian");
+  const internationalList = INTERNSHIPS_LIST.filter(
+    (i) => i.label === "International & Remote"
+  );
 
   const renderList = (list, first, rows, onPageChange) => {
     return (
       <>
         <div className="internships-grid">
           {list.slice(first, first + rows).map((i, index) => (
-            <InternshipCard key={index} internship={i} user={currentUser} onUserRefresh={onUserRefresh}/>
+            <InternshipCard
+              key={index}
+              internship={i}
+              user={currentUser}
+              onUserRefresh={onUserRefresh}
+            />
           ))}
         </div>
-        
+
         <div className="pagination-container">
           <Paginator
             first={first}
@@ -55,7 +67,8 @@ const InternshipsTab = ({ currentUser, onUserRefresh, INIT_ITEMS_PER_PAGE }) => 
       <div className="tab-header">
         <h2>Available Internships</h2>
         <p>
-          Exclusive internship opportunities for BGSNL members. New positions are added regularly.
+          Exclusive internship opportunities for BGSNL members. New positions
+          are added regularly.
         </p>
       </div>
       <div>
@@ -63,9 +76,17 @@ const InternshipsTab = ({ currentUser, onUserRefresh, INIT_ITEMS_PER_PAGE }) => 
           activeIndex={activeIndex}
           onTabChange={(e) => setActiveIndex(e.index)}
         >
+          <TabPanel header={`All (${INTERNSHIPS_LIST.length})`}>
+            {renderList(INTERNSHIPS_LIST, 0, INTERNSHIPS_LIST.length, () => {})}
+          </TabPanel>
           <TabPanel header={`Bulgarian (${bulgarianList.length})`}>
             {bulgarianList.length > 0 ? (
-              renderList(bulgarianList, bulgarianFirst, bulgarianRows, handleBulgarianPageChange)
+              renderList(
+                bulgarianList,
+                bulgarianFirst,
+                bulgarianRows,
+                handleBulgarianPageChange
+              )
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">{"💼"}</div>
@@ -74,9 +95,16 @@ const InternshipsTab = ({ currentUser, onUserRefresh, INIT_ITEMS_PER_PAGE }) => 
               </div>
             )}
           </TabPanel>
-          <TabPanel header={`International & Remote (${internationalList.length})`}>
+          <TabPanel
+            header={`International & Remote (${internationalList.length})`}
+          >
             {internationalList.length > 0 ? (
-              renderList(internationalList, internationalFirst, internationalRows, handleInternationalPageChange)
+              renderList(
+                internationalList,
+                internationalFirst,
+                internationalRows,
+                handleInternationalPageChange
+              )
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">{"💼"}</div>

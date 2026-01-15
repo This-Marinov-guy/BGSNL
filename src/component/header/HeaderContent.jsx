@@ -115,9 +115,11 @@ const HeaderContent = (props) => {
               <li className="has-dropdown">
                 <a style={{ cursor: "pointer" }}>About</a>
                 <ul className="submenu">
-                  {!user.token && <li>
-                    <Link to="/join-the-society">How to join</Link>
-                  </li>}
+                  {!user.token && (
+                    <li>
+                      <Link to="/join-the-society">How to join</Link>
+                    </li>
+                  )}
                   <li>
                     <Link to="/about">About the society</Link>
                   </li>
@@ -181,13 +183,16 @@ const HeaderContent = (props) => {
                 </a>
                 <ul className="submenu">
                   <li>
-                    <Link to={`/user`}>My details</Link>
+                    <Link to={`/user#profile`}>Profile</Link>
                   </li>
                   <li>
                     <Link to={`/user#news`}>News</Link>
                   </li>
                   <li>
                     <Link to={`/user#tickets`}>Tickets</Link>
+                  </li>
+                  <li>
+                    <Link to={`/user#internships`}>Internships</Link>
                   </li>
                   <li>
                     <Link to={`/user#settings`}>Settings</Link>

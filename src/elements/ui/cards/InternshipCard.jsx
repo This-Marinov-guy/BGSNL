@@ -36,7 +36,7 @@ const InternshipCard = (props) => {
   // Consistent styles for all titles and text
   const titleStyle = {
     marginBottom: "8px",
-    fontSize: "14px",
+    fontSize: "16px",
     fontWeight: 700,
     color: "#374151",
     textTransform: "uppercase",
@@ -44,7 +44,7 @@ const InternshipCard = (props) => {
   };
 
   const textStyle = {
-    fontSize: "14px",
+    fontSize: "16px",
     lineHeight: "1.6",
     color: "#4b5563",
     margin: 0
