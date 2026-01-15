@@ -27,6 +27,7 @@ const TabContent = ({
     return (
       <InternshipsTab
         currentUser={currentUser}
+        onUserRefresh={onUserRefresh}
         INIT_ITEMS_PER_PAGE={INIT_ITEMS_PER_PAGE}
       />
     );

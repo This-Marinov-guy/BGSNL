@@ -5,7 +5,7 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { INTERNSHIPS_LIST } from "../../../util/defines/INTERNSHIPS";
 import InternshipCard from "../cards/InternshipCard";
 
-const InternshipsTab = ({ currentUser, INIT_ITEMS_PER_PAGE }) => {
+const InternshipsTab = ({ currentUser, onUserRefresh, INIT_ITEMS_PER_PAGE }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   
   // Separate pagination state for each tab
@@ -23,7 +23,7 @@ const InternshipsTab = ({ currentUser, INIT_ITEMS_PER_PAGE }) => {
       <>
         <div className="internships-grid">
           {list.slice(first, first + rows).map((i, index) => (
-            <InternshipCard key={index} internship={i} user={currentUser}/>
+            <InternshipCard key={index} internship={i} user={currentUser} onUserRefresh={onUserRefresh}/>
           ))}
         </div>
         
@@ -93,6 +93,7 @@ const InternshipsTab = ({ currentUser, INIT_ITEMS_PER_PAGE }) => {
 
 InternshipsTab.propTypes = {
   currentUser: PropTypes.object.isRequired,
+  onUserRefresh: PropTypes.func,
   INIT_ITEMS_PER_PAGE: PropTypes.number.isRequired,
 };
 

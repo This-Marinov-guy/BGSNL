@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { GOOGLE_FORM_APPLICATION } from "../../../util/defines/INTERNSHIPS";
+import InternshipApplyModal from "../modals/InternshipApplyModal";
+import { DOCUMENT_TYPES } from "../../../util/defines/enum";
 
 const InternshipCard = (props) => {
   const {
@@ -17,7 +19,19 @@ const InternshipCard = (props) => {
     requirements,
     website,
   } = props.internship;
-  const { user, isPreview = false } = props;
+  const { user, isPreview = false, onUserRefresh } = props;
+  const [showApplyModal, setShowApplyModal] = useState(false);
+
+  const cvDocument = user?.documents?.find(
+    (document) => document.type === DOCUMENT_TYPES.CV
+  );
+
+  const handleApply = async (documents) => {
+    // Redirect to Google Form with application
+    // const formUrl = GOOGLE_FORM_APPLICATION(company, specialty, user);
+    // window.open(formUrl, "_blank");
+    setShowApplyModal(false);
+  };
 
   // Consistent styles for all titles and text
   const titleStyle = {
@@ -125,15 +139,24 @@ const InternshipCard = (props) => {
         </a>
 
         {!isPreview && (
-          <a
-            href={GOOGLE_FORM_APPLICATION(company, specialty, user)}
-            target="_blank"
-            rel="noreferrer"
-            className="rn-button-style--2 rn-btn-solid-red"
-            style={{ width: "100%", textAlign: "center", padding: "12px 24px", fontSize: "15px", fontWeight: 600 }}
-          >
-            Apply for Internship
-          </a>
+          <>
+            <button
+              onClick={() => setShowApplyModal(true)}
+              className="rn-button-style--2 rn-btn-solid-red"
+              style={{ width: "100%", textAlign: "center", padding: "12px 24px", fontSize: "15px", fontWeight: 600, border: "none", cursor: "pointer" }}
+            >
+              Apply for Internship
+            </button>
+            <InternshipApplyModal
+              visible={showApplyModal}
+              onHide={() => setShowApplyModal(false)}
+              internship={props.internship}
+              user={user}
+              cvDocument={cvDocument}
+              onApply={handleApply}
+              onUserRefresh={onUserRefresh}
+            />
+          </>
         )}
         
         {isPreview && (
@@ -165,6 +188,7 @@ InternshipCard.propTypes = {
   }).isRequired,
   user: PropTypes.object,
   isPreview: PropTypes.bool,
+  onUserRefresh: PropTypes.func,
 };
 
 export default InternshipCard;
