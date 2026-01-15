@@ -9,13 +9,87 @@ export const INTERNSHIPS_LIST = [
     duration: "Flexible",
     description:
       "A creative media production internship focused on social media, content creation, and the development of engaging media campaigns across digital platforms.",
-    bonuses: "Hands-on experience in digital media production, portfolio building opportunities, creative freedom, networking with industry professionals",
-    requirements: "Creative mindset, interest in social media and content creation, storytelling skills, video production and AI skills",
+    bonuses:
+      "Hands-on experience in digital media production, portfolio building opportunities, creative freedom, networking with industry professionals",
+    requirements:
+      "Creative mindset, interest in social media and content creation, storytelling skills, video production and AI skills",
     languages: "English",
     contactMail: "",
-    website: "https://ilike.media/",
+    website: "https://ilikemedia.nl/",
   },
   {
+    id: 18,
+    logo: "https://ilike.media/wp-content/uploads/2022/04/Logo-Black-200x50-1.png",
+    company: "iLike Media",
+    specialty: "Real Estate & Location Analysis",
+    location: "Remote",
+    label: "International & Remote",
+    duration: "Flexible",
+    description:
+      "An internship focused on real estate studies, urban planning, and spatial geography. Work on location assessment, zoning analysis, and feasibility studies for various projects.",
+    bonuses:
+      "Hands-on experience in real estate analysis, portfolio building opportunities, creative freedom, networking with industry professionals",
+    requirements:
+      "Background in Real Estate Studies, Urban Planning, Economics, or Spatial Geography. Skills in location assessment, zoning analysis, and feasibility studies.",
+    languages: "English",
+    contactMail: "",
+    website: "https://ilikemedia.nl/",
+  },
+  {
+    id: 19,
+    logo: "https://ilike.media/wp-content/uploads/2022/04/Logo-Black-200x50-1.png",
+    company: "iLike Media",
+    specialty: "Architecture & Building Design",
+    location: "Remote",
+    label: "International & Remote",
+    duration: "Flexible",
+    description:
+      "An internship in architecture and building design focusing on 3D modelling, urban design, and sustainable building concepts. Ideal for architecture students from TU/e, TU Delft, or Industrial Design programs.",
+    bonuses:
+      "Hands-on experience in architectural design, portfolio building opportunities, creative freedom, networking with industry professionals",
+    requirements:
+      "Background in Architecture (TU/e, TU Delft) or Industrial Design. Skills in 3D modelling, urban design, and sustainable building concepts.",
+    languages: "English",
+    contactMail: "",
+    website: "https://ilikemedia.nl/",
+  },
+  {
+    id: 20,
+    logo: "https://ilike.media/wp-content/uploads/2022/04/Logo-Black-200x50-1.png",
+    company: "iLike Media",
+    specialty: "Trade Fair Development & Sales",
+    location: "Remote",
+    label: "International & Remote",
+    duration: "Flexible",
+    description:
+      "An internship in trade fair development and sales focusing on marketing, business administration, and international business. Work on sales, acquisition, event logistics, and exhibition booth design.",
+    bonuses:
+      "Hands-on experience in trade fair development, portfolio building opportunities, creative freedom, networking with industry professionals",
+    requirements:
+      "Background in Marketing, Business Administration, or International Business. Skills in sales, acquisition, event logistics, and exhibition booth design.",
+    languages: "English",
+    contactMail: "",
+    website: "https://ilikemedia.nl/",
+  },
+  {
+    id: 21,
+    logo: "https://ilike.media/wp-content/uploads/2022/04/Logo-Black-200x50-1.png",
+    company: "iLike Media",
+    specialty: "Journalism & Storytelling",
+    location: "Remote",
+    label: "International & Remote",
+    duration: "Flexible",
+    description:
+      "An internship in journalism and storytelling focusing on reporting, interviewing, and long-form content development. Ideal for Journalism (RUG), Media & Culture, or Digital Humanities students.",
+    bonuses:
+      "Hands-on experience in journalism and storytelling, portfolio building opportunities, creative freedom, networking with industry professionals",
+    requirements:
+      "Background in Journalism (RUG), Media & Culture, or Digital Humanities. Skills in reporting, interviewing, and long-form content development.",
+    languages: "English",
+    contactMail: "",
+    website: "https://ilikemedia.nl/",
+  },
+  { 
     id: 16,
     logo: "https://big4accountingfirms.com/wp-content/uploads/Deloitte.svg.png",
     company: "Deloitte",

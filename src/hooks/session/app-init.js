@@ -32,7 +32,7 @@ export const useAppInitialization = () => {
       if (storedUser) {
         const decodedData = decodeJWT(storedUser.token ?? "");
         version = decodedData?.version ?? null;
-      }
+      }      
       
       if (
         !isObjectEmpty(storedUser) &&
