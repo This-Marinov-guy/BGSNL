@@ -48,7 +48,7 @@ export const INTERNSHIPS_LIST = [
     bonuses:
       "Hands-on experience in architectural design, portfolio building opportunities, creative freedom, networking with industry professionals",
     requirements:
-      "Background in Architecture (TU/e, TU Delft) or Industrial Design. Skills in 3D modelling, urban design, and sustainable building concepts.",
+      "Background in Architecture or Industrial Design. Skills in 3D modelling, urban design, and sustainable building concepts.",
     languages: "English",
     contactMail: "",
     website: "https://ilikemedia.nl/",
@@ -84,7 +84,7 @@ export const INTERNSHIPS_LIST = [
     bonuses:
       "Hands-on experience in journalism and storytelling, portfolio building opportunities, creative freedom, networking with industry professionals",
     requirements:
-      "Background in Journalism (RUG), Media & Culture, or Digital Humanities. Skills in reporting, interviewing, and long-form content development.",
+      "Background in Journalism, Media & Culture, or Digital Humanities. Skills in reporting, interviewing, and long-form content development.",
     languages: "English",
     contactMail: "",
     website: "https://ilikemedia.nl/",
