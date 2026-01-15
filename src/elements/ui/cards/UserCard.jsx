@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FiCheckCircle,
   FiEdit2,
@@ -15,20 +15,34 @@ import { useHttpClient } from "../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
 import CVUploadModal from "../modals/CVUploadModal";
+import { DOCUMENT_TYPES } from "../../../util/defines/enum";
+import { useRefreshUser } from "../../../hooks/common/api-hooks";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, onUserRefresh }) => {
   const isAlumni = user.roles.includes(ALUMNI);
-  const hasCV = user?.documents?.some((document) => document.type === 1);
+  const cvDocument = user?.documents?.find(
+    (document) => document.type === DOCUMENT_TYPES.CV
+  );
+  const hasCV = cvDocument !== undefined;
   const [isEditingQuote, setIsEditingQuote] = useState(false);
   const [quoteValue, setQuoteValue] = useState(user?.quote || "");
   const [isSavingQuote, setIsSavingQuote] = useState(false);
   const [showCVModal, setShowCVModal] = useState(false);
   const [isSavingCV, setIsSavingCV] = useState(false);
+  const [cvModalKey, setCvModalKey] = useState(0);
   const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
+  const { refreshUser } = useRefreshUser();
 
   // Check if user is tier 1+ alumni (tier >= 1)
   const hasPaidAlumniTier = isAlumni && user?.tier >= 1;
+
+  // Sync quoteValue with user.quote when user data updates (after refresh)
+  useEffect(() => {
+    if (!isEditingQuote) {
+      setQuoteValue(user?.quote || "");
+    }
+  }, [user?.quote, isEditingQuote]);
 
   const handleSaveQuote = async () => {
     try {
@@ -45,8 +59,12 @@ const UserCard = ({ user }) => {
           })
         );
         setIsEditingQuote(false);
-        // Update the user object in local state or trigger a refetch
-        window.location.reload(); // Simple solution, you might want to update state instead
+        // Reset quote value to empty (will be updated after refresh)
+        setQuoteValue("");
+        // Refresh user data in the background
+        if (onUserRefresh) {
+          refreshUser(onUserRefresh);
+        }
       }
     } catch (err) {
       dispatch(
@@ -71,20 +89,47 @@ const UserCard = ({ user }) => {
       setIsSavingCV(true);
 
       const formData = new FormData();
-      if (shouldRemove) {
-        formData.append("remove", "true");
-      } else if (file) {
-        formData.append("cv", file);
-      }
+      let response;
 
-      const response = await sendRequest(
-        "user/cv",
-        "PUT",
-        formData,
-        {},
-        false,
-        true
-      );
+      if (shouldRemove) {
+        if (!cvDocument?.id) {
+          dispatch(
+            showNotification({
+              severity: "error",
+              detail: "No CV document found to remove.",
+            })
+          );
+          setIsSavingCV(false);
+          return;
+        }
+        response = await sendRequest(
+          `user/delete-document/${cvDocument.id}`,
+          "DELETE"
+        );
+      } else if (file && hasCV && cvDocument?.id) {
+        formData.append("type", DOCUMENT_TYPES.CV);
+        formData.append("content", file);
+
+        response = await sendRequest(
+          `user/edit-document/${cvDocument.id}`,
+          "PATCH",
+          formData
+        );
+      } else if (file) {
+        formData.append("type", DOCUMENT_TYPES.CV);
+        formData.append("content", file);
+
+        response = await sendRequest("user/add-document", "POST", formData);
+      } else {
+        dispatch(
+          showNotification({
+            severity: "error",
+            detail: "Please select a file to upload.",
+          })
+        );
+        setIsSavingCV(false);
+        return;
+      }
 
       if (response?.status === true) {
         dispatch(
@@ -95,9 +140,15 @@ const UserCard = ({ user }) => {
               : "CV uploaded successfully!",
           })
         );
+
         setShowCVModal(false);
-        // Reload to update CV status
-        window.location.reload();
+        // Reset modal state by changing key (clears file input)
+        setCvModalKey(prev => prev + 1);
+
+        // Refresh user data in the background
+        if (onUserRefresh) {
+          refreshUser(onUserRefresh);
+        }
       }
     } catch (err) {
       dispatch(
@@ -343,11 +394,11 @@ const UserCard = ({ user }) => {
             >
               {hasCV ? (
                 <>
-                  <FiEdit2 size={12} />
+                  <FiEdit2 size={16} />
                 </>
               ) : (
                 <>
-                  <FiPlus size={12} />
+                  <FiPlus size={16} />
                 </>
               )}
             </button>
@@ -369,26 +420,20 @@ const UserCard = ({ user }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <div className="d-flex align-items-center">
+                <a
+                  href={cvDocument.content}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontSize: "16px", padding: "5px 12px" }}
+                  className="d-flex align-items-center"
+                >
                   <FiFile
                     size={24}
                     style={{ marginRight: "12px", color: "#017363" }}
                   />
-                  <div>
-                    <strong>CV Uploaded</strong>
-                    <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
-                      Your CV is available for viewing
-                    </p>
-                  </div>
-                </div>
-                <a
-                  href={user.cv}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rn-button-style--2 rn-btn-small rn-btn-reverse-green"
-                  style={{ fontSize: "12px", padding: "5px 12px" }}
-                >
-                  View CV
+                  {cvDocument.name && cvDocument.name.length > 50
+                    ? `${cvDocument.name.substring(0, 50)}...`
+                    : cvDocument.name}
                 </a>
               </div>
             ) : (
@@ -402,9 +447,10 @@ const UserCard = ({ user }) => {
 
         {/* CV Upload Modal */}
         <CVUploadModal
+          key={cvModalKey}
           visible={showCVModal}
           onHide={() => setShowCVModal(false)}
-          currentCV={user?.cv}
+          currentCV={cvDocument}
           onSave={handleSaveCV}
           isSaving={isSavingCV}
         />
@@ -429,7 +475,9 @@ UserCard.propTypes = {
     quote: PropTypes.string,
     tier: PropTypes.number,
     cv: PropTypes.string,
+    documents: PropTypes.array,
   }).isRequired,
+  onUserRefresh: PropTypes.func,
 };
 
 export default UserCard;

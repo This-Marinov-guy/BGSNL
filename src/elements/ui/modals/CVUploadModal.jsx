@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Dialog } from "primereact/dialog";
+import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { FiUpload, FiTrash2, FiFile } from "react-icons/fi";
 import PropTypes from "prop-types";
 
@@ -25,9 +26,19 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
     }
   };
 
-  const handleRemove = () => {
-    setShouldRemove(true);
-    setSelectedFile(null);
+  const handleRemove = (event) => {
+    confirmPopup({
+      target: event.currentTarget,
+      message: "Are you sure you want to remove your CV? This action cannot be undone.",
+      icon: "pi pi-exclamation-triangle",
+      defaultFocus: "reject",
+      accept: () => {
+        onSave(null, true);
+      },
+      reject: () => {
+        // User cancelled, do nothing
+      },
+    });
   };
 
   const handleSave = () => {
@@ -41,14 +52,16 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
   };
 
   return (
-    <Dialog
-      header="Manage Your CV"
-      visible={visible}
-      style={{ width: "500px" }}
-      onHide={handleClose}
-      closable={!isSaving}
-    >
-      <div className="cv-upload-modal">
+    <>
+      <ConfirmPopup />
+      <Dialog
+        header="Manage Your CV"
+        visible={visible}
+        style={{ width: "500px" }}
+        onHide={handleClose}
+        closable={!isSaving}
+      >
+        <div className="cv-upload-modal">
         {/* Current CV Status */}
         {currentCV && (
           <div className="mb--20">
@@ -74,7 +87,7 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
                 disabled={isSaving}
                 style={{ fontSize: "12px", padding: "5px 12px" }}
               >
-                <FiTrash2 size={12} /> Remove
+                <FiTrash2 size={16} />
               </button>
             </div>
           </div>
@@ -138,7 +151,7 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
           <button
             className="rn-button-style--2 rn-btn-green"
             onClick={handleSave}
-            disabled={isSaving || (!selectedFile && !shouldRemove)}
+            disabled={isSaving || !selectedFile}
           >
             {isSaving ? (
               <>
@@ -155,6 +168,7 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
         </div>
       </div>
     </Dialog>
+    </>
   );
 };
 

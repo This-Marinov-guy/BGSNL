@@ -23,12 +23,13 @@ export const USER_STATUSES = {
 };
 
 // ACCOUNT TABS
+export const PROFILE = "profile";
 export const TICKETS = "tickets";
 export const NEWS = "news";
 export const INTERNSHIPS = "internships";
 export const SETTINGS = "settings";
 
-export const ACCOUNT_TABS = [NEWS, TICKETS, INTERNSHIPS, SETTINGS];
+export const ACCOUNT_TABS = [NEWS, PROFILE, TICKETS, INTERNSHIPS, SETTINGS];
 
 // TIMER TYPES
 export const END_TIMER = 1;
@@ -54,3 +55,12 @@ export const COOKIES = "cookies";
 export const TERMS = "terms";
 
 export const LEGAL_TABS = [TERMS, RULES, PRIVACY, COOKIES];
+
+// Document types
+export const CV = 1;
+export const COVER_LETTER = 2;
+
+export const DOCUMENT_TYPES = {
+  CV: CV,
+  COVER_LETTER: COVER_LETTER,
+};

@@ -94,10 +94,12 @@ button {
   }
 }
 
-button[disabled][class*="rn-btn"] {
-  color: white;
-  background-color: grey;
-  border-color: grey;
+button[disabled][class*="rn-btn"],
+button[disabled][class*="rn-button-style--2"],
+button[disabled][class*="rn-button"] {
+  color: grey !important;
+  background-color: transparent;
+  border-color: grey !important;
   cursor: not-allowed;
 }
 

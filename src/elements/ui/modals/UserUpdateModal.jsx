@@ -15,6 +15,7 @@ import {
   UNIVERSITIES_BY_CITY,
 } from "../../../util/defines/UNIVERSITIES";
 import { Dropdown } from "primereact/dropdown";
+import { useRefreshUser } from "../../../hooks/common/api-hooks";
 
 const schema = yup.object().shape({
   name: yup.string(),
@@ -48,8 +49,9 @@ const groupedItemTemplate = (option) => {
   );
 };
 
-const UserUpdateModal = ({ currentUser }) => {
+const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
   const { loading, sendRequest } = useHttpClient();
+  const { refreshUser } = useRefreshUser();
 
   const modal = useSelector(selectModal);
 
@@ -121,7 +123,11 @@ const UserUpdateModal = ({ currentUser }) => {
               );
 
               if (responseEditUser?.status === true) {
-                window.location.reload();
+                // Refresh user data in the background
+                if (onUserRefresh) {
+                  refreshUser(onUserRefresh);
+                }
+                closeHandler();
               }
             }
           } catch (err) {

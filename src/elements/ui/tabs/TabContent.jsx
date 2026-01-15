@@ -1,14 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { NEWS, TICKETS, INTERNSHIPS, SETTINGS } from "../../../util/defines/enum";
+import { NEWS, TICKETS, INTERNSHIPS, SETTINGS, PROFILE } from "../../../util/defines/enum";
 import NewsTab from "./NewsTab";
 import TicketsTab from "./TicketsTab";
 import InternshipsTab from "./InternshipsTab";
 import SettingsTab from "./SettingsTab";
+import ProfileTab from "./ProfileTab";
 
 const TabContent = ({ 
   tab, 
   currentUser, 
+  hasBirthday,
+  onUserRefresh,
   navigate, 
   first, 
   rows, 
@@ -27,6 +30,8 @@ const TabContent = ({
         INIT_ITEMS_PER_PAGE={INIT_ITEMS_PER_PAGE}
       />
     );
+  } else if (tab === PROFILE) {
+    return <ProfileTab currentUser={currentUser} hasBirthday={hasBirthday} onUserRefresh={onUserRefresh} />;
   } else if (tab === SETTINGS) {
     return <SettingsTab user={currentUser} />;
   } else {
@@ -37,6 +42,8 @@ const TabContent = ({
 TabContent.propTypes = {
   tab: PropTypes.string.isRequired,
   currentUser: PropTypes.object.isRequired,
+  hasBirthday: PropTypes.bool,
+  onUserRefresh: PropTypes.func,
   navigate: PropTypes.func.isRequired,
   first: PropTypes.number.isRequired,
   rows: PropTypes.number.isRequired,

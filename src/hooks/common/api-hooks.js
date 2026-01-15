@@ -97,3 +97,34 @@ export const useArticlesLoad = () => {
 
   return { reloadArticles, reloadArticleDetails };
 };
+
+export const useRefreshUser = () => {
+  const { sendRequest } = useHttpClient();
+
+  const refreshUser = async (callback = null) => {
+    try {
+      const responseData = await sendRequest(
+        `user/current?withTickets=${false}&withChristmas=${false}`,
+        "GET",
+        null,
+        {},
+        false, // withError - don't show error notification
+        false  // withLoading - don't show loading spinner (background refresh)
+      );
+
+      if (responseData?.user && callback ) {
+        callback ({
+          user: responseData.user,
+          hasBirthday: responseData.celebrate,
+        });
+      }
+
+      return responseData;
+    } catch (err) {
+      console.error("Error refreshing user data:", err);
+      return null;
+    }
+  };
+
+  return { refreshUser };
+};

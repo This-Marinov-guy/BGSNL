@@ -15,7 +15,6 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import { selectUser } from "../../redux/user";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
-import UserProfileHeader from "../../elements/ui/headers/UserProfileHeader";
 import TabContent from "../../elements/ui/tabs/TabContent";
 import Christmas from "../../elements/special/Christmas";
 import { ACCOUNT_TABS } from "../../util/defines/enum";
@@ -139,7 +138,13 @@ const User = () => {
         logoname="logo.png"
         forceRegion={currentUser.region ?? null}
       />
-      <UserUpdateModal currentUser={currentUser} />
+      <UserUpdateModal 
+        currentUser={currentUser} 
+        onUserRefresh={(data) => {
+          setCurrentUser(data.user);
+          setHasBirthday(data.hasBirthday);
+        }}
+      />
       <Christmas currentUser={currentUser} />
 
       {/* Start User Page Container with Sidebar */}
@@ -165,12 +170,6 @@ const User = () => {
            />}
 
           <div className="content-container">
-            {/* User Profile Header */}
-            <UserProfileHeader
-              currentUser={currentUser}
-              hasBirthday={hasBirthday}
-            />
-
             {/* Campaign Section */}
             {campaignUserActions &&
               React.cloneElement(campaignUserActions.userAction.component, {
@@ -182,6 +181,11 @@ const User = () => {
               <TabContent
                 tab={tab}
                 currentUser={currentUser}
+                hasBirthday={hasBirthday}
+                onUserRefresh={(data) => {
+                  setCurrentUser(data.user);
+                  setHasBirthday(data.hasBirthday);
+                }}
                 navigate={navigate}
                 first={first}
                 rows={rows}

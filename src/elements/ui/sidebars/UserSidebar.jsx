@@ -31,6 +31,8 @@ const UserSidebar = ({
         return <FaTicketAlt size={22} />;
       case "internships":
         return <FaBriefcase size={22} />;
+      case "profile":
+        return <FaUser size={22} />;
       case "settings":
         return <FaCog size={22} />;
       default:

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import UserCard from "../cards/UserCard";
 
-const UserProfileHeader = ({ currentUser, hasBirthday }) => {
+const UserProfileHeader = ({ currentUser, hasBirthday, onUserRefresh }) => {
   return (
     <div className="user-profile-header">
       <div>
@@ -21,7 +21,7 @@ const UserProfileHeader = ({ currentUser, hasBirthday }) => {
         />
       </div>
       <div className="profile-header-info">
-        <UserCard user={currentUser} />
+        <UserCard user={currentUser} onUserRefresh={onUserRefresh} />
       </div>
     </div>
   );
@@ -30,6 +30,7 @@ const UserProfileHeader = ({ currentUser, hasBirthday }) => {
 UserProfileHeader.propTypes = {
   currentUser: PropTypes.object.isRequired,
   hasBirthday: PropTypes.bool,
+  onUserRefresh: PropTypes.func,
 };
 
 export default UserProfileHeader;
