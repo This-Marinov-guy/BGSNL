@@ -33,10 +33,10 @@ export const useAppInitialization = () => {
         const decodedData = decodeJWT(storedUser.token ?? "");
         version = decodedData?.version ?? null;
       }
-
+      
       if (
         !isObjectEmpty(storedUser) &&
-        storedUser.token &&
+        !!storedUser.token &&
         (PERSISTENT_SESSION || expirationTime > Date.now()) &&
         version == process.env.REACT_APP_AUTH_VERSION
       ) {
