@@ -277,6 +277,12 @@
 .user-content-area {
   flex: 1;
   padding: 20px;
+  max-width: calc(100% - 320px); // Account for sidebar (280px) + margins (20px each side)
+  overflow-x: hidden; // Prevent horizontal overflow
+
+  @media (max-width: 991px) {
+    max-width: 100%; // Full width on mobile when sidebar is hidden
+  }
 
   .content-container {
     background-color: var(--color-white);
@@ -284,6 +290,8 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 30px;
     min-height: calc(100vh - 220px);
+    max-width: 100%; // Ensure container doesn't exceed parent
+    box-sizing: border-box; // Include padding in width calculation
 
     @media #{$sm-layout} {
       padding: 20px 5px;
@@ -351,10 +359,6 @@
 
   .user-sidebar:not(.mobile) {
     display: none;
-  }
-
-  .user-content-area {
-    padding: 15px;
   }
 
   .user-profile-header {

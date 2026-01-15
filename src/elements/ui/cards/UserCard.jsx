@@ -1,21 +1,29 @@
 import React, { useState } from "react";
-import { FiCheckCircle, FiEdit2, FiPlus, FiHelpCircle } from "react-icons/fi";
-import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import {
-  ALUMNI,
-} from "../../../util/defines/common";
+  FiCheckCircle,
+  FiEdit2,
+  FiPlus,
+  FiHelpCircle,
+  FiFile,
+} from "react-icons/fi";
+import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
+import { ALUMNI } from "../../../util/defines/common";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { Tooltip } from "primereact/tooltip";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
+import CVUploadModal from "../modals/CVUploadModal";
 
 const UserCard = ({ user }) => {
   const isAlumni = user.roles.includes(ALUMNI);
+  const hasCV = user?.documents?.some((document) => document.type === 1);
   const [isEditingQuote, setIsEditingQuote] = useState(false);
   const [quoteValue, setQuoteValue] = useState(user?.quote || "");
   const [isSavingQuote, setIsSavingQuote] = useState(false);
+  const [showCVModal, setShowCVModal] = useState(false);
+  const [isSavingCV, setIsSavingCV] = useState(false);
   const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
 
@@ -56,6 +64,52 @@ const UserCard = ({ user }) => {
   const handleCancelEdit = () => {
     setQuoteValue(user?.quote || "");
     setIsEditingQuote(false);
+  };
+
+  const handleSaveCV = async (file, shouldRemove) => {
+    try {
+      setIsSavingCV(true);
+
+      const formData = new FormData();
+      if (shouldRemove) {
+        formData.append("remove", "true");
+      } else if (file) {
+        formData.append("cv", file);
+      }
+
+      const response = await sendRequest(
+        "user/cv",
+        "PUT",
+        formData,
+        {},
+        false,
+        true
+      );
+
+      if (response?.status === true) {
+        dispatch(
+          showNotification({
+            severity: "success",
+            detail: shouldRemove
+              ? "CV removed successfully!"
+              : "CV uploaded successfully!",
+          })
+        );
+        setShowCVModal(false);
+        // Reload to update CV status
+        window.location.reload();
+      }
+    } catch (err) {
+      dispatch(
+        showNotification({
+          severity: "error",
+          detail: "Failed to update CV. Please try again.",
+        })
+      );
+      console.error("Error updating CV:", err);
+    } finally {
+      setIsSavingCV(false);
+    }
   };
 
   return (
@@ -174,7 +228,15 @@ const UserCard = ({ user }) => {
                   onClick={() => setIsEditingQuote(true)}
                   style={{ fontSize: "12px", padding: "5px 15px" }}
                 >
-                  {user?.quote ? <><FiEdit2 size={12} /> Edit</> : <><FiPlus size={12} /> Add Quote</>}
+                  {user?.quote ? (
+                    <>
+                      <FiEdit2 size={12} /> Edit
+                    </>
+                  ) : (
+                    <>
+                      <FiPlus size={12} /> Add Quote
+                    </>
+                  )}
                 </button>
               )}
             </div>
@@ -192,7 +254,13 @@ const UserCard = ({ user }) => {
                   maxLength={200}
                   style={{ marginBottom: "10px", width: "100%" }}
                 />
-                <div style={{ fontSize: "12px", color: "#666", marginBottom: "10px" }}>
+                <div
+                  style={{
+                    fontSize: "12px",
+                    color: "#666",
+                    marginBottom: "10px",
+                  }}
+                >
                   {quoteValue.length}/200 characters
                 </div>
                 <div className="d-flex" style={{ gap: "10px" }}>
@@ -204,7 +272,10 @@ const UserCard = ({ user }) => {
                   >
                     {isSavingQuote ? (
                       <>
-                        <i className="pi pi-spin pi-spinner" style={{ marginRight: "8px" }}></i>
+                        <i
+                          className="pi pi-spin pi-spinner"
+                          style={{ marginRight: "8px" }}
+                        ></i>
                         Saving...
                       </>
                     ) : (
@@ -239,7 +310,8 @@ const UserCard = ({ user }) => {
                   </div>
                 ) : (
                   <p style={{ color: "#999", fontStyle: "italic" }}>
-                    No quote added yet. Click &quot;Add Quote&quot; to share your message!
+                    No quote added yet. Click &quot;Add Quote&quot; to share
+                    your message!
                   </p>
                 )}
               </div>
@@ -247,8 +319,96 @@ const UserCard = ({ user }) => {
           </div>
         )}
 
-      </div>
+        {/* CV Section */}
+        <div className="user-cv-section mt--30">
+          <div className="d-flex align-items-center justify-content-between mb--10">
+            <h4 className="column-title mb--0 d-flex align-items-center">
+              Curriculum Vitae (CV)
+              <FiHelpCircle
+                className="cv-help-icon"
+                data-pr-tooltip="Upload your CV to share with potential employers and partners. Only PDF format is accepted."
+                data-pr-position="top"
+                style={{
+                  marginLeft: "8px",
+                  cursor: "pointer",
+                  color: "#017363",
+                  fontSize: "16px",
+                }}
+              />
+            </h4>
+            <button
+              className="rn-button-style--2 rn-btn-small rn-btn-green"
+              onClick={() => setShowCVModal(true)}
+              style={{ fontSize: "12px", padding: "5px 15px" }}
+            >
+              {hasCV ? (
+                <>
+                  <FiEdit2 size={12} />
+                </>
+              ) : (
+                <>
+                  <FiPlus size={12} />
+                </>
+              )}
+            </button>
+          </div>
 
+          <Tooltip target=".cv-help-icon" style={{ maxWidth: "300px" }} />
+
+          <div>
+            {hasCV ? (
+              <div
+                className="cv-display"
+                style={{
+                  background: "#f9f9f9",
+                  border: "2px solid #017363",
+                  borderRadius: "8px",
+                  padding: "15px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className="d-flex align-items-center">
+                  <FiFile
+                    size={24}
+                    style={{ marginRight: "12px", color: "#017363" }}
+                  />
+                  <div>
+                    <strong>CV Uploaded</strong>
+                    <p style={{ margin: 0, fontSize: "12px", color: "#666" }}>
+                      Your CV is available for viewing
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={user.cv}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rn-button-style--2 rn-btn-small rn-btn-reverse-green"
+                  style={{ fontSize: "12px", padding: "5px 12px" }}
+                >
+                  View CV
+                </a>
+              </div>
+            ) : (
+              <p style={{ color: "#999", fontStyle: "italic" }}>
+                No CV uploaded yet. Click &quot;Upload CV&quot; to add your
+                resume!
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* CV Upload Modal */}
+        <CVUploadModal
+          visible={showCVModal}
+          onHide={() => setShowCVModal(false)}
+          currentCV={user?.cv}
+          onSave={handleSaveCV}
+          isSaving={isSavingCV}
+        />
+      </div>
     </div>
   );
 };
@@ -268,6 +428,7 @@ UserCard.propTypes = {
     subscription: PropTypes.object,
     quote: PropTypes.string,
     tier: PropTypes.number,
+    cv: PropTypes.string,
   }).isRequired,
 };
 
