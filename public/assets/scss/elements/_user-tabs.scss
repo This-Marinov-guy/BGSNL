@@ -385,4 +385,23 @@
       }
     }
   }
+
+  /* TabView mobile styles - make headers wrap */
+  .p-tabview {
+    .p-tabview-nav {
+      flex-wrap: wrap;
+      
+      li {
+        flex: 1 1 auto;
+        min-width: 0;
+        
+        .p-tabview-nav-link {
+          white-space: normal;
+          word-break: break-word;
+          text-align: center;
+          padding: 12px 8px;
+        }
+      }
+    }
+  }
 }
