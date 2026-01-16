@@ -333,14 +333,9 @@ hr {
   scrollbar-width: none; /* Firefox */
 }
 
-.p-toast {
+/* Sonner toast styles */
+[data-sonner-toaster] {
   z-index: 9999 !important; /* Ensure toast is above navigation (z-index: 999) */
-}
-
-.p-toast-message {
-  backdrop-filter: blur(
-    2000px
-  ) !important; /* Ensure the background is fully opaque */
 }
 
 .p-steps .p-steps-item.p-highlight .p-steps-number {

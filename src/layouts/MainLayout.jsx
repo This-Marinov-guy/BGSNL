@@ -1,8 +1,8 @@
 // React and Redux Required
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { clarityTrack, gaTrack } from "../util/functions/helpers";
-import { Toast } from "primereact/toast";
+import { Toaster, toast } from "sonner";
 import {
   selectNotification,
   selectNotificationIndex,
@@ -17,8 +17,6 @@ import { getActiveStrap } from "../util/defines/CAMPAIGNS";
 import Strap from "../elements/banners/Strap";
 
 const MainLayout = ({ children }) => {
-  const toast = useRef(null);
-
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
 
@@ -43,21 +41,35 @@ const MainLayout = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Always clear existing toasts first
-    toast.current.clear();
-    
     if (notification.severity) {
-      // Wait a bit for clear to complete, then show new notification
-      setTimeout(() => {
-        toast.current.show({
-          ...notification,
-          // default values
-          sticky: !(notification.closable ?? true),
-          life: notification.life ?? 8000,
-        });
-      }, 100);
+      const duration = notification.life ?? 8000;
+      const title = notification.summary || "";
+      const description = notification.detail || "";
+      
+      // Map severity to Sonner toast types
+      const toastOptions = {
+        duration: duration,
+        ...(description && { description }),
+      };
+
+      switch (notification.severity) {
+        case "success":
+          toast.success(title, toastOptions);
+          break;
+        case "error":
+          toast.error(title, toastOptions);
+          break;
+        case "warn":
+          toast.warning(title, toastOptions);
+          break;
+        case "info":
+          toast.info(title, toastOptions);
+          break;
+        default:
+          toast(title, toastOptions);
+      }
     }
-  }, [notificationIndex]);
+  }, [notificationIndex, notification]);
 
   return (
     <>
@@ -66,7 +78,11 @@ const MainLayout = ({ children }) => {
       <BirthdayModal />
       <CookiesModal />
       <GoogleCalendarModal />
-      <Toast ref={toast} position={notification.position ?? "top-center"} />
+      <Toaster 
+        position="top-center"
+        richColors
+        closeButton
+      />
       <Strap strap={activeStrap} />
       {children}
     </>

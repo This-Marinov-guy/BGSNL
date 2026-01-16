@@ -64,6 +64,7 @@
     "react-youtube": "^10.1.0",
     "sass": "^1.71.1",
     "slick-carousel": "^1.8.1",
+    "sonner": "^2.0.7",
     "stream": "npm:stream-browserify",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
