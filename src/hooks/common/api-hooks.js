@@ -26,7 +26,7 @@ export const useLoadEvents = () => {
         ? "future-event/full-data-events-list"
         : `event/events-list`;
 
-      const responseData = await sendRequest(url);
+      const responseData = await sendRequest(url, "GET", null, {}, false);
       
       dispatch(withFullData ? loadEventsDashboard(responseData.events) : loadEvents(responseData.events));
     } catch (err) {
@@ -70,7 +70,7 @@ export const useArticlesLoad = () => {
 
   const reloadArticles = async () => {
     try {
-      const responseData = await sendRequest("wordpress/posts");
+      const responseData = await sendRequest("wordpress/posts", "GET", null, {}, false);
 
       if (responseData.posts) {
         dispatch(loadArticles(responseData.posts));
