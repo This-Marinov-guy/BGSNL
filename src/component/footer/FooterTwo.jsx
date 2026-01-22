@@ -71,7 +71,7 @@ const FooterTwo = ({ forceRegion }) => {
                   {/* Start Single Widget  */}
                   <div className="col-lg-6 col-sm-6 col-12">
                     <div className="footer-link">
-                      <h4>Quick Link</h4>
+                      <h4>Quick Links</h4>
                       <ul className="ft-link">
                         <li>
                           <Link

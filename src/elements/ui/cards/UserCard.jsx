@@ -374,7 +374,7 @@ const UserCard = ({ user, onUserRefresh }) => {
         <div className="user-cv-section mt--30">
           <div className="d-flex align-items-center justify-content-between mb--10">
             <h4 className="column-title mb--0 d-flex align-items-center">
-              Curriculum Vitae (CV)
+              CV
               <FiHelpCircle
                 className="cv-help-icon"
                 data-pr-tooltip="Upload your CV to share with potential employers and partners. Only PDF format is accepted."

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LOCAL_STORAGE_SESSION_LIFE, LOCAL_STORAGE_USER_DATA, SESSION_TIMEOUT, PERSISTENT_SESSION } from "../util/defines/common";
+import { LOCAL_STORAGE_USER_DATA } from "../util/defines/common";
 
 export const userSlice = createSlice({
   name: "user",
@@ -21,12 +21,8 @@ export const userSlice = createSlice({
         state.status = status;
         state.isSubscribed = isSubscribed;
         state.isAlumni = isAlumni;
-        // Set session expiration based on persistent session setting
-        const sessionExpiry = PERSISTENT_SESSION 
-          ? Date.now() + (365 * 24 * 60 * 60 * 1000) // 1 year for persistent sessions
-          : Date.now() + SESSION_TIMEOUT; // Original timeout for non-persistent
         
-        localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, sessionExpiry);
+        // Store user data - no expiration check on frontend
         localStorage.setItem(
           LOCAL_STORAGE_USER_DATA,
           JSON.stringify({
@@ -51,7 +47,6 @@ export const userSlice = createSlice({
       state.isSubscribed = false;
       state.isAlumni = false;
       localStorage.removeItem(LOCAL_STORAGE_USER_DATA);
-      localStorage.removeItem(LOCAL_STORAGE_SESSION_LIFE);
     },
 
     refreshToken: (state, action) => {
