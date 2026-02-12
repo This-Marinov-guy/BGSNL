@@ -235,7 +235,7 @@ const Internships = () => {
           <div className="internships-filters mb--40 d-flex flex-wrap justify-content-between align-items-center">
             <form
               onSubmit={handleSearchSubmit}
-              className="internships-search-form"
+              className="internships-search-form mb--20"
             >
               <div style={{ maxWidth: "400px" }}>
                 <div style={{ position: "relative" }}>
