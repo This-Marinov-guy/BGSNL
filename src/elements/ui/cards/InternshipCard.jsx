@@ -22,7 +22,7 @@ const InternshipCard = (props) => {
   
   const { user, isPreview = false, onUserRefresh, onApplyWhenGuest } = props;
   const [showApplyModal, setShowApplyModal] = useState(false);
-  const isLoggedIn = user.status === USER_STATUSES[ACTIVE];
+  const isLoggedIn = user?.status === USER_STATUSES[ACTIVE];
 
   const cvDocument = user?.documents?.find(
     (document) => document.type === DOCUMENT_TYPES.CV
