@@ -1,26 +1,126 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import FooterTwo from "../../component/footer/FooterTwo";
 import ScrollToTop from "react-scroll-up";
-import { FiChevronUp, FiBriefcase, FiUsers, FiCalendar } from "react-icons/fi";
+import { FiChevronUp, FiBriefcase, FiUsers, FiCalendar, FiSearch } from "react-icons/fi";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { selectUser } from "../../redux/user";
 import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
 import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
+import { Paginator } from "primereact/paginator";
+
+const ROWS_PER_PAGE_OPTIONS = [6, 12, 24];
+const DEFAULT_ROWS = 12;
+const SEARCH_DEBOUNCE_MS = 500;
+
+const TYPE_ALL = "all";
+const TYPE_BULGARIAN = "bulgarian";
+const TYPE_INTERNATIONAL = "international";
 
 const Internships = () => {
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
+  const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");
+
+  const rawType = searchParams.get("type");
+  const typeParam =
+    rawType === TYPE_BULGARIAN || rawType === TYPE_INTERNATIONAL
+      ? rawType
+      : TYPE_ALL;
+  const rowsFromUrl = parseInt(searchParams.get("rows") || String(DEFAULT_ROWS), 10);
+  const rowsParam = ROWS_PER_PAGE_OPTIONS.includes(rowsFromUrl) ? rowsFromUrl : DEFAULT_ROWS;
+  const pageFromUrl = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+
+  useEffect(() => {
+    setSearchInput(searchParams.get("search") || "");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const trimmed = searchInput.trim();
+    const currentUrlSearch = searchParams.get("search") || "";
+    if (trimmed === currentUrlSearch) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        if (trimmed) {
+          next.set("search", trimmed);
+        } else {
+          next.delete("search");
+        }
+        next.delete("page");
+        return next;
+      }, { replace: true });
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchInput, setSearchParams]);
+
+  const updateUrl = (updates) => {
+    const next = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === undefined || value === "" || value === TYPE_ALL || value === "1") {
+        next.delete(key);
+      } else {
+        next.set(key, String(value));
+      }
+    });
+    setSearchParams(next, { replace: true });
+  };
+
+  const filteredList = useMemo(() => {
+    let list = INTERNSHIPS_LIST;
+    const search = (searchParams.get("search") || "").trim().toLowerCase();
+    const type = searchParams.get("type") || TYPE_ALL;
+
+    if (type === TYPE_BULGARIAN) {
+      list = list.filter((i) => i.label === "Bulgarian");
+    } else if (type === TYPE_INTERNATIONAL) {
+      list = list.filter((i) => i.label === "International & Remote");
+    }
+
+    if (search) {
+      list = list.filter(
+        (i) =>
+          (i.company && i.company.toLowerCase().includes(search)) ||
+          (i.specialty && i.specialty.toLowerCase().includes(search))
+      );
+    }
+    return list;
+  }, [searchParams]);
+
+  const totalRecords = filteredList.length;
+  const maxPage = Math.max(1, Math.ceil(totalRecords / rowsParam));
+  const pageParam = Math.min(pageFromUrl, maxPage);
+  const first = (pageParam - 1) * rowsParam;
+  const paginatedList = useMemo(
+    () => filteredList.slice(first, first + rowsParam),
+    [filteredList, first, rowsParam]
+  );
+
+  const onPageChange = (event) => {
+    updateUrl({ page: event.page + 1, rows: event.rows });
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const handleTypeChange = (type) => {
+    updateUrl({ type: type === TYPE_ALL ? undefined : type, page: 1 });
+  };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -131,19 +231,150 @@ const Internships = () => {
             </div>
           </div>
 
-          {/* All Internships Grid */}
-          {INTERNSHIPS_LIST.length > 0 ? (
-            <div className="internships-grid" style={{ marginBottom: "40px" }}>
-              {INTERNSHIPS_LIST.map((internship, index) => (
-                <InternshipCard
-                  key={internship.id ?? index}
-                  internship={internship}
-                  user={currentUser}
-                  isPreview={false}
-                  onApplyWhenGuest={() => setShowMembersOnlyModal(true)}
-                />
+          {/* Search and filters */}
+          <div className="internships-filters mb--40 d-flex flex-wrap justify-content-between align-items-center">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="internships-search-form"
+            >
+              <div style={{ maxWidth: "400px" }}>
+                <div style={{ position: "relative" }}>
+                  <FiSearch
+                    style={{
+                      position: "absolute",
+                      left: "14px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#6b7280",
+                      fontSize: "18px",
+                      pointerEvents: "none",
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    className="form-control"
+                    style={{
+                      paddingLeft: "44px",
+                      borderRadius: "10px",
+                      border: "1px solid rgba(0,0,0,0.1)",
+                      fontSize: "15px",
+                    }}
+                    aria-label="Search internships"
+                  />
+                </div>
+              </div>
+            </form>
+
+            <div className="internships-type-filter d-flex flex-wrap gap-2 align-items-center">
+              {[
+                { value: TYPE_ALL, label: "All" },
+                { value: TYPE_BULGARIAN, label: "Bulgarian" },
+                { value: TYPE_INTERNATIONAL, label: "International & Remote" },
+              ].map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => handleTypeChange(value)}
+                  className={
+                    typeParam === value
+                      ? "rn-button-style--2 rn-btn-solid-red"
+                      : "rn-button-style--2"
+                  }
+                  style={{
+                    padding: "8px 18px",
+                    fontSize: "14px",
+                    borderRadius: "8px",
+                    border:
+                      typeParam === value
+                        ? "none"
+                        : "1px solid rgba(0,0,0,0.15)",
+                    backgroundColor:
+                      typeParam === value ? undefined : "transparent",
+                    color: typeParam === value ? "#fff" : "#374151",
+                    cursor: "pointer",
+                  }}
+                >
+                  {label}
+                </button>
               ))}
             </div>
+          </div>
+
+          {/* All Internships Grid with pagination */}
+          {INTERNSHIPS_LIST.length > 0 ? (
+            <>
+              {paginatedList.length > 0 ? (
+                <>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`${first}-${typeParam}-${searchParams.get("search") || ""}`}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="internships-grid"
+                      style={{ marginBottom: "24px" }}
+                    >
+                      {paginatedList.map((internship, index) => (
+                        <motion.div
+                          key={internship.id ?? index}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.3,
+                            delay: index * 0.05,
+                            ease: "easeOut",
+                          }}
+                        >
+                          <InternshipCard
+                            internship={internship}
+                            user={currentUser}
+                            isPreview={false}
+                            onApplyWhenGuest={() =>
+                              setShowMembersOnlyModal(true)
+                            }
+                          />
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                  <motion.div
+                    className="pagination-container"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2, delay: 0.15 }}
+                  >
+                    <Paginator
+                      first={first}
+                      rows={rowsParam}
+                      totalRecords={totalRecords}
+                      rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
+                      onPageChange={onPageChange}
+                    />
+                  </motion.div>
+                </>
+              ) : (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key="empty-filters"
+                    className="empty-state"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <div className="empty-icon">
+                      <FiBriefcase />
+                    </div>
+                    <h3>No internships match your filters</h3>
+                    <p>Try adjusting your search or filter criteria.</p>
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </>
           ) : (
             <div className="empty-state">
               <div className="empty-icon">
@@ -236,7 +467,7 @@ const Internships = () => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
     </React.Fragment>

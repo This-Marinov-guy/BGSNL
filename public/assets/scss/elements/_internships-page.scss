@@ -112,6 +112,41 @@
   }
 }
 
+/* Internships filters and search */
+.internships-filters {
+  .internships-type-filter {
+    .filter-label {
+      @media (max-width: 575px) {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    }
+    button {
+      @media (max-width: 575px) {
+        margin-bottom: 4px;
+      }
+    }
+  }
+  .results-count {
+    @media (max-width: 575px) {
+      width: 100%;
+      margin-left: 0 !important;
+      margin-top: 8px;
+    }
+  }
+}
+
+.rn-internships-area .pagination-container {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  .p-paginator {
+    background: transparent;
+    border: none;
+    gap: 4px;
+  }
+}
+
 /* Internships Grid */
 .internships-grid {
   display: grid;
