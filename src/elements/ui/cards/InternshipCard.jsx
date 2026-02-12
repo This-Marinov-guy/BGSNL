@@ -19,8 +19,9 @@ const InternshipCard = (props) => {
     requirements,
     website,
   } = props.internship;
-  const { user, isPreview = false, onUserRefresh } = props;
+  const { user, isPreview = false, onUserRefresh, onApplyWhenGuest } = props;
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const isLoggedIn = !!user?.token;
 
   const cvDocument = user?.documents?.find(
     (document) => document.type === DOCUMENT_TYPES.CV
@@ -141,21 +142,29 @@ const InternshipCard = (props) => {
         {!isPreview && (
           <>
             <button
-              onClick={() => setShowApplyModal(true)}
+              onClick={() => {
+                if (isLoggedIn) {
+                  setShowApplyModal(true);
+                } else if (onApplyWhenGuest) {
+                  onApplyWhenGuest();
+                }
+              }}
               className="rn-button-style--2 rn-btn-solid-red"
               style={{ width: "100%", textAlign: "center", padding: "12px 24px", fontSize: "15px", fontWeight: 600, border: "none", cursor: "pointer" }}
             >
               Apply for Internship
             </button>
-            <InternshipApplyModal
-              visible={showApplyModal}
-              onHide={() => setShowApplyModal(false)}
-              internship={props.internship}
-              user={user}
-              cvDocument={cvDocument}
-              onApply={handleApply}
-              onUserRefresh={onUserRefresh}
-            />
+            {isLoggedIn && (
+              <InternshipApplyModal
+                visible={showApplyModal}
+                onHide={() => setShowApplyModal(false)}
+                internship={props.internship}
+                user={user}
+                cvDocument={cvDocument}
+                onApply={handleApply}
+                onUserRefresh={onUserRefresh}
+              />
+            )}
           </>
         )}
         
@@ -189,6 +198,7 @@ InternshipCard.propTypes = {
   user: PropTypes.object,
   isPreview: PropTypes.bool,
   onUserRefresh: PropTypes.func,
+  onApplyWhenGuest: PropTypes.func,
 };
 
 export default InternshipCard;

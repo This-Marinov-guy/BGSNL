@@ -11,32 +11,35 @@ import Loader from "../../elements/ui/loading/Loader";
 import { selectUser } from "../../redux/user";
 import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
+import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
 
 const Internships = () => {
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        if (user.token) {
-          const responseData = await sendRequest("user/current");
+        if (user?.token) {
+          const responseData = await sendRequest("user/current?withTickets=false&withChristmas=false");
           setCurrentUser(responseData.user);
+        } else {
+          setCurrentUser(null);
         }
       } catch (err) {
-        // User not logged in or error - that's okay, page is public
-        console.log("User not authenticated or error fetching user data");
+        setCurrentUser(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCurrentUser();
-  }, [user.token]);
+  }, [user?.token]);
 
   if (loading) {
     return <Loader />;
@@ -128,35 +131,18 @@ const Internships = () => {
             </div>
           </div>
 
-          {/* Preview Internship */}
+          {/* All Internships Grid */}
           {INTERNSHIPS_LIST.length > 0 ? (
-            <div className="preview-section">
-              <div className="preview-header">
-                <h4>Preview of Available Opportunities</h4>
-                <p>
-                  Here&apos;s a sample of the internship opportunities available
-                  to our community members:
-                </p>
-              </div>
-
-              <div className="preview-internship">
+            <div className="internships-grid" style={{ marginBottom: "40px" }}>
+              {INTERNSHIPS_LIST.map((internship, index) => (
                 <InternshipCard
-                  internship={INTERNSHIPS_LIST[0]}
+                  key={internship.id ?? index}
+                  internship={internship}
                   user={currentUser}
-                  isPreview={true}
+                  isPreview={false}
+                  onApplyWhenGuest={() => setShowMembersOnlyModal(true)}
                 />
-              </div>
-
-              <div className="preview-footer">
-                <div className="preview-info">
-                  <h5>Want to see more opportunities?</h5>
-                  <p>
-                    Join our community to access the full list of{" "}
-                    {INTERNSHIPS_LIST.length} available internships and
-                    exclusive career opportunities from our partner companies.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           ) : (
             <div className="empty-state">
@@ -240,6 +226,11 @@ const Internships = () => {
         </div>
       </div>
       {/* End Internships Area */}
+
+      <MembersOnlyApplyModal
+        visible={showMembersOnlyModal}
+        onHide={() => setShowMembersOnlyModal(false)}
+      />
 
       <FooterTwo forceRegion={currentUser?.region ?? null} />
 
