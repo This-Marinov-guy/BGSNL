@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { GOOGLE_FORM_APPLICATION } from "../../../util/defines/INTERNSHIPS";
 import InternshipApplyModal from "../modals/InternshipApplyModal";
-import { DOCUMENT_TYPES } from "../../../util/defines/enum";
+import { ACTIVE, DOCUMENT_TYPES, USER_STATUSES } from "../../../util/defines/enum";
 
 const InternshipCard = (props) => {
   const {
@@ -19,9 +19,10 @@ const InternshipCard = (props) => {
     requirements,
     website,
   } = props.internship;
+  
   const { user, isPreview = false, onUserRefresh, onApplyWhenGuest } = props;
   const [showApplyModal, setShowApplyModal] = useState(false);
-  const isLoggedIn = !!user?.token;
+  const isLoggedIn = user.status === USER_STATUSES[ACTIVE];
 
   const cvDocument = user?.documents?.find(
     (document) => document.type === DOCUMENT_TYPES.CV

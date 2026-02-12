@@ -126,7 +126,7 @@ const Internships = () => {
     const fetchCurrentUser = async () => {
       try {
         if (user?.token) {
-          const responseData = await sendRequest("user/current?withTickets=false&withChristmas=false");
+          const responseData = await sendRequest(`user/current?withTickets=false&withChristmas=false`);
           setCurrentUser(responseData.user);
         } else {
           setCurrentUser(null);
