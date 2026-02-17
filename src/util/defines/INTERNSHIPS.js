@@ -89,7 +89,7 @@ export const INTERNSHIPS_LIST = [
     contactMail: "",
     website: "https://ilikemedia.nl/",
   },
-  { 
+  {
     id: 16,
     logo: "https://big4accountingfirms.com/wp-content/uploads/Deloitte.svg.png",
     company: "Deloitte",
@@ -133,7 +133,7 @@ export const INTERNSHIPS_LIST = [
     logo: "https://www.studentjobsrotterdam.nl/_next/image?url=%2Flogos%2Fpepperminds.jpeg&w=96&q=75",
     company: "Pepperminds",
     specialty: "Face-to-Face Fundraising Ambassador",
-    location: "Groningen & Amstetrdam",
+    location: "Groningen & Amsterdam",
     label: "International & Remote",
     duration: "Part-time / Flexible",
     description:
@@ -145,7 +145,7 @@ export const INTERNSHIPS_LIST = [
     languages: "English",
     contactMail: "",
     website:
-      "https://www.pepperminds.nl/makeithappen/?mkt=LZ&utm_source=viavia&utm_medium=crewapp&utm_campaign=makeithappen",
+      "https://www.pepperminds.nl/makeithappen/?mkt=4930&recruitmentsource=Through_pepper",
   },
   {
     id: 13,
