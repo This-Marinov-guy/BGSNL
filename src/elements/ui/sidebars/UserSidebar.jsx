@@ -7,6 +7,7 @@ import {
   FaBriefcase,
   FaUser,
   FaCog,
+  FaTag,
 } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
@@ -33,6 +34,8 @@ const UserSidebar = ({
         return <FaBriefcase size={22} />;
       case "profile":
         return <FaUser size={22} />;
+      case "promotions":
+        return <FaTag size={22} />;
       case "settings":
         return <FaCog size={22} />;
       default:

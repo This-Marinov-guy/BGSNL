@@ -195,6 +195,9 @@ const HeaderContent = (props) => {
                     <Link to={`/user#internships`}>Internships</Link>
                   </li>
                   <li>
+                    <Link to={`/user#promotions`}>Promotions</Link>
+                  </li>
+                  <li>
                     <Link to={`/user#settings`}>Settings</Link>
                   </li>
                 </ul>

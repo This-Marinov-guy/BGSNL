@@ -27,9 +27,10 @@ export const PROFILE = "profile";
 export const TICKETS = "tickets";
 export const NEWS = "news";
 export const INTERNSHIPS = "internships";
+export const PROMOTIONS = "promotions";
 export const SETTINGS = "settings";
 
-export const ACCOUNT_TABS = [NEWS, PROFILE, TICKETS, INTERNSHIPS, SETTINGS];
+export const ACCOUNT_TABS = [NEWS, PROFILE, TICKETS, INTERNSHIPS, PROMOTIONS, SETTINGS];
 
 // TIMER TYPES
 export const END_TIMER = 1;
