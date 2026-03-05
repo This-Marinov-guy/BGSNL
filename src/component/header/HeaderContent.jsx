@@ -202,7 +202,7 @@ const HeaderContent = (props) => {
                   </li>
                 </ul>
               </li>
-              {checkAuthorization(user.token, ACCESS_4) && (
+              {checkAuthorization(user.token, ACCESS_3) && (
                 <li className="has-dropdown">
                   <a style={{ cursor: "pointer" }}>Event's Panel</a>
                   <ul className="submenu">
