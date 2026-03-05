@@ -33,7 +33,7 @@ export const ALUMNI = 'alumni';
 export const ACCESS_1 = [SUPER_ADMIN];
 export const ACCESS_2 = [...ACCESS_1, ADMIN, SOCIETY_ADMIN];
 export const ACCESS_3 = [...ACCESS_2, BOARD_MEMBER];
-export const ACCESS_4 = [...ACCESS_3, COMMITTEE_MEMBER];
+export const ACCESS_4 = [...ACCESS_3, COMMITTEE_MEMBER, ACTIVE_MEMBER];
 
 // event status
 export const EVENT_OPENED = 'opened';
