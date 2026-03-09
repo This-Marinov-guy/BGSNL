@@ -15,23 +15,23 @@ const HallOfFame = () => {
   const { sendRequest } = useHttpClient();
 
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
+  const [nodes, setNodes] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchNodes = async () => {
       try {
         setError(null);
-        const response = await sendRequest("user/active-alumni", "GET");
-        setUsers(response.alumniMembers);
+        const response = await sendRequest("user/tree-layout", "GET");
+        setNodes(response.nodes);
         setLoading(false);
       } catch (err) {
         setError("Failed to load alumni data. Using sample data.");
       }
     };
-    fetchUsers();
+    fetchNodes();
   }, []);
 
   const handleUserClick = (user) => {
@@ -113,7 +113,7 @@ const HallOfFame = () => {
                 </div>
               )}
               <div className="user-tree-section">
-                <Tree users={users} onUserClick={handleUserClick} />
+                <Tree nodes={nodes} onUserClick={handleUserClick} />
               </div>
             </>
           )}
