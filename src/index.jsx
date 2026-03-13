@@ -126,13 +126,6 @@ const Root = () => {
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
 
-  // Datafast analytics
-  useEffect(() => {
-    initDataFast({
-      websiteId: "dfid_78wk1IMWgxBq23ebbRgUn",
-    }).catch((err) => console.error("Datafast init failed:", err));
-  }, []);
-
   // Handle window load event
   useEffect(() => {
     const handleLoad = () => {
