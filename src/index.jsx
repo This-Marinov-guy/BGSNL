@@ -41,6 +41,7 @@ import { useAppInitialization } from "./hooks/session/app-init";
 import { useAuthSession } from "./hooks/session/auth-session";
 import { selectUser } from "./redux/user";
 import CampaignLayout from "./layouts/CampaignLayout";
+import { initDataFast } from "datafast";
 
 // Pages
 const Home = lazy(() => import("./pages/Home"));
@@ -124,6 +125,13 @@ const Root = () => {
 
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
+
+  // Datafast analytics
+  useEffect(() => {
+    initDataFast({
+      websiteId: "dfid_78wk1IMWgxBq23ebbRgUn",
+    }).catch((err) => console.error("Datafast init failed:", err));
+  }, []);
 
   // Handle window load event
   useEffect(() => {
