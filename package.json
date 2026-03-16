@@ -79,8 +79,7 @@
     "build:no-version": "npm run generate-sitemap && vite build",
     "preview": "vite preview",
     "generate-sitemap": "node scripts/generate-sitemap.js",
-    "lint": "eslint .",
-    "test": "vitest run"
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -112,7 +111,6 @@
     "npm-version": "^1.1.0",
     "postcss-import": "^16.1.1",
     "sharp": "^0.34.5",
-    "vite": "^7.3.0",
-    "vitest": "^3.2.4"
+    "vite": "^7.3.0"
   }
 }
