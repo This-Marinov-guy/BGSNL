@@ -58,8 +58,7 @@ const JoinTheSociety = () => {
                     Become a Member
                   </h3>
                   <p>
-                    Join the society during your academic years, meet new
-                    people, explore internship options and get the chance to
+                    Join the society during your academic years, get event discounts, explore internship options and get the chance to
                     enter a society's committee or a board.
                   </p>
                   {/* <div className="feature-list mt--30">
@@ -138,9 +137,8 @@ const JoinTheSociety = () => {
                     Become an Alumni
                   </h3>
                   <p>
-                    Perfect for our graduates who want to be part of the
-                    society. This program enables you to networking
-                    opportunities and alumni events.
+                    Support the society as post-graduate alumni. This program enables you to networking
+                    with our community, alumni events and  aiding our mission.
                   </p>
                   {/* <div className="feature-list mt--30">
                     <ul className="list-style--1">
