@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { useDispatch, useSelector } from "react-redux";
 import { selectEvents } from "../../redux/events";
+import { selectIsAuth } from "../../redux/user";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
@@ -32,6 +33,8 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
 
   const { reloadEvents, eventsLoading } = useLoadEvents();
 
+  const isAuth = useSelector(selectIsAuth);
+
   let events;
 
   if (displayAll) {
@@ -40,7 +43,9 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
     events = useSelector(selectEvents)[region];
 
     if (events && events.length) {
-      events = events.filter((event) => event.hidden === false);
+      events = events.filter(
+        (event) => event.hidden === false && (isAuth || !event.membersOnly)
+      );
     }
   }
   const isMoreThanOneEvent = hasNonEmptyValues(events);
@@ -88,8 +93,11 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                 <div className="col-lg-12">
                   <div className="row">
                     {REGIONS.map((regionName, index) => {
-                      // Skip regions that have no events
-                      if (!events[regionName] || !events[regionName].length) {
+                      const regionEvents = (events[regionName] || []).filter(
+                        (event) => isAuth || !event.membersOnly
+                      );
+
+                      if (!regionEvents.length) {
                         return null;
                       }
 
@@ -100,7 +108,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                         >
                           <h4 className="archive mb--30">{capitalizeFirstLetter(regionName, true).toUpperCase()}</h4>
                           <FocusCards
-                            cards={events[regionName]}
+                            cards={regionEvents}
                             region={regionName}
                           />
                         </div>

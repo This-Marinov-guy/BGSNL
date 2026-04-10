@@ -648,3 +648,352 @@
     font-size: 1rem;
   }
 }
+
+// Dashboard Stat Cards
+.dashboard-stat-card {
+  background: #ffffff;
+  border: 2px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 20px 24px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #28a745;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  &--warning {
+    &:hover {
+      border-color: #dc3545;
+    }
+
+    .dashboard-stat-card__value {
+      color: #dc3545;
+    }
+  }
+
+  &__label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  &__value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f1f25;
+    line-height: 1.2;
+
+    @media #{$sm-layout} {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+// Dashboard Date Input
+.dashboard-date-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1f1f25;
+  transition: border-color 0.3s ease;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: #28a745;
+  }
+}
+
+// Member Accordion
+.members-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.member-accordion {
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-color: #c8c8c8;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    cursor: pointer;
+    background: #fafafa;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+
+    @media #{$sm-layout} {
+      padding: 12px 14px;
+    }
+  }
+
+  &__summary {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f1f25;
+    margin-bottom: 4px;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #6c757d;
+
+    @media #{$sm-layout} {
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+  }
+
+  &__role {
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  &__status {
+    font-weight: 600;
+  }
+
+  &__toggle {
+    margin-left: 12px;
+    color: #6c757d;
+    flex-shrink: 0;
+  }
+
+  &__details {
+    padding: 20px;
+    border-top: 1px solid #e8e8e8;
+    background: #fff;
+
+    @media #{$sm-layout} {
+      padding: 14px;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    max-width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e8e8e8;
+
+    @media #{$sm-layout} {
+      max-width: 80px;
+      height: 80px;
+    }
+  }
+
+  &__detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #1f1f25;
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    strong {
+      min-width: 100px;
+      color: #6c757d;
+      font-weight: 500;
+    }
+  }
+}
+
+// Event Analytics Accordion
+.events-analytics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.event-analytics-accordion {
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-color: #c8c8c8;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #fafafa;
+    transition: background-color 0.2s ease;
+    gap: 16px;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+
+    @media #{$sm-layout} {
+      padding: 10px 14px;
+      gap: 10px;
+    }
+  }
+
+  &__poster {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media #{$sm-layout} {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  &__summary {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f1f25;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: #6c757d;
+
+    @media #{$sm-layout} {
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+  }
+
+  &__revenue {
+    font-weight: 600;
+    color: #28a745;
+  }
+
+  &__presence {
+    font-weight: 500;
+  }
+
+  &__toggle {
+    margin-left: 12px;
+    color: #6c757d;
+    flex-shrink: 0;
+  }
+
+  &__details {
+    padding: 20px;
+    border-top: 1px solid #e8e8e8;
+    background: #fff;
+
+    @media #{$sm-layout} {
+      padding: 14px;
+    }
+  }
+
+  &__stat {
+    text-align: center;
+    padding: 12px 8px;
+
+    .label {
+      display: block;
+      font-size: 0.8rem;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .value {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1f1f25;
+    }
+
+    @media #{$sm-layout} {
+      padding: 8px 4px;
+
+      .value {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  &__guests {
+    margin-top: 16px;
+
+    h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .table {
+      font-size: 0.85rem;
+
+      th {
+        font-weight: 600;
+        border-top: none;
+        background: #f8f9fa;
+      }
+
+      td {
+        vertical-align: middle;
+      }
+    }
+  }
+}

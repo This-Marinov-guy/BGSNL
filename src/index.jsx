@@ -97,6 +97,8 @@ const JoinTheSociety = lazy(() => import("./pages/information/JoinTheSociety"));
 const AddEvent = lazy(() => import("./pages/userActions/AddEvent"));
 const EditEvent = lazy(() => import("./pages/userActions/EditEvent"));
 const EventDashboard = lazy(() => import("./pages/userActions/EventDashboard"));
+const MembersDashboard = lazy(() => import("./pages/userActions/MembersDashboard"));
+const EventsAnalyticsDashboard = lazy(() => import("./pages/userActions/EventsAnalyticsDashboard"));
 
 const GuestPurchase = lazy(() => import("./pages/eventActions/GuestPurchase"));
 const GuestCheck = lazy(() => import("./pages/redirects/CheckTicket"));
@@ -332,6 +334,24 @@ const Root = () => {
                   element={
                     <AuthLayout access={ACCESS_4}>
                       <GuestCheck />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/members`}
+                  element={
+                    <AuthLayout access={ACCESS_3}>
+                      <MembersDashboard />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/events-analytics`}
+                  element={
+                    <AuthLayout access={ACCESS_3}>
+                      <EventsAnalyticsDashboard />
                     </AuthLayout>
                   }
                 />
