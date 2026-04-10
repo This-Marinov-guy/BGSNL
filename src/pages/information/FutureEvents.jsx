@@ -44,7 +44,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
 
     if (events && events.length) {
       events = events.filter(
-        (event) => event.hidden === false && (isAuth || !event.membersOnly)
+        (event) => event.hidden === false && (isAuth || !event.memberOnly)
       );
     }
   }
@@ -94,7 +94,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                   <div className="row">
                     {REGIONS.map((regionName, index) => {
                       const regionEvents = (events[regionName] || []).filter(
-                        (event) => isAuth || !event.membersOnly
+                        (event) => isAuth || !event.memberOnly
                       );
 
                       if (!regionEvents.length) {

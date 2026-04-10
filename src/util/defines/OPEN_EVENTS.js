@@ -9,7 +9,7 @@ export const SOCIETY_EVENTS = {
     breda: [
 
         // {
-        //   membersOnly: false,
+        //   memberOnly: false,
         //   visible: true,
         //   title: "Movie Night",
         //   newTitle: 'Bulgarian Dinner',

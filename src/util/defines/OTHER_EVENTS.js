@@ -4,7 +4,7 @@ import { Field, ErrorMessage } from "formik";
 export const OTHER_EVENTS = [
 //   {
 //     region: "",
-//     membersOnly: false,
+//     memberOnly: false,
 //     visible: true,
 //     title: "PwC Offer in a day",
 //     // newTitle: "Career Day",

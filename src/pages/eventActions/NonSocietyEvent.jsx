@@ -68,7 +68,7 @@ const NonSocietyEvent = (props) => {
     dispatch(removeModal(NSE_REGISTRATION_MODAL));
   };
 
-  const block = target.membersOnly && !user?.token;
+  const block = target.memberOnly && !user?.token;
 
   const submitMemberForm = async () => {
     try {

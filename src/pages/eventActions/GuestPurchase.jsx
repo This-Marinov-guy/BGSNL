@@ -170,9 +170,10 @@ const GuestPurchase = () => {
     return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />;
   }
 
-  if (selectedEvent.membersOnly) {
+  if (selectedEvent.memberOnly) {
     return <ExclusiveMemberEvent />;
   }
+  
 
   return (
     <Fragment>
