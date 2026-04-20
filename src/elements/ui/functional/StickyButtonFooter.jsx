@@ -14,15 +14,7 @@ const StickyButtonFooter = ({ children, showOnMobile = true }) => {
       const viewportHeight = window.innerHeight;
 
       // Check if we're on mobile (viewport width <= 768px)
-      const isMobile = window.innerWidth <= 768;
-
-      if (isMobile) {
-        // Show sticky footer when buttons are below viewport
-        // Hide sticky footer when user has scrolled to the actual buttons
-        setIsSticky(rect.top > viewportHeight - 100);
-      } else {
-        setIsSticky(false);
-      }
+      setIsSticky(rect.top > viewportHeight - 100);
     };
 
     // Initial check

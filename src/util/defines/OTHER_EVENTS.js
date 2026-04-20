@@ -12,10 +12,10 @@ export const OTHER_EVENTS = [
     bgImage: "19",
     bgImageExtra: "/assets/images/events/gala/background.jpg",
     date: "16th May",
-    time: "14 pm",
+    time: "13:30 pm",
     // 1 hour earlier than Netherlands / 2 than Bulgaria
-    timeStamp: "2026-05-16T12:00:00",
-    ticketTimer: "2026-05-16T12:00:00",
+    timeStamp: "2026-05-16T13:30:00",
+    ticketTimer: "2026-05-16T13:30:00",
     ticketLimit: 100,
     //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
     correctedDate: "",
@@ -52,10 +52,6 @@ export const OTHER_EVENTS = [
     Come celebrate culture in all its colors and experience a unique festival dedicated
     to community, creativity, and the power of youth.
   </p>
-
-  <div class="event-sponsors">
-    <p><strong>Sponsors:</strong> Cultuur Concreet, Domakin</p>
-  </div>
     `,
     freePass: ["vladislavmarinov3142@gmail.com"],
     marketingInputs: false,

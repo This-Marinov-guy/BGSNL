@@ -58,7 +58,8 @@ const PhoneInput = ({
         optionLabel="phoneCode"
         placeholder="Prefix"
         className="phone_code_prefix"
-        style={{zIndex: 9999}}
+        appendTo={document.body}
+        panelClassName="phone-prefix-panel"
       />
       <InputNumber
         value={value}

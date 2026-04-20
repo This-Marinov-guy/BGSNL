@@ -2,6 +2,11 @@
 @import '@assets/css/plugins.css';
 @import '@assets/scss/style.scss';
 
+/* Force phone prefix dropdown panel above Bootstrap modal (z-index: 1055) */
+.phone-prefix-panel {
+  z-index: 9999 !important;
+}
+
 /* Override PrimeReact default Inter font with our custom fonts */
 :root {
   --font-family: "Roboto", sans-serif !important;

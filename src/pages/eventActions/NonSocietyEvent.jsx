@@ -9,40 +9,31 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import ModalWindow from "../../elements/ui/modals/ModalWindow";
 import Loader from "../../elements/ui/loading/Loader";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
-import { useObjectGrabUrl } from "../../hooks/common/object-hook";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
-import { decodeJWT } from "../../util/functions/authorization";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
-import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import ImageFb from "../../elements/ui/media/ImageFb";
-import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusiveEvents";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
-import FormExtras from "../../elements/ui/forms/FormExtras";
 import { createCustomerTicket } from "../../util/functions/ticket-creator";
-import MembershipBanner from "../../elements/banners/MembershipBanner";
+import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
+import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
   surname: yup.string().required(),
   phone: yup.string().required(),
   email: yup.string().email("Please enter a valid email").required(),
-  notificationTypeTerms: yup
-    .string()
-    .required("Please select a prefered way of being contacted"),
-  notificationTerms: yup
-    .bool()
-    .required()
-    .oneOf([true], "Terms must be accepted"),
+  policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+  payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
 const NonSocietyEvent = (props) => {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [formData, setFormData] = useState({
     hasExtraGuest: false,
@@ -60,20 +51,11 @@ const NonSocietyEvent = (props) => {
 
   const navigate = useNavigate();
 
-  const closeHandler = () => {
-    dispatch(removeModal(NSE_REGISTRATION_MODAL));
-  };
+  const bgImageUrl = target.bgImageExtra
+    ? target.bgImageExtra
+    : `/assets/images/bg/bg-image-${target.bgImage}.webp`;
 
-  const closeNotificationHandler = () => {
-    dispatch(removeModal(NSE_REGISTRATION_MODAL));
-  };
-
-  const block = false;
-
-  const imageUrl =
-    target.bgImageExtra
-      ? target.bgImageExtra
-      : `/assets/images/bg/bg-image-${target.bgImage}.webp`;
+  const closeModal = () => dispatch(removeModal(NSE_REGISTRATION_MODAL));
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -95,23 +77,25 @@ const NonSocietyEvent = (props) => {
 
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Other Event Details" />
+      <PageHelmet pageTitle={target.newTitle ?? target.title} />
+
       <Header
         headertransparent="header--transparent"
         colorblack="color--black"
         logoname="logo.png"
       />
 
+      {/* Registration Modal */}
       <ModalWindow show={modal.includes(NSE_REGISTRATION_MODAL)}>
         {user.token && !currentUser ? (
           <Loader center />
         ) : (
           <Formik
             enableReinitialize
-            className="inner"
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
+                let response;
                 if (user.token) {
                   const { ticketBlob } = await createCustomerTicket(
                     target.ticket_img,
@@ -131,26 +115,30 @@ const NonSocietyEvent = (props) => {
                   form.append("phone", values.phone);
                   form.append("email", values.email);
                   form.append("extraData", formData.extraGuestName);
-                  form.append(
-                    "notificationTypeTerms",
-                    values.notificationTypeTerms || "Any"
-                  );
-                  await sendRequest("event/register/non-society-event", "POST", form);
+                  form.append("notificationTypeTerms", "Any");
+                  response = await sendRequest("event/register/non-society-event", "POST", form);
                 } else {
-                  await sendRequest(
-                    "event/register/non-society-event",
-                    "POST",
-                    {
-                      event: target.title,
-                      date: target.when,
-                      user: "normal",
-                      name: values.name + " " + values.surname,
-                      phone: values.phone,
-                      email: values.email,
-                      notificationTypeTerms: values.notificationTypeTerms,
-                    }
+                  const { ticketBlob } = await createCustomerTicket(
+                    target.ticket_img,
+                    values.name,
+                    values.surname
                   );
+                  const form = new FormData();
+                  form.append(
+                    "image",
+                    ticketBlob,
+                    target.title + "_" + values.name + values.surname + "_GUEST"
+                  );
+                  form.append("event", target.title);
+                  form.append("date", target.timeStamp);
+                  form.append("user", "normal");
+                  form.append("name", values.name + " " + values.surname);
+                  form.append("phone", values.phone);
+                  form.append("email", values.email);
+                  form.append("notificationTypeTerms", "Any");
+                  response = await sendRequest("event/register/non-society-event", "POST", form);
                 }
+                if (!response) return;
                 dispatch(
                   showNotification({
                     severity: "success",
@@ -160,7 +148,6 @@ const NonSocietyEvent = (props) => {
                   })
                 );
                 navigate("/");
-                setTimeout(() => closeNotificationHandler(), 7000);
               } catch (err) {}
             }}
             initialValues={{
@@ -168,8 +155,8 @@ const NonSocietyEvent = (props) => {
               surname: currentUser?.surname || "",
               phone: currentUser?.phone || "",
               email: currentUser?.email || "",
-              notificationTerms: true,
-              notificationTypeTerms: "whatsAPP",
+              policyTerms: false,
+              payTerms: false,
             }}
           >
             {({ setFieldValue }) => (
@@ -180,94 +167,36 @@ const NonSocietyEvent = (props) => {
                 style={{ padding: "2%" }}
               >
                 <h3>Fill your details and register</h3>
-                <FiX className="x_icon" onClick={closeHandler} />
+                <FiX className="x_icon" onClick={closeModal} />
 
-                <div className="row">
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field type="text" placeholder="Name" name="name" />
-                      <ErrorMessage
-                        className="error"
-                        name="name"
-                        component="div"
-                      />
-                    </div>
+                <div className="col-12">
+                  <div className="rn-form-group mt--20">
+                    <Field type="text" placeholder="Name" name="name" />
+                    <ErrorMessage className="error" name="name" component="div" />
                   </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field
-                        type="text"
-                        placeholder="Surname"
-                        name="surname"
-                      ></Field>
-                      <ErrorMessage
-                        className="error"
-                        name="surname"
-                        component="div"
-                      />
-                    </div>
+                  <div className="rn-form-group mt--20">
+                    <Field type="text" placeholder="Surname" name="surname" />
+                    <ErrorMessage className="error" name="surname" component="div" />
                   </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <PhoneInput
-                        placeholder="WhatsApp Phone "
-                        initialValue={currentUser?.phone || ""}
-                        onChange={(value) => setFieldValue("phone", value)}
-                      ></PhoneInput>
-                      <p className="information">
-                        Please type your number with + and country code
-                      </p>
-                      <ErrorMessage
-                        className="error"
-                        name="phone"
-                        component="div"
-                      />
-                    </div>
+                  <div className="rn-form-group mt--20">
+                    <Field type="email" placeholder="Email" name="email" />
+                    <ErrorMessage className="error" name="email" component="div" />
                   </div>
-                  <div className="col-lg-6 col-md-12 col-12">
-                    <div className="rn-form-group">
-                      <Field type="email" placeholder="Email" name="email" />
-                      <ErrorMessage
-                        className="error"
-                        name="email"
-                        component="div"
-                      />
-                    </div>
-                  </div>
-                  {/* <div className="col-lg-6 col-md-12 col-12">
-                    <div className="hor_section_nospace mt--40">
-                      <Field
-                        style={{ maxWidth: "30px", margin: "10px" }}
-                        type="checkbox"
-                        name="notificationTerms"
-                      ></Field>
-                      <p className="information">
-                        I consent to being notified by the organizer through the
-                        below contact/s
-                      </p>
-                    </div>
-                    <ErrorMessage
-                      className="error"
-                      name="notificationTerms"
-                      component="div"
+                  <div className="rn-form-group phone-input-container mt--20">
+                    <PhoneInput
+                      placeholder="WhatsApp Phone"
+                      initialValue={currentUser?.phone || ""}
+                      onChange={(value) => setFieldValue("phone", value)}
                     />
-                    <Field as="select" name="notificationTypeTerms">
-                      <option value="" disabled>
-                        Contact By
-                      </option>
-                      <option value="Email">Email</option>
-                      <option value="WhatsApp">WhatsApp</option>
-                      <option value="Email & WhatsApp">Both</option>
-                    </Field>
-                    <ErrorMessage
-                      className="error"
-                      name="notificationTypeTerms"
-                      component="div"
-                    />
-                  </div> */}
-                  {/* {user.token && (
+                    <p className="information">
+                      Please type your number with + and country code
+                    </p>
+                    <ErrorMessage className="error" name="phone" component="div" />
+                  </div>
+
+                  {user.token && (
                     <>
-                      <div className="col-12 mt--20">
+                      <div className="rn-form-group mt--20">
                         <label>Would you like to bring an additional guest?</label>
                         <select
                           value={formData.hasExtraGuest ? "1" : "0"}
@@ -283,10 +212,10 @@ const NonSocietyEvent = (props) => {
                         </select>
                       </div>
                       {formData.hasExtraGuest && (
-                        <div className="col-12">
-                          <label>Please type their name</label>
+                        <div className="rn-form-group mt--20">
                           <input
                             type="text"
+                            placeholder="Guest name"
                             value={formData.extraGuestName}
                             onChange={(e) =>
                               setFormData((prev) => ({
@@ -298,40 +227,60 @@ const NonSocietyEvent = (props) => {
                         </div>
                       )}
                     </>
-                  )} */}
+                  )}
+                  <div className="hor_section_nospace mt--40">
+                    <Field
+                      style={{ maxWidth: "30px", margin: "10px" }}
+                      type="checkbox"
+                      name="policyTerms"
+                    />
+                    <p className="information">
+                      I have read and accept the&nbsp;
+                      <a
+                        style={{ color: "#017363" }}
+                        href="/terms-and-legals"
+                        target="_blank"
+                      >
+                        society&apos;s policy
+                      </a>
+                    </p>
+                  </div>
+                  <ErrorMessage className="error" name="policyTerms" component="div" />
+
+                  <div className="hor_section_nospace mt--20">
+                    <Field
+                      style={{ maxWidth: "30px", margin: "10px" }}
+                      type="checkbox"
+                      name="payTerms"
+                    />
+                    <p className="information">
+                      I agree to share the provided information with the
+                      organization in case they need to prove my identity
+                    </p>
+                  </div>
+                  <ErrorMessage className="error" name="payTerms" component="div" />
                 </div>
 
-                {target?.ticketLink ? (
-                  <a
-                    href={target?.ticketLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rn-button-style--2 rn-btn-reverse-green mt--30"
-                  >
-                    <span>Register</span>
-                  </a>
-                ) : (
-                  <button
-                    disabled={
-                      loading ||
-                      (formData.hasExtraGuest && !formData.extraGuestName)
-                    }
-                    type="submit"
-                    className="rn-button-style--2 rn-btn-reverse-green mt--30"
-                  >
-                    {loading ? <Loader /> : <span>Register</span>}
-                  </button>
-                )}
+                <button
+                  disabled={
+                    loading ||
+                    (formData.hasExtraGuest && !formData.extraGuestName)
+                  }
+                  type="submit"
+                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
+                >
+                  {loading ? <Loader /> : <span>Register</span>}
+                </button>
               </Form>
             )}
           </Formik>
         )}
       </ModalWindow>
 
-      {/* Start Breadcrump Area */}
+      {/* Breadcrumb Area */}
       <div
-        className={`rn-page-title-area pt--120 pb--190 bg_image`}
-        style={{ backgroundImage: `url(${imageUrl})` }}
+        className="rn-page-title-area pt--120 pb--190 bg_image"
+        style={{ backgroundImage: `url(${bgImageUrl})` }}
         data-black-overlay="7"
       >
         <div className="container">
@@ -347,107 +296,100 @@ const NonSocietyEvent = (props) => {
           </div>
         </div>
       </div>
-      {/* End Breadcrump Area */}
 
-      {/* Start Portfolio Details */}
+      {/* Details Area */}
       <div className="rn-portfolio-details ptb--120 bg_color--1">
         <div className="container">
           <div className="row">
-            <div className="col-lg-12">
+            {/* When / Where / Fee */}
+            <div className="col-12 mb--20">
+              <div
+                className="portfolio-view-list d-flex flex-wrap"
+                style={{ justifyContent: "space-between" }}
+              >
+                <div className="port-view">
+                  <h3 style={{ fontSize: "24px" }}>When</h3>
+                  <p>
+                    {target.date}, {target.time}
+                  </p>
+                </div>
+                <div className="port-view">
+                  <h3 style={{ fontSize: "24px" }}>Where</h3>
+                  <p>{target.where}</p>
+                </div>
+                <div className="port-view">
+                  <h3 style={{ fontSize: "24px" }}>Entry fee</h3>
+                  <p>{target.entry ?? "Free"}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Poster */}
+            <div className="col-lg-5 col-md-12 mb--40">
+              <div className="event-poster-wrapper">
+                <ImageFb
+                  src={target.poster}
+                  alt={target.newTitle ?? target.title}
+                  className="event-poster-image"
+                />
+              </div>
+              <SponsoredBySmall />
+            </div>
+
+            {/* About + Actions */}
+            <div className="col-lg-7 col-md-12">
               <div className="portfolio-details">
                 <div className="inner">
-                  <h2>About</h2>
-                  <p dangerouslySetInnerHTML={{ __html: target.text }}></p>
+                  <h3 style={{ fontSize: "24px" }}>About</h3>
+                  <p dangerouslySetInnerHTML={{ __html: target.text }} />
 
-                  <div className="portfolio-view-list d-flex flex-wrap">
-                    <div className="port-view">
-                      <span>When</span>
-                      <h4>
-                        {target.date}, {target.time}
-                      </h4>
-                    </div>
-
-                    <div className="port-view">
-                      <span>Where</span>
-                      <h4>{target.where}</h4>
-                    </div>
-
-                    <div className="port-view">
-                      <span>Fee</span>
-                      <h4>Free</h4>
-                    </div>
-                  </div>
-                  {!block && 
-                    target?.ticketLink ? (
-                      <a href={target?.ticketLink} target="_blank" rel="noopener noreferrer" className="rn-button-style--2 rn-btn-reverse-green mt--30">
-                        <span>Register</span>
-                      </a>
-                    ) : (
-                      <button
-                      onClick={() => {
-                        dispatch(showModal(NSE_REGISTRATION_MODAL));
+                  <StickyButtonFooter>
+                    <div
+                      className="purchase-btn gap-3"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
-                      className="rn-button-style--2 rn-btn-reverse-green"
                     >
-                      Register
-                    </button>
-                  )}
-
-                  {block && (
-                    <p className="mt--20" style={{ color: "red" }}>
-                      This event is only exclusive to members!
-                    </p>
-                  )}
-
-                  {block && <MembershipBanner border={1} />}
-                </div>
-                <br />
-                {/* Start Contact Map  */}
-                <div className="container">
-                  <div className="rn-contact-map-area position-relative">
-                    {/* <div style={{ height: "450px", width: "100%" }}>
-                      <GoogleMapReact
-                        defaultCenter={eventDetails[0].center}
-                        defaultZoom={eventDetails[0].zoom}
-                      >
-                        <AnyReactComponent
-                          lat={59.955413}
-                          lng={30.337844}
-                          text="My Marker"
-                        />
-                      </GoogleMapReact>
-                    </div> */}
-                  </div>
-                </div>
-                {/* End Contact Map  */}
-                <br />
-                <div className="portfolio-thumb-inner row">
-                  {target.images?.length > 0 &&
-                    target.images.map((value, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="col-lg-6 col-md-12 col-12 thumb center_div mb--30"
+                      {target?.ticketLink ? (
+                        <a
+                          href={target.ticketLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rn-button-style--2 rn-btn-reverse-green"
                         >
-                          <ImageFb src={`${value}`} alt="Portfolio Images" />
-                        </div>
-                      );
-                    })}
+                          <span>Register</span>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => dispatch(showModal(NSE_REGISTRATION_MODAL))}
+                          className="rn-button-style--2 rn-btn-reverse-green"
+                        >
+                          Register
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="rn-button-style--2 rn-btn-reverse-red"
+                      >
+                        <span>Back</span>
+                      </button>
+                    </div>
+                  </StickyButtonFooter>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {/* End Portfolio Details */}
 
-      {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
           <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
-      {/* End Back To Top */}
 
       <Footer />
     </React.Fragment>
