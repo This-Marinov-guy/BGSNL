@@ -68,59 +68,7 @@ const NonSocietyEvent = (props) => {
     dispatch(removeModal(NSE_REGISTRATION_MODAL));
   };
 
-  const block = target.memberOnly && !user?.token;
-
-  const submitMemberForm = async () => {
-    try {
-      const { ticketBlob } = await createCustomerTicket(
-        target.ticket_img,
-        currentUser.name,
-        currentUser.surname
-      );
-
-      const form = new FormData();
-
-      form.append(
-        "image",
-        ticketBlob,
-        target.title + "_" + currentUser.name + currentUser.surname + "_MEMBER"
-      );
-
-      form.append("event", target.title);
-      form.append("date", target.timeStamp);
-      form.append("user", "member");
-      form.append("name", currentUser.name + " " + currentUser.surname);
-      form.append("phone", currentUser.phone);
-      form.append("email", currentUser.email);
-      form.append("extraData", formData.extraGuestName);
-      form.append(
-        "notificationTypeTerms",
-        currentUser.notificationTypeTerms
-          ? currentUser.notificationTypeTerms
-          : "Any"
-      );
-
-      const responseData = await sendRequest(
-        "event/register/non-society-event",
-        "POST",
-        form
-      );
-
-      if (responseData?.status) {
-        dispatch(
-          showNotification({
-            severity: "success",
-            summary: "Success",
-            detail:
-              "Your registration for the event is complete! Please check your email for confirmation!",
-          })
-        );
-
-        navigate("/");
-        setTimeout(() => closeNotificationHandler(), 7000);
-      }
-    } catch (err) {}
-  };
+  const block = false;
 
   const imageUrl =
     target.bgImageExtra
@@ -155,103 +103,60 @@ const NonSocietyEvent = (props) => {
       />
 
       <ModalWindow show={modal.includes(NSE_REGISTRATION_MODAL)}>
-        {user.token ? (
-          currentUser ? (
-            <div className="center_section pd--20">
-              <FiX
-                style={{ fontSize: "25px" }}
-                className="x_icon"
-                onClick={closeNotificationHandler}
-              />
-              <h3 className="center_text title">
-                Finish registration as{" "}
-                {currentUser.name + " " + currentUser.surname + " ?"}
-              </h3>
-              <div className="col-12">
-                <label> Would you like to bring additional guest</label>
-                <select
-                  value={formData.hasExtraGuest ? "1" : "0"}
-                  onChange={(e) =>
-                    setFormData((prevState) => {
-                      return {
-                        ...prevState,
-                        hasExtraGuest: e.target.value === "1",
-                      };
-                    })
-                  }
-                >
-                  <option value="0">No</option>
-                  <option value="1">Yes</option>
-                </select>
-              </div>
-              {formData.hasExtraGuest && (
-                <div className="col-12">
-                  <label> Please type their name</label>
-
-                  <input
-                    type="text"
-                    value={formData.extraGuestName}
-                    onChange={(e) =>
-                      setFormData((prevState) => {
-                        return {
-                          ...prevState,
-                          extraGuestName: e.target.value,
-                        };
-                      })
-                    }
-                  ></input>
-                </div>
-              )}
-              {target?.ticketLink ? (
-                <a
-                  href={target?.ticketLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
-                >
-                  <span>Register</span>
-                </a>
-              ) : (
-                <button
-                  disabled={
-                    loading ||
-                    (formData.hasExtraGuest && !formData.extraGuestName)
-                  }
-                  onClick={submitMemberForm}
-                  className="rn-button-style--2 rn-btn-reverse-green mt--30"
-                >
-                  {loading ? <Loader /> : <span>Register</span>}
-                </button>
-              )}
-            </div>
-          ) : (
-            <Loader center />
-          )
+        {user.token && !currentUser ? (
+          <Loader center />
         ) : (
           <Formik
+            enableReinitialize
             className="inner"
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
-                const responseData = await sendRequest(
-                  "event/register/non-society-event",
-                  "POST",
-                  {
-                    event: target.title,
-                    date: target.when,
-                    user: "normal",
-                    name: values.name + " " + values.surname,
-                    phone: values.phone,
-                    email: values.email,
-                    notificationTypeTerms: values.notificationTypeTerms,
-                  }
-                );
+                if (user.token) {
+                  const { ticketBlob } = await createCustomerTicket(
+                    target.ticket_img,
+                    values.name,
+                    values.surname
+                  );
+                  const form = new FormData();
+                  form.append(
+                    "image",
+                    ticketBlob,
+                    target.title + "_" + values.name + values.surname + "_MEMBER"
+                  );
+                  form.append("event", target.title);
+                  form.append("date", target.timeStamp);
+                  form.append("user", "member");
+                  form.append("name", values.name + " " + values.surname);
+                  form.append("phone", values.phone);
+                  form.append("email", values.email);
+                  form.append("extraData", formData.extraGuestName);
+                  form.append(
+                    "notificationTypeTerms",
+                    values.notificationTypeTerms || "Any"
+                  );
+                  await sendRequest("event/register/non-society-event", "POST", form);
+                } else {
+                  await sendRequest(
+                    "event/register/non-society-event",
+                    "POST",
+                    {
+                      event: target.title,
+                      date: target.when,
+                      user: "normal",
+                      name: values.name + " " + values.surname,
+                      phone: values.phone,
+                      email: values.email,
+                      notificationTypeTerms: values.notificationTypeTerms,
+                    }
+                  );
+                }
                 dispatch(
                   showNotification({
                     severity: "success",
                     summary: "Success",
                     detail:
-                      "Your registration for the event is complete! The organizer will soon contact you!",
+                      "Your registration for the event is complete! Please check your email for confirmation!",
                   })
                 );
                 navigate("/");
@@ -259,15 +164,15 @@ const NonSocietyEvent = (props) => {
               } catch (err) {}
             }}
             initialValues={{
-              name: "",
-              surname: "",
-              phone: "",
-              email: "",
+              name: currentUser?.name || "",
+              surname: currentUser?.surname || "",
+              phone: currentUser?.phone || "",
+              email: currentUser?.email || "",
               notificationTerms: false,
-              notificationTypeTerms: "",
+              notificationTypeTerms: currentUser?.notificationTypeTerms || "",
             }}
           >
-            {(setFieldValue) => (
+            {({ setFieldValue }) => (
               <Form
                 encType="multipart/form-data"
                 className="center_section"
@@ -306,6 +211,7 @@ const NonSocietyEvent = (props) => {
                     <div className="rn-form-group">
                       <PhoneInput
                         placeholder="WhatsApp Phone "
+                        initialValue={currentUser?.phone || ""}
                         onChange={(value) => setFieldValue("phone", value)}
                       ></PhoneInput>
                       <p className="information">
@@ -359,15 +265,63 @@ const NonSocietyEvent = (props) => {
                       component="div"
                     />
                   </div>
+                  {user.token && (
+                    <>
+                      <div className="col-12 mt--20">
+                        <label>Would you like to bring an additional guest?</label>
+                        <select
+                          value={formData.hasExtraGuest ? "1" : "0"}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              hasExtraGuest: e.target.value === "1",
+                            }))
+                          }
+                        >
+                          <option value="0">No</option>
+                          <option value="1">Yes</option>
+                        </select>
+                      </div>
+                      {formData.hasExtraGuest && (
+                        <div className="col-12">
+                          <label>Please type their name</label>
+                          <input
+                            type="text"
+                            value={formData.extraGuestName}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                extraGuestName: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
 
-                <button
-                  disabled={loading}
-                  type="submit"
-                  className="rn-button-style--2 rn-btn-reverse-green mt--80"
-                >
-                  {loading ? <Loader /> : <span>Update information</span>}
-                </button>
+                {target?.ticketLink ? (
+                  <a
+                    href={target?.ticketLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rn-button-style--2 rn-btn-reverse-green mt--30"
+                  >
+                    <span>Register</span>
+                  </a>
+                ) : (
+                  <button
+                    disabled={
+                      loading ||
+                      (formData.hasExtraGuest && !formData.extraGuestName)
+                    }
+                    type="submit"
+                    className="rn-button-style--2 rn-btn-reverse-green mt--30"
+                  >
+                    {loading ? <Loader /> : <span>Register</span>}
+                  </button>
+                )}
               </Form>
             )}
           </Formik>

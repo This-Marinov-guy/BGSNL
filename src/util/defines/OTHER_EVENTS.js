@@ -10,7 +10,7 @@ export const OTHER_EVENTS = [
     // newTitle: "Career Day",
     // description: "Deloitte Bulgaria",
     bgImage: "19",
-    bgImageExtra: "/assets/images/bg/bg-image-19.webp",
+    bgImageExtra: "/assets/images/events/gala/background.jpg",
     date: "16th May",
     time: "14 pm",
     // 1 hour earlier than Netherlands / 2 than Bulgaria
