@@ -194,7 +194,7 @@ const NonSocietyEvent = (props) => {
                     <ErrorMessage className="error" name="phone" component="div" />
                   </div>
 
-                  {user.token && (
+                  {/* {user.token && (
                     <>
                       <div className="rn-form-group mt--20">
                         <label>Would you like to bring an additional guest?</label>
@@ -227,7 +227,7 @@ const NonSocietyEvent = (props) => {
                         </div>
                       )}
                     </>
-                  )}
+                  )} */}
                   <div className="hor_section_nospace mt--40">
                     <Field
                       style={{ maxWidth: "30px", margin: "10px" }}
