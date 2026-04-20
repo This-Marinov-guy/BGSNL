@@ -26,7 +26,7 @@ export const FocusCards = ({ cards, region, isOtherEvent }) => {
 
 const Card = ({ card, index, hovered, setHovered, region, isOtherEvent }) => {
   const link = isOtherEvent
-    ? "/other-event-details/pwc-offer-day"
+    ? "/other-event-details/gala-festival"
     : `/${card.region ?? region}/event-details/${card.id}`;
   
   return (
