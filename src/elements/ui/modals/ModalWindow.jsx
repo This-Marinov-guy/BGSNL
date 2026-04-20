@@ -15,6 +15,7 @@ const ModalWindow = (props) => {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      enforceFocus={false}
       freeze={props.freeze}
     >
       {props.children}

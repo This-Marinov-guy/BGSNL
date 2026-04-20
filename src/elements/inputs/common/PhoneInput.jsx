@@ -21,9 +21,9 @@ const PhoneInput = ({
   }
 
   const [selectedCode, setSelectedCode] = useState(
-    EUROPEAN_COUNTRIES.find(
-      (c) => c.iso2.toUpperCase() === initialPrefix || getGeoLocation()
-    )
+    initialPrefix
+      ? EUROPEAN_COUNTRIES.find((c) => c.phoneCode === initialPrefix)
+      : EUROPEAN_COUNTRIES.find((c) => c.iso2 === getGeoLocation())
   );
 
   const [value, setValue] = useState(initialNumber);
@@ -36,12 +36,13 @@ const PhoneInput = ({
 
   return (
     <div
-      style={{ ...style, marginTop: "15px" }}
+      // style={{ ...style, marginTop: "15px" }}
       className={"phone_code " + className}
     >
       <Dropdown
         value={selectedCode}
         filter
+        filterBy="country,phoneCode"
         onChange={(e) => {
           const inputValue = e.value;
 

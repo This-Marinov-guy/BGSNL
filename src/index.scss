@@ -2,6 +2,11 @@
 @import '@assets/css/plugins.css';
 @import '@assets/scss/style.scss';
 
+/* Override Bootstrap reboot padding on lists */
+ul, ol {
+  padding-left: 0;
+}
+
 /* Force phone prefix dropdown panel above Bootstrap modal (z-index: 1055) */
 .phone-prefix-panel {
   z-index: 9999 !important;
