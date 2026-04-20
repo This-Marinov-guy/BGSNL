@@ -131,7 +131,7 @@ const NonSocietyEvent = (props) => {
                   );
                   form.append("event", target.title);
                   form.append("date", target.timeStamp);
-                  form.append("user", "normal");
+                  form.append("user", "guest");
                   form.append("name", values.name + " " + values.surname);
                   form.append("phone", values.phone);
                   form.append("email", values.email);
