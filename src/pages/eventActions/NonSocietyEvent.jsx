@@ -168,8 +168,8 @@ const NonSocietyEvent = (props) => {
               surname: currentUser?.surname || "",
               phone: currentUser?.phone || "",
               email: currentUser?.email || "",
-              notificationTerms: false,
-              notificationTypeTerms: currentUser?.notificationTypeTerms || "",
+              notificationTerms: true,
+              notificationTypeTerms: "whatsAPP",
             }}
           >
             {({ setFieldValue }) => (
@@ -234,7 +234,7 @@ const NonSocietyEvent = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="col-lg-6 col-md-12 col-12">
+                  {/* <div className="col-lg-6 col-md-12 col-12">
                     <div className="hor_section_nospace mt--40">
                       <Field
                         style={{ maxWidth: "30px", margin: "10px" }}
@@ -264,8 +264,8 @@ const NonSocietyEvent = (props) => {
                       name="notificationTypeTerms"
                       component="div"
                     />
-                  </div>
-                  {user.token && (
+                  </div> */}
+                  {/* {user.token && (
                     <>
                       <div className="col-12 mt--20">
                         <label>Would you like to bring an additional guest?</label>
@@ -298,7 +298,7 @@ const NonSocietyEvent = (props) => {
                         </div>
                       )}
                     </>
-                  )}
+                  )} */}
                 </div>
 
                 {target?.ticketLink ? (
