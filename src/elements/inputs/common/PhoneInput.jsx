@@ -58,6 +58,7 @@ const PhoneInput = ({
         optionLabel="phoneCode"
         placeholder="Prefix"
         className="phone_code_prefix"
+        style={{zIndex: 9999}}
       />
       <InputNumber
         value={value}
