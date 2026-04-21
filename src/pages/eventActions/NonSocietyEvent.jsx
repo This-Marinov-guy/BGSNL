@@ -21,7 +21,7 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import { createCustomerTicket } from "../../util/functions/ticket-creator";
 import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
-import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import SponsoredByGala from "../../elements/ui/alerts/SponsoredByGala";
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -333,7 +333,7 @@ const NonSocietyEvent = (props) => {
                   className="event-poster-image"
                 />
               </div>
-              <SponsoredBySmall />
+              <SponsoredByGala />
             </div>
 
             {/* About + Actions */}
