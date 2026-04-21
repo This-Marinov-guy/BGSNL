@@ -279,9 +279,14 @@ const NonSocietyEvent = (props) => {
 
       {/* Breadcrumb Area */}
       <div
-        className="rn-page-title-area pt--120 pb--190 bg_image"
-        style={{ backgroundImage: `url(${bgImageUrl})` }}
-        data-black-overlay="7"
+      className="rn-page-title-area pt--120 pb--190 bg_image"
+      style={{
+        backgroundImage: `url(${bgImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}   
+     data-black-overlay="7"
       >
         <div className="container">
           <div className="row">
