@@ -173,7 +173,7 @@ const HeaderContent = (props) => {
                         width: "48px",
                         height: "48px",
                         borderRadius: "50%",
-                        objectFit: "fill",
+                        objectFit: "cover",
                         border: "2px solid #fff",
                       }}
                     />
