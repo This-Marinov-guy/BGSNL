@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build:no-version",
+  "outputDirectory": "build",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
