@@ -3,9 +3,24 @@ import { isProd } from "../functions/helpers";
 import { REGION_EMAIL } from "./REGIONS_DESIGN";
 
 //Server
-export const serverEndpoint = isProd() ?
-    process.env.REACT_APP_SERVER_URL :
-    process.env.REACT_APP_TEST_SERVER_URL;
+const PROD_SERVER_ENDPOINT =
+    process.env.REACT_APP_SERVER_URL || "https://kanatitsa.bulgariansociety.nl/api/";
+const TEST_SERVER_ENDPOINT =
+    process.env.REACT_APP_TEST_SERVER_URL || "http://localhost:80/api/";
+
+const isLocalPreviewHost = () => {
+    if (typeof window === "undefined") {
+        return !isProd();
+    }
+
+    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(
+        window.location.hostname
+    );
+};
+
+export const serverEndpoint = isLocalPreviewHost()
+    ? TEST_SERVER_ENDPOINT
+    : PROD_SERVER_ENDPOINT;
 
 // Local Storage
 export const LOCAL_STORAGE_USER_DATA = 'BGSNL_user_data';
@@ -129,4 +144,3 @@ export const PAGE_TRANSLATION_TEXTS = {
 // email attr
 export const BGSNL_CC_MAIL = `cc=${REGION_EMAIL.netherlands}`;
 export const BGSNL_INTERNSHIP_MAIL_SUBJECT = `subject=BGSNL%20Internship%20Program&${BGSNL_CC_MAIL}`;
-
