@@ -620,7 +620,13 @@ const AlumniSignUp = (props) => {
 
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Join" />
+      <PageHelmet
+        pageTitle="Become an Alumni"
+        description="Support the Bulgarian Society Netherlands as a post-graduate alumni. Network with the community, attend alumni events, and aid our mission."
+        image="https://www.bulgariansociety.nl/assets/images/alumni/alumni.jpeg"
+        canonicalUrl="https://www.bulgariansociety.nl/alumni/register"
+        keywords="BGSNL alumni, join Bulgarian Society alumni, Bulgarian graduates Netherlands, alumni network"
+      />
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"

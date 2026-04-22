@@ -926,7 +926,13 @@ const SignUp = (props) => {
 
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Join" />
+      <PageHelmet
+        pageTitle="Become a Member"
+        description="Join the Bulgarian Society Netherlands during your academic years. Get event discounts, explore internship options, and get the chance to enter a committee or board."
+        image="https://www.bulgariansociety.nl/assets/images/alumni/members.jpg"
+        canonicalUrl="https://www.bulgariansociety.nl/signup"
+        keywords="BGSNL membership, join Bulgarian Society, Bulgarian students Netherlands, become a member"
+      />
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"
