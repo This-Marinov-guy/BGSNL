@@ -20,5 +20,11 @@ export const PROMO_CODES = {
       link: "https://signaal.app/download",
       discount: "10%",
     },
+    {
+      name: "Domakin",
+      code: "Domakin20",
+      link: "https://domakin.nl",
+      discount: "20%",
+    },
   ],
 };

@@ -28,9 +28,9 @@ const PromotionCard = ({ promo }) => (
     }}
   >
     <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-      <span style={{ width: "60px", height: "60px", borderRadius: "10px", background: "linear-gradient(135deg, #017363, #025420)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {/* <span style={{ width: "60px", height: "60px", borderRadius: "10px", background: "linear-gradient(135deg, #017363, #025420)", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <FiTag size={20} color="#fff" />
-      </span>
+      </span> */}
       <h3 style={{ margin: 0, fontWeight: 600, color: "var(--color-heading)" }}>
         {promo.name}
       </h3>
