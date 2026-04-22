@@ -202,22 +202,30 @@ const HeaderContent = (props) => {
                   </li>
                 </ul>
               </li>
-              {checkAuthorization(user.token, ACCESS_3) && (
+              {(checkAuthorization(user.token, ACCESS_3) || checkAuthorization(user.token, ACCESS_4)) && (
                 <li className="has-dropdown">
                   <a style={{ cursor: "pointer" }}>Dashboard</a>
                   <ul className="submenu">
-                    <li>
-                      <Link to="/user/dashboard">Events</Link>
-                    </li>
-                    <li>
-                      <Link to="/user/add-event">Add Event</Link>
-                    </li>
-                    <li>
-                      <Link to="/user/members">Members</Link>
-                    </li>
-                    <li>
-                      <Link to="/user/events-analytics">Events Analytics</Link>
-                    </li>
+                    {checkAuthorization(user.token, ACCESS_4) && (
+                      <>
+                        <li>
+                          <Link to="/user/dashboard">Events</Link>
+                        </li>
+                        <li>
+                          <Link to="/user/add-event">Add Event</Link>
+                        </li>
+                      </>
+                    )}
+                    {checkAuthorization(user.token, ACCESS_3) && (
+                      <>
+                        <li>
+                          <Link to="/user/members">Members</Link>
+                        </li>
+                        <li>
+                          <Link to="/user/events-analytics">Events Analytics</Link>
+                        </li>
+                      </>
+                    )}
                   </ul>
                 </li>
               )}
