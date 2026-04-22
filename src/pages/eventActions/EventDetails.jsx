@@ -74,7 +74,7 @@ const EventDetails = () => {
       <PageHelmet
         pageTitle={eventTitle}
         description={eventDescription}
-        image={bgImageUrl}
+        image={selectedEvent.poster || bgImageUrl}
         type="event"
         canonicalUrl={eventUrl}
         keywords={`${eventTitle}, Bulgarian event, ${region}, BGSNL event, Bulgarian Society`}

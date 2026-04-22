@@ -71,13 +71,31 @@ const NonSocietyEvent = (props) => {
     }
   }, []);
 
+  const baseUrl = "https://www.bulgariansociety.nl";
+  const eventTitle = target.newTitle ?? target.title;
+  const eventDescription = (target.description || target.text)
+    ?.replace(/<[^>]*>/g, "")
+    .trim()
+    .substring(0, 160);
+  const eventImage = target.poster
+    ? `${baseUrl}${target.poster}`
+    : undefined;
+  const eventUrl = `${baseUrl}/other-event-details/gala-festival`;
+
   if (target.eventClosed) {
     return <TicketSaleClosed />;
   }
 
   return (
     <React.Fragment>
-      <PageHelmet pageTitle={target.newTitle ?? target.title} />
+      <PageHelmet
+        pageTitle={eventTitle}
+        description={eventDescription}
+        image={eventImage}
+        type="event"
+        canonicalUrl={eventUrl}
+        keywords={`${eventTitle}, Bulgarian event, Netherlands, BGSNL`}
+      />
 
       <Header
         headertransparent="header--transparent"

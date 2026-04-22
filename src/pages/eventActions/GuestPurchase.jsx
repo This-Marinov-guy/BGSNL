@@ -177,7 +177,14 @@ const GuestPurchase = () => {
 
   return (
     <Fragment>
-      <PageHelmet pageTitle="Buy Ticket" />
+      <PageHelmet
+        pageTitle={selectedEvent.newTitle || selectedEvent.title}
+        description={(selectedEvent.description || selectedEvent.text)?.replace(/<[^>]*>/g, "").substring(0, 160)}
+        image={selectedEvent.poster}
+        type="event"
+        canonicalUrl={`https://www.bulgariansociety.nl/${region}/purchase-ticket/${eventId}`}
+        keywords={`${selectedEvent.title}, buy ticket, Bulgarian event, ${region}, BGSNL`}
+      />
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"
