@@ -18,9 +18,19 @@ function stripHtml(html) {
     .substring(0, 160);
 }
 
+function normalizePath(pathname) {
+  if (!pathname || pathname === "/") return "/";
+  return pathname.replace(/\/+$/, "") || "/";
+}
+
 function metaHtml({ title, description, image, url, type }) {
-  const t = (title || "BGSNL – Your Home Away From Home").replace(/"/g, "&quot;");
-  const d = (description || "The official website of the Bulgarian Society Netherlands.").replace(/"/g, "&quot;");
+  const t = (title || "BGSNL – Your Home Away From Home").replace(
+    /"/g,
+    "&quot;"
+  );
+  const d = (
+    description || "The official website of the Bulgarian Society Netherlands."
+  ).replace(/"/g, "&quot;");
   const img = image || `${SITE_URL}/assets/images/bg/welcome.png`;
   const u = url || SITE_URL;
   const og = type || "website";
@@ -43,80 +53,112 @@ function metaHtml({ title, description, image, url, type }) {
   <meta name="twitter:image" content="${img}">
   <meta http-equiv="refresh" content="0;url=${u}">
 </head>
-<body><p>Redirecting to <a href="${u}">${t}</a>…</p></body>
+<body><p>Redirecting to <a href="${u}">${t}</a>...</p></body>
 </html>`;
 }
 
-const STATIC_META = {
-  "/other-event-details/gala-festival": {
-    title: "Joint Gala Festival",
-    description:
-      "Join us for the Joint Gala Festival – a cultural gathering that celebrates identity, creativity, and youth through shared artistic expression.",
-    image: `${SITE_URL}/assets/images/events/gala/poster.png`,
-    url: `${SITE_URL}/other-event-details/gala-festival`,
-    type: "event",
+const STATIC_META = [
+  {
+    pattern: /^\/other-event-details\/gala-festival$/,
+    meta: {
+      title: "Joint Gala Festival",
+      description:
+        "Join us for the Joint Gala Festival - a cultural gathering that celebrates identity, creativity, and youth through shared artistic expression.",
+      image: `${SITE_URL}/assets/images/events/gala/poster.png`,
+      url: `${SITE_URL}/other-event-details/gala-festival`,
+      type: "event",
+    },
   },
-  "/signup": {
-    title: "Become a Member – BGSNL",
-    description:
-      "Join the Bulgarian Society Netherlands during your academic years. Get event discounts, explore internship options, and get the chance to enter a committee or board.",
-    image: `${SITE_URL}/assets/images/alumni/members.jpg`,
-    url: `${SITE_URL}/signup`,
+  {
+    pattern: /^\/(?:[^/]+\/)?signup$/,
+    meta: {
+      title: "Become a Member - BGSNL",
+      description:
+        "Join the Bulgarian Society Netherlands during your academic years. Get event discounts, explore internship options, and get the chance to enter a committee or board.",
+      image: `${SITE_URL}/assets/images/alumni/members.jpg`,
+      url: `${SITE_URL}/signup`,
+    },
   },
-  "/alumni/register": {
-    title: "Become an Alumni – BGSNL",
-    description:
-      "Support the Bulgarian Society Netherlands as a post-graduate alumni. Network with the community, attend alumni events, and aid our mission.",
-    image: `${SITE_URL}/assets/images/alumni/alumni.jpeg`,
-    url: `${SITE_URL}/alumni/register`,
+  {
+    pattern: /^\/alumni\/register$/,
+    meta: {
+      title: "Become an Alumni - BGSNL",
+      description:
+        "Support the Bulgarian Society Netherlands as a post-graduate alumni. Network with the community, attend alumni events, and aid our mission.",
+      image: `${SITE_URL}/assets/images/alumni/alumni.jpeg`,
+      url: `${SITE_URL}/alumni/register`,
+    },
   },
-};
+];
 
-// Skip files with extensions (.js, .css, .png …) and Vercel internals
+function getStaticMeta(pathname) {
+  const match = STATIC_META.find(({ pattern }) => pattern.test(pathname));
+  return match?.meta;
+}
+
+function htmlResponse(html, source) {
+  return new Response(html, {
+    headers: {
+      "cache-control": "no-store",
+      "content-type": "text/html; charset=utf-8",
+      "x-bgsnl-meta-source": source,
+    },
+  });
+}
+
+// Skip files with extensions (.js, .css, .png ...) and Vercel internals
 export const config = {
   matcher: ["/((?!_vercel|.*\\..*).*)", "/"],
+  runtime: "nodejs",
 };
 
 export default async function middleware(request) {
+  const url = new URL(request.url);
+  const pathname = normalizePath(url.pathname);
   const ua = request.headers.get("user-agent") || "";
-  if (!isCrawler(ua)) return; // regular browsers → Vercel serves static SPA as normal
+  const debugMode =
+    url.searchParams.has("__meta") ||
+    request.headers.get("x-bgsnl-debug-meta") === "1";
 
-  const { pathname } = new URL(request.url);
+  // Browsers keep getting the SPA unless debug mode is enabled.
+  if (!debugMode && !isCrawler(ua)) return;
 
-  // Static pages — no API call needed
-  if (STATIC_META[pathname]) {
-    return new Response(metaHtml(STATIC_META[pathname]), {
-      headers: { "content-type": "text/html; charset=utf-8" },
-    });
+  const staticMeta = getStaticMeta(pathname);
+  if (staticMeta) {
+    return htmlResponse(
+      metaHtml({
+        ...staticMeta,
+        url: `${SITE_URL}${pathname}`,
+      }),
+      "static"
+    );
   }
 
-  // Dynamic event pages — fetch from Express API
   const eventMatch =
     pathname.match(/^\/[^/]+\/event-details\/([^/]+)$/) ||
-    pathname.match(/^\/[^/]+\/purchase-ticket\/([^/]+)$/) ||
-    pathname.match(/^\/[^/]+\/member-purchase\/([^/]+)$/);
+    pathname.match(/^\/[^/]+\/purchase-ticket\/([^/]+)$/);
 
-  if (eventMatch) {
-    try {
-      const res = await fetch(`${API_URL}/event/event-details/${eventMatch[1]}`);
-      if (res.ok) {
-        const data = await res.json();
-        const event = data && data.event;
-        if (event) {
-          return new Response(
-            metaHtml({
-              title: event.newTitle || event.title,
-              description: stripHtml(event.description || event.text),
-              image: event.poster ? `${SITE_URL}${event.poster}` : undefined,
-              url: `${SITE_URL}${pathname}`,
-              type: "event",
-            }),
-            { headers: { "content-type": "text/html; charset=utf-8" } }
-          );
-        }
-      }
-    } catch (_) {
-      // API unreachable — fall through and let Vercel serve index.html
-    }
+  if (!eventMatch) return;
+
+  try {
+    const res = await fetch(`${API_URL}/event/event-details/${eventMatch[1]}`);
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const event = data && data.event;
+    if (!event) return;
+
+    return htmlResponse(
+      metaHtml({
+        title: event.newTitle || event.title,
+        description: stripHtml(event.description || event.text),
+        image: event.poster ? `${SITE_URL}${event.poster}` : undefined,
+        url: `${SITE_URL}${pathname}`,
+        type: "event",
+      }),
+      "event"
+    );
+  } catch (_) {
+    // API unreachable - fall through and let Vercel serve index.html
   }
 }
