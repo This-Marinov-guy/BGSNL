@@ -25,8 +25,8 @@ const HeaderContent = (props) => {
 
   const articles = useSelector(selectArticles);
 
-  const profileImage = user.token ? decodeJWT(user.token).image : '';
-  
+  const profileImage = user.token ? decodeJWT(user.token).image : "";
+
   const region = props.forceRegion ?? useParams().region;
 
   const navigate = useNavigate();
@@ -202,33 +202,30 @@ const HeaderContent = (props) => {
                   </li>
                 </ul>
               </li>
-              {(checkAuthorization(user.token, ACCESS_3) ||
-                checkAuthorization(user.token, ACCESS_4)) && (
+              {checkAuthorization(user.token, ACCESS_4) && (
                 <li className="has-dropdown">
                   <a style={{ cursor: "pointer" }}>Dashboard</a>
                   <ul className="submenu">
-                    {checkAuthorization(user.token, ACCESS_4) && (
-                      <>
-                        <li>
-                          <Link to="/user/dashboard">Events</Link>
-                        </li>
-                        <li>
-                          <Link to="/user/add-event">Add Event</Link>
-                        </li>
-                        {checkAuthorization(user.token, ACCESS_3) && (
-                          <>
-                            <li>
-                              <Link to="/user/members">Members</Link>
-                            </li>
-                            <li>
-                              <Link to="/user/events-analytics">
-                                Events Analytics
-                              </Link>
-                            </li>
-                          </>
-                        )}
-                      </>
-                    )}
+                    <>
+                      <li>
+                        <Link to="/user/dashboard">Events</Link>
+                      </li>
+                      <li>
+                        <Link to="/user/add-event">Add Event</Link>
+                      </li>
+                      {checkAuthorization(user.token, ACCESS_3) && (
+                        <>
+                          <li>
+                            <Link to="/user/members">Members</Link>
+                          </li>
+                          <li>
+                            <Link to="/user/events-analytics">
+                              Events Analytics
+                            </Link>
+                          </li>
+                        </>
+                      )}
+                    </>
                   </ul>
                 </li>
               )}
