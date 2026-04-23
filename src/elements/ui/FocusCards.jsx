@@ -40,9 +40,6 @@ const Card = ({ card, region, isOtherEvent }) => {
             className="focus-card-image"
             style={{
               backgroundImage: `url(${card.poster})`,
-              backgroundPosition: "center",
-              backgroundFit: "cover",
-              backgroundSize: "cover",
             }}
           />
           {card.memberOnly && (
