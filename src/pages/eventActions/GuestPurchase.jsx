@@ -298,6 +298,7 @@ const GuestPurchase = () => {
 
             <div className="col-12">
               <Formik
+                enableReinitialize
                 validationSchema={schema}
                 onSubmit={async (values) => {
                   try {
@@ -350,10 +351,10 @@ const GuestPurchase = () => {
                   }
                 }}
                 initialValues={{
-                  name: currentUser?.name,
-                  surname: currentUser?.surname,
-                  email: currentUser?.email,
-                  phone: currentUser?.phone,
+                  name: currentUser?.name || "",
+                  surname: currentUser?.surname || "",
+                  email: currentUser?.email || "",
+                  phone: currentUser?.phone || "",
                   policyTerms: false,
                   payTerms: false,
                   ...constructInitialExtraFormValues(
@@ -423,6 +424,8 @@ const GuestPurchase = () => {
                         <div className="col-lg-12 col-md-12 col-12">
                           <div className="rn-form-group phone-input-container">
                             <PhoneInput
+                              key={values.phone || "phone-empty"}
+                              initialValue={values.phone || ""}
                               onChange={(value) =>
                                 setFieldValue("phone", value)
                               }
