@@ -91,7 +91,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                 <EventsLoading />
               ) : (
                 <div className="col-lg-12">
-                  <div className="row">
+                  <div className="future-events-region-list">
                     {REGIONS.map((regionName, index) => {
                       const regionEvents = (events[regionName] || []).filter(
                         (event) => isAuth || !event.memberOnly
@@ -102,16 +102,31 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                       }
 
                       return (
-                        <div
-                          className="col-lg-6 col-md-6 col-sm-12 mt--40"
-                          key={index}
+                        <section
+                          className="future-events-region-section"
+                          key={regionName}
                         >
-                          <h4 className="archive mb--30">{capitalizeFirstLetter(regionName, true).toUpperCase()}</h4>
+                          <div className="future-events-region-header">
+                            {/* <h4 className="archive future-events-region-title">
+                              {capitalizeFirstLetter(
+                                regionName,
+                                true,
+                              ).toUpperCase()}
+                            </h4> */}
+                            <span className="future-events-region-count m-auto">
+                              <h4 className="archive future-events-region-title">
+                                {capitalizeFirstLetter(
+                                  regionName,
+                                  true,
+                                ).toUpperCase()}
+                              </h4>{" "}
+                            </span>
+                          </div>
                           <FocusCards
                             cards={regionEvents}
                             region={regionName}
                           />
-                        </div>
+                        </section>
                       );
                     })}
                   </div>
@@ -125,6 +140,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                   <FocusCards
                     cards={events}
                     region={region}
+                    centerItems={false}
                   />
                 ) : (
                   <p className="col-lg-6 mt--20 mb--20">
@@ -161,6 +177,7 @@ const FutureOtherEventsContent = () => {
                   cards={OTHER_EVENTS}
                   region="other"
                   isOtherEvent
+                  centerItems={false}
                 />
               ) : (
                 <p className="col-lg-6 mt--20 mb--20">

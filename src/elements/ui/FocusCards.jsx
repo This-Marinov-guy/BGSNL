@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { cn } from "../../util/functions/helpers";
+import { FiCalendar, FiLock } from "react-icons/fi";
 import { MOMENT_DATE_TIME } from "../../util/functions/date";
 import moment from "moment";
 
-export const FocusCards = ({ cards, region, isOtherEvent }) => {
-  const [hovered, setHovered] = useState(null);
-
+export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) => {
   return (
-    <div className="focus-cards-grid">
-      {cards.map((card, index) => (
+    <div
+      className={`focus-cards-grid${
+        !centerItems || isOtherEvent ? " focus-cards-grid--left" : ""
+      }`}
+    >
+      {cards.map((card) => (
         <Card
-          key={card.id}
+          key={card.id || `${card.title}-${card.date}`}
           card={card}
-          index={index}
-          hovered={hovered}
-          setHovered={setHovered}
           region={region}
           isOtherEvent={isOtherEvent}
         />
@@ -24,38 +23,48 @@ export const FocusCards = ({ cards, region, isOtherEvent }) => {
   );
 };
 
-const Card = ({ card, index, hovered, setHovered, region, isOtherEvent }) => {
+const Card = ({ card, region, isOtherEvent }) => {
   const link = isOtherEvent
     ? "/other-event-details/gala-festival"
     : `/${card.region ?? region}/event-details/${card.id}`;
-  
+
+  const dateLabel = moment(card.date).isValid()
+    ? moment(card.correctedDate ?? card.date).format(MOMENT_DATE_TIME)
+    : card.date;
+
   return (
-    <div
-      onMouseEnter={() => setHovered(index)}
-      onMouseLeave={() => setHovered(null)}
-      className={cn(
-        "focus-card",
-        hovered !== null && hovered !== index && "focus-card-blurred"
-      )}
-    >
+    <article className="focus-card">
       <Link to={link} className="focus-card-link">
-        <div
-          className="focus-card-image"
-          style={{ backgroundImage: `url(${card.poster})` }}
-        >
-          <div className="focus-card-overlay">
-            <h3 className="focus-card-title">{card.title}</h3>
-            <div className="focus-card-details">
-              <div className="focus-card-datetime">
-                {moment(card.date).isValid() ? moment(card.correctedDate ?? card.date).format(
-                  MOMENT_DATE_TIME
-                ) : card.date}
-              </div>
+        <div className="focus-card-media ">
+          <div
+            className="focus-card-image"
+            style={{
+              backgroundImage: `url(${card.poster})`,
+              backgroundPosition: "center",
+              backgroundFit: "cover",
+              backgroundSize: "cover",
+            }}
+          />
+          {card.memberOnly && (
+            <div className="focus-card-badge">
+              <FiLock />
+              Members Only
+            </div>
+          )}
+        </div>
+
+        <div className="focus-card-content">
+          <h3 className="focus-card-title">{card.title}</h3>
+
+          <div className="focus-card-details">
+            <div className="focus-card-meta">
+              <FiCalendar />
+              <span>{dateLabel}</span>
             </div>
           </div>
         </div>
       </Link>
-    </div>
+    </article>
   );
 };
 
