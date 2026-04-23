@@ -23,7 +23,8 @@ const EventModal = (props) => {
     const [ticketGeneratorModal, setTicketGeneratorModal] = useState(false);
 
     const { sendRequest, loading } = useHttpClient();
-    const {user} = useSelector(selectUser);
+
+    const user = useSelector(selectUser);
 
     const navigate = useNavigate();
 
