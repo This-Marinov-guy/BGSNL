@@ -7,6 +7,7 @@ export const createQrCodeCheckGuest = (data) => {
   }&code=${data.code}&count=${data?.quantity ?? 1}`;
 };
 
+// Deprecated since we moved it in the backend
 export const createCustomerTicket = async (
   ticketImage,
   name,
