@@ -24,6 +24,21 @@ export const PREMIUM_PARTNER = [
       "Platform for helping with apartment searching the Netherlands. We offer doing the viewings for you, directly contacting you with a landlord or finding someone to take your room/apartment.",
     features: ["Housing Assistance", "Reliable Service", "Community Trusted"],
   },
+  {
+    name: "ILikeMedia",
+    logo: "/assets/images/brand/brand-14.png",
+    url: "https://ilikemedia.nl/",
+    since: "2026",
+    style: { scale: "1.0" },
+    description:
+      "ILikeMedia provides digital media and marketing support for brands and communities, helping organizations grow visibility and engagement.",
+    features: [
+      "Digital Media",
+      "Marketing Support",
+      "Brand Visibility",
+      "Community Growth",
+    ],
+  },
 ];
 
 export const PARTNERS = [
@@ -40,6 +55,13 @@ export const PARTNERS = [
     url: "https://domakin.nl/",
     since: "2023",
     style: { borderRadius: "5%" },
+  },
+  {
+    name: "ILikeMedia",
+    logo: "/assets/images/brand/brand-14.png",
+    url: "https://ilikemedia.nl/",
+    since: "2026",
+    style: { scale: "1.0" },
   },
   {
     name: "Cool Travel",
@@ -82,13 +104,13 @@ export const PARTNERS = [
     logo: "/assets/images/brand/brand-12.png",
     url: "https://www.societasbulgarica.org/",
     since: "2025",
-    style: { scale: "0.6" },
+    style: { scale: "0.8" },
   },
   {
     name: "Sunny Beach Groningen",
     logo: "/assets/images/brand/brand-10.png",
     url: "https://sunnybeach-groningen.nl",
     since: "2023",
-    style: { scale: "0.7" },
+    style: { scale: "0.88" },
   },
 ];

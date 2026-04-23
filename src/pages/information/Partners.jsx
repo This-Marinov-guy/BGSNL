@@ -164,7 +164,7 @@ const Partners = () => {
       {/* End Intro Area */}
 
       {/* Start Other Partners Area */}
-      <div className="rn-brand-area ptb--120 bg_color--1">
+      <div className="rn-brand-area ptb--120 bg_color--1 partners-grid-section">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -176,21 +176,24 @@ const Partners = () => {
           </div>
           <div className="row">
             <div className="col-lg-12">
-              <ul className="brand-style-2">
+              <ul className="partners-logo-grid">
                 {PARTNERS.map((partner, index) => (
-                  <li key={index} style={{ listStyle: "none" }}>
-                    <div className="partner-item text-center">
+                  <li key={index}>
+                    <div className="partner-item partner-grid-item text-center">
                       <a href={partner.url} target="_blank" rel="noreferrer">
-                        <img
-                          src={partner.logo}
-                          alt={`${partner.name} Logo`}
-                          style={partner.style || {}}
-                        />
+                        <span className="partners-logo-card">
+                          <img
+                            className="partners-logo-image"
+                            src={partner.logo}
+                            alt={`${partner.name} Logo`}
+                            style={partner.style || {}}
+                          />
+                        </span>
                       </a>
-                      <h4 className="mt--20" style={{ fontSize: "1.2rem" }}>
+                      <h4 className="mt--15" style={{ fontSize: "1.05rem" }}>
                         {partner.name}
                       </h4>
-                      <p style={{ fontSize: "0.9rem", color: "#666" }}>
+                      <p style={{ fontSize: "0.85rem", color: "#666" }}>
                         Partner since {partner.since}
                       </p>
                     </div>

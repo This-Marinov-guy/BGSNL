@@ -1,93 +1,87 @@
-import React, { Component } from "react";
+import React from "react";
 
-class BrandTwo extends Component {
-  render() {
-    return (
-      <div
-        style={{ padding: "40px 40px 5px", marginBottom: "20px" }}
-        className="rn-brand-area brand-separation bg_color--5"
-      >
-        <h3 style={{ textAlign: "center", fontFamily: "Archive" }}>Partners</h3>
-        <ul className="brand-style-2">
-          <li>
-            <a href="https://www.cooltravel.bg/" target="_blank">
-              <img
-                className="splash-li"
-                src="/assets/images/brand/brand-06.png"
-                alt="Logo Images"
-              />
+const BRAND_TWO_PARTNERS = [
+  {
+    href: "https://www.cooltravel.bg/",
+    src: "/assets/images/brand/brand-06.png",
+    alt: "Cool Travel logo",
+    style: { backgroundColor: "#77a02e", borderRadius: "47%", padding: "16px" },
+  },
+  {
+    href: "https://domakin.nl/",
+    src: "/assets/images/brand/brand-07.png",
+    alt: "Domakin logo",
+    style: { borderRadius: "5%" },
+  },
+  {
+    href: "https://ilikemedia.nl/",
+    src: "/assets/images/brand/brand-14.png",
+    alt: "ILikeMedia logo",
+    style: { scale: "1.0" },
+  },
+  {
+    href: "https://studybuddy.bg/",
+    src: "/assets/images/brand/brand-04.png",
+    alt: "Study Buddy logo",
+  },
+  {
+    href: "https://www.unify.bg/",
+    src: "/assets/images/brand/brand-02.png",
+    alt: "Unify logo",
+  },
+  {
+    href: "https://www.bghub-eindhoven.nl/",
+    src: "/assets/images/brand/brand-11.png",
+    alt: "BG Hub Eindhoven logo",
+  },
+  {
+    href: "https://bulgariawantsyou.com/en",
+    src: "https://bulgariawantsyou.com/themes/custom/bwy/logo.svg",
+    alt: "Bulgaria Wants You logo",
+    style: { backgroundColor: "#BFBFBF", padding: "10px", borderRadius: "10px" },
+  },
+  {
+    href: "https://www.societasbulgarica.org/",
+    src: "/assets/images/brand/brand-12.png",
+    alt: "Societas Bulgarica logo",
+    style: { scale: "0.8" },
+  },
+  {
+    href: "https://www.pwc.bg/",
+    src: "/assets/images/brand/brand-13.png",
+    alt: "PwC logo",
+    style: { scale: "1.25" },
+  },
+  {
+    href: "https://sunnybeach-groningen.nl",
+    src: "/assets/images/brand/brand-10.png",
+    alt: "Sunny Beach Groningen logo",
+    style: { scale: "0.88" },
+  },
+];
+
+const BrandTwo = () => {
+  return (
+    <div className="rn-brand-area brand-separation brand-two-compact bg_color--5">
+      <h3 className="brand-two-title">Partners</h3>
+      <ul className="brand-two-grid">
+        {BRAND_TWO_PARTNERS.map((partner) => (
+          <li key={partner.href} className="brand-two-grid-item">
+            <a href={partner.href} target="_blank" rel="noreferrer">
+              <span className="brand-two-logo-card">
+                <img
+                  className="brand-two-logo-image"
+                  src={partner.src}
+                  alt={partner.alt}
+                  style={partner.style || {}}
+                />
+              </span>
             </a>
           </li>
-          <li>
-            <a href="https://domakin.nl/" target="_blank">
-              <img
-                src="/assets/images/brand/brand-07.png"
-                alt="Logo Images"
-                style={{ borderRadius: "5%" }}
-              />
-            </a>
-          </li>
-          <li>
-            <a href="https://studybuddy.bg/" target="_blank">
-              <img src="/assets/images/brand/brand-04.png" alt="Logo Images" />
-            </a>
-          </li>
-          {/* <li>
-                        <a href='https://www.integral.bg/' target='_blank'><img src="/assets/images/brand/brand-05.png" alt="Logo Images" /></a>
-                    </li> */}
-          <li>
-            <a href="https://www.unify.bg/" target="_blank">
-              <img src="/assets/images/brand/brand-02.png" alt="Logo Images" />
-            </a>
-          </li>
-          <li>
-            <a href="https://www.bghub-eindhoven.nl/" target="_blank">
-              <img src="/assets/images/brand/brand-11.png" alt="Logo Images" />
-            </a>
-          </li>
-          <li className="mt--20 mb--10">
-            <a href="https://bulgariawantsyou.com/en" target="_blank">
-              <img
-                src="https://bulgariawantsyou.com/themes/custom/bwy/logo.svg"
-                style={{
-                  backgroundColor: "#BFBFBF",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-                alt="Logo Images"
-              />
-            </a>
-          </li>
-          <li>
-            <a href="https://www.societasbulgarica.org/" target="_blank">
-              <img
-                src="/assets/images/brand/brand-12.png"
-                style={{ scale: "0.6" }}
-                alt="Logo Images"
-              />
-            </a>
-          </li>
-          <li>
-            <a href="https://www.pwc.bg/" target="_blank">
-              <img
-                src="/assets/images/brand/brand-13.png"
-                style={{ scale: "1.4" }}
-                alt="Logo Images"
-              />
-            </a>
-          </li>
-          <li>
-            <a href="https://sunnybeach-groningen.nl" target="_blank">
-              <img
-                src="/assets/images/brand/brand-10.png"
-                style={{ scale: "0.7" }}
-                alt="Logo Images"
-              />
-            </a>
-          </li>
-        </ul>
-      </div>
-    );
-  }
-}
+        ))}
+      </ul>
+    </div>
+  );
+};
+
 export default BrandTwo;
