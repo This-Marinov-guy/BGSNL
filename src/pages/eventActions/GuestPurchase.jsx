@@ -8,14 +8,10 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/media/ImageFb";
-import { Message } from "primereact/message";
+
 import Loader from "../../elements/ui/loading/Loader";
 import { InputNumber } from "primereact/inputnumber";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import {
-  createCustomerTicket,
-  createQrCodeCheckGuest,
-} from "../../util/functions/ticket-creator";
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
@@ -61,7 +57,6 @@ const GuestPurchase = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventClosed, setEventClosed] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [normalTicket, setNormalTicket] = useState(false);
   const [schema, setSchema] = useState(null);
   const [schemaFields, setSchemaFields] = useState(null);
   const [currentUser, setCurrentUser] = useState({
@@ -78,12 +73,6 @@ const GuestPurchase = () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-
-  const buyFreeTicket = async (formData) => {
-    await sendRequest("event/purchase-ticket/guest", "POST", formData);
-    sessionStorage.setItem("prevUrl", window.location.href);
-    navigate("/success");
-  };
 
   const handleErrorMsg = (errors) => {
     if (!isObjectEmpty(errors)) {
@@ -314,131 +303,28 @@ const GuestPurchase = () => {
                   try {
                     setIsLoading(true);
 
-                    let allowDiscount = false;
-                    const isGuestForDiscount =
-                      selectedEvent.discountPass &&
-                      (selectedEvent.discountPass.includes(values.email) ||
-                        selectedEvent.discountPass.includes(
-                          values.name + " " + values.surname
-                        ));
-                    const isGuestForFreeTicket =
-                      selectedEvent.freePass &&
-                      (selectedEvent.freePass.includes(values.email) ||
-                        selectedEvent.freePass.includes(
-                          values.name + " " + values.surname
-                        ));
-
-                    // TODO: add functionality for multiple tickets
-                    if (
-                      !normalTicket &&
-                      (isGuestForDiscount || isGuestForFreeTicket)
-                    ) {
-                      const checkDiscounts = await sendRequest(
-                        `event/check-guest-discount/${eventId}`,
-                        "POST",
-                        {
-                          email: values.email,
-                          name: values.name,
-                          surname: values.surname,
-                        }
-                      );
-
-                      if (
-                        !checkDiscounts.hasOwnProperty("status") &&
-                        !checkDiscounts.status
-                      ) {
-                        dispatch(
-                          showNotification({
-                            severity: "warn",
-                            detail:
-                              "You already have an applied bonus for this event - you can still proceed the checkout but will pay the guest price!",
-                            life: 1200,
-                          })
-                        );
-                        setNormalTicket(true);
-                        return;
-                      } else {
-                        allowDiscount = true;
-                      }
-                    }
-
                     const data = {
                       eventId: selectedEvent.id,
                       code: new Date().valueOf(),
                       quantity,
                     };
 
-                    const hasQR = selectedEvent.ticketQR;
-                    const qrCode = hasQR ? createQrCodeCheckGuest(data) : "";
-
-                    const { ticketBlob } = await createCustomerTicket(
-                      selectedEvent.ticketImg,
-                      values.name,
-                      values.surname,
-                      selectedEvent.ticketColor,
-                      qrCode,
-                      selectedEvent.ticketName,
-                      quantity
-                    );
-
-                    // formData
                     const formData = new FormData();
-                    formData.append(
-                      "image",
-                      ticketBlob,
-                      selectedEvent.id +
-                        "_" +
-                        values.name +
-                        values.surname +
-                        "_GUEST"
-                    );
-                    formData.append("region", region);
                     formData.append("quantity", quantity);
                     formData.append("origin_url", window.location.origin);
                     formData.append("method", "buy_guest_ticket");
                     formData.append("eventId", selectedEvent.id);
                     formData.append("code", data.code);
                     formData.append("guestEmail", values.email);
+                    formData.append("guestName", values.name + " " + values.surname);
+                    formData.append("guestPhone", values.phone);
 
                     if (selectedEvent?.extraInputsForm) {
                       appendExtraInputsToForm(formData, schemaFields, values);
                     }
 
-                    if (
-                      selectedEvent?.addOns?.isEnabled &&
-                      values.addOns?.length > 0
-                    ) {
+                    if (selectedEvent?.addOns?.isEnabled && values.addOns?.length > 0) {
                       formData.append("addOns", JSON.stringify(values.addOns));
-                    }
-
-                    formData.append(
-                      "guestName",
-                      values.name + " " + values.surname
-                    );
-                    formData.append("guestPhone", values.phone);
-
-                    if (selectedEvent.isFree) {
-                      return await buyFreeTicket(formData);
-                    }
-
-                    if (
-                      allowDiscount &&
-                      (isGuestForDiscount || isGuestForFreeTicket)
-                    ) {
-                      if (isGuestForFreeTicket) {
-                        return await buyFreeTicket(formData);
-                      } else {
-                        formData.append(
-                          "itemId",
-                          selectedEvent.product?.activeMember.priceId ??
-                            selectedEvent.product?.member.priceId
-                        );
-                      }
-                    } else {
-                      formData.append(
-                        "itemId",
-                        selectedEvent.product?.guest.priceId
-                      );
                     }
 
                     const responseData = await sendRequest(
@@ -447,12 +333,18 @@ const GuestPurchase = () => {
                       formData
                     );
 
-                    if (responseData.url) {
+                    if (responseData?.url) {
                       sessionStorage.setItem("prevUrl", window.location.href);
                       window.location.assign(responseData.url);
+                      return;
+                    }
+
+                    if (responseData?.status && responseData?.free) {
+                      sessionStorage.setItem("prevUrl", window.location.href);
+                      navigate("/success");
                     }
                   } catch (err) {
-                    // console.log(err)
+                    // handled by http-hook
                   } finally {
                     setIsLoading(false);
                   }
@@ -666,15 +558,7 @@ const GuestPurchase = () => {
                     </div>
 
                     <div className="col-12">
-                      {normalTicket && (
-                        <Message
-                          severity="warn"
-                          className="mb--20"
-                          text="You already have redeemed your discount - if you proceed, you will pay the full ticket price"
-                        />
-                      )}
-
-                      <StickyButtonFooter>
+                        <StickyButtonFooter>
                         <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30 mb--50">
                           <button
                             onClick={() => handleErrorMsg(errors)}

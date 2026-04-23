@@ -533,8 +533,6 @@ const EventForm = (props) => {
           memberOnly: initialData?.memberOnly ?? false,
           hidden: initialData?.hidden ?? false,
           extraInputsForm: initialData?.extraInputsForm ?? [],
-          freePass: initialData?.freePass ?? [],
-          discountPass: initialData?.discountPass ?? [],
           subEvent: initialData?.subEvent ?? null,
           region: initialData?.region ?? "",
           title: initialData?.title ?? "",
@@ -1427,55 +1425,6 @@ const EventForm = (props) => {
                 <small style={{ color: "#6c757d", fontStyle: "italic" }}>
                   Customize your event with these additional options
                 </small>
-              </div>
-
-              <div className="row">
-                <div className="col-lg-6 col-12 mt--20">
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "8px", marginBottom: "10px" }}
-                  >
-                    <h5 style={{ margin: 0, color: "#6c757d" }}>
-                      Discount Emails
-                    </h5>
-                    <Tooltip target=".discount-emails-tooltip" />
-                    <FiInfo
-                      className="discount-emails-tooltip"
-                      style={{ cursor: "help", color: "#6c757d" }}
-                      data-pr-tooltip="Email addresses that receive member pricing (in addition to active members)"
-                      data-pr-position="right"
-                    />
-                  </div>
-                  <StringDynamicInputs
-                    name="discountPass"
-                    onChange={(inputs) => setFieldValue("discountPass", inputs)}
-                    initialValues={values.discountPass}
-                    placeholder="e.g., guest@example.com"
-                  />
-                </div>
-                <div className="col-lg-6 col-12 mt--20">
-                  <div
-                    className="d-flex align-items-center"
-                    style={{ gap: "8px", marginBottom: "10px" }}
-                  >
-                    <h5 style={{ margin: 0, color: "#6c757d" }}>
-                      Free Pass Emails
-                    </h5>
-                    <Tooltip target=".freepass-emails-tooltip" />
-                    <FiInfo
-                      className="freepass-emails-tooltip"
-                      style={{ cursor: "help", color: "#6c757d" }}
-                      data-pr-tooltip="Email addresses that can register for free (e.g., sponsors, VIPs)"
-                      data-pr-position="right"
-                    />
-                  </div>
-                  <StringDynamicInputs
-                    name="freePass"
-                    onChange={(inputs) => setFieldValue("freePass", inputs)}
-                    initialValues={values.freePass}
-                    placeholder="e.g., vip@example.com"
-                  />
-                </div>
               </div>
 
               <h3 className="label mt--40">Manage Sales</h3>

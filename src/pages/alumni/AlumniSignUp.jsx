@@ -15,18 +15,14 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../util/defines/ALUMNI";
 import {
   encryptData,
   isObjectEmpty,
-  removeSpacesAndLowercase,
 } from "../../util/functions/helpers";
 import { Steps } from "primereact/steps";
-import { showModal } from "../../redux/modal";
 import {
-  BIRTHDAY_MODAL,
   INCORRECT_MISSING_DATA,
 } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
@@ -48,7 +44,6 @@ const schema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Passwords do not match")
     .required("Passwords do not match"),
   policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  memberKey: yup.string(),
 });
 
 const stepConfig = [
@@ -306,51 +301,14 @@ const AlumniSignUp = (props) => {
                   }
 
                   if (responseData.status === true) {
-                    const checkMember = await sendRequest(
-                      "security/check-member-key",
+                    const checkoutResponse = await sendRequest(
+                      "payment/checkout/signup",
                       "POST",
-                      { email: removeSpacesAndLowercase(values.email) }
+                      formData
                     );
 
-                    if (checkMember?.status === true) {
-                      const responseData = await sendRequest(
-                        `security/alumni-signup`,
-                        "POST",
-                        formData
-                      );
-                      dispatch(
-                        login({
-                          token: responseData.token,
-                          expirationDate: new Date(
-                            new Date().getTime() + 36000000
-                          ).toISOString(),
-                        })
-                      );
-                      dispatch(
-                        showNotification({
-                          severity: "success",
-                          summary: "Welcome to the Alumni Society",
-                          detail: "Hop in the User section to see your details",
-                          life: 7000,
-                        })
-                      );
-
-                      if (responseData.celebrate) {
-                        dispatch(showModal(BIRTHDAY_MODAL));
-                      }
-
-                      navigate(sessionStorage.getItem("prevUrl") ?? `/`);
-                      sessionStorage.removeItem("prevUrl");
-                    } else {
-                      const responseData = await sendRequest(
-                        "payment/checkout/signup",
-                        "POST",
-                        formData
-                      );
-
-                      if (responseData.url) {
-                        window.location.assign(responseData.url);
-                      }
+                    if (checkoutResponse.url) {
+                      window.location.assign(checkoutResponse.url);
                     }
                   }
                 }}
@@ -361,7 +319,6 @@ const AlumniSignUp = (props) => {
                   password: "",
                   confirmPassword: "",
                   policyTerms: false,
-                  memberKey: "",
                 }}
               >
                 {({ values, setFieldValue, errors, isValid, dirty }) => (

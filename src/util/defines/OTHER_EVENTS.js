@@ -53,7 +53,6 @@ export const OTHER_EVENTS = [
     to community, creativity, and the power of youth.
   </p>
     `,
-    freePass: ["vladislavmarinov3142@gmail.com"],
     marketingInputs: false,
     ticket_img: "/assets/images/events/gala/ticket.png",
     images: [

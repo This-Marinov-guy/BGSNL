@@ -26,6 +26,11 @@ const SponsoredBySmall = () => {
           src="/assets/images/brand/brand-04.png"
           alt="small-logo"
         />
+        <ImageFb
+          style={{ maxHeight: "2em", margin: "2px" }}
+          src="/assets/images/brand/brand-14.png"
+          alt="ilikemedia-logo"
+        />
       </div>
     </div>
   );

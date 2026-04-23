@@ -107,6 +107,7 @@ const SuccessDonation = lazy(() => import("./pages/redirects/SuccessDonation"));
 const Fail = lazy(() => import("./pages/redirects/Fail"));
 
 const TicketComponent = lazy(() => import("./pages/private/TicketComponent"));
+const TicketPlayground = lazy(() => import("./pages/private/TicketPlayground"));
 
 const PageNavigationFunc = () => {
   const { pathname } = useLocation();
@@ -264,7 +265,10 @@ const Root = () => {
               {/* Redirect pages */}
 
               {!isProd() && (
-                <Route exact path={`/test`} element={<TicketComponent />} />
+                <>
+                  <Route exact path={`/test`} element={<TicketComponent />} />
+                  <Route exact path={`/playground`} element={<TicketPlayground />} />
+                </>
               )}
 
               <Route exact path={`/success`} element={<Success />} />

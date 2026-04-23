@@ -45,10 +45,9 @@ const MainLayout = ({ children }) => {
       const duration = notification.life ?? 8000;
       const title = notification.summary || "";
       const description = notification.detail || "";
-      
-      // Map severity to Sonner toast types
+
       const toastOptions = {
-        duration: duration,
+        duration,
         ...(description && { description }),
       };
 
@@ -78,7 +77,7 @@ const MainLayout = ({ children }) => {
       <BirthdayModal />
       <CookiesModal />
       <GoogleCalendarModal />
-      <Toaster 
+      <Toaster
         position="top-center"
         richColors
         closeButton

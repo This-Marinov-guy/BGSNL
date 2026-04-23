@@ -192,31 +192,6 @@ export const estimatePriceByEvent = (
   }
 
   if (
-    !options.blockDiscounts &&
-    isMemberDataFull &&
-    selectedEvent.activeMemberPriceId &&
-    selectedEvent.discountPass.length > 0 &&
-    (selectedEvent.discountPass.includes(user.email) ||
-      selectedEvent.discountPass.includes(`${user.name} ${user.surname}`))
-  ) {
-    return (
-      <>
-        {product?.activeMember.price} euro {includedText}
-      </>
-    );
-  }
-
-  if (
-    !options.blockDiscounts &&
-    isMemberDataFull &&
-    selectedEvent.freePass.length > 0 &&
-    (selectedEvent.freePass.includes(user.email) ||
-      selectedEvent.freePass.includes(`${user.name} ${user.surname}`))
-  ) {
-    return "FREE";
-  }
-
-  if (
     isMember &&
     !isActiveMember &&
     product.member?.price &&

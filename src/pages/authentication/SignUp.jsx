@@ -15,21 +15,17 @@ import ScrollToTop from "react-scroll-up";
 import { FiChevronUp } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/user";
 import { Link, useParams } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
 import { REGIONS_MEMBERSHIP_SPECIFICS } from "../../util/defines/REGIONS_AUTH_CONFIG";
 import {
   encryptData,
   isObjectEmpty,
-  removeSpacesAndLowercase,
 } from "../../util/functions/helpers";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from "primereact/steps";
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
-import { showModal } from "../../redux/modal";
 import {
-  BIRTHDAY_MODAL,
   INCORRECT_MISSING_DATA,
 } from "../../util/defines/common";
 import { Calendar } from "../../elements/inputs/common/Calendar";
@@ -92,7 +88,6 @@ const schema = yup.object().shape({
   policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   dataTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  memberKey: yup.string(),
 });
 
 const stepConfig = [
@@ -342,55 +337,14 @@ const SignUp = (props) => {
                   }
 
                   if (responseData.status === true) {
-                    const checkMember = await sendRequest(
-                      "security/check-member-key",
+                    const checkoutResponse = await sendRequest(
+                      "payment/checkout/signup",
                       "POST",
-                      { email: removeSpacesAndLowercase(values.email) }
+                      formData
                     );
 
-                    if (checkMember?.status === true) {
-                      const responseData = await sendRequest(
-                        `security/signup`,
-                        "POST",
-                        formData
-                      );
-                      dispatch(
-                        login({
-                          token: responseData.token,
-                          expirationDate: new Date(
-                            new Date().getTime() + 36000000
-                          ).toISOString(),
-                        })
-                      );
-                      dispatch(
-                        showNotification({
-                          severity: "success",
-                          summary: "Welcome to the Society",
-                          detail:
-                            "Hop in the User section to see your tickets, news and your information",
-                          life: 7000,
-                        })
-                      );
-
-                      if (responseData.celebrate) {
-                        dispatch(showModal(BIRTHDAY_MODAL));
-                      }
-
-                      navigate(
-                        sessionStorage.getItem("prevUrl") ??
-                          `/${responseData.region}`
-                      );
-                      sessionStorage.removeItem("prevUrl");
-                    } else {
-                      const responseData = await sendRequest(
-                        "payment/checkout/signup",
-                        "POST",
-                        formData
-                      );
-
-                      if (responseData.url) {
-                        window.location.assign(responseData.url);
-                      }
+                    if (checkoutResponse.url) {
+                      window.location.assign(checkoutResponse.url);
                     }
                   }
                 }}
@@ -412,7 +366,6 @@ const SignUp = (props) => {
                   notificationTerms: false,
                   notificationTypeTerms: "whatsapp & email",
                   payTerms: false,
-                  memberKey: "",
                 }}
               >
                 {({ values, setFieldValue, errors, isValid, dirty }) => (
