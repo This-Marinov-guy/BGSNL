@@ -19,7 +19,6 @@ import { showNotification } from "../../redux/notification";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
-import { createCustomerTicket } from "../../util/functions/ticket-creator";
 import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 import SponsoredByGala from "../../elements/ui/alerts/SponsoredByGala";
 
@@ -113,49 +112,26 @@ const NonSocietyEvent = (props) => {
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
-                let response;
+                const form = new FormData();
+                form.append("event", target.title);
+                form.append("date", target.timeStamp);
+                form.append("user", user.token ? "member" : "guest");
+                form.append("name", values.name + " " + values.surname);
+                form.append("phone", values.phone);
+                form.append("email", values.email);
+                form.append("ticketImg", target.ticket_img);
+                form.append("origin_url", window.location.origin);
+                form.append("notificationTypeTerms", "Any");
+
                 if (user.token) {
-                  const { ticketBlob } = await createCustomerTicket(
-                    target.ticket_img,
-                    values.name,
-                    values.surname
-                  );
-                  const form = new FormData();
-                  form.append(
-                    "image",
-                    ticketBlob,
-                    target.title + "_" + values.name + values.surname + "_MEMBER"
-                  );
-                  form.append("event", target.title);
-                  form.append("date", target.timeStamp);
-                  form.append("user", "member");
-                  form.append("name", values.name + " " + values.surname);
-                  form.append("phone", values.phone);
-                  form.append("email", values.email);
                   form.append("extraData", formData.extraGuestName);
-                  form.append("notificationTypeTerms", "Any");
-                  response = await sendRequest("event/register/non-society-event", "POST", form);
-                } else {
-                  const { ticketBlob } = await createCustomerTicket(
-                    target.ticket_img,
-                    values.name,
-                    values.surname
-                  );
-                  const form = new FormData();
-                  form.append(
-                    "image",
-                    ticketBlob,
-                    target.title + "_" + values.name + values.surname + "_GUEST"
-                  );
-                  form.append("event", target.title);
-                  form.append("date", target.timeStamp);
-                  form.append("user", "guest");
-                  form.append("name", values.name + " " + values.surname);
-                  form.append("phone", values.phone);
-                  form.append("email", values.email);
-                  form.append("notificationTypeTerms", "Any");
-                  response = await sendRequest("event/register/non-society-event", "POST", form);
                 }
+
+                const response = await sendRequest(
+                  "event/register/non-society-event",
+                  "POST",
+                  form
+                );
                 if (!response) return;
                 dispatch(
                   showNotification({
