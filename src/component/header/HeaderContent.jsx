@@ -129,18 +129,32 @@ const HeaderContent = (props) => {
                     </Link>
                   </li>
                   <li>
-                    <Link to={`/partners`}>Partners</Link>
-                  </li>
-                  <li>
                     <Link to={`/welcome-to-alumni`}>Alumni Program</Link>
                   </li>
                   <li>
                     <Link to={`/hall-of-fame`}>Alumni Tree</Link>
                   </li>
+                  <li>
+                    <Link to={`/${region ? region + "/" : ""}contact`}>
+                      Contact
+                    </Link>
+                  </li>
                 </ul>
               </li>
             </Fragment>
           )}
+
+          <li className="has-dropdown">
+            <a style={{ cursor: "pointer" }}>Partners</a>
+            <ul className="submenu">
+              <li>
+                <Link to="/partners/pwc-bulgaria">PwC</Link>
+              </li>
+              <li>
+                <Link to="/partners">See all</Link>
+              </li>
+            </ul>
+          </li>
 
           <li>
             <Link to="/articles">Articles</Link>
@@ -151,11 +165,42 @@ const HeaderContent = (props) => {
             <Link to={`/internships`}>Internships</Link>
           </li>
 
-          <li>
-            <Link to={`/${region ? region + "/" : ""}contact`}>Contact</Link>
-          </li>
           {user.token && (
             <>
+              {checkAuthorization(user.token, ACCESS_4) && (
+                <li className="has-dropdown">
+                  <a style={{ cursor: "pointer" }}>Dashboard</a>
+                  <ul className="submenu">
+                    <>
+                      <li>
+                        <Link to="/user/dashboard">Events</Link>
+                      </li>
+                      <li>
+                        <Link to="/user/add-event">Add Event</Link>
+                      </li>
+                      {checkAuthorization(user.token, ACCESS_3) && (
+                        <>
+                          <li>
+                            <Link to="/user/members">Members</Link>
+                          </li>
+                          <li>
+                            <Link to="/user/events-analytics">
+                              Events Analytics
+                            </Link>
+                          </li>
+                        </>
+                      )}
+                      {checkAuthorization(user.token, ACCESS_1) && (
+                        <li>
+                          <Link to="/user/internships-dashboard">
+                            Internships
+                          </Link>
+                        </li>
+                      )}
+                    </>
+                  </ul>
+                </li>
+              )}
               <li className="has-dropdown">
                 <a
                   style={{
@@ -202,40 +247,6 @@ const HeaderContent = (props) => {
                   </li>
                 </ul>
               </li>
-              {checkAuthorization(user.token, ACCESS_4) && (
-                <li className="has-dropdown">
-                  <a style={{ cursor: "pointer" }}>Dashboard</a>
-                  <ul className="submenu">
-                    <>
-                      <li>
-                        <Link to="/user/dashboard">Events</Link>
-                      </li>
-                      <li>
-                        <Link to="/user/add-event">Add Event</Link>
-                      </li>
-                      {checkAuthorization(user.token, ACCESS_3) && (
-                        <>
-                          <li>
-                            <Link to="/user/members">Members</Link>
-                          </li>
-                          <li>
-                            <Link to="/user/events-analytics">
-                              Events Analytics
-                            </Link>
-                          </li>
-                        </>
-                      )}
-                      {checkAuthorization(user.token, ACCESS_1) && (
-                        <li>
-                          <Link to="/user/internships-dashboard">
-                            Internships
-                          </Link>
-                        </li>
-                      )}
-                    </>
-                  </ul>
-                </li>
-              )}
             </>
           )}
 

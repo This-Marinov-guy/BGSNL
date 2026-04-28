@@ -103,14 +103,21 @@ const Partners = () => {
                         </div>
                       </div>
                       <div className="read-more-btn mt--40 text-center">
-                        <a
-                          className="rn-btn"
-                          href={partner.url}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Visit Website
-                        </a>
+                        <div className="d-flex flex-wrap justify-content-center" style={{ gap: "12px" }}>
+                          {partner.name === "PwC Bulgaria" && (
+                            <Link className="rn-button-style--2" to="/partners/pwc-bulgaria">
+                              Explore Partner
+                            </Link>
+                          )}
+                          <a
+                            className="rn-btn"
+                            href={partner.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Visit Website
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -19,6 +19,7 @@ const InternshipCard = (props) => {
     bonuses,
     requirements,
     website,
+    applyLink,
   } = props.internship;
   
   const { user, isPreview = false, onUserRefresh, onApplyWhenGuest } = props;
@@ -29,11 +30,26 @@ const InternshipCard = (props) => {
     (document) => document.type === DOCUMENT_TYPES.CV
   );
 
+  const hasExternalApplyLink = Boolean(applyLink?.trim());
+
   const handleApply = async (documents) => {
     // Redirect to Google Form with application
     // const formUrl = GOOGLE_FORM_APPLICATION(company, specialty, user);
     // window.open(formUrl, "_blank");
     setShowApplyModal(false);
+  };
+
+  const handleApplyClick = () => {
+    if (hasExternalApplyLink) {
+      window.open(applyLink, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    if (isLoggedIn) {
+      setShowApplyModal(true);
+    } else if (onApplyWhenGuest) {
+      onApplyWhenGuest();
+    }
   };
 
   // Consistent styles for all titles and text
@@ -144,19 +160,13 @@ const InternshipCard = (props) => {
         {!isPreview && (
           <>
             <button
-              onClick={() => {
-                if (isLoggedIn) {
-                  setShowApplyModal(true);
-                } else if (onApplyWhenGuest) {
-                  onApplyWhenGuest();
-                }
-              }}
+              onClick={handleApplyClick}
               className="rn-button-style--2 rn-btn-solid-red"
               style={{ width: "100%", textAlign: "center", padding: "12px 24px", fontSize: "15px", fontWeight: 600, border: "none", cursor: "pointer" }}
             >
-              Apply for Internship
+              {hasExternalApplyLink ? "Apply Externally" : "Apply for Internship"}
             </button>
-            {isLoggedIn && (
+            {isLoggedIn && !hasExternalApplyLink && (
               <InternshipApplyModal
                 visible={showApplyModal}
                 onHide={() => setShowApplyModal(false)}

@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 class Breadcrumb extends Component {
 
     render() {
-        const { title, category, parent, extraElement } = this.props;
-        const imageUrl = `/assets/images/bg/bg-image-1.webp`;
+        const { title, category, parent, extraElement, imageUrl = `/assets/images/bg/bg-image-1.webp` } = this.props;
 
         return (
             <React.Fragment>
@@ -38,4 +37,3 @@ class Breadcrumb extends Component {
 }
 
 export default Breadcrumb;
-

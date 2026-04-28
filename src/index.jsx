@@ -61,6 +61,7 @@ const Contact = lazy(() => import("./pages/information/Contact"));
 const Internships = lazy(() => import("./pages/information/Internships"));
 const Policy = lazy(() => import("./pages/information/Policy"));
 const Partners = lazy(() => import("./pages/information/Partners"));
+const PwcPartner = lazy(() => import("./pages/information/PwcPartner"));
 const Error404 = lazy(() => import("./pages/Error404"));
 const Maintenance = lazy(() => import("./pages/Maintenance"));
 const Board = lazy(() => import("./pages/information/Board"));
@@ -208,6 +209,7 @@ const Root = () => {
               <Route exact path={`/internships`} element={<Internships />} />
               <Route exact path={`/terms-and-legals`} element={<Policy />} />
               <Route exact path={`/partners`} element={<Partners />} />
+              <Route exact path={`/partners/pwc-bulgaria`} element={<PwcPartner />} />
 
               <Route exact path={`/articles`} element={<ArticlesPage />} />
 
