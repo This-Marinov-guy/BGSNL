@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import InternshipApplyModal from "../modals/InternshipApplyModal";
-import { ACTIVE, DOCUMENT_TYPES, USER_STATUSES } from "../../../util/defines/enum";
+import { useSelector } from "react-redux";
+import { ACTIVE, USER_STATUSES } from "../../../util/defines/enum";
+import { selectUser } from "../../../redux/user";
+import { useInternshipApplyModal } from "../../../hooks/common/use-internship-apply-modal";
 
 const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
 
@@ -23,21 +25,12 @@ const InternshipCard = (props) => {
   } = props.internship;
   
   const { user, isPreview = false, onUserRefresh, onApplyWhenGuest } = props;
-  const [showApplyModal, setShowApplyModal] = useState(false);
-  const isLoggedIn = user?.status === USER_STATUSES[ACTIVE];
-
-  const cvDocument = user?.documents?.find(
-    (document) => document.type === DOCUMENT_TYPES.CV
-  );
+  const authUser = useSelector(selectUser);
+  const { openInternshipApplyModal } = useInternshipApplyModal();
+  const isLoggedIn =
+    (user?.status || authUser?.status) === USER_STATUSES[ACTIVE];
 
   const hasExternalApplyLink = Boolean(applyLink?.trim());
-
-  const handleApply = async (documents) => {
-    // Redirect to Google Form with application
-    // const formUrl = GOOGLE_FORM_APPLICATION(company, specialty, user);
-    // window.open(formUrl, "_blank");
-    setShowApplyModal(false);
-  };
 
   const handleApplyClick = () => {
     if (hasExternalApplyLink) {
@@ -46,7 +39,11 @@ const InternshipCard = (props) => {
     }
 
     if (isLoggedIn) {
-      setShowApplyModal(true);
+      openInternshipApplyModal({
+        internship: props.internship,
+        user,
+        onUserRefresh,
+      });
     } else if (onApplyWhenGuest) {
       onApplyWhenGuest();
     }
@@ -166,17 +163,6 @@ const InternshipCard = (props) => {
             >
               {hasExternalApplyLink ? "Apply Externally" : "Apply for Internship"}
             </button>
-            {isLoggedIn && !hasExternalApplyLink && (
-              <InternshipApplyModal
-                visible={showApplyModal}
-                onHide={() => setShowApplyModal(false)}
-                internship={props.internship}
-                user={user}
-                cvDocument={cvDocument}
-                onApply={handleApply}
-                onUserRefresh={onUserRefresh}
-              />
-            )}
           </>
         )}
         

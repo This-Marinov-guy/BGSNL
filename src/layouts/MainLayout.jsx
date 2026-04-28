@@ -1,5 +1,6 @@
 // React and Redux Required
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { clarityTrack, gaTrack } from "../util/functions/helpers";
 import { Toaster, toast } from "sonner";
@@ -15,6 +16,7 @@ import CookiesModal from "../elements/ui/modals/CookiesModal";
 import GoogleCalendarModal from "../elements/ui/modals/GoogleCalendarModal";
 import { getActiveStrap } from "../util/defines/CAMPAIGNS";
 import Strap from "../elements/banners/Strap";
+import { InternshipApplyModalProvider } from "../hooks/common/use-internship-apply-modal";
 
 const MainLayout = ({ children }) => {
   const notification = useSelector(selectNotification);
@@ -71,7 +73,7 @@ const MainLayout = ({ children }) => {
   }, [notificationIndex, notification]);
 
   return (
-    <>
+    <InternshipApplyModalProvider>
       <DonationModal />
       <RecruitModal />
       <BirthdayModal />
@@ -84,8 +86,12 @@ const MainLayout = ({ children }) => {
       />
       <Strap strap={activeStrap} />
       {children}
-    </>
+    </InternshipApplyModalProvider>
   );
+};
+
+MainLayout.propTypes = {
+  children: PropTypes.node,
 };
 
 export default MainLayout;

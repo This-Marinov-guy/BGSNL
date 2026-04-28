@@ -14,7 +14,6 @@ const InternshipApplyModal = ({
   visible,
   onHide,
   internship,
-  user,
   cvDocument,
   onApply,
   onUserRefresh,
@@ -180,14 +179,6 @@ const InternshipApplyModal = ({
             showNotification({
               severity: "error",
               detail: "Failed to save CV. Please try again.",
-            })
-          );
-        }
-        if (coverLetterResponse?.status !== true) {
-          dispatch(
-            showNotification({
-              severity: "error",
-              detail: "Failed to save cover letter. Please try again.",
             })
           );
         }
@@ -490,13 +481,14 @@ InternshipApplyModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
   internship: PropTypes.shape({
+    _id: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     logo: PropTypes.string,
     company: PropTypes.string.isRequired,
     specialty: PropTypes.string.isRequired,
   }).isRequired,
-  user: PropTypes.object,
   cvDocument: PropTypes.object,
-  onApply: PropTypes.func.isRequired,
+  onApply: PropTypes.func,
   onUserRefresh: PropTypes.func,
 };
 
