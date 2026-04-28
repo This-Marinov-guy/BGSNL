@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
 import { useRefreshUser } from "../../../hooks/common/api-hooks";
 
+const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
+
 const InternshipApplyModal = ({
   visible,
   onHide,
@@ -216,7 +218,7 @@ const InternshipApplyModal = ({
           <img
             src={
               internship.logo ||
-              "https://t2.uc.ltmcdn.com/en/posts/2/8/0/how_do_internships_work_11082_orig.jpg"
+              FALLBACK_INTERNSHIP_IMAGE
             }
             alt={internship.company}
             style={{ width: "100px", objectFit: "contain" }}

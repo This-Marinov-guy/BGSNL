@@ -7,7 +7,6 @@ import { decryptData } from "../../util/functions/helpers";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import CardInputs from "../../elements/inputs/common/CardInputs";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
-import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 
 const TEST = [
   {
@@ -102,11 +101,7 @@ const BloggerPost = ({ blogId, postId }) => {
 const TicketComponent = () => {
   return (
     <div style={{ padding: "20px" }}>
-      <div className="d-flex justify-content-between flex-wrap gap-3">
-        <InternshipCard internship={INTERNSHIPS_LIST[0]} />
-        <InternshipCard internship={INTERNSHIPS_LIST[0]} />
-        <InternshipCard internship={INTERNSHIPS_LIST[0]} />
-      </div>
+
     </div>
   );
 };

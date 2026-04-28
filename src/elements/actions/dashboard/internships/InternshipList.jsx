@@ -1,10 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
 import { FiEdit2, FiTrash2, FiPlus } from "react-icons/fi";
+
+const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
+const getOrderSignature = (items = []) => items.map((item) => item._id).join("|");
+
+const moveInternship = (items, draggedId, targetId) => {
+  const draggedIndex = items.findIndex((item) => item._id === draggedId);
+  const targetIndex = items.findIndex((item) => item._id === targetId);
+
+  if (draggedIndex === -1 || targetIndex === -1 || draggedIndex === targetIndex) {
+    return items;
+  }
+
+  const nextItems = [...items];
+  const [draggedItem] = nextItems.splice(draggedIndex, 1);
+  nextItems.splice(targetIndex, 0, draggedItem);
+
+  return nextItems;
+};
 
 const InternshipList = () => {
   const { sendRequest, loading } = useHttpClient();
@@ -13,11 +31,23 @@ const InternshipList = () => {
   const [internships, setInternships] = useState([]);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toggling, setToggling] = useState(new Set());
+  const [draggedId, setDraggedId] = useState(null);
+  const [dragOverId, setDragOverId] = useState(null);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const persistedInternshipsRef = useRef([]);
+
+  const setLoadedInternships = (items) => {
+    const nextItems = items ?? [];
+    setInternships(nextItems);
+    persistedInternshipsRef.current = nextItems;
+    setDraggedId(null);
+    setDragOverId(null);
+  };
 
   const loadInternships = async () => {
     try {
       const data = await sendRequest("internship/admin-list");
-      setInternships(data?.internships ?? []);
+      setLoadedInternships(data?.internships ?? []);
     } catch {
       dispatch(showNotification({ severity: "error", detail: "Failed to load internships." }));
     }
@@ -66,14 +96,117 @@ const InternshipList = () => {
     }
   };
 
+  const handleSaveOrder = async () => {
+    if (savingOrder || internships.length === 0) return;
+
+    setSavingOrder(true);
+
+    try {
+      const data = await sendRequest(
+        "internship/reorder",
+        "PATCH",
+        { internshipIds: internships.map((item) => item._id) },
+        {},
+        false
+      );
+
+      if (!data?.status) {
+        throw new Error("Failed to save internship order.");
+      }
+
+      setLoadedInternships(data?.internships ?? internships);
+      dispatch(showNotification({ severity: "success", summary: "Internship order saved" }));
+    } catch {
+      dispatch(showNotification({ severity: "error", detail: "Failed to save internship order." }));
+    } finally {
+      setSavingOrder(false);
+    }
+  };
+
+  const handleResetOrder = () => {
+    setInternships(persistedInternshipsRef.current);
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const handleDragStart = (event, itemId) => {
+    if (savingOrder) return;
+
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", itemId);
+    setDraggedId(itemId);
+    setDragOverId(itemId);
+  };
+
+  const handleDragOver = (event, itemId) => {
+    event.preventDefault();
+
+    if (!draggedId || draggedId === itemId) return;
+
+    event.dataTransfer.dropEffect = "move";
+    setDragOverId(itemId);
+  };
+
+  const handleDrop = (event, itemId) => {
+    event.preventDefault();
+
+    const sourceId = draggedId || event.dataTransfer.getData("text/plain");
+
+    if (!sourceId || sourceId === itemId) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    setInternships((prev) => moveInternship(prev, sourceId, itemId));
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const hasOrderChanges =
+    internships.length > 0 &&
+    getOrderSignature(internships) !== getOrderSignature(persistedInternshipsRef.current);
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb--30 flex-wrap" style={{ gap: "15px" }}>
-        <h3 style={{ margin: 0 }}>Internships Dashboard</h3>
-        <Link to="/user/add-internship" className="rn-button-style--2 rn-btn-green">
-          <FiPlus style={{ marginRight: "6px" }} />
-          Add Internship
-        </Link>
+        <div>
+          <h3 style={{ margin: 0 }}>Internships Dashboard</h3>
+          <p style={{ margin: "8px 0 0", fontSize: "13px", color: "#6b7280" }}>
+            Drag rows to reorder internships, then save the new order.
+          </p>
+        </div>
+        <div className="d-flex flex-wrap align-items-center" style={{ gap: "10px" }}>
+          {hasOrderChanges && (
+            <button
+              type="button"
+              className="rn-button-style--2"
+              style={{ padding: "10px 16px", border: "none", cursor: "pointer" }}
+              onClick={handleResetOrder}
+              disabled={savingOrder}
+            >
+              Reset order
+            </button>
+          )}
+          <button
+            type="button"
+            className="rn-button-style--2 rn-btn-green"
+            style={{ padding: "10px 16px", border: "none", cursor: hasOrderChanges && !savingOrder ? "pointer" : "default", opacity: hasOrderChanges ? 1 : 0.65 }}
+            onClick={handleSaveOrder}
+            disabled={!hasOrderChanges || savingOrder}
+          >
+            {savingOrder ? "Saving..." : "Save order"}
+          </button>
+          <Link to="/user/add-internship" className="rn-button-style--2 rn-btn-green">
+            <FiPlus style={{ marginRight: "6px" }} />
+            Add Internship
+          </Link>
+        </div>
       </div>
 
       {loading && internships.length === 0 && <p>Loading...</p>}
@@ -87,6 +220,11 @@ const InternshipList = () => {
       {internships.map((item) => (
         <div
           key={item._id}
+          draggable={!savingOrder}
+          onDragStart={(event) => handleDragStart(event, item._id)}
+          onDragOver={(event) => handleDragOver(event, item._id)}
+          onDrop={(event) => handleDrop(event, item._id)}
+          onDragEnd={handleDragEnd}
           style={{
             display: "flex",
             alignItems: "center",
@@ -94,24 +232,38 @@ const InternshipList = () => {
             padding: "14px 20px",
             marginBottom: "12px",
             borderRadius: "10px",
-            border: "1px solid #e5e7eb",
+            border: dragOverId === item._id && draggedId !== item._id ? "1px solid #017363" : "1px solid #e5e7eb",
             backgroundColor: item.isActive ? "#fff" : "#f9fafb",
-            transition: "background-color 0.2s",
+            transition: "background-color 0.2s, border-color 0.2s, box-shadow 0.2s",
+            cursor: savingOrder ? "default" : "grab",
+            opacity: draggedId === item._id ? 0.65 : 1,
+            boxShadow: dragOverId === item._id && draggedId !== item._id ? "0 0 0 3px rgba(1,115,99,0.12)" : "none",
           }}
         >
+          <div style={{ flex: "0 0 70px", display: "flex", alignItems: "center", gap: "10px", color: "#6b7280" }}>
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: "18px",
+                letterSpacing: "1px",
+                userSelect: "none",
+              }}
+              title="Drag to reorder"
+            >
+              |||
+            </span>
+            <span style={{ fontSize: "12px", fontWeight: 700, color: "#9ca3af", minWidth: "22px" }}>
+              {internships.findIndex((internship) => internship._id === item._id) + 1}
+            </span>
+          </div>
+
           {/* Logo */}
           <div style={{ flex: "0 0 60px" }}>
-            {item.logo ? (
-              <img
-                src={item.logo}
-                alt={item.company}
-                style={{ width: "60px", height: "40px", objectFit: "contain", borderRadius: "4px" }}
-              />
-            ) : (
-              <div style={{ width: "60px", height: "40px", background: "#f3f4f6", borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", color: "#9ca3af" }}>
-                No logo
-              </div>
-            )}
+            <img
+              src={item.logo || FALLBACK_INTERNSHIP_IMAGE}
+              alt={item.company}
+              style={{ width: "60px", height: "40px", objectFit: "cover", borderRadius: "4px" }}
+            />
           </div>
 
           {/* Info */}

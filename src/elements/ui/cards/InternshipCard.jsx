@@ -4,6 +4,8 @@ import { GOOGLE_FORM_APPLICATION } from "../../../util/defines/INTERNSHIPS";
 import InternshipApplyModal from "../modals/InternshipApplyModal";
 import { ACTIVE, DOCUMENT_TYPES, USER_STATUSES } from "../../../util/defines/enum";
 
+const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
+
 const InternshipCard = (props) => {
   const {
     logo,
@@ -60,7 +62,7 @@ const InternshipCard = (props) => {
           <img
             src={
               logo ||
-              "https://t2.uc.ltmcdn.com/en/posts/2/8/0/how_do_internships_work_11082_orig.jpg"
+              FALLBACK_INTERNSHIP_IMAGE
             }
             className={"responsive_img " + (logoClass || "")}
             alt="Company Logo"

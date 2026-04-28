@@ -4,7 +4,6 @@ import { Paginator } from "primereact/paginator";
 import { TabView, TabPanel } from "primereact/tabview";
 import InternshipCard from "../cards/InternshipCard";
 import { useHttpClient } from "../../../hooks/common/http-hook";
-import { INTERNSHIPS_LIST } from "../../../util/defines/INTERNSHIPS";
 
 const InternshipsTab = ({
   currentUser,
@@ -13,7 +12,7 @@ const InternshipsTab = ({
 }) => {
   const { sendRequest } = useHttpClient();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [internships, setInternships] = useState(INTERNSHIPS_LIST);
+  const [internships, setInternships] = useState([]);
 
   // Separate pagination state for each tab
   const [bulgarianFirst, setBulgarianFirst] = useState(0);

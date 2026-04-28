@@ -10,7 +10,6 @@ import { FiChevronUp, FiBriefcase, FiUsers, FiCalendar, FiSearch } from "react-i
 import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../../elements/ui/loading/Loader";
 import { selectUser } from "../../redux/user";
-import { INTERNSHIPS_LIST } from "../../util/defines/INTERNSHIPS";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
 import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
 import { Paginator } from "primereact/paginator";
@@ -30,7 +29,7 @@ const Internships = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(true);
-  const [internships, setInternships] = useState(INTERNSHIPS_LIST);
+  const [internships, setInternships] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
   const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");
