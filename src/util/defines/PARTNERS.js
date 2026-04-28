@@ -113,4 +113,11 @@ export const PARTNERS = [
     since: "2023",
     style: { scale: "0.88" },
   },
+  {
+    name: "Dutch Wel",
+    logo: "/assets/images/brand/brand-15.svg",
+    url: "https://www.dutchwel.com",
+    since: "2026",
+    style: { scale: "0.88" },
+  },
 ];
