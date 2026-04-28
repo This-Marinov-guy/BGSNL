@@ -189,7 +189,7 @@ const PwcPartner = () => {
                   key={internship._id || internship.id}
                   className="col-lg-6 col-12"
                 >
-                  <InternshipCard internship={internship} isPreview={true} />
+                  <InternshipCard internship={internship} />
                 </div>
               ))}
             </div>
