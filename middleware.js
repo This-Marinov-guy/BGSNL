@@ -60,6 +60,17 @@ function metaHtml({ title, description, image, url, type }) {
 
 const STATIC_META = [
   {
+    pattern: /^\/partners\/pwc-bulgaria$/,
+    meta: {
+      title: "PwC Bulgaria x BGSNL",
+      description:
+        "Explore PwC Bulgaria's partnership with Bulgarian Society Netherlands, including career opportunities, company insights, and active internships shared with our community.",
+      image: `${SITE_URL}/assets/images/events/pwc.jpeg`,
+      url: `${SITE_URL}/partners/pwc-bulgaria`,
+      type: "website",
+    },
+  },
+  {
     pattern: /^\/other-event-details\/gala-festival$/,
     meta: {
       title: "Joint Gala Festival",
