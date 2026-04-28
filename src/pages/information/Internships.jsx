@@ -99,7 +99,7 @@ const Internships = () => {
       );
     }
     return list;
-  }, [searchParams]);
+  }, [internships, searchParams]);
 
   const totalRecords = filteredList.length;
   const maxPage = Math.max(1, Math.ceil(totalRecords / rowsParam));
@@ -124,11 +124,10 @@ const Internships = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const internshipsData = await sendRequest("internship/list", "GET", null, {}, false, false);
-      const list = internshipsData?.internships;
-      if (list?.length) setInternships(list);
-
       try {
+        const internshipsData = await sendRequest("internship/list", "GET", null, {}, false, false);
+        setInternships(internshipsData?.internships ?? []);
+
         if (user?.token) {
           const responseData = await sendRequest(`user/current?withTickets=false&withChristmas=false`);
           setCurrentUser(responseData.user);

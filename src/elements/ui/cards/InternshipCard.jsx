@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { GOOGLE_FORM_APPLICATION } from "../../../util/defines/INTERNSHIPS";
 import InternshipApplyModal from "../modals/InternshipApplyModal";
 import { ACTIVE, DOCUMENT_TYPES, USER_STATUSES } from "../../../util/defines/enum";
 

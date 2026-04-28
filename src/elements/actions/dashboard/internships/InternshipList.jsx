@@ -5,9 +5,13 @@ import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
 import { FiEdit2, FiTrash2, FiPlus } from "react-icons/fi";
+import { FaGripVertical } from "react-icons/fa";
 
 const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
+const COMPACT_LAYOUT_BREAKPOINT = 992;
 const getOrderSignature = (items = []) => items.map((item) => item._id).join("|");
+const getIsCompactLayout = () =>
+  typeof window !== "undefined" ? window.innerWidth < COMPACT_LAYOUT_BREAKPOINT : false;
 
 const moveInternship = (items, draggedId, targetId) => {
   const draggedIndex = items.findIndex((item) => item._id === draggedId);
@@ -34,7 +38,9 @@ const InternshipList = () => {
   const [draggedId, setDraggedId] = useState(null);
   const [dragOverId, setDragOverId] = useState(null);
   const [savingOrder, setSavingOrder] = useState(false);
+  const [isCompactLayout, setIsCompactLayout] = useState(getIsCompactLayout);
   const persistedInternshipsRef = useRef([]);
+  const autoSaveTimeoutRef = useRef(null);
 
   const setLoadedInternships = (items) => {
     const nextItems = items ?? [];
@@ -55,6 +61,17 @@ const InternshipList = () => {
 
   useEffect(() => {
     loadInternships();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsCompactLayout(getIsCompactLayout());
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleToggleActive = async (item) => {
@@ -96,8 +113,8 @@ const InternshipList = () => {
     }
   };
 
-  const handleSaveOrder = async () => {
-    if (savingOrder || internships.length === 0) return;
+  const persistOrder = async (items) => {
+    if (savingOrder || items.length === 0) return;
 
     setSavingOrder(true);
 
@@ -105,7 +122,7 @@ const InternshipList = () => {
       const data = await sendRequest(
         "internship/reorder",
         "PATCH",
-        { internshipIds: internships.map((item) => item._id) },
+        { internshipIds: items.map((item) => item._id) },
         {},
         false
       );
@@ -114,19 +131,12 @@ const InternshipList = () => {
         throw new Error("Failed to save internship order.");
       }
 
-      setLoadedInternships(data?.internships ?? internships);
-      dispatch(showNotification({ severity: "success", summary: "Internship order saved" }));
+      setLoadedInternships(data?.internships ?? items);
     } catch {
       dispatch(showNotification({ severity: "error", detail: "Failed to save internship order." }));
     } finally {
       setSavingOrder(false);
     }
-  };
-
-  const handleResetOrder = () => {
-    setInternships(persistedInternshipsRef.current);
-    setDraggedId(null);
-    setDragOverId(null);
   };
 
   const handleDragStart = (event, itemId) => {
@@ -172,37 +182,50 @@ const InternshipList = () => {
     internships.length > 0 &&
     getOrderSignature(internships) !== getOrderSignature(persistedInternshipsRef.current);
 
+  useEffect(() => {
+    if (!hasOrderChanges || savingOrder || draggedId) return;
+
+    autoSaveTimeoutRef.current = window.setTimeout(() => {
+      autoSaveTimeoutRef.current = null;
+      persistOrder(internships);
+    }, 500);
+
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        window.clearTimeout(autoSaveTimeoutRef.current);
+        autoSaveTimeoutRef.current = null;
+      }
+    };
+  }, [draggedId, hasOrderChanges, internships, savingOrder]);
+
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb--30 flex-wrap" style={{ gap: "15px" }}>
-        <div>
+      <div
+        className="d-flex justify-content-between align-items-center mb--30 flex-wrap"
+        style={{ gap: "15px" }}
+      >
+        <div style={{ flex: isCompactLayout ? "1 1 100%" : "1 1 auto" }}>
           <h3 style={{ margin: 0 }}>Internships Dashboard</h3>
           <p style={{ margin: "8px 0 0", fontSize: "13px", color: "#6b7280" }}>
-            Drag rows to reorder internships, then save the new order.
+            Drag rows to reorder internships. Changes save automatically.
           </p>
         </div>
-        <div className="d-flex flex-wrap align-items-center" style={{ gap: "10px" }}>
-          {hasOrderChanges && (
-            <button
-              type="button"
-              className="rn-button-style--2"
-              style={{ padding: "10px 16px", border: "none", cursor: "pointer" }}
-              onClick={handleResetOrder}
-              disabled={savingOrder}
-            >
-              Reset order
-            </button>
-          )}
-          <button
-            type="button"
+        <div
+          className="d-flex flex-wrap align-items-center"
+          style={{
+            gap: "10px",
+            width: isCompactLayout ? "100%" : "auto",
+            justifyContent: isCompactLayout ? "stretch" : "flex-end",
+          }}
+        >
+          <Link
+            to="/user/add-internship"
             className="rn-button-style--2 rn-btn-green"
-            style={{ padding: "10px 16px", border: "none", cursor: hasOrderChanges && !savingOrder ? "pointer" : "default", opacity: hasOrderChanges ? 1 : 0.65 }}
-            onClick={handleSaveOrder}
-            disabled={!hasOrderChanges || savingOrder}
+            style={{
+              width: isCompactLayout ? "100%" : "auto",
+              textAlign: "center",
+            }}
           >
-            {savingOrder ? "Saving..." : "Save order"}
-          </button>
-          <Link to="/user/add-internship" className="rn-button-style--2 rn-btn-green">
             <FiPlus style={{ marginRight: "6px" }} />
             Add Internship
           </Link>
@@ -227,20 +250,36 @@ const InternshipList = () => {
           onDragEnd={handleDragEnd}
           style={{
             display: "flex",
-            alignItems: "center",
+            alignItems: isCompactLayout ? "flex-start" : "center",
             gap: "16px",
             padding: "14px 20px",
             marginBottom: "12px",
             borderRadius: "10px",
-            border: dragOverId === item._id && draggedId !== item._id ? "1px solid #017363" : "1px solid #e5e7eb",
+            border:
+              dragOverId === item._id && draggedId !== item._id
+                ? "1px solid #017363"
+                : "1px solid #e5e7eb",
             backgroundColor: item.isActive ? "#fff" : "#f9fafb",
-            transition: "background-color 0.2s, border-color 0.2s, box-shadow 0.2s",
+            transition:
+              "background-color 0.2s, border-color 0.2s, box-shadow 0.2s",
             cursor: savingOrder ? "default" : "grab",
             opacity: draggedId === item._id ? 0.65 : 1,
-            boxShadow: dragOverId === item._id && draggedId !== item._id ? "0 0 0 3px rgba(1,115,99,0.12)" : "none",
+            boxShadow:
+              dragOverId === item._id && draggedId !== item._id
+                ? "0 0 0 3px rgba(1,115,99,0.12)"
+                : "none",
+            flexWrap: isCompactLayout ? "wrap" : "nowrap",
           }}
         >
-          <div style={{ flex: "0 0 70px", display: "flex", alignItems: "center", gap: "10px", color: "#6b7280" }}>
+          <div
+            style={{
+              flex: isCompactLayout ? "0 0 auto" : "0 0 70px",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              color: "#6b7280",
+            }}
+          >
             <span
               style={{
                 fontFamily: "monospace",
@@ -250,10 +289,19 @@ const InternshipList = () => {
               }}
               title="Drag to reorder"
             >
-              |||
+              <FaGripVertical />
             </span>
-            <span style={{ fontSize: "12px", fontWeight: 700, color: "#9ca3af", minWidth: "22px" }}>
-              {internships.findIndex((internship) => internship._id === item._id) + 1}
+            <span
+              style={{
+                fontSize: "12px",
+                fontWeight: 700,
+                color: "#9ca3af",
+                minWidth: "22px",
+              }}
+            >
+              {internships.findIndex(
+                (internship) => internship._id === item._id,
+              ) + 1}
             </span>
           </div>
 
@@ -262,35 +310,77 @@ const InternshipList = () => {
             <img
               src={item.logo || FALLBACK_INTERNSHIP_IMAGE}
               alt={item.company}
-              style={{ width: "60px", height: "40px", objectFit: "cover", borderRadius: "4px" }}
+              style={{
+                width: "60px",
+                height: "40px",
+                objectFit: "cover",
+                borderRadius: "4px",
+              }}
             />
           </div>
 
           {/* Info */}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: 700, fontSize: "15px", color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          <div
+            style={{
+              flex: isCompactLayout ? "1 1 calc(100% - 162px)" : 1,
+              minWidth: 0,
+            }}
+          >
+            <div
+              style={{
+                fontWeight: 700,
+                fontSize: "15px",
+                color: "#111827",
+                whiteSpace: isCompactLayout ? "normal" : "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                wordBreak: "break-word",
+              }}
+            >
               {item.company}
             </div>
-            <div style={{ fontSize: "13px", color: "#6b7280", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#6b7280",
+                whiteSpace: isCompactLayout ? "normal" : "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                wordBreak: "break-word",
+              }}
+            >
               {item.specialty}
             </div>
           </div>
 
           {/* Label badge */}
-          <span style={{
-            flexShrink: 0,
-            backgroundColor: item.label === "Bulgarian" ? "#dcfce7" : "#dbeafe",
-            color: item.label === "Bulgarian" ? "#166534" : "#1e40af",
-            borderRadius: "9999px",
-            padding: "3px 10px",
-            fontSize: "11px",
-            fontWeight: 600,
-          }}>
+          <span
+            style={{
+              flexShrink: 0,
+              backgroundColor:
+                item.label === "Bulgarian" ? "#dcfce7" : "#dbeafe",
+              color: item.label === "Bulgarian" ? "#166534" : "#1e40af",
+              borderRadius: "9999px",
+              padding: "3px 10px",
+              fontSize: "11px",
+              fontWeight: 600,
+              order: isCompactLayout ? 4 : 0,
+            }}
+          >
             {item.label}
           </span>
 
           {/* Active toggle */}
-          <div style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "7px" }}>
+          <div
+            style={{
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: "7px",
+              marginLeft: isCompactLayout ? 0 : "auto",
+              order: isCompactLayout ? 5 : 0,
+            }}
+          >
             <button
               type="button"
               onClick={() => handleToggleActive(item)}
@@ -310,36 +400,65 @@ const InternshipList = () => {
                 flexShrink: 0,
               }}
             >
-              <span style={{
-                position: "absolute",
-                top: "2px",
-                left: item.isActive ? "20px" : "2px",
-                width: "18px",
-                height: "18px",
-                borderRadius: "50%",
-                backgroundColor: "#fff",
-                transition: "left 0.2s",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-              }} />
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  left: item.isActive ? "20px" : "2px",
+                  width: "18px",
+                  height: "18px",
+                  borderRadius: "50%",
+                  backgroundColor: "#fff",
+                  transition: "left 0.2s",
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                }}
+              />
             </button>
-            <span style={{ fontSize: "11px", fontWeight: 600, color: item.isActive ? "#166534" : "#9ca3af", minWidth: "46px" }}>
+            <span
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: item.isActive ? "#166534" : "#9ca3af",
+                minWidth: "46px",
+              }}
+            >
               {item.isActive ? "Active" : "Inactive"}
             </span>
           </div>
 
           {/* Actions */}
-          <div className="d-flex" style={{ gap: "8px", flexShrink: 0 }}>
+          <div
+            className="d-flex"
+            style={{
+              gap: "8px",
+              flexShrink: 0,
+              width: isCompactLayout ? "100%" : "auto",
+              justifyContent: isCompactLayout ? "flex-end" : "flex-start",
+              order: isCompactLayout ? 6 : 0,
+            }}
+          >
             <Link
               to={`/user/edit-internship/${item._id}`}
               className="rn-button"
-              style={{ padding: "6px 14px", fontSize: "13px" }}
+              style={{
+                padding: "6px 14px",
+                fontSize: "13px",
+                minWidth: isCompactLayout ? "96px" : "auto",
+                textAlign: "center",
+              }}
               title="Edit"
             >
               <FiEdit2 />
             </Link>
             <button
               className="rn-button-style--2 rn-btn-solid-red"
-              style={{ padding: "6px 14px", fontSize: "13px", border: "none", cursor: "pointer" }}
+              style={{
+                padding: "6px 14px",
+                fontSize: "13px",
+                border: "none",
+                cursor: "pointer",
+                minWidth: isCompactLayout ? "96px" : "auto",
+              }}
               onClick={() => setDeleteTarget(item)}
               title="Delete"
             >
@@ -351,9 +470,15 @@ const InternshipList = () => {
 
       <ConfirmCenterModal
         visible={!!deleteTarget}
-        setVisible={(v) => { if (!v) setDeleteTarget(null); }}
+        setVisible={(v) => {
+          if (!v) setDeleteTarget(null);
+        }}
         onConfirm={handleDelete}
-        text={deleteTarget ? `Are you sure you want to delete "${deleteTarget.company} — ${deleteTarget.specialty}"? This cannot be undone.` : ""}
+        text={
+          deleteTarget
+            ? `Are you sure you want to delete "${deleteTarget.company} — ${deleteTarget.specialty}"? This cannot be undone.`
+            : ""
+        }
         loading={loading}
       />
     </>
