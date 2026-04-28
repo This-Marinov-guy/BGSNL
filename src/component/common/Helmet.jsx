@@ -20,11 +20,37 @@ class PageHelmet extends Component {
     const defaultImage = "https://www.bulgariansociety.nl/assets/images/splashscreens/welcome.png";
     const defaultKeywords = "Bulgarian Society, Bulgaria, Netherlands, Bulgarian community, events, culture, membership, student organization";
 
+    const buildAbsoluteUrl = (value) => {
+      if (!value) return value;
+      if (value.startsWith("http://") || value.startsWith("https://")) return value;
+      if (value.startsWith("/")) return `${baseUrl}${value}`;
+      return `${baseUrl}/${value}`;
+    };
+
+    const getImageType = (value) => {
+      const normalizedValue = (value || "").split("?")[0].toLowerCase();
+
+      if (normalizedValue.endsWith(".jpg") || normalizedValue.endsWith(".jpeg")) {
+        return "image/jpeg";
+      }
+
+      if (normalizedValue.endsWith(".webp")) {
+        return "image/webp";
+      }
+
+      if (normalizedValue.endsWith(".gif")) {
+        return "image/gif";
+      }
+
+      return "image/png";
+    };
+
     const metaDescription = description || defaultDescription;
-    const metaImage = image || defaultImage;
-    const metaUrl = url || canonicalUrl || baseUrl;
+    const metaImage = buildAbsoluteUrl(image || defaultImage);
+    const metaUrl = buildAbsoluteUrl(url || canonicalUrl || baseUrl);
     const metaKeywords = keywords || defaultKeywords;
     const fullTitle = pageTitle ? `${pageTitle} | Bulgarian Society Netherlands` : "Bulgarian Society Netherlands - Your Home Away From Home";
+    const metaImageType = getImageType(metaImage);
 
     return (
       <React.Fragment>
@@ -54,7 +80,7 @@ class PageHelmet extends Component {
           <meta property="og:image" content={metaImage} />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
-          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:type" content={metaImageType} />
           <meta property="og:site_name" content="Bulgarian Society Netherlands" />
           <meta property="og:locale" content="en_NL" />
 

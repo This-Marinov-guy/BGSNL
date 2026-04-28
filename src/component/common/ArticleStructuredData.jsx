@@ -8,12 +8,26 @@ import { Helmet } from "react-helmet";
 const ArticleStructuredData = ({ article }) => {
   if (!article) return null;
 
+  const baseUrl = "https://www.bulgariansociety.nl";
+  const buildAbsoluteUrl = (value) => {
+    if (!value) return value;
+    if (value.startsWith("http://") || value.startsWith("https://")) return value;
+    if (value.startsWith("/")) return `${baseUrl}${value}`;
+    return `${baseUrl}/${value}`;
+  };
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": article.title,
     "description": article.description || article.excerpt || "Article by Bulgarian Society Netherlands",
-    "image": article.image || article.featured_image || article.cover_photo || "https://www.bulgariansociety.nl/assets/images/splashscreens/welcome.png",
+    "image": buildAbsoluteUrl(
+      article.thumbnail ||
+      article.image ||
+      article.featured_image ||
+      article.cover_photo ||
+      "/assets/images/avatars/article.png"
+    ),
     "author": {
       "@type": article.author_organization ? "Organization" : "Person",
       "name": article.author || "Bulgarian Society Netherlands"

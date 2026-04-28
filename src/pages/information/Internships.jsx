@@ -150,7 +150,12 @@ const Internships = () => {
 
   return (
     <React.Fragment>
-      <PageHelmet pageTitle="Internships - BGSNL Community" />
+      <PageHelmet
+        pageTitle="Internships - BGSNL Community"
+        image="/assets/images/news/internships.jpg"
+        canonicalUrl="https://www.bulgariansociety.nl/internships"
+      />
+
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"

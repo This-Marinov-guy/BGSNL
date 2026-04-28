@@ -55,7 +55,11 @@ const ArticlesPage = () => {
 
   return (
     <>
-      <PageHelmet pageTitle="Articles" />
+      <PageHelmet
+        pageTitle="Articles"
+        image="/assets/images/avatars/article.png"
+        canonicalUrl="https://www.bulgariansociety.nl/articles"
+      />
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"

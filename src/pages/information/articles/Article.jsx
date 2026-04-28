@@ -40,13 +40,19 @@ const Article = () => {
   const articleDescription = selectedArticle.excerpt || selectedArticle.description || 
     (selectedArticle.content ? selectedArticle.content.replace(/<[^>]*>/g, '').substring(0, 160) : '');
   const articleUrl = `https://www.bulgariansociety.nl/articles/${articleId}/${selectedArticle.slug || ''}`;
+  const articleImage =
+    selectedArticle.thumbnail ||
+    selectedArticle.featured_image ||
+    selectedArticle.image ||
+    selectedArticle.cover_photo ||
+    "/assets/images/avatars/article.png";
 
   return (
     <React.Fragment>
       <PageHelmet 
         pageTitle={selectedArticle.title}
         description={articleDescription}
-        image={selectedArticle.featured_image || selectedArticle.image}
+        image={articleImage}
         type="article"
         canonicalUrl={articleUrl}
         keywords={`${selectedArticle.title}, Bulgarian article, BGSNL, Bulgarian Society`}

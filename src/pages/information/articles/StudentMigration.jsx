@@ -29,7 +29,11 @@ const StudentMigration = () => {
     }, []);
 
     return <React.Fragment>
-        <PageHelmet pageTitle="Articles" />
+        <PageHelmet
+            pageTitle={text.title}
+            image={ARTICLE_FROM_BG_TO_NL.folder + "1.webp"}
+            type="article"
+        />
         <Header
             headertransparent="header--transparent"
             colorblack="color--black"

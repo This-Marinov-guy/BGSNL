@@ -13,7 +13,11 @@ const Minerva = () => {
     const [modal, setModal] = useState();
 
     return <React.Fragment>
-        <PageHelmet pageTitle="Articles" />
+        <PageHelmet
+            pageTitle="Bulgarian student exhibitions in Groningen"
+            image="/assets/images/profile/minerva/1.webp"
+            type="article"
+        />
         <Header
             headertransparent="header--transparent"
             colorblack="color--black"

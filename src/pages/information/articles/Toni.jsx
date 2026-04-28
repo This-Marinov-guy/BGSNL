@@ -9,7 +9,11 @@ import FooterTwo from "../../../component/footer/FooterTwo";
 
 const Toni = () => {
     return <React.Fragment>
-        <PageHelmet pageTitle="Articles" />
+        <PageHelmet
+            pageTitle="The entrepreneurship series II: Toni Enchev Small steps towards big goals"
+            image="/assets/images/profile/toni/1.webp"
+            type="article"
+        />
         <Header
             headertransparent="header--transparent"
             colorblack="color--black"
