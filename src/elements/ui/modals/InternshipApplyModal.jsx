@@ -124,9 +124,14 @@ const InternshipApplyModal = ({
       // Check if both requests were successful
       if (cvResponse?.status === true) {
         const formData = new FormData();
-        formData.append("companyId", internship.id);
+        // _id is the MongoDB ObjectId; fall back to legacy numeric id for static-list compatibility
+        const internshipRef = internship._id || internship.id;
+        formData.append("companyId", String(internshipRef));
         formData.append("companyName", internship.company);
         formData.append("position", internship.specialty);
+        if (internship._id) {
+          formData.append("internshipId", internship._id);
+        }
         formData.append("skipCoverLetter", !selectedCoverLetter);
         if (selectedCoverLetter) {
           formData.append("coverLetter", selectedCoverLetter);

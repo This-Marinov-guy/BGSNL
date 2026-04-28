@@ -30,6 +30,7 @@ const Internships = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(true);
+  const [internships, setInternships] = useState(INTERNSHIPS_LIST);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
   const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");
@@ -81,7 +82,7 @@ const Internships = () => {
   };
 
   const filteredList = useMemo(() => {
-    let list = INTERNSHIPS_LIST;
+    let list = internships;
     const search = (searchParams.get("search") || "").trim().toLowerCase();
     const type = searchParams.get("type") || TYPE_ALL;
 
@@ -123,7 +124,11 @@ const Internships = () => {
   };
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
+    const fetchData = async () => {
+      const internshipsData = await sendRequest("internship/list", "GET", null, {}, false, false);
+      const list = internshipsData?.internships;
+      if (list?.length) setInternships(list);
+
       try {
         if (user?.token) {
           const responseData = await sendRequest(`user/current?withTickets=false&withChristmas=false`);
@@ -138,7 +143,7 @@ const Internships = () => {
       }
     };
 
-    fetchCurrentUser();
+    fetchData();
   }, [user?.token]);
 
   if (loading) {
@@ -195,20 +200,19 @@ const Internships = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="row mb--50">
-            <div className="col-lg-4 col-md-6 col-12">
-              <div className="stat-card">
+          <div className="row mb--50 align-items-stretch">
+            <div className="col-lg-6 col-md-6 col-12 d-flex flex-column" style={{ gap: "20px" }}>
+              <div className="stat-card" style={{ flex: 1, margin: 0 }}>
                 <div className="stat-icon">
                   <FiBriefcase />
                 </div>
                 <div className="stat-content">
-                  <h4>{INTERNSHIPS_LIST.length}</h4>
+                  <h4>{internships.length}</h4>
                   <p>Available Positions</p>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-4 col-md-6 col-12">
-              <div className="stat-card">
+
+              <div className="stat-card" style={{ flex: 1, margin: 0 }}>
                 <div className="stat-icon">
                   <FiUsers />
                 </div>
@@ -218,15 +222,14 @@ const Internships = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-4 col-md-6 col-12">
-              <div className="stat-card">
-                <div className="stat-icon">
-                  <FiCalendar />
-                </div>
-                <div className="stat-content">
-                  <h4>Weekly</h4>
-                  <p>New Opportunities</p>
-                </div>
+
+            <div className="col-lg-6 col-md-6 col-12 mt-4 mt-md-0">
+              <div style={{ position: "relative", height: "100%", borderRadius: "12px", overflow: "hidden", minHeight: "200px" }}>
+                <img
+                  src="/assets/images/events/pwc.jpeg"
+                  alt="career"
+                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
               </div>
             </div>
           </div>
@@ -304,7 +307,7 @@ const Internships = () => {
           </div>
 
           {/* All Internships Grid with pagination */}
-          {INTERNSHIPS_LIST.length > 0 ? (
+          {internships.length > 0 ? (
             <>
               {paginatedList.length > 0 ? (
                 <>
@@ -328,6 +331,7 @@ const Internships = () => {
                             delay: index * 0.05,
                             ease: "easeOut",
                           }}
+                          style={{ height: "100%" }}
                         >
                           <InternshipCard
                             internship={internship}

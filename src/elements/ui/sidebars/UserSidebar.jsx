@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
-import { formatRole } from "../../../util/defines/common";
+import { formatRole, ACCESS_1 } from "../../../util/defines/common";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import { FiArrowUp } from "react-icons/fi";
@@ -42,6 +42,8 @@ const UserSidebar = ({
         return <FaUser size={22} />;
     }
   };
+
+  const isAccess1 = currentUser.roles?.some((r) => ACCESS_1.includes(r));
 
   return (
     <>
@@ -135,6 +137,20 @@ const UserSidebar = ({
                 </Link>
               </li>
             ))}
+            {isAccess1 && (
+              <>
+                <li className="sidebar-divider" />
+                <li>
+                  <Link
+                    to="/user/internships-dashboard"
+                    onClick={() => { if (isMobile) toggleSidebar(); }}
+                  >
+                    <span className="sidebar-icon"><FaBriefcase size={22} /></span>
+                    <span className="sidebar-label">Manage Internships</span>
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

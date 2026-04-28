@@ -129,7 +129,7 @@ const InternshipCard = (props) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="d-flex flex-column" style={{ gap: "10px" }}>
+      <div className="d-flex flex-column" style={{ gap: "10px", marginTop: "auto" }}>
         <a
           href={website}
           target="_blank"

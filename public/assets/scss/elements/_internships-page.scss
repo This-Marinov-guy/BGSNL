@@ -153,11 +153,22 @@
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   margin-bottom: 50px;
-  
+  align-items: stretch;
+
   @media (max-width: 767px) {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+
+  > * {
+    height: 100%;
+  }
+}
+
+.intern-card {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
 }
 
 /* Preview Section */

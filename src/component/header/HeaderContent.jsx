@@ -13,7 +13,7 @@ import {
   decodeJWT,
 } from "../../util/functions/authorization";
 import NewBadge from "../../elements/ui/badges/NewBadge";
-import { ACCESS_2, ACCESS_3, ACCESS_4 } from "../../util/defines/common";
+import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4 } from "../../util/defines/common";
 import LogoutAlert from "../../elements/ui/alerts/Logout";
 import { selectArticles } from "../../redux/articles";
 import { encodeForURL } from "../../util/functions/helpers";
@@ -224,6 +224,13 @@ const HeaderContent = (props) => {
                             </Link>
                           </li>
                         </>
+                      )}
+                      {checkAuthorization(user.token, ACCESS_1) && (
+                        <li>
+                          <Link to="/user/internships-dashboard">
+                            Internships
+                          </Link>
+                        </li>
                       )}
                     </>
                   </ul>

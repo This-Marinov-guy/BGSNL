@@ -99,6 +99,9 @@ const EditEvent = lazy(() => import("./pages/userActions/EditEvent"));
 const EventDashboard = lazy(() => import("./pages/userActions/EventDashboard"));
 const MembersDashboard = lazy(() => import("./pages/userActions/MembersDashboard"));
 const EventsAnalyticsDashboard = lazy(() => import("./pages/userActions/EventsAnalyticsDashboard"));
+const InternshipsDashboard = lazy(() => import("./pages/userActions/InternshipsDashboard"));
+const AddInternship = lazy(() => import("./pages/userActions/AddInternship"));
+const EditInternship = lazy(() => import("./pages/userActions/EditInternship"));
 
 const GuestPurchase = lazy(() => import("./pages/eventActions/GuestPurchase"));
 const GuestCheck = lazy(() => import("./pages/redirects/CheckTicket"));
@@ -356,6 +359,33 @@ const Root = () => {
                   element={
                     <AuthLayout access={ACCESS_3}>
                       <EventsAnalyticsDashboard />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/internships-dashboard`}
+                  element={
+                    <AuthLayout access={ACCESS_1}>
+                      <InternshipsDashboard />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/add-internship`}
+                  element={
+                    <AuthLayout access={ACCESS_1}>
+                      <AddInternship />
+                    </AuthLayout>
+                  }
+                />
+                <Route
+                  exact
+                  path={`/user/edit-internship/:internshipId`}
+                  element={
+                    <AuthLayout access={ACCESS_1}>
+                      <EditInternship />
                     </AuthLayout>
                   }
                 />

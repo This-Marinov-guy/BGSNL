@@ -1,27 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Paginator } from "primereact/paginator";
 import { TabView, TabPanel } from "primereact/tabview";
-import { INTERNSHIPS_LIST } from "../../../util/defines/INTERNSHIPS";
 import InternshipCard from "../cards/InternshipCard";
+import { useHttpClient } from "../../../hooks/common/http-hook";
+import { INTERNSHIPS_LIST } from "../../../util/defines/INTERNSHIPS";
 
 const InternshipsTab = ({
   currentUser,
   onUserRefresh,
   INIT_ITEMS_PER_PAGE,
 }) => {
+  const { sendRequest } = useHttpClient();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [internships, setInternships] = useState(INTERNSHIPS_LIST);
 
   // Separate pagination state for each tab
   const [bulgarianFirst, setBulgarianFirst] = useState(0);
   const [bulgarianRows, setBulgarianRows] = useState(INIT_ITEMS_PER_PAGE);
 
   const [internationalFirst, setInternationalFirst] = useState(0);
-  const [internationalRows, setInternationalRows] =
-    useState(INIT_ITEMS_PER_PAGE);
+  const [internationalRows, setInternationalRows] = useState(INIT_ITEMS_PER_PAGE);
 
-  const bulgarianList = INTERNSHIPS_LIST.filter((i) => i.label === "Bulgarian");
-  const internationalList = INTERNSHIPS_LIST.filter(
+  useEffect(() => {
+    const fetchInternships = async () => {
+      const data = await sendRequest("internship/list", "GET", null, {}, false, false);
+      const list = data?.internships;
+      if (list?.length) setInternships(list);
+    };
+    fetchInternships();
+  }, []);
+
+  const bulgarianList = internships.filter((i) => i.label === "Bulgarian");
+  const internationalList = internships.filter(
     (i) => i.label === "International & Remote"
   );
 
@@ -31,7 +42,7 @@ const InternshipsTab = ({
         <div className="internships-grid">
           {list.slice(first, first + rows).map((i, index) => (
             <InternshipCard
-              key={index}
+              key={i._id ?? index}
               internship={i}
               user={currentUser}
               onUserRefresh={onUserRefresh}
@@ -76,8 +87,8 @@ const InternshipsTab = ({
           activeIndex={activeIndex}
           onTabChange={(e) => setActiveIndex(e.index)}
         >
-          <TabPanel header={`All (${INTERNSHIPS_LIST.length})`}>
-            {renderList(INTERNSHIPS_LIST, 0, INTERNSHIPS_LIST.length, () => {})}
+          <TabPanel header={`All (${internships.length})`}>
+            {renderList(internships, 0, internships.length, () => {})}
           </TabPanel>
           <TabPanel header={`Bulgarian (${bulgarianList.length})`}>
             {bulgarianList.length > 0 ? (

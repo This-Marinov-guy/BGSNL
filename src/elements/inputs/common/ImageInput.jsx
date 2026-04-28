@@ -55,7 +55,7 @@ const ImageInput = (props) => {
           ...props.style,
           width: "120px",
           height: "120px",
-          borderRadius: "50%",
+          borderRadius: "10%",
           border: "2px dashed #ddd",
           display: "flex",
           alignItems: "center",
@@ -108,7 +108,7 @@ const ImageInput = (props) => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              borderRadius: "50%",
+              borderRadius: "10%",
             }}
           />
         )}
