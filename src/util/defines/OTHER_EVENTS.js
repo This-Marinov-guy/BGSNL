@@ -33,7 +33,7 @@ export const OTHER_EVENTS = [
     // memberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     // activeMemberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     text: `<p>
-  The <strong>Bulgarian Society Netherlands</strong> invites you to this year’s
+  The <strong>Bulgarian Society Netherlands</strong> and <strong>Het Success</strong> invite you to this year’s
   <strong>Gala Festival</strong>, organized on the occasion of <strong>24 May</strong> —
   the Day of the Bulgarian Alphabet, Education, and Culture.
 </p>
