@@ -32,27 +32,30 @@ export const OTHER_EVENTS = [
     // price_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     // memberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     // activeMemberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
-    text: `
-  <p>
-    Join us for the <strong>Joint Gala Festival</strong>, an inspiring cultural gathering
-    that celebrates identity, creativity, and youth through shared artistic expression.
-    Under the theme <em>“Cultural Palette &amp; The Power of Youth”</em>, the event brings
-    people together for an afternoon of folklore dance, live music, visual art, and
-    meaningful connections.
-  </p>
+    text: `<p>
+  The <strong>Bulgarian Society Netherlands</strong> invites you to this year’s
+  <strong>Gala Festival</strong>, organized on the occasion of <strong>24 May</strong> —
+  the Day of the Bulgarian Alphabet, Education, and Culture.
+</p>
 
-  <p>
-    This festival highlights the energy of young people and the beauty of cultural
-    diversity, creating a space where tradition and contemporary expression meet.
-    Guests can expect a vibrant program filled with performances, artistic showcases,
-    and opportunities to connect with others in a warm and festive atmosphere.
-  </p>
+<p>
+  This year’s theme is <em>“The Power of Youth”</em>: an evening dedicated to emerging
+  voices and the expression of creativity through art, music, and dance. In the spirit
+  of the celebration, we will honor Bulgarian education, cultural heritage, and the
+  values that connect and inspire us wherever we are in the world.
+</p>
 
-  <p>
-    Come celebrate culture in all its colors and experience a unique festival dedicated
-    to community, creativity, and the power of youth.
-  </p>
-    `,
+<p>
+  Guests can look forward to a rich and memorable program, including inspiring art
+  exhibitions, live musical performances, a grand dance finale, elegant networking,
+  catering and refreshing drinks, and three thematic cultural blocks throughout the
+  evening.
+</p>
+
+<p>
+  Join us for a festive cultural gathering dedicated to community, creativity, and the
+  power of youth.
+</p>`,
     marketingInputs: false,
     ticket_img: "/assets/images/events/gala/ticket.png",
     images: [
