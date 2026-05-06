@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
+import { formatCorrectedDateTime } from "../../util/functions/date";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
@@ -311,6 +312,12 @@ const NonSocietyEvent = (props) => {
                   <p>
                     {target.date}, {target.time}
                   </p>
+                  {target.correctedDate && (
+                    <p style={{ color: "#f80707" }} className="error">
+                      {"Updated Date/Time -> " +
+                        formatCorrectedDateTime(target.correctedDate)}
+                    </p>
+                  )}
                 </div>
                 <div className="port-view">
                   <h3 style={{ fontSize: "24px" }}>Where</h3>

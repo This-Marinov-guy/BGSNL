@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FiCalendar, FiLock } from "react-icons/fi";
-import { MOMENT_DATE_TIME } from "../../util/functions/date";
+import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
 import moment from "moment";
 
 export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) => {
@@ -28,9 +28,11 @@ const Card = ({ card, region, isOtherEvent }) => {
     ? "/other-event-details/gala-festival"
     : `/${card.region ?? region}/event-details/${card.id}`;
 
-  const dateLabel = moment(card.date).isValid()
-    ? moment(card.correctedDate ?? card.date).format(MOMENT_DATE_TIME)
-    : card.date;
+  const dateLabel = card.correctedDate
+    ? formatCorrectedDateTime(card.correctedDate)
+    : moment(card.date).isValid()
+      ? moment(card.date).format(MOMENT_DATE_TIME)
+      : card.date;
 
   return (
     <article className="focus-card">

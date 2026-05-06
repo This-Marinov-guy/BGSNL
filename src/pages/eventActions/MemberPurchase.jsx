@@ -24,7 +24,7 @@ import {
 } from "../../util/functions/helpers";
 import { showNotification } from "../../redux/notification";
 import { ACCESS_3 } from "../../util/defines/common";
-import { MOMENT_DATE_TIME } from "../../util/functions/date";
+import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
@@ -296,8 +296,8 @@ const MemberPurchase = () => {
                               </strong>
                               <span>
                                 {selectedEvent.correctedDate
-                                  ? moment(selectedEvent.correctedDate).format(
-                                      MOMENT_DATE_TIME
+                                  ? formatCorrectedDateTime(
+                                      selectedEvent.correctedDate
                                     ) + " Updated!"
                                   : moment(selectedEvent.date).format(
                                       MOMENT_DATE_TIME

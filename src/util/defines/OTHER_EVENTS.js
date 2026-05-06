@@ -17,9 +17,12 @@ export const OTHER_EVENTS = [
     timeStamp: "2026-05-16T12:30:00",
     ticketTimer: "2026-05-16T12:30:00",
     ticketLimit: 100,
-    //   Use the corrected date and time for changes in the date or time. Do not change the initial ones as it will make a new event in the DB
+    // Use correctedDate to publish a change to the date/time. Do not change the
+    // initial date/time/timeStamp — that's the event's identity.
+    // Format: full ISO timestamp with timezone, e.g. "2026-05-17T13:30:00+02:00"
+    // (use the +02:00 / +03:00 offset for the timezone you typed the time in).
+    // It is rendered in each viewer's local timezone.
     correctedDate: "",
-    correctedTime: "",
     where: `Scheepsbouwweg 8 - Loft, Rotterdam`,
     isMemberFree: true,
     entry: "Free",
@@ -33,28 +36,37 @@ export const OTHER_EVENTS = [
     // memberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     // activeMemberPrice_id: "price_1P7uhsIOw5UGbAo1fvnUj3yw",
     text: `<p>
-  The <strong>Bulgarian Society Netherlands</strong> and <strong>Het Succes</strong> invite you to this year’s
-  <strong>Gala Festival</strong>, organized on the occasion of <strong>24 May</strong> —
-  the Day of the Bulgarian Alphabet, Education, and Culture.
+  On behalf of the <strong>Bulgarian Society in the Netherlands</strong>, we have the honour of inviting you to attend the Gala Festival
+  <strong>“Cultural Palette” &amp; “The Power of Youth”</strong>, organized together with the cultural foundation
+  <strong>“Het Succes”</strong>.
 </p>
 
 <p>
-  This year’s theme is <em>“The Power of Youth”</em>: an evening dedicated to emerging
-  voices and the expression of creativity through art, music, and dance. In the spirit
-  of the celebration, we will honor Bulgarian education, cultural heritage, and the
-  values that connect and inspire us wherever we are in the world.
+  <strong>Date:</strong> 16 May 2026<br>
+  <strong>Time:</strong> 13:30 – 18:30<br>
+  <strong>Venue:</strong> RDM Next – Loft<br>
+  <strong>Address:</strong> Scheepsbouwweg 8-Loft, 3089 JW Rotterdam, The Netherlands
 </p>
 
 <p>
-  Guests can look forward to a rich and memorable program, including inspiring art
-  exhibitions, live musical performances, a grand dance finale, elegant networking,
-  catering and refreshing drinks, and three thematic cultural blocks throughout the
-  evening.
+  The event aims to celebrate the richness of Bulgarian education and culture on the occasion of
+  <strong>24 May</strong>, and to highlight the inspiring role of the younger generation in preserving
+  and developing Bulgarian cultural identity in an international environment.
 </p>
 
 <p>
-  Join us for a festive cultural gathering dedicated to community, creativity, and the
-  power of youth.
+  The event will bring together representatives of the Bulgarian diaspora in the Netherlands,
+  cultural organizations, partners, artists, and young talents.
+</p>
+
+<p>
+  The program includes performances of Bulgarian folk dances, live music, artistic presentations,
+  and opportunities for cultural exchange between the Bulgarian and Dutch communities.
+</p>
+
+<p>
+  Your presence is valuable to our community, and we hope to see you at the event and celebrate
+  this special occasion together.
 </p>`,
     marketingInputs: false,
     ticket_img: "/assets/images/events/gala/ticket.png",

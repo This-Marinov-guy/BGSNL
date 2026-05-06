@@ -16,7 +16,7 @@ import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { estimatePriceByEvent, isMember } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
-import { MOMENT_DATE_TIME } from "../../util/functions/date";
+import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import EventStructuredData from "../../component/common/EventStructuredData";
 import EventImageCarousel from "../../elements/ui/EventImageCarousel";
@@ -125,9 +125,7 @@ const EventDetails = () => {
                   {selectedEvent.correctedDate && (
                     <p style={{ color: "#f80707" }} className="error">
                       {"Updated Date/Time -> " +
-                        moment(selectedEvent.correctedDate).format(
-                          "Do MMM YY hh:mm"
-                        )}
+                        formatCorrectedDateTime(selectedEvent.correctedDate)}
                     </p>
                   )}
                 </div>

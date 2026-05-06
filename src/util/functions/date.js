@@ -3,6 +3,26 @@ export const MOMENT_DATE_TIME = "Do MMM h:mm a";
 export const MOMENT_DATE_YEAR = "Do MMM YYYY";
 export const MOMENT_DATE = "Do MMM";
 
+// Format used for "updated" / corrected event date+time. Renders in the
+// reader's local timezone so each user sees the moment in their own time.
+export const CORRECTED_DATE_TIME = "DD - MM hh:mm a";
+
+// Stringly-typed ISO/Date input → "DD - MM hh:mm a" in the viewer's local TZ.
+// Returns "" when the input is missing or unparseable.
+export const formatCorrectedDateTime = (value) => {
+  if (!value) return "";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "";
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  let h = d.getHours();
+  const ampm = h >= 12 ? "pm" : "am";
+  h = h % 12 || 12;
+  const hh = String(h).padStart(2, "0");
+  const min = String(d.getMinutes()).padStart(2, "0");
+  return `${dd} - ${mm} ${hh}:${min} ${ampm}`;
+};
+
 export const dateConvertor = (date, time, getAsValue = false) => {
   // Ensure date is a Date object
   date = new Date(date);

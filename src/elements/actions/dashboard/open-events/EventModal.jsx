@@ -13,7 +13,7 @@ import moment from 'moment';
 import { useHttpClient } from '../../../../hooks/common/http-hook';
 import { showNotification } from '../../../../redux/notification';
 import { ACCESS_3, EVENT_DELETED } from '../../../../util/defines/common';
-import { MOMENT_DATE_TIME } from '../../../../util/functions/date';
+import { MOMENT_DATE_TIME, formatCorrectedDateTime } from '../../../../util/functions/date';
 import GenerateTicketsModal from './GenerateTicketsModal';
 import { checkAuthorization } from '../../../../util/functions/authorization';
 import { selectUser } from '../../../../redux/user';
@@ -195,9 +195,11 @@ const EventModal = (props) => {
               <InfoRow label="Location" value={props.event.location} />
               <InfoRow
                 label="Date & Time"
-                value={moment(
-                  props.event.correctedDate ?? props.event.date,
-                ).format(MOMENT_DATE_TIME)}
+                value={
+                  props.event.correctedDate
+                    ? formatCorrectedDateTime(props.event.correctedDate)
+                    : moment(props.event.date).format(MOMENT_DATE_TIME)
+                }
               />
               <InfoRow
                 label="Subtitle"

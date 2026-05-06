@@ -20,7 +20,7 @@ import { isObjectEmpty } from "../../util/functions/helpers";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { MOMENT_DATE_TIME } from "../../util/functions/date";
+import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusiveEvents";
@@ -248,8 +248,8 @@ const GuestPurchase = () => {
                         </strong>
                         <span>
                           {selectedEvent.correctedDate
-                            ? moment(selectedEvent.correctedDate).format(
-                                MOMENT_DATE_TIME
+                            ? formatCorrectedDateTime(
+                                selectedEvent.correctedDate
                               ) + " Updated!"
                             : moment(selectedEvent.date).format(
                                 MOMENT_DATE_TIME
