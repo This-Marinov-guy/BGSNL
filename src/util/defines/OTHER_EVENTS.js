@@ -47,7 +47,7 @@ export const OTHER_EVENTS = [
 
 <p>
   <strong>Date:</strong> 16 May 2026<br>
-  <strong>Time:</strong> 13:30 – 18:30<br>
+  <strong>Time:</strong> 13:30 – 19:30<br>
   <strong>Venue:</strong> RDM Next – Loft<br>
   <strong>Address:</strong> Scheepsbouwweg 8-Loft, 3089 JW Rotterdam, The Netherlands
   <br/>
