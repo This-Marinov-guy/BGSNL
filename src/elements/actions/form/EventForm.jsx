@@ -5,11 +5,16 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../../ui/loading/Loader";
 import ImageInput from "../../inputs/common/ImageInput";
-import { BG_INDEX, REGIONS } from "../../../util/defines/REGIONS_DESIGN";
+import {
+  ADMIN_EVENT_REGIONS,
+  BG_INDEX,
+  REGIONS,
+} from "../../../util/defines/REGIONS_DESIGN";
 import StringDynamicInputs from "../../inputs/common-complicated/StringDynamicInputs";
 import InputsBuilder from "../../inputs/builders/InputsBuilder";
 import {
   askBeforeRedirect,
+  hasOverlap,
   isPlainObject,
   isObjectEmpty,
   isProd,
@@ -17,6 +22,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import {
+  ACCESS_2,
   EVENT_ADDED,
   EVENT_EDITED,
   INCORRECT_MISSING_DATA,
@@ -25,7 +31,7 @@ import LongLoading from "../../ui/loading/LongLoading";
 import SubEventBuilder from "../../inputs/builders/SubEventBuilder";
 import { CalendarWithClock } from "../../inputs/common/Calendar";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "../../../redux/notification";
 import { addEventToAll, editEventFromAll } from "../../../redux/events";
 import ImageSelection from "../../inputs/ImageSelection";
@@ -37,6 +43,8 @@ import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
 import { FiInfo } from "react-icons/fi";
 import { Tooltip } from "primereact/tooltip";
 import MultiImageUpload from "../../inputs/MultiImageUpload";
+import { selectUser } from "../../../redux/user";
+import { decodeJWT } from "../../../util/functions/authorization";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -53,7 +61,12 @@ const EventForm = (props) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
   const { eventId } = useParams();
+  const roles = decodeJWT(user.token)?.roles ?? [];
+  const regionOptions = hasOverlap(roles, ACCESS_2)
+    ? ADMIN_EVENT_REGIONS
+    : REGIONS;
 
   const edit = props.edit;
   const initialData = edit ? props.initialData : null;
@@ -711,7 +724,7 @@ const EventForm = (props) => {
                       <option value="" disabled>
                         Select Region
                       </option>
-                      {REGIONS.map((val, index) => {
+                      {regionOptions.map((val, index) => {
                         return (
                           <option value={val} key={index}>
                             {capitalizeFirstLetter(val, true)}

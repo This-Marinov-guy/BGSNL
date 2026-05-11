@@ -9,7 +9,7 @@ const PAGES = [
     { label: 'Event Analysis', path: '/user/events-analytics' },
 ];
 
-const Filter = () => {
+const Filter = ({ regions = REGIONS }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -32,7 +32,7 @@ const Filter = () => {
                     <select defaultValue={searchParams.get("region") || ''} onChange={handleRegionChange}>
                         <option value="" disabled>Select Region</option>
                         <option value="">All</option>
-                        {REGIONS.map((val, index) => (
+                        {regions.map((val, index) => (
                             <option value={val} key={index}>{capitalizeFirstLetter(val, true)}</option>
                         ))}
                     </select>

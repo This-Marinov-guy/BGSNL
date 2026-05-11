@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from "formik";
 
 export const OTHER_EVENTS = [
   {
-    region: "",
+    region: "netherlands",
     memberOnly: false,
     visible: true,
     title: "Gala Festival",
@@ -13,9 +13,13 @@ export const OTHER_EVENTS = [
     bgImageExtra: "/assets/images/events/gala/background.jpg",
     date: "16th May",
     time: "13:30 pm",
-    // 1 hour earlier than Netherlands / 2 than Bulgaria
-    timeStamp: "2026-05-16T12:30:00",
-    ticketTimer: "2026-05-16T13:30:00",
+    // Full ISO timestamp with the offset of the timezone the event takes place
+    // in (Europe/Amsterdam → +02:00 in CEST, +01:00 in CET). This is the
+    // unambiguous absolute moment of the event; the ticket email always renders
+    // it in NL time so every recipient sees the same date/time regardless of
+    // where they (or the server) live.
+    timeStamp: "2026-05-16T13:30:00+02:00",
+    ticketTimer: "2026-05-16T13:30:00+02:00",
     ticketLimit: 150,
     // Use correctedDate to publish a change to the date/time. Do not change the
     // initial date/time/timeStamp — that's the event's identity.

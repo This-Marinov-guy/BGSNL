@@ -1,17 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { REGIONS } from "../util/defines/REGIONS_DESIGN";
+import { ADMIN_EVENT_REGIONS, REGIONS } from "../util/defines/REGIONS_DESIGN";
 
-let regionObject = {};
+const createRegionObject = (regions) => regions.reduce((acc, region) => {
+    acc[region] = [];
+    return acc;
+}, {});
 
-REGIONS.forEach(region => {
-    regionObject[region] = [];
-});
+const createPublicEventsState = () => createRegionObject(REGIONS);
+const createDashboardEventsState = () => createRegionObject(ADMIN_EVENT_REGIONS);
 
 export const eventsSlice = createSlice({
     name: "events",
     initialState: {
-        all: regionObject,
-        allDashboard: regionObject,
+        all: createPublicEventsState(),
+        allDashboard: createDashboardEventsState(),
         selected: null,
         selectedDashboard: null,
     },
@@ -20,8 +22,12 @@ export const eventsSlice = createSlice({
             state.selected = action.payload;
         },
         loadEvents: (state, action) => {
-            state.all = regionObject;
-            action.payload.forEach(event => state.all[event.region].push(event));
+            state.all = createPublicEventsState();
+            action.payload.forEach(event => {
+                if (state.all[event.region]) {
+                    state.all[event.region].push(event);
+                }
+            });
         },
 
         // Dashboard reducers
@@ -29,12 +35,19 @@ export const eventsSlice = createSlice({
             state.selectedDashboard = action.payload;
         },
         loadEventsDashboard: (state, action) => {
-            state.allDashboard = regionObject;
-            action.payload.forEach(event => state.allDashboard[event.region].push(event));
+            state.allDashboard = createDashboardEventsState();
+            action.payload.forEach(event => {
+                if (state.allDashboard[event.region]) {
+                    state.allDashboard[event.region].push(event);
+                }
+            });
         },
         addEventToAll: (state, action) => {
             const event = action.payload;
 
+            if (!state.allDashboard[event.region]) {
+                state.allDashboard[event.region] = [];
+            }
             state.allDashboard[event.region] = [...state.allDashboard[event.region], event];
         },
         editEventFromAll: (state, action) => {

@@ -22,6 +22,9 @@ export const REGIONS = [
   "rotterdam",
 ];
 
+export const DEFAULT_REGION = "netherlands";
+export const ADMIN_EVENT_REGIONS = [...REGIONS, DEFAULT_REGION];
+
 export const REGION_MAIN_COLOR = {
   groningen: "#f92820",
   rotterdam: "#f92820",
