@@ -19,7 +19,7 @@ export const OTHER_EVENTS = [
     // it in NL time so every recipient sees the same date/time regardless of
     // where they (or the server) live.
     timeStamp: "2026-05-16T13:30:00+02:00",
-    ticketTimer: "2026-05-16T13:30:00+02:00",
+    ticketTimer: "2026-05-14T13:30:00+02:00",
     ticketLimit: 150,
     // Use correctedDate to publish a change to the date/time. Do not change the
     // initial date/time/timeStamp — that's the event's identity.
