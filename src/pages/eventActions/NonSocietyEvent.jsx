@@ -19,7 +19,6 @@ import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import ImageFb from "../../elements/ui/media/ImageFb";
-import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 import SponsoredByGala from "../../elements/ui/alerts/SponsoredByGala";
 
@@ -32,8 +31,20 @@ const schema = yup.object().shape({
   payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
+const isTicketTimerFinished = (ticketTimer) => {
+  if (!ticketTimer) return false;
+
+  const timerValue = new Date(ticketTimer).valueOf();
+
+  return Number.isFinite(timerValue) && timerValue <= Date.now();
+};
+
 const NonSocietyEvent = (props) => {
+  const target = OTHER_EVENTS[0];
   const [currentUser, setCurrentUser] = useState(null);
+  const [ticketTimerClosed, setTicketTimerClosed] = useState(() =>
+    isTicketTimerFinished(target.ticketTimer)
+  );
 
   const [formData, setFormData] = useState({
     hasExtraGuest: false,
@@ -41,8 +52,6 @@ const NonSocietyEvent = (props) => {
   });
 
   const { loading, sendRequest } = useHttpClient();
-
-  const target = OTHER_EVENTS[0];
 
   const user = useSelector(selectUser);
   const modal = useSelector(selectModal);
@@ -56,6 +65,8 @@ const NonSocietyEvent = (props) => {
     : `/assets/images/bg/bg-image-${target.bgImage}.webp`;
 
   const closeModal = () => dispatch(removeModal(NSE_REGISTRATION_MODAL));
+
+  const eventSoldOut = target.eventClosed || ticketTimerClosed;
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -71,6 +82,20 @@ const NonSocietyEvent = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!target.ticketTimer || ticketTimerClosed) return undefined;
+
+    const timer = setInterval(() => {
+      if (isTicketTimerFinished(target.ticketTimer)) {
+        setTicketTimerClosed(true);
+        dispatch(removeModal(NSE_REGISTRATION_MODAL));
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [dispatch, target.ticketTimer, ticketTimerClosed]);
+
   const baseUrl = "https://www.bulgariansociety.nl";
   const eventTitle = target.newTitle ?? target.title;
   const eventDescription = (target.description || target.text)
@@ -81,10 +106,6 @@ const NonSocietyEvent = (props) => {
     ? `${baseUrl}${target.poster}`
     : undefined;
   const eventUrl = `${baseUrl}/other-event-details/gala-festival`;
-
-  if (target.eventClosed) {
-    return <TicketSaleClosed />;
-  }
 
   return (
     <React.Fragment>
@@ -104,7 +125,7 @@ const NonSocietyEvent = (props) => {
       />
 
       {/* Registration Modal */}
-      <ModalWindow show={modal.includes(NSE_REGISTRATION_MODAL)}>
+      <ModalWindow show={!eventSoldOut && modal.includes(NSE_REGISTRATION_MODAL)}>
         {user.token && !currentUser ? (
           <Loader center />
         ) : (
@@ -349,41 +370,52 @@ const NonSocietyEvent = (props) => {
                   <h3 style={{ fontSize: "24px" }}>About</h3>
                   <p dangerouslySetInnerHTML={{ __html: target.text }} />
 
-                  <StickyButtonFooter>
-                    <div
-                      className="purchase-btn gap-3"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      {target?.ticketLink ? (
-                        <a
-                          href={target.ticketLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                          <span>Register</span>
-                        </a>
-                      ) : (
-                        <button
-                          onClick={() => dispatch(showModal(NSE_REGISTRATION_MODAL))}
-                          className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                          Register
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="rn-button-style--2 rn-btn-reverse-red"
-                      >
-                        <span>Back</span>
-                      </button>
+                  {eventSoldOut ? (
+                    <div className="purchase-btn text-center mt--40">
+                      <h3 style={{ color: "#f80707", fontSize: "24px" }}>
+                        This event is sold out.
+                      </h3>
+                      <p className="information">
+                        Registration is now closed. Thank you for your interest.
+                      </p>
                     </div>
-                  </StickyButtonFooter>
+                  ) : (
+                    <StickyButtonFooter>
+                      <div
+                        className="purchase-btn gap-3"
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        {target?.ticketLink ? (
+                          <a
+                            href={target.ticketLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rn-button-style--2 rn-btn-reverse-green"
+                          >
+                            <span>Register</span>
+                          </a>
+                        ) : (
+                          <button
+                            onClick={() => dispatch(showModal(NSE_REGISTRATION_MODAL))}
+                            className="rn-button-style--2 rn-btn-reverse-green"
+                          >
+                            Register
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => navigate(-1)}
+                          className="rn-button-style--2 rn-btn-reverse-red"
+                        >
+                          <span>Back</span>
+                        </button>
+                      </div>
+                    </StickyButtonFooter>
+                  )}
                 </div>
               </div>
             </div>
