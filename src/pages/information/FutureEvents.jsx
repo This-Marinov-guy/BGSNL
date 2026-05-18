@@ -215,12 +215,12 @@ const FutureEvents = (props) => {
       {/* Start Future Events Area */}
       {region ? (
         <>
-          <FutureOtherEventsContent />
+          {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
           <FutureEventsContent nullable={false} />
         </>
       ) : (
         <>
-          <FutureOtherEventsContent />
+          {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
           <FutureEventsContent displayAll nullable={false} />
         </>
       )}
@@ -229,7 +229,7 @@ const FutureEvents = (props) => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
