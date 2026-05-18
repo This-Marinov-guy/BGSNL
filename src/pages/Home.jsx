@@ -15,6 +15,7 @@ import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import NewsList from "../elements/ui/lists/NewsList";
 import Hero2 from "../component/hero/Hero2";
 import Hero1 from "../component/hero/Hero1";
+import { OTHER_EVENTS } from "../util/defines/OTHER_EVENTS";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -61,12 +62,12 @@ const Home = () => {
       {/* Start Upcoming Events Area */}
       {region ? (
         <>
-          <FutureOtherEventsContent />
+          {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
           <FutureEventsContent />
         </>
       ) : (
         <>
-          <FutureOtherEventsContent />
+          {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
           <FutureEventsContent displayAll />
         </>
       )}
@@ -84,7 +85,7 @@ const Home = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
