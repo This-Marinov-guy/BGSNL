@@ -76,6 +76,12 @@
   .empty-icon {
     font-size: 60px;
     margin-bottom: 18px;
+
+    .empty-icon-image {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+    }
   }
   
   h3 {

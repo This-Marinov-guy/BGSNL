@@ -50,7 +50,13 @@ const TicketsTab = ({ currentUser, navigate }) => {
           </div>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">{"🎫"}</div>
+            <div className="empty-icon">
+              <img
+                src="/assets/images/svg/3d/ticket.png"
+                alt=""
+                className="empty-icon-image"
+              />
+            </div>
             <h3>No Tickets Found</h3>
             <p>You haven't purchased any tickets yet.</p>
           </div>
