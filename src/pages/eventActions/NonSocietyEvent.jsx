@@ -9,7 +9,7 @@ import Header from "../../component/header/Header";
 import Footer from "../../component/footer/Footer";
 import ModalWindow from "../../elements/ui/modals/ModalWindow";
 import Loader from "../../elements/ui/loading/Loader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { removeModal, selectModal, showModal } from "../../redux/modal";
@@ -17,18 +17,26 @@ import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { formatCorrectedDateTime } from "../../util/functions/date";
 import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { showNotification } from "../../redux/notification";
-import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
-import SponsoredByGala from "../../elements/ui/alerts/SponsoredByGala";
 
 const schema = yup.object().shape({
-  name: yup.string().required(),
-  surname: yup.string().required(),
-  phone: yup.string().required(),
-  email: yup.string().email("Please enter a valid email").required(),
-  policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
-  payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+  fullName: yup.string().trim().required("Името и фамилията са задължителни"),
+  email: yup
+    .string()
+    .email("Моля, въведи валиден имейл адрес")
+    .required("Имейл адресът е задължителен"),
+  university: yup.string().trim().required("Университетът е задължителен"),
+  course: yup.string().trim().required("Специалността е задължителна"),
+  questions: yup.string().max(1500, "Максималната дължина е 1500 символа"),
+  policyTerms: yup
+    .bool()
+    .required()
+    .oneOf([true], "Трябва да приемеш политиката"),
+  payTerms: yup
+    .bool()
+    .required()
+    .oneOf([true], "Трябва да дадеш съгласие за споделяне на данните"),
 });
 
 const isTicketTimerFinished = (ticketTimer) => {
@@ -39,18 +47,14 @@ const isTicketTimerFinished = (ticketTimer) => {
   return Number.isFinite(timerValue) && timerValue <= Date.now();
 };
 
-const NonSocietyEvent = (props) => {
-  const target = OTHER_EVENTS[0];
+const NonSocietyEvent = () => {
+  const { eventId } = useParams();
+  const target =
+    OTHER_EVENTS.find((event) => event.id === eventId) ?? OTHER_EVENTS[0];
   const [currentUser, setCurrentUser] = useState(null);
   const [ticketTimerClosed, setTicketTimerClosed] = useState(() =>
     isTicketTimerFinished(target.ticketTimer)
   );
-
-  const [formData, setFormData] = useState({
-    hasExtraGuest: false,
-    extraGuestName: "",
-  });
-
   const { loading, sendRequest } = useHttpClient();
 
   const user = useSelector(selectUser);
@@ -80,7 +84,7 @@ const NonSocietyEvent = (props) => {
     if (user.token) {
       fetchCurrentUser();
     }
-  }, []);
+  }, [user.token]);
 
   useEffect(() => {
     if (!target.ticketTimer || ticketTimerClosed) return undefined;
@@ -105,7 +109,13 @@ const NonSocietyEvent = (props) => {
   const eventImage = target.poster
     ? `${baseUrl}${target.poster}`
     : undefined;
-  const eventUrl = `${baseUrl}/other-event-details/gala-festival`;
+  const eventUrl = `${baseUrl}/other-event-details/${target.id}`;
+
+  const memberUniversity =
+    currentUser?.university === "other"
+      ? currentUser?.otherUniversityName || ""
+      : currentUser?.university || currentUser?.otherUniversityName || "";
+  const memberCourse = currentUser?.course || "";
 
   return (
     <React.Fragment>
@@ -115,7 +125,7 @@ const NonSocietyEvent = (props) => {
         image={eventImage}
         type="event"
         canonicalUrl={eventUrl}
-        keywords={`${eventTitle}, Bulgarian event, Netherlands, BGSNL`}
+        keywords={`${eventTitle}, PwC Bulgaria, Sofia, careers, BGSNL`}
       />
 
       <Header
@@ -137,17 +147,18 @@ const NonSocietyEvent = (props) => {
                 const form = new FormData();
                 form.append("event", target.title);
                 form.append("date", target.timeStamp);
+                form.append("timezone", target.timezone);
                 form.append("user", user.token ? "member" : "guest");
-                form.append("name", values.name + " " + values.surname);
-                form.append("phone", values.phone);
+                form.append("name", values.fullName.trim());
                 form.append("email", values.email);
+                form.append("phone", currentUser?.phone || "-");
+                form.append("university", values.university.trim());
+                form.append("course", values.course.trim());
+                form.append("questions", values.questions.trim());
+                form.append("referenceCode", target.referenceCode);
                 form.append("ticketImg", target.ticket_img);
                 form.append("origin_url", window.location.origin);
                 form.append("notificationTypeTerms", "Any");
-
-                if (user.token) {
-                  form.append("extraData", formData.extraGuestName);
-                }
 
                 const response = await sendRequest(
                   "event/register/non-society-event",
@@ -158,92 +169,89 @@ const NonSocietyEvent = (props) => {
                 dispatch(
                   showNotification({
                     severity: "success",
-                    summary: "Success",
+                    summary: "Успешна регистрация",
                     detail:
-                      "Your registration for the event is complete! Please check your email for confirmation!",
+                      "Регистрацията ти е завършена. Провери имейла си за потвърждение.",
                   })
                 );
                 navigate("/");
-              } catch (err) {}
+              } catch (err) {
+                console.error("PwC event registration failed", err);
+              }
             }}
             initialValues={{
-              name: currentUser?.name || "",
-              surname: currentUser?.surname || "",
-              phone: currentUser?.phone || "",
+              fullName: currentUser
+                ? `${currentUser.name || ""} ${currentUser.surname || ""}`.trim()
+                : "",
               email: currentUser?.email || "",
+              university: memberUniversity,
+              course: memberCourse,
+              questions: "",
               policyTerms: false,
               payTerms: false,
             }}
           >
-            {({ setFieldValue }) => (
+            {() => (
               <Form
                 encType="multipart/form-data"
                 className="center_section"
                 id="form"
                 style={{ padding: "2%" }}
               >
-                <h3>Fill your details and register</h3>
+                <h3>Регистрация за {target.title}</h3>
                 <FiX className="x_icon" onClick={closeModal} />
 
                 <div className="col-12">
                   <div className="rn-form-group mt--20">
-                    <Field type="text" placeholder="Name" name="name" />
-                    <ErrorMessage className="error" name="name" component="div" />
+                    <label htmlFor="fullName">Име и фамилия</label>
+                    <Field
+                      id="fullName"
+                      type="text"
+                      placeholder="Име и фамилия"
+                      name="fullName"
+                    />
+                    <ErrorMessage className="error" name="fullName" component="div" />
                   </div>
                   <div className="rn-form-group mt--20">
-                    <Field type="text" placeholder="Surname" name="surname" />
-                    <ErrorMessage className="error" name="surname" component="div" />
-                  </div>
-                  <div className="rn-form-group mt--20">
-                    <Field type="email" placeholder="Email" name="email" />
+                    <label htmlFor="email">Имейл адрес</label>
+                    <Field id="email" type="email" placeholder="Имейл адрес" name="email" />
                     <ErrorMessage className="error" name="email" component="div" />
                   </div>
-                  <div className="rn-form-group phone-input-container mt--20">
-                    <PhoneInput
-                      placeholder="WhatsApp Phone"
-                      initialValue={currentUser?.phone || ""}
-                      onChange={(value) => setFieldValue("phone", value)}
+                  <div className="rn-form-group mt--20">
+                    <label htmlFor="university">
+                      Университет, в който учиш или си завършил/а
+                    </label>
+                    <Field
+                      id="university"
+                      type="text"
+                      placeholder="Университет"
+                      name="university"
                     />
-                    <p className="information">
-                      Please type your number with + and country code
-                    </p>
-                    <ErrorMessage className="error" name="phone" component="div" />
+                    <ErrorMessage className="error" name="university" component="div" />
                   </div>
-
-                  {/* {user.token && (
-                    <>
-                      <div className="rn-form-group mt--20">
-                        <label>Would you like to bring an additional guest?</label>
-                        <select
-                          value={formData.hasExtraGuest ? "1" : "0"}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              hasExtraGuest: e.target.value === "1",
-                            }))
-                          }
-                        >
-                          <option value="0">No</option>
-                          <option value="1">Yes</option>
-                        </select>
-                      </div>
-                      {formData.hasExtraGuest && (
-                        <div className="rn-form-group mt--20">
-                          <input
-                            type="text"
-                            placeholder="Guest name"
-                            value={formData.extraGuestName}
-                            onChange={(e) =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                extraGuestName: e.target.value,
-                              }))
-                            }
-                          />
-                        </div>
-                      )}
-                    </>
-                  )} */}
+                  <div className="rn-form-group mt--20">
+                    <label htmlFor="course">Каква специалност учиш или си завършил/а?</label>
+                    <Field
+                      id="course"
+                      type="text"
+                      placeholder="Специалност"
+                      name="course"
+                    />
+                    <ErrorMessage className="error" name="course" component="div" />
+                  </div>
+                  <div className="rn-form-group mt--20">
+                    <label htmlFor="questions">
+                      Имаш ли въпроси, които искаш да адресираме на събитието?
+                    </label>
+                    <Field
+                      as="textarea"
+                      id="questions"
+                      rows="4"
+                      placeholder="Въпросите ти (по желание)"
+                      name="questions"
+                    />
+                    <ErrorMessage className="error" name="questions" component="div" />
+                  </div>
                   <div className="hor_section_nospace mt--40">
                     <Field
                       style={{ maxWidth: "30px", margin: "10px" }}
@@ -251,13 +259,14 @@ const NonSocietyEvent = (props) => {
                       name="policyTerms"
                     />
                     <p className="information">
-                      I have read and accept the&nbsp;
+                      Прочетох и приемам&nbsp;
                       <a
                         style={{ color: "#017363" }}
                         href="/terms-and-legals"
                         target="_blank"
+                        rel="noreferrer"
                       >
-                        society&apos;s policy
+                        политиката на сдружението
                       </a>
                     </p>
                   </div>
@@ -270,22 +279,19 @@ const NonSocietyEvent = (props) => {
                       name="payTerms"
                     />
                     <p className="information">
-                      I agree to share the provided information with the
-                      organization in case they need to prove my identity
+                      Съгласявам се предоставената информация да бъде споделена
+                      с PwC България за целите на събитието
                     </p>
                   </div>
                   <ErrorMessage className="error" name="payTerms" component="div" />
                 </div>
 
                 <button
-                  disabled={
-                    loading ||
-                    (formData.hasExtraGuest && !formData.extraGuestName)
-                  }
+                  disabled={loading}
                   type="submit"
                   className="rn-button-style--2 rn-btn-reverse-green mt--30"
                 >
-                  {loading ? <Loader /> : <span>Register</span>}
+                  {loading ? <Loader /> : <span>Регистрирай се</span>}
                 </button>
               </Form>
             )}
@@ -329,7 +335,7 @@ const NonSocietyEvent = (props) => {
                 style={{ justifyContent: "space-between" }}
               >
                 <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>When</h3>
+                  <h3 style={{ fontSize: "24px" }}>Кога</h3>
                   <p>
                     {target.date}, {target.time}
                   </p>
@@ -341,11 +347,11 @@ const NonSocietyEvent = (props) => {
                   )}
                 </div>
                 <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Where</h3>
+                  <h3 style={{ fontSize: "24px" }}>Къде</h3>
                   <p>{target.where}</p>
                 </div>
                 <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Entry fee</h3>
+                  <h3 style={{ fontSize: "24px" }}>Вход</h3>
                   <p>{target.entry ?? "Free"}</p>
                 </div>
               </div>
@@ -360,23 +366,22 @@ const NonSocietyEvent = (props) => {
                   className="event-poster-image"
                 />
               </div>
-              <SponsoredByGala />
             </div>
 
             {/* About + Actions */}
             <div className="col-lg-7 col-md-12">
               <div className="portfolio-details">
                 <div className="inner">
-                  <h3 style={{ fontSize: "24px" }}>About</h3>
-                  <p dangerouslySetInnerHTML={{ __html: target.text }} />
+                  <h3 style={{ fontSize: "24px" }}>За събитието</h3>
+                  <div dangerouslySetInnerHTML={{ __html: target.text }} />
 
                   {eventSoldOut ? (
                     <div className="purchase-btn text-center mt--40">
                       <h3 style={{ color: "#f80707", fontSize: "24px" }}>
-                        This event is sold out.
+                        Регистрацията е затворена.
                       </h3>
                       <p className="information">
-                        Registration is now closed. Thank you for your interest.
+                        Благодарим ти за интереса към събитието.
                       </p>
                     </div>
                   ) : (
@@ -396,14 +401,14 @@ const NonSocietyEvent = (props) => {
                             rel="noopener noreferrer"
                             className="rn-button-style--2 rn-btn-reverse-green"
                           >
-                            <span>Register</span>
+                            <span>Регистрирай се</span>
                           </a>
                         ) : (
                           <button
                             onClick={() => dispatch(showModal(NSE_REGISTRATION_MODAL))}
                             className="rn-button-style--2 rn-btn-reverse-green"
                           >
-                            Register
+                            Регистрирай се
                           </button>
                         )}
                         <button
@@ -411,7 +416,7 @@ const NonSocietyEvent = (props) => {
                           onClick={() => navigate(-1)}
                           className="rn-button-style--2 rn-btn-reverse-red"
                         >
-                          <span>Back</span>
+                          <span>Назад</span>
                         </button>
                       </div>
                     </StickyButtonFooter>

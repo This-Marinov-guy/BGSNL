@@ -25,7 +25,7 @@ export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) 
 
 const Card = ({ card, region, isOtherEvent }) => {
   const link = isOtherEvent
-    ? "/other-event-details/gala-festival"
+    ? `/other-event-details/${card.id}`
     : `/${card.region ?? region}/event-details/${card.id}`;
 
   const dateLabel = card.correctedDate

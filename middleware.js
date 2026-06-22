@@ -71,13 +71,13 @@ const STATIC_META = [
     },
   },
   {
-    pattern: /^\/other-event-details\/gala-festival$/,
+    pattern: /^\/other-event-details\/pwc-career-pathways$/,
     meta: {
-      title: "Joint Gala Festival",
+      title: "Първи стъпки след университета | PwC България",
       description:
-        "Join us for the Joint Gala Festival - a cultural gathering that celebrates identity, creativity, and youth through shared artistic expression.",
-      image: `${SITE_URL}/assets/images/events/gala/poster.png`,
-      url: `${SITE_URL}/other-event-details/gala-festival`,
+        "Bulgarian Society Netherlands and PwC Bulgaria invite students and young professionals to explore career opportunities in audit, finance, and accounting.",
+      image: `${SITE_URL}/assets/images/events/pwc-2026/poster.png`,
+      url: `${SITE_URL}/other-event-details/pwc-career-pathways`,
       type: "event",
     },
   },

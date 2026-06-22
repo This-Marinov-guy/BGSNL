@@ -31,6 +31,7 @@ const STATIC_ROUTES = [
   { path: '/terms-and-legals', priority: '0.5', changefreq: 'yearly' },
   { path: '/partners', priority: '0.7', changefreq: 'monthly' },
   { path: '/partners/pwc-bulgaria', priority: '0.7', changefreq: 'monthly' },
+  { path: '/other-event-details/pwc-career-pathways', priority: '0.8', changefreq: 'weekly' },
   { path: '/articles', priority: '0.9', changefreq: 'weekly' },
   { path: '/articles/toni-villa', priority: '0.7', changefreq: 'yearly' },
   { path: '/articles/from-bulgaria-to-the-netherlands', priority: '0.7', changefreq: 'yearly' },

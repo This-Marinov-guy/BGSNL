@@ -267,13 +267,7 @@ const Root = () => {
                 />
                 <Route
                   exact
-                  path={"/other-event-details/gala-festival"}
-                  element={<NonSocietyEvent />}
-                ></Route>
-
-                <Route
-                  exact
-                  path={"/other-event-details/joint-gala-festival"}
+                  path={"/other-event-details/:eventId"}
                   element={<NonSocietyEvent />}
                 ></Route>
 

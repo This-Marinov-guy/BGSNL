@@ -72,6 +72,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.bulgariansociety.nl/other-event-details/pwc-career-pathways</loc>
+    <lastmod>2026-06-22T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.bulgariansociety.nl/articles</loc>
     <lastmod>2026-05-11T18:30:44.396Z</lastmod>
     <changefreq>weekly</changefreq>
