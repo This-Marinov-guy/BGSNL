@@ -46,7 +46,7 @@ const HeaderContent = (props) => {
                 <Link to="/">Netherlands</Link>
               </li>
               {REGIONS.map((region, index) => {
-                if (region === "leiden_hague") {
+                if (region === "breda_tilburg") {
                   return (
                     <li key={index}>
                       <Link to={"/" + region}>
@@ -134,11 +134,6 @@ const HeaderContent = (props) => {
                   <li>
                     <Link to={`/hall-of-fame`}>Alumni Tree</Link>
                   </li>
-                  <li>
-                    <Link to={`/${region ? region + "/" : ""}contact`}>
-                      Contact
-                    </Link>
-                  </li>
                 </ul>
               </li>
             </Fragment>
@@ -163,6 +158,10 @@ const HeaderContent = (props) => {
           <li>
             <SolidBadge className="absolute-badge" text="New" color="green" />
             <Link to={`/internships`}>Internships</Link>
+          </li>
+
+          <li>
+            <Link to={`/${region ? region + "/" : ""}contact`}>Contact</Link>
           </li>
 
           {user.token && (

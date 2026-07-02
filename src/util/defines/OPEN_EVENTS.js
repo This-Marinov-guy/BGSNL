@@ -6,7 +6,7 @@ export const SOCIETY_EVENTS = {
     leeuwarden: [
 
     ],
-    breda: [
+    breda_tilburg: [
 
         // {
         //   memberOnly: false,
@@ -78,9 +78,9 @@ export const SOCIETY_EVENTS = {
         //     `The price includes drink and popcorns🍿!
         //     `
         //   ],
-        //   ticket_img: '/assets/images/tickets/breda/ticket-7.png',
-        //   images: ["/assets/images/portfolio/breda/portfolio-7"],
-        //   thumbnail: "/assets/images/portfolio/breda/portfolio-7",
+        //   ticket_img: '/assets/images/tickets/breda_tilburg/ticket-7.png',
+        //   images: ["/assets/images/portfolio/breda_tilburg/portfolio-7"],
+        //   thumbnail: "/assets/images/portfolio/breda_tilburg/portfolio-7",
         // },
     ],
     maastricht: [

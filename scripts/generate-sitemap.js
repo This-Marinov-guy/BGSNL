@@ -9,7 +9,7 @@ const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.bulgariansoc
 // All regions from your app
 const REGIONS = [
   'amsterdam',
-  'breda',
+  'breda_tilburg',
   'eindhoven',
   'groningen',
   'leiden_hague',

@@ -7,7 +7,7 @@
 
 .groningen button:hover,
 .amsterdam button:hover,
-.breda button:hover,
+.breda_tilburg button:hover,
 .eindhoven button:hover,
 .leeuwarden button:hover,
 .maastricht button:hover,
@@ -112,22 +112,22 @@
   background-color: #007862 !important;
 }
 
-/* .breda  */
+/* .breda_tilburg  */
 
-.breda p,
-.breda h3,
-.breda a:hover,
-.breda li:hover,
-.breda h4 a:hover {
+.breda_tilburg p,
+.breda_tilburg h3,
+.breda_tilburg a:hover,
+.breda_tilburg li:hover,
+.breda_tilburg h4 a:hover {
   color: #f64535 !important;
 }
 
-.breda button {
+.breda_tilburg button {
   background-color: #f64535 !important;
   border: #f64535 !important;
 }
 
-.breda .thumbnail-inner-2::before {
+.breda_tilburg .thumbnail-inner-2::before {
   background-color: #f64535 !important;
   background-image: linear-gradient(#f64535 10%, #000000 100%) !important;
 }

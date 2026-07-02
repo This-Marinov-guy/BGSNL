@@ -17,7 +17,7 @@ export const UNIVERSITIES_BY_CITY = [
   },
   {
     label: "Breda",
-    code: "breda",
+    code: "breda_tilburg",
     items: [
       {
         label: "Breda University of Applied Sciences",
