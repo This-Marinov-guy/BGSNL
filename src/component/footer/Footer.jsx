@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -6,6 +7,11 @@ import {
   REGION_MAIN_COLOR,
   REGION_SECOND_COLOR,
   REGION_SOCIALS,
+  REGIONS,
+  REGION_DISPLAY_NAMES,
+  getRegionPath,
+  isPublicRegionSlug,
+  resolveRegionSlug,
   KVK,
 } from "../../util/defines/REGIONS_DESIGN";
 import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
@@ -14,7 +20,11 @@ import { showModal } from "../../redux/modal";
 import { DONATION_MODAL } from "../../util/defines/common";
 
 const Footer = ({ forceRegion }) => {
-  const region = forceRegion ?? useParams().region;
+  const regionParam = forceRegion ?? useParams().region;
+  const region = isPublicRegionSlug(regionParam)
+    ? resolveRegionSlug(regionParam)
+    : null;
+  const regionPath = region ? getRegionPath(region) : "";
 
   const dispatch = useDispatch();
 
@@ -75,7 +85,7 @@ const Footer = ({ forceRegion }) => {
                           <Link
                             to={
                               region
-                                ? `/${region}/events/future-events`
+                                ? `${regionPath}/events/future-events`
                                 : `/events/future-events`
                             }
                           >
@@ -83,7 +93,7 @@ const Footer = ({ forceRegion }) => {
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/${region}/contact`}>Contact</Link>
+                          <Link to={region ? `${regionPath}/contact` : "/contact"}>Contact</Link>
                         </li>
                         <li>
                           <Link to="/terms-and-legals" target="_blank" rel="noopener noreferrer">
@@ -126,6 +136,21 @@ const Footer = ({ forceRegion }) => {
                   </div>
                   {/* End Single Widget  */}
 
+                  <div className="col-lg-12 mt--30">
+                    <div className="footer-link footer-city-links">
+                      <h4>City societies</h4>
+                      <ul className="ft-link footer-city-grid">
+                        {REGIONS.map((city) => (
+                          <li key={city}>
+                            <Link to={getRegionPath(city)}>
+                              Bulgarian Society {REGION_DISPLAY_NAMES[city]}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
                   <div className="col-lg-12">
                     <div className="copyright-text">
                       <p>
@@ -144,6 +169,10 @@ const Footer = ({ forceRegion }) => {
       </footer>
     </Fragment>
   );
+};
+
+Footer.propTypes = {
+  forceRegion: PropTypes.string,
 };
 
 export default Footer;

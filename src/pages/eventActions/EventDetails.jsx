@@ -20,6 +20,10 @@ import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import EventStructuredData from "../../component/common/EventStructuredData";
 import EventImageCarousel from "../../elements/ui/EventImageCarousel";
+import {
+  getRegionPath,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 
 const EventDetails = () => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -28,6 +32,8 @@ const EventDetails = () => {
   const user = useSelector(selectUser);
 
   const { region, eventId } = useParams();
+  const regionKey = resolveRegionSlug(region);
+  const regionPath = getRegionPath(regionKey);
   const navigate = useNavigate();
 
   const { loading, sendRequest } = useHttpClient();
@@ -65,7 +71,7 @@ const EventDetails = () => {
   const eventTitle = selectedEvent.newTitle || selectedEvent.title;
   const eventDescription =
     selectedEvent.description || selectedEvent.text?.substring(0, 160);
-  const eventUrl = `https://www.bulgariansociety.nl/${region}/event-details/${eventId}`;
+  const eventUrl = `https://www.bulgariansociety.nl${regionPath}/event-details/${eventId}`;
 
   const eventImages = selectedEvent.images.filter(Boolean); // Remove any null/undefined values
 
@@ -77,9 +83,9 @@ const EventDetails = () => {
         image={selectedEvent.poster || bgImageUrl}
         type="event"
         canonicalUrl={eventUrl}
-        keywords={`${eventTitle}, Bulgarian event, ${region}, BGSNL event, Bulgarian Society`}
+        keywords={`${eventTitle}, Bulgarian event, ${regionKey}, BGSNL event, Bulgarian Society`}
       />
-      <EventStructuredData event={selectedEvent} region={region} />
+      <EventStructuredData event={selectedEvent} region={regionKey} />
 
       <Header
         headertransparent="header--transparent"
@@ -257,7 +263,7 @@ const EventDetails = () => {
                             <>
                               {!eventClosed && (
                                 <Link
-                                  to={`/${region}/purchase-ticket/${eventId}`}
+                                  to={`${regionPath}/purchase-ticket/${eventId}`}
                                   className="rn-button-style--2 rn-btn-reverse-green"
                                 >
                                   Buy Ticket

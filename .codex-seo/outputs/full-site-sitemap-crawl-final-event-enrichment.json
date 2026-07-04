@@ -1,0 +1,664 @@
+{
+  "generatedAt": "2026-07-04T17:08:46.700Z",
+  "buildDir": "D:\\GitHub\\BGSNL\\build",
+  "sitemapPath": "D:\\GitHub\\BGSNL\\public\\sitemap.xml",
+  "summary": {
+    "sitemapUrls": 65,
+    "prerenderedUrls": 65,
+    "missingPrerenderedUrls": 0,
+    "pagesWithIssues": 0,
+    "issueBreakdown": {}
+  },
+  "pages": [
+    {
+      "url": "https://www.bulgariansociety.nl/",
+      "routePath": "/",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Netherlands | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/about",
+      "routePath": "/about",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\about\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "About Bulgarian Society Netherlands | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/about",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/join-the-society",
+      "routePath": "/join-the-society",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\join-the-society\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Join Bulgarian Society Netherlands | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/join-the-society",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/internships",
+      "routePath": "/internships",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\internships\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Internships for Bulgarian Students in the Netherlands | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/internships",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/events/future-events",
+      "routePath": "/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Events in the Netherlands | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/events/past-events",
+      "routePath": "/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles",
+      "routePath": "/articles",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL Articles for Bulgarian Students in the Netherlands",
+      "canonical": "https://www.bulgariansociety.nl/articles",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/from-bulgaria-to-the-netherlands",
+      "routePath": "/articles/from-bulgaria-to-the-netherlands",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\from-bulgaria-to-the-netherlands\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "From Bulgaria to the Netherlands | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/from-bulgaria-to-the-netherlands",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/toni-villa",
+      "routePath": "/articles/toni-villa",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\toni-villa\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Toni Villa and Bulgarian Entrepreneurship | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/toni-villa",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/acedemie-minerva",
+      "routePath": "/articles/acedemie-minerva",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\acedemie-minerva\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Student Exhibitions in Groningen | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/acedemie-minerva",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/board-and-committee",
+      "routePath": "/board-and-committee",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\board-and-committee\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL Boards and Committees",
+      "canonical": "https://www.bulgariansociety.nl/board-and-committee",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/welcome-to-alumni",
+      "routePath": "/welcome-to-alumni",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\welcome-to-alumni\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL Alumni Community",
+      "canonical": "https://www.bulgariansociety.nl/welcome-to-alumni",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/hall-of-fame",
+      "routePath": "/hall-of-fame",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\hall-of-fame\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL Hall of Fame",
+      "canonical": "https://www.bulgariansociety.nl/hall-of-fame",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/developers",
+      "routePath": "/developers",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\developers\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL Developers",
+      "canonical": "https://www.bulgariansociety.nl/developers",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/terms-and-legals",
+      "routePath": "/terms-and-legals",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\terms-and-legals\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL Terms and Policies",
+      "canonical": "https://www.bulgariansociety.nl/terms-and-legals",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/partners",
+      "routePath": "/partners",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\partners\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Netherlands Partners",
+      "canonical": "https://www.bulgariansociety.nl/partners",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/partners/pwc-bulgaria",
+      "routePath": "/partners/pwc-bulgaria",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\partners\\pwc-bulgaria\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "PwC Bulgaria and BGSNL Partnership",
+      "canonical": "https://www.bulgariansociety.nl/partners/pwc-bulgaria",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/other-event-details/pwc-career-pathways",
+      "routePath": "/other-event-details/pwc-career-pathways",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\other-event-details\\pwc-career-pathways\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "PwC Career Pathways Event | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/other-event-details/pwc-career-pathways",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/amsterdam",
+      "routePath": "/amsterdam",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\amsterdam\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Amsterdam | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/amsterdam",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/amsterdam/contact",
+      "routePath": "/amsterdam/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\amsterdam\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Amsterdam | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/amsterdam/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/amsterdam/events/future-events",
+      "routePath": "/amsterdam/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\amsterdam\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Amsterdam Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/amsterdam/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/amsterdam/events/past-events",
+      "routePath": "/amsterdam/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\amsterdam\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Amsterdam Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/amsterdam/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/breda",
+      "routePath": "/breda",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\breda\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Breda and Tilburg | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/breda",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/breda/contact",
+      "routePath": "/breda/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\breda\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Breda and Tilburg | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/breda/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/breda/events/future-events",
+      "routePath": "/breda/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\breda\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Breda and Tilburg Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/breda/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/breda/events/past-events",
+      "routePath": "/breda/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\breda\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Breda and Tilburg Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/breda/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/eindhoven",
+      "routePath": "/eindhoven",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\eindhoven\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Eindhoven | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/eindhoven",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/eindhoven/contact",
+      "routePath": "/eindhoven/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\eindhoven\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Eindhoven | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/eindhoven/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/eindhoven/events/future-events",
+      "routePath": "/eindhoven/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\eindhoven\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Eindhoven Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/eindhoven/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/eindhoven/events/past-events",
+      "routePath": "/eindhoven/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\eindhoven\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Eindhoven Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/eindhoven/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/groningen",
+      "routePath": "/groningen",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\groningen\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Groningen | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/groningen",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/groningen/contact",
+      "routePath": "/groningen/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\groningen\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Groningen | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/groningen/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/groningen/events/future-events",
+      "routePath": "/groningen/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\groningen\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Groningen Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/groningen/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/groningen/events/past-events",
+      "routePath": "/groningen/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\groningen\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Groningen Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/groningen/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leiden_hague",
+      "routePath": "/leiden_hague",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leiden_hague\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Leiden and The Hague | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leiden_hague",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leiden_hague/contact",
+      "routePath": "/leiden_hague/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leiden_hague\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Leiden and The Hague | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leiden_hague/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leiden_hague/events/future-events",
+      "routePath": "/leiden_hague/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leiden_hague\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Leiden and The Hague Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leiden_hague/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leiden_hague/events/past-events",
+      "routePath": "/leiden_hague/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leiden_hague\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Leiden and The Hague Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leiden_hague/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leeuwarden",
+      "routePath": "/leeuwarden",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leeuwarden\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Leeuwarden | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leeuwarden",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leeuwarden/contact",
+      "routePath": "/leeuwarden/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leeuwarden\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Leeuwarden | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leeuwarden/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leeuwarden/events/future-events",
+      "routePath": "/leeuwarden/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leeuwarden\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Leeuwarden Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leeuwarden/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/leeuwarden/events/past-events",
+      "routePath": "/leeuwarden/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\leeuwarden\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Leeuwarden Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/leeuwarden/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/maastricht",
+      "routePath": "/maastricht",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\maastricht\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Maastricht | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/maastricht",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/maastricht/contact",
+      "routePath": "/maastricht/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\maastricht\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Maastricht | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/maastricht/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/maastricht/events/future-events",
+      "routePath": "/maastricht/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\maastricht\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Maastricht Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/maastricht/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/maastricht/events/past-events",
+      "routePath": "/maastricht/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\maastricht\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Maastricht Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/maastricht/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/rotterdam",
+      "routePath": "/rotterdam",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\rotterdam\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Rotterdam | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/rotterdam",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/rotterdam/contact",
+      "routePath": "/rotterdam/contact",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\rotterdam\\contact\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Contact Bulgarian Society Rotterdam | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/rotterdam/contact",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/rotterdam/events/future-events",
+      "routePath": "/rotterdam/events/future-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\rotterdam\\events\\future-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Upcoming Bulgarian Society Rotterdam Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/rotterdam/events/future-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/rotterdam/events/past-events",
+      "routePath": "/rotterdam/events/past-events",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\rotterdam\\events\\past-events\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Past Bulgarian Society Rotterdam Events | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/rotterdam/events/past-events",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/825/bgsnl-expanded-its-community-what-the-newly-established-branch-in-the-hague-achieved-in-its-first-months",
+      "routePath": "/articles/825/bgsnl-expanded-its-community-what-the-newly-established-branch-in-the-hague-achieved-in-its-first-months",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\825\\bgsnl-expanded-its-community-what-the-newly-established-branch-in-the-hague-achieved-in-its-first-months\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL expanded its community: What the newly established branch in The Hague achieved in its first months | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/825/bgsnl-expanded-its-community-what-the-newly-established-branch-in-the-hague-achieved-in-its-first-months",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/792/bulgaria-wants-you-in-the-hague-what-did-the-event-offer-to-bulgarians-in-the-netherlands",
+      "routePath": "/articles/792/bulgaria-wants-you-in-the-hague-what-did-the-event-offer-to-bulgarians-in-the-netherlands",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\792\\bulgaria-wants-you-in-the-hague-what-did-the-event-offer-to-bulgarians-in-the-netherlands\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgaria Wants You in The Hague: What did the event offer to Bulgarians in the Netherlands? | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/792/bulgaria-wants-you-in-the-hague-what-did-the-event-offer-to-bulgarians-in-the-netherlands",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/754/when-ambition-and-positivity-build-communities-and-why-everyone-can-be-balkan-queens",
+      "routePath": "/articles/754/when-ambition-and-positivity-build-communities-and-why-everyone-can-be-balkan-queens",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\754\\when-ambition-and-positivity-build-communities-and-why-everyone-can-be-balkan-queens\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "When ambition and positivity build communities – and why everyone can be Balkan Queens? | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/754/when-ambition-and-positivity-build-communities-and-why-everyone-can-be-balkan-queens",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/709/bgsnl-participates-in-the-first-international-seminar-for-bulgarian-societies",
+      "routePath": "/articles/709/bgsnl-participates-in-the-first-international-seminar-for-bulgarian-societies",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\709\\bgsnl-participates-in-the-first-international-seminar-for-bulgarian-societies\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL participates in the first International Seminar for Bulgarian Societies | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/709/bgsnl-participates-in-the-first-international-seminar-for-bulgarian-societies",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/666/my-life-began-when-i-came-here-a-conversation-with-mila-paparizova-about-animation-nostalgia-and-self-discovery",
+      "routePath": "/articles/666/my-life-began-when-i-came-here-a-conversation-with-mila-paparizova-about-animation-nostalgia-and-self-discovery",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\666\\my-life-began-when-i-came-here-a-conversation-with-mila-paparizova-about-animation-nostalgia-and-self-discovery\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "“My life began when I came here“: A conversation with Mila Paparizova about animation, nostalgia and self-discovery | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/666/my-life-began-when-i-came-here-a-conversation-with-mila-paparizova-about-animation-nostalgia-and-self-discovery",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/634/judges-say-yes-how-ivan-and-kiril-produced-a-film-in-84-hours-and-won-their-first-prize",
+      "routePath": "/articles/634/judges-say-yes-how-ivan-and-kiril-produced-a-film-in-84-hours-and-won-their-first-prize",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\634\\judges-say-yes-how-ivan-and-kiril-produced-a-film-in-84-hours-and-won-their-first-prize\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Judges say yes! How Ivan and Kiril produced a film in 84 hours and won their first prize | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/634/judges-say-yes-how-ivan-and-kiril-produced-a-film-in-84-hours-and-won-their-first-prize",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/597/how-much-courage-does-it-take-to-make-it-into-fashion",
+      "routePath": "/articles/597/how-much-courage-does-it-take-to-make-it-into-fashion",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\597\\how-much-courage-does-it-take-to-make-it-into-fashion\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "How much courage does It take to make it into fashion? | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/597/how-much-courage-does-it-take-to-make-it-into-fashion",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/388/bulgarian-school-in-eindhoven-more-than-15-years-of-community",
+      "routePath": "/articles/388/bulgarian-school-in-eindhoven-more-than-15-years-of-community",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\388\\bulgarian-school-in-eindhoven-more-than-15-years-of-community\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian school in Eindhoven: More than 15 years of community | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/388/bulgarian-school-in-eindhoven-more-than-15-years-of-community",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/325/project-bulgarian-world-bulgarian-school-in-maastricht",
+      "routePath": "/articles/325/project-bulgarian-world-bulgarian-school-in-maastricht",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\325\\project-bulgarian-world-bulgarian-school-in-maastricht\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Project ,,Bulgarian World’’: Bulgarian school in Maastricht | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/325/project-bulgarian-world-bulgarian-school-in-maastricht",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/317/why-did-we-create-bgsnl-articles-and-what-comes-next",
+      "routePath": "/articles/317/why-did-we-create-bgsnl-articles-and-what-comes-next",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\317\\why-did-we-create-bgsnl-articles-and-what-comes-next\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Why did we create BGSNL articles and what comes next? | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/317/why-did-we-create-bgsnl-articles-and-what-comes-next",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/302/bgsamsterdam-has-a-new-president-meet-lusi",
+      "routePath": "/articles/302/bgsamsterdam-has-a-new-president-meet-lusi",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\302\\bgsamsterdam-has-a-new-president-meet-lusi\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSAmsterdam has a new president: Meet Lusi | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/302/bgsamsterdam-has-a-new-president-meet-lusi",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/299/bgsnl-opens-up-a-new-chapter",
+      "routePath": "/articles/299/bgsnl-opens-up-a-new-chapter",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\299\\bgsnl-opens-up-a-new-chapter\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "BGSNL opens up a new chapter | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/299/bgsnl-opens-up-a-new-chapter",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/186/the-mission-duo-possible-how-bgsleeuwarden-helps-students-get-funding",
+      "routePath": "/articles/186/the-mission-duo-possible-how-bgsleeuwarden-helps-students-get-funding",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\186\\the-mission-duo-possible-how-bgsleeuwarden-helps-students-get-funding\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "The mission “DUO” possible: How BGSLeeuwarden helps students get funding | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/186/the-mission-duo-possible-how-bgsleeuwarden-helps-students-get-funding",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/128/the-creative-journey-behind-bulgarian-society-groningens-branding",
+      "routePath": "/articles/128/the-creative-journey-behind-bulgarian-society-groningens-branding",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\128\\the-creative-journey-behind-bulgarian-society-groningens-branding\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "The creative journey behind Bulgarian Society Groningen’s branding | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/128/the-creative-journey-behind-bulgarian-society-groningens-branding",
+      "issues": []
+    },
+    {
+      "url": "https://www.bulgariansociety.nl/articles/41/bulgarian-society-groningens-annual-review",
+      "routePath": "/articles/41/bulgarian-society-groningens-annual-review",
+      "filePath": "D:\\GitHub\\BGSNL\\build\\articles\\41\\bulgarian-society-groningens-annual-review\\index.html",
+      "exists": true,
+      "hasPrerenderedRoot": true,
+      "title": "Bulgarian Society Groningen’s annual review | BGSNL",
+      "canonical": "https://www.bulgariansociety.nl/articles/41/bulgarian-society-groningens-annual-review",
+      "issues": []
+    }
+  ]
+}

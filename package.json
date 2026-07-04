@@ -1,7 +1,7 @@
 {
   "name": "bgsnl",
   "version": "3.3.1",
-  "homepage": "https://bulgariansociety.nl",
+  "homepage": "https://www.bulgariansociety.nl",
   "private": true,
   "basename": "/",
   "dependencies": {
@@ -75,10 +75,26 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "npm version patch && npm run generate-sitemap && vite build",
-    "build:no-version": "npm run generate-sitemap && vite build",
+    "build": "npm version patch && npm run generate-sitemap && vite build && npm run generate-prerendered-html",
+    "build:no-version": "npm run generate-sitemap && vite build && npm run generate-prerendered-html",
     "preview": "vite preview",
     "generate-sitemap": "node scripts/generate-sitemap.js",
+    "generate-prerendered-html": "node scripts/generate-prerendered-html.js",
+    "article:prerender:self-test": "node scripts/article-prerender-self-test.js",
+    "ahrefs:report:self-test": "node scripts/ahrefs-report-self-test.js",
+    "seo:prerender:self-test": "node scripts/seo-prerender-self-test.js",
+    "events:archive:export": "node scripts/export-past-events-from-tickets.js",
+    "events:archive:export:mongo": "node scripts/export-past-events-archive.js",
+    "events:archive:self-test": "node scripts/past-events-archive-exporter-self-test.js",
+    "events:past-page:self-test": "node scripts/past-events-page-self-test.js",
+    "footer:links:self-test": "node scripts/footer-links-self-test.js",
+    "full-sitemap-crawl:self-test": "node scripts/full-site-sitemap-crawl-self-test.js",
+    "live-html:self-test": "node scripts/bgsnl-live-html-audit-self-test.js",
+    "sitemap:self-test": "node scripts/sitemap-generator-self-test.js",
+    "audit:bgsnl-crawl": "node scripts/bgsnl-crawl-audit.js",
+    "audit:full-sitemap-crawl": "node scripts/full-site-sitemap-crawl.js",
+    "audit:bgsnl-live-html": "node scripts/bgsnl-live-html-audit.js",
+    "audit:bgsnl-geo-query-benchmark": "node scripts/bgsnl-geo-query-benchmark.js",
     "lint": "eslint ."
   },
   "eslintConfig": {

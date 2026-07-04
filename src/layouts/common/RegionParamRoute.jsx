@@ -1,15 +1,19 @@
 import React from 'react'
 import { Redirect, Route, useLocation } from 'react-router-dom';
-import { REGIONS } from '../../util/defines/REGIONS_DESIGN';
+import {
+    isPublicRegionSlug,
+    resolveRegionSlug,
+} from '../../util/defines/REGIONS_DESIGN';
 import styles from './RegionLayout.module.css'
 
 const RegionParamRoute = ({ component: Component, ...rest }) => {
     const region = useLocation().pathname.split('/')[1]
+    const regionKey = resolveRegionSlug(region)
 
-    return REGIONS.includes(region) ? <Route
+    return isPublicRegionSlug(region) ? <Route
     {...rest}
     render={(props) => (
-        <div className={styles[region] || ''}> 
+        <div className={styles[regionKey] || ''}>
             <Component {...props} />
         </div>
     )}

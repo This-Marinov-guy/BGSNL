@@ -22,7 +22,10 @@ import {
   encryptData,
   isObjectEmpty,
 } from "../../util/functions/helpers";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import {
+  isPublicRegionSlug,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import { Steps } from "primereact/steps";
 import RegionOptions2 from "../../elements/ui/buttons/RegionOptions2";
 import {
@@ -115,10 +118,11 @@ const groupedItemTemplate = (option) => {
 
 const SignUp = (props) => {
   const { region } = useParams();
+  const regionKey = resolveRegionSlug(region);
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
 
-  const uniOptions = reorderUniversitiesByCode(UNIVERSITIES_BY_CITY, region);
+  const uniOptions = reorderUniversitiesByCode(UNIVERSITIES_BY_CITY, regionKey);
 
   const handleSelectStep = (e) => {
     const newIndex = e.index;
@@ -146,7 +150,7 @@ const SignUp = (props) => {
   };
 
   useEffect(() => {
-    if (region && !REGIONS.includes(region)) {
+    if (region && !isPublicRegionSlug(region)) {
       navigate("/signup");
     }
 
@@ -305,7 +309,7 @@ const SignUp = (props) => {
                   );
                   formData.append("origin_url", window.location.origin);
                   formData.append("method", "signup");
-                  formData.append("region", region);
+                  formData.append("region", regionKey);
                   formData.append("name", values.name);
                   formData.append("surname", values.surname);
                   formData.append("birth", values.birth);

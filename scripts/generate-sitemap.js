@@ -1,225 +1,199 @@
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+const { SITEMAP_ROUTES } = require("./seo-page-data");
+const pastEventsArchive = require("../src/util/defines/past-events-archive.json");
 
-// Configuration
-const BASE_URL = 'https://www.bulgariansociety.nl';
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.bulgariansociety.nl/api/';
+const BASE_URL = "https://www.bulgariansociety.nl";
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "https://kanatitsa.bulgariansociety.nl/api/";
+const SITEMAP_REQUEST_HEADERS = { Origin: BASE_URL };
 
-// All regions from your app
-const REGIONS = [
-  'amsterdam',
-  'breda_tilburg',
-  'eindhoven',
-  'groningen',
-  'leiden_hague',
-  'leeuwarden',
-  'maastricht',
-  'rotterdam',
-];
-
-// Static routes (excluding user routes)
-const STATIC_ROUTES = [
-  { path: '/', priority: '1.0', changefreq: 'daily' },
-  { path: '/about', priority: '0.9', changefreq: 'monthly' },
-  { path: '/board-and-committee', priority: '0.8', changefreq: 'monthly' },
-  { path: '/welcome-to-alumni', priority: '0.8', changefreq: 'monthly' },
-  { path: '/join-the-society', priority: '0.9', changefreq: 'monthly' },
-  { path: '/hall-of-fame', priority: '0.7', changefreq: 'monthly' },
-  { path: '/developers', priority: '0.5', changefreq: 'monthly' },
-  { path: '/internships', priority: '0.8', changefreq: 'monthly' },
-  { path: '/terms-and-legals', priority: '0.5', changefreq: 'yearly' },
-  { path: '/partners', priority: '0.7', changefreq: 'monthly' },
-  { path: '/partners/pwc-bulgaria', priority: '0.7', changefreq: 'monthly' },
-  { path: '/other-event-details/pwc-career-pathways', priority: '0.8', changefreq: 'weekly' },
-  { path: '/articles', priority: '0.9', changefreq: 'weekly' },
-  { path: '/articles/toni-villa', priority: '0.7', changefreq: 'yearly' },
-  { path: '/articles/from-bulgaria-to-the-netherlands', priority: '0.7', changefreq: 'yearly' },
-  { path: '/articles/acedemie-minerva', priority: '0.7', changefreq: 'yearly' },
-];
-
-// Regional routes
-const REGIONAL_STATIC_ROUTES = [
-  { path: '/contact', priority: '0.8', changefreq: 'monthly' },
-  { path: '/events/future-events', priority: '0.9', changefreq: 'daily' },
-  { path: '/events/past-events', priority: '0.6', changefreq: 'weekly' },
-];
-
-// Helper function to encode title for URL
 function encodeForURL(title) {
-  if (!title) return 'article';
+  if (!title) return "article";
   return title
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
     .trim();
 }
 
-// Helper function to format date to ISO string
 function formatDate(date) {
   if (!date) return new Date().toISOString();
-  const d = new Date(date);
-  return isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
 }
 
-// Fetch events from backend
+function addUniqueUrl(urls, seen, url) {
+  if (!url.loc || seen.has(url.loc)) return false;
+  urls.push(url);
+  seen.add(url.loc);
+  return true;
+}
+
 async function fetchEvents() {
   try {
-    console.log('Fetching events from:', SERVER_URL + 'event/events-list');
-    const response = await axios.get(SERVER_URL + 'event/events-list', {
+    console.log("Fetching events from:", `${SERVER_URL}event/events-list`);
+    const response = await axios.get(`${SERVER_URL}event/events-list`, {
       timeout: 10000,
+      headers: SITEMAP_REQUEST_HEADERS,
     });
-    
-    if (response.data && response.data.events) {
-      console.log(`✓ Fetched ${response.data.events.length} events`);
+
+    if (response.data?.events) {
+      console.log(`Fetched ${response.data.events.length} API event route candidate(s)`);
       return response.data.events;
     }
-    
-    console.warn('⚠ No events found in response');
+
+    console.warn("No events found in API response");
     return [];
   } catch (error) {
-    console.error('✗ Error fetching events:', error.message);
+    console.warn("Event API unavailable for sitemap:", error.message);
     return [];
   }
 }
 
-// Fetch articles from backend
 async function fetchArticles() {
   try {
-    console.log('Fetching articles from:', SERVER_URL + 'wordpress/posts');
-    const response = await axios.get(SERVER_URL + 'wordpress/posts', {
+    console.log("Fetching articles from:", `${SERVER_URL}wordpress/posts`);
+    const response = await axios.get(`${SERVER_URL}wordpress/posts`, {
       timeout: 10000,
+      headers: SITEMAP_REQUEST_HEADERS,
     });
-    
-    if (response.data && response.data.posts) {
-      console.log(`✓ Fetched ${response.data.posts.length} articles`);
+
+    if (response.data?.posts) {
+      console.log(`Fetched ${response.data.posts.length} API article route candidate(s)`);
       return response.data.posts;
     }
-    
-    console.warn('⚠ No articles found in response');
+
+    console.warn("No articles found in API response");
     return [];
   } catch (error) {
-    console.error('✗ Error fetching articles:', error.message);
+    console.warn("Article API unavailable for sitemap:", error.message);
     return [];
   }
 }
 
-// Generate sitemap XML
+function archiveEvents() {
+  void pastEventsArchive;
+  return [];
+}
+
+function routeForApiEvent(event) {
+  const id = event.id || event._id;
+  const region = event.region;
+  if (!id || !region) return null;
+
+  return {
+    loc: `${BASE_URL}/${region}/event-details/${id}`,
+    lastmod: formatDate(event.updated_at || event.updatedAt || event.created_at || event.createdAt),
+    changefreq: "weekly",
+    priority: "0.8",
+  };
+}
+
+function routeForApiArticle(article) {
+  if (!article.id || !article.title) return null;
+  return {
+    loc: `${BASE_URL}/articles/${article.id}/${encodeForURL(article.title)}`,
+    lastmod: formatDate(article.updated_at || article.updatedAt || article.created_at || article.createdAt || article.date),
+    changefreq: "monthly",
+    priority: "0.7",
+  };
+}
+
 function generateSitemapXML(urls) {
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-${urls.map(url => `  <url>
+${urls.map((url) => `  <url>
     <loc>${url.loc}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
-  </url>`).join('\n')}
+  </url>`).join("\n")}
 </urlset>`;
-  
-  return xml;
 }
 
-// Main function
 async function generateSitemap() {
-  console.log('\n🚀 Starting sitemap generation...\n');
-  
+  console.log("\nStarting sitemap generation...\n");
+
   const urls = [];
+  const seen = new Set();
   const today = new Date().toISOString();
-  
-  // 1. Add static routes
-  console.log('📄 Adding static routes...');
-  STATIC_ROUTES.forEach(route => {
-    urls.push({
+
+  console.log("Adding public route inventory...");
+  for (const route of SITEMAP_ROUTES) {
+    addUniqueUrl(urls, seen, {
       loc: `${BASE_URL}${route.path}`,
       lastmod: today,
       changefreq: route.changefreq,
       priority: route.priority,
     });
-  });
-  console.log(`✓ Added ${STATIC_ROUTES.length} static routes\n`);
-  
-  // 2. Add regional routes
-  console.log('🌍 Adding regional routes...');
-  let regionalCount = 0;
-  REGIONS.forEach(region => {
-    // Add region home page
-    urls.push({
-      loc: `${BASE_URL}/${region}`,
-      lastmod: today,
-      changefreq: 'daily',
-      priority: '0.9',
-    });
-    regionalCount++;
-    
-    // Add regional static routes
-    REGIONAL_STATIC_ROUTES.forEach(route => {
-      urls.push({
-        loc: `${BASE_URL}/${region}${route.path}`,
-        lastmod: today,
-        changefreq: route.changefreq,
-        priority: route.priority,
-      });
-      regionalCount++;
-    });
-  });
-  console.log(`✓ Added ${regionalCount} regional routes\n`);
-  
-  // 3. Fetch and add dynamic event routes
-  console.log('📅 Fetching and adding event routes...');
+  }
+  console.log(`Added ${SITEMAP_ROUTES.length} public routes\n`);
+
+  console.log("Fetching and adding event routes...");
   const events = await fetchEvents();
-  events.forEach(event => {
-    if (event.id && event.region) {
-      urls.push({
-        loc: `${BASE_URL}/${event.region}/event-details/${event.id}`,
-        lastmod: formatDate(event.updated_at || event.created_at),
-        changefreq: 'weekly',
-        priority: '0.8',
-      });
-    }
-  });
-  console.log(`✓ Added ${events.length} event routes\n`);
-  
-  // 4. Fetch and add dynamic article routes
-  console.log('📝 Fetching and adding article routes...');
+  let apiEventRoutes = 0;
+  for (const event of events) {
+    const route = routeForApiEvent(event);
+    if (route && addUniqueUrl(urls, seen, route)) apiEventRoutes += 1;
+  }
+
+  let archiveEventRoutes = 0;
+  for (const route of archiveEvents()) {
+    if (addUniqueUrl(urls, seen, route)) archiveEventRoutes += 1;
+  }
+  console.log(`Added ${apiEventRoutes} API event route(s)`);
+  console.log(`Added ${archiveEventRoutes} archive event route(s)\n`);
+
+  console.log("Fetching and adding article routes...");
   const articles = await fetchArticles();
-  articles.forEach(article => {
-    if (article.id && article.title) {
-      const encodedTitle = encodeForURL(article.title);
-      urls.push({
-        loc: `${BASE_URL}/articles/${article.id}/${encodedTitle}`,
-        lastmod: formatDate(article.updated_at || article.created_at || article.date),
-        changefreq: 'monthly',
-        priority: '0.7',
-      });
-    }
-  });
-  console.log(`✓ Added ${articles.length} article routes\n`);
-  
-  // 5. Generate and save sitemap
-  console.log('💾 Generating sitemap XML...');
+  let articleRoutes = 0;
+  for (const article of articles) {
+    const route = routeForApiArticle(article);
+    if (route && addUniqueUrl(urls, seen, route)) articleRoutes += 1;
+  }
+  console.log(`Added ${articleRoutes} article route(s)\n`);
+
+  console.log("Generating sitemap XML...");
   const sitemapXML = generateSitemapXML(urls);
-  
-  const outputPath = path.join(__dirname, '../public/sitemap.xml');
+  const outputPath = path.join(__dirname, "../public/sitemap.xml");
   fs.writeFileSync(outputPath, sitemapXML);
-  
-  console.log(`✅ Sitemap generated successfully!`);
-  console.log(`📍 Location: ${outputPath}`);
-  console.log(`📊 Total URLs: ${urls.length}`);
-  console.log(`   - Static routes: ${STATIC_ROUTES.length}`);
-  console.log(`   - Regional routes: ${regionalCount}`);
-  console.log(`   - Event routes: ${events.length}`);
-  console.log(`   - Article routes: ${articles.length}\n`);
+
+  console.log("Sitemap generated successfully");
+  console.log(`Location: ${outputPath}`);
+  console.log(`Total URLs: ${urls.length}`);
+  console.log(` - Public route inventory: ${SITEMAP_ROUTES.length}`);
+  console.log(` - API event routes: ${apiEventRoutes}`);
+  console.log(` - Archive event routes: ${archiveEventRoutes}`);
+  console.log(` - Article routes: ${articleRoutes}\n`);
+
+  return {
+    totalUrls: urls.length,
+    apiEventRoutes,
+    archiveEventRoutes,
+    articleRoutes,
+  };
 }
 
-// Run the script
-generateSitemap().catch(error => {
-  console.error('\n❌ Error generating sitemap:', error.message);
-  process.exit(1);
-});
+if (require.main === module) {
+  generateSitemap().catch((error) => {
+    console.error("\nError generating sitemap:", error.message);
+    process.exit(1);
+  });
+}
 
+module.exports = {
+  archiveEvents,
+  fetchArticles,
+  fetchEvents,
+  generateSitemap,
+  generateSitemapXML,
+  routeForApiArticle,
+  routeForApiEvent,
+};

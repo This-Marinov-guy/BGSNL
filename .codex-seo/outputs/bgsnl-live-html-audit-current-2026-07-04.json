@@ -1,0 +1,2853 @@
+{
+  "generatedAt": "2026-07-04T17:33:21.786Z",
+  "siteUrl": "https://www.bulgariansociety.nl",
+  "summary": {
+    "routes": 14,
+    "routesWithIssues": 14,
+    "criticalHighFindings": 143,
+    "findingsBySeverity": {
+      "critical": 14,
+      "high": 129,
+      "medium": 14,
+      "low": 0
+    }
+  },
+  "results": [
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "routePath": "/",
+      "url": "https://www.bulgariansociety.nl/",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "critical",
+          "impact": 5,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing answer-ready phrase: BGSNL stands for Bulgarian Society Netherlands"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Netherlands (BGSNL)"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing required link: /events/future-events"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing JSON-LD type: WebSite"
+        },
+        {
+          "id": "home",
+          "query": "Bulgarian Society Netherlands",
+          "targetPath": "/",
+          "severity": "medium",
+          "impact": 5,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "routePath": "/about",
+      "url": "https://www.bulgariansociety.nl/about",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "critical",
+          "impact": 5,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/about"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian students"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing answer-ready phrase: Radio Bulgaria"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing required link: https://aba.government.bg/organizations/bulgarian-society-netherlands/1456"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing required link: https://bnrnews.bg/en/post/490264/bulgarian-students-in-the-netherlands-have-support-of-bulgarian-society-there"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing JSON-LD type: AboutPage"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "high",
+          "impact": 5,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "about",
+          "query": "Bulgarian students Netherlands",
+          "targetPath": "/about",
+          "severity": "medium",
+          "impact": 5,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "routePath": "/amsterdam",
+      "url": "https://www.bulgariansociety.nl/amsterdam",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/amsterdam"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Amsterdam"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /amsterdam/events/future-events"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /amsterdam/events/past-events"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "amsterdam",
+          "query": "Bulgarian Society Amsterdam",
+          "targetPath": "/amsterdam",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "routePath": "/breda",
+      "url": "https://www.bulgariansociety.nl/breda",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/breda"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Breda and Tilburg"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /breda/events/future-events"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /breda/events/past-events"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "breda",
+          "query": "Bulgarian Society Breda and Tilburg",
+          "targetPath": "/breda",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "routePath": "/eindhoven",
+      "url": "https://www.bulgariansociety.nl/eindhoven",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/eindhoven"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Eindhoven"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /eindhoven/events/future-events"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /eindhoven/events/past-events"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "eindhoven",
+          "query": "Bulgarian Society Eindhoven",
+          "targetPath": "/eindhoven",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "routePath": "/events/future-events",
+      "url": "https://www.bulgariansociety.nl/events/future-events",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/events/future-events"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Upcoming Bulgarian Society events"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /amsterdam/events/future-events"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "events-future-events",
+          "query": "Bulgarian events Netherlands",
+          "targetPath": "/events/future-events",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "routePath": "/events/past-events",
+      "url": "https://www.bulgariansociety.nl/events/past-events",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/events/past-events"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: 101 archived public events"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Past Bulgarian Society events"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /events/future-events"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: CollectionPage"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: Event"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: ItemList"
+        },
+        {
+          "id": "events-past-events",
+          "query": "BGSNL past events",
+          "targetPath": "/events/past-events",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 500"
+        }
+      ]
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "routePath": "/groningen",
+      "url": "https://www.bulgariansociety.nl/groningen",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/groningen"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Groningen"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /groningen/events/future-events"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /groningen/events/past-events"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "groningen",
+          "query": "Bulgarian Society Groningen",
+          "targetPath": "/groningen",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "routePath": "/join-the-society",
+      "url": "https://www.bulgariansociety.nl/join-the-society",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/join-the-society"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Become a member"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /events/future-events"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /internships"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /signup"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "join-the-society",
+          "query": "join Bulgarian Society Netherlands",
+          "targetPath": "/join-the-society",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "routePath": "/leeuwarden",
+      "url": "https://www.bulgariansociety.nl/leeuwarden",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/leeuwarden"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Leeuwarden"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /leeuwarden/events/future-events"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /leeuwarden/events/past-events"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "leeuwarden",
+          "query": "Bulgarian Society Leeuwarden",
+          "targetPath": "/leeuwarden",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "routePath": "/leiden_hague",
+      "url": "https://www.bulgariansociety.nl/leiden_hague",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/leiden_hague"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Leiden and The Hague"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /leiden_hague/events/future-events"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /leiden_hague/events/past-events"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "leiden-hague",
+          "query": "Bulgarian Society Leiden and The Hague",
+          "targetPath": "/leiden_hague",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "routePath": "/maastricht",
+      "url": "https://www.bulgariansociety.nl/maastricht",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/maastricht"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Maastricht"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /maastricht/events/future-events"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /maastricht/events/past-events"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "maastricht",
+          "query": "Bulgarian Society Maastricht",
+          "targetPath": "/maastricht",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "routePath": "/rotterdam",
+      "url": "https://www.bulgariansociety.nl/rotterdam",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "critical",
+          "impact": 4,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/rotterdam"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Bulgarian Society Rotterdam"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /rotterdam/events/future-events"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing required link: /rotterdam/events/past-events"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "high",
+          "impact": 4,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "rotterdam",
+          "query": "Bulgarian Society Rotterdam",
+          "targetPath": "/rotterdam",
+          "severity": "medium",
+          "impact": 4,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "routePath": "/internships",
+      "url": "https://www.bulgariansociety.nl/internships",
+      "status": "fetched",
+      "title": "Bulgarian Society Netherlands",
+      "canonical": "",
+      "hasPrerenderRoot": false,
+      "wordCount": 12,
+      "internalLinks": 0,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "ContactPoint",
+        "Country",
+        "ImageObject",
+        "ListItem",
+        "Organization",
+        "PostalAddress"
+      ],
+      "findings": [
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "critical",
+          "impact": 3,
+          "issue": "live HTML is missing prerendered crawler content"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML title does not match expected route title"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/internships"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing answer-ready phrase: Internships for the BGSNL community"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing answer-ready phrase: Quick answer"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing required link: /join-the-society"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing required link: /partners"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing required link: /partners/pwc-bulgaria"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing JSON-LD type: FAQPage"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "high",
+          "impact": 3,
+          "issue": "live HTML missing JSON-LD type: WebPage"
+        },
+        {
+          "id": "internships",
+          "query": "Bulgarian internships Netherlands",
+          "targetPath": "/internships",
+          "severity": "medium",
+          "impact": 3,
+          "issue": "live HTML has 12 words; expected at least 120"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "critical",
+      "impact": 5,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "critical",
+      "impact": 5,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "critical",
+      "impact": 4,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "critical",
+      "impact": 3,
+      "issue": "live HTML is missing prerendered crawler content"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/about"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian students"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing answer-ready phrase: Radio Bulgaria"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing required link: https://aba.government.bg/organizations/bulgarian-society-netherlands/1456"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing required link: https://bnrnews.bg/en/post/490264/bulgarian-students-in-the-netherlands-have-support-of-bulgarian-society-there"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing JSON-LD type: AboutPage"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing answer-ready phrase: BGSNL stands for Bulgarian Society Netherlands"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Netherlands (BGSNL)"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing required link: /events/future-events"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "high",
+      "impact": 5,
+      "issue": "live HTML missing JSON-LD type: WebSite"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/amsterdam"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Amsterdam"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /amsterdam/events/future-events"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /amsterdam/events/past-events"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/breda"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Breda and Tilburg"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /breda/events/future-events"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /breda/events/past-events"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/eindhoven"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Eindhoven"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /eindhoven/events/future-events"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /eindhoven/events/past-events"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/events/future-events"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Upcoming Bulgarian Society events"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /amsterdam/events/future-events"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/events/past-events"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: 101 archived public events"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Past Bulgarian Society events"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /events/future-events"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: CollectionPage"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: Event"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: ItemList"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/groningen"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Groningen"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /groningen/events/future-events"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /groningen/events/past-events"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/join-the-society"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Become a member"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /events/future-events"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /internships"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /signup"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/leeuwarden"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Leeuwarden"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /leeuwarden/events/future-events"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /leeuwarden/events/past-events"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/leiden_hague"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Leiden and The Hague"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /leiden_hague/events/future-events"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /leiden_hague/events/past-events"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/maastricht"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Maastricht"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /maastricht/events/future-events"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /maastricht/events/past-events"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/rotterdam"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Bulgarian Society Rotterdam"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /rotterdam/events/future-events"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing required link: /rotterdam/events/past-events"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "high",
+      "impact": 4,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML title does not match expected route title"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML canonical does not match https://www.bulgariansociety.nl/internships"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing answer-ready phrase: Internships for the BGSNL community"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing answer-ready phrase: Quick answer"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing required link: /join-the-society"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing required link: /partners"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing required link: /partners/pwc-bulgaria"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing JSON-LD type: FAQPage"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "high",
+      "impact": 3,
+      "issue": "live HTML missing JSON-LD type: WebPage"
+    },
+    {
+      "id": "about",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "severity": "medium",
+      "impact": 5,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "home",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "severity": "medium",
+      "impact": 5,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "breda",
+      "query": "Bulgarian Society Breda and Tilburg",
+      "targetPath": "/breda",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "eindhoven",
+      "query": "Bulgarian Society Eindhoven",
+      "targetPath": "/eindhoven",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "events-future-events",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "events-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 500"
+    },
+    {
+      "id": "groningen",
+      "query": "Bulgarian Society Groningen",
+      "targetPath": "/groningen",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "join-the-society",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "leeuwarden",
+      "query": "Bulgarian Society Leeuwarden",
+      "targetPath": "/leeuwarden",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "leiden-hague",
+      "query": "Bulgarian Society Leiden and The Hague",
+      "targetPath": "/leiden_hague",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "maastricht",
+      "query": "Bulgarian Society Maastricht",
+      "targetPath": "/maastricht",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "rotterdam",
+      "query": "Bulgarian Society Rotterdam",
+      "targetPath": "/rotterdam",
+      "severity": "medium",
+      "impact": 4,
+      "issue": "live HTML has 12 words; expected at least 120"
+    },
+    {
+      "id": "internships",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "severity": "medium",
+      "impact": 3,
+      "issue": "live HTML has 12 words; expected at least 120"
+    }
+  ]
+}

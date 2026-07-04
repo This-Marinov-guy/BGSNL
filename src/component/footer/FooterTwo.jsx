@@ -1,5 +1,5 @@
 import React from "react";
-import ImageFb from "../../elements/ui/media/ImageFb";
+import PropTypes from "prop-types";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -7,6 +7,11 @@ import {
   REGION_MAIN_COLOR,
   REGION_SECOND_COLOR,
   REGION_SOCIALS,
+  REGIONS,
+  REGION_DISPLAY_NAMES,
+  getRegionPath,
+  isPublicRegionSlug,
+  resolveRegionSlug,
   KVK,
 } from "../../util/defines/REGIONS_DESIGN";
 import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
@@ -16,7 +21,11 @@ import { useDispatch } from "react-redux";
 
 // Copy of Footer - footer needs to be bigger in order to be on the bottom of the page
 const FooterTwo = ({ forceRegion }) => {
-  const region = forceRegion ?? useParams().region;
+  const regionParam = forceRegion ?? useParams().region;
+  const region = isPublicRegionSlug(regionParam)
+    ? resolveRegionSlug(regionParam)
+    : null;
+  const regionPath = region ? getRegionPath(region) : "";
 
   const dispatch = useDispatch();
 
@@ -77,7 +86,7 @@ const FooterTwo = ({ forceRegion }) => {
                           <Link
                             to={
                               region
-                                ? `/${region}/events/future-events`
+                                ? `${regionPath}/events/future-events`
                                 : `/events/future-events`
                             }
                           >
@@ -85,7 +94,7 @@ const FooterTwo = ({ forceRegion }) => {
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/${region}/contact`}>Contact</Link>
+                          <Link to={region ? `${regionPath}/contact` : "/contact"}>Contact</Link>
                         </li>
                         <li>
                           <Link to="/terms-and-legals" target="_blank" rel="noopener noreferrer">
@@ -128,6 +137,21 @@ const FooterTwo = ({ forceRegion }) => {
                   </div>
                   {/* End Single Widget  */}
 
+                  <div className="col-lg-12 mt--30">
+                    <div className="footer-link footer-city-links">
+                      <h4>City societies</h4>
+                      <ul className="ft-link footer-city-grid">
+                        {REGIONS.map((city) => (
+                          <li key={city}>
+                            <Link to={getRegionPath(city)}>
+                              Bulgarian Society {REGION_DISPLAY_NAMES[city]}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
                   <div className="col-lg-12">
                     <div className="copyright-text">
                       <p>
@@ -147,4 +171,9 @@ const FooterTwo = ({ forceRegion }) => {
     </>
   );
 };
+
+FooterTwo.propTypes = {
+  forceRegion: PropTypes.string,
+};
+
 export default FooterTwo;

@@ -11,13 +11,18 @@ import { FiMail } from "react-icons/fi";
 
 import { FaLink } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { REGION_SOCIALS, REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
+import {
+  REGION_SOCIALS,
+  REGION_EMAIL,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
 
 
 const Contact = () => {
 
   const { region } = useParams()
+  const regionKey = resolveRegionSlug(region);
 
   return (
     <React.Fragment>
@@ -48,10 +53,11 @@ const Contact = () => {
                   <p>
                     <a
                       style={{ overflowWrap: "break-word" }}
-                      href={`mailto:${REGION_EMAIL[region ?? "netherlands"]}`}
+                      href={`mailto:${REGION_EMAIL[regionKey ?? "netherlands"]}`}
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      {REGION_EMAIL[region ?? "netherlands"]}
+                      {REGION_EMAIL[regionKey ?? "netherlands"]}
                     </a>
                   </p>
                 </div>
@@ -66,14 +72,14 @@ const Contact = () => {
                 </div>
                 <div className="inner">
                   <div className="social_media">
-                    {REGION_SOCIALS[region ?? "netherlands"] ? (
-                      REGION_SOCIALS[region ?? "netherlands"].filter(val => !val.special).map((val, i) => (
+                    {REGION_SOCIALS[regionKey ?? "netherlands"] ? (
+                      REGION_SOCIALS[regionKey ?? "netherlands"].filter(val => !val.special).map((val, i) => (
                         <div key={i}>
                           <a 
                             href={`${val.link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={getSocialAriaLabel(val.link, region)}
+                            aria-label={getSocialAriaLabel(val.link, regionKey)}
                           >
                             {val.Social}
                           </a>

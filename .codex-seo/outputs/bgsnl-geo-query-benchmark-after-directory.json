@@ -1,0 +1,228 @@
+{
+  "generatedAt": "2026-07-04T13:42:21.892Z",
+  "engines": [
+    {
+      "id": "google",
+      "type": "search"
+    },
+    {
+      "id": "bing",
+      "type": "search"
+    },
+    {
+      "id": "chatgpt",
+      "type": "ai-answer"
+    },
+    {
+      "id": "perplexity",
+      "type": "ai-answer"
+    },
+    {
+      "id": "gemini",
+      "type": "ai-answer"
+    }
+  ],
+  "results": [
+    {
+      "id": "brand-full-name",
+      "query": "Bulgarian Society Netherlands",
+      "targetPath": "/",
+      "impact": 5,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": true,
+      "internalLinks": 7,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage",
+        "Organization",
+        "WebPage",
+        "WebSite"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "brand-acronym",
+      "query": "BGSNL Netherlands",
+      "targetPath": "/",
+      "impact": 5,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": true,
+      "internalLinks": 7,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage",
+        "Organization",
+        "WebPage",
+        "WebSite"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "bulgarian-students-netherlands",
+      "query": "Bulgarian students Netherlands",
+      "targetPath": "/about",
+      "impact": 5,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": true,
+      "internalLinks": 6,
+      "jsonLdTypes": [
+        "AboutPage",
+        "BreadcrumbList",
+        "FAQPage",
+        "Organization"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "join-bgsnl",
+      "query": "join Bulgarian Society Netherlands",
+      "targetPath": "/join-the-society",
+      "impact": 4,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": true,
+      "internalLinks": 5,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage",
+        "WebPage"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "bulgarian-events-netherlands",
+      "query": "Bulgarian events Netherlands",
+      "targetPath": "/events/future-events",
+      "impact": 4,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": true,
+      "internalLinks": 5,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage",
+        "WebPage"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "bgsnl-past-events",
+      "query": "BGSNL past events",
+      "targetPath": "/events/past-events",
+      "impact": 4,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": false,
+      "internalLinks": 19,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "CollectionPage",
+        "Event",
+        "FAQPage",
+        "ItemList",
+        "Organization"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "bulgarian-internships-netherlands",
+      "query": "Bulgarian internships Netherlands",
+      "targetPath": "/internships",
+      "impact": 3,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": false,
+      "internalLinks": 4,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage",
+        "WebPage"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    },
+    {
+      "id": "bulgarian-society-amsterdam",
+      "query": "Bulgarian Society Amsterdam",
+      "targetPath": "/amsterdam",
+      "impact": 4,
+      "engines": [
+        "google",
+        "bing",
+        "chatgpt",
+        "perplexity",
+        "gemini"
+      ],
+      "answerFirst": true,
+      "cited": true,
+      "internalLinks": 5,
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage",
+        "WebPage"
+      ],
+      "missingPhrases": [],
+      "missingLinks": [],
+      "missingJsonLdTypes": []
+    }
+  ],
+  "findings": []
+}

@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 import { Navigate, useLocation } from 'react-router-dom';
-import { REGIONS } from '../../util/defines/REGIONS_DESIGN';
+import { isPublicRegionSlug } from '../../util/defines/REGIONS_DESIGN';
 import styles from './RegionLayout.module.css'
 
 const RegionLayout = (props) => {
     const region = useLocation().pathname.split('/')[1]
 
-    return REGIONS.includes(region) ?
+    return isPublicRegionSlug(region) ?
         // <div className={styles[region] || ''}>
         <div>
             {props.children}

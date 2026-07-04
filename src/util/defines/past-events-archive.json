@@ -1,0 +1,1582 @@
+{
+  "generatedAt": "2026-07-04T17:01:56.600Z",
+  "privacy": "Generated from event-level export fields and aggregated registration-choice signals only. Personal contact, attendee identity, ticket identifier, ticket file URL, and payment fields are intentionally excluded.",
+  "stats": {
+    "totalEvents": 101,
+    "totalRegions": 7,
+    "totalRegistrations": 3113,
+    "years": [
+      2025,
+      2024,
+      2023
+    ],
+    "latestDate": "2025-04-04",
+    "oldestDate": "2023-12-07"
+  },
+  "events": [
+    {
+      "id": "groningen-2025-04-04-brush-blush",
+      "title": "Brush & Blush",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2025-04-04",
+      "year": 2025,
+      "location": "Lust",
+      "registrationCount": 1,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Groningen where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "breda_tilburg-2025-04-04-lesh-party",
+      "title": "Lesh party",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2025-04-04",
+      "year": 2025,
+      "location": "Proost",
+      "registrationCount": 39,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A social BGSNL event in Breda and Tilburg built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "rotterdam-2025-03-21-4i4ko-parichko",
+      "title": "4i4ko Parichko",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-03-21",
+      "year": 2025,
+      "location": "Eetcafé Concordia",
+      "registrationCount": 24,
+      "url": "",
+      "tags": [],
+      "summary": "A relaxed BGSNL games event in Rotterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "eindhoven-2025-03-21-board-games-night",
+      "title": "BOARD GAMES NIGHT",
+      "region": "eindhoven",
+      "regionName": "Eindhoven",
+      "date": "2025-03-21",
+      "year": 2025,
+      "location": "Common Room, TU/E",
+      "registrationCount": 14,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A relaxed BGSNL games event in Eindhoven for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "leeuwarden-2025-03-21-suples-workout",
+      "title": "SUPLES workout",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2025-03-21",
+      "year": 2025,
+      "location": "Groningen",
+      "registrationCount": 1,
+      "url": "",
+      "tags": [],
+      "summary": "An active BGSNL event in Leeuwarden for people to move, compete, and meet others from the community."
+    },
+    {
+      "id": "groningen-2025-03-21-suples",
+      "title": "Suples Тренировка",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2025-03-21",
+      "year": 2025,
+      "location": "Sportlab Groningen",
+      "registrationCount": 4,
+      "url": "",
+      "tags": [
+        "sports"
+      ],
+      "summary": "An active BGSNL event in Groningen for people to move, compete, and meet others from the community."
+    },
+    {
+      "id": "amsterdam-2025-03-15-",
+      "title": "Холандска Маршрутка",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2025-03-15",
+      "year": 2025,
+      "location": "Amsterdam",
+      "registrationCount": 48,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "summary": "A BGSNL outing in Amsterdam designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands. Workshop choices were part of registration. The event also included a borrel option for relaxed conversation after the main activity."
+    },
+    {
+      "id": "groningen-2025-03-12-2000s-party",
+      "title": "2000s Party",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2025-03-12",
+      "year": 2025,
+      "location": "Sunny Beach",
+      "registrationCount": 71,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "leeuwarden-2025-03-03-battle-bites",
+      "title": "Battle & Bites",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2025-03-03",
+      "year": 2025,
+      "location": "R10, E2.023",
+      "registrationCount": 16,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL dinner in Leeuwarden where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "amsterdam-2025-03-02-3",
+      "title": "Български празник за 3 март",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2025-03-02",
+      "year": 2025,
+      "location": "Първо българско училище АБВ",
+      "registrationCount": 40,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Amsterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "groningen-2025-03-01-martenichki-chill",
+      "title": "Martenichki & Chill",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2025-03-01",
+      "year": 2025,
+      "location": "Lust",
+      "registrationCount": 22,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Groningen where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "rotterdam-2025-03-01-martenitsi-workshop",
+      "title": "Martenitsi Workshop",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-03-01",
+      "year": 2025,
+      "location": "Polak Building",
+      "registrationCount": 16,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "summary": "A practical BGSNL event in Rotterdam connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "groningen-2025-02-23-board-games",
+      "title": "BOARD GAMES",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2025-02-23",
+      "year": 2025,
+      "location": "Literair Café 'de Graanrepubliek'",
+      "registrationCount": 19,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A relaxed BGSNL games event in Groningen for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "amsterdam-2025-02-22-inside-the-minds-of-hrs-job-market-in-the-netherlands-vs-bulgaria",
+      "title": "Inside the minds of HRs: Job market in the Netherlands vs Bulgaria",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2025-02-22",
+      "year": 2025,
+      "location": "Online",
+      "registrationCount": 40,
+      "url": "",
+      "tags": [],
+      "summary": "A practical BGSNL event in Amsterdam connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "rotterdam-2025-02-22-sip-paint",
+      "title": "Sip & Paint",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-02-22",
+      "year": 2025,
+      "location": "The Social Hub Rotterdam",
+      "registrationCount": 17,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "maastricht-2025-02-22-workshop",
+      "title": "Мартеница Workshop",
+      "region": "maastricht",
+      "regionName": "Maastricht",
+      "date": "2025-02-22",
+      "year": 2025,
+      "location": "Buurtcentrum de Boeckel",
+      "registrationCount": 6,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "summary": "A practical BGSNL event in Maastricht connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "amsterdam-2025-02-15-galentines-pals",
+      "title": "Galentines & Pals",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2025-02-15",
+      "year": 2025,
+      "location": "The Poké Lab",
+      "registrationCount": 19,
+      "url": "",
+      "tags": [],
+      "summary": "A social BGSNL event in Amsterdam built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "eindhoven-2025-02-15-",
+      "title": "Море От Любов",
+      "region": "eindhoven",
+      "regionName": "Eindhoven",
+      "date": "2025-02-15",
+      "year": 2025,
+      "location": "Common Room, TU/E",
+      "registrationCount": 19,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Eindhoven where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "leeuwarden-2025-02-14-sveti-trifon-zarezan",
+      "title": "Sveti Trifon Zarezan",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2025-02-14",
+      "year": 2025,
+      "location": "StudentStay",
+      "registrationCount": 18,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL dinner in Leeuwarden where Bulgarian students and friends could meet over familiar food and conversation. Wine preferences such as White, Red, and бяло were part of the sign-up."
+    },
+    {
+      "id": "rotterdam-2025-02-10-the-bachelor",
+      "title": "The Bachelor",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-02-10",
+      "year": 2025,
+      "location": "Polak Building",
+      "registrationCount": 14,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "rotterdam-2025-02-08-belot-tournament-games-night",
+      "title": "Belot Tournament & Games Night",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-02-08",
+      "year": 2025,
+      "location": "Eetcafé Concordia",
+      "registrationCount": 34,
+      "url": "",
+      "tags": [
+        "social",
+        "sports"
+      ],
+      "summary": "A relaxed BGSNL games event in Rotterdam for people to meet, play, and join the local Bulgarian community. People could join through team and single-player sign-ups."
+    },
+    {
+      "id": "groningen-2025-02-03-greek-bulgarian-dinner",
+      "title": "Greek & Bulgarian Dinner",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2025-02-03",
+      "year": 2025,
+      "location": "Taverna Doris",
+      "registrationCount": 30,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A BGSNL dinner in Groningen where Bulgarian students and friends could meet over familiar food and conversation. Registration included menu choices such as meat and vegan."
+    },
+    {
+      "id": "rotterdam-2025-01-24-horoteka",
+      "title": "Horoteka",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-01-24",
+      "year": 2025,
+      "location": "Erasmus Sport Centre, Hall 5",
+      "registrationCount": 13,
+      "url": "",
+      "tags": [
+        "culture",
+        "sports"
+      ],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "eindhoven-2025-01-18-bg-movie-night",
+      "title": "BG Movie Night",
+      "region": "eindhoven",
+      "regionName": "Eindhoven",
+      "date": "2025-01-18",
+      "year": 2025,
+      "location": "Common Room, TU/E",
+      "registrationCount": 21,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL movie night in Eindhoven where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "amsterdam-2025-01-12-ice-skating",
+      "title": "Ice Skating",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2025-01-12",
+      "year": 2025,
+      "location": "Jaap Eden Ice Rink (Radioweg 64, 1098 NJ Amsterdam)",
+      "registrationCount": 13,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Amsterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "rotterdam-2025-01-11-social-drinks-night",
+      "title": "Social Drinks Night",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2025-01-11",
+      "year": 2025,
+      "location": "Eetcafé Concordia",
+      "registrationCount": 20,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "leeuwarden-2024-12-07-bulgarian-dinner",
+      "title": "Bulgarian Dinner",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-12-07",
+      "year": 2024,
+      "location": "Club Z - Zaailand 106, 8911 BN Leeuwarden",
+      "registrationCount": 83,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A BGSNL dinner in Leeuwarden where Bulgarian students and friends could meet over familiar food and conversation. Registration included menu choices such as with meat, vegeterian, and vegan."
+    },
+    {
+      "id": "eindhoven-2024-12-07-student-holiday-pre-party-balkanski-bogata6-x-balkan-queens",
+      "title": "Student Holiday Pre-Party: Balkanski Bogata6 x Balkan Queens!",
+      "region": "eindhoven",
+      "regionName": "Eindhoven",
+      "date": "2024-12-07",
+      "year": 2024,
+      "location": "Common Room, MetaForum, TU Eindhoven",
+      "registrationCount": 16,
+      "url": "",
+      "tags": [
+        "culture",
+        "social",
+        "sports"
+      ],
+      "summary": "A social BGSNL event in Eindhoven built around music, conversation, and meeting the Bulgarian student community. The sign-up also included quiz participation."
+    },
+    {
+      "id": "rotterdam-2024-12-06-bulgarian-movie-night",
+      "title": "Bulgarian Movie Night",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-12-06",
+      "year": 2024,
+      "location": "Polak Building",
+      "registrationCount": 20,
+      "url": "",
+      "tags": [
+        "culture"
+      ],
+      "summary": "A BGSNL movie night in Rotterdam where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "groningen-2024-12-05-glamour-party",
+      "title": "Glamour Party",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-12-05",
+      "year": 2024,
+      "location": "Sunny beach",
+      "registrationCount": 100,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "maastricht-2024-12-05-student-party",
+      "title": "Student Party",
+      "region": "maastricht",
+      "regionName": "Maastricht",
+      "date": "2024-12-05",
+      "year": 2024,
+      "location": "CAVO",
+      "registrationCount": 34,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A social BGSNL event in Maastricht built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "breda_tilburg-2024-12-01-breda-run",
+      "title": "Breda run",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-12-01",
+      "year": 2024,
+      "location": "Stadspark Valkenberg",
+      "registrationCount": 31,
+      "url": "",
+      "tags": [
+        "sports"
+      ],
+      "summary": "An active BGSNL event in Breda and Tilburg for people to move, compete, and meet others from the community."
+    },
+    {
+      "id": "groningen-2024-12-01-students-for-students",
+      "title": "STUDENTS FOR STUDENTS",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-12-01",
+      "year": 2024,
+      "location": "RUG library, Tammeszaal",
+      "registrationCount": 15,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Groningen where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "eindhoven-2024-11-30-belot-tournament-game-night",
+      "title": "Belot Tournament & Game Night",
+      "region": "eindhoven",
+      "regionName": "Eindhoven",
+      "date": "2024-11-30",
+      "year": 2024,
+      "location": "Common Room, MetaForum, TU Eindhoven",
+      "registrationCount": 40,
+      "url": "",
+      "tags": [
+        "social",
+        "sports"
+      ],
+      "summary": "A relaxed BGSNL games event in Eindhoven for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "amsterdam-2024-11-30-networking-event",
+      "title": "Networking Event",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-11-30",
+      "year": 2024,
+      "location": "Oostzaanstraat 28, 1013 WL Amsterdam",
+      "registrationCount": 17,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "summary": "A practical BGSNL event in Amsterdam connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "breda_tilburg-2024-11-29-bulgarian-dinner",
+      "title": "Bulgarian dinner",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-11-29",
+      "year": 2024,
+      "location": "Brandpunt",
+      "registrationCount": 23,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A BGSNL dinner in Breda and Tilburg where Bulgarian students and friends could meet over familiar food and conversation. Registration included menu choices such as 2 kebapcheta & 1 meatball, 2 meatballs & 1 kebapche, and 3 meatballs."
+    },
+    {
+      "id": "breda_tilburg-2024-11-29-bulgarian-dinner-party",
+      "title": "Bulgarian dinner & party",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-11-29",
+      "year": 2024,
+      "location": "Brandpunt",
+      "registrationCount": 17,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A BGSNL dinner in Breda and Tilburg where Bulgarian students and friends could meet over familiar food and conversation. Registration included menu choices such as 2 meatballs and 1 kebapche, 3 meatballs, and 2 kebapcheta and 1 meatball."
+    },
+    {
+      "id": "breda_tilburg-2024-11-29-bulgarian-party",
+      "title": "Bulgarian party",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-11-29",
+      "year": 2024,
+      "location": "Proost Breda",
+      "registrationCount": 22,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A social BGSNL event in Breda and Tilburg built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "groningen-2024-11-28-card-players",
+      "title": "Card Players",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-11-28",
+      "year": 2024,
+      "location": "Literair Café",
+      "registrationCount": 14,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Groningen where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "amsterdam-2024-11-14-bulgarian-movie-night",
+      "title": "Bulgarian Movie Night",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-11-14",
+      "year": 2024,
+      "location": "BuzzHouse, Oudemanhuispoort Campus",
+      "registrationCount": 18,
+      "url": "",
+      "tags": [
+        "culture"
+      ],
+      "summary": "A BGSNL movie night in Amsterdam where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "leeuwarden-2024-11-14-movie-night",
+      "title": "Movie Night: “В сърцето на машината”",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-11-14",
+      "year": 2024,
+      "location": "NHL Stenden R10 Auditorium",
+      "registrationCount": 15,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL movie night in Leeuwarden where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "eindhoven-2024-11-09-bg-dinner",
+      "title": "BG Dinner",
+      "region": "eindhoven",
+      "regionName": "Eindhoven",
+      "date": "2024-11-09",
+      "year": 2024,
+      "location": "Common Room, MetaForum, TU Eindhoven",
+      "registrationCount": 35,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A BGSNL dinner in Eindhoven where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "breda_tilburg-2024-11-04-games-night",
+      "title": "Games night",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-11-04",
+      "year": 2024,
+      "location": "Bühne Breda",
+      "registrationCount": 21,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A relaxed BGSNL games event in Breda and Tilburg for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "amsterdam-2024-10-25-balkan-baba-yaga",
+      "title": "Balkan Baba Yaga",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-10-25",
+      "year": 2024,
+      "location": "Club Air, Amstelstraat 24, Amsterdam",
+      "registrationCount": 155,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Amsterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "leeuwarden-2024-10-25-sip-and-paint-night",
+      "title": "Sip and Paint Night",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-10-25",
+      "year": 2024,
+      "location": "StudentStay Basement",
+      "registrationCount": 8,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Leeuwarden where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "groningen-2024-10-25-who-wants-to-be-a-milioner4e",
+      "title": "Who wants to be a Milioner4e?",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-10-25",
+      "year": 2024,
+      "location": "De Toeter",
+      "registrationCount": 24,
+      "url": "",
+      "tags": [],
+      "summary": "A relaxed BGSNL games event in Groningen for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "amsterdam-2024-10-17-karaoke-night",
+      "title": "Karaoke Night",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-10-17",
+      "year": 2024,
+      "location": "Bar Lunar (Halvemaansteeg 14, 1017 CR)",
+      "registrationCount": 7,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A social BGSNL event in Amsterdam built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "amsterdam-2024-10-11-beer-pong",
+      "title": "Beer Pong",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-10-11",
+      "year": 2024,
+      "location": "Jan van Galenstraat 315, 1056 CB Amsterdam",
+      "registrationCount": 19,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A relaxed BGSNL games event in Amsterdam for people to meet, play, and join the local Bulgarian community. Team sign-ups helped people join the activity together."
+    },
+    {
+      "id": "rotterdam-2024-10-06-game-night",
+      "title": "Game Night",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-10-06",
+      "year": 2024,
+      "location": "Cafe Stalles",
+      "registrationCount": 28,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A relaxed BGSNL games event in Rotterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "groningen-2024-10-03-welcome-to-balkania",
+      "title": "Welcome to Balkania!",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-10-03",
+      "year": 2024,
+      "location": "Sunny Beach",
+      "registrationCount": 101,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Groningen where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "amsterdam-2024-09-15-trivia-night-board-games",
+      "title": "Trivia Night & Board Games",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-09-15",
+      "year": 2024,
+      "location": "The Poke Lab",
+      "registrationCount": 18,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "summary": "A relaxed BGSNL games event in Amsterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "leeuwarden-2024-09-14-networking",
+      "title": "Networking",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-09-14",
+      "year": 2024,
+      "location": "Paddy O’Ryan",
+      "registrationCount": 54,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "summary": "A practical BGSNL event in Leeuwarden connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "groningen-2024-09-11-treasure-hunt",
+      "title": "Treasure Hunt",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-09-11",
+      "year": 2024,
+      "location": "Grote Markt",
+      "registrationCount": 8,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL outing in Groningen designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands."
+    },
+    {
+      "id": "groningen-2024-09-09-bulgarian-dinner",
+      "title": "Bulgarian Dinner",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-09-09",
+      "year": 2024,
+      "location": "Taverna Doris",
+      "registrationCount": 42,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "summary": "A BGSNL dinner in Groningen where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "rotterdam-2024-09-08-intro-week-day-2",
+      "title": "Intro Week (Day 2)",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-09-08",
+      "year": 2024,
+      "location": "Kralingse Bos",
+      "registrationCount": 8,
+      "url": "",
+      "tags": [],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "rotterdam-2024-09-07-intro-week",
+      "title": "Intro Week",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-09-07",
+      "year": 2024,
+      "location": "Polak / City Center / Concordia / Kralingse Bos",
+      "registrationCount": 4,
+      "url": "",
+      "tags": [
+        "travel"
+      ],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "rotterdam-2024-09-07-intro-week-day-1",
+      "title": "Intro Week (Day 1)",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-09-07",
+      "year": 2024,
+      "location": "Polak / City Center / Concordia",
+      "registrationCount": 5,
+      "url": "",
+      "tags": [
+        "travel"
+      ],
+      "summary": "A BGSNL past event in Rotterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "groningen-2024-06-27-bulgarian-student-party-b086c",
+      "title": "Bulgarian Student Party",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-06-27",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 47,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "amsterdam-2024-06-15-bowling-73efa",
+      "title": "Bowling",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-06-15",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 9,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL past event in Amsterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "breda_tilburg-2024-06-14-picnic-73e6b",
+      "title": "Picnic",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-06-14",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 6,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL outing in Breda and Tilburg designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands."
+    },
+    {
+      "id": "rotterdam-2024-06-02-picnic-68293",
+      "title": "Picnic",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-06-02",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 22,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL outing in Rotterdam designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands."
+    },
+    {
+      "id": "amsterdam-2024-06-01-uefa-champions-league-finale-84c9a",
+      "title": "UEFA Champions League Finale",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-06-01",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 18,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL past event in Amsterdam where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "amsterdam-2024-05-31-football-match-84c68",
+      "title": "Football Match",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-05-31",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 13,
+      "url": "",
+      "tags": [
+        "sports"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "An active BGSNL event in Amsterdam for people to move, compete, and meet others from the community."
+    },
+    {
+      "id": "groningen-2024-05-24-spring-gala-743ae",
+      "title": "Spring Gala",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-05-24",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 129,
+      "url": "",
+      "tags": [
+        "culture"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "rotterdam-2024-05-22-horoteka-horo-workshop-3787e",
+      "title": "Horoteka - Horo Workshop",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-05-22",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 14,
+      "url": "",
+      "tags": [
+        "culture",
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Rotterdam connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "groningen-2024-05-18-dancing-bears-workshop-iv-e2a16",
+      "title": "Dancing Bears Workshop IV",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-05-18",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 3,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Groningen connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "leeuwarden-2024-05-17-bg-y2k-party-c3115",
+      "title": "BG Y2K Party",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-05-17",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 39,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Leeuwarden built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "amsterdam-2024-05-16-international-chalgari-7486b",
+      "title": "International Chalgari",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-05-16",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 109,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Amsterdam built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "groningen-2024-05-10-dancing-bears-workshop-iii-c3bde",
+      "title": "Dancing Bears Workshop III",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-05-10",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 5,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Groningen connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "leeuwarden-2024-05-04-easter-egg-dye-74636",
+      "title": "Easter Egg Dye",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-05-04",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 8,
+      "url": "",
+      "tags": [
+        "culture"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL past event in Leeuwarden where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "breda_tilburg-2024-05-04-easter-gathering-2d0a7",
+      "title": "Easter Gathering",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-05-04",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 13,
+      "url": "",
+      "tags": [
+        "culture"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL past event in Breda and Tilburg where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "amsterdam-2024-05-04-easter-picnic-2cd41",
+      "title": "Easter Picnic",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-05-04",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 13,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL outing in Amsterdam designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands."
+    },
+    {
+      "id": "groningen-2024-04-28-dancing-bears-workshop-ii-7e3f9",
+      "title": "Dancing Bears Workshop II",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-04-28",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 6,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Groningen connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "breda_tilburg-2024-04-25-movie-night-742c1",
+      "title": "Movie Night",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-04-25",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 5,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL movie night in Breda and Tilburg where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "groningen-2024-04-20-dancing-bears-workshop-full-access-7e3f0",
+      "title": "Dancing Bears Workshop Full Access",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-04-20",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 2,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Groningen connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "groningen-2024-04-20-dancing-bears-workshop-i-a366b",
+      "title": "Dancing Bears Workshop I",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-04-20",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 5,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Groningen connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "groningen-2024-04-19-board-games-part-2-db674",
+      "title": "Board Games Part 2",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-04-19",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 23,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Groningen for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "leeuwarden-2024-04-18-bg-retro-movie-night-ii-73247",
+      "title": "BG Retro Movie Night II",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-04-18",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 19,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL movie night in Leeuwarden where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "amsterdam-2024-04-17-treasure-hunt-9c16a",
+      "title": "Treasure Hunt",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-04-17",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 21,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL outing in Amsterdam designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands."
+    },
+    {
+      "id": "groningen-2024-04-15-a-hungry-bear-doesn-t-dance-39db0",
+      "title": "A hungry bear doesn't dance",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-04-15",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 22,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "rotterdam-2024-04-12-international-quiz-night-9c047",
+      "title": "International Quiz Night",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-04-12",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 35,
+      "url": "",
+      "tags": [
+        "career",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Rotterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "breda_tilburg-2024-04-10-karaoke-night-39e22",
+      "title": "Karaoke Night",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-04-10",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 25,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Breda and Tilburg built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "breda_tilburg-2024-04-02-karaoke-night-4cabd",
+      "title": "Karaoke Night",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-04-02",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 1,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Breda and Tilburg built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "leeuwarden-2024-03-28-bg-retro-movie-night-f423d",
+      "title": "BG Retro Movie Night",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-03-28",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 28,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL movie night in Leeuwarden where people could watch together and meet others from the local community."
+    },
+    {
+      "id": "breda_tilburg-2024-03-20-speedfriending-bonding-games-night-aa1bd",
+      "title": "Speedfriending & Bonding games night",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-03-20",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 16,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Breda and Tilburg for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "amsterdam-2024-03-14-board-game-night-a6dd1",
+      "title": "Board Game Night",
+      "region": "amsterdam",
+      "regionName": "Amsterdam",
+      "date": "2024-03-14",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 21,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Amsterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "groningen-2024-03-09-entrepreneurship-series-iii-f7ff4",
+      "title": "Entrepreneurship Series III",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-03-09",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 10,
+      "url": "",
+      "tags": [
+        "career"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A practical BGSNL event in Groningen connecting Bulgarian students and young professionals through learning and networking."
+    },
+    {
+      "id": "leeuwarden-2024-03-07-bulgarian-dinner-e0c5e",
+      "title": "Bulgarian Dinner",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-03-07",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 75,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL dinner in Leeuwarden where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "groningen-2024-03-07-bulgarian-student-party-a5071",
+      "title": "Bulgarian Student Party",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-03-07",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 120,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "groningen-2024-03-02-to-shipka-and-back-f7a7a",
+      "title": "To Shipka and Back",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2024-03-02",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 12,
+      "url": "",
+      "tags": [],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL past event in Groningen where Bulgarian students, young professionals, and friends could meet the local community."
+    },
+    {
+      "id": "breda_tilburg-2024-03-01-bulgarian-dinner-party-10ca8",
+      "title": "Bulgarian Dinner & Party",
+      "region": "breda_tilburg",
+      "regionName": "Breda and Tilburg",
+      "date": "2024-03-01",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 156,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL dinner in Breda and Tilburg where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "maastricht-2024-03-01-bulgarian-party-f7a7f",
+      "title": "Bulgarian Party",
+      "region": "maastricht",
+      "regionName": "Maastricht",
+      "date": "2024-03-01",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 56,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Maastricht built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "rotterdam-2024-02-19-bulgarian-dinner",
+      "title": "Bulgarian Dinner",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-02-19",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 63,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL dinner in Rotterdam where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "rotterdam-2024-02-06-game-night",
+      "title": "Game Night",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-02-06",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 10,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Rotterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "rotterdam-2024-02-04-belot-tournament",
+      "title": "Belot Tournament",
+      "region": "rotterdam",
+      "regionName": "Rotterdam",
+      "date": "2024-02-04",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 7,
+      "url": "",
+      "tags": [
+        "social",
+        "sports"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Rotterdam for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "leeuwarden-2024-01-20-game-night-belot",
+      "title": "Game Night (Belot)",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2024-01-20",
+      "year": 2024,
+      "location": "",
+      "registrationCount": 13,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A relaxed BGSNL games event in Leeuwarden for people to meet, play, and join the local Bulgarian community."
+    },
+    {
+      "id": "leeuwarden-2023-12-08-bulgarian-dinner-party",
+      "title": "Bulgarian Dinner & Party",
+      "region": "leeuwarden",
+      "regionName": "Leeuwarden",
+      "date": "2023-12-08",
+      "year": 2023,
+      "location": "",
+      "registrationCount": 141,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A BGSNL dinner in Leeuwarden where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "groningen-2023-12-07-bulgarian-student-party-dec",
+      "title": "Bulgarian Student Party Dec",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "2023-12-07",
+      "year": 2023,
+      "location": "",
+      "registrationCount": 126,
+      "url": "",
+      "tags": [
+        "culture",
+        "social"
+      ],
+      "dateSource": "last-ticket-purchase",
+      "sourceStatus": "archive-recovered",
+      "summary": "A social BGSNL event in Groningen built around music, conversation, and meeting the Bulgarian student community."
+    },
+    {
+      "id": "groningen-archive-quiz-night-love-wines",
+      "title": "Quiz Night: Love & Wines",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "",
+      "year": null,
+      "location": "",
+      "registrationCount": 18,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "sourceStatus": "archive-only",
+      "summary": "A BGSNL dinner in Groningen where Bulgarian students and friends could meet over familiar food and conversation."
+    },
+    {
+      "id": "groningen-archive-rotterdam-trip",
+      "title": "Rotterdam Trip",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "",
+      "year": null,
+      "location": "",
+      "registrationCount": 16,
+      "url": "",
+      "tags": [
+        "travel"
+      ],
+      "sourceStatus": "archive-only",
+      "summary": "A BGSNL outing in Groningen designed to help people explore, talk, and feel part of the Bulgarian community in the Netherlands."
+    },
+    {
+      "id": "groningen-archive-social-drinks-and-belot",
+      "title": "Social Drinks and Belot",
+      "region": "groningen",
+      "regionName": "Groningen",
+      "date": "",
+      "year": null,
+      "location": "",
+      "registrationCount": 32,
+      "url": "",
+      "tags": [
+        "social"
+      ],
+      "sourceStatus": "archive-only",
+      "summary": "A relaxed BGSNL games event in Groningen for people to meet, play, and join the local Bulgarian community."
+    }
+  ]
+}

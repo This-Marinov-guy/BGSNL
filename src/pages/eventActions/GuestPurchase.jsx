@@ -11,7 +11,10 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 
 import Loader from "../../elements/ui/loading/Loader";
 import { InputNumber } from "primereact/inputnumber";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import {
+  getRegionPath,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import FormExtras from "../../elements/ui/forms/FormExtras";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import MembershipBanner from "../../elements/banners/MembershipBanner";
@@ -67,6 +70,8 @@ const GuestPurchase = () => {
   });
 
   const { region, eventId } = useParams();
+  const regionKey = resolveRegionSlug(region);
+  const regionPath = getRegionPath(regionKey);
 
   const user = useSelector(selectUser);
 
@@ -171,8 +176,8 @@ const GuestPurchase = () => {
         description={(selectedEvent.description || selectedEvent.text)?.replace(/<[^>]*>/g, "").substring(0, 160)}
         image={selectedEvent.poster}
         type="event"
-        canonicalUrl={`https://www.bulgariansociety.nl/${region}/purchase-ticket/${eventId}`}
-        keywords={`${selectedEvent.title}, buy ticket, Bulgarian event, ${region}, BGSNL`}
+        canonicalUrl={`https://www.bulgariansociety.nl${regionPath}/purchase-ticket/${eventId}`}
+        keywords={`${selectedEvent.title}, buy ticket, Bulgarian event, ${regionKey}, BGSNL`}
       />
       <HeaderTwo
         headertransparent="header--transparent"

@@ -11,7 +11,10 @@ import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import FormExtras from "../../elements/ui/forms/FormExtras";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import {
+  getRegionPath,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
@@ -53,6 +56,8 @@ const MemberPurchase = () => {
   const dispatch = useDispatch();
 
   const { region, eventId } = useParams();
+  const regionKey = resolveRegionSlug(region);
+  const regionPath = getRegionPath(regionKey);
 
   const user = useSelector(selectUser);
 
@@ -143,8 +148,8 @@ const MemberPurchase = () => {
         description={(selectedEvent.description || selectedEvent.text)?.replace(/<[^>]*>/g, "").substring(0, 160)}
         image={selectedEvent.poster}
         type="event"
-        canonicalUrl={`https://www.bulgariansociety.nl/${region}/purchase-ticket/${eventId}`}
-        keywords={`${selectedEvent.title}, buy ticket, Bulgarian event, ${region}, BGSNL`}
+        canonicalUrl={`https://www.bulgariansociety.nl${regionPath}/purchase-ticket/${eventId}`}
+        keywords={`${selectedEvent.title}, buy ticket, Bulgarian event, ${regionKey}, BGSNL`}
       />
       <HeaderTwo
         headertransparent="header--transparent"

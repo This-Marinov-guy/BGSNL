@@ -15,7 +15,10 @@ import { selectEvents } from "../../redux/events";
 import { selectIsAuth } from "../../redux/user";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import {
+  REGIONS,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import {
   checkObjectOfArraysEmpty,
   hasNonEmptyValues,
@@ -28,6 +31,7 @@ import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
 const FutureEventsContent = ({ displayAll, nullable = true }) => {
   const { region } = useParams();
+  const regionKey = resolveRegionSlug(region);
 
   const dispatch = useDispatch();
 
@@ -40,7 +44,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
   if (displayAll) {
     events = useSelector(selectEvents);
   } else {
-    events = useSelector(selectEvents)[region];
+    events = useSelector(selectEvents)[regionKey];
 
     if (events && events.length) {
       events = events.filter(
@@ -139,7 +143,7 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
                 ) : events && events.length > 0 ? (
                   <FocusCards
                     cards={events}
-                    region={region}
+                    region={regionKey}
                     centerItems={false}
                   />
                 ) : (

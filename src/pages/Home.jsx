@@ -11,7 +11,9 @@ import {
   FutureOtherEventsContent,
 } from "./information/FutureEvents";
 import { useParams, useNavigate } from "react-router-dom";
-import { REGIONS } from "../util/defines/REGIONS_DESIGN";
+import {
+  isPublicRegionSlug,
+} from "../util/defines/REGIONS_DESIGN";
 import NewsList from "../elements/ui/lists/NewsList";
 import Hero2 from "../component/hero/Hero2";
 import Hero1 from "../component/hero/Hero1";
@@ -22,7 +24,7 @@ const Home = () => {
   const { region } = useParams();
 
   useEffect(() => {
-    if (region && !REGIONS.includes(region)) {
+    if (region && !isPublicRegionSlug(region)) {
       navigate("/");
     }
   }, [region]);

@@ -1,0 +1,11 @@
+Error-Duplicate_pages_without_canonical.csv
+Error-indexable-Orphan_page_(has_no_incoming_internal_links).csv
+Error-indexable-Page_has_no_outgoing_links.csv
+Notice-HTTP_to_HTTPS_redirect.csv
+Notice-Redirect_chain.csv
+Warning-3XX_redirect.csv
+Warning-X_(Twitter)_card_incomplete.csv
+Warning-indexable-H1_tag_missing_or_empty.csv
+Warning-indexable-Low_word_count.csv
+Warning-indexable-Meta_description_too_long.csv
+Warning-indexable-Redirected_page_has_no_incoming_internal_links.csv

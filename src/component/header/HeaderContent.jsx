@@ -5,7 +5,12 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import {
+  REGIONS,
+  getRegionPath,
+  isPublicRegionSlug,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import { useParams } from "react-router-dom";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import {
@@ -27,7 +32,11 @@ const HeaderContent = (props) => {
 
   const profileImage = user.token ? decodeJWT(user.token).image : "";
 
-  const region = props.forceRegion ?? useParams().region;
+  const regionParam = props.forceRegion ?? useParams().region;
+  const region = isPublicRegionSlug(regionParam)
+    ? resolveRegionSlug(regionParam)
+    : null;
+  const regionPath = region ? getRegionPath(region) : "";
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,7 +58,7 @@ const HeaderContent = (props) => {
                 if (region === "breda_tilburg") {
                   return (
                     <li key={index}>
-                      <Link to={"/" + region}>
+                      <Link to={getRegionPath(region)}>
                         <div className="hor_section">
                           {capitalizeFirstLetter(region, true)}
                           <NewBadge />
@@ -61,7 +70,7 @@ const HeaderContent = (props) => {
 
                 return (
                   <li key={index}>
-                    <Link to={"/" + region}>
+                    <Link to={getRegionPath(region)}>
                       {capitalizeFirstLetter(region, true)}
                     </Link>
                   </li>
@@ -86,12 +95,12 @@ const HeaderContent = (props) => {
                 <a style={{ cursor: "pointer" }}>Events</a>
                 <ul className="submenu">
                   <li>
-                    <Link to={`/${region}/events/future-events`}>
+                    <Link to={`${regionPath}/events/future-events`}>
                       Future Events
                     </Link>
                   </li>
                   <li>
-                    <Link to={`/${region}/events/past-events`}>
+                    <Link to={`${regionPath}/events/past-events`}>
                       Past Events
                     </Link>
                   </li>
@@ -161,7 +170,7 @@ const HeaderContent = (props) => {
           </li>
 
           <li>
-            <Link to={`/${region ? region + "/" : ""}contact`}>Contact</Link>
+            <Link to={region ? `${regionPath}/contact` : "/contact"}>Contact</Link>
           </li>
 
           {user.token && (

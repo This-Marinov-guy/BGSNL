@@ -2,11 +2,16 @@ import React from "react";
 import ContactForm from "./ContactForm";
 import ImageFb from "../ui/media/ImageFb";
 import { useParams } from "react-router-dom";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import {
+  isPublicRegionSlug,
+  resolveRegionSlug,
+} from "../../util/defines/REGIONS_DESIGN";
 import { HOLIDAYS } from "../../util/configs/common";
 
 const ContactTwo = () => {
   const { region } = useParams();
+  const regionKey = resolveRegionSlug(region);
+  const hasRegion = isPublicRegionSlug(region);
 
   return (
     <div className="contact-form--1">
@@ -25,15 +30,15 @@ const ContactTwo = () => {
               <ImageFb
                 style={{ borderRadius: "50%" }}
                 src={`/assets/images/logo/${
-                  REGIONS.includes(region)
-                    ? region
+                  hasRegion
+                    ? regionKey
                     : HOLIDAYS.isWinter
                     ? "logo-xmas"
                     : "logo"
                 }.webp`}
                 fallback={`/assets/images/logo/${
-                  REGIONS.includes(region)
-                    ? region
+                  hasRegion
+                    ? regionKey
                     : HOLIDAYS.isWinter
                     ? "logo-xmas"
                     : "logo"

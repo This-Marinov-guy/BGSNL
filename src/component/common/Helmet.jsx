@@ -16,7 +16,7 @@ class PageHelmet extends Component {
     } = this.props;
 
     const baseUrl = "https://www.bulgariansociety.nl";
-    const defaultDescription = "Welcome to the official Bulgarian Society in Netherlands! We aim to bring Bulgarians together, develop Bulgarian culture, and showcase it among internationals. Find information about us, our events, and how to become a member.";
+    const defaultDescription = "Bulgarian Society Netherlands connects Bulgarian students and young Bulgarians through events, membership, internships, and local city communities.";
     const defaultImage = "https://www.bulgariansociety.nl/assets/images/splashscreens/welcome.png";
     const defaultKeywords = "Bulgarian Society, Bulgaria, Netherlands, Bulgarian community, events, culture, membership, student organization";
 

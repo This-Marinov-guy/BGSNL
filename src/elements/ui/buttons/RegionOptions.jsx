@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import styles from '../../../layouts/common/RegionLayout.module.css'
 import { Link, useParams } from 'react-router-dom'
 import {capitalizeFirstLetter} from '../../../util/functions/capitalize'
-import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
+import {
+    REGIONS,
+    getRegionPath,
+    resolveRegionSlug,
+} from '../../../util/defines/REGIONS_DESIGN'
 
 const RegionOptions = (props) => {
     const { region } = useParams();
-    const [select, setSelected] = useState(region || null)
+    const [select, setSelected] = useState(resolveRegionSlug(region) || null)
 
     return (
         <div className="mt--100" style={{ height: '45vh' }}>
@@ -14,7 +18,7 @@ const RegionOptions = (props) => {
             <ul className="brand-style-2">
                 {REGIONS.map((r, index) => {
                     return <li key={index} className={(region && r != select) ? styles['disable'] : styles[r]}>
-                        <Link to={`/${r}/${props.to}`}>
+                        <Link to={`${getRegionPath(r)}/${props.to}`}>
                             <button
                             //  style={r != select ? {opacity: '50%'} : {}}
                                 className={' rn-button-style--2 rn-btn-reverse-green'}

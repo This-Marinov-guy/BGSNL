@@ -22,6 +22,46 @@ export const REGIONS = [
   "rotterdam",
 ];
 
+export const REGION_DISPLAY_NAMES = {
+  amsterdam: "Amsterdam",
+  breda_tilburg: "Breda and Tilburg",
+  eindhoven: "Eindhoven",
+  groningen: "Groningen",
+  leiden_hague: "Leiden and The Hague",
+  leeuwarden: "Leeuwarden",
+  maastricht: "Maastricht",
+  rotterdam: "Rotterdam",
+};
+
+export const REGION_PUBLIC_SLUGS = {
+  amsterdam: "amsterdam",
+  breda_tilburg: "breda",
+  eindhoven: "eindhoven",
+  groningen: "groningen",
+  leiden_hague: "leiden_hague",
+  leeuwarden: "leeuwarden",
+  maastricht: "maastricht",
+  rotterdam: "rotterdam",
+};
+
+export const REGION_ROUTE_ALIASES = {
+  breda: "breda_tilburg",
+  tilburg: "breda_tilburg",
+  breda_tilburg: "breda_tilburg",
+};
+
+export const resolveRegionSlug = (region) => (
+  REGION_ROUTE_ALIASES[region] || region
+);
+
+export const isPublicRegionSlug = (region) => (
+  !!region && REGIONS.includes(resolveRegionSlug(region))
+);
+
+export const getRegionPath = (region) => (
+  `/${REGION_PUBLIC_SLUGS[resolveRegionSlug(region)] || region}`
+);
+
 export const DEFAULT_REGION = "netherlands";
 export const ADMIN_EVENT_REGIONS = [...REGIONS, DEFAULT_REGION];
 

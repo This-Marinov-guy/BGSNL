@@ -4,6 +4,7 @@ Disallow: /login
 Disallow: /signup
 Disallow: /alumni/register
 Disallow: /amsterdam/purchase-ticket/
+Disallow: /breda/purchase-ticket/
 Disallow: /breda_tilburg/purchase-ticket/
 Disallow: /eindhoven/purchase-ticket/
 Disallow: /groningen/purchase-ticket/

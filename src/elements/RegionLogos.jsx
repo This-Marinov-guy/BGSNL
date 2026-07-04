@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from 'react-router-dom'
-import { REGIONS } from "../util/defines/REGIONS_DESIGN";
+import {
+    REGIONS,
+    getRegionPath,
+} from "../util/defines/REGIONS_DESIGN";
 
 const RegionLogos = () => {
     return (
@@ -8,7 +11,7 @@ const RegionLogos = () => {
             <ul className="brand-style-3">
                 {REGIONS.map((r, i) => {
                     return <li key={i}>
-                        <Link to={`./${r}`}><img src={`/assets/images/logo/${r}.jpg`} alt="Logo Images" /></Link>
+                        <Link to={getRegionPath(r)}><img src={`/assets/images/logo/${r}.jpg`} alt="Logo Images" /></Link>
                     </li>
                 })}
             </ul>

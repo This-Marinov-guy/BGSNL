@@ -1,6 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
+import {
+    REGIONS,
+    getRegionPath,
+} from '../../../util/defines/REGIONS_DESIGN'
 import { Card } from 'primereact/card';
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize';
 
@@ -13,7 +16,7 @@ const RegionOptions2 = (props) => {
                         title={<div className='hor_section'>
                             {capitalizeFirstLetter(r, true)}
                             <Link
-                                to={`/${r}/${props.to}`}
+                                to={`${getRegionPath(r)}/${props.to}`}
                                 className="rn-button-style--2 rn-btn-green"
                             >
                                 Select
