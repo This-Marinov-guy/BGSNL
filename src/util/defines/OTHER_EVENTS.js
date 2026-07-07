@@ -1,48 +1,48 @@
 export const OTHER_EVENTS = [
-  {
-    id: "pwc-career-pathways",
-    referenceCode: "4DEFC47D72",
-    region: "netherlands",
-    memberOnly: false,
-    visible: true,
-    title: "Първи стъпки след университета",
-    description: "Изгради своята кариера в България с PwC",
-    bgImageExtra: "/assets/images/events/sofia.png",
-    date: "6 July 2026",
-    time: "17:00 – 19:00",
-    timeStamp: "2026-07-06T17:00:00+03:00",
-    timezone: "Europe/Sofia",
-    ticketTimer: "2026-07-06T17:00:00+03:00",
-    correctedDate: "",
-    where: "9–11 бул. „Мария Луиза“, София, България (PwC Bulgaria Office)",
-    entry: "Безплатно",
-    text: `<p>
-      <strong>Bulgarian Society Netherlands</strong> и <strong>PwC България</strong> те канят на събитие,
-      създадено специално за студенти и млади специалисти, които искат да изградят кариерата си в България.
-      Ако си във финален етап на обучението си и кариерните ти интереси са насочени предимно в сферата на
-      одита, финансите или счетоводството, ще се радваме да се запознаем с теб.
-    </p>
+  // {
+  //   id: "pwc-career-pathways",
+  //   referenceCode: "4DEFC47D72",
+  //   region: "netherlands",
+  //   memberOnly: false,
+  //   visible: true,
+  //   title: "Първи стъпки след университета",
+  //   description: "Изгради своята кариера в България с PwC",
+  //   bgImageExtra: "/assets/images/events/sofia.png",
+  //   date: "6 July 2026",
+  //   time: "17:00 – 19:00",
+  //   timeStamp: "2026-07-06T17:00:00+03:00",
+  //   timezone: "Europe/Sofia",
+  //   ticketTimer: "2026-07-06T17:00:00+03:00",
+  //   correctedDate: "",
+  //   where: "9–11 бул. „Мария Луиза“, София, България (PwC Bulgaria Office)",
+  //   entry: "Безплатно",
+  //   text: `<p>
+  //     <strong>Bulgarian Society Netherlands</strong> и <strong>PwC България</strong> те канят на събитие,
+  //     създадено специално за студенти и млади специалисти, които искат да изградят кариерата си в България.
+  //     Ако си във финален етап на обучението си и кариерните ти интереси са насочени предимно в сферата на
+  //     одита, финансите или счетоводството, ще се радваме да се запознаем с теб.
+  //   </p>
 
-    <p><strong>Подготвили сме ти интересна програма, която включва:</strong></p>
+  //   <p><strong>Подготвили сме ти интересна програма, която включва:</strong></p>
 
-    <p>
-      <strong>Истории, които вдъхновяват:</strong> Станислава Сярова и Ивайло Табаков са завършили в
-      Нидерландия и ще разкажат подробности около завръщането си в България и първите стъпки към успешната
-      кариера в PwC.
-    </p>
+  //   <p>
+  //     <strong>Истории, които вдъхновяват:</strong> Станислава Сярова и Ивайло Табаков са завършили в
+  //     Нидерландия и ще разкажат подробности около завръщането си в България и първите стъпки към успешната
+  //     кариера в PwC.
+  //   </p>
 
-    <p>
-      <strong>Join our team:</strong> Информация за актуалните кариерни възможности и PwC културата.
-    </p>
+  //   <p>
+  //     <strong>Join our team:</strong> Информация за актуалните кариерни възможности и PwC културата.
+  //   </p>
 
-    <p>
-      <strong>Networking:</strong> Възможност да се срещнеш с професионалисти от различните екипи.
-    </p>`,
-    marketingInputs: false,
-    ticket_img: "/assets/images/events/pwc-2026/ticket.png",
-    images: ["/assets/images/events/pwc-2026/poster.png"],
-    poster: "/assets/images/events/pwc-2026/poster.png",
-  },
+  //   <p>
+  //     <strong>Networking:</strong> Възможност да се срещнеш с професионалисти от различните екипи.
+  //   </p>`,
+  //   marketingInputs: false,
+  //   ticket_img: "/assets/images/events/pwc-2026/ticket.png",
+  //   images: ["/assets/images/events/pwc-2026/poster.png"],
+  //   poster: "/assets/images/events/pwc-2026/poster.png",
+  // },
   //   {
   //     region: "netherlands",
   //     memberOnly: false,
