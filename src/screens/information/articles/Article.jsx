@@ -19,19 +19,26 @@ import NoArticleFound from "../../../elements/ui/errors/NoArticleFound";
 import ChangeLanguageLinks from "../../../elements/ui/buttons/ChangeLanguageLinks";
 import ArticleStructuredData from "../../../component/common/ArticleStructuredData";
 
-const Article = () => {
+/**
+ * `initialArticle` is fetched on the server by the route, so the post body is
+ * in the HTML instead of arriving after reloadArticleDetails() runs.
+ */
+const Article = ({ initialArticle = null }) => {
   const { articleId } = useParams();
 
   const { reloadArticleDetails } = useArticlesLoad();
 
-  const selectedArticle = useSelector(selectSingleArticle);
+  const storedArticle = useSelector(selectSingleArticle);
+  const selectedArticle = storedArticle ?? initialArticle;
   const pageLoading = useSelector(selectPageLoading);
 
   useEffect(() => {
     reloadArticleDetails(articleId);
   }, []);
 
-  if (pageLoading) {
+  // Only show the loader when there is nothing to render yet — otherwise the
+  // mount-time refetch would blank out server-rendered content.
+  if (pageLoading && !selectedArticle) {
     return <PageLoading />;
   }
 

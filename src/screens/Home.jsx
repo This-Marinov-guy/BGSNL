@@ -19,7 +19,7 @@ import Hero2 from "../component/hero/Hero2";
 import Hero1 from "../component/hero/Hero1";
 import { OTHER_EVENTS } from "../util/defines/OTHER_EVENTS";
 
-const Home = () => {
+const Home = ({ initialEvents }) => {
   const navigate = useNavigate();
   const { region } = useParams();
 
@@ -65,12 +65,12 @@ const Home = () => {
       {region ? (
         <>
           {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
-          <FutureEventsContent />
+          <FutureEventsContent initialEvents={initialEvents} />
         </>
       ) : (
         <>
           {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
-          <FutureEventsContent displayAll />
+          <FutureEventsContent displayAll initialEvents={initialEvents} />
         </>
       )}
       {/* End Upcoming Events Area */}

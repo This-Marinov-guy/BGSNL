@@ -11,7 +11,7 @@ import { FiCheckCircle, FiChevronUp } from "react-icons/fi";
 import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
 
-const About = React.memo(() => {
+const About = React.memo(({ initialAboutData = {} }) => {
   return (
     <React.Fragment>
       <PageHelmet 
@@ -60,7 +60,7 @@ const About = React.memo(() => {
           <div className="row">
             <div className="col-lg-12">
               <div className="section-title text-center">
-                <CounterOne />
+                <CounterOne initialData={initialAboutData} />
               </div>
             </div>
           </div>

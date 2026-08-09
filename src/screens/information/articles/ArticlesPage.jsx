@@ -13,8 +13,15 @@ import Footer from "../../../component/footer/Footer";
 import SearchField from "../../../elements/ui/functional/SearchField";
 import ArticleCard from "../../../elements/ui/cards/ArticleCard";
 
-const ArticlesPage = () => {
-  const articles = useSelector(selectArticles);
+/**
+ * `initialArticles` is fetched on the server by app/(site)/articles/page.jsx so
+ * the list is in the HTML. The store is empty during SSR and on the client's
+ * first render, so both produce the same markup; once MainLayout's
+ * reloadArticles() populates Redux, the store takes over.
+ */
+const ArticlesPage = ({ initialArticles = [] }) => {
+  const storedArticles = useSelector(selectArticles);
+  const articles = storedArticles?.length ? storedArticles : initialArticles;
   const [firstArticle, ...restArticles] = articles;
 
   const [searchParams, setSearchParams] = useSearchParams();

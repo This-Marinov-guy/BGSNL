@@ -28,7 +28,13 @@ import { showModal } from "../../redux/modal";
 import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
-const FutureEventsContent = ({ displayAll, nullable = true }) => {
+/**
+ * `initialEvents` is the region-keyed map fetched on the server by the route,
+ * so upcoming events are in the HTML rather than appearing after reloadEvents()
+ * runs on the client. The store is empty during SSR and on the client's first
+ * render, so both produce identical markup; the store wins once it is filled.
+ */
+const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => {
   const { region } = useParams();
 
   const dispatch = useDispatch();
@@ -36,13 +42,21 @@ const FutureEventsContent = ({ displayAll, nullable = true }) => {
   const { reloadEvents, eventsLoading } = useLoadEvents();
 
   const isAuth = useSelector(selectIsAuth);
+  // Called unconditionally — the previous version had it inside both branches
+  // of an if/else, which is a hooks-order hazard.
+  const storedEvents = useSelector(selectEvents);
+
+  const source =
+    initialEvents && checkObjectOfArraysEmpty(storedEvents)
+      ? initialEvents
+      : storedEvents;
 
   let events;
 
   if (displayAll) {
-    events = useSelector(selectEvents);
+    events = source;
   } else {
-    events = useSelector(selectEvents)[region];
+    events = source[region];
 
     if (events && events.length) {
       events = events.filter(
@@ -195,7 +209,7 @@ const FutureOtherEventsContent = () => {
   );
 };
 
-const FutureEvents = (props) => {
+const FutureEvents = ({ initialEvents, ...props }) => {
   const { region } = useParams();
 
   return (
@@ -218,12 +232,16 @@ const FutureEvents = (props) => {
       {region ? (
         <>
           {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
-          <FutureEventsContent nullable={false} />
+          <FutureEventsContent nullable={false} initialEvents={initialEvents} />
         </>
       ) : (
         <>
           {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
-          <FutureEventsContent displayAll nullable={false} />
+          <FutureEventsContent
+            displayAll
+            nullable={false}
+            initialEvents={initialEvents}
+          />
         </>
       )}
       {/* End Future Events Area */}

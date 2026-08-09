@@ -1,3 +1,5 @@
+import { SITE_URL, getEventDetails } from "../api/server";
+
 /**
  * Server-side metadata for event pages.
  *
@@ -7,24 +9,9 @@
  * real page with the real <head> for everyone, so no sniffing is needed.
  */
 
-export const SITE_URL = "https://www.bulgariansociety.nl";
-
-const API_URL = (
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://api.bulgariansociety.nl/api/"
-).replace(/\/+$/, "");
+export { SITE_URL };
 
 const DEFAULT_IMAGE = `${SITE_URL}/assets/images/bg/welcome.png`;
-
-/**
- * The API rejects server-to-server calls that arrive without a site Origin
- * ("Forbidden: Access is denied!"), which browsers send automatically but
- * fetch() on the server does not. Without these the metadata below would
- * silently fall back to site defaults on every event page.
- */
-export const API_HEADERS = {
-  Origin: SITE_URL,
-  Referer: `${SITE_URL}/`,
-};
 
 export const stripHtml = (html) =>
   (html || "")
@@ -32,27 +19,6 @@ export const stripHtml = (html) =>
     .replace(/\s+/g, " ")
     .trim()
     .substring(0, 160);
-
-export async function fetchEvent(eventId) {
-  if (!eventId) return null;
-
-  try {
-    const res = await fetch(`${API_URL}/event/event-details/${eventId}`, {
-      headers: API_HEADERS,
-      // Matches the old middleware's 3s budget; a slow API must not block SSR.
-      signal: AbortSignal.timeout(3000),
-      next: { revalidate: 300 },
-    });
-
-    if (!res.ok) return null;
-
-    const data = await res.json();
-    return data?.event ?? null;
-  } catch {
-    // API unreachable or timed out — fall back to the site-level defaults.
-    return null;
-  }
-}
 
 /**
  * The old middleware wrote `og:type="event"` as raw HTML. Next validates this
@@ -93,7 +59,7 @@ export function toMetadata({ title, description, image, path, type = "website" }
 }
 
 export async function buildEventMetadata(eventId, path) {
-  const event = await fetchEvent(eventId);
+  const event = await getEventDetails(eventId);
 
   if (!event) {
     return toMetadata({ path, type: "event" });

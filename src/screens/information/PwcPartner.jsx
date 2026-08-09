@@ -18,10 +18,12 @@ const PWC_VIDEO = "/assets/images/partners/pwc.mp4";
 const PWC_BREADCRUMB_IMAGE = "/assets/images/partners/sofia.png";
 const PWC_METADATA_IMAGE = "/assets/images/events/pwc.jpeg";
 
-const PwcPartner = () => {
+// `initialInternships` comes from the server render so the PwC roles are in
+// the HTML instead of behind a <Loader />.
+const PwcPartner = ({ initialInternships = [] }) => {
   const { sendRequest } = useHttpClient();
-  const [loading, setLoading] = useState(true);
-  const [internships, setInternships] = useState([]);
+  const [loading, setLoading] = useState(!initialInternships.length);
+  const [internships, setInternships] = useState(initialInternships);
 
   useEffect(() => {
     const loadInternships = async () => {

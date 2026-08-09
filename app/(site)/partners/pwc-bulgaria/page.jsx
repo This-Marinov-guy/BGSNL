@@ -1,4 +1,5 @@
 import PwcPartner from "@/screens/information/PwcPartner";
+import { getInternships } from "@/util/api/server";
 import { toMetadata } from "@/util/seo/event-metadata";
 
 // Ported from the STATIC_META table in the old root middleware.js.
@@ -10,6 +11,8 @@ export const metadata = toMetadata({
   path: "/partners/pwc-bulgaria",
 });
 
-export default function Page() {
-  return <PwcPartner />;
+export default async function Page() {
+  const internships = await getInternships();
+
+  return <PwcPartner initialInternships={internships} />;
 }

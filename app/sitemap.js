@@ -1,5 +1,5 @@
 import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
-import { API_HEADERS } from "@/util/seo/event-metadata";
+import { getArticles, getEvents } from "@/util/api/server";
 
 /**
  * Replaces scripts/generate-sitemap.js, which wrote public/sitemap.xml at build
@@ -8,9 +8,6 @@ import { API_HEADERS } from "@/util/seo/event-metadata";
  */
 
 const BASE_URL = "https://www.bulgariansociety.nl";
-const SERVER_URL = (
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://api.bulgariansociety.nl/api/"
-).replace(/\/+$/, "");
 
 // Re-fetch at most once an hour.
 export const revalidate = 3600;
@@ -59,23 +56,6 @@ const toDate = (value) => {
   return isNaN(d.getTime()) ? new Date() : d;
 };
 
-async function fetchList(endpoint, key) {
-  try {
-    const res = await fetch(`${SERVER_URL}/${endpoint}`, {
-      // The API refuses server-side calls without a site Origin — see API_HEADERS.
-      headers: API_HEADERS,
-      signal: AbortSignal.timeout(10000),
-      next: { revalidate },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data?.[key] ?? [];
-  } catch {
-    // A sitemap missing its dynamic half beats a sitemap that 500s.
-    return [];
-  }
-}
-
 export default async function sitemap() {
   const now = new Date();
 
@@ -106,10 +86,7 @@ export default async function sitemap() {
     }
   }
 
-  const [events, articles] = await Promise.all([
-    fetchList("event/events-list", "events"),
-    fetchList("wordpress/posts", "posts"),
-  ]);
+  const [events, articles] = await Promise.all([getEvents(), getArticles()]);
 
   for (const event of events) {
     if (!event?.id || !event?.region) continue;

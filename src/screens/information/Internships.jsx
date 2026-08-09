@@ -24,14 +24,17 @@ const TYPE_ALL = "all";
 const TYPE_BULGARIAN = "bulgarian";
 const TYPE_INTERNATIONAL = "international";
 
-const Internships = () => {
+const Internships = ({ initialInternships = [] }) => {
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [loading, setLoading] = useState(true);
-  const [internships, setInternships] = useState([]);
+  // `initialInternships` comes from the server render, so the list is in the
+  // HTML instead of behind a <Loader />. The effect below still refetches after
+  // hydration (it also needs the current user to gate member-only listings).
+  const [loading, setLoading] = useState(!initialInternships.length);
+  const [internships, setInternships] = useState(initialInternships);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
   const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");

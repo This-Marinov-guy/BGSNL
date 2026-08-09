@@ -5,9 +5,11 @@ import { useHttpClient } from "../../hooks/common/http-hook";
 import CustomSpinner from "../ui/loading/CustomSpinner";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 
-const CounterOne = () => {
+// `initialData` comes from the server render (About fetches common/get-about-data),
+// so the figures are in the HTML instead of behind spinners.
+const CounterOne = ({ initialData = {} }) => {
   const [didViewCountUp, setDidViewCountUp] = useState(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(initialData);
 
   const { loading, sendRequest } = useHttpClient();
 
@@ -23,7 +25,7 @@ const CounterOne = () => {
   const STATISTICS = [
     {
       countNum:
-        loading || !data.hasOwnProperty("cities") ? (
+        (loading && !Object.keys(data).length) || !data.hasOwnProperty("cities") ? (
           <CustomSpinner />
         ) : (
           data?.cities
@@ -32,7 +34,7 @@ const CounterOne = () => {
     },
     {
       countNum:
-        loading || !data.hasOwnProperty("events") ? (
+        (loading && !Object.keys(data).length) || !data.hasOwnProperty("events") ? (
           <CustomSpinner />
         ) : (
           data?.events
@@ -42,7 +44,7 @@ const CounterOne = () => {
     },
     {
       countNum:
-        loading || !data.hasOwnProperty("members") ? (
+        (loading && !Object.keys(data).length) || !data.hasOwnProperty("members") ? (
           <CustomSpinner />
         ) : (
           data?.members
@@ -51,7 +53,7 @@ const CounterOne = () => {
     },
     {
       countNum:
-        loading || !data.hasOwnProperty("alumnis") ? (
+        (loading && !Object.keys(data).length) || !data.hasOwnProperty("alumnis") ? (
           <CustomSpinner />
         ) : (
           data?.alumnis
@@ -60,7 +62,7 @@ const CounterOne = () => {
     },
     // {
     //   countNum:
-    //     loading || !data.hasOwnProperty("activeMembers") ? (
+    //     (loading && !Object.keys(data).length) || !data.hasOwnProperty("activeMembers") ? (
     //       <CustomSpinner />
     //     ) : data?.activeMembers < 60 ? (
     //       65
@@ -71,7 +73,7 @@ const CounterOne = () => {
     // },
     {
       countNum:
-        loading || !data.hasOwnProperty("tickets") ? (
+        (loading && !Object.keys(data).length) || !data.hasOwnProperty("tickets") ? (
           <CustomSpinner />
         ) : (
           data?.tickets

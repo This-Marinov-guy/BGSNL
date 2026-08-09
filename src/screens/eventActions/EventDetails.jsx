@@ -23,9 +23,14 @@ import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import EventStructuredData from "../../component/common/EventStructuredData";
 import EventImageCarousel from "../../elements/ui/EventImageCarousel";
 
-const EventDetails = () => {
+/**
+ * `initialEvent` is fetched on the server by the route, so the event is in the
+ * HTML rather than appearing after the effect below runs. The effect still
+ * refetches on mount to pick up live ticket availability.
+ */
+const EventDetails = ({ initialEvent = null }) => {
   const [eventClosed, setEventClosed] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(initialEvent);
 
   const user = useSelector(selectUser);
 
@@ -52,7 +57,9 @@ const EventDetails = () => {
     getEventDetails();
   }, []);
 
-  if (loading) {
+  // Only fall back to the loader when there is nothing to show yet — otherwise
+  // the mount-time refetch would replace server-rendered content with a spinner.
+  if (loading && !selectedEvent) {
     return <HeaderLoadingError />;
   } else if (!selectedEvent) {
     return <NoEventFound />;

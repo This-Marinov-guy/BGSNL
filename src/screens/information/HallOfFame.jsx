@@ -69,11 +69,12 @@ function TreeSkeleton() {
   );
 }
 
-const HallOfFame = () => {
+// `initialNodes` comes from the server render (user/tree-layout).
+const HallOfFame = ({ initialNodes = [] }) => {
   const { sendRequest } = useHttpClient();
 
-  const [loading, setLoading] = useState(true);
-  const [nodes, setNodes] = useState([]);
+  const [loading, setLoading] = useState(!initialNodes.length);
+  const [nodes, setNodes] = useState(initialNodes);
   const [selectedUser, setSelectedUser] = useState(null);
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState(null);
