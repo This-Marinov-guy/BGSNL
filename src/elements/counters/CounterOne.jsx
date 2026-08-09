@@ -89,6 +89,19 @@ const CounterOne = ({ initialData = {} }) => {
     }
   };
 
+  /**
+   * react-countup renders its start value (0) until the element scrolls into
+   * view, so on the server every figure came out as "0". Rendering the real
+   * number until mount puts the actual figures in the HTML for crawlers while
+   * leaving the 0 -> N animation untouched: the swap to <CountUp> happens in an
+   * effect, and for anything below the fold it happens off-screen.
+   */
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <Fragment>
       <div className="row center_div">
@@ -99,13 +112,17 @@ const CounterOne = ({ initialData = {} }) => {
           >
             <h5 className="counter">
               {value.icon}
-              <VisibilitySensor
-                onChange={onVisibilityChange}
-                offset={{ top: 10 }}
-                delayedCall
-              >
-                <CountUp end={didViewCountUp ? value.countNum : 0} />
-              </VisibilitySensor>
+              {mounted ? (
+                <VisibilitySensor
+                  onChange={onVisibilityChange}
+                  offset={{ top: 10 }}
+                  delayedCall
+                >
+                  <CountUp end={didViewCountUp ? value.countNum : 0} />
+                </VisibilitySensor>
+              ) : (
+                value.countNum
+              )}
             </h5>
             <p className="description">{value.countTitle}</p>
           </div>

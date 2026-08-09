@@ -51,12 +51,14 @@ const defaultSchema = yup.object().shape({
   addOns: yup.array(),
 });
 
-const GuestPurchase = () => {
+// `initialEvent` is fetched on the server by the route. The guest flow needs
+// no authenticated user, so it renders fully server-side.
+const GuestPurchase = ({ initialEvent = null }) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingPage, setLoadingPage] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [loadingPage, setLoadingPage] = useState(!initialEvent);
+  const [selectedEvent, setSelectedEvent] = useState(initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [schema, setSchema] = useState(null);
@@ -147,7 +149,8 @@ const GuestPurchase = () => {
     fetchCurrentUser();
   }, []);
 
-  if (loadingPage) {
+  // Keep server-rendered content on screen while the mount-time refetch runs.
+  if (loadingPage && !selectedEvent) {
     return <HeaderLoadingError />;
   } else if (!selectedEvent) {
     return <NoEventFound />;

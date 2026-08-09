@@ -13,10 +13,14 @@ import GuestPurchase from "./GuestPurchase";
  * Membership is derived from the localStorage JWT, so the choice has to stay
  * on the client.
  */
-const PurchaseTicket = () => {
+const PurchaseTicket = ({ initialEvent = null }) => {
   const user = useSelector(selectUser);
 
-  return isMember(user) ? <MemberPurchase /> : <GuestPurchase />;
+  return isMember(user) ? (
+    <MemberPurchase initialEvent={initialEvent} />
+  ) : (
+    <GuestPurchase initialEvent={initialEvent} />
+  );
 };
 
 export default PurchaseTicket;

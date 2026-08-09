@@ -40,13 +40,18 @@ import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import CardInputs from "../../elements/inputs/common/CardInputs";
 import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 
-const MemberPurchase = () => {
+// `initialEvent` is seeded from the server render. Unlike the guest flow this
+// screen still waits for `currentUser`: membership pricing depends on the
+// logged-in account, whose JWT lives in localStorage and is unavailable to the
+// server. PurchaseTicket therefore renders GuestPurchase server-side and swaps
+// to this screen after the user is restored on the client.
+const MemberPurchase = ({ initialEvent = null }) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(initialEvent);
   const [currentUser, setCurrentUser] = useState();
-  const [loadingPage, setLoadingPage] = useState(true);
+  const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [schema, setSchema] = useState(null);

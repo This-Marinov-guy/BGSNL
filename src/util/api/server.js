@@ -19,10 +19,32 @@ const API_URL = (
 ).replace(/\/+$/, "");
 
 /**
- * The API answers "Forbidden: Access is denied!" to requests without a site
- * Origin. Browsers attach it automatically; server-side fetch does not.
+ * Fail loudly rather than silently shipping the secret below to the browser.
+ * Every export here is meant to run only during a server render.
  */
+if (typeof window !== "undefined") {
+  throw new Error(
+    "src/util/api/server.js was imported into a client bundle. It holds the " +
+      "server-to-server API key — import it only from server components."
+  );
+}
+
+/**
+ * The API's firewall (BGSNL-API middleware/firewall.js) identifies callers two
+ * ways:
+ *
+ *  - `x-bgsnl-server-key`, a shared secret only this server knows. Server-only
+ *    env var, deliberately without the NEXT_PUBLIC_ prefix so Next refuses to
+ *    inline it into client bundles. Browsers cannot send it: it is not in the
+ *    API's Access-Control-Allow-Headers.
+ *  - the browser Origin allow-list, kept here as a fallback so the site keeps
+ *    working if the key has not been configured on the API yet. Once both
+ *    sides have the key, the key is what actually identifies us.
+ */
+const SERVER_KEY = process.env.BGSNL_SERVER_KEY || "";
+
 export const API_HEADERS = {
+  ...(SERVER_KEY ? { "x-bgsnl-server-key": SERVER_KEY } : {}),
   Origin: SITE_URL,
   Referer: `${SITE_URL}/`,
 };
