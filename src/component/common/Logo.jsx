@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom'
+import { Link } from "@/util/navigation"
 
 export const Logo = () => (
     <div className="logo">

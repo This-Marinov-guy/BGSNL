@@ -19,7 +19,7 @@ export const isTokenExpired = (token) => {
 
     const currentTime = Math.floor(Date.now() / 1000); 
 
-    return (exp < currentTime) && (version != process.env.REACT_APP_AUTH_VERSION); 
+    return (exp < currentTime) && (version != process.env.NEXT_PUBLIC_AUTH_VERSION); 
 }
 
 export const checkAuthorization = (token, roles) => {

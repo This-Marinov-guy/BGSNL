@@ -4,9 +4,9 @@ import { REGION_EMAIL } from "./REGIONS_DESIGN";
 
 //Server
 const PROD_SERVER_ENDPOINT =
-    process.env.REACT_APP_SERVER_URL || "https://kanatitsa.bulgariansociety.nl/api/";
+    process.env.NEXT_PUBLIC_SERVER_URL || "https://kanatitsa.bulgariansociety.nl/api/";
 const TEST_SERVER_ENDPOINT =
-    process.env.REACT_APP_TEST_SERVER_URL || "http://localhost:80/api/";
+    process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://localhost:80/api/";
 
 const isLocalPreviewHost = () => {
     if (typeof window === "undefined") {

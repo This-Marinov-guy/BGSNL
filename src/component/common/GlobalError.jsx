@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { usePathname, useNavigate } from "@/util/navigation";
 import axios from 'axios';
 import HeaderTwo from '../header/HeaderTwo';
 import { AXIOM_DATASET, getAxiomEndpoint, isAxiomLoggingEnabled } from '../../util/configs/axiom';
@@ -105,7 +105,7 @@ const logErrorToAxiom = (error, componentStack, errorInfo) => {
 
     // Send to Axiom via API
     try {
-        const AXIOM_API_TOKEN = process.env.REACT_APP_AXIOM_API_TOKEN;
+        const AXIOM_API_TOKEN = process.env.NEXT_PUBLIC_AXIOM_API_TOKEN;
         const AXIOM_ENDPOINT = getAxiomEndpoint();
         
         if (AXIOM_API_TOKEN) {
@@ -145,7 +145,7 @@ const handleError = (error, info) => {
 };
 
 const GlobalError = ({ children }) => {
-    const location = useLocation();
+    const pathname = usePathname();
 
     useEffect(() => {
         // Capture console errors
@@ -193,7 +193,7 @@ const GlobalError = ({ children }) => {
                     };
 
                     // Send to Axiom
-                    const AXIOM_API_TOKEN = process.env.REACT_APP_AXIOM_API_TOKEN;
+                    const AXIOM_API_TOKEN = process.env.NEXT_PUBLIC_AXIOM_API_TOKEN;
                     const AXIOM_ENDPOINT = getAxiomEndpoint();
                     
                     if (AXIOM_API_TOKEN) {
@@ -221,7 +221,7 @@ const GlobalError = ({ children }) => {
     return (
         <ErrorBoundary
             FallbackComponent={ErrorFallback}
-            key={location.pathname} // Force remount on location change
+            key={pathname} // Force remount on location change
             onError={handleError}
         >
             {children}

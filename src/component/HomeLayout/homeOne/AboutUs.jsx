@@ -4,7 +4,7 @@ import ImageFb from "../../../elements/ui/media/ImageFb";
 import { presentation } from "../../../page-demo/script";
 import { SLIDESHOW } from "../../../util/defines/GLOBAL_INFO";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Link } from "react-router-dom";
+import { Link } from "@/util/navigation";
 
 const AboutUs = ({ learnMore }) => {
   let title = "About Us";

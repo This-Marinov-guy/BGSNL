@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import { Dialog } from "primereact/dialog";
 import { FiLogIn, FiUserPlus } from "react-icons/fi";
 import ImageFb from "../media/ImageFb";

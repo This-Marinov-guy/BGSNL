@@ -46,7 +46,7 @@ export const useAppInitialization = () => {
         if (
           !isObjectEmpty(storedUser) &&
           !!storedUser.token &&
-          version == process.env.REACT_APP_AUTH_VERSION
+          version == process.env.NEXT_PUBLIC_AUTH_VERSION
         ) {
           await loginUser(storedUser.token);
         } else if (storedUser && storedUser.token) {

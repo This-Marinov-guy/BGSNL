@@ -1,6 +1,6 @@
 import React from 'react'
 import { Message } from "primereact/message";
-import { Link } from 'react-router-dom'
+import { Link } from "@/util/navigation"
 
 const InternshipBanner = () => {
     return (

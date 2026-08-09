@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@/util/navigation";
 import { FiCalendar, FiLock } from "react-icons/fi";
 import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
 import moment from "moment";

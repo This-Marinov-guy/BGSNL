@@ -17,12 +17,12 @@ export const AXIOM_ENDPOINTS = {
 // Get the current endpoint based on NODE_ENV
 export const getAxiomEndpoint = () => {
   const environment = process.env.NODE_ENV || 'development';
-  return process.env.REACT_APP_AXIOM_ENDPOINT || AXIOM_ENDPOINTS[environment];
+  return process.env.NEXT_PUBLIC_AXIOM_ENDPOINT || AXIOM_ENDPOINTS[environment];
 };
 
 // Helper function to determine if Axiom logging is enabled
 export const isAxiomLoggingEnabled = () => {
   // Only enable in production by default, or if explicitly enabled in other environments
   if (process.env.NODE_ENV === 'production') return true;
-  return process.env.REACT_APP_ENABLE_AXIOM_LOGGING == 1;
+  return process.env.NEXT_PUBLIC_ENABLE_AXIOM_LOGGING == 1;
 };

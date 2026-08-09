@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import { useState, useEffect } from "react";
 import { selectUser } from "../../redux/user";
 import { ALUMNI } from "../../util/defines/common";

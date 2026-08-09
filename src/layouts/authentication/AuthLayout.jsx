@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "@/util/navigation";
 import { selectUser } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
 import { checkAuthorization } from "../../util/functions/authorization";
@@ -22,7 +24,7 @@ const AuthLayout = ({ children, access = [] }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA); 
-      const isAuth = !!(user && user.token) || !!userData || (user.version == process.env.REACT_APP_AUTH_VERSION);
+      const isAuth = !!(user && user.token) || !!userData || (user.version == process.env.NEXT_PUBLIC_AUTH_VERSION);
       const routePath = location.pathname + location.hash + location.search;
 
       if (!isAuth) {

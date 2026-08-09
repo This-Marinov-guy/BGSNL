@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import packageJson from "../../../package.json";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "@/util/navigation";
 import {
   REGION_EMAIL,
   REGION_MAIN_COLOR,

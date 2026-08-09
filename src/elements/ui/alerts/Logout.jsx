@@ -1,7 +1,7 @@
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import { logout } from "../../../redux/user";
 
 const LogoutAlert = ({ visible, onHide }) => {

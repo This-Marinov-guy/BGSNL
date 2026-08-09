@@ -1,7 +1,7 @@
 import React from "react";
 import ImageFb from "../ui/media/ImageFb";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Link } from "@/util/navigation";
+import { useParams } from "@/util/navigation";
 
 const PortfolioList = (props) => {
   const { region } = useParams();

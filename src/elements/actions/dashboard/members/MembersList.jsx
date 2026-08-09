@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { selectUser } from "../../../../redux/user";
 import {

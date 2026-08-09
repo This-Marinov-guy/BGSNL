@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from "@/util/navigation"
 import { useDispatch } from 'react-redux';
 import { showModal } from '../../redux/modal';
 import { WEB_DEV_MODAL } from '../../util/defines/common';

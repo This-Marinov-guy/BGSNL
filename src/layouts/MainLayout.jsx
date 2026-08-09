@@ -26,16 +26,16 @@ const MainLayout = ({ children }) => {
 
   const { reloadArticles } = useArticlesLoad();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [window.location.pathname]);
+  // Scroll reset on navigation now lives in <ScrollToTop /> (app/providers.jsx).
+  // The old `[window.location.pathname]` dependency evaluated during render,
+  // which crashes server rendering.
 
   useEffect(() => {
-    if (process.env.REACT_APP_CLARITY_ENABLE == "1") {
+    if (process.env.NEXT_PUBLIC_CLARITY_ENABLE == "1") {
       clarityTrack();
     }
 
-    if (process.env.REACT_APP_GTM_ENABLE == "1") {
+    if (process.env.NEXT_PUBLIC_GTM_ENABLE == "1") {
       gaTrack();
     }
 

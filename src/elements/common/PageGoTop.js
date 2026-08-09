@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "@/util/navigation";
 
 const PageGoTop = ({ children }) => {
     const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { changeLocalStorageIndex } from "../../redux/modal";
-import { Link } from "react-router-dom";
+import { Link } from "@/util/navigation";
 
 const Strap = (props) => {
   const { strap } = props;
@@ -36,7 +36,7 @@ const Strap = (props) => {
   } else if (strap?.link) {
     dynamicButton = (
       <a
-        href={process.env.REACT_APP_PUBLIC_URL + strap?.link?.href}
+        href={process.env.NEXT_PUBLIC_PUBLIC_URL + strap?.link?.href}
         target="_blank"
         rel="noopener noreferrer"
         className="ml-2 underline"

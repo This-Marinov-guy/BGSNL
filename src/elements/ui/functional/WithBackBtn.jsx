@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "@/util/navigation"
 import { FiChevronLeft } from 'react-icons/fi';
 
 const WithBackBtn = (props) => {

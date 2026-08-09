@@ -6,7 +6,7 @@ import { FiInfo } from 'react-icons/fi';
 import { capitalizeFirstLetter } from '../../../../util/functions/capitalize';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadSingleEventDashboard, removeEventFromAll } from '../../../../redux/events';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "@/util/navigation";
 import { Image } from 'primereact/image';
 import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
 import moment from 'moment';

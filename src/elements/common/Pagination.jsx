@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "@/util/navigation";
 import { FaAngleRight } from "react-icons/fa";
 
 export default function Pagination() {

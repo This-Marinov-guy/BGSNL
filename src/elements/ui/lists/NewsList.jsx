@@ -5,7 +5,7 @@ import { showModal } from "../../../redux/modal";
 import { DONATION_MODAL, WEB_DEV_MODAL } from "../../../util/defines/common";
 import { REGION_INSTAGRAM } from "../../../util/defines/REGIONS_DESIGN";
 import { selectIsAuth } from "../../../redux/user";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@/util/navigation";
 import Slider from "react-slick";
 import { CAMPAIGNS } from "../../../util/defines/CAMPAIGNS";
 import "./NewsList.css";

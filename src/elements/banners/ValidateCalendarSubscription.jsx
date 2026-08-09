@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@/util/navigation";
 import ImageInput from "../inputs/common/ImageInput";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import Loader from "../ui/loading/Loader";

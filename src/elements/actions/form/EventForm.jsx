@@ -19,7 +19,7 @@ import {
   isObjectEmpty,
   isProd,
 } from "../../../util/functions/helpers";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "@/util/navigation";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import {
   ACCESS_2,

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../redux/notification";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import ImageInput from "../../inputs/common/ImageInput";
 import { FiChevronDown, FiCheck, FiX } from "react-icons/fi";
 

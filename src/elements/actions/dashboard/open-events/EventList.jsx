@@ -4,7 +4,7 @@ import Event from './Event'
 import { useSelector } from 'react-redux';
 import { selectEventsDashboard } from '../../../../redux/events';
 import Filter from '../Filter';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link } from "@/util/navigation";
 import { useLoadEvents } from '../../../../hooks/common/api-hooks';
 import EventsLoading from '../../../ui/loading/EventsLoading';
 import { selectUser } from '../../../../redux/user';

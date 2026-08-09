@@ -4,7 +4,7 @@ const GifImage = (props) => {
     const [gif, setGif] = useState(null)
     const [loading, setLoading] = useState(false)
 
-    const apiKey = process.env.REACT_APP_GIPHY;
+    const apiKey = process.env.NEXT_PUBLIC_GIPHY;
     const searchEndPoint = "https://api.giphy.com/v1/gifs/search?";
     const limit = 10;
     const keyword = 'christmas'

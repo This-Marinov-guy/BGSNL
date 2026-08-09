@@ -14,6 +14,9 @@ firebase.json
 
 # production
 /build
+/.next
+/out
+next-env.d.ts
 
 # misc
 .DS_Store

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";

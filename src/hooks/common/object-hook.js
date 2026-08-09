@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams } from "@/util/navigation";
 
 // takes the eventId which is a title from the url and returns the event 
 export const useObjectGrabUrl = (array) => {

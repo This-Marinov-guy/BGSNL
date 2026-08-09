@@ -2,7 +2,7 @@ import QRCode from "qrcode";
 import { resizeFile } from "./helpers";
 
 export const createQrCodeCheckGuest = (data) => {
-  return `${process.env.REACT_APP_PUBLIC_URL}/user/check-guest-list?event=${
+  return `${process.env.NEXT_PUBLIC_PUBLIC_URL}/user/check-guest-list?event=${
     data.eventId
   }&code=${data.code}&count=${data?.quantity ?? 1}`;
 };

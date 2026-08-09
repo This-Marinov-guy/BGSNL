@@ -1,7 +1,7 @@
 import React from 'react'
 import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize'
-import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from "@/util/navigation";
 
 const PAGES = [
     { label: 'Members', path: '/user/members' },

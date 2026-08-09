@@ -1,7 +1,7 @@
 import React from "react";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../loading/Loader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import { Dialog } from "primereact/dialog";
 import {
   REGIONS_MEMBERSHIP_SPECIFICS,

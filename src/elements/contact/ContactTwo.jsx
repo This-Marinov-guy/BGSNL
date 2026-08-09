@@ -1,7 +1,7 @@
 import React from "react";
 import ContactForm from "./ContactForm";
 import ImageFb from "../ui/media/ImageFb";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/util/navigation";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { HOLIDAYS } from "../../util/configs/common";
 

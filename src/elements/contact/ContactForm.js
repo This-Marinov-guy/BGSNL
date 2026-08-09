@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import emailjs from "emailjs-com";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/util/navigation";
 import PropTypes from "prop-types";
 import Loader from "../ui/loading/Loader";
 import { REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
@@ -38,9 +38,9 @@ function ContactForm(props) {
     setIsLoading(true);
 
     e.preventDefault();
-    const serviceID = process.env.REACT_APP_SERVICE || "default_service";
-    const templateID = process.env.REACT_APP_TEMPLATE || "default_template";
-    const userID = process.env.REACT_APP_PUBLIC_KEY || "default_key";
+    const serviceID = process.env.NEXT_PUBLIC_SERVICE || "default_service";
+    const templateID = process.env.NEXT_PUBLIC_TEMPLATE || "default_template";
+    const userID = process.env.NEXT_PUBLIC_PUBLIC_KEY || "default_key";
 
     await emailjs.sendForm(serviceID, templateID, e.target, userID).then(
       (result) => {

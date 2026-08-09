@@ -3,7 +3,7 @@ import {
   LOCAL_STORAGE_LANGUAGE_PREFERENCE,
   PAGE_TRANSLATION_TEXTS,
 } from "../../../util/defines/common";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import { encodeForURL } from "../../../util/functions/helpers";
 
 const ChangeLanguageLinks = ({ post }) => {

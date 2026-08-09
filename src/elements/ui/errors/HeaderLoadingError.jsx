@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import HeaderTwo from '../../../component/header/HeaderTwo'
 import ImageFb from '../media/ImageFb'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from "@/util/navigation"
 import Fade from 'react-bootstrap/Fade';
 
 const HeaderLoadingError = () => {

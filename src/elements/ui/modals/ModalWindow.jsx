@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 
 const ModalWindow = (props) => {
-  
-  if (props.freeze) {
+  // Was assigned during render, which crashes SSR.
+  useEffect(() => {
+    if (!props.freeze) return;
+
     window.onscroll = function () {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     };
-  }
+
+    return () => {
+      window.onscroll = null;
+    };
+  }, [props.freeze]);
 
   return (
     <Modal

@@ -33,7 +33,7 @@ export const gaTrack = () => {
     return;
   }
 
-  ReactGA.initialize(process.env.REACT_APP_GOOGLE_TAG);
+  ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_TAG);
 
   if (ReactGA.isInitialized) {
     console.log("Track with Google Analytics");
@@ -46,7 +46,7 @@ export const clarityTrack = () => {
     return;
   }
 
-  clarity.init(process.env.REACT_APP_CLARITY_ID);
+  clarity.init(process.env.NEXT_PUBLIC_CLARITY_ID);
   clarity.consent();
 
   if (clarity.hasStarted()) {
@@ -117,7 +117,7 @@ export const decryptData = (string) => {
   try {
     const decryptedBytes = CryptoJS.AES.decrypt(
       decodeURIComponent(string),
-      process.env.REACT_APP_ENCRYPTION_KEY
+      process.env.NEXT_PUBLIC_ENCRYPTION_KEY
     );
     decryptedData = JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8));
   } catch (err) {
@@ -320,7 +320,7 @@ export const getGeoLocation = () => {
     return "bg";
   }
 
-  fetch(`https://ipinfo.io/json?token=${process.env.REACT_APP_GEO_TOKEN}`)
+  fetch(`https://ipinfo.io/json?token=${process.env.NEXT_PUBLIC_GEO_TOKEN}`)
     .then((response) => response.json())
     .then((data) => {
       location = data.country;

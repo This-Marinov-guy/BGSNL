@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from "@/util/navigation";
 import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { Card } from 'primereact/card';
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize';

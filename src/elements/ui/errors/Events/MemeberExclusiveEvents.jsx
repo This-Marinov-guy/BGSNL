@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from "@/util/navigation"
 import { REGIONS } from '../../../../util/defines/REGIONS_DESIGN';
 import ImageFb from '../../media/ImageFb';
 import MembershipBanner from '../../../banners/MembershipBanner';

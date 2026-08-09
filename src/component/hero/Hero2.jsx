@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "@/util/navigation";
 import ImageFb from "../../elements/ui/media/ImageFb";
 
 const Hero2 = () => {

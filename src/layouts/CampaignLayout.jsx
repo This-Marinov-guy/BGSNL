@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CAMPAIGNS } from "../util/defines/CAMPAIGNS";
 import { Dialog } from "primereact/dialog";
 import ImageFb from "../elements/ui/media/ImageFb";
-import { Link } from "react-router-dom";
+import { Link } from "@/util/navigation";
 import { useSelector } from "react-redux";
 import { selectLocalStorageIndex } from "../redux/modal";
 

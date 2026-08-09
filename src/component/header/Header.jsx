@@ -1,9 +1,9 @@
-import React, { useState, Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, Fragment } from "react";
+import { Link } from "@/util/navigation";
 import { FiX, FiMenu } from "react-icons/fi";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/util/navigation";
 import HeaderContent from "./HeaderContent";
 import { HOLIDAYS } from "../../util/configs/common";
 import { getActiveStrap } from "../../util/defines/CAMPAIGNS";
@@ -15,15 +15,16 @@ const Header = (props) => {
 
   const activeStrap = getActiveStrap();
 
-  var elements = document.querySelectorAll(".has-dropdown > a");
-  for (var i in elements) {
-    if (elements.hasOwnProperty(i)) {
-      elements[i].onclick = function () {
+  // Was executed straight in the render body, which crashes server rendering.
+  useEffect(() => {
+    const elements = document.querySelectorAll(".has-dropdown > a");
+    elements.forEach((element) => {
+      element.onclick = function () {
         this.parentElement.querySelector(".submenu").classList.toggle("active");
         this.classList.toggle("open");
       };
-    }
-  }
+    });
+  });
 
   let logoUrl = (
     <ImageFb

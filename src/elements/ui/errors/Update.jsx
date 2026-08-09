@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import { useSelector } from "react-redux";
 import { selectWarning } from "../../../redux/modal";
@@ -7,9 +7,16 @@ import Modal from "react-bootstrap/Modal";
 const Update = () => {
   const warning = useSelector(selectWarning);
 
-  window.onscroll = function () {
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  };
+  // Was assigned during render, which crashes SSR.
+  useEffect(() => {
+    window.onscroll = function () {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
+
+    return () => {
+      window.onscroll = null;
+    };
+  }, []);
 
   return (
     <Modal

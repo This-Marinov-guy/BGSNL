@@ -3,7 +3,7 @@ import { FiX, FiCheck } from "react-icons/fi";
 import PropTypes from "prop-types";
 import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../../util/defines/ALUMNI";
 import { Badge } from "primereact/badge";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/util/navigation";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../loading/Loader";
 import { useDispatch } from "react-redux";

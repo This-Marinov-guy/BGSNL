@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "@/util/navigation";
 import { FiMenu, FiX } from "react-icons/fi";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { useParams } from "react-router-dom";
+import { useParams } from "@/util/navigation";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import {
   checkAuthorization,
