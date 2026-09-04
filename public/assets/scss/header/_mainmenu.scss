@@ -22,8 +22,8 @@ Mainmenu Area
         h3 {
           @extend %transition;
           color: white;
-          font-size: 24px;
-          font-weight: 500;
+
+
           padding: 20px 0;
           display: inline-block;
         }
@@ -56,8 +56,8 @@ Mainmenu Area
               a,
               h3 {
                 line-height: normal !important;
-                font-size: 26px;
-                font-weight: 500;
+
+
                 padding: 10px 20px;
                 display: block;
                 color: #1f1f25;
@@ -137,17 +137,39 @@ Mainmenu Area
       position: fixed;
       top: 5px;
       right: 30px;
-      font-size: 50px;
+
       color: #017363 !important;
     }
     &.text-red {
       position: fixed;
       top: 5px;
       right: 30px;
-      font-size: 50px;
+
       color: #ab1c02 !important;
     }
   }
+}
+
+.humberger-menu .menutrigger,
+.close-menu .closeTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border-radius: 8px;
+  line-height: 1;
+}
+
+.humberger-menu .menutrigger {
+  top: 8px;
+  right: 18px;
+}
+
+.header-wrapper .close-menu {
+  top: 8px;
+  right: 18px;
 }
 
 .color-white {
@@ -218,5 +240,23 @@ Mainmenu Area
 @media #{$sm-layout} {
   .header-style-two .humberger-menu span.text-white {
     color: #1d1d24 !important;
+  }
+}
+
+/* Compact desktop header without reducing mobile navigation touch targets. */
+@media only screen and (min-width: 1200px) {
+  .header-area .header-right.header-red {
+    padding: 3px 16px;
+  }
+
+  .header-area .mainmenunav ul.mainmenu > li > a,
+  .header-area .mainmenunav ul.mainmenu > li > h3 {
+    padding-block: 12px;
+  }
+
+  .header-area .header-btn .rn-button-style--2,
+  .header-area .header-btn .rn-btn {
+    min-height: 32px;
+    padding: 6px 14px;
   }
 }

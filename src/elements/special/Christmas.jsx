@@ -1,15 +1,21 @@
-import React, { useState, Fragment } from "react";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../ui/loading/Loader";
+import {
+  Fragment,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
 import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FiX } from "react-icons/fi";
-
-import ModalWindow from "../ui/modals/ModalWindow";
-
-import GifSearch from "./GifSearch";
-import GifImage from "./GifImage";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { HOLIDAYS } from "../../util/configs/common";
+import Loader from "../ui/loading/Loader";
+import ValidatedFormik from "../ui/forms/ValidatedFormik";
+import ModalWindow from "../ui/modals/ModalWindow";
+import GifImage from "./GifImage";
+import GifSearch from "./GifSearch";
 
 const schema = yup.object().shape({
   text: yup.string().required("You are not sending without a wish >:("),
@@ -54,46 +60,15 @@ const Christmas = (props) => {
   return (
     <Fragment>
       {showInbox && (
-        <ModalWindow show={showInbox}>
+        <ModalWindow
+          show={showInbox}
+          title="Your Christmas Cards"
+          onHide={() => setShowInbox(false)}
+        >
           <div
             className="inner"
             style={{ padding: "20px", maxHeight: "80vh", overflowY: "auto" }}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "25px",
-                borderBottom: "2px solid #e9ecef",
-                paddingBottom: "15px",
-              }}
-            >
-              <h3
-                style={{
-                  margin: 0,
-                  color: "#017363",
-                  fontSize: "24px",
-                  fontWeight: "600",
-                }}
-              >
-                Your Christmas Cards
-              </h3>
-              <FiX
-                className="x_icon"
-                onClick={() => {
-                  setShowInbox(false);
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontSize: "24px",
-                  color: "#6c757d",
-                  transition: "color 0.3s ease",
-                }}
-                onMouseEnter={(e) => (e.target.style.color = "#dc3545")}
-                onMouseLeave={(e) => (e.target.style.color = "#6c757d")}
-              />
-            </div>
             {props.currentUser.christmas.length > 0 ? (
               <div className="row mt--20" style={{ gap: "20px" }}>
                 {props.currentUser.christmas.map((card, index) => (
@@ -149,7 +124,6 @@ const Christmas = (props) => {
                   style={{
                     margin: 0,
                     color: "#6c757d",
-                    fontSize: "18px",
                     fontStyle: "italic",
                   }}
                 >
@@ -161,8 +135,12 @@ const Christmas = (props) => {
         </ModalWindow>
       )}
       {showForm && (
-        <ModalWindow show={showForm}>
-          <Formik
+        <ModalWindow
+          show={showForm}
+          title="Send a Christmas Card to a BGSNL member"
+          onHide={() => setShowForm(false)}
+        >
+          <ValidatedFormik
             className="inner"
             validationSchema={schema}
             initialValues={{
@@ -197,12 +175,6 @@ const Christmas = (props) => {
           >
             {success ? (
               <div style={{ padding: "10px" }}>
-                <FiX
-                  className="x_icon"
-                  onClick={() => {
-                    setShowForm(false);
-                  }}
-                />
                 <img src="https://i.pinimg.com/originals/ff/6e/bd/ff6ebd0dfb50a44c04c842f365df4446.gif"></img>
                 <p className="mt--20">
                   Hope you had fun - we expect to see you next year as well!
@@ -211,22 +183,11 @@ const Christmas = (props) => {
               </div>
             ) : (
               <Form id="form" style={{ padding: "5%" }}>
-                <div className="hor_section">
-                  <h3>Send a Christmas Card to a BGSNL member</h3>
-                  <FiX
-                    className="x_icon"
-                    onClick={() => {
-                      setShowForm(false);
-                    }}
-                  />
-                </div>
                 <div className="row">
                   <div className="col-lg-12 col-md-12 col-12 mt--20">
                     <div className="rn-form-group">
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           marginBottom: "8px",
                           display: "block",
                         }}
@@ -241,7 +202,6 @@ const Christmas = (props) => {
                         style={{
                           padding: "12px 16px",
                           minHeight: "120px",
-                          fontSize: "16px",
                           border: "1px solid #e9ecef",
                           borderRadius: "8px",
                           width: "100%",
@@ -260,8 +220,6 @@ const Christmas = (props) => {
                     <div className="rn-form-group">
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           marginBottom: "8px",
                           display: "block",
                         }}
@@ -275,7 +233,6 @@ const Christmas = (props) => {
                         style={{
                           width: "100%",
                           padding: "12px 16px",
-                          fontSize: "16px",
                           border: "1px solid #e9ecef",
                           borderRadius: "8px",
                         }}
@@ -296,8 +253,6 @@ const Christmas = (props) => {
                       ></Field>
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           color: "#6c757d",
                           cursor: "pointer",
                           margin: 0,
@@ -312,8 +267,6 @@ const Christmas = (props) => {
                     <div className="rn-form-group">
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           marginBottom: "8px",
                           display: "block",
                         }}
@@ -328,7 +281,6 @@ const Christmas = (props) => {
                         style={{
                           width: "100%",
                           padding: "12px 16px",
-                          fontSize: "16px",
                           border: "1px solid #e9ecef",
                           borderRadius: "8px",
                         }}
@@ -349,8 +301,6 @@ const Christmas = (props) => {
                       ></Field>
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           color: "#6c757d",
                           cursor: "pointer",
                           margin: 0,
@@ -370,7 +320,7 @@ const Christmas = (props) => {
                 </button>
               </Form>
             )}
-          </Formik>
+          </ValidatedFormik>
         </ModalWindow>
       )}
 
@@ -384,8 +334,6 @@ const Christmas = (props) => {
           style={{
             color: "white",
             marginBottom: "25px",
-            fontSize: "28px",
-            fontWeight: "600",
           }}
         >
           Holiday Special
@@ -420,6 +368,14 @@ const Christmas = (props) => {
       </div>
     </Fragment>
   );
+};
+
+Christmas.propTypes = {
+  currentUser: PropTypes.shape({
+    christmas: PropTypes.arrayOf(PropTypes.object).isRequired,
+    name: PropTypes.string,
+    surname: PropTypes.string,
+  }).isRequired,
 };
 
 export default Christmas;

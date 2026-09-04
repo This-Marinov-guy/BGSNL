@@ -1,10 +1,10 @@
 "use client";
 
-import React from 'react'
+import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import EventForm from '../../elements/actions/form/EventForm';
+import EventForm from "../../elements/actions/form/EventForm";
 
 const AddEvent = (props) => {
   return (
@@ -21,7 +21,7 @@ const AddEvent = (props) => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

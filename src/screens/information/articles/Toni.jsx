@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect } from "react";
-import Breadcrumb from "../../../elements/common/Breadcrumb";
+import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
-import ImageFb from "../../../elements/ui/media/ImageFb";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../../component/header/Header";
 import FooterTwo from "../../../component/footer/FooterTwo";
+import Header from "../../../component/header/Header";
+import Breadcrumb from "../../../elements/common/Breadcrumb";
+import ImageFb from "../../../elements/ui/media/ImageFb";
 
 const Toni = () => {
     return <React.Fragment>
@@ -21,9 +21,10 @@ const Toni = () => {
             colorblack="color--black"
             logoname="logo.png"
         />
-        {/* Start Breadcrump Area */}
-        <Breadcrumb title={"Toni's Villa"} category='Articles' />
-        {/* End Breadcrump Area */}
+        <Breadcrumb
+            title="Toni's Villa"
+            description="The entrepreneurship series: small steps towards big goals with Toni Enchev."
+        />
         {/* <div className="container mt--80 mb--80">
 
             <h2 className="title">Society Articles</h2>
@@ -40,11 +41,11 @@ const Toni = () => {
         >
             <div className="inner-wrapper">
                 <div className="inner">
-                    <h2 style={{ textAlign: "start", fontSize: '44px' }}>
+                    <h2 style={{ textAlign: "start" }}>
                         The entrepreneurship series II: Toni Enchev Small steps
                         towards big goals
                     </h2>
-                    <p style={{ textAlign: "end", fontSize: '26px' }} className="mb--10">
+                    <p style={{ textAlign: "end" }} className="mb--10">
                         Small steps towards big goals
                     </p>
                     <p className="author mb--20"> Written by Gergana Popova & Jordanka Daskalova      </p>
@@ -319,7 +320,7 @@ const Toni = () => {
         {/* Start Back To Top */}
         <div className="backto-top">
             <ScrollToTop showUnder={160}>
-                <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+                <FiChevronUp size={26} />
             </ScrollToTop>
         </div>
         {/* End Back To Top */}

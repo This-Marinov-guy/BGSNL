@@ -1,6 +1,4 @@
-import React from "react";
 import ValidateCalendarSubscription from "../../elements/banners/ValidateCalendarSubscription";
-import { isTodayInRange } from "../functions/helpers";
 
 export const CAMPAIGNS = [
 //   {

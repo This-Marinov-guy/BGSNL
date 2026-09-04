@@ -103,7 +103,11 @@
 	.avatar-ring {
 		fill: #ffffff;
 		stroke-width: 3;
-		transition: stroke 0.2s;
+		transition: stroke 0.2s ease;
+	}
+	.alumni-node {
+		cursor: pointer;
+		outline: none;
 	}
 
 	/* Tier-based avatar ring stroke colors */
@@ -137,18 +141,14 @@
 		stroke: #7a8499;
 	}
 	.node-label {
-		font-size: 12px;
 		text-anchor: middle;
-		fill: #333;
-		font-weight: 700;
-		font-family: "Roboto", sans-serif;
-	}
-	.node-tier-label {
-		font-size: 10px;
-		text-anchor: middle;
-		fill: #666;
-		font-weight: 500;
-		font-family: "Roboto", sans-serif;
+		fill: #fff;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(4px);
+		transform-box: fill-box;
+		transform-origin: center;
+		transition: opacity 180ms ease, transform 220ms ease;
 	}
 	.tree-container-wrapper {
 		position: relative;
@@ -161,20 +161,32 @@
 		transform: scale(1.05);
 	}
 	.node-label-card {
-		fill: #ffffff;
-		stroke: #e0e3ea;
-		stroke-width: 1;
-		filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.07));
-		opacity: 0.8;
+		fill: #173a31;
+		filter: drop-shadow(0 5px 12px rgba(18, 41, 32, 0.22));
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(4px);
+		transform-box: fill-box;
+		transform-origin: center;
+		transition: opacity 180ms ease, transform 220ms ease;
 	}
 	g.avatar-hover > .node-label-card {
 		opacity: 1;
-		transition: transform 0.2s ease-in-out;
-		transform: scale(1.05);
+		transform: translateY(0);
 	}
 	g.avatar-hover > .node-label {
-		transition: transform 0.2s ease-in-out;
-		transform: scale(1.05);
+		opacity: 1;
+		transform: translateY(0);
+	}
+	g.alumni-node:focus > .avatar-ring {
+		stroke: #9e0d33;
+		stroke-width: 4;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.user-tree-section :is(.node-label, .node-label-card, image) {
+		transition-duration: 1ms !important;
 	}
 }
 

@@ -1,22 +1,36 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types';
-import { Tooltip } from 'primereact/tooltip';
-import { Dialog } from 'primereact/dialog';
-import { FiInfo } from 'react-icons/fi';
-import { capitalizeFirstLetter } from '../../../../util/functions/capitalize';
-import { useDispatch, useSelector } from 'react-redux';
-import { loadSingleEventDashboard, removeEventFromAll } from '../../../../redux/events';
+import { useState } from "react";
+import moment from "moment";
+import PropTypes from "prop-types";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import {
+  Dialog,
+  Image,
+  Tooltip,
+} from "@/compat/primereact";
+import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
 import { useNavigate } from "@/util/navigation";
-import { Image } from 'primereact/image';
-import ConfirmCenterModal from '../../../ui/modals/ConfirmCenterModal';
-import moment from 'moment';
-import { useHttpClient } from '../../../../hooks/common/http-hook';
-import { showNotification } from '../../../../redux/notification';
-import { ACCESS_3, EVENT_DELETED } from '../../../../util/defines/common';
-import { MOMENT_DATE_TIME, formatCorrectedDateTime } from '../../../../util/functions/date';
-import GenerateTicketsModal from './GenerateTicketsModal';
-import { checkAuthorization } from '../../../../util/functions/authorization';
-import { selectUser } from '../../../../redux/user';
+import { useHttpClient } from "../../../../hooks/common/http-hook";
+import {
+  loadSingleEventDashboard,
+  removeEventFromAll,
+} from "../../../../redux/events";
+import { showNotification } from "../../../../redux/notification";
+import { selectUser } from "../../../../redux/user";
+import {
+  ACCESS_3,
+  EVENT_DELETED,
+} from "../../../../util/defines/common";
+import { checkAuthorization } from "../../../../util/functions/authorization";
+import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
+import {
+  formatCorrectedDateTime,
+  MOMENT_DATE_TIME,
+} from "../../../../util/functions/date";
+import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
+import GenerateTicketsModal from "./GenerateTicketsModal";
 
 const EventModal = (props) => {
     const [visible, setVisible] = useState(false);
@@ -29,6 +43,9 @@ const EventModal = (props) => {
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
+    const isDraft = props.event.status === "draft";
+    const formatOptionalDate = (value) =>
+      value ? moment(value).format(MOMENT_DATE_TIME) : "Not set";
 
     const onDelete = async () => {
         const responseData = await sendRequest(`future-event/delete-event/${props.event.id}`, 'DELETE');
@@ -53,7 +70,6 @@ const EventModal = (props) => {
             alignItems: 'center'
         }}>
             <span style={{ 
-                fontWeight: 600, 
                 minWidth: '160px',
                 color: '#374151'
             }}>
@@ -61,8 +77,7 @@ const EventModal = (props) => {
             </span>
             <span style={{ 
                 flex: 1,
-                color: highlight ? '#059669' : '#6b7280',
-                fontWeight: highlight ? 600 : 400
+                color: highlight ? '#059669' : '#6b7280'
             }}>
                 {value}
             </span>
@@ -80,7 +95,6 @@ const EventModal = (props) => {
         }}>
             <h4 style={{ 
                 marginBottom: '15px',
-                fontWeight: 700,
                 color: '#111827',
                 paddingBottom: '10px',
                 borderBottom: '2px solid #e5e7eb'
@@ -110,12 +124,12 @@ const EventModal = (props) => {
         <Dialog
           header={
             <div>
-              <div style={{ fontWeight: 700, marginBottom: "4px" }}>
-                {props.event.title}
+              <div style={{ marginBottom: "4px" }}>
+                {props.event.title || "Untitled draft"}
               </div>
-              <div style={{ color: "#6b7280", fontWeight: 400 }}>
-                {capitalizeFirstLetter(props.event.region, true)} •{" "}
-                {moment(props.event.date).format(MOMENT_DATE_TIME)}
+              <div style={{ color: "#6b7280" }}>
+                {capitalizeFirstLetter(props.event.region, true) || "Region not set"} •{" "}
+                {formatOptionalDate(props.event.date)}
               </div>
             </div>
           }
@@ -134,7 +148,7 @@ const EventModal = (props) => {
               flexWrap: "wrap",
             }}
           >
-            {checkAuthorization(user.token, ACCESS_3) && (
+            {!isDraft && checkAuthorization(user.token, ACCESS_3) && (
               <button
                 onClick={() => setTicketGeneratorModal(true)}
                 className="rn-button-style--2 rn-btn-reverse-green"
@@ -159,7 +173,7 @@ const EventModal = (props) => {
                 transition: "all 0.3s ease",
               }}
             >
-              Edit Event
+              {isDraft ? "Edit Draft" : "Edit Event"}
             </button>
             <button
               onClick={() => setVisible(true)}
@@ -190,15 +204,15 @@ const EventModal = (props) => {
               />
               <InfoRow
                 label="Region"
-                value={capitalizeFirstLetter(props.event.region)}
+                value={capitalizeFirstLetter(props.event.region) || "Not set"}
               />
-              <InfoRow label="Location" value={props.event.location} />
+              <InfoRow label="Location" value={props.event.location || "Not set"} />
               <InfoRow
                 label="Date & Time"
                 value={
                   props.event.correctedDate
                     ? formatCorrectedDateTime(props.event.correctedDate)
-                    : moment(props.event.date).format(MOMENT_DATE_TIME)
+                    : formatOptionalDate(props.event.date)
                 }
               />
               <InfoRow
@@ -217,10 +231,10 @@ const EventModal = (props) => {
 
             {/* Ticket Information */}
             <SectionCard title="Ticket Settings">
-              <InfoRow label="Ticket Limit" value={props.event.ticketLimit} />
+              <InfoRow label="Ticket Limit" value={props.event.ticketLimit ?? "Not set"} />
               <InfoRow
                 label="Ticket Timer"
-                value={moment(props.event.ticketTimer).format(MOMENT_DATE_TIME)}
+                value={formatOptionalDate(props.event.ticketTimer)}
               />
               <InfoRow
                 label="Sale Closed"
@@ -289,7 +303,6 @@ const EventModal = (props) => {
                         style={{
                           marginTop: "12px",
                           marginBottom: "8px",
-                          fontWeight: 600,
                           color: "#374151",
                         }}
                       >
@@ -317,7 +330,6 @@ const EventModal = (props) => {
                         style={{
                           marginTop: "12px",
                           marginBottom: "8px",
-                          fontWeight: 600,
                           color: "#374151",
                         }}
                       >
@@ -343,7 +355,6 @@ const EventModal = (props) => {
                             style={{
                               marginTop: "8px",
                               marginBottom: "8px",
-                              fontWeight: 600,
                               color: "#374151",
                             }}
                           >
@@ -388,37 +399,47 @@ const EventModal = (props) => {
               <div className="row" style={{ gap: "15px 0" }}>
                 <div className="col-lg-4 col-md-6 col-12">
                   <div style={{ textAlign: "center" }}>
-                    <p style={{ fontWeight: 600, marginBottom: "8px" }}>
+                    <p style={{ marginBottom: "8px" }}>
                       Ticket
                     </p>
-                    <Image
-                      src={props.event.ticketImg}
-                      width="100%"
-                      style={{ maxWidth: "250px", borderRadius: "8px" }}
-                      alt="ticket"
-                      preview
-                    />
+                    {props.event.ticketImg ? (
+                      <Image
+                        src={props.event.ticketImg}
+                        width="100%"
+                        style={{ maxWidth: "250px", borderRadius: "8px" }}
+                        alt="ticket"
+                        preview
+                      />
+                    ) : (
+                      <span>Not uploaded</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="col-lg-4 col-md-6 col-12">
                   <div style={{ textAlign: "center" }}>
-                    <p style={{ fontWeight: 600, marginBottom: "8px" }}>
+                    <p style={{ marginBottom: "8px" }}>
                       Poster
                     </p>
-                    <Image
-                      src={props.event.poster}
-                      width="100%"
-                      style={{ maxWidth: "250px", borderRadius: "8px" }}
-                      alt="poster"
-                      preview
-                    />
+                    {props.event.poster ? (
+                      <Image
+                        src={props.event.poster}
+                        width="100%"
+                        style={{ maxWidth: "250px", borderRadius: "8px" }}
+                        alt="poster"
+                        loading="eager"
+                        fetchPriority="high"
+                        preview
+                      />
+                    ) : (
+                      <span>Not uploaded</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="col-lg-4 col-md-6 col-12">
                   <div style={{ textAlign: "center" }}>
-                    <p style={{ fontWeight: 600, marginBottom: "8px" }}>
+                    <p style={{ marginBottom: "8px" }}>
                       Background{" "}
                       <FiInfo
                         className="image-info"
@@ -449,7 +470,7 @@ const EventModal = (props) => {
 
                 {props.event.images?.length > 0 && (
                   <div className="col-12">
-                    <p style={{ fontWeight: 600, marginBottom: "12px" }}>
+                    <p style={{ marginBottom: "12px" }}>
                       Additional Images{" "}
                       <FiInfo
                         className="image-info"

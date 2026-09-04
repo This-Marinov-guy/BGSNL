@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import styles from "../../../layouts/common/RegionLayout.module.css";
 import { REGIONS } from "../../../util/defines/REGIONS_DESIGN";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";

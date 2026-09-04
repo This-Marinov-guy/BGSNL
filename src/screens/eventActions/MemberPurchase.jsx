@@ -1,44 +1,81 @@
 "use client";
 
-import React, { Fragment, useEffect, useState } from "react";
-import { Formik, Form, ErrorMessage } from "formik";
-import * as yup from "yup";
-import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
-import { useNavigate, useParams, Link } from "@/util/navigation";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../../elements/ui/loading/Loader";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import Footer from "../../component/footer/Footer";
-import ImageFb from "../../elements/ui/media/ImageFb";
-import FormExtras from "../../elements/ui/forms/FormExtras";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../../redux/user";
-import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
-import moment from "moment";
-import { Message } from "primereact/message";
 import {
-  encryptData,
-  estimatePriceByEvent,
-} from "../../util/functions/helpers";
-import { showNotification } from "../../redux/notification";
-import { ACCESS_3 } from "../../util/defines/common";
-import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
-import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
+  Fragment,
+  useEffect,
+  useState,
+} from "react";
+import {
+  ErrorMessage,
+  Form,
+} from "formik";
+import PropTypes from "prop-types";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import * as yup from "yup";
+import { Message } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiChevronUp,
+  IconlyArrowLeft,
+  IconlyArrowRight,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  useNavigate,
+  useParams,
+} from "@/util/navigation";
+import PageHelmet from "../../component/common/Helmet";
+import Footer from "../../component/footer/Footer";
+import HeaderTwo from "../../component/header/HeaderTwo";
+import CardInputs from "../../elements/inputs/common/CardInputs";
+import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
+import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
+import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
-import { ACTIVE, LOCKED, USER_STATUSES } from "../../util/defines/enum";
+import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
+import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
+import FormExtras from "../../elements/ui/forms/FormExtras";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import Loader from "../../elements/ui/loading/Loader";
+import ImageFb from "../../elements/ui/media/ImageFb";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { showNotification } from "../../redux/notification";
+import { selectUser } from "../../redux/user";
+import { estimatePriceByEvent } from "../../util/functions/helpers";
 import {
   appendExtraInputsToForm,
   buildSchemaExtraInputs,
   constructInitialExtraFormValues,
 } from "../../util/functions/input-helpers";
-import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
-import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
-import CardInputs from "../../elements/inputs/common/CardInputs";
-import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
+
+const buildMemberValidation = (event) => {
+  let validationSchema = null;
+  let schemaFields = null;
+
+  if (event?.extraInputsForm) {
+    const extraValidation = buildSchemaExtraInputs(event.extraInputsForm);
+    validationSchema = extraValidation.schema;
+    schemaFields = extraValidation.schemaFields;
+  }
+
+  if (event?.addOns?.isMandatory) {
+    const addOnsSchema = yup.object().shape({
+      addOns: yup
+        .array()
+        .min(1, "Please choose an option")
+        .required("Please choose an option"),
+    });
+    validationSchema = validationSchema
+      ? validationSchema.concat(addOnsSchema)
+      : addOnsSchema;
+  }
+
+  return { schema: validationSchema, schemaFields };
+};
 
 // `initialEvent` is seeded from the server render. Unlike the guest flow this
 // screen still waits for `currentUser`: membership pricing depends on the
@@ -46,7 +83,7 @@ import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter"
 // server. PurchaseTicket therefore renders GuestPurchase server-side and swaps
 // to this screen after the user is restored on the client.
 const MemberPurchase = ({ initialEvent = null }) => {
-  const { loading, sendRequest, forceStartLoading } = useHttpClient();
+  const { sendRequest } = useHttpClient();
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(initialEvent);
@@ -54,8 +91,9 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
-  const [schema, setSchema] = useState(null);
-  const [schemaFields, setSchemaFields] = useState(null);
+  const [{ schema, schemaFields }, setValidation] = useState(() =>
+    buildMemberValidation(initialEvent)
+  );
 
   const dispatch = useDispatch();
 
@@ -89,35 +127,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
-        let finalSchema = null;
-
-        if (responseData.event?.extraInputsForm) {
-          const { schema, schemaFields } = buildSchemaExtraInputs(
-            responseData.event.extraInputsForm
-          );
-          finalSchema = schema;
-          setSchemaFields(schemaFields);
-        }
-
-        // Add mandatory add-ons validation
-        if (responseData.event?.addOns?.isMandatory) {
-          const addOnsSchema = yup.object().shape({
-            addOns: yup
-              .array()
-              .min(1, "Please choose an option")
-              .required("Please choose an option"),
-          });
-
-          if (finalSchema) {
-            finalSchema = finalSchema.concat(addOnsSchema);
-          } else {
-            finalSchema = addOnsSchema;
-          }
-        }
-
-        if (finalSchema) {
-          setSchema(finalSchema);
-        }
+        setValidation(buildMemberValidation(responseData.event));
       } catch (err) {
         // do nothing
       } finally {
@@ -143,6 +153,21 @@ const MemberPurchase = ({ initialEvent = null }) => {
     return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />;
   }
 
+  const displayedTicketPrice = estimatePriceByEvent(
+    selectedEvent,
+    { ...currentUser, token: user.token ?? "" },
+    {
+      withIncludedText: false,
+      blockDiscounts: alreadyRegistered,
+      withMemberBadge: true,
+    }
+  );
+  const checkoutActionLabel =
+    selectedEvent.isFree ||
+    (selectedEvent.isMemberFree && !alreadyRegistered)
+      ? "Get ticket"
+      : "Proceed to payment";
+
   return (
     <Fragment>
       <PageHelmet
@@ -158,27 +183,36 @@ const MemberPurchase = ({ initialEvent = null }) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div
-        className="member-purchase-container container mt--140 mb--120"
-        style={{
-          paddingLeft: "clamp(15px, 3vw, 20px)",
-          paddingRight: "clamp(15px, 3vw, 20px)",
-        }}
-      >
-        <h2
-          className="center_text mb--60 mb_md--40 mb_sm--30"
-          style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)" }}
-        >
-          Purchase a Ticket
-        </h2>
+      <main className="purchase-page member-purchase-container">
+        <MobilePurchaseSummary
+          key={selectedEvent.id}
+          event={selectedEvent}
+          price={displayedTicketPrice}
+        />
+        <div className="container purchase-page-container">
+          <header className="purchase-page-header">
+            <h1>Complete your booking</h1>
+            <p>Your member details and price will be applied automatically.</p>
+          </header>
 
         <div
-          className="row team_member_border_1 team_border_long_add_on purchase_panel"
-          style={{
-            padding: "clamp(10px, 4vw, 40px)",
-          }}
+          className="row team_member_border_1 team_border_long_add_on purchase_panel purchase-checkout-shell"
         >
-          <Formik
+          <div className="purchase-event-sidebar">
+            <PurchaseEventSummary
+              event={selectedEvent}
+              factsInsideOverview
+              price={displayedTicketPrice}
+              priceBadge={<DynamicTicketBadge product={selectedEvent?.product} />}
+              showMemberPriceComparison={false}
+              usesMemberPrice={!alreadyRegistered}
+            />
+            <div className="purchase-sponsor">
+              <SponsoredBySmall />
+            </div>
+          </div>
+
+          <ValidatedFormik
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
@@ -199,7 +233,12 @@ const MemberPurchase = ({ initialEvent = null }) => {
                 formData.append("normalTicket", `${alreadyRegistered}`);
 
                 if (selectedEvent?.extraInputsForm) {
-                  appendExtraInputsToForm(formData, schemaFields, values);
+                  appendExtraInputsToForm(
+                    formData,
+                    schemaFields,
+                    values,
+                    selectedEvent.extraInputsForm
+                  );
                 }
 
                 if (selectedEvent?.addOns?.isEnabled && values.addOns?.length > 0) {
@@ -250,130 +289,21 @@ const MemberPurchase = ({ initialEvent = null }) => {
             }}
           >
             {({ values, setFieldValue }) => (
-              <Form id="form" encType="multipart/form-data">
-                <div className="col-12">
-                  <div className="event_details">
-                    <div className="row g-4 align-items-center mt--30 mb--40">
-                      {/* Event Poster */}
-                      <div className="col-12 col-md-4 col-lg-3">
-                        <div className="d-flex justify-content-center">
-                          <ImageFb
-                            src={`${selectedEvent.poster}`}
-                            alt="Event"
-                            className="title_img"
-                            style={{
-                              maxWidth: "100%",
-                              height: "auto",
-                              maxHeight: "250px",
-                              objectFit: "contain",
-                              borderRadius: "8px",
-                              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Event Details */}
-                      <div className="col-12 col-md-8 col-lg-9">
-                        <h2
-                          className="mb--30 text-center text-md-start"
-                          style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)" }}
-                        >
-                          Event Details
-                        </h2>
-                        <div className="row g-3 information-container">
-                          <div className="col-12 col-sm-6 col-md-4">
-                            <div className="detail-item text-center">
-                              <strong
-                                className="d-block mb-1"
-                                style={{ color: "#017363" }}
-                              >
-                                Name:
-                              </strong>
-                              <span>{selectedEvent.title}</span>
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-4">
-                            <div className="detail-item text-center">
-                              <strong
-                                className="d-block mb-1"
-                                style={{ color: "#017363" }}
-                              >
-                                Date:
-                              </strong>
-                              <span>
-                                {selectedEvent.correctedDate
-                                  ? formatCorrectedDateTime(
-                                      selectedEvent.correctedDate
-                                    ) + " Updated!"
-                                  : moment(selectedEvent.date).format(
-                                      MOMENT_DATE_TIME
-                                    )}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-4">
-                            <div className="detail-item text-center">
-                              <strong
-                                className="d-block mb-1"
-                                style={{ color: "#017363" }}
-                              >
-                                Address:
-                              </strong>
-                              <span style={{ wordBreak: "break-word" }}>
-                                {selectedEvent.location}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="col-12 col-sm-6 col-md-12">
-                            <div className="detail-item text-center">
-                              <strong
-                                className="d-block mb-1"
-                                style={{ color: "#017363" }}
-                              >
-                                Price:
-                              </strong>
-                              <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
-                                <span>
-                                  {estimatePriceByEvent(
-                                    selectedEvent,
-                                    { ...currentUser, token: user.token ?? "" },
-                                    {
-                                      withIncludedText: false,
-                                      blockDiscounts: alreadyRegistered,
-                                      withMemberBadge: true,
-                                    }
-                                  )}
-                                </span>
-                                <DynamicTicketBadge
-                                  product={selectedEvent?.product}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <SponsoredBySmall />
-                  </div>
-                </div>
+              <Form id="form" encType="multipart/form-data" className="purchase-form">
                 {selectedEvent.extraInputsForm?.length > 0 && (
                   <div className="col-12">
-                    <h3
-                      className="mb--30 text-center text-md-start"
-                      style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)" }}
-                    >
-                      Additional Information
-                    </h3>
+                    <div className="purchase-form-heading">
+                      <h2>Additional information</h2>
+                      <p>Please complete the details requested by the organiser.</p>
+                    </div>
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>
                 )}
                 {selectedEvent?.addOns?.isEnabled &&
                   selectedEvent.addOns?.items?.length > 0 && (
-                    <div className="col-12">
+                    <div className="col-12" data-field-name="addOns">
                       <h3
-                        className="text-center mb--20"
-                        style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)" }}
+                        className="text-center mb--20 type-subheading"
                       >
                         {selectedEvent.addOns.title}
                         {selectedEvent.addOns?.isMandatory && (
@@ -381,11 +311,11 @@ const MemberPurchase = ({ initialEvent = null }) => {
                         )}
                       </h3>
                       <p
-                        className="text-center mb--30"
-                        style={{ fontSize: "0.875rem", color: "#666" }}
+                        className="text-center mb--30 "
+                        style={{ color: "#666" }}
                       >
                         {selectedEvent.addOns?.isMandatory && (
-                          <span style={{ color: "#dc3545", fontWeight: "600" }}>
+                          <span style={{ color: "#dc3545" }}>
                             *Required - {" "}
                           </span>
                         )}
@@ -416,39 +346,31 @@ const MemberPurchase = ({ initialEvent = null }) => {
                     />
                   )}
 
-                  <StickyButtonFooter>
-                    <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30">
-                      <button
-                        disabled={isLoading}
-                        type="submit"
-                        className="rn-button-style--2 rn-btn-reverse-green"
-                        style={{
-                          width: "100%",
-                          maxWidth: "300px",
-                          minWidth: "clamp(150px, 40vw, 200px)",
-                          padding:
-                            "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                        }}
-                      >
-                        {isLoading ? <Loader /> : <span>Proceed to Payment</span>}
-                      </button>
+                  <div className="purchase-actions">
+                    <button
+                      type="button"
+                      onClick={() => navigate(-1)}
+                      className="rn-button-style--2 rn-btn-reverse purchase-action-control "
+                    >
+                      <IconlyArrowLeft aria-hidden />
+                      <span>Back</span>
+                    </button>
 
-                      <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="rn-button-style--2 rn-btn-reverse-red"
-                        style={{
-                          width: "100%",
-                          maxWidth: "300px",
-                          minWidth: "clamp(150px, 40vw, 200px)",
-                          padding:
-                            "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                        }}
-                      >
-                        <span>Back</span>
-                      </button>
-                    </div>
-                  </StickyButtonFooter>
+                    <button
+                      disabled={isLoading}
+                      type="submit"
+                      className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary "
+                    >
+                      {isLoading ? (
+                        <Loader />
+                      ) : (
+                        <>
+                          <span>{checkoutActionLabel}</span>
+                          <IconlyArrowRight aria-hidden />
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="col-12 mt--40">
@@ -462,8 +384,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
                     }}
                   >
                     <p
-                      className="mb--20"
-                      style={{ fontSize: "0.875rem", lineHeight: "1.6" }}
+                      className="mb--20 "
                     >
                       <ImageFb
                         className="calendar-subscription__header-icon"
@@ -479,12 +400,8 @@ const MemberPurchase = ({ initialEvent = null }) => {
                       used as a proof of your identity on the entry!
                     </p>
                     <p
-                      className="mb--0"
-                      style={{
-                        fontSize: "0.875rem",
-                        lineHeight: "1.6",
-                        color: "#666",
-                      }}
+                      className="mb--0 "
+                      style={{ color: "#666" }}
                     >
                       *Special discounted price for board and committee members
                       may apply
@@ -493,13 +410,14 @@ const MemberPurchase = ({ initialEvent = null }) => {
                 </div>
               </Form>
             )}
-          </Formik>
+          </ValidatedFormik>
         </div>
       </div>
+      </main>
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
@@ -507,6 +425,10 @@ const MemberPurchase = ({ initialEvent = null }) => {
       <Footer />
     </Fragment>
   );
+};
+
+MemberPurchase.propTypes = {
+  initialEvent: PropTypes.object,
 };
 
 export default MemberPurchase;

@@ -1,4 +1,3 @@
-import React from "react";
 import Snowfall from "react-snowfall";
 import { HOLIDAYS } from "../../../util/configs/common";
 

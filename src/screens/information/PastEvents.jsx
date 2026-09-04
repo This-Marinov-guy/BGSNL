@@ -1,16 +1,19 @@
 "use client";
 
 import React, { Component } from "react";
+import { Image } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiChevronUp,
+  FiInstagram,
+} from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp, FiInstagram } from "react-icons/fi";
-import Header from "../../component/header/Header";
-import { Image } from "primereact/image";
 import Footer from "../../component/footer/Footer";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
 import RegionOptionsUnstyled from "../../elements/ui/buttons/RegionOptionsUnstyled";
-import { REGION_INSTAGRAM } from "../../util/defines/REGIONS_DESIGN";
 import { PAST_EVENTS_GALLERY } from "../../util/defines/GALLERY";
+import { REGION_INSTAGRAM } from "../../util/defines/REGIONS_DESIGN";
 
 const PastEventsContent = () => {
   return (
@@ -54,9 +57,9 @@ const PastEventsContent = () => {
               style={{ alignSelf: "flex-start" }}
               className="col-12 past-events-gallery"
             >
-              <h2 className="mt--40 center_text" style={{ fontSize: "1em" }}>
+              <h2 className="mt--40 center_text">
                 Find more about our latest events on our{" "}
-                <FiInstagram style={{ fontSize: "1em" }} /> channels
+                <FiInstagram /> channels
               </h2>
               <RegionOptionsUnstyled links={REGION_INSTAGRAM} withMain />
             </div>
@@ -77,9 +80,10 @@ class PastEvents extends Component {
           colorblack="color--black"
           logoname="logo.png"
         />
-        {/* Start Breadcrump Area */}
-        <Breadcrumb title={"Past Events"} />
-        {/* End Breadcrump Area */}
+        <Breadcrumb
+          title="Past Events"
+          description="Look back at the gatherings, celebrations, and projects that brought our community together."
+        />
 
         {/* Start Past Events Area */}
         <PastEventsContent />
@@ -88,7 +92,7 @@ class PastEvents extends Component {
         {/* Start Back To Top */}
         <div className="backto-top">
           <ScrollToTop showUnder={160}>
-            <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+            <FiChevronUp size={26} />
           </ScrollToTop>
         </div>
         {/* End Back To Top */}

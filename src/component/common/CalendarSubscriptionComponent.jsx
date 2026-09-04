@@ -1,13 +1,16 @@
-import React from "react";
-import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
-import "@assets/scss/elements/_calendarSubscriptionComponent.scss";
+import {
+  FaApple,
+  FaGoogle,
+  FaMicrosoft,
+} from "@/elements/ui/icons/IconlyIcons";
+import ImageFb from "../../elements/ui/media/ImageFb";
 import {
   googleCalendarIframeSrc,
   googleCalendarPublicLink,
   icsLink,
   outlookWebLink,
 } from "../../util/configs/google";
-import ImageFb from "../../elements/ui/media/ImageFb";
+import "@assets/scss/elements/_calendarSubscriptionComponent.scss";
 
 const CalendarSubscriptionComponent = () => {
   return (

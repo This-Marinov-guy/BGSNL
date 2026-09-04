@@ -8,27 +8,144 @@
   margin-bottom: 1.5rem;
 }
 
-.membership-banner-icon-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  opacity: 0.8;
+.membership-banner-motion-icon,
+.membership-banner-discount-icon {
+  width: 100px;
+  height: 100px;
 }
 
-.membership-banner-icon-image {
-  position: relative;
-  z-index: 1;
-  animation: float 3s ease-in-out infinite;
-}
+.ticket-motion-icon {
+  display: block;
+  line-height: 0;
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
+  > svg {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 
+.membership-banner-heading {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+
+  .membership-banner-icon-wrapper {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
+
+  .membership-banner-title {
+    min-width: 0;
+  }
+}
+
+.membership-banner-copy {
+  min-width: 0;
+}
+
+.membership-banner-title {
+  display: block;
+  color: inherit;
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+
+
+  line-height: 1.3;
+}
+
+.membership-banner-benefits {
+  margin: 0.45rem 0 0;
+  padding-left: 1.1rem;
+  color: #35443d;
+  font-family: "Roboto", sans-serif;
+
+
+  line-height: 1.5;
+  text-align: left;
+
+  li {
+    margin: 0;
+  }
+}
+
+.membership-offer-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  padding: 18px;
+  margin-bottom: 24px;
+  color: #2d2718;
+  background: #f4c851;
+}
+
+.membership-offer-icon {
+  display: inline-flex;
+  flex: 0 0 40px;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  aspect-ratio: 1;
+  color: currentColor;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+
+  svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+.membership-offer-icon .membership-offer-motion-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.membership-offer-copy {
+  display: grid;
+  min-width: 0;
+
+  .membership-banner-heading {
+    gap: 12px;
+    margin-bottom: 0;
+  }
+
+  p {
+    color: inherit;
+    line-height: 1.35;
+    margin: 8px 0 0 52px;
+    opacity: 0.84;
+  }
+
+  ul {
+    display: grid;
+    gap: 2px;
+    margin: 7px 0 0 52px;
+    padding-left: 18px;
+    color: inherit;
+    line-height: 1.35;
+  }
+
+  li {
+    margin: 0;
+  }
+}
+
+.membership-offer-action.rn-button-style--2 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  width: min(calc(100% - 52px), 20rem);
+  min-height: 42px;
+  margin: 14px 0 0 52px;
+  padding: 9px 18px;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+}

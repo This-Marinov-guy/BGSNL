@@ -1,6 +1,15 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import { FiX, FiUpload, FiInfo } from "react-icons/fi";
-import { Tooltip } from "primereact/tooltip";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Tooltip } from "@/compat/primereact";
+import {
+  FiInfo,
+  FiUpload,
+  FiX,
+} from "@/elements/ui/icons/IconlyIcons";
 import ImageFb from "../ui/media/ImageFb";
 
 const DEFAULT_MAX_IMAGES = 5;
@@ -18,6 +27,7 @@ const DEFAULT_VALID_FILE_TYPES = [
 const MultiImageUpload = ({ 
   existingImages = [], 
   onImagesChange,
+  onValidationChange,
   name = "images",
   maxImages = DEFAULT_MAX_IMAGES,
   maxFileSize = DEFAULT_MAX_FILE_SIZE,
@@ -44,11 +54,19 @@ const MultiImageUpload = ({
     });
   });
   const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [touchStartIndex, setTouchStartIndex] = useState(null);
   const fileInputRef = useRef(null);
   const gridRef = useRef(null);
   const tooltipId = `tooltip-${name}`;
+
+  const setDeferredValidationError = useCallback((message) => {
+    setError(message);
+    setShowError(false);
+    fileInputRef.current?.setCustomValidity(message ?? "");
+    onValidationChange?.(message ?? "");
+  }, [onValidationChange]);
 
   // Update images when existingImages prop changes
   useEffect(() => {
@@ -211,11 +229,13 @@ const MultiImageUpload = ({
   // Handle file selection
   const handleFileSelect = useCallback(async (files) => {
     const fileArray = Array.from(files);
-    setError(null);
+    setDeferredValidationError(null);
 
     // Check total count
     if (images.length + fileArray.length > maxImages) {
-      setError(`Maximum ${maxImages} images allowed. Please remove some images first.`);
+      setDeferredValidationError(
+        `Maximum ${maxImages} images allowed. Please remove some images first.`
+      );
       return;
     }
 
@@ -257,7 +277,7 @@ const MultiImageUpload = ({
     }
 
     if (errors.length > 0) {
-      setError(errors.join(" "));
+      setDeferredValidationError(errors.join(" "));
     }
 
     if (newImages.length > 0) {
@@ -265,7 +285,7 @@ const MultiImageUpload = ({
       setImages(updatedImages);
       notifyChange(updatedImages);
     }
-  }, [images, maxImages, maxFileSize, maxDimension, validFileTypes]);
+  }, [images, maxImages, maxFileSize, maxDimension, validFileTypes, setDeferredValidationError]);
 
   // Handle file input change
   const handleInputChange = (e) => {
@@ -427,7 +447,11 @@ const MultiImageUpload = ({
   const acceptString = validFileTypes.join(',') + ',.heic,.heif';
 
   return (
-    <div className={`multi-image-upload ${className}`}>
+    <div
+      className={`multi-image-upload ${className}`}
+      data-field-name={name}
+      data-custom-validation-field
+    >
       {showInfo && (
         <div
           className="d-flex align-items-center justify-content-center"
@@ -458,26 +482,28 @@ const MultiImageUpload = ({
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
         >
-          <FiUpload style={{ fontSize: "32px", color: "#6c757d", marginBottom: "10px" }} />
+          <FiUpload style={{ color: "#6c757d", marginBottom: "10px" }} />
           <p style={{ margin: "5px 0", color: "#6c757d" }}>
             Click or drag and drop to upload files
           </p>
-          <p style={{ margin: "5px 0", fontSize: "12px", color: "#999" }}>
+          <p style={{ margin: "5px 0", color: "#999" }}>
             Max {maxImages} files, {maxSizeMB}MB each, {fileTypesStr} only
           </p>
           <input
             ref={fileInputRef}
             type="file"
+            name={name}
             accept={acceptString}
             multiple
             onChange={handleInputChange}
+            onInvalid={() => setShowError(true)}
             style={{ display: "none" }}
           />
         </div>
       )}
 
       {/* Error Message */}
-      {error && (
+      {error && showError && (
         <div className="error-message" style={{ 
           color: "#dc3545", 
           marginTop: "10px",
@@ -519,6 +545,7 @@ const MultiImageUpload = ({
               }}
             >
               <button
+                type="button"
                 className="remove-btn"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -550,7 +577,6 @@ const MultiImageUpload = ({
                   >
                     <div
                       style={{
-                        fontSize: "32px",
                         marginBottom: "8px",
                         color: "#dc3545"
                       }}
@@ -559,10 +585,8 @@ const MultiImageUpload = ({
                     </div>
                     <span
                       style={{
-                        fontSize: "11px",
                         color: "#6c757d",
-                        textAlign: "center",
-                        fontWeight: "600"
+                        textAlign: "center"
                       }}
                     >
                       PDF
@@ -590,9 +614,7 @@ const MultiImageUpload = ({
                     background: "rgba(1, 115, 99, 0.9)",
                     color: "white",
                     padding: "2px 8px",
-                    borderRadius: "4px",
-                    fontSize: "11px",
-                    fontWeight: "600"
+                    borderRadius: "4px"
                   }}
                 >
                   Drag to reorder
@@ -605,7 +627,7 @@ const MultiImageUpload = ({
 
       {/* Info Text */}
       {showInfo && (
-        <p style={{ marginTop: "15px", fontSize: "12px", color: "#6c757d" }}>
+        <p style={{ marginTop: "15px", color: "#6c757d" }}>
           <small>* Maximum {maxImages} files allowed</small>
           <br />
           <small>* Images will be automatically resized to max {maxDimension}px width/height</small>

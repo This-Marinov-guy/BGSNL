@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "@/util/navigation";
-import ImageInput from "../inputs/common/ImageInput";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../ui/loading/Loader";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import { FiCheck } from "@/elements/ui/icons/IconlyIcons";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { showNotification } from "../../redux/notification";
-import { FiCheck } from "react-icons/fi";
+import ImageInput from "../inputs/common/ImageInput";
+import Loader from "../ui/loading/Loader";
 
 const ValidateCalendarSubscription = (props) => {
   const { border = 4, calendarImage } = props;
@@ -17,7 +17,8 @@ const ValidateCalendarSubscription = (props) => {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setLoading(true);
 
     const formData = new FormData();
@@ -48,13 +49,16 @@ const ValidateCalendarSubscription = (props) => {
   };
 
   return (
-    <div
+    <form
       className={`team_member_border_${border} row align-items-center container`}
+      onSubmit={handleSubmit}
       style={{
         margin: "20px auto",
       }}
     >
       <ImageInput
+        name="calendarSubscriptionImage"
+        required
         onChange={(event) => {
           setImage(event.target.files[0]);
         }}
@@ -65,9 +69,9 @@ const ValidateCalendarSubscription = (props) => {
         style={{ paddingRight: 0, paddingLeft: 0 }}
         className="col-lg-8 col-md-6 col-12 text-center"
       >
-        <h5 className="mt--20">March is Membership Month {calendarImage && <FiCheck style={{color: "green", fontSize: '2em'}}/>}</h5>
+        <h5 className="mt--20">March is Membership Month {calendarImage && <FiCheck style={{color: "green"}}/>}</h5>
         <p className="information center_text">
-          Tag a travel buddy in the comments of BGSNL campaign post (click below on "Explain") and submit a proof here that you have subscribed to one of our calendars and
+          Tag a travel buddy in the comments of BGSNL campaign post (click below on &quot;Explain&quot;) and submit a proof here that you have subscribed to one of our calendars and
           enter a giveway to win 2 free tickets to any BGSNL event and 2 two-way
           train tickets for the event. You have time until{" "}
           <span className="body_emphasis">31st of March</span>. Do not waste
@@ -81,7 +85,7 @@ const ValidateCalendarSubscription = (props) => {
         ) : (
           <div className="row d-flex justify-content-center g--4 mt--20">
             <button
-              onClick={handleSubmit}
+              type="submit"
               className="rn-button-style--2 rn-btn-reverse-green center_text"
             >
               <span className="">Submit</span>
@@ -92,8 +96,13 @@ const ValidateCalendarSubscription = (props) => {
           </div>
         )}
       </div>
-    </div>
+    </form>
   );
+};
+
+ValidateCalendarSubscription.propTypes = {
+  border: PropTypes.number,
+  calendarImage: PropTypes.string,
 };
 
 export default ValidateCalendarSubscription;

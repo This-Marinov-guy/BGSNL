@@ -2,7 +2,10 @@
  * Session utility functions for managing persistent sessions
  */
 
-import { PERSISTENT_SESSION, LOCAL_STORAGE_SESSION_LIFE } from "../defines/common";
+import {
+  LOCAL_STORAGE_SESSION_LIFE,
+  PERSISTENT_SESSION,
+} from "../defines/common";
 
 /**
  * Check if persistent sessions are enabled

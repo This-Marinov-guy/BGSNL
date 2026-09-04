@@ -1,26 +1,39 @@
-import React, { useState } from "react";
-import { Dialog } from "primereact/dialog";
-import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
-import { FiUpload, FiTrash2, FiFile } from "react-icons/fi";
+import {
+  useRef,
+  useState,
+} from "react";
 import PropTypes from "prop-types";
+import {
+  confirmPopup,
+  ConfirmPopup,
+  Dialog,
+} from "@/compat/primereact";
+import {
+  FiFile,
+  FiTrash2,
+  FiUpload,
+} from "@/elements/ui/icons/IconlyIcons";
+
+const getPdfValidationMessage = (file) => {
+  if (!file) return "";
+  if (file.type !== "application/pdf") {
+    return "Please upload a PDF file only.";
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    return "File size must be less than 5MB.";
+  }
+  return "";
+};
 
 const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [shouldRemove, setShouldRemove] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type (PDF only)
-      if (file.type !== "application/pdf") {
-        alert("Please upload a PDF file only");
-        return;
-      }
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB");
-        return;
-      }
+      e.currentTarget.setCustomValidity(getPdfValidationMessage(file));
       setSelectedFile(file);
       setShouldRemove(false);
     }
@@ -41,15 +54,41 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
     });
   };
 
-  const handleSave = () => {
+  const handleSave = (event) => {
+    event.preventDefault();
     onSave(selectedFile, shouldRemove);
   };
 
   const handleClose = () => {
     setSelectedFile(null);
     setShouldRemove(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+      fileInputRef.current.setCustomValidity("");
+    }
     onHide();
   };
+
+  const actions = (
+    <>
+      <button
+        type="button"
+        className="rn-button-style--2 rn-btn-reverse"
+        onClick={handleClose}
+        disabled={isSaving}
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        form="cv-upload-form"
+        className="rn-button-style--2 rn-btn-green"
+        disabled={isSaving}
+      >
+        {isSaving ? "Saving..." : "Save Changes"}
+      </button>
+    </>
+  );
 
   return (
     <>
@@ -60,8 +99,13 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
         style={{ width: "500px" }}
         onHide={handleClose}
         closable={!isSaving}
+        footer={actions}
       >
-        <div className="cv-upload-modal">
+        <form
+          className="cv-upload-modal"
+          id="cv-upload-form"
+          onSubmit={handleSave}
+        >
         {/* Current CV Status */}
         {currentCV && (
           <div className="mb--20">
@@ -82,10 +126,11 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
                 <span>CV uploaded</span>
               </div>
               <button
+                type="button"
                 className="rn-button-style--2 rn-btn-small rn-btn-reverse-red"
                 onClick={handleRemove}
                 disabled={isSaving}
-                style={{ fontSize: "12px", padding: "5px 12px" }}
+                style={{ padding: "5px 12px" }}
               >
                 <FiTrash2 size={16} />
               </button>
@@ -98,10 +143,17 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
           <h5 style={{ marginBottom: "10px" }}>
             {currentCV ? "Replace with New CV:" : "Upload CV:"}
           </h5>
-          <div className="file-upload-wrapper">
+          <div
+            className="file-upload-wrapper"
+            data-field-name="cv"
+            data-custom-validation-field
+          >
             <input
+              ref={fileInputRef}
               type="file"
+              name="cv"
               accept=".pdf"
+              required
               onChange={handleFileChange}
               disabled={isSaving}
               style={{ display: "none" }}
@@ -109,11 +161,10 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
             />
             <label
               htmlFor="cv-file-input"
-              className="rn-button-style--2 rn-btn-green"
+              className="rn-button-style--2 rn-btn-green upload-dropzone"
               style={{
                 display: "inline-block",
                 cursor: isSaving ? "not-allowed" : "pointer",
-                fontSize: "14px",
                 padding: "10px 20px",
                 opacity: isSaving ? 0.6 : 1,
               }}
@@ -124,49 +175,19 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
             {selectedFile && (
               <div
                 className="mt--10"
-                style={{ fontSize: "14px", color: "#017363" }}
+                style={{ color: "#017363" }}
               >
                 <FiFile size={14} style={{ marginRight: "5px" }} />
                 {selectedFile.name} ({(selectedFile.size / 1024).toFixed(2)} KB)
               </div>
             )}
           </div>
-          <p style={{ fontSize: "12px", color: "#666", marginTop: "8px" }}>
+          <p style={{ color: "#666", marginTop: "8px" }}>
             Maximum file size: 5MB. Accepted format: PDF only.
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div
-          className="d-flex justify-content-end"
-          style={{ gap: "10px", marginTop: "30px" }}
-        >
-          <button
-            className="rn-button-style--2 rn-btn-reverse"
-            onClick={handleClose}
-            disabled={isSaving}
-          >
-            Cancel
-          </button>
-          <button
-            className="rn-button-style--2 rn-btn-green"
-            onClick={handleSave}
-            disabled={isSaving || !selectedFile}
-          >
-            {isSaving ? (
-              <>
-                <i
-                  className="pi pi-spin pi-spinner"
-                  style={{ marginRight: "8px" }}
-                ></i>
-                Saving...
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </button>
-        </div>
-      </div>
+      </form>
     </Dialog>
     </>
   );
@@ -175,7 +196,7 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
 CVUploadModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
-  currentCV: PropTypes.string,
+  currentCV: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   isSaving: PropTypes.bool.isRequired,
 };

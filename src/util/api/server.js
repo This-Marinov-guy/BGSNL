@@ -1,4 +1,5 @@
 import { LEGACY_ARTICLES } from "../defines/ARTICLES";
+import { SITE_URL } from "../seo/site";
 
 /**
  * Server-side API client.
@@ -12,11 +13,19 @@ import { LEGACY_ARTICLES } from "../defines/ARTICLES";
  * meaningful in the browser. Account pages keep using it.
  */
 
-export const SITE_URL = "https://www.bulgariansociety.nl";
+export { SITE_URL };
 
-const API_URL = (
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://api.bulgariansociety.nl/api/"
+const PRODUCTION_API_URL = (
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  "https://api.bulgariansociety.nl/api/"
 ).replace(/\/+$/, "");
+
+const TEST_API_URL = (
+  process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://127.0.0.1:8080/api/"
+).replace(/\/+$/, "");
+
+const API_URL =
+  process.env.NODE_ENV === "production" ? PRODUCTION_API_URL : TEST_API_URL;
 
 /**
  * Fail loudly rather than silently shipping the secret below to the browser.
@@ -53,20 +62,31 @@ export const API_HEADERS = {
  * Never throws. A page whose data fetch failed should still render its shell
  * (the client effect will retry after hydration), not return a 500.
  */
-async function apiGet(endpoint, { revalidate = 300, timeout = 8000 } = {}) {
-  try {
-    const res = await fetch(`${API_URL}/${endpoint}`, {
-      headers: API_HEADERS,
-      signal: AbortSignal.timeout(timeout),
-      next: { revalidate },
-    });
+async function apiGet(
+  endpoint,
+  { revalidate = 300, timeout = 8000, fallbackToProduction = false } = {}
+) {
+  const baseUrls = [API_URL];
 
-    if (!res.ok) return null;
-
-    return await res.json();
-  } catch {
-    return null;
+  if (fallbackToProduction && PRODUCTION_API_URL !== API_URL) {
+    baseUrls.push(PRODUCTION_API_URL);
   }
+
+  for (const baseUrl of baseUrls) {
+    try {
+      const res = await fetch(`${baseUrl}/${endpoint}`, {
+        headers: API_HEADERS,
+        signal: AbortSignal.timeout(timeout),
+        next: { revalidate },
+      });
+
+      if (res.ok) return await res.json();
+    } catch {
+      // Try the next configured public API when one is available.
+    }
+  }
+
+  return null;
 }
 
 /* ---------------------------------------------------------------- events -- */
@@ -109,15 +129,22 @@ export async function getEventDetails(eventId) {
  * server render and the post-hydration Redux render produce the same list.
  */
 export async function getArticles() {
-  const data = await apiGet("wordpress/posts");
+  const data = await apiGet("wordpress/posts", {
+    fallbackToProduction: true,
+    timeout: 15000,
+  });
   const posts = data?.posts ?? [];
   return [...posts, ...LEGACY_ARTICLES];
 }
 
 export async function getArticle(articleId) {
   if (!articleId) return null;
-  const data = await apiGet(`wordpress/posts/${articleId}`);
-  return data?.data ?? null;
+  const data = await apiGet(`wordpress/posts/${articleId}`, {
+    fallbackToProduction: true,
+    timeout: 15000,
+  });
+
+  return data?.data ? { ...data.data, id: String(articleId) } : null;
 }
 
 /* ----------------------------------------------------------- internships -- */

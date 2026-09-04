@@ -1,5 +1,5 @@
 import React from 'react'
-import { Message } from "primereact/message";
+import { Message } from "@/compat/primereact";
 import { Link } from "@/util/navigation"
 
 const InternshipBanner = () => {

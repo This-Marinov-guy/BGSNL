@@ -1,23 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import { useNavigate } from "@/util/navigation";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/user";
+import { Password } from "@/compat/primereact";
+import {
+  Link,
+  useNavigate,
+} from "@/util/navigation";
 import PageHelmet from "../../component/common/Helmet";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { Password } from "primereact/password";
 import Loader from "../../elements/ui/loading/Loader";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { showModal } from "../../redux/modal";
-import { Link } from "@/util/navigation";
-import { Button } from "primereact/button";
+import {
+  removeNotification,
+  showNotification,
+} from "../../redux/notification";
+import { login } from "../../redux/user";
 import {
   BIRTHDAY_MODAL,
   GENERAL_ERROR,
-  INFO_STYLE,
 } from "../../util/defines/common";
-import { removeNotification, showNotification } from "../../redux/notification";
 import ForgottenPassword from "./ForgottenPassword";
 
 const Login = () => {
@@ -27,6 +30,11 @@ const Login = () => {
   });
 
   const [isVisible, setIsVisible] = useState(false);
+  const [isFormReady, setIsFormReady] = useState(false);
+
+  useEffect(() => {
+    setIsFormReady(true);
+  }, []);
 
   const { sendRequest } = useHttpClient();
 
@@ -51,7 +59,7 @@ const Login = () => {
         password: loginFormValues.password,
       });
 
-      if (!responseData.hasOwnProperty("token")) {
+      if (!Object.hasOwn(responseData, "token")) {
         return dispatch(showNotification(GENERAL_ERROR));
       }
 
@@ -96,7 +104,8 @@ const Login = () => {
 
       navigate(sessionStorage.getItem("prevUrl") ?? `/${responseData.region}`);
       sessionStorage.removeItem("prevUrl");
-    } catch (err) {
+    } catch {
+      // useHttpClient reports request failures through the global notification UI.
     } finally {
       setLoading(false);
     }
@@ -114,72 +123,87 @@ const Login = () => {
         visible={isVisible}
         onHide={() => setIsVisible(false)}
       />
-      <div className="container team_member_border_1 login_screen">
-        <h3 style={{ fontSize: "0.8em" }} className="center_text">
-          Log in your account
-        </h3>
-        <form
-          className="center_section"
-          onSubmit={(event) => loginHandler(event)}
-        >
-          <div className="col-lg-8 col-md-8 col-sm-11">
-            <div className="rn-form-group">
-              <input
-                type="text"
-                name="email"
-                placeholder="Email"
-                onChange={(event) => changeFormInputHandler(event)}
-              />
+      <main className="login_screen">
+        <section className="login_card" aria-labelledby="login-title">
+          <article className="login_card_visual">
+            <img
+              src="/assets/images/bg/login-community.jpg"
+              alt="BGSNL guests enjoying a Bulgarian folk performance"
+            />
+            <div className="login_card_story">
+              <h2>Closer to home, together.</h2>
+              <p>
+                Access your events, memberships and community profile in one
+                place.
+              </p>
+            </div>
+          </article>
+
+          <div className="login_card_content">
+            <div className="login_card_content_inner">
+              <h1 id="login-title">Welcome back</h1>
+
+              {isFormReady ? (
+                <form
+                  className="login_form"
+                  onSubmit={(event) => loginHandler(event)}
+                >
+                  <div className="rn-form-group">
+                    <label htmlFor="login-email">Email</label>
+                    <input
+                      id="login-email"
+                      className="bgsnl-form-control"
+                      type="email"
+                      name="email"
+                      value={loginFormValues.email}
+                      autoComplete="email"
+                      required
+                      onChange={(event) => changeFormInputHandler(event)}
+                    />
+                  </div>
+                  <div className="rn-form-group">
+                    <label htmlFor="login-password">Password</label>
+                    <Password
+                      id="login-password"
+                      inputClassName="bgsnl-form-control"
+                      name="password"
+                      value={loginFormValues.password}
+                      autoComplete="current-password"
+                      required
+                      onChange={(event) => changeFormInputHandler(event)}
+                      toggleMask
+                      feedback={false}
+                      unstyled
+                    />
+                  </div>
+                  <button
+                    disabled={loading}
+                    type="submit"
+                    className="login_submit"
+                  >
+                    {loading ? <Loader /> : <span>Log in</span>}
+                  </button>
+                </form>
+              ) : null}
+
+              <div className="login_actions">
+                <button
+                  type="button"
+                  className="login_text_link"
+                  onClick={() => {
+                    setIsVisible(true);
+                  }}
+                >
+                  Forgot your password?
+                </button>
+                <Link className="login_join_banner" to="/join-the-society">
+                  No account? Let&apos;s sign you up.
+                </Link>
+              </div>
             </div>
           </div>
-          <div className="col-lg-8 col-md-8 col-sm-11">
-            <div className="rn-form-group">
-              <Password
-                name="password"
-                placeholder="Password"
-                onChange={(event) => changeFormInputHandler(event)}
-                toggleMask
-                feedback={false}
-                unstyled
-              />
-            </div>
-          </div>
-          <button
-            disabled={
-              loading && !loginFormValues.email && !loginFormValues.password
-            }
-            type="submit"
-            className="rn-button-style--2 rn-btn-reverse-green mt--40"
-          >
-            {loading ? <Loader /> : <span>Log In</span>}
-          </button>
-        </form>
-        <div className="action_btns">
-          <button
-            style={{ border: "none" }}
-            className="rn-button-style--1"
-            onClick={() => {
-              setIsVisible(true);
-            }}
-          >
-            Forgot my password
-          </button>
-          <Link
-            style={{ fontSize: "0.9em" }}
-            className="rn-button-style--1 center_text"
-            to="/signup"
-          >
-            Not a member? Register now!
-          </Link>
-          <Link
-            style={{ fontSize: "0.9em" }}
-            className="rn-button-style--1 center_text"
-            to="/alumni/register"
-          >
-            Rather be an Alumni? Register now!
-          </Link>
-        </div>
-      </div>
+        </section>
+      </main>
     </React.Fragment>
   );
 };

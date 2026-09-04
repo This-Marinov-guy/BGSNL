@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react'
-import ImageFb from '../../elements/ui/media/ImageFb';
-import { Dialog } from 'primereact/dialog';
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Dialog } from "@/compat/primereact";
+import { FiMusic } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
-import { ARTISTS } from '../../util/defines/ARTISTS.js';
-import { FiMic, FiMusic } from 'react-icons/fi';
+import ImageFb from "../../elements/ui/media/ImageFb";
+import { ARTISTS } from "../../util/defines/ARTISTS.js";
 
 const GalaMembers = () => {
     const [display, setDisplay] = useState(false)
@@ -54,7 +58,7 @@ const GalaMembers = () => {
                             <h3 className='mr--5'>{value.name} |</h3>
                             <h4>{value.title}</h4>
                         </div>
-                        <Link style={{ fontSize: '20px' }} onClick={() => setDisplay(value)} to='#'>Click me <FiMusic /></Link>
+                        <Link onClick={() => setDisplay(value)} to='#'>Click me <FiMusic /></Link>
                     </div>
                 </div>)
             })}

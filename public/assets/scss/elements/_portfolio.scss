@@ -141,17 +141,17 @@
     .inner {
       p {
         color: #c6c9d8;
-        font-size: 20px;
+
       }
       h4 {
-        font-size: 24px;
+
         line-height: 36px;
         a {
           color: #faf9f6;
         }
       }
       .title {
-        font-size: 24px;
+
         line-height: 36px;
         color: #faf9f6;
       }
@@ -446,7 +446,7 @@
       position: absolute;
       z-index: 3;
       background: transparent;
-      font-size: 20px;
+
       width: 253px;
       min-height: 101%;
 
@@ -466,7 +466,7 @@
       &::before {
         line-height: 1;
         opacity: 0.75;
-        font-size: 30px;
+
         position: relative;
         top: -14px;
         transition: 0.5s;
@@ -646,7 +646,7 @@ Portfolio Style Three
     }
     p {
       &.portfoliotype {
-        font-size: 20px;
+
         margin-bottom: 5px;
         color: #c6c9d8;
       }
@@ -656,8 +656,8 @@ Portfolio Style Three
         margin-bottom: 0;
         a {
           color: #faf9f6;
-          font-size: 24px;
-          font-weight: 500;
+
+
           line-height: 36px;
           @extend %transition;
         }
@@ -729,7 +729,7 @@ Portfolio Style Three
 
     p {
       margin-bottom: 5px;
-      font-size: 26px;
+
     }
     h4 {
       a {
@@ -831,7 +831,7 @@ Portfolio Style Three
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
+
   cursor: pointer;
   position: absolute;
   z-index: 800;

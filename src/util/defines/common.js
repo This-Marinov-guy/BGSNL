@@ -6,7 +6,7 @@ import { REGION_EMAIL } from "./REGIONS_DESIGN";
 const PROD_SERVER_ENDPOINT =
     process.env.NEXT_PUBLIC_SERVER_URL || "https://kanatitsa.bulgariansociety.nl/api/";
 const TEST_SERVER_ENDPOINT =
-    process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://localhost:80/api/";
+    process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://localhost:8080/api/";
 
 const isLocalPreviewHost = () => {
     if (typeof window === "undefined") {
@@ -52,6 +52,7 @@ export const ACCESS_4 = [...ACCESS_3, COMMITTEE_MEMBER, ACTIVE_MEMBER];
 
 // event status
 export const EVENT_OPENED = 'opened';
+export const EVENT_DRAFT = 'draft';
 export const EVENT_CLOSED = 'closed';
 export const EVENT_SALE_STOP = 'temporary closed';
 export const EVENT_CANCELED = 'canceled';
@@ -123,6 +124,7 @@ export const getStyleBySeverity = (severity) => {
 
 export const EVENT_ADDED = { summary: 'Event added', ...SUCCESS_STYLE };
 export const EVENT_EDITED = { summary: 'Event edited', ...SUCCESS_STYLE };
+export const EVENT_DRAFT_SAVED = { summary: 'Event draft saved', ...SUCCESS_STYLE };
 export const EVENT_DELETED = { summary: 'Event deleted', ...SUCCESS_STYLE };
 
 export const GENERAL_ERROR = { summary: 'Something went wrong - please try again or report to support!', ...DANGER_STYLE };

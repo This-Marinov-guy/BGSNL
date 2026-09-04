@@ -126,12 +126,12 @@
       }
     }
     .title {
-      font-size: 23px;
+
       color: #515462;
       line-height: 42px;
       margin: 30px 0 50px 0;
       @media #{$laptop-device} {
-        font-size: 20px;
+
         line-height: 36px;
         margin: 24px 0 40px 0;
       }
@@ -163,7 +163,7 @@
           }
           @media #{$sm-layout} {
             padding: 9px 12px;
-            font-size: 16px;
+
           }
         }
         @media #{$laptop-device} {
@@ -202,7 +202,7 @@
       p {
         color: #c6c9d8;
         opacity: 0.75;
-        font-weight: 300;
+
       }
     }
   }
@@ -217,8 +217,8 @@
         text-align: center;
         padding: 20px 0;
         color: rgba(255, 255, 255, 0.7);
-        font-size: 20px;
-        font-weight: 500;
+
+
         transition: 0.3s ease-in-out;
         letter-spacing: 0.2px;
       }
@@ -259,8 +259,8 @@
       text-align: left;
       padding: 25px 0 10px 0;
       color: #1f1f25;
-      font-size: 26px;
-      font-weight: 500;
+
+
       transition: 0.3s ease-in-out;
       letter-spacing: 0.2px;
       margin: 0;
@@ -269,8 +269,8 @@
       display: block;
       padding: 0;
       color: rgba(29, 29, 36, 0.75);
-      font-size: 16px;
-      font-weight: 300;
+
+
       transition: 0.3s ease-in-out;
       line-height: 25px;
       @media #{$sm-layout} {
@@ -285,10 +285,10 @@
         position: absolute;
         color: #f6f6f6;
         z-index: -1;
-        font-size: 81px;
+
         bottom: -55px;
         line-height: inherit;
-        font-weight: 300;
+
         letter-spacing: 11px;
       }
     }
@@ -308,12 +308,12 @@
       padding: 9px 14px;
       color: #fff;
       border-radius: 4px;
-      font-size: 16px;
+
       line-height: 1;
       right: 5px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-weight: 500;
+
     }
   }
 }
@@ -326,7 +326,7 @@ Faq Area
     margin-top: 20px;
   }
   .accodion-style--1 .accordion__item .accordion__heading .accordion__button {
-    font-size: 18px;
+
     padding: 10px 0;
   }
   .accodion-style--1 .accordion__item .accordion__heading {
@@ -347,13 +347,13 @@ Faq Area
 
   .accordion__panel {
     p {
-      font-size: 18px;
+
       line-height: 30px;
       background: none;
       border: none;
       padding: 0 0 15px;
       margin: 0;
-      font-weight: 400;
+
       padding-top: 11px;
       color: #1d1d24;
       font-family: "Poppins", sans-serif;
@@ -403,7 +403,7 @@ Faq Area
   li {
     padding: 0 14px;
     color: #101010;
-    font-size: 18px;
+
     cursor: pointer;
     outline: none;
     @media #{$large-mobile} {
@@ -445,8 +445,8 @@ Footer Style
     h2 {
       &.title {
         color: $heading-color;
-        font-size: 60px;
-        font-weight: 500;
+
+
         margin-bottom: 65px;
       }
     }
@@ -460,8 +460,8 @@ a {
     height: 70px;
     line-height: 70px;
     border-radius: 43px;
-    font-size: 18px;
-    font-weight: 500;
+
+
     text-transform: uppercase;
     transition: 0.4s ease-in-out;
     color: #ffffff;
@@ -483,11 +483,11 @@ a {
         color: #c6c9d8;
         @media #{$md-layout} {
           margin-bottom: 13px;
-          font-size: 20px;
+
         }
         @media #{$sm-layout} {
           margin-bottom: 13px;
-          font-size: 20px;
+
         }
       }
     }
@@ -495,15 +495,15 @@ a {
       &.subtitle {
         color: #c6c9d8;
         @media #{$md-layout} {
-          font-size: 18px;
+
           line-height: 28px;
         }
         @media #{$laptop-device} {
-          font-size: 18px;
+
           line-height: 26px;
         }
         @media #{$sm-layout} {
-          font-size: 18px;
+
           line-height: 28px;
           color: #ffffff;
         }
@@ -572,20 +572,20 @@ a {
   }
   .section-title {
     .title {
-      font-size: 54px;
+
       line-height: 70px;
       margin-bottom: 20px;
       @media #{$md-layout} {
-        font-size: 45px;
+
         line-height: 61px;
       }
       @media #{$sm-layout} {
-        font-size: 30px;
+
         line-height: 50px;
       }
     }
     p {
-      font-size: 18px;
+
       padding: 0;
       padding-right: 6%;
       margin-bottom: 0;
@@ -620,15 +620,15 @@ a {
       }
       h6 {
         color: rgba(198, 201, 216, 0.75);
-        font-size: 14px;
+
         margin-bottom: 0;
-        font-weight: 300;
+
       }
     }
   }
   .subtitle {
     color: rgba(198, 201, 216, 0.75);
-    font-size: 15px;
+
     margin-top: 35px;
     margin-bottom: 0;
     letter-spacing: 1px;
@@ -643,13 +643,13 @@ gt matrik score area
   .inner {
     .title {
       color: #000000;
-      font-size: 54px;
+
       margin-bottom: 16px;
       @media #{$md-layout} {
-        font-size: 45px;
+
       }
       @media #{$sm-layout} {
-        font-size: 30px;
+
       }
       br {
         @media #{$md-layout} {
@@ -662,7 +662,7 @@ gt matrik score area
     }
     p {
       margin-bottom: 0;
-      font-size: 18px;
+
       line-height: 30px;
       color: rgba(29, 29, 36, 0.75);
       padding: 0;
@@ -745,8 +745,8 @@ gt matrik score area
     padding: 31px 28px;
   }
   .icon {
-    font-size: 54px;
-    font-weight: 400;
+
+
     margin-bottom: 14px;
     display: inline-flex;
     color: $theme-color;
@@ -758,16 +758,16 @@ gt matrik score area
   }
   .title {
     margin-bottom: 5px;
-    font-weight: 500;
-    font-size: 24px;
+
+
     @media #{$sm-layout} {
       margin-bottom: 10px;
-      font-size: 20px;
+
     }
   }
   p {
     color: #717173;
-    font-size: 18px;
+
     line-height: 30px;
     margin-bottom: 30px;
     @media #{$sm-layout} {
@@ -785,7 +785,7 @@ gt matrik score area
 }
 .rn-accordion-area .card-box p {
   margin-bottom: 20px;
-  font-size: 18px;
+
 }
 .rn-accordion-area .card-box.support p {
   margin-bottom: 20px;
@@ -843,28 +843,28 @@ gt matrik score area
       }
       .info {
         .title {
-          font-size: 18px;
+
           line-height: 1.22;
-          font-weight: 700;
+
           margin-bottom: 0;
           color: #1f1f25;
         }
         p {
-          font-weight: 300;
+
           color: $theme-color;
-          font-size: 16px;
+
         }
       }
     }
     .content {
       h5 {
-        font-size: 18px;
+
         margin-bottom: 15px;
-        font-weight: 500;
+
         color: #1f1f25;
       }
       p {
-        font-size: 18px;
+
         line-height: 30px;
         color: #717173;
       }

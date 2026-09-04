@@ -1,41 +1,44 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { useSelector } from "react-redux";
+import { Message } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import {
   useLocation,
   useNavigate,
   useSearchParams,
 } from "@/util/navigation";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import { useSelector } from "react-redux";
-import { FiChevronUp } from "react-icons/fi";
-import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
-import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
 import PageHelmet from "../../component/common/Helmet";
+import FooterTwo from "../../component/footer/FooterTwo";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { selectUser } from "../../redux/user";
+import Christmas from "../../elements/special/Christmas";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
+import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
 import TabContent from "../../elements/ui/tabs/TabContent";
-import Christmas from "../../elements/special/Christmas";
-import { ACCOUNT_TABS } from "../../util/defines/enum";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { selectUser } from "../../redux/user";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
-import { Message } from "primereact/message";
-import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
+import { ACCOUNT_TABS } from "../../util/defines/enum";
 
 const User = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
-  const [tab, setTab] = useState(
-    window.location.hash.substring(1).split("?")[0]
-  );
+  const [tab, setTab] = useState(ACCOUNT_TABS[0]);
 
   const INIT_ITEMS_PER_PAGE = 6;
-  
+
   const [first, setFirst] = useState(
     (searchParams.get("page") ? searchParams.get("page") - 1 : 0) *
       INIT_ITEMS_PER_PAGE
@@ -70,23 +73,59 @@ const User = () => {
   const routePath = location.pathname + location.hash;
 
   const scrollRef = useRef(null);
-  
+
   // Handle responsive detection
   useLayoutEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 992);
+    const mobileQuery = window.matchMedia("(max-width: 991px)");
+    const handleViewportChange = (event) => {
+      setIsMobile(event.matches);
+      if (!event.matches) setIsSidebarOpen(false);
     };
-    
-    handleResize(); // Initialize on mount
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+
+    handleViewportChange(mobileQuery);
+    mobileQuery.addEventListener("change", handleViewportChange);
+
+    return () =>
+      mobileQuery.removeEventListener("change", handleViewportChange);
   }, []);
-  
+
+  useEffect(() => {
+    if (!isMobile || !isSidebarOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setIsSidebarOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isMobile, isSidebarOpen]);
+
   const toggleSidebar = () => {
-    setIsSidebarOpen(prev => !prev);
+    setIsSidebarOpen((previousValue) => !previousValue);
+  };
+
+  const handleTabChange = (newTab) => {
+    setTab(newTab);
+
+    if (isMobile) {
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      requestAnimationFrame(() => {
+        scrollRef.current?.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
+        scrollRef.current?.focus({ preventScroll: true });
+      });
+    }
   };
 
   const campaignUserActions = CAMPAIGNS.find(
@@ -106,10 +145,15 @@ const User = () => {
           `user/current?withTickets=${true}&withChristmas=${true}`
         );
 
+        if (!responseData?.user) {
+          throw new Error("The account response did not include a user.");
+        }
+
         setCurrentUser(responseData.user);
         setHasBirthday(responseData.celebrate);
       } catch (err) {
         console.error("Error fetching user data:", err);
+        setLoadFailed(true);
       } finally {
         setIsPageLoading(false);
       }
@@ -120,15 +164,20 @@ const User = () => {
 
   useEffect(() => {
     const hash = window.location.hash.substring(1).split("?")[0];
-    setTab(hash);
+    setTab(ACCOUNT_TABS.includes(hash) ? hash : ACCOUNT_TABS[0]);
   }, [location.hash]);
-
-  useEffect(() => {
-    // Update tab on hash change
-  }, [tab, currentUser]);
 
   if (isPageLoading) {
     return <HeaderLoadingError />;
+  }
+
+  if (loadFailed || !currentUser) {
+    return (
+      <HeaderLoadingError
+        isError
+        message="We could not load your account. Check your connection and try again."
+      />
+    );
   }
 
   return (
@@ -140,8 +189,8 @@ const User = () => {
         logoname="logo.png"
         forceRegion={currentUser.region ?? null}
       />
-      <UserUpdateModal 
-        currentUser={currentUser} 
+      <UserUpdateModal
+        currentUser={currentUser}
         onUserRefresh={(data) => {
           setCurrentUser(data.user);
           setHasBirthday(data.hasBirthday);
@@ -150,14 +199,12 @@ const User = () => {
       <Christmas currentUser={currentUser} />
 
       {/* Start User Page Container with Sidebar */}
-      <div className="user-page-container">
+      <main className="user-page-container" id="user-account-content">
         {/* Sidebar */}
         <UserSidebar
           currentUser={currentUser}
           activeTab={tab || ACCOUNT_TABS[0]}
-          onTabChange={(newTab) => {
-            setTab(newTab);
-          }}
+          onTabChange={handleTabChange}
           isMobile={isMobile}
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
@@ -168,7 +215,7 @@ const User = () => {
           {currentUser?.tier === 0 && <Message 
             severity="info"
             text="As a tier 0 alumni, you are not eligible to any bonuses from the alumni program. Please upgrade your subscription from the settings tab."
-            className="center_div mb--20"
+            className="user-dashboard-notice mb--20"
            />}
 
           <div className="content-container">
@@ -179,7 +226,13 @@ const User = () => {
               })}
 
             {/* Tab Content */}
-            <div ref={scrollRef}>
+            <section
+              aria-live="polite"
+              className="user-tab-transition"
+              key={tab}
+              ref={scrollRef}
+              tabIndex={-1}
+            >
               <TabContent
                 tab={tab}
                 currentUser={currentUser}
@@ -194,10 +247,10 @@ const User = () => {
                 onPageChange={onPageChange}
                 INIT_ITEMS_PER_PAGE={INIT_ITEMS_PER_PAGE}
               />
-            </div>
+            </section>
           </div>
         </div>
-      </div>
+      </main>
       {/* End User Collection */}
 
       {/* Start Footer Style  */}
@@ -206,7 +259,7 @@ const User = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

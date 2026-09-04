@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog } from 'primereact/dialog';
+import { Dialog } from "@/compat/primereact";
 import { useDispatch, useSelector } from 'react-redux';
 import { removeModal, selectModal } from '../../../redux/modal';
 import { WEB_DEV_MODAL } from '../../../util/defines/common';

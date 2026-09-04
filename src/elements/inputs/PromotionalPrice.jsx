@@ -1,7 +1,9 @@
-import React from "react";
-import { Field, ErrorMessage } from "formik";
-import { CalendarWithClock } from "./common/Calendar";
+import {
+  ErrorMessage,
+  Field,
+} from "formik";
 import { toCamelCase } from "../../util/functions/helpers";
+import { CalendarWithClock } from "./common/Calendar";
 
 const PromotionalPrices = ({
   parent,
@@ -46,16 +48,19 @@ const PromotionalPrices = ({
       <div className="row">
         <div className="col-lg-6 col-12">
           <div className="rn-form-group">
-            <CalendarWithClock
-              mode="single"
-              locale="en-nl"
-              placeholder={"Start From"}
-              captionLayout="dropdown"
-              initialValue={initialStartValue}
-              onSelect={(value) => {
-                setFieldValue(`${parent ?? ""}${prefix}.startTimer`, value);
-              }}
-            />
+            <div data-field-name={`${parent ?? ""}${prefix}.startTimer`}>
+              <CalendarWithClock
+                name={`${parent ?? ""}${prefix}.startTimer`}
+                mode="single"
+                locale="en-nl"
+                placeholder={"Start From"}
+                captionLayout="dropdown"
+                initialValue={initialStartValue}
+                onSelect={(value) => {
+                  setFieldValue(`${parent ?? ""}${prefix}.startTimer`, value);
+                }}
+              />
+            </div>
             <ErrorMessage
               className="error"
               name={`${parent ?? ""}${prefix}.startTimer`}
@@ -65,16 +70,19 @@ const PromotionalPrices = ({
         </div>
         <div className="col-lg-6 col-12">
           <div className="rn-form-group">
-            <CalendarWithClock
-              mode="single"
-              locale="en-nl"
-              placeholder={"End At"}
-              captionLayout="dropdown"
-              initialValue={initialEndValue}
-              onSelect={(value) => {
-                setFieldValue(`${parent ?? ""}${prefix}.endTimer`, value);
-              }}
-            />
+            <div data-field-name={`${parent ?? ""}${prefix}.endTimer`}>
+              <CalendarWithClock
+                name={`${parent ?? ""}${prefix}.endTimer`}
+                mode="single"
+                locale="en-nl"
+                placeholder={"End At"}
+                captionLayout="dropdown"
+                initialValue={initialEndValue}
+                onSelect={(value) => {
+                  setFieldValue(`${parent ?? ""}${prefix}.endTimer`, value);
+                }}
+              />
+            </div>
             <ErrorMessage
               className="error"
               name={`${parent ?? ""}${prefix}.endTimer`}

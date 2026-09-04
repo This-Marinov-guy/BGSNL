@@ -1,7 +1,9 @@
-import React from "react";
 import PropTypes from "prop-types";
+import {
+  FiExternalLink,
+  IconlyDiscount,
+} from "@/elements/ui/icons/IconlyIcons";
 import { PROMO_CODES } from "../../../util/defines/PROMO_CODES";
-import { FiExternalLink, FiTag } from "react-icons/fi";
 
 const capitalizeCity = (str) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -15,46 +17,22 @@ const getPromosByCity = () => {
 };
 
 const PromotionCard = ({ promo }) => (
-  <div
-    className="promotion-card settings-card"
-    style={{
-      padding: "24px",
-      borderRadius: "12px",
-      border: "1px solid rgba(0,0,0,0.08)",
-      boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px",
-    }}
-  >
-    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-      {/* <span style={{ width: "60px", height: "60px", borderRadius: "10px", background: "linear-gradient(135deg, #017363, #025420)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <FiTag size={20} color="#fff" />
-      </span> */}
-      <h3 style={{ margin: 0, fontWeight: 600, color: "var(--color-heading)" }}>
-        {promo.name}
-      </h3>
+  <article className="promotion-card settings-card">
+    <div className="promotion-card__header">
+      <span className="promotion-card__icon" aria-hidden="true">
+        <IconlyDiscount size={22} />
+      </span>
+      <h3>{promo.name}</h3>
     </div>
     {promo?.discount && (
-      <p style={{ margin: 0, color: "var(--color-body)" }}>
+      <p className="promotion-card__discount">
         <strong>Discount:</strong> {promo.discount}
       </p>
     )}
     {promo.code && (
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-        <strong style={{ fontSize: "18px", color: "#374151" }}>Code:</strong>
-        <code
-          style={{
-            padding: "6px 12px",
-            borderRadius: "8px",
-            background: "#f3f4f6",
-            fontWeight: 600,
-            letterSpacing: "0.5px",
-            color: "#017363",
-          }}
-        >
-          {promo.code}
-        </code>
+      <div className="promotion-card__code">
+        <strong>Code:</strong>
+        <code>{promo.code}</code>
       </div>
     )}
     {promo.link && (
@@ -62,22 +40,13 @@ const PromotionCard = ({ promo }) => (
         href={promo.link}
         target="_blank"
         rel="noreferrer"
-        className="rn-button-style--2 rn-btn-green"
-        style={{
-          marginTop: "auto",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "8px 16px",
-          justifyContent: "center",
-          textDecoration: "none",
-        }}
+        className="rn-button-style--2 rn-btn-green promotion-card__link"
       >
         Visit store
-        <FiExternalLink size={16} />
+        <FiExternalLink size={16} aria-hidden />
       </a>
     )}
-  </div>
+  </article>
 );
 
 PromotionCard.propTypes = {
@@ -102,27 +71,11 @@ const PromotionsTab = () => {
         {byCity.length > 0 ? (
           <div className="promotions-by-city">
             {byCity.map(({ city, promos }) => (
-              <section key={city} className="promotions-city-section" style={{ marginBottom: "32px" }}>
-                <h3
-                  className="promotions-city-title archive"
-                  style={{
-                    fontSize: "22px",
-                    color: "var(--color-heading)",
-                    marginBottom: "16px",
-                    paddingBottom: "8px",
-                    borderBottom: "2px solid rgba(1, 115, 99, 0.2)",
-                  }}
-                >
+              <section key={city} className="promotions-city-section">
+                <h3 className="promotions-city-title archive">
                   {capitalizeCity(city)}
                 </h3>
-                <div
-                  className="promotions-grid"
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                    gap: "24px",
-                  }}
-                >
+                <div className="promotions-grid">
                   {promos.map((promo, idx) => (
                     <PromotionCard key={promo.code || promo.name || idx} promo={promo} />
                   ))}
@@ -132,7 +85,9 @@ const PromotionsTab = () => {
           </div>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">🎁</div>
+            <div className="empty-icon" aria-hidden="true">
+              <IconlyDiscount size={44} />
+            </div>
             <h3>No promotions right now</h3>
             <p>Check back later for exclusive member discounts and offers.</p>
           </div>

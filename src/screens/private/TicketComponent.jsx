@@ -1,14 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import {
-  createCustomerTicket,
-  createQrCodeCheckGuest,
-} from "../../util/functions/ticket-creator";
-import { decryptData } from "../../util/functions/helpers";
-import PhoneInput from "../../elements/inputs/common/PhoneInput";
-import CardInputs from "../../elements/inputs/common/CardInputs";
-import InternshipCard from "../../elements/ui/cards/InternshipCard";
+  useEffect,
+  useState,
+} from "react";
 
 const TEST = [
   {

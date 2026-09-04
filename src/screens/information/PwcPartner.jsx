@@ -1,25 +1,32 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiBriefcase,
+  FiCheckCircle,
+  FiChevronUp,
+} from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp, FiCheckCircle, FiBriefcase } from "react-icons/fi";
-import { Link } from "@/util/navigation";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../../elements/ui/loading/Loader";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
+import PageLoading from "../../elements/ui/loading/PageLoading";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { PREMIUM_PARTNER } from "../../util/defines/PARTNERS";
 
 const PWC_PARTNER = PREMIUM_PARTNER.find((partner) => partner.name === "PwC Bulgaria");
 const PWC_VIDEO = "/assets/images/partners/pwc.mp4";
-const PWC_BREADCRUMB_IMAGE = "/assets/images/partners/sofia.png";
 const PWC_METADATA_IMAGE = "/assets/images/events/pwc.jpeg";
 
 // `initialInternships` comes from the server render so the PwC roles are in
-// the HTML instead of behind a <Loader />.
+// the HTML instead of behind a loading state.
 const PwcPartner = ({ initialInternships = [] }) => {
   const { sendRequest } = useHttpClient();
   const [loading, setLoading] = useState(!initialInternships.length);
@@ -47,7 +54,7 @@ const PwcPartner = ({ initialInternships = [] }) => {
   );
 
   if (loading) {
-    return <Loader />;
+    return <PageLoading />;
   }
 
   return (
@@ -66,9 +73,7 @@ const PwcPartner = ({ initialInternships = [] }) => {
 
       <Breadcrumb
         title="PwC Bulgaria"
-        category="Premium Partner"
-        parent="Partners"
-        imageUrl={PWC_BREADCRUMB_IMAGE}
+        description="Explore career opportunities and community initiatives with our premium partner PwC Bulgaria."
       />
 
       <div className="rn-about-area ptb--120 bg_color--5">
@@ -142,7 +147,7 @@ const PwcPartner = ({ initialInternships = [] }) => {
               </div>
             </div>
 
-            <div style={{}} className="col-lg-6">
+            <div className="col-lg-6">
               <img
                 src={"/assets/images/events/pwc.jpeg"}
                 alt="PwC Bulgaria logo"
@@ -211,13 +216,17 @@ const PwcPartner = ({ initialInternships = [] }) => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
 
       <FooterTwo />
     </React.Fragment>
   );
+};
+
+PwcPartner.propTypes = {
+  initialInternships: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default PwcPartner;

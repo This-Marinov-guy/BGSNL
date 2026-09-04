@@ -1,7 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { FiLock } from "react-icons/fi";
-import { Image } from "primereact/image";
+import { Image } from "@/compat/primereact";
+import { FiLock } from "@/elements/ui/icons/IconlyIcons";
 import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 

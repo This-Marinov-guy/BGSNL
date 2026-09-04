@@ -1,5 +1,7 @@
-import React from "react";
-import { Link, useLocation } from "@/util/navigation";
+import {
+  Link,
+  useLocation,
+} from "@/util/navigation";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
 
 const CampaignBanner = (props) => {

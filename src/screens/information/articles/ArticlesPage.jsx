@@ -1,17 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PageHelmet from "../../../component/common/Helmet";
-import HeaderTwo from "../../../component/header/HeaderTwo";
+import PropTypes from "prop-types";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import {
+  FiChevronUp,
+  IconlyArrowRight,
+  IconlyDocument,
+  IconlySearch,
+} from "@/elements/ui/icons/IconlyIcons";
+import { Link, useSearchParams } from "@/util/navigation";
+import PageHelmet from "../../../component/common/Helmet";
+import ScrollToTop from "../../../component/common/ScrollToTop";
+import Footer from "../../../component/footer/Footer";
+import HeaderTwo from "../../../component/header/HeaderTwo";
+import Pagination from "../../../elements/common/Pagination";
+import ArticleCard from "../../../elements/ui/cards/ArticleCard";
+import PageLoading from "../../../elements/ui/loading/PageLoading";
 import { selectArticles } from "../../../redux/articles";
 import { encodeForURL } from "../../../util/functions/helpers";
-import PageLoading from "../../../elements/ui/loading/PageLoading";
-import { Link, useSearchParams } from "@/util/navigation";
-import { Paginator } from "primereact/paginator";
-import Footer from "../../../component/footer/Footer";
-import SearchField from "../../../elements/ui/functional/SearchField";
-import ArticleCard from "../../../elements/ui/cards/ArticleCard";
+
+const INITIAL_ITEMS_PER_PAGE = 6;
+
+const getArticleLink = (article) =>
+  article.legacyLink ??
+  `/articles/${article.id}/${encodeForURL(article.title)}`;
 
 /**
  * `initialArticles` is fetched on the server by app/(site)/articles/page.jsx so
@@ -22,45 +35,68 @@ import ArticleCard from "../../../elements/ui/cards/ArticleCard";
 const ArticlesPage = ({ initialArticles = [] }) => {
   const storedArticles = useSelector(selectArticles);
   const articles = storedArticles?.length ? storedArticles : initialArticles;
-  const [firstArticle, ...restArticles] = articles;
-
+  const featuredArticle = articles[0];
+  const otherArticles = useMemo(() => articles.slice(1), [articles]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = Math.max(0, Number(searchParams.get("page") || 1) - 1);
+  const currentPageParam = searchParams.get("page") || "1";
+  const [query, setQuery] = useState("");
+  const [first, setFirst] = useState(initialPage * INITIAL_ITEMS_PER_PAGE);
+  const [rows, setRows] = useState(INITIAL_ITEMS_PER_PAGE);
 
-  const INIT_ITEMS_PER_PAGE = 6;
+  useEffect(() => {
+    const scrollToPageStart = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    };
 
-  const [listedArticles, setListedArticles] = useState(restArticles);
-  const [first, setFirst] = useState(
-    (searchParams.get("page") ? searchParams.get("page") - 1 : 0) *
-      INIT_ITEMS_PER_PAGE
-  );
-  const [rows, setRows] = useState(INIT_ITEMS_PER_PAGE);
+    scrollToPageStart();
+    const frame = window.requestAnimationFrame(scrollToPageStart);
 
-  const searchArticles = (e) => {
-    const keyword = e.target.value.toLowerCase();
+    return () => window.cancelAnimationFrame(frame);
+  }, [currentPageParam]);
 
-    setListedArticles(
-      restArticles.filter(
-        (a) =>
-          a.title.toLowerCase().includes(keyword) ||
-          a.description.toLowerCase().includes(keyword)
-      )
+  const filteredArticles = useMemo(() => {
+    const keyword = query.trim().toLocaleLowerCase();
+
+    if (!keyword) return otherArticles;
+
+    return otherArticles.filter((article) =>
+      `${article.title ?? ""} ${article.description ?? ""}`
+        .toLocaleLowerCase()
+        .includes(keyword)
     );
+  }, [otherArticles, query]);
+
+  const handleSearch = (event) => {
+    setQuery(event.target.value);
+    setFirst(0);
   };
 
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
-
     setSearchParams({ page: event.page + 1 });
   };
 
-  useEffect(() => {
-    setListedArticles(restArticles);
-  }, [articles]);
-
-  if (articles?.length === 0) {
+  if (!articles?.length) {
     return <PageLoading />;
   }
+
+  const featuredLink = getArticleLink(featuredArticle);
+  const lastPageStart = Math.max(
+    0,
+    Math.floor((filteredArticles.length - 1) / rows) * rows
+  );
+  const visibleFirst = Math.min(first, lastPageStart);
+  const visibleArticles = filteredArticles.slice(
+    visibleFirst,
+    visibleFirst + rows
+  );
+  const resultLabel = query.trim()
+    ? `${filteredArticles.length} ${
+        filteredArticles.length === 1 ? "result" : "results"
+      }`
+    : `${otherArticles.length} stories`;
 
   return (
     <>
@@ -75,95 +111,131 @@ const ArticlesPage = ({ initialArticles = [] }) => {
         logoname="logo.png"
       />
 
-      <div className="container articles-list-container mt--150 mb--60">
-        <h3 className="center_text mt--150">Articles</h3>
-        <p className="center_text">Stay updated with our latest insights</p>
-        <label className="center_div mt--40 mb--40">Latest Article</label>
-        <div className="row g--5">
-          <Link
-            to={`/articles/${firstArticle.id}/${encodeForURL(
-              firstArticle.title
-            )}`}
-          >
-            <img
-              src={firstArticle.thumbnail}
-              className="col main team_member_border_2"
-            />
-          </Link>
-          <div className="col">
-            <Link
-              to={`/articles/${firstArticle.id}/${encodeForURL(
-                firstArticle.title
-              )}`}
-              style={{ textDecoration: 'none', color: 'inherit' }}
-            >
-              <h3 className="mb--20">{firstArticle.title}</h3>
-            </Link>
-            <p>{firstArticle.description}</p>
-            <Link
-              className="main-link"
-              to={`/articles/${firstArticle.id}/${encodeForURL(
-                firstArticle.title
-              )}`}
-            >
-              Read more
-            </Link>
-          </div>
-        </div>
+      <main className="articles-page">
+        <div className="container">
+          <header className="articles-page-hero">
+            <h1>Stories from our community</h1>
+            <p>
+              Discover the people, ideas, and experiences bringing Bulgarians
+              in the Netherlands closer together.
+            </p>
+          </header>
 
-        <div className="mt--60">
-          <div className="d-flex flex-column flex-md-row align-items-center gap-3">
-            <div className="d-flex flex-md-grow-1 justify-content-md-start justify-content-center">
-              <label>All Articles</label>
-            </div>
-            <div className="d-flex justify-content-center">
-              <SearchField
-                onChange={searchArticles}
-                className="article-search"
+          <section
+            className="articles-featured"
+            aria-labelledby="featured-article-title"
+          >
+            <Link className="articles-featured-image" to={featuredLink}>
+              <img
+                src={featuredArticle.thumbnail}
+                alt={`${featuredArticle.title} article cover`}
+                fetchPriority="high"
+                onError={(event) => {
+                  event.currentTarget.onerror = null;
+                  event.currentTarget.src =
+                    "/assets/images/avatars/article.png";
+                }}
               />
+            </Link>
+            <div className="articles-featured-content">
+              <span className="articles-featured-label">
+                <IconlyDocument size={18} aria-hidden />
+                Latest story
+              </span>
+              <h2 id="featured-article-title">
+                <Link to={featuredLink}>{featuredArticle.title}</Link>
+              </h2>
+              <p>{featuredArticle.description}</p>
+              <Link className="articles-featured-link" to={featuredLink}>
+                Read the story
+                <IconlyArrowRight size={20} aria-hidden />
+              </Link>
             </div>
-          </div>
-          <div className="row mt--20">
-            {listedArticles?.length > 0 ? (
-              <>
-                {listedArticles
-                  .slice(first, first + rows)
-                  .map((article, index) => (
-                    <div key={index} className="col-lg-4 col-md-6 col-12">
-                      <ArticleCard
-                        image={article.thumbnail}
-                        fallbackImage="/assets/images/avatars/article.png"
-                        title={article.title}
-                        description={article.description}
-                        link={
-                          article.legacyLink ??
-                          `/articles/${article.id}/${encodeForURL(
-                            article.title
-                          )}`
-                        }
-                        isInsideLink
-                      />
-                    </div>
-                  ))}
-                <Paginator
-                  className="col-12"
-                  first={first}
-                  rows={rows}
-                  totalRecords={listedArticles.length ?? 0}
-                  rowsPerPageOptions={[INIT_ITEMS_PER_PAGE, 10, 15]}
-                  onPageChange={onPageChange}
+          </section>
+
+          <section
+            className="articles-library"
+            aria-labelledby="all-articles-title"
+          >
+            <div className="articles-library-toolbar">
+              <div>
+                <span className="articles-eyebrow">Explore</span>
+                <h2 id="all-articles-title">All articles</h2>
+                <p aria-live="polite">{resultLabel}</p>
+              </div>
+              <label className="articles-search">
+                <span>Search articles</span>
+                <IconlySearch size={21} aria-hidden />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={handleSearch}
+                  aria-label="Search articles"
                 />
+              </label>
+            </div>
+
+            {visibleArticles.length ? (
+              <>
+                <div className="articles-grid">
+                  {visibleArticles.map((article) => (
+                    <ArticleCard
+                      key={article.id ?? article.title}
+                      image={article.thumbnail}
+                      fallbackImage="/assets/images/avatars/article.png"
+                      title={article.title}
+                      description={article.description}
+                      link={getArticleLink(article)}
+                      isInsideLink
+                    />
+                  ))}
+                </div>
+                {filteredArticles.length > INITIAL_ITEMS_PER_PAGE && (
+                  <div className="articles-pagination">
+                    <Pagination
+                      first={visibleFirst}
+                      rows={rows}
+                      totalRecords={filteredArticles.length}
+                      rowsPerPageOptions={[6, 9, 12]}
+                      onPageChange={onPageChange}
+                      ariaLabel="Articles pagination"
+                    />
+                  </div>
+                )}
               </>
             ) : (
-              <p className="col-12 center_text">No more articles found</p>
+              <div className="articles-empty-state" role="status">
+                <IconlySearch size={28} aria-hidden />
+                <h3>{query.trim() ? "No matching stories" : "More stories soon"}</h3>
+                <p>
+                  {query.trim()
+                    ? "Try a broader search term or clear the search field."
+                    : "We are preparing more stories from our community."}
+                </p>
+                {query.trim() && (
+                  <button type="button" onClick={() => setQuery("")}>
+                    Clear search
+                  </button>
+                )}
+              </div>
             )}
-          </div>
+          </section>
         </div>
+      </main>
+
+      <div className="backto-top">
+        <ScrollToTop showUnder={160}>
+          <FiChevronUp size={26} />
+        </ScrollToTop>
       </div>
 
       <Footer />
     </>
   );
+};
+
+ArticlesPage.propTypes = {
+  initialArticles: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default ArticlesPage;

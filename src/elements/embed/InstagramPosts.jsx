@@ -44,15 +44,15 @@ export const InstagramNlBoardPost = () => {
                     </svg>
                   </div>
                   <div style="padding-top: 8px;">
-                    <div style="color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">
+                    <div style="color:#3897f0; font-family:Arial,sans-serif; font-style:normal; line-height:18px;">
                       View this post on Instagram
                     </div>
                   </div>
                 </a>
-                <p style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;">
+                <p style="color:#c9c8cd; font-family:Arial,sans-serif; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;">
                   <a 
                     href="https://www.instagram.com/p/DCUfE39tnsZ/?utm_source=ig_embed&amp;utm_campaign=loading" 
-                    style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" 
+                    style="color:#c9c8cd; font-family:Arial,sans-serif; font-style:normal; line-height:17px; text-decoration:none;" 
                     target="_blank"
                   >
                     A post shared by Bulgarian Society Netherlands (@bulgariansociety.netherlands)

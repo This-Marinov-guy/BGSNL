@@ -3,9 +3,43 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const privateIndexingHeaders = [
+  {
+    key: "X-Robots-Tag",
+    value: "noindex, nofollow, noarchive, nosnippet, noimageindex",
+  },
+  { key: "Referrer-Policy", value: "no-referrer" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+];
+
+const privateRouteSources = [
+  "/user/:path*",
+  "/login",
+  "/signup",
+  "/:region/signup",
+  "/alumni/register",
+  "/:region/purchase-ticket/:path*",
+  "/success",
+  "/fail",
+  "/donation/success",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  outputFileTracingRoot: __dirname,
+
+  async headers() {
+    return privateRouteSources.map((source) => ({
+      source,
+      headers: [
+        ...privateIndexingHeaders,
+        ...(source.startsWith("/user")
+          ? [{ key: "Cache-Control", value: "private, no-store" }]
+          : []),
+      ],
+    }));
+  },
 
   // The legacy template SCSS lives under public/assets and uses `~pkg` imports.
   sassOptions: {
@@ -20,10 +54,6 @@ const nextConfig = {
   // 400+ pre-sized static images already live in public/assets.
   images: {
     unoptimized: true,
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   webpack: (config) => {

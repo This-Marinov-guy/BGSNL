@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Breadcrumb from "../../../elements/common/Breadcrumb";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
-import ImageFb from "../../../elements/ui/media/ImageFb";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../../component/header/Header";
 import FooterTwo from "../../../component/footer/FooterTwo";
-import LanguageChangeModal from "../../../elements/ui/modals/LanguageChangeModal";
-import { LOCAL_STORAGE_LANGUAGE_PREFERENCE } from "../../../util/defines/common";
-import { ARTICLE_FROM_BG_TO_NL } from "../../../util/defines/ARTICLES";
+import Header from "../../../component/header/Header";
+import Breadcrumb from "../../../elements/common/Breadcrumb";
 import ChangeLanguageBtns from "../../../elements/ui/buttons/ChangeLanguageBtns";
+import ImageFb from "../../../elements/ui/media/ImageFb";
+import LanguageChangeModal from "../../../elements/ui/modals/LanguageChangeModal";
+import { ARTICLE_FROM_BG_TO_NL } from "../../../util/defines/ARTICLES";
+import { LOCAL_STORAGE_LANGUAGE_PREFERENCE } from "../../../util/defines/common";
 
 const StudentMigration = () => {
     const [isChangeLangModal, setIsChangeLangModal] = useState(false);
@@ -47,9 +50,10 @@ const StudentMigration = () => {
             colorblack="color--black"
             logoname="logo.png"
         />
-        {/* Start Breadcrump Area */}
-        <Breadcrumb title={text.heading} category='Articles' />
-        {/* End Breadcrump Area */}
+        <Breadcrumb
+            title={text.heading}
+            description="A practical student perspective on moving from Bulgaria to the Netherlands."
+        />
 
         <ChangeLanguageBtns callback={changeLanguage} />
         <LanguageChangeModal visible={isChangeLangModal} callback={changeLanguage} onHide={() => setIsChangeLangModal(false)} />
@@ -59,10 +63,10 @@ const StudentMigration = () => {
         >
             <div className="inner-wrapper">
                 <div className="inner">
-                    <h2 style={{ textAlign: "start", fontSize: '32px', fontFamily: 'Archive' }}>
+                    <h2 style={{ textAlign: "start", fontFamily: 'Archive' }}>
                         {text.title}
                     </h2>
-                    <h5 style={{ color: '#017363',textAlign: "end", fontSize: '22px' }} className="mb--60">
+                    <h5 style={{ color: '#017363',textAlign: "end" }} className="mb--60">
                         {text.author} | {text.date} | {text.time}
                     </h5>
                     <p className="mt--20 mb--40">
@@ -151,7 +155,7 @@ const StudentMigration = () => {
         {/* Start Back To Top */}
         <div className="backto-top">
             <ScrollToTop showUnder={160}>
-                <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+                <FiChevronUp size={26} />
             </ScrollToTop>
         </div>
         {/* End Back To Top */}

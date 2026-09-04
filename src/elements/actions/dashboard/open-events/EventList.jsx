@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { ADMIN_EVENT_REGIONS, REGIONS } from '../../../../util/defines/REGIONS_DESIGN'
 import Event from './Event'
 import { useSelector } from 'react-redux';
-import { selectEventsDashboard } from '../../../../redux/events';
+import { selectEventDrafts, selectEventsDashboard } from '../../../../redux/events';
 import Filter from '../Filter';
 import { useSearchParams, Link } from "@/util/navigation";
 import { useLoadEvents } from '../../../../hooks/common/api-hooks';
@@ -31,6 +31,10 @@ const EventList = () => {
         REGIONS.filter((r) => r === region);
 
     const events = useSelector(selectEventsDashboard);
+    const drafts = useSelector(selectEventDrafts);
+    const visibleDrafts = regionParam
+        ? drafts.filter((event) => event.region === regionParam)
+        : drafts;
 
     useEffect(() => {
         reloadEvents(true);
@@ -51,6 +55,29 @@ const EventList = () => {
         </div>
             {isAuthorized  && <Filter regions={dashboardRegions} />}
             {eventsLoading ? <EventsLoading /> : <div className='mt--20'>
+                {visibleDrafts.length > 0 && (
+                    <div className='region-section'>
+                        <div className='row'>
+                            <div className='col-12'>
+                                <h4 className='archive region-title'>Drafts</h4>
+                            </div>
+                        </div>
+                        <div className='row'>
+                            <div className='col-12'>
+                                <div className='grid events-grid'>
+                                    {visibleDrafts.map((event) => (
+                                        <Event
+                                            key={event.id}
+                                            event={event}
+                                            loadData={() => reloadEvents(true)}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <hr className='region-divider' />
+                    </div>
+                )}
                 {regionList.map((region, index) => {
                     return <div className='region-section' key={index}>
                         <div className='row'>

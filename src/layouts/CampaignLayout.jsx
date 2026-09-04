@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { CAMPAIGNS } from "../util/defines/CAMPAIGNS";
-import { Dialog } from "primereact/dialog";
-import ImageFb from "../elements/ui/media/ImageFb";
-import { Link } from "@/util/navigation";
+import {
+  useEffect,
+  useState,
+} from "react";
+import { usePathname } from "next/navigation";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import { Dialog } from "@/compat/primereact";
+import { Link } from "@/util/navigation";
+import ImageFb from "../elements/ui/media/ImageFb";
 import { selectLocalStorageIndex } from "../redux/modal";
+import { CAMPAIGNS } from "../util/defines/CAMPAIGNS";
 
 const CampaignLayout = ({ children }) => {
   const [openModals, setOpenModals] = useState({});
+  const pathname = usePathname();
 
   const localStorageIndex = useSelector(selectLocalStorageIndex);
 
@@ -32,7 +38,9 @@ const CampaignLayout = ({ children }) => {
 
   return (
     <>
-      {children}
+      <div className="site-page-transition" key={pathname ?? "site-page"}>
+        {children}
+      </div>
 
       {/* Render modals for active campaigns */}
       {CAMPAIGNS.map((campaign) =>
@@ -72,7 +80,12 @@ const CampaignLayout = ({ children }) => {
                 <h5>
                   Powered by:{" "}
                   {campaign.modal.sponsors.map((sponsor) => (
-                    <a href={sponsor.link} target="_blank">
+                    <a
+                      href={sponsor.link}
+                      key={sponsor.link}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       <ImageFb
                         style={{ height: "4em", margin: "2px" }}
                         src={sponsor.image}
@@ -116,6 +129,10 @@ const CampaignLayout = ({ children }) => {
       )}
     </>
   );
+};
+
+CampaignLayout.propTypes = {
+  children: PropTypes.node,
 };
 
 export default CampaignLayout;

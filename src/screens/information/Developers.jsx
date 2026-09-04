@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import Devs from "../../component/HomeLayout/homeOne/Devs";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
+import Header from "../../component/header/Header";
+import Devs from "../../component/HomeLayout/homeOne/Devs";
+import Breadcrumb from "../../elements/common/Breadcrumb";
 
 const Developers = React.memo(() => {
   return (
@@ -18,9 +18,10 @@ const Developers = React.memo(() => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      {/* Start Breadcrump Area */}
-      <Breadcrumb title={"Developers"} />
-      {/* End Breadcrump Area */}
+      <Breadcrumb
+        title="Developers"
+        description="Meet the people building and maintaining the digital home of Bulgarian Society Netherlands."
+      />
 
       {/* Start About Area  */}
       <Devs />
@@ -29,7 +30,7 @@ const Developers = React.memo(() => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { InputNumber } from "primereact/inputnumber";
-import { Message } from "primereact/message";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import PageLoading from "../../elements/ui/loading/PageLoading";
+import {
+  useEffect,
+  useState,
+} from "react";
+import { useDispatch } from "react-redux";
+import {
+  InputNumber,
+  Message,
+} from "@/compat/primereact";
 import { useNavigate } from "@/util/navigation";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import { useDispatch } from "react-redux";
+import PageLoading from "../../elements/ui/loading/PageLoading";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { showNotification } from "../../redux/notification";
 
 const GuestCheck = () => {
@@ -33,6 +38,13 @@ const GuestCheck = () => {
   const handleCountChange = (e) => {
     const newCount = e.target.value;
     searchParams.set("count", newCount);
+  };
+
+  const submitCount = (event) => {
+    event.preventDefault();
+    navigate(`${location.pathname}?${searchParams.toString()}`, {
+      replace: true,
+    });
   };
 
   const updateGuestList = async () => {
@@ -126,34 +138,34 @@ const GuestCheck = () => {
               <div className="col-lg-12">
                 <Message severity={severity} text={message} />
               </div>
-              <div className="col-lg-12 mt--40 mb--40">
+              <form
+                className="col-lg-12 mt--40 mb--40"
+                onSubmit={submitCount}
+              >
                 <h3>Ticket Count</h3>
-                <InputNumber
-                  value={count || 1}
-                  onValueChange={handleCountChange}
-                  showButtons
-                  buttonLayout="horizontal"
-                  style={{ width: "160px" }}
-                  decrementButtonClassName="p-button-danger"
-                  incrementButtonClassName="p-button-success"
-                  min={1}
-                  max={10}
-                />
-                <br/>
+                <div data-field-name="count">
+                  <InputNumber
+                    name="count"
+                    value={count || 1}
+                    onValueChange={handleCountChange}
+                    showButtons
+                    buttonLayout="horizontal"
+                    style={{ width: "160px" }}
+                    decrementButtonClassName="p-button-danger"
+                    incrementButtonClassName="p-button-success"
+                    min={1}
+                    max={10}
+                    required
+                  />
+                </div>
+                <br />
                 <button
-                  onClick={() =>
-                    navigate(
-                      `${location.pathname}?${searchParams.toString()}`,
-                      {
-                        replace: true,
-                      }
-                    )
-                  }
+                  type="submit"
                   className="rn-button-style--2 rn-btn-reverse-green"
                 >
                   Submit Count
                 </button>
-              </div>
+              </form>
               {info}
             </div>
           </div>

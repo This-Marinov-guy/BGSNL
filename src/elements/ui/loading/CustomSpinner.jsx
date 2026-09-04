@@ -1,4 +1,4 @@
-import { ProgressSpinner } from 'primereact/progressspinner'
+import { ProgressSpinner } from "@/compat/primereact"
 import React from 'react'
 
 const CustomSpinner = () => {

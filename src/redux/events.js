@@ -14,6 +14,7 @@ export const eventsSlice = createSlice({
     initialState: {
         all: createPublicEventsState(),
         allDashboard: createDashboardEventsState(),
+        drafts: [],
         selected: null,
         selectedDashboard: null,
     },
@@ -36,7 +37,12 @@ export const eventsSlice = createSlice({
         },
         loadEventsDashboard: (state, action) => {
             state.allDashboard = createDashboardEventsState();
+            state.drafts = [];
             action.payload.forEach(event => {
+                if (event.status === "draft") {
+                    state.drafts.push(event);
+                    return;
+                }
                 if (state.allDashboard[event.region]) {
                     state.allDashboard[event.region].push(event);
                 }
@@ -45,6 +51,11 @@ export const eventsSlice = createSlice({
         addEventToAll: (state, action) => {
             const event = action.payload;
 
+            if (event.status === "draft") {
+                state.drafts = [...state.drafts, event];
+                return;
+            }
+
             if (!state.allDashboard[event.region]) {
                 state.allDashboard[event.region] = [];
             }
@@ -52,9 +63,21 @@ export const eventsSlice = createSlice({
         },
         editEventFromAll: (state, action) => {
             const event = action.payload;
-            const index = state.allDashboard[event.region].findIndex(e => e.id === event.id);
-            if (index !== -1) {
-                state.allDashboard[event.region][index] = event;
+
+            state.drafts = state.drafts.filter(e => e.id !== event.id);
+            Object.keys(state.allDashboard).forEach(region => {
+                state.allDashboard[region] = state.allDashboard[region].filter(
+                    e => e.id !== event.id
+                );
+            });
+
+            if (event.status === "draft") {
+                state.drafts.push(event);
+            } else {
+                if (!state.allDashboard[event.region]) {
+                    state.allDashboard[event.region] = [];
+                }
+                state.allDashboard[event.region].push(event);
             }
         },
 
@@ -62,7 +85,10 @@ export const eventsSlice = createSlice({
             reducer(state, action) {
                 const { region, eventId } = action.payload;
 
-                state.allDashboard[region] = state.allDashboard[region].filter(e => e.id !== eventId);
+                state.drafts = state.drafts.filter(e => e.id !== eventId);
+                if (state.allDashboard[region]) {
+                    state.allDashboard[region] = state.allDashboard[region].filter(e => e.id !== eventId);
+                }
             },
             prepare(values) {
                 return {
@@ -78,6 +104,7 @@ export const eventsSlice = createSlice({
 export const selectEvents = (state) => state.events.all;
 export const selectSingleEvent = (state) => state.events.selected;
 export const selectEventsDashboard = (state) => state.events.allDashboard;
+export const selectEventDrafts = (state) => state.events.drafts;
 export const selectSingleEventDashboard = (state) => state.events.selectedDashboard;
 export const { loadSingleEventDashboard, loadEventsDashboard, loadSingleEvent, loadEvents, addEventToAll, editEventFromAll, removeEventFromAll } = eventsSlice.actions;
 export default eventsSlice.reducer;

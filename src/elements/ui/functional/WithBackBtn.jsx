@@ -1,6 +1,5 @@
-import React from 'react'
-import { useNavigate } from "@/util/navigation"
-import { FiChevronLeft } from 'react-icons/fi';
+import { FiChevronLeft } from "@/elements/ui/icons/IconlyIcons";
+import { useNavigate } from "@/util/navigation";
 
 const WithBackBtn = (props) => {
     const navigate = useNavigate();

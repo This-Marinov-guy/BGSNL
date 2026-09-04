@@ -1,11 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch } from "react-redux";
+import {
+  FaGripVertical,
+  FiEdit2,
+  FiPlus,
+  FiTrash2,
+} from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
-import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
-import { FiEdit2, FiTrash2, FiPlus } from "react-icons/fi";
-import { FaGripVertical } from "react-icons/fa";
 
 const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
 const COMPACT_LAYOUT_BREAKPOINT = 992;
@@ -206,7 +214,7 @@ const InternshipList = () => {
       >
         <div style={{ flex: isCompactLayout ? "1 1 100%" : "1 1 auto" }}>
           <h3 style={{ margin: 0 }}>Internships Dashboard</h3>
-          <p style={{ margin: "8px 0 0", fontSize: "13px", color: "#6b7280" }}>
+          <p style={{ margin: "8px 0 0", color: "#6b7280" }}>
             Drag rows to reorder internships. Changes save automatically.
           </p>
         </div>
@@ -283,7 +291,6 @@ const InternshipList = () => {
             <span
               style={{
                 fontFamily: "monospace",
-                fontSize: "18px",
                 letterSpacing: "1px",
                 userSelect: "none",
               }}
@@ -293,8 +300,6 @@ const InternshipList = () => {
             </span>
             <span
               style={{
-                fontSize: "12px",
-                fontWeight: 700,
                 color: "#9ca3af",
                 minWidth: "22px",
               }}
@@ -328,8 +333,6 @@ const InternshipList = () => {
           >
             <div
               style={{
-                fontWeight: 700,
-                fontSize: "15px",
                 color: "#111827",
                 whiteSpace: isCompactLayout ? "normal" : "nowrap",
                 overflow: "hidden",
@@ -341,7 +344,6 @@ const InternshipList = () => {
             </div>
             <div
               style={{
-                fontSize: "13px",
                 color: "#6b7280",
                 whiteSpace: isCompactLayout ? "normal" : "nowrap",
                 overflow: "hidden",
@@ -362,8 +364,6 @@ const InternshipList = () => {
               color: item.label === "Bulgarian" ? "#166534" : "#1e40af",
               borderRadius: "9999px",
               padding: "3px 10px",
-              fontSize: "11px",
-              fontWeight: 600,
               order: isCompactLayout ? 4 : 0,
             }}
           >
@@ -416,8 +416,6 @@ const InternshipList = () => {
             </button>
             <span
               style={{
-                fontSize: "11px",
-                fontWeight: 600,
                 color: item.isActive ? "#166534" : "#9ca3af",
                 minWidth: "46px",
               }}
@@ -442,7 +440,6 @@ const InternshipList = () => {
               className="rn-button"
               style={{
                 padding: "6px 14px",
-                fontSize: "13px",
                 minWidth: isCompactLayout ? "96px" : "auto",
                 textAlign: "center",
               }}
@@ -454,7 +451,6 @@ const InternshipList = () => {
               className="rn-button-style--2 rn-btn-solid-red"
               style={{
                 padding: "6px 14px",
-                fontSize: "13px",
                 border: "none",
                 cursor: "pointer",
                 minWidth: isCompactLayout ? "96px" : "auto",

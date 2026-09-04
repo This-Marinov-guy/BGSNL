@@ -1,18 +1,27 @@
 "use client";
 
 /* eslint-disable react/display-name */
-import React, { useEffect, useState } from "react";
-import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
-import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import Rules from "../../elements/legals/Rules";
-import Privacy from "../../elements/legals/Privacy";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
-import { COOKIES, LEGAL_TABS, PRIVACY, RULES, TERMS } from "../../util/defines/enum";
+import PageHelmet from "../../component/common/Helmet";
+import FooterTwo from "../../component/footer/FooterTwo";
+import HeaderTwo from "../../component/header/HeaderTwo";
 import Cookies from "../../elements/legals/Cookies";
+import Privacy from "../../elements/legals/Privacy";
+import Rules from "../../elements/legals/Rules";
 import Terms from "../../elements/legals/Terms";
+import {
+  COOKIES,
+  LEGAL_TABS,
+  PRIVACY,
+  RULES,
+  TERMS,
+} from "../../util/defines/enum";
 
 const Policy = React.memo(() => {
   // The hash is only known on the client; reading it during render crashed SSR.
@@ -74,7 +83,7 @@ const Policy = React.memo(() => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

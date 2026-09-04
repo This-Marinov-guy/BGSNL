@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
+import { Image } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import BrandTwo from "../../elements/BrandTwo";
-import { Image } from "primereact/image";
-import ScrollToTop from "react-scroll-up";
-import { FiCheckCircle, FiChevronUp } from "react-icons/fi";
-import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
+import Header from "../../component/header/Header";
+import BrandTwo from "../../elements/BrandTwo";
+import Breadcrumb from "../../elements/common/Breadcrumb";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { BOARD_AND_COMMITTEES_IMAGES } from "../../util/defines/REGIONS_STRUCTURE";
 
@@ -21,9 +21,10 @@ const Structure = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      {/* Start Breadcrump Area */}
-      <Breadcrumb title={"Boards & Committees"} />
-      {/* End Breadcrump Area */}
+      <Breadcrumb
+        title="Boards & Committees"
+        description="Learn how our national board, city boards, and committees work together across the Netherlands."
+      />
 
       {/* Start Board of NL */}
       <div className="about-wrapper mb--40">
@@ -125,7 +126,7 @@ const Structure = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

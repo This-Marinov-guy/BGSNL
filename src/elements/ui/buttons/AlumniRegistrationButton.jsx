@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
 

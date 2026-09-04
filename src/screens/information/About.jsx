@@ -1,15 +1,19 @@
 "use client";
 
 import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import PropTypes from "prop-types";
+import {
+  FiCheckCircle,
+  FiChevronUp,
+} from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import BrandTwo from "../../elements/BrandTwo";
-import CounterOne from "../../elements/counters/CounterOne";
-import AboutUs from "../../component/HomeLayout/homeOne/AboutUs";
-import ScrollToTop from "react-scroll-up";
-import { FiCheckCircle, FiChevronUp } from "react-icons/fi";
-import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
+import Header from "../../component/header/Header";
+import AboutUs from "../../component/HomeLayout/homeOne/AboutUs";
+import BrandTwo from "../../elements/BrandTwo";
+import Breadcrumb from "../../elements/common/Breadcrumb";
+import CounterOne from "../../elements/counters/CounterOne";
 
 const About = React.memo(({ initialAboutData = {} }) => {
   return (
@@ -25,9 +29,10 @@ const About = React.memo(({ initialAboutData = {} }) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      {/* Start Breadcrump Area */}
-      <Breadcrumb title={"About"} />
-      {/* End Breadcrump Area */}
+      <Breadcrumb
+        title="About"
+        description="Meet the network helping Bulgarians in the Netherlands build community, share opportunities, and feel at home."
+      />
 
       {/* Start About Area  */}
       <AboutUs />
@@ -36,12 +41,12 @@ const About = React.memo(({ initialAboutData = {} }) => {
       {/* Start Extended About Area  */}
       <div className="container mb--40">
         <p className="mb--40">
-          Welcome to the Bulgarian Society Netherlands (BGSNL)! 🇧🇬 Your home
-          away from home. We know the unique challenges that Bulgarian students
-          face when studying abroad, and we’re here to support you every step of
-          the way. From exploring career opportunities to fostering a strong
+          Welcome to the Bulgarian Society Netherlands (BGSNL), your home away
+          from home. We know the unique challenges that Bulgarian students face
+          when studying abroad, and we’re here to support you every step of the
+          way. From exploring career opportunities to fostering a strong
           community, we’re here to help you thrive and make the most of your
-          experience in the Netherlands. 🇳🇱
+          experience in the Netherlands.
         </p>
 
         <p className="mb--40">
@@ -55,17 +60,21 @@ const About = React.memo(({ initialAboutData = {} }) => {
       {/* End Extended About Area  */}
 
       {/* Start CounterUp Area */}
-      <div className="rn-counterup-area pt--40 p pb--40 bg_color--1">
+      <section className="rn-counterup-area about-summary">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="section-title text-center">
-                <CounterOne initialData={initialAboutData} />
-              </div>
-            </div>
+          <div className="about-summary__panel">
+            <header className="about-summary__intro">
+              <h2>Community at a glance</h2>
+              <p>
+                A growing network built by Bulgarians, for Bulgarians across
+                the Netherlands.
+              </p>
+            </header>
+
+            <CounterOne initialData={initialAboutData} />
           </div>
         </div>
-      </div>
+      </section>
       {/* End CounterUp Area */}
 
       {/* Start Speech Area */}
@@ -106,7 +115,7 @@ const About = React.memo(({ initialAboutData = {} }) => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
@@ -115,5 +124,10 @@ const About = React.memo(({ initialAboutData = {} }) => {
     </React.Fragment>
   );
 });
+
+About.displayName = "About";
+About.propTypes = {
+  initialAboutData: PropTypes.object,
+};
 
 export default About;

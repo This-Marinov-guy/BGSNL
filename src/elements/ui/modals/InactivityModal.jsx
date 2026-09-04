@@ -1,5 +1,6 @@
 import React from "react";
-import { Dialog } from "primereact/dialog";
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 import { useDispatch, useSelector } from "react-redux";
 import { removeModal, selectModal } from "../../../redux/modal";
 import { INACTIVITY_MODAL } from "../../../util/defines/common";
@@ -30,24 +31,31 @@ const InactivityModal = ({ timeRemaining }) => {
   return (
     <Dialog
       modal
+      header="Session expiring"
       visible={modal.includes(INACTIVITY_MODAL)}
       onHide={closeHandler}
-    >
-      <div className="center_section">
-        <h3>Your session is about to expire if you stay inactive</h3>
-        <p className="center_text">
-          You have {formatMsToTimer(timeRemaining)} seconds until you are
-          automatically signed out
-        </p>
+      footer={
         <button
           onClick={closeHandler}
-          className="rn-button-style--2 rn-btn-reverse-green mt--40"
+          className="rn-button-style--2 rn-btn-reverse-green"
         >
           Stay active
         </button>
+      }
+    >
+      <div className="center_section">
+        <p className="center_text">
+          Your session is about to expire if you stay inactive.{" "}
+          You have {formatMsToTimer(timeRemaining)} seconds until you are
+          automatically signed out
+        </p>
       </div>
     </Dialog>
   );
+};
+
+InactivityModal.propTypes = {
+  timeRemaining: PropTypes.number.isRequired,
 };
 
 export default InactivityModal;

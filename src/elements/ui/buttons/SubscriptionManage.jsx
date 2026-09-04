@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHttpClient } from '../../../hooks/common/http-hook'
-import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+import { ConfirmPopup, confirmPopup } from "@/compat/primereact";
 import { useDispatch } from 'react-redux';
 import { showNotification } from '../../../redux/notification';
 import CustomSpinner from '../loading/CustomSpinner';

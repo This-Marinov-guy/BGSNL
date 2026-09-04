@@ -9,23 +9,23 @@
   
   .rn-page-title {
     .title {
-      font-size: 48px;
-      font-weight: 700;
+
+
       color: #ffffff;
       margin-bottom: 15px;
       
       @media (max-width: 767px) {
-        font-size: 36px;
+
       }
     }
     
     p {
-      font-size: 20px;
+
       color: rgba(255, 255, 255, 0.9);
       margin: 0;
       
       @media (max-width: 767px) {
-        font-size: 18px;
+
       }
     }
   }
@@ -39,25 +39,25 @@
     margin-bottom: 60px;
     
     .title {
-      font-size: 36px;
-      font-weight: 700;
+
+
       color: var(--heading-color);
       margin-bottom: 15px;
       
       @media (max-width: 767px) {
-        font-size: 28px;
+
       }
     }
     
     .description {
-      font-size: 18px;
+
       color: var(--body-color);
       line-height: 1.6;
       max-width: 800px;
       margin: 0 auto;
       
       @media (max-width: 767px) {
-        font-size: 16px;
+
       }
     }
   }
@@ -65,7 +65,7 @@
 
 /* Stats Cards */
 .stat-card {
-  background: var(--color-white);
+  background: #fff;
   border-radius: 16px;
   padding: 30px 25px;
   text-align: center;
@@ -90,30 +90,34 @@
     margin: 0 auto 20px;
     
     svg {
-      font-size: 32px;
+
       color: #ffffff;
     }
   }
   
   .stat-content {
     h4 {
-      font-size: 32px;
-      font-weight: 700;
+
+
       color: var(--heading-color);
       margin-bottom: 8px;
     }
     
     p {
-      font-size: 16px;
+
       color: var(--body-color);
       margin: 0;
-      font-weight: 500;
+
     }
   }
 }
 
 /* Internships filters and search */
 .internships-filters {
+  .internships-search-form {
+    width: min(100%, 400px);
+  }
+
   .internships-type-filter {
     .filter-label {
       @media (max-width: 575px) {
@@ -169,6 +173,7 @@
   height: 100%;
   display: flex !important;
   flex-direction: column;
+  background: #fff;
 }
 
 /* Preview Section */
@@ -185,14 +190,14 @@
     margin-bottom: 30px;
     
     h4 {
-      font-size: 28px;
-      font-weight: 700;
+
+
       color: var(--heading-color);
       margin-bottom: 15px;
     }
     
     p {
-      font-size: 18px;
+
       color: var(--body-color);
       line-height: 1.6;
       margin: 0;
@@ -217,8 +222,8 @@
         color: #ffffff;
         padding: 5px 15px;
         border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
+
+
         letter-spacing: 1px;
       }
     }
@@ -233,14 +238,14 @@
     
     .preview-info {
       h5 {
-        font-size: 22px;
-        font-weight: 600;
+
+
         color: var(--heading-color);
         margin-bottom: 15px;
       }
       
       p {
-        font-size: 16px;
+
         color: var(--body-color);
         line-height: 1.6;
         margin: 0;
@@ -260,8 +265,8 @@
   
   p {
     margin: 0;
-    font-size: 16px;
-    font-weight: 500;
+
+
     color: #856404;
   }
 }
@@ -282,7 +287,7 @@
         background: var(--color-white);
         border: 2px solid var(--border-color);
         color: var(--heading-color);
-        font-weight: 600;
+
         margin: 0 5px;
         border-radius: 8px;
         min-width: 45px;
@@ -310,7 +315,7 @@
       background: var(--color-white);
       border: 2px solid var(--border-color);
       color: var(--heading-color);
-      font-weight: 600;
+
       margin: 0 5px;
       border-radius: 8px;
       min-width: 45px;
@@ -336,20 +341,20 @@
   margin: 40px 0;
   
   .empty-icon {
-    font-size: 80px;
+
     color: var(--color-gray);
     margin-bottom: 30px;
   }
   
   h3 {
-    font-size: 28px;
-    font-weight: 600;
+
+
     color: var(--heading-color);
     margin-bottom: 15px;
   }
   
   p {
-    font-size: 18px;
+
     color: var(--body-color);
     line-height: 1.6;
   }
@@ -365,20 +370,20 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   
   .restriction-icon {
-    font-size: 80px;
+
     color: var(--color-gray);
     margin-bottom: 30px;
   }
   
   h3 {
-    font-size: 32px;
-    font-weight: 700;
+
+
     color: var(--heading-color);
     margin-bottom: 20px;
   }
   
   p {
-    font-size: 18px;
+
     color: var(--body-color);
     line-height: 1.6;
     margin-bottom: 40px;
@@ -392,8 +397,8 @@
     
     button {
       padding: 15px 30px !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
+
+
       border-radius: 10px !important;
       min-width: 180px;
     }
@@ -410,8 +415,8 @@
   margin-bottom: 40px;
   
   h4 {
-    font-size: 32px;
-    font-weight: 700;
+
+
     color: var(--heading-color);
     text-align: center;
     margin-bottom: 40px;
@@ -436,20 +441,20 @@
       }
       
       .benefit-icon {
-        font-size: 48px;
+
         margin-bottom: 20px;
         display: block;
       }
       
       h5 {
-        font-size: 20px;
-        font-weight: 600;
+
+
         color: var(--heading-color);
         margin-bottom: 15px;
       }
       
       p {
-        font-size: 16px;
+
         color: var(--body-color);
         line-height: 1.6;
         margin: 0;
@@ -467,14 +472,14 @@
   border: 1px solid rgba(1, 115, 99, 0.1);
   
   h4 {
-    font-size: 28px;
-    font-weight: 600;
+
+
     color: var(--heading-color);
     margin-bottom: 15px;
   }
   
   p {
-    font-size: 18px;
+
     color: var(--body-color);
     line-height: 1.6;
     margin-bottom: 30px;
@@ -491,8 +496,8 @@
     
     button {
       padding: 15px 30px !important;
-      font-size: 16px !important;
-      font-weight: 600 !important;
+
+
       border-radius: 10px !important;
       min-width: 200px;
     }
@@ -513,12 +518,12 @@
       height: 70px;
       
       svg {
-        font-size: 28px;
+
       }
     }
     
     .stat-content h4 {
-      font-size: 28px;
+
     }
   }
 }
@@ -538,17 +543,17 @@
       margin-bottom: 15px;
       
       svg {
-        font-size: 24px;
+
       }
     }
     
     .stat-content {
       h4 {
-        font-size: 24px;
+
       }
       
       p {
-        font-size: 14px;
+
       }
     }
   }
@@ -557,16 +562,16 @@
     padding: 40px 20px;
     
     .restriction-icon {
-      font-size: 60px;
+
       margin-bottom: 20px;
     }
     
     h3 {
-      font-size: 24px;
+
     }
     
     p {
-      font-size: 16px;
+
     }
     
     .restriction-actions {
@@ -585,11 +590,11 @@
     
     .preview-header {
       h4 {
-        font-size: 24px;
+
       }
       
       p {
-        font-size: 16px;
+
       }
     }
     
@@ -598,11 +603,11 @@
       
       .preview-info {
         h5 {
-          font-size: 20px;
+
         }
         
         p {
-          font-size: 14px;
+
         }
       }
     }
@@ -612,7 +617,7 @@
     padding: 30px 20px;
     
     h4 {
-      font-size: 24px;
+
       margin-bottom: 30px;
     }
     
@@ -624,17 +629,17 @@
         padding: 15px;
         
         .benefit-icon {
-          font-size: 40px;
+
           margin-bottom: 15px;
         }
         
         h5 {
-          font-size: 18px;
+
           margin-bottom: 10px;
         }
         
         p {
-          font-size: 14px;
+
         }
       }
     }
@@ -644,11 +649,11 @@
     padding: 30px 20px;
     
     h4 {
-      font-size: 24px;
+
     }
     
     p {
-      font-size: 16px;
+
     }
     
     .cta-actions {

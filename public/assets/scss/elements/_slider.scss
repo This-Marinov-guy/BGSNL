@@ -43,8 +43,9 @@ Slider Default Style
     }
     h1 {
       &.title {
+        // The homepage hero is the sole component-level weight exception.
         font-size: 70px;
-        font-weight: 700;
+        font-weight: $type-weight-bold;
         text-transform: uppercase;
         font-family: $title-font;
         line-height: 90px;
@@ -188,14 +189,13 @@ Slider Default Style
         &.title {
           color: #ffffff;
           font-size: 3em;
-          font-weight: 600;
 
           @media #{$lg-layout} {
             font-size: 2.7em;
           }
 
           @media #{$md-layout} {
-            font-size: 2, 3em;
+            font-size: 2.3em;
             margin-bottom: 18px;
           }
           @media #{$sm-layout} {
@@ -212,7 +212,7 @@ Slider Default Style
           line-height: 40px;
           margin: 0;
           padding: 0 16%;
-          font-weight: 300;
+
           @media #{$sm-layout} {
             padding: 0;
           }
@@ -290,7 +290,6 @@ Slider Default Style
         &.title {
           color: #1f1f25;
           font-size: 75px;
-          font-weight: 900;
           font-family: "Montserrat", sans-serif;
           line-height: 90px;
           text-transform: inherit;
@@ -701,6 +700,64 @@ Slider Default Button And Dot STyle
 
 .slider-activation {
   position: relative;
+  .hero-event-line {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    min-height: 46px;
+    padding: 10px 24px;
+    background: rgba($body-color, 0.92);
+    color: #fff;
+    text-align: center;
+  }
+  .hero-event-line__viewport {
+    min-height: 26px;
+    perspective: 560px;
+  }
+  .hero-event-line__copy {
+    margin: 0;
+    color: inherit;
+
+    line-height: 26px;
+    transform-origin: center;
+
+    a {
+      color: inherit;
+
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+      transition: text-decoration-thickness 0.2s ease;
+
+      &:hover {
+        color: inherit;
+        text-decoration-thickness: 2px;
+      }
+
+      &:focus-visible {
+        color: inherit;
+        outline: 2px solid #fff;
+        outline-offset: 3px;
+      }
+    }
+  }
+
+  @media #{$sm-layout} {
+    .hero-event-line {
+      min-height: 58px;
+      padding: 8px 18px;
+    }
+    .hero-event-line__viewport {
+      min-height: 42px;
+    }
+    .hero-event-line__copy {
+
+      line-height: 21px;
+    }
+  }
+
   .slick-dots {
     bottom: 60px;
     @media #{$sm-layout} {

@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import { ErrorMessage } from "formik";
 import PlusButton from "../../ui/buttons/PlusButton";
 import XButton from "../../ui/buttons/XButton";
@@ -73,14 +76,13 @@ const AddOnsBuilder = (props) => {
             <div className="rn-form-group">
               <label
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "500",
                   marginBottom: "5px",
                 }}
               >
                 Main Title <span style={{ color: "#dc3545" }}>*</span>
               </label>
               <input
+                name="addOns.title"
                 type="text"
                 placeholder="e.g., Extra Options"
                 onChange={(e) => handleValueChange("title", e.target.value)}
@@ -99,8 +101,6 @@ const AddOnsBuilder = (props) => {
             <div className="rn-form-group">
               <label
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "500",
                   marginBottom: "5px",
                   color: "#6c757d",
                 }}
@@ -121,8 +121,6 @@ const AddOnsBuilder = (props) => {
             <div className="rn-form-group">
               <label
                 style={{
-                  fontSize: "14px",
-                  fontWeight: "500",
                   marginBottom: "5px",
                   color: "#6c757d",
                 }}
@@ -154,7 +152,10 @@ const AddOnsBuilder = (props) => {
         <h5 className="mt--20 mb--20" style={{ color: "#6c757d" }}>
           Add-On Items
         </h5>
-        <div className="row mt--10 mb--10">
+        <div
+          className="row mt--10 mb--10"
+          data-field-name="addOns.items"
+        >
           {input.items.map((item, itemIndex) => (
             <div
               className="col-lg-4 col-md-6 col-12 mb--30"
@@ -173,14 +174,13 @@ const AddOnsBuilder = (props) => {
               <div className="rn-form-group">
                 <label
                   style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
                     marginBottom: "5px",
                   }}
                 >
                   Title <span style={{ color: "#dc3545" }}>*</span>
                 </label>
                 <input
+                  name={`addOns.items[${itemIndex}].title`}
                   type="text"
                   placeholder="e.g., Extra Drink"
                   value={item.title}
@@ -198,8 +198,6 @@ const AddOnsBuilder = (props) => {
               <div className="rn-form-group">
                 <label
                   style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
                     marginBottom: "5px",
                     color: "#6c757d",
                   }}
@@ -207,6 +205,7 @@ const AddOnsBuilder = (props) => {
                   Description
                 </label>
                 <input
+                  name={`addOns.items[${itemIndex}].description`}
                   type="text"
                   placeholder="e.g., One additional beverage"
                   value={item.description}
@@ -224,8 +223,6 @@ const AddOnsBuilder = (props) => {
               <div className="rn-form-group">
                 <label
                   style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
                     marginBottom: "5px",
                     color: "#6c757d",
                   }}
@@ -233,6 +230,7 @@ const AddOnsBuilder = (props) => {
                   Price (€)
                 </label>
                 <input
+                  name={`addOns.items[${itemIndex}].price`}
                   type="number"
                   placeholder="e.g., 5.00"
                   value={item.price || ""}

@@ -1,55 +1,62 @@
 import React from "react";
+import PropTypes from "prop-types";
+import TicketMotionIcon from "@/elements/ui/icons/TicketMotionIcon";
 import { Link, useLocation } from "@/util/navigation";
-import ImageFb from "../ui/media/ImageFb";
 
-const MembershipBanner = ({ border = 2 }) => {
+const formatSaving = (saving) =>
+  new globalThis.Intl.NumberFormat("en-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: Number.isInteger(saving) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(saving);
+
+const MembershipBanner = ({ border = 2, saving = null }) => {
   const location = useLocation();
   const routePath = location.pathname;
+  const hasSaving = Number.isFinite(saving) && saving > 0;
 
   return (
     <div
       className={`team_member_border_${border} center_section`}
       style={{ margin: "40px auto" }}
     >
-      <div className="membership-banner-icon-wrapper">
-        <svg
-          className="membership-banner-icon-bg"
-          width="120"
-          height="120"
-          viewBox="0 0 120 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M60 5C85.5 5 110 25.5 110 60C110 94.5 85.5 105 60 105C34.5 105 10 94.5 10 60C10 25.5 34.5 5 60 5Z"
-            fill="#ECF5FC"
-          />
-        </svg>
-        <ImageFb
-          className="membership-banner-icon-image"
-          style={{ width: 100, height: 100 }}
-          src={"/assets/images/svg/3d/achievement-3d.png"}
-          fallback={"/assets/images/svg/information/achievement-3d.png"}
-          alt="Calendar"
-        />
-      </div>
-      <p className="information center_text">
-        You do not want to miss a discount, fill the info manually or miss a
-        ticket for your collection - become a member to enjoy these benefits!
-      </p>
-      <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
-        <Link
-          className="rn-button-style--2 rn-btn-reverse-green center_text"
-          onClick={() => sessionStorage.setItem("prevUrl", routePath)}
-          to="/signup"
-        >
-          <span className="">Become a Member</span>
-        </Link>
+      <div className="membership-banner-copy">
+        <div className="membership-banner-heading">
+          <div className="membership-banner-icon-wrapper" aria-hidden="true">
+            <TicketMotionIcon className="membership-banner-motion-icon" />
+          </div>
+          <strong className="membership-banner-title ">
+            {hasSaving
+              ? `Save ${formatSaving(saving)} by becoming a member`
+              : "Keep your ticket as a member"}
+          </strong>
+        </div>
+        <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+          <Link
+            className="rn-button-style--2 rn-btn-reverse-green center_text type-caption"
+            onClick={() => sessionStorage.setItem("prevUrl", routePath)}
+            to="/signup"
+          >
+            <span className="">Become a Member</span>
+          </Link>
+        </div>
+        <p className="information type-caption">
+          With your membership you also receive
+        </p>
+        <ul className="membership-banner-benefits type-caption">
+          <li>exclusive access to events and merchandise</li>
+          <li>internship opportunities</li>
+          <li>ticket collection that lasts</li>
+        </ul>
       </div>
     </div>
   );
+};
+
+MembershipBanner.propTypes = {
+  border: PropTypes.number,
+  saving: PropTypes.number,
 };
 
 export default MembershipBanner;

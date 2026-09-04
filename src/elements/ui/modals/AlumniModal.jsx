@@ -1,99 +1,53 @@
-import React, { useState } from "react";
-import { FiX } from "react-icons/fi";
+import { useState } from "react";
 import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 import AlumniTypeModal from "./AlumniTypeModal";
 
 const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
-  if (!isOpen) return null;
+  const actions = (
+    <>
+      <button
+        onClick={onJoinNow}
+        className="alumni-button"
+        style={{ margin: 0 }}
+        type="button"
+      >
+        <span className="alumni-icon">🎓</span>
+        Join Now
+      </button>
+      <a
+        href="/welcome-to-alumni"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClose}
+        className="rn-button-style--2 rn-btn-reverse"
+      >
+        Learn More
+      </a>
+    </>
+  );
 
   return (
-    <div
-      className="modal-overlay"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 10000,
-        padding: "20px",
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
+    <Dialog
+      header="Join Our Alumni Program"
+      visible={isOpen}
+      onHide={onClose}
+      footer={actions}
+      style={{ width: "600px" }}
+      dismissableMask
     >
       <div
         className="alumni-modal"
         style={{
-          backgroundColor: "white",
-          borderRadius: "12px",
-          padding: "30px",
-          maxWidth: "600px",
           width: "100%",
-          maxHeight: "80vh",
-          overflow: "auto",
-          position: "relative",
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
           scrollbarWidth: "none", // Firefox
           msOverflowStyle: "none", // IE and Edge
         }}
       >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "15px",
-            right: "15px",
-            background: "none",
-            border: "none",
-            fontSize: "24px",
-            cursor: "pointer",
-            color: "#666",
-            padding: "5px",
-            borderRadius: "50%",
-            width: "35px",
-            height: "35px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#f5f5f5";
-            e.target.style.color = "#333";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "transparent";
-            e.target.style.color = "#666";
-          }}
-        >
-          <FiX />
-        </button>
-
-        {/* Modal Content */}
         <div style={{ textAlign: "center", marginBottom: "25px" }}>
-          {/* <div style={{ fontSize: "48px", marginBottom: "15px" }}>🎓</div> */}
-          <h2
-            style={{
-              color: "#017363",
-              marginBottom: "10px",
-              fontSize: "28px",
-              fontWeight: "bold",
-            }}
-          >
-            Join Our Alumni Program
-          </h2>
           <p
             style={{
               color: "#666",
-              fontSize: "16px",
               marginBottom: "0",
             }}
           >
@@ -126,8 +80,6 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
             style={{
               color: "#017363",
               marginBottom: "15px",
-              fontSize: "20px",
-              fontWeight: "600",
             }}
           >
             Alumni Benefits
@@ -144,14 +96,12 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                 marginBottom: "10px",
                 display: "flex",
                 alignItems: "center",
-                fontSize: "15px",
               }}
             >
               <span
                 style={{
                   color: "#017363",
                   marginRight: "10px",
-                  fontSize: "18px",
                 }}
               >
                 ✓
@@ -163,14 +113,12 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                 marginBottom: "10px",
                 display: "flex",
                 alignItems: "center",
-                fontSize: "15px",
               }}
             >
               <span
                 style={{
                   color: "#017363",
                   marginRight: "10px",
-                  fontSize: "18px",
                 }}
               >
                 ✓
@@ -182,14 +130,12 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                 marginBottom: "10px",
                 display: "flex",
                 alignItems: "center",
-                fontSize: "15px",
               }}
             >
               <span
                 style={{
                   color: "#017363",
                   marginRight: "10px",
-                  fontSize: "18px",
                 }}
               >
                 ✓
@@ -201,14 +147,12 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                 marginBottom: "10px",
                 display: "flex",
                 alignItems: "center",
-                fontSize: "15px",
               }}
             >
               <span
                 style={{
                   color: "#017363",
                   marginRight: "10px",
-                  fontSize: "18px",
                 }}
               >
                 ✓
@@ -220,14 +164,12 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                 marginBottom: "10px",
                 display: "flex",
                 alignItems: "center",
-                fontSize: "15px",
               }}
             >
               <span
                 style={{
                   color: "#017363",
                   marginRight: "10px",
-                  fontSize: "18px",
                 }}
               >
                 ✓
@@ -239,63 +181,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
 
         {/* Modal content ends here */}
       </div>
-
-      {/* Fixed Footer */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "rgba(255, 255, 255, 0.95)",
-          borderTop: "1px solid #e9ecef",
-          padding: "15px 20px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "15px",
-          zIndex: 10001,
-          boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.1)",
-          flexWrap: "wrap",
-        }}
-      >
-        <button
-          onClick={onJoinNow}
-          className="alumni-button"
-          style={{ margin: 0 }}
-        >
-          <span className="alumni-icon">🎓</span>
-          Join Now
-        </button>
-        <a
-          href="/welcome-to-alumni"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onClose}
-          style={{
-            backgroundColor: "transparent",
-            color: "#666",
-            border: "2px solid #ddd",
-            borderRadius: "8px",
-            padding: "12px 24px",
-            fontSize: "16px",
-            fontWeight: "500",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#f5f5f5";
-            e.target.style.borderColor = "#999";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "transparent";
-            e.target.style.borderColor = "#ddd";
-          }}
-        >
-          Learn More
-        </a>
-      </div>
-    </div>
+    </Dialog>
   );
 };
 

@@ -1,68 +1,126 @@
 "use client";
 
-import React, { Fragment, useEffect, useState } from "react";
+import {
+  Fragment,
+  useEffect,
+  useState,
+} from "react";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useHttpClient } from "../../hooks/common/http-hook";
+import { InputNumber } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiChevronUp,
+  IconlyArrowLeft,
+  IconlyArrowRight,
+  IconlyMinus,
+  IconlyPlus,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  useNavigate,
+  useParams,
+} from "@/util/navigation";
 import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
 import Footer from "../../component/footer/Footer";
-import ImageFb from "../../elements/ui/media/ImageFb";
-
-import Loader from "../../elements/ui/loading/Loader";
-import { InputNumber } from "primereact/inputnumber";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import FormExtras from "../../elements/ui/forms/FormExtras";
-import { useNavigate, useParams, Link } from "@/util/navigation";
-import MembershipBanner from "../../elements/banners/MembershipBanner";
-import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import { isObjectEmpty } from "../../util/functions/helpers";
-import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
-import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
-import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
+import HeaderTwo from "../../component/header/HeaderTwo";
+import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
+import CardInputs from "../../elements/inputs/common/CardInputs";
+import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
+import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
+import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
-import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusiveEvents";
-import { showNotification } from "../../redux/notification";
-import { INCORRECT_MISSING_DATA } from "../../util/defines/common";
-import { error } from "jquery";
+import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
+import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
+import FormExtras from "../../elements/ui/forms/FormExtras";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import Loader from "../../elements/ui/loading/Loader";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { selectUser } from "../../redux/user";
 import {
   appendExtraInputsToForm,
   buildSchemaExtraInputs,
   constructInitialExtraFormValues,
 } from "../../util/functions/input-helpers";
-import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
-import PhoneInput from "../../elements/inputs/common/PhoneInput";
-import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
-import CardInputs from "../../elements/inputs/common/CardInputs";
-import { selectUser } from "../../redux/user";
-import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 
 const defaultSchema = yup.object().shape({
-  name: yup.string().required(),
-  surname: yup.string().required(),
-  phone: yup.string().required(),
-  email: yup.string().email("Please enter a valid email").required(),
+  name: yup.string().required("Name is required"),
+  surname: yup.string().required("Surname is required"),
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .min(8, "Please enter a valid phone number")
+    .max(40, "Please enter a valid phone number"),
+  email: yup
+    .string()
+    .email("Please enter a valid email")
+    .required("Email is required"),
   policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
   payTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
+  quantity: yup
+    .number()
+    .typeError("Please enter a valid quantity")
+    .integer("Quantity must be a whole number")
+    .min(1, "Quantity must be at least 1")
+    .max(10, "Quantity cannot be greater than 10")
+    .required("Quantity is required"),
   addOns: yup.array(),
 });
+
+const buildGuestValidation = (event) => {
+  let validationSchema = defaultSchema;
+  let schemaFields = null;
+
+  if (event?.extraInputsForm) {
+    const extraValidation = buildSchemaExtraInputs(
+      event.extraInputsForm,
+      defaultSchema
+    );
+    validationSchema = extraValidation.schema;
+    schemaFields = extraValidation.schemaFields;
+  }
+
+  if (event?.addOns?.isMandatory) {
+    validationSchema = validationSchema.shape({
+      addOns: yup
+        .array()
+        .min(1, "Please choose an option")
+        .required("Please choose an option"),
+    });
+  }
+
+  return { schema: validationSchema, schemaFields };
+};
+
+const formatEuro = (value) =>
+  new globalThis.Intl.NumberFormat("en-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 
 // `initialEvent` is fetched on the server by the route. The guest flow needs
 // no authenticated user, so it renders fully server-side.
 const GuestPurchase = ({ initialEvent = null }) => {
-  const { loading, sendRequest, forceStartLoading } = useHttpClient();
+  const { sendRequest } = useHttpClient();
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [selectedEvent, setSelectedEvent] = useState(initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [schema, setSchema] = useState(null);
-  const [schemaFields, setSchemaFields] = useState(null);
+  const [{ schema, schemaFields }, setValidation] = useState(() =>
+    buildGuestValidation(initialEvent)
+  );
   const [currentUser, setCurrentUser] = useState({
     name: "",
     surname: "",
@@ -73,16 +131,9 @@ const GuestPurchase = ({ initialEvent = null }) => {
   const { region, eventId } = useParams();
 
   const user = useSelector(selectUser);
-
-  const dispatch = useDispatch();
+  const userIsLoggedIn = Boolean(user?.token);
 
   const navigate = useNavigate();
-
-  const handleErrorMsg = (errors) => {
-    if (!isObjectEmpty(errors)) {
-      dispatch(showNotification(INCORRECT_MISSING_DATA));
-    }
-  };
 
   useEffect(() => {
     setLoadingPage(true);
@@ -117,29 +168,9 @@ const GuestPurchase = ({ initialEvent = null }) => {
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
-        let finalSchema = defaultSchema;
-
-        if (responseData.event.hasOwnProperty("extraInputsForm")) {
-          const { schema, schemaFields } = buildSchemaExtraInputs(
-            responseData.event?.extraInputsForm ?? null,
-            defaultSchema
-          );
-          finalSchema = schema;
-          setSchemaFields(schemaFields);
-        }
-
-        // Add mandatory add-ons validation
-        if (responseData.event?.addOns?.isMandatory) {
-          finalSchema = finalSchema.shape({
-            addOns: yup
-              .array()
-              .min(1, "Please choose an option")
-              .required("Please choose an option"),
-          });
-        }
-
-        setSchema(finalSchema);
+        setValidation(buildGuestValidation(responseData.event));
       } catch (err) {
+        // The shared request hook presents the error state.
       } finally {
         setLoadingPage(false);
       }
@@ -167,7 +198,30 @@ const GuestPurchase = ({ initialEvent = null }) => {
   if (selectedEvent.memberOnly) {
     return <ExclusiveMemberEvent />;
   }
-  
+
+  const showMembershipOffer =
+    !userIsLoggedIn && selectedEvent?.product?.member?.price != null;
+  const guestPrice = Number(selectedEvent?.product?.guest?.price);
+  const memberPrice = selectedEvent.isMemberFree
+    ? 0
+    : Number(selectedEvent?.product?.member?.price);
+  const membershipSaving =
+    Number.isFinite(guestPrice) &&
+    Number.isFinite(memberPrice) &&
+    guestPrice > memberPrice
+      ? guestPrice - memberPrice
+      : null;
+  const membershipOfferTitle = membershipSaving
+    ? `Save ${formatEuro(membershipSaving)} and keep your ticket as a member`
+    : "Keep your ticket as a member";
+  const displayedTicketPrice = selectedEvent.isFree
+    ? "Free"
+    : selectedEvent.product?.guest?.price != null
+      ? `€${selectedEvent.product.guest.price}`
+      : "Price unavailable";
+  const checkoutActionLabel = selectedEvent.isFree
+    ? "Get ticket"
+    : "Proceed to payment";
 
   return (
     <Fragment>
@@ -185,124 +239,47 @@ const GuestPurchase = ({ initialEvent = null }) => {
         logoname="logo.png"
       />
 
-      <div className="container mt--140 mb--120">
-        <h2
-          className="center_text mb--60 mb_md--40 mb_sm--30"
-          style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)" }}
-        >
-          Purchase a Ticket
-        </h2>
-
-        {selectedEvent?.product?.member?.price && <MembershipBanner />}
-
+      <main className="purchase-page guest-purchase-container">
+        <MobilePurchaseSummary
+          key={selectedEvent.id}
+          event={selectedEvent}
+          price={displayedTicketPrice}
+        />
+        <div className="container purchase-page-container">
         <div
-          className="row team_member_border_1 team_border_long_add_on"
-          style={{
-            padding: "clamp(10px, 4vw, 40px)",
-          }}
+          className="row team_member_border_1 team_border_long_add_on purchase-checkout-shell"
         >
-          <div className="col-12 mt--30 mb--40">
-            <div className="row g-4 align-items-center">
-              {/* Event Poster */}
-              <div className="col-12 col-md-4 col-lg-3">
-                <div className="d-flex justify-content-center">
-                  <ImageFb
-                    src={`${selectedEvent.poster}`}
-                    alt="Event"
-                    className="title_img"
-                    style={{
-                      maxWidth: "100%",
-                      height: "auto",
-                      maxHeight: "250px",
-                      objectFit: "contain",
-                      borderRadius: "8px",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    }}
-                  />
-                </div>
+          <div className="col-12 purchase-checkout-content">
+            <div className="purchase-event-sidebar">
+              <PurchaseEventSummary
+                event={selectedEvent}
+                factsInsideOverview={!showMembershipOffer}
+                price={displayedTicketPrice}
+                priceBadge={<DynamicTicketBadge product={selectedEvent?.product} />}
+                showMemberPriceComparison={!userIsLoggedIn}
+                usesMemberPrice={false}
+              />
+              <div className="purchase-sponsor">
+                <SponsoredBySmall />
               </div>
-
-              {/* Event Details */}
-              <div className="col-12 col-md-8 col-lg-9">
-                <h2
-                  className="mb--30 text-center text-md-start"
-                  style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)" }}
-                >
-                  Event Details
-                </h2>
-                <div className="information-container">
-                  <div className="row g-3 mb-3">
-                    <div className="col-12 col-sm-6 col-md-3">
-                      <div className="detail-item text-center">
-                        <strong
-                          className="d-block mb-1"
-                          style={{ color: "#017363" }}
-                        >
-                          Name:
-                        </strong>
-                        <span>{selectedEvent.title}</span>
-                      </div>
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-3">
-                      <div className="detail-item text-center">
-                        <strong
-                          className="d-block mb-1"
-                          style={{ color: "#017363" }}
-                        >
-                          Date:
-                        </strong>
-                        <span>
-                          {selectedEvent.correctedDate
-                            ? formatCorrectedDateTime(
-                                selectedEvent.correctedDate
-                              ) + " Updated!"
-                            : moment(selectedEvent.date).format(
-                                MOMENT_DATE_TIME
-                              )}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-3">
-                      <div className="detail-item text-center">
-                        <strong
-                          className="d-block mb-1"
-                          style={{ color: "#017363" }}
-                        >
-                          Address:
-                        </strong>
-                        <span style={{ wordBreak: "break-word" }}>
-                          {selectedEvent.location}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-3">
-                      <div className="detail-item text-center">
-                        <strong
-                          className="d-block mb-1"
-                          style={{ color: "#017363" }}
-                        >
-                          Price:
-                        </strong>
-                        <div className="d-flex align-items-center justify-content-center flex-wrap gap-2">
-                          <span>
-                            {selectedEvent.isFree
-                              ? "FREE"
-                              : selectedEvent.product?.guest.price + " euro"}
-                          </span>
-                          <DynamicTicketBadge
-                            product={selectedEvent?.product}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <SponsoredBySmall />
             </div>
 
             <div className="col-12">
-              <Formik
+              {showMembershipOffer && (
+                <div className="purchase-membership-banner purchase-form-membership-banner">
+                  <MembershipOfferBanner
+                    title={membershipOfferTitle}
+                    onAction={() => {
+                      sessionStorage.setItem(
+                        "prevUrl",
+                        `/${region}/purchase-ticket/${eventId}`
+                      );
+                    }}
+                  />
+                </div>
+              )}
+
+              <ValidatedFormik
                 enableReinitialize
                 validationSchema={schema}
                 onSubmit={async (values) => {
@@ -312,21 +289,32 @@ const GuestPurchase = ({ initialEvent = null }) => {
                     const data = {
                       eventId: selectedEvent.id,
                       code: new Date().valueOf(),
-                      quantity,
+                      quantity: values.quantity,
                     };
 
                     const formData = new FormData();
-                    formData.append("quantity", quantity);
+                    formData.append("quantity", values.quantity);
                     formData.append("origin_url", window.location.origin);
                     formData.append("method", "buy_guest_ticket");
                     formData.append("eventId", selectedEvent.id);
+                    const marketingRegion = selectedEvent.region ?? region;
+                    if (marketingRegion) {
+                      formData.append("region", marketingRegion);
+                    }
                     formData.append("code", data.code);
                     formData.append("guestEmail", values.email);
                     formData.append("guestName", values.name + " " + values.surname);
                     formData.append("guestPhone", values.phone);
+                    formData.append("policyTerms", values.policyTerms);
+                    formData.append("payTerms", values.payTerms);
 
                     if (selectedEvent?.extraInputsForm) {
-                      appendExtraInputsToForm(formData, schemaFields, values);
+                      appendExtraInputsToForm(
+                        formData,
+                        schemaFields,
+                        values,
+                        selectedEvent.extraInputsForm
+                      );
                     }
 
                     if (selectedEvent?.addOns?.isEnabled && values.addOns?.length > 0) {
@@ -362,31 +350,39 @@ const GuestPurchase = ({ initialEvent = null }) => {
                   phone: currentUser?.phone || "",
                   policyTerms: false,
                   payTerms: false,
+                  quantity: 1,
                   ...constructInitialExtraFormValues(
                     selectedEvent?.extraInputsForm ?? null
                   ),
                   addOns: [],
                 }}
               >
-                {({ values, setFieldValue, errors }) => (
+                {({ values, setFieldValue }) => (
                   <Form
                     id="form"
                     encType="multipart/form-data"
-                    className="row g-4"
+                    className={`row g-4 purchase-form${
+                      showMembershipOffer ? " has-membership-banner" : ""
+                    }`}
                   >
                     <div className="col-12">
-                      <h3
-                        className="mb--30 text-center text-md-start"
-                        style={{ fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)" }}
-                      >
-                        Fill your details and buy a ticket
-                      </h3>
+                      <div className="purchase-form-heading">
+                        <h1 className="type-heading-md">Complete your booking</h1>
+                        <p className="">
+                          Review the event and enter the details needed for your
+                          ticket.
+                        </p>
+                      </div>
                     </div>
                     <div className="col-12">
                       <div className="row g-3">
-                        <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rn-form-group">
-                            <Field type="text" placeholder="Name" name="name" />
+                        <div className="col-12 col-md-6">
+                          <div className="rn-form-group" data-field-name="name">
+                            <Field
+                              type="text"
+                              placeholder="Name"
+                              name="name"
+                            />
                             <ErrorMessage
                               className="error"
                               name="name"
@@ -394,8 +390,8 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-                        <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rn-form-group">
+                        <div className="col-12 col-md-6">
+                          <div className="rn-form-group" data-field-name="surname">
                             <Field
                               type="text"
                               placeholder="Surname"
@@ -408,16 +404,16 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-                        <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rn-form-group">
+                        <div className="col-12 col-md-6">
+                          <div className="rn-form-group" data-field-name="email">
                             <Field
                               type="email"
                               placeholder="Email"
                               name="email"
                             />
                             <p className="information">
-                              Please enter an email you have access to as the
-                              ticket will be send through it
+                              Use an email address you can access. We will send
+                              your ticket there.
                             </p>
                             <ErrorMessage
                               className="error"
@@ -426,18 +422,21 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-                        <div className="col-lg-12 col-md-12 col-12">
-                          <div className="rn-form-group phone-input-container">
+                        <div className="col-12 col-md-6">
+                          <div
+                            className="rn-form-group phone-input-container"
+                            data-field-name="phone"
+                          >
                             <PhoneInput
-                              key={values.phone || "phone-empty"}
+                              name="phone"
                               initialValue={values.phone || ""}
                               onChange={(value) =>
                                 setFieldValue("phone", value)
                               }
                             />{" "}
                             <p className="information">
-                              Please enter your real number as it might be used
-                              to prove your identity on the entry
+                              Use a valid number in case the organiser needs to
+                              confirm your identity at entry.
                             </p>
                             <ErrorMessage
                               className="error"
@@ -455,12 +454,9 @@ const GuestPurchase = ({ initialEvent = null }) => {
 
                     {selectedEvent?.addOns?.isEnabled &&
                       selectedEvent.addOns?.items?.length > 0 && (
-                        <div className="col-lg-12">
+                        <div className="col-lg-12" data-field-name="addOns">
                           <h3
-                            className="text-center mb--20"
-                            style={{
-                              fontSize: "clamp(1.125rem, 2.5vw, 1.75rem)",
-                            }}
+                            className="text-center mb--20 type-subheading"
                           >
                             {selectedEvent.addOns.title}
                             {selectedEvent.addOns?.isMandatory && (
@@ -468,11 +464,11 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             )}
                           </h3>
                           <p
-                            className="text-center mb--30"
-                            style={{ fontSize: "0.875rem", color: "#666" }}
+                            className="text-center mb--30 "
+                            style={{ color: "#666" }}
                           >
                             {selectedEvent.addOns?.isMandatory && (
-                              <span style={{ color: "#dc3545", fontWeight: "600" }}>
+                              <span style={{ color: "#dc3545" }}>
                                 *Required - {" "}
                               </span>
                             )}
@@ -494,23 +490,28 @@ const GuestPurchase = ({ initialEvent = null }) => {
                         </div>
                       )}
 
-                    <div className="col-lg-12 col-md-12 col-12">
-                      <div className="hor_section_nospace mt--40">
+                    <div
+                      className="col-lg-12 col-md-12 col-12 purchase-consent-field"
+                      data-field-name="policyTerms"
+                    >
+                      <div className="hor_section_nospace">
                         <Field
+                          id="policyTerms"
                           style={{ maxWidth: "30px", margin: "10px" }}
                           type="checkbox"
                           name="policyTerms"
                         ></Field>
-                        <p className="information">
+                        <label className="information" htmlFor="policyTerms">
                           I have read and accept the&nbsp;
                           <a
                             style={{ color: "#017363" }}
                             href={"/terms-and-legals"}
                             target="_blank"
+                            rel="noreferrer"
                           >
-                            society's policy
+                            society&apos;s policy
                           </a>
-                        </p>
+                        </label>
                       </div>
                       <ErrorMessage
                         className="error"
@@ -519,17 +520,21 @@ const GuestPurchase = ({ initialEvent = null }) => {
                       />
                     </div>
 
-                    <div className="col-lg-12 col-md-12 col-12">
-                      <div className="hor_section_nospace mt--40">
+                    <div
+                      className="col-lg-12 col-md-12 col-12 purchase-consent-field"
+                      data-field-name="payTerms"
+                    >
+                      <div className="hor_section_nospace">
                         <Field
+                          id="payTerms"
                           style={{ maxWidth: "30px", margin: "10px" }}
                           type="checkbox"
                           name="payTerms"
                         ></Field>
-                        <p className="information">
+                        <label className="information" htmlFor="payTerms">
                           I agree to share the provided information with the
                           organization in case they need to prove my identity
-                        </p>
+                        </label>
                       </div>
                       <ErrorMessage
                         className="error"
@@ -539,90 +544,85 @@ const GuestPurchase = ({ initialEvent = null }) => {
                     </div>
                     <div className="col-12">
                       <div
-                        className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 p-3"
-                        style={{
-                          background: "#f9f9f9",
-                          borderRadius: "8px",
-                        }}
+                        className="purchase-quantity"
+                        data-field-name="quantity"
                       >
-                        <h3
-                          className="mb--0"
-                          style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)" }}
-                        >
-                          Quantity:
-                        </h3>
+                        <h3>Quantity</h3>
                         <InputNumber
-                          value={quantity}
-                          onValueChange={(e) => setQuantity(e.value)}
+                          name="quantity"
+                          value={values.quantity}
+                          onValueChange={(e) =>
+                            setFieldValue("quantity", e.value, false)
+                          }
                           showButtons
                           buttonLayout="horizontal"
-                          style={{ width: "clamp(140px, 40vw, 160px)" }}
+                          className="purchase-quantity-input"
                           decrementButtonClassName="p-button-danger"
                           incrementButtonClassName="p-button-success"
+                          decrementButtonIcon={<IconlyMinus aria-hidden />}
+                          incrementButtonIcon={<IconlyPlus aria-hidden />}
                           min={1}
                           max={10}
+                        />
+                        <ErrorMessage
+                          className="error"
+                          name="quantity"
+                          component="div"
+                          data-validation-message-for="quantity"
                         />
                       </div>
                     </div>
 
                     <div className="col-12">
-                        <StickyButtonFooter>
-                        <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 mt--30 mb--50">
-                          <button
-                            onClick={() => handleErrorMsg(errors)}
-                            disabled={isLoading}
-                            type="submit"
-                            className="rn-button-style--2 rn-btn-reverse-green"
-                            style={{
-                              width: "100%",
-                              maxWidth: "300px",
-                              minWidth: "clamp(150px, 40vw, 200px)",
-                              padding:
-                                "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                            }}
-                          >
-                            {isLoading ? (
-                              <Loader />
-                            ) : (
-                              <span>Proceed to Payment</span>
-                            )}
-                          </button>
+                      <div className="purchase-actions">
+                        <button
+                          type="button"
+                          onClick={() => navigate(-1)}
+                          className="rn-button-style--2 rn-btn-reverse purchase-action-control "
+                        >
+                          <IconlyArrowLeft aria-hidden />
+                          <span>Back</span>
+                        </button>
 
-                          <button
-                            type="button"
-                            onClick={() => navigate(-1)}
-                            className="rn-button-style--2 rn-btn-reverse-red"
-                            style={{
-                              width: "100%",
-                              maxWidth: "300px",
-                              minWidth: "clamp(150px, 40vw, 200px)",
-                              padding:
-                                "clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px)",
-                            }}
-                          >
-                            <span>Back</span>
-                          </button>
-                        </div>
-                      </StickyButtonFooter>
+                        <button
+                          disabled={isLoading}
+                          type="submit"
+                          className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary "
+                        >
+                          {isLoading ? (
+                            <Loader />
+                          ) : (
+                            <>
+                              <span>{checkoutActionLabel}</span>
+                              <IconlyArrowRight aria-hidden />
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </Form>
                 )}
-              </Formik>
+              </ValidatedFormik>
             </div>
           </div>
         </div>
         {/* Start Back To Top */}
         <div className="backto-top">
           <ScrollToTop showUnder={160}>
-            <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+            <FiChevronUp size={26} />
           </ScrollToTop>
         </div>
-      </div>
+        </div>
+      </main>
       {/* End Back To Top */}
 
       <Footer />
     </Fragment>
   );
+};
+
+GuestPurchase.propTypes = {
+  initialEvent: PropTypes.object,
 };
 
 export default GuestPurchase;

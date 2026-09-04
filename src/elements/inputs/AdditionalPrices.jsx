@@ -1,10 +1,13 @@
-import React from "react";
-import { Field, ErrorMessage } from "formik";
-import { Calendar, CalendarWithClock } from "./common/Calendar";
-import { toCamelCase } from "../../util/functions/helpers";
+import {
+  ErrorMessage,
+  Field,
+} from "formik";
+import PropTypes from "prop-types";
+import { Tooltip } from "@/compat/primereact";
+import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
 import { END_TIMER } from "../../util/defines/enum";
-import { Tooltip } from "primereact/tooltip";
-import { FiInfo } from "react-icons/fi";
+import { toCamelCase } from "../../util/functions/helpers";
+import { CalendarWithClock } from "./common/Calendar";
 
 const AdditionalPrices = ({
   label,
@@ -19,60 +22,84 @@ const AdditionalPrices = ({
   }
 
   const prefix = toCamelCase(label);
-  
+  const timerName =
+    timerType === END_TIMER
+      ? `${prefix}.ticketTimer`
+      : `${prefix}.startTimer`;
+  const limitChoiceName = `${prefix}.at-least-one-limit`;
 
   return (
     <>
       <Tooltip target=".ticket-limit-info" />
-      <div className="row">
+      {withLimit && (
+        <div className="row">
+          <div className="col-lg-12 col-12">
+            <div className="hor_section_nospace mt--10">
+              <Field
+                style={{ maxWidth: "30px" }}
+                type="checkbox"
+                name={`${prefix}.excludeMembers`}
+              />
+              <p className="information">Exclude Member Tickets from count</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div
+        className="row"
+        {...(withLimit
+          ? {
+              "data-custom-validation-field": true,
+              "data-field-name": limitChoiceName,
+            }
+          : {})}
+      >
         {withLimit && (
-          <>
-            <div className="col-lg-12 col-12">
-              <div className="hor_section_nospace mt--10">
+          <div className="col-lg-6 col-12">
+            <div
+              className="rn-form-group"
+              data-custom-validation-field
+              data-field-name={`${prefix}.ticketLimit`}
+            >
+              <div style={{ position: "relative" }}>
                 <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name={`${prefix}.excludeMembers`}
-                />
-                <p className="information">Exclude Member Tickets from count</p>
-              </div>
-            </div>
-            <div className="col-lg-6 col-12">
-              <div className="rn-form-group">
-                <div style={{ position: "relative" }}>
-                  <Field
-                    type="number"
-                    placeholder="Ticket Limit"
-                    name={`${prefix}.ticketLimit`}
-                    min={1}
-                    step={1}
-                    style={{ paddingRight: "35px" }}
-                  />
-                  <FiInfo
-                    className="ticket-limit-info"
-                    data-pr-tooltip="The count to reach in order to start these prices (can exclude members from the count if the checkbox above is checked)"
-                    data-pr-position="top"
-                    style={{
-                      position: "absolute",
-                      right: "10px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      cursor: "help",
-                      color: "#666"
-                    }}
-                  />
-                </div>
-                <ErrorMessage
-                  className="error"
+                  type="number"
+                  placeholder="Ticket Limit"
                   name={`${prefix}.ticketLimit`}
-                  component="div"
+                  min={1}
+                  step={1}
+                  style={{ paddingRight: "35px" }}
+                />
+                <FiInfo
+                  className="ticket-limit-info"
+                  data-pr-tooltip="The count to reach in order to start these prices (can exclude members from the count if the checkbox above is checked)"
+                  data-pr-position="top"
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    cursor: "help",
+                    color: "#666",
+                  }}
                 />
               </div>
+              <ErrorMessage
+                className="error"
+                name={`${prefix}.ticketLimit`}
+                component="div"
+                data-validation-message-for={`${prefix}.ticketLimit`}
+              />
             </div>
-          </>
+          </div>
         )}
-        <div className="col-lg-6 col-12">
-          <div className="rn-form-group">
+        <div className={withLimit ? "col-lg-6 col-12" : "col-12"}>
+          <div
+            className="rn-form-group"
+            data-custom-validation-field
+            data-field-name={timerName}
+          >
             <CalendarWithClock
               mode="single"
               locale="en-nl"
@@ -82,46 +109,32 @@ const AdditionalPrices = ({
               captionLayout="dropdown"
               min={new Date()}
               initialValue={initialCalendarValue}
-              name={
-                timerType === END_TIMER
-                  ? `${prefix}.ticketTimer`
-                  : `${prefix}.startTimer`
-              }
+              name={timerName}
               onSelect={(value) => {
-                setFieldValue(
-                  timerType === END_TIMER
-                    ? `${prefix}.ticketTimer`
-                    : `${prefix}.startTimer`,
-                  value
-                );
+                setFieldValue(timerName, value);
               }}
             />
             {!withLimit && (
               <ErrorMessage
                 className="error"
-                name={
-                  timerType === END_TIMER
-                    ? `${prefix}.ticketTimer`
-                    : `${prefix}.startTimer`
-                }
+                name={timerName}
                 component="div"
+                data-validation-message-for={timerName}
               />
             )}
           </div>
         </div>
-      </div>
-
-      {withLimit && (
-        <div className="row">
+        {withLimit && (
           <div className="col-12">
             <ErrorMessage
               className="error center_text"
-              name={`${prefix}.at-least-one-limit`}
+              name={limitChoiceName}
               component="div"
+              data-validation-message-for={limitChoiceName}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="row">
         <div className="col-lg-6 col-12">
@@ -159,6 +172,18 @@ const AdditionalPrices = ({
       </div>
     </>
   );
+};
+
+AdditionalPrices.propTypes = {
+  initialCalendarValue: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.string,
+  ]),
+  label: PropTypes.string.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
+  timerType: PropTypes.number,
+  visible: PropTypes.bool,
+  withLimit: PropTypes.bool,
 };
 
 export default AdditionalPrices;

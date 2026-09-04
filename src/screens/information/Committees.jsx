@@ -1,17 +1,16 @@
 "use client";
 
 import React from "react";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import PageHelmet from "../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../component/header/Header";
-import Footer from "../../component/footer/Footer";
-import WindowShift from "../../elements/ui/functional/WindowShift";
-import TeamTwo from "../../elements/TeamTwo";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import { useParams } from "@/util/navigation";
+import PageHelmet from "../../component/common/Helmet";
+import Footer from "../../component/footer/Footer";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
+import TeamTwo from "../../elements/TeamTwo";
+import WindowShift from "../../elements/ui/functional/WindowShift";
 import { REGION_COMMITTEE_MEMBERS } from "../../util/defines/REGIONS_STRUCTURE";
-
 
 const Committees = React.memo(() => {
 
@@ -58,7 +57,7 @@ const Committees = React.memo(() => {
   //     {/* Start Back To Top */}
   //     <div className="backto-top">
   //       <ScrollToTop showUnder={160}>
-  //         <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+  //         <FiChevronUp size={26} />
   //       </ScrollToTop>
   //     </div>
   //     {/* End Back To Top */}

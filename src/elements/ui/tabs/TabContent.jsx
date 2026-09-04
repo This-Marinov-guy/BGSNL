@@ -1,12 +1,18 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { NEWS, TICKETS, INTERNSHIPS, SETTINGS, PROFILE, PROMOTIONS } from "../../../util/defines/enum";
-import NewsTab from "./NewsTab";
-import TicketsTab from "./TicketsTab";
+import {
+  INTERNSHIPS,
+  NEWS,
+  PROFILE,
+  PROMOTIONS,
+  SETTINGS,
+  TICKETS,
+} from "../../../util/defines/enum";
 import InternshipsTab from "./InternshipsTab";
-import SettingsTab from "./SettingsTab";
+import NewsTab from "./NewsTab";
 import ProfileTab from "./ProfileTab";
 import PromotionsTab from "./PromotionsTab";
+import SettingsTab from "./SettingsTab";
+import TicketsTab from "./TicketsTab";
 
 const TabContent = ({ 
   tab, 

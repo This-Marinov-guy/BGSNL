@@ -1,5 +1,5 @@
 import React from "react";
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressSpinner } from "@/compat/primereact";
 
 const Loader = () => {
   return (
@@ -7,7 +7,7 @@ const Loader = () => {
       style={{ margin: "auto" }}
       className="d-flex align-items-center justify-content-center g--3 disabled"
     >
-      <span style={{ fontSize: "18px" }}>Loading </span>
+      <span>Loading </span>
       <ProgressSpinner
         style={{ width: "20px", height: "20px" }}
         strokeWidth="8"

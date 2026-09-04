@@ -1,9 +1,11 @@
 import React from 'react'
-import { Dialog } from 'primereact/dialog';
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 
 const LongLoading = ({ visible }) => {
     return (
         <Dialog
+            header="Please wait"
             visible={visible}
             modal blockScroll closable={false} closeOnEscape={false} draggable={false}
         >
@@ -17,5 +19,9 @@ const LongLoading = ({ visible }) => {
         </Dialog>
     )
 }
+
+LongLoading.propTypes = {
+    visible: PropTypes.bool.isRequired,
+};
 
 export default LongLoading

@@ -1,50 +1,69 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
+import PropTypes from "prop-types";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import {
+  ConfirmDialog,
+  Tooltip,
+} from "@/compat/primereact";
+import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
+import {
+  useNavigate,
+  useParams,
+} from "@/util/navigation";
 import { useHttpClient } from "../../../hooks/common/http-hook";
-import Loader from "../../ui/loading/Loader";
-import ImageInput from "../../inputs/common/ImageInput";
+import {
+  addEventToAll,
+  editEventFromAll,
+} from "../../../redux/events";
+import { showNotification } from "../../../redux/notification";
+import { selectUser } from "../../../redux/user";
+import {
+  ACCESS_2,
+  EVENT_ADDED,
+  EVENT_DRAFT,
+  EVENT_DRAFT_SAVED,
+  EVENT_EDITED,
+} from "../../../util/defines/common";
+import { START_TIMER } from "../../../util/defines/enum";
 import {
   ADMIN_EVENT_REGIONS,
   BG_INDEX,
   REGIONS,
 } from "../../../util/defines/REGIONS_DESIGN";
-import StringDynamicInputs from "../../inputs/common-complicated/StringDynamicInputs";
-import InputsBuilder from "../../inputs/builders/InputsBuilder";
+import { decodeJWT } from "../../../util/functions/authorization";
+import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import {
   askBeforeRedirect,
   hasOverlap,
   isPlainObject,
-  isObjectEmpty,
-  isProd,
 } from "../../../util/functions/helpers";
-import { useNavigate, useParams } from "@/util/navigation";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import {
-  ACCESS_2,
-  EVENT_ADDED,
-  EVENT_EDITED,
-  INCORRECT_MISSING_DATA,
-} from "../../../util/defines/common";
-import LongLoading from "../../ui/loading/LongLoading";
+import AdditionalPrices from "../../inputs/AdditionalPrices";
+import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
+import InputsBuilder from "../../inputs/builders/InputsBuilder";
+import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
 import SubEventBuilder from "../../inputs/builders/SubEventBuilder";
 import { CalendarWithClock } from "../../inputs/common/Calendar";
-import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
-import { useDispatch, useSelector } from "react-redux";
-import { showNotification } from "../../../redux/notification";
-import { addEventToAll, editEventFromAll } from "../../../redux/events";
+import ImageInput from "../../inputs/common/ImageInput";
 import ImageSelection from "../../inputs/ImageSelection";
-import AdditionalPrices from "../../inputs/AdditionalPrices";
-import { START_TIMER } from "../../../util/defines/enum";
-import PromotionalPrices from "../../inputs/PromotionalPrice";
-import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
-import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
-import { FiInfo } from "react-icons/fi";
-import { Tooltip } from "primereact/tooltip";
 import MultiImageUpload from "../../inputs/MultiImageUpload";
-import { selectUser } from "../../../redux/user";
-import { decodeJWT } from "../../../util/functions/authorization";
+import PromotionalPrices from "../../inputs/PromotionalPrice";
+import ValidatedFormik from "../../ui/forms/ValidatedFormik";
+import Loader from "../../ui/loading/Loader";
+import LongLoading from "../../ui/loading/LongLoading";
+import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 
 const EventForm = (props) => {
   const { loading, sendRequest, forceStartLoading } = useHttpClient();
@@ -57,6 +76,7 @@ const EventForm = (props) => {
     newFiles: [],
     all: []
   });
+  const [extraImagesTouched, setExtraImagesTouched] = useState(false);
 
   const navigate = useNavigate();
 
@@ -69,24 +89,41 @@ const EventForm = (props) => {
     : REGIONS;
 
   const edit = props.edit;
-  const initialData = edit ? props.initialData : null;
+  const storedInitialData = edit ? props.initialData : null;
+  const draftData =
+    storedInitialData?.status === EVENT_DRAFT
+      ? storedInitialData.draftData ?? {}
+      : null;
+  const initialData = draftData
+    ? {
+        ...storedInitialData,
+        ...draftData,
+        poster: storedInitialData.poster ?? draftData.poster ?? null,
+        ticketImg: storedInitialData.ticketImg ?? draftData.ticketImg ?? null,
+        bgImageExtra:
+          storedInitialData.bgImageExtra ?? draftData.bgImageExtra ?? null,
+        images: storedInitialData.images ?? draftData.images ?? [],
+        product: {
+          ...storedInitialData.product,
+          guest: { price: draftData.guestPrice },
+          member: { price: draftData.memberPrice },
+          activeMember: { price: draftData.activeMemberPrice },
+          promoCodes: draftData.promoCodes?.codes ?? [],
+        },
+        promotion: {
+          guest: draftData.guestPromotion,
+          member: draftData.memberPromotion,
+        },
+      }
+    : storedInitialData;
   const bgs = Array.from({ length: BG_INDEX }, (_, i) => ({
     src: `/assets/images/bg/bg-image-${i + 1}.webp`,
     value: i + 1,
   }));
 
-  const preSubmitCheck = (errors) => {
-    if (!isProd()) {
-      console.log(errors);
-    }
-
-    if (!isObjectEmpty(errors)) {
-      return dispatch(showNotification(INCORRECT_MISSING_DATA));
-    }
-  };
-
   const handleExtraImagesChange = (data) => {
     setExtraImagesData(data);
+    setExtraImagesTouched(true);
   };
 
   const isImageCorrectRatio = (file, margin = 0.01) => {
@@ -155,23 +192,28 @@ const EventForm = (props) => {
     isMemberFree: yup.bool(),
     memberOnly: yup.bool(),
     isTicketLink: yup.bool(),
+    isSaleClosed: yup.bool(),
 
-    guestPrice: yup.number().when(["isFree", "isTicketLink"], {
-      is: (isFree, isTicketLink) => isFree || isTicketLink,
-      then: () => yup.number().nullable(),
+    guestPrice: yup.mixed().when(
+      ["isSaleClosed", "isFree", "isTicketLink"],
+      {
+      is: (isSaleClosed, isFree, isTicketLink) =>
+        isSaleClosed || isFree || isTicketLink,
+      then: () => yup.mixed().nullable(),
       otherwise: () =>
         yup
           .number()
           .required("Guest Price is required")
           .min(1, "Must be greater than 0"),
-    }),
+      }
+    ),
 
     memberPrice: yup
-      .number()
-      .when(["isFree", "isMemberFree", "memberOnly", "isTicketLink"], {
-        is: (isFree, isMemberFree, memberOnly, isTicketLink) =>
-          (isFree || isMemberFree) && !memberOnly && !isTicketLink,
-        then: () => yup.number().nullable(),
+      .mixed()
+      .when(["isSaleClosed", "isFree", "isMemberFree", "isTicketLink"], {
+        is: (isSaleClosed, isFree, isMemberFree, isTicketLink) =>
+          isSaleClosed || isFree || isMemberFree || isTicketLink,
+        then: () => yup.mixed().nullable(),
         otherwise: () =>
           yup
             .number()
@@ -179,7 +221,15 @@ const EventForm = (props) => {
             .min(1, "Must be greater than 0"),
       }),
 
-    activeMemberPrice: yup.number().min(1, "Must be greater than 0").nullable(),
+    activeMemberPrice: yup
+      .mixed()
+      .when(["isSaleClosed", "isFree", "isMemberFree", "isTicketLink"], {
+        is: (isSaleClosed, isFree, isMemberFree, isTicketLink) =>
+          isSaleClosed || isFree || isMemberFree || isTicketLink,
+        then: () => yup.mixed().nullable(),
+        otherwise: () =>
+          yup.number().min(1, "Must be greater than 0").nullable(),
+      }),
 
     earlyBird: yup
       .object()
@@ -424,17 +474,297 @@ const EventForm = (props) => {
       }),
     }),
 
-    ticketLink: yup.string().when("isTicketLink", {
-      is: (isTicketLink) => isTicketLink,
-      then: () =>
-        yup.string().required("Link to the ticket platform is required"),
-      otherwise: () => yup.string(),
-    }),
+    ticketLink: yup
+      .string()
+      .when(["isSaleClosed", "isFree", "isTicketLink"], {
+        is: (isSaleClosed, isFree, isTicketLink) =>
+          !isSaleClosed && !isFree && isTicketLink,
+        then: () =>
+          yup
+            .string()
+            .url("Enter a valid ticket platform URL")
+            .required("Link to the ticket platform is required"),
+        otherwise: () => yup.string().nullable(),
+      }),
+
+    bgImage: yup
+      .number()
+      .integer("Choose a valid background image")
+      .min(1, "Choose a valid background image")
+      .max(BG_INDEX, "Choose a valid background image")
+      .required("Choose a background image"),
+    bgImageSelection: yup
+      .number()
+      .oneOf([1, 2], "Choose which background image to display")
+      .required("Choose which background image to display"),
+
+    subEvent: yup
+      .object({
+        description: yup.string().max(1000, "Description is too long"),
+        links: yup
+          .array()
+          .max(50, "Too many related-event links")
+          .of(
+            yup.object({
+              name: yup
+                .string()
+                .max(200, "Link name is too long")
+                .test(
+                  "paired-sub-event-name",
+                  "Add a name for this link",
+                  function (value) {
+                    const href = String(this.parent?.href ?? "").trim();
+                    return !href || Boolean(String(value ?? "").trim());
+                  }
+                ),
+              href: yup
+                .string()
+                .max(2048, "Link is too long")
+                .test(
+                  "valid-sub-event-link",
+                  "Enter a valid HTTP(S) link",
+                  function (value) {
+                    const name = String(this.parent?.name ?? "").trim();
+                    const href = String(value ?? "").trim();
+                    if (!name && !href) return true;
+                    return Boolean(name) && /^https?:\/\/[^\s]+$/i.test(href);
+                  }
+                ),
+            })
+          ),
+      })
+      .nullable(),
+
+    extraInputsForm: yup
+      .array()
+      .max(50, "Too many custom inputs")
+      .of(
+        yup.object({
+          type: yup
+            .string()
+            .oneOf(["text", "select"], "Choose a valid input type")
+            .required("Input type is required"),
+          placeholder: yup
+            .string()
+            .trim()
+            .max(200, "Question must not exceed 200 characters")
+            .required("Question is required"),
+          required: yup.boolean(),
+          multiselect: yup.boolean(),
+          options: yup.array().when("type", {
+            is: "select",
+            then: () =>
+              yup
+                .array()
+                .max(100, "Too many options")
+                .of(
+                  yup
+                    .string()
+                    .trim()
+                    .required("Options cannot be empty")
+                )
+                .min(1, "Add at least one option"),
+            otherwise: () => yup.array().max(100, "Too many options"),
+          }),
+        })
+      )
+      .test(
+        "unique-custom-input-questions",
+        "Custom input questions must be unique",
+        function (inputs) {
+          const seen = new Set();
+
+          for (let index = 0; index < (inputs?.length ?? 0); index += 1) {
+            const question = String(inputs[index]?.placeholder ?? "")
+              .trim()
+              .toLocaleLowerCase();
+            if (!question) continue;
+            if (seen.has(question)) {
+              return this.createError({
+                path: `${this.path}[${index}].placeholder`,
+                message: "Use a unique question for each custom input",
+              });
+            }
+            seen.add(question);
+          }
+
+          return true;
+        }
+      ),
 
     text: yup.string().required("Add some content to the event"),
-    ticketImg: yup.mixed().required("A ticket image is required"),
-    poster: yup.mixed().required("A poster is required"),
+    ticketImg: yup
+      .mixed()
+      .required("A ticket image is required")
+      .test(
+        "fileType",
+        "Please choose a JPG or PNG image",
+        (value) =>
+          typeof value === "string" ||
+          ["image/jpg", "image/jpeg", "image/png"].includes(value?.type)
+      )
+      .test(
+        "aspectRatio",
+        "Ticket image must use the 300:97 aspect ratio",
+        async (value) => {
+          if (
+            !value ||
+            typeof value === "string" ||
+            !["image/jpg", "image/jpeg", "image/png"].includes(value.type)
+          ) {
+            return true;
+          }
+
+          try {
+            return await isImageCorrectRatio(value, 0.02);
+          } catch {
+            return false;
+          }
+        }
+      ),
+    poster: yup
+      .mixed()
+      .required("A poster is required")
+      .test(
+        "fileType",
+        "Please choose a JPG or PNG image",
+        (value) =>
+          typeof value === "string" ||
+          ["image/jpg", "image/jpeg", "image/png"].includes(value?.type)
+      ),
+    bgImageExtra: yup
+      .mixed()
+      .test(
+        "fileType",
+        "Please choose a JPG or PNG image",
+        (value) =>
+          !value ||
+          typeof value === "string" ||
+          ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
+      ),
+    extraImagesValidation: yup.string().test(
+      "fileValidation",
+      "Extra images are invalid",
+      function (value) {
+        return value ? this.createError({ message: value }) : true;
+      }
+    ),
   });
+
+  const buildFormData = (values, saveAsDraft) => {
+    const formData = new FormData();
+    const orderedImages = extraImagesTouched
+      ? extraImagesData.all ?? []
+      : (initialData?.images ?? []).map((url) => ({
+          isExisting: true,
+          url,
+        }));
+
+    const imagesOrder = [];
+    let newFileCounter = 0;
+
+    orderedImages.forEach((img) => {
+      if (img.isExisting) {
+        imagesOrder.push({ type: "existing", url: img.url });
+      } else {
+        imagesOrder.push({
+          type: "new",
+          fileName: `image_${newFileCounter}`,
+        });
+        newFileCounter += 1;
+      }
+    });
+
+    formData.append("imagesOrder", JSON.stringify(imagesOrder));
+    formData.append(
+      "existingImages",
+      JSON.stringify(
+        orderedImages.filter((img) => img.isExisting).map((img) => img.url)
+      )
+    );
+
+    let fileIndex = 0;
+    orderedImages.forEach((img) => {
+      if (!img.isExisting && img.file) {
+        formData.append("images", img.file, `image_${fileIndex}`);
+        fileIndex += 1;
+      }
+    });
+
+    Object.entries(values).forEach(([key, val]) => {
+      if (key === "promoCodes") {
+        if (val.isEnabled && val.codes?.length > 0) {
+          const validPromoCodes = val.codes.filter(
+            (code) => code.code && code.code.trim() !== ""
+          );
+          if (validPromoCodes.length > 0) {
+            formData.append(key, JSON.stringify(validPromoCodes));
+          }
+        }
+      } else if (
+        isPlainObject(val) ||
+        ["extraInputsForm", "addOns"].includes(key)
+      ) {
+        formData.append(key, JSON.stringify(val));
+      } else if (Array.isArray(val)) {
+        val.forEach((value) => formData.append(`${key}[]`, value));
+      } else if (val === null) {
+        formData.append(key, "null");
+      } else if (val !== undefined) {
+        formData.append(key, val);
+      }
+    });
+
+    formData.append("status", saveAsDraft ? EVENT_DRAFT : "opened");
+    if (saveAsDraft) {
+      formData.append("draftData", JSON.stringify(values));
+    }
+
+    return formData;
+  };
+
+  const submitValues = async (values, saveAsDraft = false) => {
+    try {
+      if (!saveAsDraft) await waitForConfirmation();
+
+      setSubmitting(true);
+      forceStartLoading();
+
+      const responseData = props.edit
+        ? await sendRequest(
+            `future-event/edit-event/${eventId}`,
+            "PATCH",
+            buildFormData(values, saveAsDraft)
+          )
+        : await sendRequest(
+            "future-event/add-event",
+            "POST",
+            buildFormData(values, saveAsDraft)
+          );
+
+      if (responseData.status) {
+        navigate("/user/dashboard");
+        dispatch(
+          showNotification(
+            saveAsDraft
+              ? EVENT_DRAFT_SAVED
+              : props.edit && initialData?.status !== EVENT_DRAFT
+                ? EVENT_EDITED
+                : EVENT_ADDED
+          )
+        );
+        dispatch(
+          props.edit
+            ? editEventFromAll(responseData.event)
+            : addEventToAll(responseData.event)
+        );
+      }
+    } catch (err) {
+      // Request errors are surfaced by useHttpClient.
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -445,103 +775,10 @@ const EventForm = (props) => {
         setVisible={setVisible}
       />
       <LongLoading visible={submitting} />
-      <Formik
+      <ValidatedFormik
         className="container"
         validationSchema={schema}
-        onSubmit={async (values) => {
-          try {
-            await waitForConfirmation();
-
-            setSubmitting(true);
-            forceStartLoading();
-
-            const formData = new FormData();
-
-            // Handle extra images with correct order preservation
-            const orderedImages = extraImagesData.all || [];
-            
-            // Build ordered array: each item indicates if it's existing (by URL) or new (by file name)
-            // Format: [{ type: 'existing', url: '...' }, { type: 'new', fileName: 'image_0' }, ...]
-            const imagesOrder = [];
-            let newFileCounter = 0;
-            
-            orderedImages.forEach((img) => {
-              if (img.isExisting) {
-                imagesOrder.push({ type: 'existing', url: img.url });
-              } else {
-                const fileName = `image_${newFileCounter}`;
-                imagesOrder.push({ type: 'new', fileName });
-                newFileCounter++;
-              }
-            });
-            
-            formData.append("imagesOrder", JSON.stringify(imagesOrder));
-
-            // Append new files with matching file names
-            let fileIndex = 0;
-            orderedImages.forEach((img) => {
-              if (!img.isExisting && img.file) {
-                const fileName = `image_${fileIndex}`;
-                formData.append(`images`, img.file, fileName);
-                fileIndex++;
-              }
-            });
-
-            // Send existing image URLs (order doesn't matter here, order is in imagesOrder)
-            if (extraImagesData.existing.length > 0) {
-              formData.append("existingImages", JSON.stringify(extraImagesData.existing));
-            }
-
-            Object.entries(values).forEach(([key, val]) => {
-              if (key === "promoCodes") {
-                // Only send promoCodes array if enabled
-                if (val.isEnabled && val.codes && val.codes.length > 0) {
-                  // Filter out empty promo codes and format properly
-                  const validPromoCodes = val.codes.filter(
-                    (code) => code.code && code.code.trim() !== ""
-                  );
-                  if (validPromoCodes.length > 0) {
-                    formData.append(key, JSON.stringify(validPromoCodes));
-                  }
-                }
-              } else if (
-                isPlainObject(val) ||
-                ["extraInputsForm", "addOns"].includes(key)
-              ) {
-                formData.append(key, JSON.stringify(val));
-              } else if (Array.isArray(val)) {
-                val.forEach((v, i) => {
-                  formData.append(`${key}[]`, v);
-                });
-              } else {
-                formData.append(key, val);
-              }
-            });
-
-            const responseData = props.edit
-              ? await sendRequest(
-                  `future-event/edit-event/${eventId}`,
-                  "PATCH",
-                  formData
-                )
-              : await sendRequest("future-event/add-event", "POST", formData);
-
-            if (responseData.status) {
-              navigate("/user/dashboard");
-              dispatch(
-                showNotification(props.edit ? EVENT_EDITED : EVENT_ADDED)
-              );
-              dispatch(
-                props.edit
-                  ? editEventFromAll(responseData.event)
-                  : addEventToAll(responseData.event)
-              );
-            }
-          } catch (err) {
-          } finally {
-            setSubmitting(false);
-          }
-        }}
+        onSubmit={(values) => submitValues(values)}
         initialValues={{
           memberOnly: initialData?.memberOnly ?? false,
           hidden: initialData?.hidden ?? false,
@@ -586,6 +823,7 @@ const EventForm = (props) => {
           bgImage: initialData?.bgImage ?? 1,
           bgImageExtra: initialData?.bgImageExtra ?? null,
           bgImageSelection: initialData?.bgImageSelection ?? 1,
+          extraImagesValidation: "",
           earlyBird: {
             ticketLimit:
               initialData?.earlyBird?.ticketLimit !== undefined &&
@@ -658,9 +896,24 @@ const EventForm = (props) => {
                 : [{ title: "", description: "", price: undefined }],
           },
           promoCodes: {
-            isEnabled: initialData?.product?.promoCodes?.length > 0,
+            isEnabled:
+              initialData?.status === EVENT_DRAFT
+                ? initialData?.promoCodes?.isEnabled ?? false
+                : initialData?.product?.promoCodes?.length > 0,
             codes:
-              initialData?.product?.promoCodes?.length > 0
+              initialData?.status === EVENT_DRAFT
+                ? initialData?.promoCodes?.codes ?? [
+                    {
+                      code: "",
+                      discountType: 2,
+                      discount: undefined,
+                      useLimit: undefined,
+                      timeLimit: "",
+                      minAmount: undefined,
+                      active: true,
+                    },
+                  ]
+                : initialData?.product?.promoCodes?.length > 0
                 ? initialData?.product?.promoCodes?.map((code) => ({
                     ...code,
                     active: code.active !== undefined ? code.active : true,
@@ -679,7 +932,7 @@ const EventForm = (props) => {
           },
         }}
       >
-        {({ values, setFieldValue, errors, isValid, dirty }) => (
+        {({ values, setFieldValue }) => (
           <Form
             encType="multipart/form-data"
             id="form"
@@ -699,7 +952,7 @@ const EventForm = (props) => {
                 className="d-flex align-items-center"
                 style={{ gap: "8px", marginBottom: "20px" }}
               >
-                <h2 style={{ margin: 0, color: "#dc3545", fontSize: "24px" }}>
+                <h2 style={{ margin: 0, color: "#dc3545" }}>
                   Required Information
                 </h2>
                 <small style={{ color: "#6c757d", fontStyle: "italic" }}>
@@ -713,14 +966,16 @@ const EventForm = (props) => {
                   <div className="rn-form-group">
                     <label
                       style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
                         marginBottom: "5px",
                       }}
                     >
                       Region <span style={{ color: "#dc3545" }}>*</span>
                     </label>
-                    <Field disabled={props.edit} as="select" name="region">
+                    <Field
+                      disabled={props.edit && initialData?.status !== EVENT_DRAFT}
+                      as="select"
+                      name="region"
+                    >
                       <option value="" disabled>
                         Select Region
                       </option>
@@ -743,8 +998,6 @@ const EventForm = (props) => {
                   <div className="rn-form-group">
                     <label
                       style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
                         marginBottom: "5px",
                       }}
                     >
@@ -768,8 +1021,6 @@ const EventForm = (props) => {
                   <div className="rn-form-group">
                     <label
                       style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
                         marginBottom: "5px",
                       }}
                     >
@@ -791,8 +1042,6 @@ const EventForm = (props) => {
                   <div className="rn-form-group">
                     <label
                       style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
                         marginBottom: "5px",
                         color: "#6c757d",
                       }}
@@ -817,24 +1066,25 @@ const EventForm = (props) => {
                   <div className="rn-form-group">
                     <label
                       style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
                         marginBottom: "5px",
                       }}
                     >
                       Date and Time <span style={{ color: "#dc3545" }}>*</span>
                     </label>
-                    <CalendarWithClock
-                      mode="single"
-                      locale="en-nl"
-                      placeholder="Select event date and time"
-                      captionLayout="dropdown"
-                      initialValue={values.date}
-                      min={new Date()}
-                      onSelect={(value) => {
-                        setFieldValue("date", value);
-                      }}
-                    />
+                    <div data-field-name="date">
+                      <CalendarWithClock
+                        name="date"
+                        mode="single"
+                        locale="en-nl"
+                        placeholder="Select event date and time"
+                        captionLayout="dropdown"
+                        initialValue={values.date}
+                        min={new Date()}
+                        onSelect={(value) => {
+                          setFieldValue("date", value);
+                        }}
+                      />
+                    </div>
                     <ErrorMessage
                       className="error"
                       name="date"
@@ -848,8 +1098,6 @@ const EventForm = (props) => {
                   <div className="rn-form-group">
                     <label
                       style={{
-                        fontSize: "14px",
-                        fontWeight: "500",
                         marginBottom: "5px",
                       }}
                     >
@@ -914,8 +1162,6 @@ const EventForm = (props) => {
                       <div className="rn-form-group">
                         <label
                           style={{
-                            fontSize: "14px",
-                            fontWeight: "500",
                             marginBottom: "5px",
                           }}
                         >
@@ -945,8 +1191,6 @@ const EventForm = (props) => {
                       <div className="rn-form-group">
                         <label
                           style={{
-                            fontSize: "14px",
-                            fontWeight: "500",
                             marginBottom: "5px",
                           }}
                         >
@@ -969,8 +1213,6 @@ const EventForm = (props) => {
                       <div className="rn-form-group">
                         <label
                           style={{
-                            fontSize: "14px",
-                            fontWeight: "500",
                             marginBottom: "5px",
                             color: "#6c757d",
                           }}
@@ -996,8 +1238,6 @@ const EventForm = (props) => {
                           <div className="rn-form-group">
                             <label
                               style={{
-                                fontSize: "14px",
-                                fontWeight: "500",
                                 marginBottom: "5px",
                               }}
                             >
@@ -1020,8 +1260,6 @@ const EventForm = (props) => {
                           <div className="rn-form-group">
                             <label
                               style={{
-                                fontSize: "14px",
-                                fontWeight: "500",
                                 marginBottom: "5px",
                                 color: "#6c757d",
                               }}
@@ -1045,8 +1283,6 @@ const EventForm = (props) => {
                           <div className="rn-form-group">
                             <label
                               style={{
-                                fontSize: "14px",
-                                fontWeight: "500",
                                 marginBottom: "5px",
                                 color: "#6c757d",
                               }}
@@ -1099,12 +1335,15 @@ const EventForm = (props) => {
                         data-pr-position="right"
                       />
                     </div>
-                    <ImageInput
-                      initialImage={values.poster}
-                      onChange={(event) => {
-                        setFieldValue("poster", event.target.files[0]);
-                      }}
-                    />
+                    <div data-field-name="poster">
+                      <ImageInput
+                        name="poster"
+                        initialImage={values.poster}
+                        onChange={(event) => {
+                          setFieldValue("poster", event.target.files[0]);
+                        }}
+                      />
+                    </div>
                     <ErrorMessage
                       className="error center_div"
                       name="poster"
@@ -1138,34 +1377,15 @@ const EventForm = (props) => {
                         data-pr-position="right"
                       />
                     </div>
-                    <ImageInput
-                      initialImage={values.ticketImg}
-                      onChange={(event) => {
-                        isImageCorrectRatio(event.target.files[0], 0.02)
-                          .then((isCorrect) => {
-                            if (isCorrect) {
-                              setFieldValue("ticketImg", event.target.files[0]);
-                            } else {
-                              dispatch(
-                                showNotification({
-                                  severity: "warn",
-                                  detail:
-                                    "Image is not the correct ration and will not be uploaded - please choose another image!",
-                                })
-                              );
-                            }
-                          })
-                          .catch((error) => {
-                            dispatch(
-                              showNotification({
-                                severity: "danger",
-                                detail:
-                                  "Error uploading the image - please try again!",
-                              })
-                            );
-                          });
-                      }}
-                    />
+                    <div data-field-name="ticketImg">
+                      <ImageInput
+                        name="ticketImg"
+                        initialImage={values.ticketImg}
+                        onChange={(event) => {
+                          setFieldValue("ticketImg", event.target.files[0]);
+                        }}
+                      />
+                    </div>
                     <p className="mt--10 information center_text">
                       *ticket must be jpg or png in resolution 300:97 (like 1500
                       x 485)
@@ -1283,20 +1503,35 @@ const EventForm = (props) => {
                       style={{ margin: "auto", width: "250px" }}
                     >
                       <ImageSelection
+                        name="bgImage"
                         placeholder="Choose default background"
                         initialValue={values.bgImage}
                         onSelect={(option) => setFieldValue("bgImage", option)}
                         options={bgs}
                       />
-                      <h5>or choose your own</h5>
-                      <ImageInput
-                        initialImage={values.bgImageExtra}
-                        style={{ height: "150px" }}
-                        onChange={(event) => {
-                          setFieldValue("bgImageExtra", event.target.files[0]);
-                          setFieldValue("bgImageSelection", 2);
-                        }}
+                      <ErrorMessage
+                        className="error center_text"
+                        name="bgImage"
+                        component="div"
+                        data-validation-message-for="bgImage"
                       />
+                      <h5>or choose your own</h5>
+                      <div data-field-name="bgImageExtra">
+                        <ImageInput
+                          name="bgImageExtra"
+                          initialImage={values.bgImageExtra}
+                          style={{ height: "150px" }}
+                          onChange={(event) => {
+                            setFieldValue("bgImageExtra", event.target.files[0]);
+                            setFieldValue("bgImageSelection", 2);
+                          }}
+                        />
+                        <ErrorMessage
+                          className="error center_text"
+                          name="bgImageExtra"
+                          component="div"
+                        />
+                      </div>
                       <p className="mt--10 information center_text">
                         *choose a wide one
                       </p>
@@ -1340,8 +1575,6 @@ const EventForm = (props) => {
                     >
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           margin: 0,
                         }}
                       >
@@ -1377,8 +1610,6 @@ const EventForm = (props) => {
                     >
                       <label
                         style={{
-                          fontSize: "14px",
-                          fontWeight: "500",
                           margin: 0,
                         }}
                       >
@@ -1394,17 +1625,20 @@ const EventForm = (props) => {
                     </div>
                     <div className="d-flex align-items-center gap-3">
                       <div className="flex-grow-1">
-                        <CalendarWithClock
-                          mode="single"
-                          locale="en-nl"
-                          placeholder="Select ticket sales deadline"
-                          captionLayout="dropdown"
-                          min={values.date ? new Date(values.date) : new Date()}
-                          initialValue={values.ticketTimer}
-                          onSelect={(value) => {
-                            setFieldValue("ticketTimer", value);
-                          }}
-                        />
+                        <div data-field-name="ticketTimer">
+                          <CalendarWithClock
+                            name="ticketTimer"
+                            mode="single"
+                            locale="en-nl"
+                            placeholder="Select ticket sales deadline"
+                            captionLayout="dropdown"
+                            min={values.date ? new Date(values.date) : new Date()}
+                            initialValue={values.ticketTimer}
+                            onSelect={(value) => {
+                              setFieldValue("ticketTimer", value);
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1432,7 +1666,7 @@ const EventForm = (props) => {
                 className="d-flex align-items-center"
                 style={{ gap: "8px", marginBottom: "20px" }}
               >
-                <h2 style={{ margin: 0, color: "#17a2b8", fontSize: "24px" }}>
+                <h2 style={{ margin: 0, color: "#17a2b8" }}>
                   Optional Settings
                 </h2>
                 <small style={{ color: "#6c757d", fontStyle: "italic" }}>
@@ -1527,10 +1761,18 @@ const EventForm = (props) => {
                   <MultiImageUpload
                     existingImages={initialData?.images ?? []}
                     onImagesChange={handleExtraImagesChange}
-                    name="extraImages"
+                    name="extraImagesValidation"
+                    onValidationChange={(message) =>
+                      setFieldValue("extraImagesValidation", message)
+                    }
                     label="Extra Description Images"
                     tooltip="Additional images to display at the bottom of the event page (poster is already included)"
                     maxImages={5}
+                  />
+                  <ErrorMessage
+                    className="error center_text"
+                    name="extraImagesValidation"
+                    component="div"
                   />
                 </div>
               </div>
@@ -1736,12 +1978,14 @@ const EventForm = (props) => {
               />
 
               <SubEventBuilder
+                name="subEvent"
                 onChange={(input) => setFieldValue("subEvent", input)}
                 initialValues={values.subEvent}
               />
 
               <h3 className="label mt--40">Add extra inputs by your choice</h3>
               <InputsBuilder
+                name="extraInputsForm"
                 onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
                 initialValues={values.extraInputsForm}
               />
@@ -1752,28 +1996,47 @@ const EventForm = (props) => {
             <div className="mt--40 mb--20 center_div">
               <button
                 onClick={() => navigate("/user/dashboard")}
+                type="button"
                 className="rn-button-style--2 rn-btn-reverse mr--5"
               >
                 Dashboard
               </button>
+              {(!props.edit || initialData?.status === EVENT_DRAFT) && (
+                <button
+                  disabled={loading || submitting}
+                  type="button"
+                  onClick={() => submitValues(values, true)}
+                  className="rn-button-style--2 rn-btn-reverse mr--5"
+                >
+                  <span>Save as Draft</span>
+                </button>
+              )}
               <button
-                disabled={loading}
+                disabled={loading || submitting}
                 type="submit"
-                onClick={() => preSubmitCheck(errors, isValid, dirty)}
                 className="rn-button-style--2 rn-btn-reverse-green"
               >
                 {loading ? (
                   <Loader />
                 ) : (
-                  <span>{props.edit ? "Edit Event" : "Submit Event"}</span>
+                  <span>
+                    {props.edit && initialData?.status !== EVENT_DRAFT
+                      ? "Edit Event"
+                      : "Submit Event"}
+                  </span>
                 )}
               </button>
             </div>
           </Form>
         )}
-      </Formik>
+      </ValidatedFormik>
     </>
   );
+};
+
+EventForm.propTypes = {
+  edit: PropTypes.bool,
+  initialData: PropTypes.object,
 };
 
 export default EventForm;

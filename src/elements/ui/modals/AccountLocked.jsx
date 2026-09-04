@@ -2,7 +2,7 @@ import React from "react";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import Loader from "../loading/Loader";
 import { useNavigate } from "@/util/navigation";
-import { Dialog } from "primereact/dialog";
+import { Dialog } from "@/compat/primereact";
 import {
   REGIONS_MEMBERSHIP_SPECIFICS,
   findMembershipByProperty,
@@ -23,6 +23,7 @@ import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import { ALUMNI } from "../../../util/defines/common";
 import { decodeJWT } from "../../../util/functions/authorization";
 import ImageFb from "../media/ImageFb";
+import { IconlyArrowRight } from "../icons/IconlyIcons";
 
 const AccountLocked = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -215,21 +216,7 @@ const AccountLocked = () => {
             alt="Lock"
           />
 
-          <svg
-            width={42}
-            height={42}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3 12H21M21 12L16 7M21 12L16 17"
-              stroke="red"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-          </svg>
+          <IconlyArrowRight size={42} color="red" aria-hidden />
           <ImageFb
             src="/assets/images/svg/3d/pig-bank.png"
             width={84}
@@ -301,6 +288,7 @@ const AccountLocked = () => {
       <PageLoading />
       <Dialog
         modal
+        header="Account status"
         visible={status !== USER_STATUSES[ACTIVE]}
         blockScroll={true}
         closable={false}

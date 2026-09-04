@@ -138,12 +138,6 @@ font-family: 'Poppins', sans-serif;
     @extend %bgImagePosition;
 }
 
-@for $i from 1 through 80 {
-    .font--#{$i}{
-        font-size: #{$i}px !important;
-    }
-}
-
 // @for $i from 1 through 36 {
 //     .bg_image--#{$i} {
 //         background-image: url(/assets/images/bg/bg-image-#{$i}.webp) !important;
@@ -151,10 +145,10 @@ font-family: 'Poppins', sans-serif;
 // }
 
 p {
-    font-size: 20px;
+
     line-height: 30px;
     @media #{$sm-layout} {
-        font-size: 18px;
+
         line-height: 28px !important;
     }
 }
@@ -430,7 +424,7 @@ textarea:-ms-input-placeholder {
     & i {
         display: block;
         line-height: 34px;
-        font-size: 22px;
+
     }
 
     &:hover {

@@ -8,10 +8,17 @@ import { ACCESS_2 } from "../../../../util/defines/common";
 import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
-import { Skeleton } from "primereact/skeleton";
+import { Calendar, Skeleton } from "@/compat/primereact";
 import Filter from "../Filter";
 import EventAnalyticsAccordion from "./EventAnalyticsAccordion";
 import { exportEventsCSV } from "./exportEvents";
+
+const formatDateParam = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const EventsAnalyticsList = () => {
   const [events, setEvents] = useState([]);
@@ -22,8 +29,8 @@ const EventsAnalyticsList = () => {
     totalEvents: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
 
   const user = useSelector(selectUser);
   const { roles, region } = decodeJWT(user.token);
@@ -41,8 +48,8 @@ const EventsAnalyticsList = () => {
       setLoading(true);
       const params = new URLSearchParams();
       if (isAdmin && regionParam) params.set("region", regionParam);
-      if (fromDate) params.set("from", fromDate);
-      if (toDate) params.set("to", toDate);
+      if (fromDate) params.set("from", formatDateParam(fromDate));
+      if (toDate) params.set("to", formatDateParam(toDate));
       const query = params.toString() ? `?${params.toString()}` : "";
 
       const responseData = await sendRequest(
@@ -149,20 +156,24 @@ const EventsAnalyticsList = () => {
         <div className="row align-items-end" style={{ gap: "10px 0" }}>
           <div className="col-lg-4 col-md-4 col-12">
             <label>From</label>
-            <input
-              type="date"
+            <Calendar
               value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
+              onChange={(event) => setFromDate(event.value)}
               className="dashboard-date-input"
+              placeholder="Select start date"
+              dateFormat="dd/mm/yy"
+              maxDate={toDate ?? undefined}
             />
           </div>
           <div className="col-lg-4 col-md-4 col-12">
             <label>To</label>
-            <input
-              type="date"
+            <Calendar
               value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
+              onChange={(event) => setToDate(event.value)}
               className="dashboard-date-input"
+              placeholder="Select end date"
+              dateFormat="dd/mm/yy"
+              minDate={fromDate ?? undefined}
             />
           </div>
           <div className="col-lg-4 col-md-4 col-12">

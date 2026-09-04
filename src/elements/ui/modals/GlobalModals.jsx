@@ -1,9 +1,8 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../redux/user';
-import { useAlumniRegistration } from '../../../hooks/alumni/use-alumni-registration';
-import AlumniTypeModal from './AlumniTypeModal';
-import AlumniErrorModal from './AlumniErrorModal';
+import { useSelector } from "react-redux";
+import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
+import { selectUser } from "../../../redux/user";
+import AlumniErrorModal from "./AlumniErrorModal";
+import AlumniTypeModal from "./AlumniTypeModal";
 
 const GlobalModals = () => {
   const { showTypeModal, setShowTypeModal, showErrorModal, setShowErrorModal } = useAlumniRegistration();

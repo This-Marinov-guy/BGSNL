@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
 import EventList from "../../elements/actions/dashboard/open-events/EventList";
 
 const EventDashboard = () => {
@@ -14,15 +14,15 @@ const EventDashboard = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div className="container mt--200">
+      <main className="container user-workspace-page mt--200">
         <EventList />
-      </div>
+      </main>
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}
       <div className="backto-top" >
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

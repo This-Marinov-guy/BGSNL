@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiArrowLeft,
+  FiChevronUp,
+} from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp, FiArrowLeft } from "react-icons/fi";
 import InternshipForm from "../../elements/actions/form/InternshipForm";
 
 const AddInternship = () => {
@@ -20,7 +23,7 @@ const AddInternship = () => {
           <Link
             to="/user/internships-dashboard"
             className="d-inline-flex align-items-center"
-            style={{ color: "#6b7280", textDecoration: "none", gap: "6px", fontSize: "15px" }}
+            style={{ color: "#6b7280", textDecoration: "none", gap: "6px" }}
           >
             <FiArrowLeft size={18} />
             Back to Dashboard
@@ -32,7 +35,7 @@ const AddInternship = () => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
     </React.Fragment>

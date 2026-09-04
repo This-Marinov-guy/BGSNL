@@ -1,5 +1,5 @@
 import React from 'react'
-import { Skeleton } from 'primereact/skeleton';
+import { Skeleton } from "@/compat/primereact";
 
 const EventsLoading = () => {
     return (

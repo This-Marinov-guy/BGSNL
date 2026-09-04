@@ -14,7 +14,7 @@ import {
   capitalizeAfterSpace,
 } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
-import { Skeleton } from "primereact/skeleton";
+import { Skeleton } from "@/compat/primereact";
 import Filter from "../Filter";
 import MemberAccordion from "./MemberAccordion";
 import { exportMembersCSV } from "./exportMembers";

@@ -7,13 +7,13 @@
         padding-left: 105px;
         h2 {
             &.title {
-                font-size: 40px;
+
                 line-height: 51px;
                 margin-bottom: 14px;
             }
         }
         p {
-            font-size: 24px;
+
             line-height: 30px;
             color: rgba(29, 29, 36, 0.75);
             margin-bottom: 0;
@@ -32,7 +32,7 @@
         .details {
             p {
                 color: rgba(29, 29, 36, 0.75);
-                font-size: 18px;
+
                 line-height: 30px;
                 margin-bottom: 0;
                 & + p {
@@ -41,13 +41,13 @@
             }
             h4 {
                 &.title {
-                    font-size: 36px;
+
                     line-height: 30px;
-                    font-weight: 500;
+
                     margin-top: 40px;
                     margin-bottom: 27px;
                     @media #{$sm-layout} {
-                        font-size: 26px;
+
                         line-height: 38px;
                         margin-top: 26px;
                         margin-bottom: 18px;
@@ -57,7 +57,7 @@
             ul {
                 &.liststyle {
                     li {
-                        font-size: 20px;
+
                         line-height: 30px;
                         color: rgba(29, 29, 36, 0.75);
                         position: relative;

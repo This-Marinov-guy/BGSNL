@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { FiCheck } from "react-icons/fi";
+import { Component } from "react";
+import { FiCheck } from "@/elements/ui/icons/IconlyIcons";
 
 class ListOne extends Component{
     render(){

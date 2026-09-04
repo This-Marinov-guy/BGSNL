@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Paginator } from "primereact/paginator";
-import { TabView, TabPanel } from "primereact/tabview";
+import { TabView, TabPanel } from "@/compat/primereact";
+import { FaBriefcase } from "@/elements/ui/icons/IconlyIcons";
+import Pagination from "../../common/Pagination";
 import InternshipCard from "../cards/InternshipCard";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 
@@ -50,12 +51,13 @@ const InternshipsTab = ({
         </div>
 
         <div className="pagination-container">
-          <Paginator
+          <Pagination
             first={first}
             rows={rows}
             totalRecords={list.length ?? 0}
             rowsPerPageOptions={[INIT_ITEMS_PER_PAGE, 10, 15]}
             onPageChange={onPageChange}
+            ariaLabel="Member internships pagination"
           />
         </div>
       </>
@@ -99,7 +101,9 @@ const InternshipsTab = ({
               )
             ) : (
               <div className="empty-state">
-                <div className="empty-icon">{"💼"}</div>
+                <div className="empty-icon" aria-hidden="true">
+                  <FaBriefcase size={44} />
+                </div>
                 <h3>No Bulgarian Internships</h3>
                 <p>Check back soon for new opportunities.</p>
               </div>
@@ -117,7 +121,9 @@ const InternshipsTab = ({
               )
             ) : (
               <div className="empty-state">
-                <div className="empty-icon">{"💼"}</div>
+                <div className="empty-icon" aria-hidden="true">
+                  <FaBriefcase size={44} />
+                </div>
                 <h3>No International/Remote Internships</h3>
                 <p>Check back soon for new opportunities.</p>
               </div>

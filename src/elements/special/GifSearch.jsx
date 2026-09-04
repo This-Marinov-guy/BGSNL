@@ -53,8 +53,6 @@ const GifSearch = (props) => {
         <div className="rn-form-group">
           <label
             style={{
-              fontSize: "14px",
-              fontWeight: "500",
               marginBottom: "8px",
               display: "block",
               color: "#6c757d",
@@ -80,7 +78,6 @@ const GifSearch = (props) => {
             style={{
               width: "100%",
               padding: "12px 16px",
-              fontSize: "16px",
               border: "1px solid #e9ecef",
               borderRadius: "8px",
               transition: "border-color 0.3s ease, box-shadow 0.3s ease",
@@ -124,8 +121,6 @@ const GifSearch = (props) => {
                   style={{
                     margin: 0,
                     color: "#155724",
-                    fontWeight: "500",
-                    fontSize: "14px",
                   }}
                 >
                   GIF Selected ✓
@@ -138,7 +133,6 @@ const GifSearch = (props) => {
                   style={{
                     marginTop: "4px",
                     padding: "4px 12px",
-                    fontSize: "12px",
                     color: "#dc3545",
                     backgroundColor: "transparent",
                     border: "1px solid #dc3545",
@@ -177,7 +171,6 @@ const GifSearch = (props) => {
                 style={{
                   marginTop: "15px",
                   color: "#6c757d",
-                  fontSize: "14px",
                 }}
               >
                 Searching for GIFs (Powered by GIPHY)...
@@ -198,8 +191,6 @@ const GifSearch = (props) => {
               <p
                 style={{
                   margin: "0 0 15px 0",
-                  fontSize: "14px",
-                  fontWeight: "500",
                   color: "#495057",
                 }}
               >
@@ -268,7 +259,7 @@ const GifSearch = (props) => {
                 borderRadius: "8px",
               }}
             >
-              <p style={{ margin: 0, color: "#856404", fontSize: "14px" }}>
+              <p style={{ margin: 0, color: "#856404" }}>
                 No GIFs found. Try a different search term!
               </p>
             </div>

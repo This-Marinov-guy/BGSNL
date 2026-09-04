@@ -17,14 +17,14 @@ ul{
             margin: 0 20px;
             display: inline-block;
             padding-bottom: 4px;
-            font-size: 18px;
-            font-weight: 500;
+
+
             cursor: pointer;
             outline: none;
             
             @media #{$lg-layout} {
                 margin: 0 10px;
-                font-size: 17px;
+
             }
 
             @media #{$sm-layout} {
@@ -56,9 +56,9 @@ ul{
 .single-tab-content {
     padding-top: 20px;
     p {
-        font-weight: 300;
+
         color: #717173;
-        font-size: 18px;
+
         line-height: 30px;
     }
 }
@@ -77,16 +77,16 @@ ul{
         list-style: none;
         li{
             color: #7e7e7e;
-            font-size: 26px;
+
             line-height: inherit;
             margin-bottom: 15px;
-            font-weight: 300;
+
             a{
-                font-weight: 500;
+
                 display: block;
                 color: #717173;
                 span{
-                    font-weight: 300;
+
                 }
             }
         }

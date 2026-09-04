@@ -1,32 +1,35 @@
 "use client";
 
 import React, { useEffect } from "react";
-import PageHelmet from "../../component/common/Helmet";
-import Breadcrumb from "../../elements/common/Breadcrumb";
-import ScrollToTop from "react-scroll-up";
-import { Tooltip } from "primereact/tooltip";
-import { FiChevronUp } from "react-icons/fi";
-import Lottie from "react-lottie-player";
 import calendarMotion from "@assets/images/svg/motion/calendar-motion.json";
-import Header from "../../component/header/Header";
-import Footer from "../../component/footer/Footer";
+import Lottie from "react-lottie-player";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import { Tooltip } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import { useParams } from "@/util/navigation";
-import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
-import { useDispatch, useSelector } from "react-redux";
-import { selectEvents } from "../../redux/events";
-import { selectIsAuth } from "../../redux/user";
+import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
+import PageHelmet from "../../component/common/Helmet";
+import Footer from "../../component/footer/Footer";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
+import FocusCards from "../../elements/ui/FocusCards";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
+import { selectEvents } from "../../redux/events";
+import { showModal } from "../../redux/modal";
+import { selectIsAuth } from "../../redux/user";
+import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
+import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import {
   checkObjectOfArraysEmpty,
   hasNonEmptyValues,
 } from "../../util/functions/helpers";
-import FocusCards from "../../elements/ui/FocusCards";
-import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
-import { showModal } from "../../redux/modal";
-import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
-import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
 /**
  * `initialEvents` is the region-keyed map fetched on the server by the route,
@@ -74,6 +77,23 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
     return null;
   }
 
+  const visibleRegionGroups = displayAll
+    ? REGIONS.map((regionName) => ({
+        regionName,
+        events: (events?.[regionName] || []).filter(
+          (event) => isAuth || !event.memberOnly
+        ),
+      })).filter((group) => group.events.length > 0)
+    : [];
+
+  // A single region, or a long list of regions, gets the full page width so
+  // its event cards can run horizontally. Two or three active regions remain
+  // compact columns for an easy cross-city overview.
+  const regionListLayout =
+    visibleRegionGroups.length === 1 || visibleRegionGroups.length > 3
+      ? "future-events-region-list--rows"
+      : `future-events-region-list--columns-${visibleRegionGroups.length}`;
+
   return (
     <div className="portfolio-area pt--40 pb--10 bg_color--5">
       <div className="rn-slick-dot">
@@ -107,44 +127,37 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
                 <EventsLoading />
               ) : (
                 <div className="col-lg-12">
-                  <div className="future-events-region-list">
-                    {REGIONS.map((regionName, index) => {
-                      const regionEvents = (events[regionName] || []).filter(
-                        (event) => isAuth || !event.memberOnly
-                      );
-
-                      if (!regionEvents.length) {
-                        return null;
-                      }
-
-                      return (
-                        <section
-                          className="future-events-region-section"
-                          key={regionName}
-                        >
-                          <div className="future-events-region-header">
-                            {/* <h4 className="archive future-events-region-title">
+                  <div
+                    className={`future-events-region-list ${regionListLayout}`}
+                    data-active-regions={visibleRegionGroups.length}
+                  >
+                    {visibleRegionGroups.map(({ regionName, events: regionEvents }) => (
+                      <section
+                        className="future-events-region-section"
+                        key={regionName}
+                      >
+                        <div className="future-events-region-header">
+                          {/* <h4 className="archive future-events-region-title">
+                            {capitalizeFirstLetter(
+                              regionName,
+                              true,
+                            ).toUpperCase()}
+                          </h4> */}
+                          <span className="future-events-region-count m-auto">
+                            <h4 className="archive future-events-region-title">
                               {capitalizeFirstLetter(
                                 regionName,
                                 true,
                               ).toUpperCase()}
-                            </h4> */}
-                            <span className="future-events-region-count m-auto">
-                              <h4 className="archive future-events-region-title">
-                                {capitalizeFirstLetter(
-                                  regionName,
-                                  true,
-                                ).toUpperCase()}
-                              </h4>{" "}
-                            </span>
-                          </div>
-                          <FocusCards
-                            cards={regionEvents}
-                            region={regionName}
-                          />
-                        </section>
-                      );
-                    })}
+                            </h4>{" "}
+                          </span>
+                        </div>
+                        <FocusCards
+                          cards={regionEvents}
+                          region={regionName}
+                        />
+                      </section>
+                    ))}
                   </div>
                 </div>
               )
@@ -221,9 +234,10 @@ const FutureEvents = ({ initialEvents, ...props }) => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      {/* Start Breadcrump Area */}
-      <Breadcrumb title={"Future Events"} />
-      {/* End Breadcrump Area */}
+      <Breadcrumb
+        title="Future Events"
+        description="See what is coming up and plan your next gathering with the Bulgarian community near you."
+      />
 
       {/* Add Calendar Subscription Component Here */}
       <CalendarSubscriptionComponent />
@@ -249,7 +263,7 @@ const FutureEvents = ({ initialEvents, ...props }) => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

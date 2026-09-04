@@ -1,27 +1,57 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import PageHelmet from "../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../component/header/Header";
-import Footer from "../../component/footer/Footer";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/user";
-import ImageFb from "../../elements/ui/media/ImageFb";
-import Countdown from "../../elements/ui/functional/Countdown";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../../elements/ui/loading/Loader";
-import { Link, useParams, useNavigate } from "@/util/navigation";
-import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
-import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import { estimatePriceByEvent, isMember } from "../../util/functions/helpers";
-import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
+import React, {
+  useEffect,
+  useState,
+} from "react";
 import moment from "moment";
-import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiChevronUp,
+  IconlyCalendar,
+  IconlyLocation,
+  IconlyTicket,
+  IconlyTimeCircle,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  Link,
+  useParams,
+} from "@/util/navigation";
+import Footer from "../../component/footer/Footer";
+import HeaderTwo from "../../component/header/HeaderTwo";
+import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
-import EventStructuredData from "../../component/common/EventStructuredData";
+import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
+import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import EventImageCarousel from "../../elements/ui/EventImageCarousel";
+import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
+import TicketClosingCountdown from "../../elements/ui/functional/TicketClosingCountdown";
+import ImageFb from "../../elements/ui/media/ImageFb";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { selectUser } from "../../redux/user";
+import {
+  formatCorrectedDateTime,
+  MOMENT_DATE_TIME,
+} from "../../util/functions/date";
+import {
+  estimatePriceByEvent,
+  isMember,
+} from "../../util/functions/helpers";
+
+const getNumericPrice = (value) => {
+  const numericPrice = Number(value);
+  return Number.isFinite(numericPrice) ? numericPrice : null;
+};
+
+const formatEuro = (value) =>
+  new globalThis.Intl.NumberFormat("en-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 
 /**
  * `initialEvent` is fetched on the server by the route, so the event is in the
@@ -35,7 +65,6 @@ const EventDetails = ({ initialEvent = null }) => {
   const user = useSelector(selectUser);
 
   const { region, eventId } = useParams();
-  const navigate = useNavigate();
 
   const { loading, sendRequest } = useHttpClient();
 
@@ -51,7 +80,9 @@ const EventDetails = ({ initialEvent = null }) => {
         );
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
-      } catch (err) {}
+      } catch (err) {
+        // The server-rendered event remains available if the live refresh fails.
+      }
     };
 
     getEventDetails();
@@ -65,106 +96,164 @@ const EventDetails = ({ initialEvent = null }) => {
     return <NoEventFound />;
   }
 
-  const price = estimatePriceByEvent(selectedEvent, user);
-  const bgImageUrl =
-    selectedEvent.bgImageExtra && selectedEvent?.bgImageSelection == 2
-      ? selectedEvent.bgImageExtra
-      : `/assets/images/bg/bg-image-${selectedEvent.bgImage}.webp`;
-
+  const price = estimatePriceByEvent(selectedEvent, user, {
+    withIncludedText: false,
+    blockDiscounts: false,
+    withMemberBadge: true,
+  });
   const eventTitle = selectedEvent.newTitle || selectedEvent.title;
-  const eventDescription =
-    selectedEvent.description || selectedEvent.text?.substring(0, 160);
-  const eventUrl = `https://www.bulgariansociety.nl/${region}/event-details/${eventId}`;
+  const eventImages = Array.from(
+    new Set([selectedEvent.poster, ...(selectedEvent.images || [])].filter(Boolean))
+  );
+  const userIsMember = isMember(user);
+  const userIsLoggedIn = Boolean(user?.token);
+  const ticketIsFree =
+    selectedEvent.isFree || (userIsMember && selectedEvent.isMemberFree);
+  const ticketActionLabel = ticketIsFree ? "Get ticket" : "Buy ticket";
+  const guestPrice = getNumericPrice(selectedEvent?.product?.guest?.price);
+  const memberPrice = selectedEvent.isMemberFree
+    ? 0
+    : getNumericPrice(selectedEvent?.product?.member?.price);
+  const memberSaving =
+    guestPrice !== null && memberPrice !== null && memberPrice < guestPrice
+      ? guestPrice - memberPrice
+      : null;
+  const includedWithTicket = userIsMember
+    ? selectedEvent.memberIncluding || selectedEvent.entryIncluding
+    : selectedEvent.entryIncluding;
+  const ticketInclusions = includedWithTicket?.replace(/\s+\*\s+/g, "\n• ");
+  const membershipOfferTitle = userIsMember
+    ? memberSaving !== null
+      ? `You save ${formatEuro(memberSaving)} and keep your ticket`
+      : "Your ticket stays in your collection"
+    : memberSaving !== null
+      ? `Save ${formatEuro(memberSaving)} and keep your ticket as a member`
+      : "Keep your ticket as a member";
+  const purchasePath = `/${region}/purchase-ticket/${eventId}`;
+  const showMembershipOffer =
+    !selectedEvent.ticketLink && !userIsLoggedIn;
+  const factsInsideBookingCard = !showMembershipOffer;
 
-  const eventImages = selectedEvent.images.filter(Boolean); // Remove any null/undefined values
+  const rememberEventPage = () => {
+    sessionStorage.setItem(
+      "prevUrl",
+      `/${region}/event-details/${eventId}`
+    );
+  };
+
+  const purchaseActions = (
+    <div className="event-purchase-actions">
+      {selectedEvent.ticketLink && !eventClosed ? (
+        <a
+          href={selectedEvent.ticketLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rn-button-style--2 rn-btn-reverse-green event-action-control "
+        >
+          {ticketActionLabel}
+        </a>
+      ) : !eventClosed ? (
+        <Link
+          to={purchasePath}
+          className="rn-button-style--2 rn-btn-reverse-green event-action-control "
+        >
+          {ticketActionLabel}
+        </Link>
+      ) : (
+        <button
+          type="button"
+          disabled
+          className="rn-button-style--2 rn-btn-reverse-green event-action-control "
+        >
+          Sold out
+        </button>
+      )}
+    </div>
+  );
+  const eventFacts = (
+    <section
+      className={`event-details-facts${
+        selectedEvent.ticketTimer ? "" : " event-details-facts-two"
+      }${factsInsideBookingCard ? " event-details-facts--inside-booking" : ""}`}
+      aria-label="Event details"
+    >
+      <div className="event-detail-item">
+        <span className="event-detail-icon">
+          <IconlyCalendar />
+        </span>
+        <div>
+          <span className="event-detail-label type-caption">Date</span>
+          <strong>
+            {selectedEvent.correctedDate
+              ? formatCorrectedDateTime(selectedEvent.correctedDate)
+              : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
+          </strong>
+          {selectedEvent.correctedDate && (
+            <span className="event-detail-update type-caption">
+              Updated date and time
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="event-detail-item">
+        <span className="event-detail-icon">
+          <IconlyLocation />
+        </span>
+        <div>
+          <span className="event-detail-label type-caption">Location</span>
+          <strong>{selectedEvent.location}</strong>
+        </div>
+      </div>
+
+      {selectedEvent.ticketTimer && (
+        <div className="event-detail-item event-detail-item-wide">
+          <span className="event-detail-icon">
+            <IconlyTimeCircle />
+          </span>
+          <div>
+            <span className="event-detail-label type-caption">
+              Time to closing
+            </span>
+            <TicketClosingCountdown
+              isClosed={selectedEvent.isSaleClosed || eventClosed}
+              onClose={setEventClosed}
+              targetTime={selectedEvent.ticketTimer}
+            />
+          </div>
+        </div>
+      )}
+    </section>
+  );
+  const stickyMembershipSaving =
+    showMembershipOffer && memberSaving !== null ? (
+      <Link
+        className="event-sticky-membership-saving type-caption"
+        onClick={rememberEventPage}
+        to="/signup"
+      >
+        Save {formatEuro(memberSaving)} by becoming a member
+      </Link>
+    ) : null;
 
   return (
     <React.Fragment>
-      <PageHelmet
-        pageTitle={eventTitle}
-        description={eventDescription}
-        image={selectedEvent.poster || bgImageUrl}
-        type="event"
-        canonicalUrl={eventUrl}
-        keywords={`${eventTitle}, Bulgarian event, ${region}, BGSNL event, Bulgarian Society`}
-      />
-      <EventStructuredData event={selectedEvent} region={region} />
-
-      <Header
+      <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"
         logoname="logo.png"
       />
 
-      {/* Start Breadcrump Area */}
-      <div
-        className={`rn-page-title-area pt--120 pb--190 bg_image`}
-        style={{ backgroundImage: `url(${bgImageUrl})` }}
-        data-black-overlay="7"
-      >
+      <main className="rn-portfolio-details event-details-page">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">
-                  {selectedEvent.newTitle || selectedEvent.title}
-                </h2>
-                <p>{selectedEvent.description}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* End Breadcrump Area */}
-
-      {/* Start Portfolio Details */}
-      <div className="rn-portfolio-details ptb--120 bg_color--1">
-        <div className="container">
-          <div className="row">
-            <div className="col-12 mb--20">
-              <div
-                className="portfolio-view-list d-flex flex-wrap"
-                style={{ justifyContent: "space-between" }}
-              >
-                <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>When</h3>
-                  <p style={{}}>
-                    {moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
-                  </p>
-                  {selectedEvent.correctedDate && (
-                    <p style={{ color: "#f80707" }} className="error">
-                      {"Updated Date/Time -> " +
-                        formatCorrectedDateTime(selectedEvent.correctedDate)}
-                    </p>
-                  )}
-                </div>
-
-                <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Where</h3>
-                  <p style={{}}>{selectedEvent.location}</p>
-                </div>
-
-                <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Entry fee</h3>
-                  <p
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    {price}
-                    <DynamicTicketBadge
-                      isMember={isMember(user)}
-                      product={selectedEvent?.product}
-                      event={selectedEvent}
-                    />
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-5 col-md-12 mb--40">
-              {/* Event Images Carousel */}
+          <div
+            className={`event-details-layout${
+              factsInsideBookingCard
+                ? " event-details-layout--facts-inside-booking"
+                : ""
+            }`}
+          >
+            <section className="event-details-media" aria-label="Event images">
               {eventImages.length > 1 ? (
                 <EventImageCarousel images={eventImages} />
               ) : (
@@ -173,136 +262,123 @@ const EventDetails = ({ initialEvent = null }) => {
                     src={selectedEvent.poster}
                     alt={eventTitle}
                     className="event-poster-image"
+                    eager
+                    fetchPriority="high"
                   />
                 </div>
               )}
-            </div>
+            </section>
 
-            <div className="col-lg-7 col-md-12">
-              <div className="portfolio-details">
-                <div className="inner">
-                  <h3 style={{ fontSize: "24px" }}>About</h3>
-                  <p style={{ whiteSpace: "pre-line" }}>{selectedEvent.text}</p>
+            <div className="event-details-content">
+              {!factsInsideBookingCard && eventFacts}
 
-                  {
-                    //for links to subEvent
-                    selectedEvent?.subEvent?.description &&
-                      selectedEvent?.subEvent.links.length > 0 && (
-                        <div className="mt--40 mb--40 team_member_border_1 center_section">
-                          <h3 className="center_text">
-                            {selectedEvent.subEvent.description}
-                          </h3>
-                          <div className="row">
-                            {selectedEvent.subEvent.links.map((link, idx) => {
-                              return (
-                                <a
-                                  key={idx}
-                                  className="rn-button-style--2 rn-btn-reverse-green center_text center_div_no_gap m--5"
-                                  href={link.href}
-                                >
-                                  <span className="">{link.name}</span>
-                                </a>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )
-                  }
-                  {!selectedEvent.isSaleClosed &&
-                    (loading ? (
-                      <div>
-                        <h3 className="mt--20">
-                          Checking Ticket Availability - please be patient!
-                        </h3>
-                        <Loader />
-                      </div>
-                    ) : (
-                      <StickyButtonFooter>
-                        <div
-                          className="purchase-btn gap-3"
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
+              <section
+                className="event-booking-card"
+                aria-label="Ticket options"
+              >
+                <div className="event-booking-heading">
+                  <div>
+                    <div className="event-ticket-price">
+                      <span className="event-ticket-price-value">
+                        <span
+                          className="event-ticket-price-icon"
+                          aria-hidden="true"
                         >
-                          {selectedEvent.ticketLink ? (
-                            <div>
-                              <div
-                                className="purchase-btn"
-                                style={{ justifyContent: "center" }}
-                              >
-                                <a
-                                  style={
-                                    eventClosed
-                                      ? {
-                                          pointerEvents: "none",
-                                          backgroundColor: "#ccc",
-                                          borderColor: "white",
-                                        }
-                                      : {}
-                                  }
-                                  href={selectedEvent.ticketLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="rn-button-style--2 rn-btn-reverse-green"
-                                >
-                                  {eventClosed ? "Sold out" : "Buy Ticket"}
-                                </a>
-                                <button
-                                  type="button"
-                                  onClick={() => navigate(-1)}
-                                  className="rn-button-style--2 rn-btn-reverse-red"
-                                >
-                                  <span>Back</span>
-                                </button>
-                              </div>
-                              <p className="information mt--20">
-                                *Tickets are purchased from an outside platform!
-                                Click the button to be redirected
-                              </p>
-                            </div>
-                          ) : (
-                            <>
-                              {!eventClosed && (
-                                <Link
-                                  to={`/${region}/purchase-ticket/${eventId}`}
-                                  className="rn-button-style--2 rn-btn-reverse-green"
-                                >
-                                  Buy Ticket
-                                </Link>
-                              )}
-                              <button
-                                type="button"
-                                onClick={() => navigate(-1)}
-                                className="rn-button-style--2 rn-btn-reverse-red"
-                              >
-                                <span>Back</span>
-                              </button>
-                            </>
-                          )}
-                          {selectedEvent.ticketTimer && (
-                            <Countdown
-                              targetTime={selectedEvent.ticketTimer}
-                              eventClosed={eventClosed}
-                              setEventClosed={setEventClosed}
-                            />
-                          )}
-                        </div>
-                      </StickyButtonFooter>
-                    ))}
+                          <IconlyTicket />
+                        </span>
+                        <span className="type-heading-lg">{price}</span>
+                      </span>
+                      <DynamicTicketBadge
+                        isMember={userIsMember}
+                        product={selectedEvent?.product}
+                        event={selectedEvent}
+                      />
+                    </div>
+                  </div>
+
+                  {!userIsLoggedIn && memberSaving !== null && (
+                    <div
+                      className="event-price-comparison "
+                      aria-label="Price comparison"
+                    >
+                      <span
+                        className="is-current"
+                        aria-current="true"
+                      >
+                        Regular {formatEuro(guestPrice)}
+                      </span>
+                      <span className="is-alternative">
+                        Member {formatEuro(memberPrice)}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              </div>
+
+                {ticketInclusions && (
+                  <p className="event-ticket-includes ">{ticketInclusions}</p>
+                )}
+
+                {factsInsideBookingCard && eventFacts}
+
+                {showMembershipOffer && (
+                  <MembershipOfferBanner
+                    title={membershipOfferTitle}
+                    onAction={rememberEventPage}
+                  />
+                )}
+
+                {selectedEvent.isSaleClosed ? (
+                  <p className="event-sale-status ">Ticket sales are closed.</p>
+                ) : (
+                  <StickyButtonFooter stickyContent={stickyMembershipSaving}>
+                    {purchaseActions}
+                  </StickyButtonFooter>
+                )}
+
+                {selectedEvent.ticketLink && !eventClosed && (
+                  <p className="event-external-note ">
+                    Tickets are sold by an external ticket platform.
+                  </p>
+                )}
+              </section>
+
+              <section className="event-about-card">
+                <div className="event-about-heading">
+                  <h3>{eventTitle}</h3>
+                </div>
+                <div className="event-about-body">
+                  <p className="event-about-copy type-body">
+                    {selectedEvent.text}
+                  </p>
+
+                  {selectedEvent?.subEvent?.description &&
+                    selectedEvent?.subEvent?.links?.length > 0 && (
+                      <div className="event-related-links">
+                        <h4>{selectedEvent.subEvent.description}</h4>
+                        <div>
+                          {selectedEvent.subEvent.links.map((link, idx) => (
+                            <a
+                              key={idx}
+                              href={link.href}
+                              className="rn-button-style--2 rn-btn-green rn-btn-small "
+                            >
+                              {link.name}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                </div>
+              </section>
             </div>
           </div>
         </div>
-      </div>
-      {/* End Portfolio Details */}
+      </main>
 
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}
@@ -311,4 +387,9 @@ const EventDetails = ({ initialEvent = null }) => {
     </React.Fragment>
   );
 };
+
+EventDetails.propTypes = {
+  initialEvent: PropTypes.object,
+};
+
 export default EventDetails;

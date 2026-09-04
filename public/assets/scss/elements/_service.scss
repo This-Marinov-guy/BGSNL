@@ -59,16 +59,16 @@
       h4 {
         &.title {
           margin-bottom: 20px;
-          font-weight: 400;
-          font-size: 26px;
+
+
           @media #{$sm-layout} {
             margin-bottom: 12px;
-            font-weight: 400;
-            font-size: 20px;
+
+
           }
           @media #{$large-mobile} {
             margin-bottom: 9px;
-            font-size: 18px;
+
           }
         }
       }
@@ -76,7 +76,7 @@
       li,
       .edit_btn {
         opacity: 0.75;
-        font-weight: 300;
+
       }
     }
   }
@@ -125,8 +125,8 @@
       border-radius: 10px;
     }
     .icon {
-      font-size: 54px;
-      font-weight: 400;
+
+
       margin-bottom: 23px;
       display: inline-flex;
       color: $theme-color;
@@ -142,13 +142,13 @@
       h3 {
         &.title {
           margin-bottom: 19px;
-          font-weight: 500;
+
           @extend %transition;
           @media #{$laptop-device} {
-            font-size: 23px;
+
           }
           @media #{$sm-layout} {
-            font-size: 23px;
+
           }
           @media #{$md-layout} {
             margin-bottom: 8px;
@@ -250,8 +250,8 @@
     }
     .icon {
       display: inline-flex;
-      font-size: 54px;
-      font-weight: 400;
+
+
       margin-bottom: 23px;
       display: inline-flex;
       color: $theme-color;
@@ -270,19 +270,19 @@
       h3 {
         &.title {
           margin-bottom: 19px;
-          font-weight: 500;
-          font-size: 23px;
+
+
           @extend %transition;
           @media #{$laptop-device} {
             margin-bottom: 12px;
-            font-size: 23px;
+
           }
           @media #{$large-mobile} {
             color: #fff;
           }
           @media #{$sm-layout} {
             margin-bottom: 10px;
-            font-size: 23px;
+
           }
         }
       }
@@ -344,10 +344,10 @@
     justify-content: center;
 
     h3 {
-      font-size: 23px;
+
       margin-top: 30px;
       margin-bottom: 10px;
-      font-weight: 600;
+
       a {
         @extend %transition;
         color: $heading-color;
@@ -357,7 +357,7 @@
       }
     }
     .edit_btn {
-      font-size: 17px;
+
       line-height: 24px;
     }
   }
@@ -426,7 +426,7 @@
     .content {
       h3 {
         &.title {
-          font-size: 19px;
+
           color: #ffffff;
         }
       }
@@ -549,15 +549,15 @@
   }
 
   &__title {
-    font-size: 1.25rem;
-    font-weight: 600;
+
+
     margin-bottom: 12px;
     line-height: 1.4;
     color: inherit;
     transition: color 0.3s ease;
 
     @media #{$sm-layout} {
-      font-size: 1.1rem;
+
       margin-bottom: 8px;
     }
   }
@@ -570,19 +570,19 @@
 
     p {
       margin: 0;
-      font-size: 0.9rem;
+
       line-height: 1.5;
       display: flex;
       align-items: center;
       gap: 5px;
 
       strong {
-        font-weight: 600;
+
         min-width: 60px;
       }
 
       @media #{$sm-layout} {
-        font-size: 0.85rem;
+
       }
     }
   }
@@ -613,12 +613,12 @@
 
 .region-title {
   margin-bottom: 20px;
-  font-weight: 600;
+
   letter-spacing: 0.5px;
 
   @media #{$sm-layout} {
     margin-bottom: 15px;
-    font-size: 1.3rem;
+
   }
 }
 
@@ -640,12 +640,12 @@
   text-align: center;
   padding: 40px 20px;
   color: rgba(29, 29, 36, 0.5);
-  font-size: 1.1rem;
+
   font-style: italic;
 
   @media #{$sm-layout} {
     padding: 30px 20px;
-    font-size: 1rem;
+
   }
 }
 
@@ -673,22 +673,22 @@
   }
 
   &__label {
-    font-size: 0.85rem;
+
     color: #6c757d;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 8px;
-    font-weight: 500;
+
   }
 
   &__value {
-    font-size: 1.8rem;
-    font-weight: 700;
+
+
     color: #1f1f25;
     line-height: 1.2;
 
     @media #{$sm-layout} {
-      font-size: 1.4rem;
+
     }
   }
 }
@@ -699,7 +699,7 @@
   padding: 10px 12px;
   border: 2px solid #e8e8e8;
   border-radius: 8px;
-  font-size: 0.95rem;
+
   color: #1f1f25;
   transition: border-color 0.3s ease;
   background: #fff;
@@ -751,8 +751,8 @@
   }
 
   &__name {
-    font-size: 1rem;
-    font-weight: 600;
+
+
     color: #1f1f25;
     margin-bottom: 4px;
   }
@@ -761,12 +761,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    font-size: 0.85rem;
+
     color: #6c757d;
 
     @media #{$sm-layout} {
       gap: 8px;
-      font-size: 0.8rem;
+
     }
   }
 
@@ -774,11 +774,11 @@
     background: #e9ecef;
     padding: 2px 8px;
     border-radius: 4px;
-    font-weight: 500;
+
   }
 
   &__status {
-    font-weight: 600;
+
   }
 
   &__toggle {
@@ -816,7 +816,7 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
-    font-size: 0.9rem;
+
     color: #1f1f25;
 
     a {
@@ -831,7 +831,7 @@
     strong {
       min-width: 100px;
       color: #6c757d;
-      font-weight: 500;
+
     }
   }
 }
@@ -897,8 +897,8 @@
   }
 
   &__name {
-    font-size: 1rem;
-    font-weight: 600;
+
+
     color: #1f1f25;
     margin-bottom: 4px;
     white-space: nowrap;
@@ -910,22 +910,22 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    font-size: 0.85rem;
+
     color: #6c757d;
 
     @media #{$sm-layout} {
       gap: 8px;
-      font-size: 0.8rem;
+
     }
   }
 
   &__revenue {
-    font-weight: 600;
+
     color: #28a745;
   }
 
   &__presence {
-    font-weight: 500;
+
   }
 
   &__toggle {
@@ -950,7 +950,7 @@
 
     .label {
       display: block;
-      font-size: 0.8rem;
+
       color: #6c757d;
       text-transform: uppercase;
       letter-spacing: 0.3px;
@@ -959,8 +959,8 @@
 
     .value {
       display: block;
-      font-size: 1.2rem;
-      font-weight: 700;
+
+
       color: #1f1f25;
     }
 
@@ -968,7 +968,7 @@
       padding: 8px 4px;
 
       .value {
-        font-size: 1rem;
+
       }
     }
   }
@@ -977,16 +977,16 @@
     margin-top: 16px;
 
     h5 {
-      font-size: 1rem;
-      font-weight: 600;
+
+
       margin-bottom: 12px;
     }
 
     .table {
-      font-size: 0.85rem;
+
 
       th {
-        font-weight: 600;
+
         border-top: none;
         background: #f8f9fa;
       }

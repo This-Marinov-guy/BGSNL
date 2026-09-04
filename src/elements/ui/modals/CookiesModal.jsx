@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { LOCAL_STORAGE_COOKIE_CONSENT } from "../../../util/defines/common";
+import {
+  useEffect,
+  useState,
+} from "react";
 import { Link } from "@/util/navigation";
+import { LOCAL_STORAGE_COOKIE_CONSENT } from "../../../util/defines/common";
 
 const CookiesModal = () => {
   const [visible, setVisible] = useState(false);

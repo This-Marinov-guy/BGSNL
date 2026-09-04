@@ -67,7 +67,7 @@ abbr[title] {
 }
 b,
 strong {
-  font-weight: bold;
+
 }
 dfn {
   font-style: italic;
@@ -81,7 +81,7 @@ kbd,
 pre,
 samp {
   font-family: monospace, serif;
-  font-size: 16px;
+
   -webkit-hyphens: none;
   -moz-hyphens: none;
   -ms-hyphens: none;
@@ -91,7 +91,7 @@ pre {
   background: #f5f5f5;
   color: #666;
   font-family: monospace;
-  font-size: 16px;
+
   margin: 20px 0;
   overflow: auto;
   padding: 20px;
@@ -115,9 +115,9 @@ q:after {
   content: none;
 }
 blockquote {
-  font-size: 20px;
+
   font-style: italic;
-  font-weight: 300;
+
   margin: 24px 40px;
 }
 blockquote blockquote {
@@ -125,25 +125,25 @@ blockquote blockquote {
 }
 blockquote cite,
 blockquote small {
-  font-size: 16px;
-  font-weight: normal;
+
+
   text-transform: uppercase;
 }
 blockquote em,
 blockquote i {
   font-style: normal;
-  font-weight: 300;
+
 }
 blockquote strong,
 blockquote b {
-  font-weight: 400;
+
 }
 small {
-  font-size: 17px !important;
+
 }
 sub,
 sup {
-  font-size: 75%;
+
   line-height: 0;
   position: relative;
   vertical-align: baseline;
@@ -158,7 +158,7 @@ dl {
   margin: 0 20px;
 }
 dt {
-  font-weight: bold;
+
 }
 dd {
   margin: 0 0 20px;
@@ -203,7 +203,7 @@ button,
 input,
 select,
 textarea {
-  font-size: 100%;
+
   margin: 0;
   max-width: 100%;
   vertical-align: baseline;
@@ -300,7 +300,7 @@ table {
   border-bottom: 1px solid #ededed;
   border-collapse: collapse;
   border-spacing: 0;
-  font-size: 18px;
+
   line-height: 2;
   margin: 0 0 20px;
   width: 100%;
@@ -308,15 +308,15 @@ table {
 caption,
 th,
 td {
-  font-weight: normal;
+
   text-align: center;
 }
 caption {
-  font-size: 22px;
+
   margin: 20px 0;
 }
 th {
-  font-weight: bold;
+
   text-transform: uppercase;
 }
 td {

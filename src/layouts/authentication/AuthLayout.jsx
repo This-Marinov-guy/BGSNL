@@ -1,15 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "@/util/navigation";
-import { selectUser } from "../../redux/user";
-import { showNotification } from "../../redux/notification";
-import { checkAuthorization } from "../../util/functions/authorization";
-import AccountLocked from "../../elements/ui/modals/AccountLocked";
-import { ACTIVE, USER_STATUSES } from "../../util/defines/enum";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import {
+  useLocation,
+  useNavigate,
+} from "@/util/navigation";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
+import AccountLocked from "../../elements/ui/modals/AccountLocked";
+import { showNotification } from "../../redux/notification";
+import { selectUser } from "../../redux/user";
 import { LOCAL_STORAGE_USER_DATA } from "../../util/defines/common";
+import {
+  ACTIVE,
+  USER_STATUSES,
+} from "../../util/defines/enum";
+import { checkAuthorization } from "../../util/functions/authorization";
 
 const AuthLayout = ({ children, access = [] }) => {
   const location = useLocation();

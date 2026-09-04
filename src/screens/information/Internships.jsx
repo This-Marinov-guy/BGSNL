@@ -1,20 +1,37 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  AnimatePresence,
+  motion,
+} from "framer-motion";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "@/util/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiBriefcase,
+  FiChevronUp,
+  FiUsers,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  useNavigate,
+  useSearchParams,
+} from "@/util/navigation";
 import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
 import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp, FiBriefcase, FiUsers, FiCalendar, FiSearch } from "react-icons/fi";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../../elements/ui/loading/Loader";
-import { selectUser } from "../../redux/user";
+import HeaderTwo from "../../component/header/HeaderTwo";
+import Breadcrumb from "../../elements/common/Breadcrumb";
+import Pagination from "../../elements/common/Pagination";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
+import SearchField from "../../elements/ui/functional/SearchField";
+import PageLoading from "../../elements/ui/loading/PageLoading";
 import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
-import { Paginator } from "primereact/paginator";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { selectUser } from "../../redux/user";
 
 const ROWS_PER_PAGE_OPTIONS = [6, 12, 24];
 const DEFAULT_ROWS = 12;
@@ -150,7 +167,7 @@ const Internships = ({ initialInternships = [] }) => {
   }, [user?.token]);
 
   if (loading) {
-    return <Loader />;
+    return <PageLoading />;
   }
 
   return (
@@ -168,26 +185,10 @@ const Internships = ({ initialInternships = [] }) => {
         forceRegion={currentUser?.region ?? null}
       />
 
-      {/* Start Page Title Area */}
-      <div
-        className="rn-page-title-area pt--120 pb--190 bg_image bg_image--15"
-        data-black-overlay="6"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">Internships</h2>
-                <p>
-                  Discover career opportunities and connect with our partner
-                  companies
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* End Page Title Area */}
+      <Breadcrumb
+        title="Internships"
+        description="Discover career opportunities and connect with our partner companies."
+      />
 
       {/* Start Internships Area */}
       <div className="rn-internships-area mt--100 rn-section-gap">
@@ -248,35 +249,12 @@ const Internships = ({ initialInternships = [] }) => {
               onSubmit={handleSearchSubmit}
               className="internships-search-form mb--20"
             >
-              <div style={{ maxWidth: "400px" }}>
-                <div style={{ position: "relative" }}>
-                  <FiSearch
-                    style={{
-                      position: "absolute",
-                      left: "14px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      color: "#6b7280",
-                      fontSize: "18px",
-                      pointerEvents: "none",
-                    }}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="form-control"
-                    style={{
-                      paddingLeft: "44px",
-                      borderRadius: "10px",
-                      border: "1px solid rgba(0,0,0,0.1)",
-                      fontSize: "15px",
-                    }}
-                    aria-label="Search internships"
-                  />
-                </div>
-              </div>
+              <SearchField
+                ariaLabel="Search internships"
+                className="internships-search-field"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+              />
             </form>
 
             <div className="internships-type-filter d-flex flex-wrap gap-2 align-items-center">
@@ -296,7 +274,6 @@ const Internships = ({ initialInternships = [] }) => {
                   }
                   style={{
                     padding: "8px 18px",
-                    fontSize: "14px",
                     borderRadius: "8px",
                     border:
                       typeParam === value
@@ -359,12 +336,13 @@ const Internships = ({ initialInternships = [] }) => {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.2, delay: 0.15 }}
                   >
-                    <Paginator
+                    <Pagination
                       first={first}
                       rows={rowsParam}
                       totalRecords={totalRecords}
                       rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
                       onPageChange={onPageChange}
+                      ariaLabel="Internships pagination"
                     />
                   </motion.div>
                 </>
@@ -479,11 +457,15 @@ const Internships = ({ initialInternships = [] }) => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
     </React.Fragment>
   );
+};
+
+Internships.propTypes = {
+  initialInternships: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Internships;

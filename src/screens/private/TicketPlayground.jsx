@@ -1,14 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
 import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import Header from "../../component/header/Header";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import Footer from "../../component/footer/Footer";
-import { useHttpClient } from "../../hooks/common/http-hook";
+import Header from "../../component/header/Header";
 import Loader from "../../elements/ui/loading/Loader";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import { useHttpClient } from "../../hooks/common/http-hook";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -40,7 +45,7 @@ const TicketPlayground = () => {
             name labels.
           </p>
 
-          <Formik
+          <ValidatedFormik
             validationSchema={schema}
             initialValues={{ name: "Test", surname: "User", quantity: 1 }}
             onSubmit={async (values) => {
@@ -100,7 +105,7 @@ const TicketPlayground = () => {
                 </div>
               </Form>
             )}
-          </Formik>
+          </ValidatedFormik>
 
           {preview?.ticketUrl && (
             <div className="mt--50">

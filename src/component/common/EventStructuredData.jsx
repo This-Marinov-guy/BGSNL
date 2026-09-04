@@ -1,5 +1,4 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 
 /**
  * Structured data component for Event pages
@@ -47,11 +46,12 @@ const EventStructuredData = ({ event, region }) => {
   );
 
   return (
-    <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(structuredData)}
-      </script>
-    </Helmet>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+      }}
+    />
   );
 };
 

@@ -3,31 +3,55 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../public/assets/css/plugins.css";
 import "@/styles/globals.scss";
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Providers from "./providers";
-
-const SITE_URL = "https://www.bulgariansociety.nl";
+import {
+  DEFAULT_DESCRIPTION,
+  DEFAULT_IMAGE,
+  SITE_NAME,
+  SITE_URL,
+} from "@/util/seo/site";
+import {
+  organizationSchema,
+  serializeJsonLd,
+  websiteSchema,
+} from "@/util/seo/structured-data";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Bulgarian Society Netherlands",
+    default: SITE_NAME,
     template: "%s | BGSNL",
   },
-  description:
-    "Welcome to the official Bulgarian Society in Netherlands! We aim to bring Bulgarians together, develop Bulgarian culture, and showcase it among internationals. Find information about us, our events, and how to become a member.",
-  applicationName: "Bulgarian Society Netherlands",
-  authors: [{ name: "Bulgarian Society Netherlands" }],
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "community",
+  alternates: { canonical: SITE_URL },
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: `${SITE_URL}/assets/images/logo/logo-nl.png`,
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    "max-snippet": -1,
+    "max-image-preview": "large",
+    "max-video-preview": -1,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "Your Home Away From Home",
     description:
@@ -37,10 +61,11 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: `${SITE_URL}/assets/images/splashscreens/welcome.png`,
+        url: DEFAULT_IMAGE,
         width: 1200,
         height: 630,
         type: "image/png",
+        alt: "Bulgarian Society Netherlands — Your Home Away From Home",
       },
     ],
   },
@@ -49,10 +74,15 @@ export const metadata = {
     title: "Your Home Away From Home",
     description:
       "Join the Bulgarian Society in the Netherlands! Discover our events, become a member, and connect with fellow Bulgarians.",
-    images: [`${SITE_URL}/assets/images/splashscreens/welcome.png`],
+    images: [
+      {
+        url: DEFAULT_IMAGE,
+        alt: "Bulgarian Society Netherlands — Your Home Away From Home",
+      },
+    ],
   },
   appleWebApp: {
-    title: "Bulgarian Society Netherlands",
+    title: SITE_NAME,
   },
   other: {
     "al:ios:url": SITE_URL,
@@ -66,54 +96,6 @@ export const viewport = {
   themeColor: "#000000",
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  url: SITE_URL,
-  name: "Bulgarian Society Netherlands",
-  alternateName: "BGSNL",
-  description:
-    "Join the Bulgarian Society in the Netherlands! Discover our events, become a member, and connect with fellow Bulgarians.",
-  logo: {
-    "@type": "ImageObject",
-    url: `${SITE_URL}/assets/images/logo/logo-nl.png`,
-    width: 512,
-    height: 512,
-  },
-  image: `${SITE_URL}/assets/images/splashscreens/welcome.png`,
-  email: "info@bulgariansociety.nl",
-  address: { "@type": "PostalAddress", addressCountry: "NL" },
-  sameAs: [
-    "https://www.instagram.com/bulgariansociety.netherlands/",
-    "https://www.linkedin.com/company/bulgarian-society-netherlands",
-  ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "info@bulgariansociety.nl",
-    contactType: "customer service",
-  },
-  memberOf: {
-    "@type": "Organization",
-    name: "Bulgarian communities in the Netherlands",
-  },
-  areaServed: { "@type": "Country", name: "Netherlands" },
-  knowsAbout: [
-    "Bulgarian Culture",
-    "Student Organizations",
-    "Events",
-    "Community Building",
-  ],
-  foundingDate: "2020",
-};
-
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-  ],
-};
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -123,11 +105,11 @@ export default function RootLayout({ children }) {
 
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationSchema) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
         />
 
         <script

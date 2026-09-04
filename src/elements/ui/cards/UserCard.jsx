@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+import moment from "moment";
+import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { Tooltip } from "@/compat/primereact";
 import {
   FiCheckCircle,
   FiEdit2,
-  FiPlus,
-  FiHelpCircle,
   FiFile,
-} from "react-icons/fi";
-import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
-import { ALUMNI } from "../../../util/defines/common";
-import moment from "moment";
-import PropTypes from "prop-types";
-import { Tooltip } from "primereact/tooltip";
-import { useHttpClient } from "../../../hooks/common/http-hook";
-import { useDispatch } from "react-redux";
-import { showNotification } from "../../../redux/notification";
-import CVUploadModal from "../modals/CVUploadModal";
-import { DOCUMENT_TYPES } from "../../../util/defines/enum";
+  FiHelpCircle,
+  FiPlus,
+} from "@/elements/ui/icons/IconlyIcons";
 import { useRefreshUser } from "../../../hooks/common/api-hooks";
+import { useHttpClient } from "../../../hooks/common/http-hook";
+import { showNotification } from "../../../redux/notification";
+import { ALUMNI } from "../../../util/defines/common";
+import { DOCUMENT_TYPES } from "../../../util/defines/enum";
+import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
+import CVUploadModal from "../modals/CVUploadModal";
 
 const UserCard = ({ user, onUserRefresh }) => {
   const isAlumni = user.roles.includes(ALUMNI);
@@ -44,7 +47,8 @@ const UserCard = ({ user, onUserRefresh }) => {
     }
   }, [user?.quote, isEditingQuote]);
 
-  const handleSaveQuote = async () => {
+  const handleSaveQuote = async (event) => {
+    event.preventDefault();
     try {
       setIsSavingQuote(true);
       const response = await sendRequest("user/alumni-quote", "PATCH", {
@@ -200,10 +204,14 @@ const UserCard = ({ user, onUserRefresh }) => {
               )}
               {user?.university && (
                 <li>
-                  <span className="bold">University: </span>
-                  {user.university === "other"
-                    ? user.otherUniversityName
-                    : user.university}
+                  <span className="bold">
+                    {user.university === "working" ? "Profession: " : "University: "}
+                  </span>
+                  {user.university === "working"
+                    ? user.profession || "Not specified"
+                    : user.university === "other"
+                      ? user.otherUniversityName
+                      : user.university}
                 </li>
               )}
             </ul>
@@ -269,15 +277,15 @@ const UserCard = ({ user, onUserRefresh }) => {
                     marginLeft: "8px",
                     cursor: "pointer",
                     color: "#017363",
-                    fontSize: "16px",
                   }}
                 />
               </h4>
               {!isEditingQuote && (
                 <button
+                  type="button"
                   className="rn-button-style--2 rn-btn-small rn-btn-green"
                   onClick={() => setIsEditingQuote(true)}
-                  style={{ fontSize: "12px", padding: "5px 15px" }}
+                  style={{ padding: "5px 15px" }}
                 >
                   {user?.quote ? (
                     <>
@@ -295,9 +303,10 @@ const UserCard = ({ user, onUserRefresh }) => {
             <Tooltip target=".quote-help-icon" style={{ maxWidth: "300px" }} />
 
             {isEditingQuote ? (
-              <div>
+              <form onSubmit={handleSaveQuote}>
                 <textarea
                   className="rn-form-control"
+                  name="quote"
                   value={quoteValue}
                   onChange={(e) => setQuoteValue(e.target.value)}
                   placeholder="Enter your quote here..."
@@ -307,7 +316,6 @@ const UserCard = ({ user, onUserRefresh }) => {
                 />
                 <div
                   style={{
-                    fontSize: "12px",
                     color: "#666",
                     marginBottom: "10px",
                   }}
@@ -316,10 +324,10 @@ const UserCard = ({ user, onUserRefresh }) => {
                 </div>
                 <div className="d-flex" style={{ gap: "10px" }}>
                   <button
+                    type="submit"
                     className="rn-button-style--2 rn-btn-green"
-                    onClick={handleSaveQuote}
                     disabled={isSavingQuote}
-                    style={{ fontSize: "14px", padding: "8px 20px" }}
+                    style={{ padding: "8px 20px" }}
                   >
                     {isSavingQuote ? (
                       <>
@@ -334,15 +342,16 @@ const UserCard = ({ user, onUserRefresh }) => {
                     )}
                   </button>
                   <button
+                    type="button"
                     className="rn-button-style--2 rn-btn-reverse-red"
                     onClick={handleCancelEdit}
                     disabled={isSavingQuote}
-                    style={{ fontSize: "14px", padding: "8px 20px" }}
+                    style={{ padding: "8px 20px" }}
                   >
                     Cancel
                   </button>
                 </div>
-              </div>
+              </form>
             ) : (
               <div>
                 {user?.quote ? (
@@ -354,7 +363,6 @@ const UserCard = ({ user, onUserRefresh }) => {
                       borderRadius: "4px",
                       padding: "15px",
                       fontStyle: "italic",
-                      fontSize: "20px",
                     }}
                   >
                     &ldquo;{user.quote}&rdquo;
@@ -383,14 +391,14 @@ const UserCard = ({ user, onUserRefresh }) => {
                   marginLeft: "8px",
                   cursor: "pointer",
                   color: "#017363",
-                  fontSize: "16px",
                 }}
               />
             </h4>
             <button
+              type="button"
               className="rn-button-style--2 rn-btn-small rn-btn-green"
               onClick={() => setShowCVModal(true)}
-              style={{ fontSize: "12px", padding: "5px 15px" }}
+              style={{ padding: "5px 15px" }}
             >
               {hasCV ? (
                 <>
@@ -424,7 +432,7 @@ const UserCard = ({ user, onUserRefresh }) => {
                   href={cvDocument.content}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ fontSize: "16px", padding: "5px 12px" }}
+                  style={{ padding: "5px 12px" }}
                   className="d-flex align-items-center"
                 >
                   <FiFile
@@ -469,6 +477,7 @@ UserCard.propTypes = {
     birth: PropTypes.string,
     university: PropTypes.string,
     otherUniversityName: PropTypes.string,
+    profession: PropTypes.string,
     region: PropTypes.string,
     roles: PropTypes.array,
     subscription: PropTypes.object,

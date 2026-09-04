@@ -1,14 +1,9 @@
-import React from "react";
-import { MEMBERSHIP_PRICES_IDS } from "./PRICES";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChessRook,
-  faHome,
-  faUser,
-  faChessPawn,
-  faChessBishop,
-  faChessKing,
-} from "@fortawesome/free-solid-svg-icons";
+  IconlyChessKing3D,
+  IconlyChessKnight3D,
+  IconlyChessQueen3D,
+  IconlyChessRook3D,
+} from "@/elements/ui/icons/IconlyIcons";
 
 export const ALUMNI_MEMBERSHIP_SPECIFICS = [
   {
@@ -40,17 +35,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: true,
       },
     ],
-    icon: (
-      <FontAwesomeIcon
-        style={{
-          fontSize: "26px",
-          color: "black",
-          height: "75px",
-          marginLeft: "20px",
-        }}
-        icon={faChessPawn}
-      />
-    ),
+    icon: <IconlyChessKnight3D className="alumni-tier-chess-icon" />,
     price: 3,
     itemId: "price_1Rx1XKAShinXgMFZqWsg4V0D",
     renewItemId: "price_1Rx1XKAShinXgMFZqWsg4V0D",
@@ -85,17 +70,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
         strike: true,
       },
     ],
-    icon: (
-      <FontAwesomeIcon
-        style={{
-          fontSize: "24px",
-          color: "black",
-          height: "75px",
-          marginLeft: "20px",
-        }}
-        icon={faChessBishop}
-      />
-    ),
+    icon: <IconlyChessRook3D className="alumni-tier-chess-icon" />,
     price: 5,
     itemId: "price_1SGEBBAShinXgMFZuC6fiOqf",
     renewItemId: "price_1SGEBBAShinXgMFZuC6fiOqf",
@@ -135,17 +110,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     //   text: "Best Price",
     // },
     // borderColor: "#00acee",
-    icon: (
-      <FontAwesomeIcon
-        style={{
-          fontSize: "27px",
-          color: "black",
-          height: "75px",
-          marginLeft: "20px",
-        }}
-        icon={faChessRook}
-      />
-    ),
+    icon: <IconlyChessQueen3D className="alumni-tier-chess-icon" />,
     price: 7,
     itemId: "price_1SGEFLAShinXgMFZcWsbLjeE",
     renewItemId: "price_1SGEFLAShinXgMFZcWsbLjeE",
@@ -185,18 +150,7 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
       text: "Best Value",
     },
     borderColor: "#e5b80b",
-    icon: (
-      <FontAwesomeIcon
-        style={{
-          fontSize: "30px",
-          color: "black",
-          height: "75px",
-          marginLeft: "20px",
-        }}
-        icon={faChessKing}
-        className="icon-chess"
-      />
-    ),
+    icon: <IconlyChessKing3D className="alumni-tier-chess-icon" />,
     price: "10",
     itemId: "price_1SGEFoAShinXgMFZZzo95PeT",
     renewItemId: "price_1SGEFoAShinXgMFZZzo95PeT",

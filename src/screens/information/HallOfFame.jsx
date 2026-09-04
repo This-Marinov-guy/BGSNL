@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
 import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import { Dialog } from "primereact/dialog";
+import HeaderTwo from "../../component/header/HeaderTwo";
 import Tree from "../../component/userTree/Tree";
-import { Link } from "@/util/navigation";
+import Breadcrumb from "../../elements/common/Breadcrumb";
 import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
+import { useHttpClient } from "../../hooks/common/http-hook";
 
 // Approximate skeleton of the tree shape — circles for nodes, lines for branches
 function TreeSkeleton() {
@@ -75,8 +78,6 @@ const HallOfFame = ({ initialNodes = [] }) => {
 
   const [loading, setLoading] = useState(!initialNodes.length);
   const [nodes, setNodes] = useState(initialNodes);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [visible, setVisible] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -93,13 +94,6 @@ const HallOfFame = ({ initialNodes = [] }) => {
     fetchNodes();
   }, []);
 
-  const handleUserClick = (user) => {
-    if (user.quote) {
-      setSelectedUser(user);
-      setVisible(true);
-    }
-  };
-
   return (
     <React.Fragment>
       <PageHelmet pageTitle="Alumni Tree" />
@@ -109,26 +103,10 @@ const HallOfFame = ({ initialNodes = [] }) => {
         logoname="logo.png"
       />
 
-      {/* Start Breadcrump Area */}
-      <div
-        className="rn-page-title-area pt--120 pb--190 bg_image bg_image--15"
-        style={{ backgroundImage: `url(/assets/images/bg/bg-image-29.webp)` }}
-        data-black-overlay="6"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">Alumni Tree</h2>
-                <p>
-                  Our esteemed alumni members who make our society exceptional
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* End Breadcrump Area */}
+      <Breadcrumb
+        title="Alumni Tree"
+        description="Meet the alumni members whose time, ideas, and care continue to shape our society."
+      />
 
       {/* Start Alumni Tree Area */}
       <div className="rn-alumni-area mt--100 rn-section-gap">
@@ -172,7 +150,7 @@ const HallOfFame = ({ initialNodes = [] }) => {
                 </div>
               )}
               <div className="user-tree-section">
-                <Tree nodes={nodes} onUserClick={handleUserClick} />
+                <Tree nodes={nodes} />
               </div>
             </>
           )}
@@ -184,11 +162,15 @@ const HallOfFame = ({ initialNodes = [] }) => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
     </React.Fragment>
   );
+};
+
+HallOfFame.propTypes = {
+  initialNodes: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default HallOfFame;

@@ -1,13 +1,11 @@
-import React from "react";
 import {
-  FaInstagram,
-  FaFlickr,
-  FaLinkedinIn,
-  FaLinkedin,
-  FaFacebookF,
-  FaMailBulk,
   FaDollarSign,
-} from "react-icons/fa";
+  FaFacebookF,
+  FaFlickr,
+  FaInstagram,
+  FaLinkedin,
+  FaMailBulk,
+} from "@/elements/ui/icons/IconlyIcons";
 
 export const BG_INDEX = 23;
 

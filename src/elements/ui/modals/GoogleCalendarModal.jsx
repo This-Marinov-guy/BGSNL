@@ -1,9 +1,14 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { removeModal, selectModal } from "../../../redux/modal";
-import { Dialog } from "primereact/dialog";
-import { GOOGLE_CALENDAR_MODAL } from "../../../util/defines/common";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import { Dialog } from "@/compat/primereact";
 import CalendarSubscriptionComponent from "../../../component/common/CalendarSubscriptionComponent";
+import {
+  removeModal,
+  selectModal,
+} from "../../../redux/modal";
+import { GOOGLE_CALENDAR_MODAL } from "../../../util/defines/common";
 
 const GoogleCalendarModal = () => {
   const modal = useSelector(selectModal);
@@ -11,6 +16,7 @@ const GoogleCalendarModal = () => {
 
   return (
     <Dialog
+      header="Add events to your calendar"
       visible={modal.includes(GOOGLE_CALENDAR_MODAL)}
       onHide={() => dispatch(removeModal(GOOGLE_CALENDAR_MODAL))}
       dismissableMask

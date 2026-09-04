@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "primereact/image";
+import { Image } from "@/compat/primereact";
 import { replaceSpaceWithNewLine } from "../../util/functions/capitalize";
 
 const TeamMember = ({ member }) => {

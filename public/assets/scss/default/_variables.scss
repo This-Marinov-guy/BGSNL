@@ -60,18 +60,45 @@ $color-3: #2f21b3;
 $color-4: #8956e2;
 $colorList: $color-1, $color-2, $color-3, $color-4;
 
-//===== Line Height =====//
-$body-line-height: 1.714286;
-//==== Font size =====//
-$body-font-size: 28px;
-$body-font-weight: 500;
-$a: 26px;
-$h1: 60px;
-$h2: 50px;
-$h3: 26px;
-$h4: 22px;
-$h5: 18px;
-$h6: 16px;
+//===== Typography scale =====//
+// A compact, semantic scale keeps interface text consistent while fluid
+// heading tokens provide responsive hierarchy without breakpoint arithmetic.
+$type-size-minimum: 1rem;
+$type-size-caption: 1.1rem;
+$type-size-small: 0.8rem;
+$type-size-body: 1.1rem;
+$type-size-lead: 1.3rem;
+$type-size-subheading: 1.3rem;
+$type-size-navigation: 1.5rem;
+$type-size-heading-sm: 1.5rem;
+$type-size-heading-md: clamp(1.75rem, 2.5vw, 2.25rem);
+$type-size-heading-lg: clamp(2.25rem, 4vw, 3.5rem);
+$type-size-display: clamp(2.75rem, 6vw, 5.25rem);
+
+$type-line-tight: 1.1;
+$type-line-heading: 1.2;
+$type-line-body: 1.6;
+$type-line-relaxed: 1.75;
+
+// Keep weight choices as deliberate, reusable roles instead of per-component
+// corrections. The hero title is the only component-level exception.
+$type-weight-regular: 400;
+$type-weight-medium: 500;
+$type-weight-semibold: 600;
+$type-weight-bold: 700;
+$type-weight-black: 900;
+
+// Backwards-compatible aliases used by legacy templates.
+$body-line-height: $type-line-body;
+$body-font-size: $type-size-body;
+$body-font-weight: $type-weight-medium;
+$a: $type-size-subheading;
+$h1: $type-size-heading-lg;
+$h2: $type-size-heading-md;
+$h3: $type-size-heading-sm;
+$h4: $type-size-subheading;
+$h5: $type-size-lead;
+$h6: $type-size-body;
 
 //===== Social Colors =====//
 $facebook: #3b5998;

@@ -1,6 +1,8 @@
-import React from "react";
-import { Field, ErrorMessage } from "formik";
-import { FloatLabel } from "primereact/floatlabel";
+import {
+  ErrorMessage,
+  Field,
+} from "formik";
+import { FloatLabel } from "@/compat/primereact";
 
 const FieldExtended = (props) => {
   const {placeholder, className, ...rest} = props;

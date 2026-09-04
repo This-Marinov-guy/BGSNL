@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Breadcrumb from "../../../elements/common/Breadcrumb";
+import React, { useState } from "react";
+import { Dialog } from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
-import ImageFb from "../../../elements/ui/media/ImageFb";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../../component/header/Header";
 import FooterTwo from "../../../component/footer/FooterTwo";
-import { Dialog } from 'primereact/dialog';
+import Header from "../../../component/header/Header";
+import Breadcrumb from "../../../elements/common/Breadcrumb";
+import ImageFb from "../../../elements/ui/media/ImageFb";
 import VideoPlayer from "../../../elements/ui/media/VideoPLayer";
 
 const Minerva = () => {
@@ -25,9 +25,10 @@ const Minerva = () => {
             colorblack="color--black"
             logoname="logo.png"
         />
-        {/* Start Breadcrump Area */}
-        <Breadcrumb title={"Academie Minerva"} category='Articles' />
-        {/* End Breadcrump Area */}
+        <Breadcrumb
+            title="Academie Minerva"
+            description="Meet Bulgarian students exhibiting their work in Groningen."
+        />
         {/* <div className="container mt--80 mb--80">
 
             <h2 className="title">Society Articles</h2>
@@ -44,10 +45,10 @@ const Minerva = () => {
         >
             <div className="inner-wrapper">
                 <div className="inner">
-                    <h2 style={{ textAlign: "start", fontSize: '44px' }}>
+                    <h2 style={{ textAlign: "start" }}>
                         Exhibitions you don't want to miss
                     </h2>
-                    <p style={{ fontSize: '26px' }} className="mb--10">
+                    <p className="mb--10">
                         Bulgarian student exhibitions in Groningen
                     </p>
                     <ImageFb
@@ -312,7 +313,7 @@ const Minerva = () => {
         {/* Start Back To Top */}
         <div className="backto-top">
             <ScrollToTop showUnder={160}>
-                <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+                <FiChevronUp size={26} />
             </ScrollToTop>
         </div>
         {/* End Back To Top */}

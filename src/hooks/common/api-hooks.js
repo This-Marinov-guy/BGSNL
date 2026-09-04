@@ -29,7 +29,8 @@ export const useLoadEvents = () => {
       const responseData = await sendRequest(url, "GET", null, {}, false);
       
       dispatch(withFullData ? loadEventsDashboard(responseData.events) : loadEvents(responseData.events));
-    } catch (err) {
+    } catch {
+      // The shared request helper already reports failures when requested.
     } finally {
       setEventsLoading(false);
     }
@@ -83,15 +84,26 @@ export const useArticlesLoad = () => {
   const reloadArticleDetails = async (articleId) => {
     try {
       dispatch(startPageLoading());
-      const responseData = await sendRequest(`wordpress/posts/${articleId}`);
+      const responseData = await sendRequest(
+        `wordpress/posts/${articleId}`,
+        "GET",
+        null,
+        {},
+        false
+      );
+      const article = responseData?.data
+        ? { ...responseData.data, id: String(articleId) }
+        : null;
 
-      if (responseData.data) {
-        dispatch(loadSingleArticle(responseData.data));
+      if (article) {
+        dispatch(loadSingleArticle(article));
       }
+
+      return article;
     } catch (err) {
       return null;
     } finally {
-        dispatch(stopPageLoading());
+      dispatch(stopPageLoading());
     }
   };
 

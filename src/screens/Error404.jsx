@@ -1,11 +1,11 @@
 "use client";
 
-import React, { Fragment } from "react";
-import Header from "../component/header/Header";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
+import { Fragment } from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import Footer from "../component/footer/Footer";
+import Header from "../component/header/Header";
 
 const Error404 = () => {
   return (
@@ -40,7 +40,7 @@ const Error404 = () => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

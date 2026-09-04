@@ -12,8 +12,6 @@ const ToggleSwitch = ({
       {showLabel && (
         <span
           style={{
-            fontSize: "13px",
-            fontWeight: "500",
             color: checked ? "#28a745" : "#dc3545",
           }}
         >

@@ -1,53 +1,56 @@
-import React from "react";
+import PropTypes from "prop-types";
+import { IconlyNetwork } from "@/elements/ui/icons/IconlyIcons";
+import { useNavigate, useParams } from "@/util/navigation";
 import {
   LOCAL_STORAGE_LANGUAGE_PREFERENCE,
   PAGE_TRANSLATION_TEXTS,
 } from "../../../util/defines/common";
-import { useNavigate } from "@/util/navigation";
 import { encodeForURL } from "../../../util/functions/helpers";
 
 const ChangeLanguageLinks = ({ post }) => {
-  if (!post.translations) return null;
-
   const navigate = useNavigate();
+  const { articleId } = useParams();
+  const translations = Object.entries(post.translations ?? {});
 
-  const changeLanguage = (e) => {
-    const newLang = e.target.name;
-    const id = e.target.id;
+  if (!translations.length) return null;
 
-    localStorage.setItem(LOCAL_STORAGE_LANGUAGE_PREFERENCE, newLang);
-
+  const changeLanguage = (language, id) => {
+    localStorage.setItem(LOCAL_STORAGE_LANGUAGE_PREFERENCE, language);
     navigate(`/articles/${id}/${encodeForURL(post.title)}`);
   };
 
-  const btnText = Object.entries(post.translations).map(([value, id]) => ({
-    id,
-    value,
-  }));
-
   return (
-    <div>
-      <ul className="brand-style-2">
-        {btnText.map((b, index) => {
+    <nav className="article-language-switcher" aria-label="Article language">
+      <span>
+        <IconlyNetwork size={18} aria-hidden />
+        Read in
+      </span>
+      <div>
+        {translations.map(([language, id]) => {
+          const isCurrent = String(id) === String(articleId);
+
           return (
-            <li key={index}>
-              <button
-                key={index}
-                id={b.id}
-                name={b.value}
-                className={`rn-button-style--2 rn-btn-solid-green`}
-                onClick={changeLanguage}
-              >
-                {PAGE_TRANSLATION_TEXTS[b.value]
-                  ? PAGE_TRANSLATION_TEXTS[b.value]["button"]
-                  : b.value}
-              </button>
-            </li>
+            <button
+              key={`${language}-${id}`}
+              type="button"
+              className={isCurrent ? "is-active" : undefined}
+              aria-pressed={isCurrent}
+              onClick={() => changeLanguage(language, id)}
+            >
+              {PAGE_TRANSLATION_TEXTS[language]?.button ?? language}
+            </button>
           );
         })}
-      </ul>
-    </div>
+      </div>
+    </nav>
   );
+};
+
+ChangeLanguageLinks.propTypes = {
+  post: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    translations: PropTypes.object,
+  }).isRequired,
 };
 
 export default ChangeLanguageLinks;

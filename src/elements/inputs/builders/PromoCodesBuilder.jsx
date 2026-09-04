@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ErrorMessage } from "formik";
 import PlusButton from "../../ui/buttons/PlusButton";
 import XButton from "../../ui/buttons/XButton";
 import { CalendarWithClock } from "../common/Calendar";
@@ -71,7 +72,7 @@ const PromoCodesBuilder = (props) => {
                 <h5 style={{ margin: 0 }}>Promo Code #{index + 1}</h5>
                 <div className="d-flex align-items-center" style={{ gap: "10px" }}>
                   {/* {promoCode.id && (
-                    <small style={{ color: "#6c757d", fontSize: "12px" }}>
+                    <small style={{ color: "#6c757d" }}>
                       ID: {promoCode.id}
                     </small>
                   )} */}
@@ -90,8 +91,6 @@ const PromoCodesBuilder = (props) => {
                   style={{
                     color: "#dc3545",
                     marginBottom: "15px",
-                    fontSize: "13px",
-                    fontWeight: "600",
                   }}
                 >
                   Required Fields
@@ -101,14 +100,13 @@ const PromoCodesBuilder = (props) => {
                 <div className="rn-form-group">
                   <label
                     style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
                       marginBottom: "5px",
                     }}
                   >
                     Code <span style={{ color: "#dc3545" }}>*</span>
                   </label>
                   <input
+                    name={`promoCodes.codes[${index}].code`}
                     type="text"
                     placeholder="e.g., SUMMER2024"
                     value={promoCode.code}
@@ -120,14 +118,17 @@ const PromoCodesBuilder = (props) => {
                       )
                     }
                   />
+                  <ErrorMessage
+                    className="error"
+                    name={`promoCodes.codes[${index}].code`}
+                    component="div"
+                  />
                 </div>
 
                 {/* Discount Type Radio */}
                 <div className="rn-form-group mt--20">
                   <label
                     style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
                       marginBottom: "8px",
                       display: "block",
                       width: "8em",
@@ -142,14 +143,14 @@ const PromoCodesBuilder = (props) => {
                     >
                       <input
                         type="radio"
-                        name={`discountType-${index}`}
+                        name={`promoCodes.codes[${index}].discountType`}
                         checked={promoCode.discountType === 1}
                         onChange={() =>
                           handlePromoCodeChange(index, "discountType", 1)
                         }
                         style={{ cursor: "pointer" }}
                       />
-                      <span style={{ fontSize: "14px" }}>Fixed Amount (€)</span>
+                      <span>Fixed Amount (€)</span>
                     </span>
                     <span
                       className="center_div"
@@ -157,24 +158,27 @@ const PromoCodesBuilder = (props) => {
                     >
                       <input
                         type="radio"
-                        name={`discountType-${index}`}
+                        name={`promoCodes.codes[${index}].discountType`}
                         checked={promoCode.discountType === 2}
                         onChange={() =>
                           handlePromoCodeChange(index, "discountType", 2)
                         }
                         style={{ cursor: "pointer" }}
                       />
-                      <span style={{ fontSize: "14px" }}>Percentage (%)</span>
+                      <span>Percentage (%)</span>
                     </span>
                   </div>
+                  <ErrorMessage
+                    className="error"
+                    name={`promoCodes.codes[${index}].discountType`}
+                    component="div"
+                  />
                 </div>
 
                 {/* Discount Value */}
                 <div className="rn-form-group">
                   <label
                     style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
                       marginBottom: "5px",
                     }}
                   >
@@ -184,6 +188,7 @@ const PromoCodesBuilder = (props) => {
                     <span style={{ color: "#dc3545" }}>*</span>
                   </label>
                   <input
+                    name={`promoCodes.codes[${index}].discount`}
                     type="number"
                     placeholder={
                       promoCode.discountType === 2 ? "e.g., 20" : "e.g., 10.00"
@@ -200,6 +205,11 @@ const PromoCodesBuilder = (props) => {
                     max={promoCode.discountType === 2 ? 100 : undefined}
                     step="0.01"
                   />
+                  <ErrorMessage
+                    className="error"
+                    name={`promoCodes.codes[${index}].discount`}
+                    component="div"
+                  />
                 </div>
               </div>
 
@@ -211,8 +221,6 @@ const PromoCodesBuilder = (props) => {
                   style={{
                     color: "#6c757d",
                     marginBottom: "15px",
-                    fontSize: "13px",
-                    fontWeight: "600",
                   }}
                 >
                   Optional Settings
@@ -222,8 +230,6 @@ const PromoCodesBuilder = (props) => {
                 <div className="rn-form-group">
                   <label
                     style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
                       marginBottom: "5px",
                       color: "#6c757d",
                     }}
@@ -231,6 +237,7 @@ const PromoCodesBuilder = (props) => {
                     Usage Limit
                   </label>
                   <input
+                    name={`promoCodes.codes[${index}].useLimit`}
                     type="number"
                     placeholder="e.g., 100"
                     value={promoCode.useLimit || ""}
@@ -244,30 +251,43 @@ const PromoCodesBuilder = (props) => {
                     min={1}
                     step={1}
                   />
+                  <ErrorMessage
+                    className="error"
+                    name={`promoCodes.codes[${index}].useLimit`}
+                    component="div"
+                  />
                 </div>
 
                 {/* Time Limit */}
                 <div className="rn-form-group">
                   <label
                     style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
                       marginBottom: "5px",
                       color: "#6c757d",
                     }}
                   >
                     Expiration Date
                   </label>
-                  <CalendarWithClock
-                    mode="single"
-                    locale="en-nl"
-                    placeholder="Select expiration"
-                    captionLayout="dropdown"
-                    min={new Date()}
-                    initialValue={promoCode.timeLimit}
-                    onSelect={(value) =>
-                      handlePromoCodeChange(index, "timeLimit", value || "")
-                    }
+                  <div
+                    data-field-name={`promoCodes.codes[${index}].timeLimit`}
+                  >
+                    <CalendarWithClock
+                      name={`promoCodes.codes[${index}].timeLimit`}
+                      mode="single"
+                      locale="en-nl"
+                      placeholder="Select expiration"
+                      captionLayout="dropdown"
+                      min={new Date()}
+                      initialValue={promoCode.timeLimit}
+                      onSelect={(value) =>
+                        handlePromoCodeChange(index, "timeLimit", value || "")
+                      }
+                    />
+                  </div>
+                  <ErrorMessage
+                    className="error"
+                    name={`promoCodes.codes[${index}].timeLimit`}
+                    component="div"
                   />
                 </div>
 
@@ -275,8 +295,6 @@ const PromoCodesBuilder = (props) => {
                 <div className="rn-form-group">
                   <label
                     style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
                       marginBottom: "5px",
                       color: "#6c757d",
                     }}
@@ -284,6 +302,7 @@ const PromoCodesBuilder = (props) => {
                     Minimum Purchase (€)
                   </label>
                   <input
+                    name={`promoCodes.codes[${index}].minAmount`}
                     type="number"
                     placeholder="e.g., 50.00"
                     value={promoCode.minAmount || ""}
@@ -296,6 +315,11 @@ const PromoCodesBuilder = (props) => {
                     }
                     min={0.01}
                     step="0.01"
+                  />
+                  <ErrorMessage
+                    className="error"
+                    name={`promoCodes.codes[${index}].minAmount`}
+                    component="div"
                   />
                 </div>
               </div>

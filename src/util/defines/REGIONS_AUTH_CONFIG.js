@@ -1,5 +1,7 @@
-import React from "react";
-import { FiUser, FiUserPlus } from "react-icons/fi";
+import {
+  FiUser,
+  FiUserPlus,
+} from "@/elements/ui/icons/IconlyIcons";
 import { MEMBERSHIP_PRICES_IDS } from "./PRICES";
 
 export const REGIONS_MEMBERSHIP_SPECIFICS = [

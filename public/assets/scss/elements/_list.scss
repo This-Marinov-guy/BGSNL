@@ -5,8 +5,8 @@
 .list-style--1 {
     @extend %liststyle;
     li {
-        font-weight: 500;
-        font-size: 22px;
+
+
         line-height: inherit;
         margin-bottom: 10px;
         i,
@@ -26,8 +26,8 @@
 .list-style--2 {
     @extend %liststyle;
     li {
-        font-weight: 400;
-        font-size: 18px;
+
+
         line-height: inherit;
         margin-bottom: 10px;
         i,
@@ -51,10 +51,10 @@ ul {
             position: relative;
             padding-left: 26px;
             color: rgba(29, 29, 36, 0.75);
-            font-size: 20px;
+
             line-height: 25px;
             @media #{$sm-layout} {
-                font-size: 22px;
+
                 line-height: 22px;
             }
             &::before {

@@ -1,19 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
-import * as yup from "yup";
-import { Formik, Form, ErrorMessage } from "formik";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import { Steps } from 'primereact/steps';
-import { useDispatch } from "react-redux";
-import { Dialog } from 'primereact/dialog';
-import { InputOtp } from 'primereact/inputotp';
-import { Password } from 'primereact/password';
-import Loader from "../../elements/ui/loading/Loader";
-import { showNotification } from "../../redux/notification";
-import { Calendar } from 'primereact/calendar';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import {
+  ErrorMessage,
+  Form,
+} from "formik";
 import moment from "moment";
-import { FORGOTTEN_PASSWORD_STEPS_ENUM, FP_CHANGE_PASSWORD, FP_SEND_EMAIL_TOKEN, FP_VERIFY_TOKEN } from "../../util/defines/enum";
+import { useDispatch } from "react-redux";
+import * as yup from "yup";
+import {
+  Dialog,
+  InputOtp,
+  Password,
+  Steps,
+} from "@/compat/primereact";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import Loader from "../../elements/ui/loading/Loader";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { showNotification } from "../../redux/notification";
+import {
+  FORGOTTEN_PASSWORD_STEPS_ENUM,
+  FP_CHANGE_PASSWORD,
+  FP_SEND_EMAIL_TOKEN,
+  FP_VERIFY_TOKEN,
+} from "../../util/defines/enum";
 
 const initialValues = {
     email: "",
@@ -58,6 +69,7 @@ const ForgottenPassword = (props) => {
     const { loading, sendRequest } = useHttpClient();
 
     const dispatch = useDispatch();
+    const formId = "forgotten-password-step-" + step;
 
     const changeFormInputHandler = (event) => {
         setFormValues((prevState) => {
@@ -87,11 +99,24 @@ const ForgottenPassword = (props) => {
             if (responseData.status) {
                 setStep(FORGOTTEN_PASSWORD_STEPS_ENUM[FP_VERIFY_TOKEN]);
             }
-        } catch (err) { }
+        } catch (error) {
+            void error;
+        }
     };
 
     const verifyToken = async (event) => {
         event.preventDefault();
+
+        const tokenInput = event.currentTarget.querySelector("input");
+        tokenInput?.setCustomValidity(
+            String(formValues.token).length === 6
+                ? ""
+                : "Please enter the complete 6-digit verification token."
+        );
+
+        if (!event.currentTarget.reportValidity()) {
+            return;
+        }
 
         const parameters = {
             ...formValues,
@@ -108,7 +133,9 @@ const ForgottenPassword = (props) => {
             if (responseData.status) {
                 setStep(FORGOTTEN_PASSWORD_STEPS_ENUM[FP_CHANGE_PASSWORD]);
             }
-        } catch (err) { }
+        } catch (error) {
+            void error;
+        }
     }
 
     const changePassword = async (values) => {
@@ -129,7 +156,9 @@ const ForgottenPassword = (props) => {
                 dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password', life: 7000 }));
                 onHide();
             }
-        } catch (err) { }
+        } catch (error) {
+            void error;
+        }
     }
 
     let content;
@@ -137,8 +166,8 @@ const ForgottenPassword = (props) => {
     switch (step) {
         case FORGOTTEN_PASSWORD_STEPS_ENUM[FP_SEND_EMAIL_TOKEN]:
             content = <form
+                id={formId}
                 className="center_div_col"
-                style={{ padding: "10px 20px" }}
                 onSubmit={sendTokenHandler}
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
@@ -149,34 +178,19 @@ const ForgottenPassword = (props) => {
                     <input
                         type="email"
                         name="email"
+                        value={formValues.email}
+                        required
                         placeholder="Email"
                         className="col-12 mt--20"
                         onChange={(event) => changeFormInputHandler(event)}
                     />
-
                 </div>
-                {loading ? <Loader /> :
-                    <div className="center_div mt--60">
-                        <button
-                            onClick={handleBack}
-                            type="button"
-                            className="rn-button-style--2 rn-btn-reverse mr--5">
-                            Back
-                        </button>
-                        <button
-                            type="submit"
-                            className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                            Proceed
-                        </button>
-                    </div>
-                }
             </form>;
             break;
         case FORGOTTEN_PASSWORD_STEPS_ENUM[FP_VERIFY_TOKEN]:
             content = <form
+                id={formId}
                 className="center_div_col"
-                style={{ padding: "10px 20px" }}
                 onSubmit={verifyToken}
             >
                 <div className="row mb--20" style={{ maxWidth: '20em' }}>
@@ -184,18 +198,25 @@ const ForgottenPassword = (props) => {
                         We have sent an email containing the token. <br /> In order to verify it is you, we will need it back!
                     </p>
                     <h4 className="col-12 center_div">Verification Token</h4>
-                    <InputOtp
-                        value={formValues.token}
-                        name="token"
-                        onChange={(e) => setFormValues(prevState => {
-                            return {
-                                ...prevState,
-                                token: e.value
-                            }
-                        })}
-                        integerOnly
-                        length={6}
-                        className="col-12 mt--10" />
+                    <div className="col-12 mt--10" data-field-name="token">
+                        <InputOtp
+                            value={formValues.token}
+                            name="token"
+                            onChange={(e) => {
+                                e.originalEvent?.target
+                                    ?.closest("[data-field-name='token']")
+                                    ?.querySelectorAll("input")
+                                    .forEach((input) => input.setCustomValidity(""));
+                                setFormValues(prevState => {
+                                    return {
+                                        ...prevState,
+                                        token: e.value
+                                    }
+                                });
+                            }}
+                            integerOnly
+                            length={6} />
+                    </div>
                         {/* Remove the need of birth and phone verification */}
                     {/* <h4 className="col-12 center_div mt--10">Additional Information</h4>
                     <div className="col-12" style={{ padding: '0' }}>
@@ -220,30 +241,12 @@ const ForgottenPassword = (props) => {
                         onChange={(event) => changeFormInputHandler(event)}
                     /> */}
                 </div>
-                {loading ? <Loader /> :
-                    <div className="center_div mt--60">
-                        <button
-                            onClick={handleBack}
-                            type="button"
-                            className="rn-button-style--2 rn-btn-reverse mr--5">
-                            Back
-                        </button>
-                        <button
-                            type="submit"
-                            className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                            Proceed
-                        </button>
-                    </div>
-                }
             </form>;
             break;
         case FORGOTTEN_PASSWORD_STEPS_ENUM[FP_CHANGE_PASSWORD]:
-            content = <Formik
+            content = <ValidatedFormik
                 className="inner"
                 validationSchema={schema}
-                validateOnChange={false}
-                validateOnBlur={false}
                 onSubmit={(values) => changePassword(values)}
                 initialValues={{
                     password: "",
@@ -251,7 +254,7 @@ const ForgottenPassword = (props) => {
                 }}
             >
                 {({ setFieldValue }) => (
-                    <Form id="form" style={{ padding: "10px 20px" }}>
+                    <Form id={formId}>
                         <div className="hor_section">
                             <p>Now it is time to make your new password</p>
                         </div>
@@ -291,39 +294,51 @@ const ForgottenPassword = (props) => {
                                 </div>
                             </div>
                         </div>
-                        {loading ? <Loader /> :
-                            <div className="center_div mt--60">
-                                <button
-                                    onClick={handleBack}
-                                    type="button"
-                                    className="rn-button-style--2 rn-btn-reverse mr--5">
-                                    Back
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="rn-button-style--2 rn-btn-reverse-green"
-                                >
-                                    Proceed
-                                </button>
-                            </div>
-                        }
                     </Form>
                 )}
-            </Formik>;
+            </ValidatedFormik>;
             break;
         default:
             content = '';
 
     }
 
-    return (
+    const actions = loading ? <Loader /> : (
         <>
-            <Dialog header="Reset your password" visible={visible} style={{ maxWidth: '80vw', textAlign: 'center' }} onHide={onHide}>
-                <Steps model={stepConfig} activeIndex={step} className="mt--20" />
-                {content}
-            </Dialog>
+            <button
+                onClick={handleBack}
+                type="button"
+                className="rn-button-style--2 rn-btn-reverse"
+            >
+                Back
+            </button>
+            <button
+                type="submit"
+                form={formId}
+                className="rn-button-style--2 rn-btn-reverse-green"
+            >
+                Proceed
+            </button>
         </>
+    );
+
+    return (
+        <Dialog
+            header="Reset your password"
+            visible={visible}
+            style={{ width: "560px" }}
+            onHide={onHide}
+            footer={actions}
+        >
+            <Steps model={stepConfig} activeIndex={step} className="mb--30" />
+            {content}
+        </Dialog>
     )
 }
+
+ForgottenPassword.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    onHide: PropTypes.func.isRequired,
+};
 
 export default ForgottenPassword

@@ -1,39 +1,45 @@
 "use client";
 
 import React from "react";
-import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import { useNavigate } from "@/util/navigation";
-import PageHelmet from "../../component/common/Helmet";
-import Header from "../../component/header/Header";
-import Loader from "../../elements/ui/loading/Loader";
-import Alert from "react-bootstrap/Alert";
-import { FiX } from "react-icons/fi";
-import Footer from "../../component/footer/Footer";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import { Link } from "@/util/navigation";
-import { showNotification } from "../../redux/notification";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
 import { useDispatch } from "react-redux";
+import * as yup from "yup";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import {
+  Link,
+  useNavigate,
+} from "@/util/navigation";
+import PageHelmet from "../../component/common/Helmet";
+import Footer from "../../component/footer/Footer";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import Loader from "../../elements/ui/loading/Loader";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import { showNotification } from "../../redux/notification";
 
 const schema = yup.object().shape({
     name: yup.string().required("Name is required"),
     surname: yup.string().required("Surname is required"),
     email: yup.string().email("Please enter a valid email").required(),
-    comments: yup.string()
+    comments: yup.string(),
+    policyTerms: yup
+        .bool()
+        .oneOf([true], "Terms must be accepted")
+        .required(),
 });
 
-const ContestRegister = (props) => {
+const ContestRegister = () => {
     const { loading, sendRequest } = useHttpClient();
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-
-    const closeHandler = () => {
-
-    };
 
     return (
         <React.Fragment>
@@ -45,22 +51,10 @@ const ContestRegister = (props) => {
                 logoname="logo.png"
             />
 
-            {/* Start Breadcrump Area */}
-            <div
-                className={`rn-page-title-area pt--120 pb--190 bg_image bg_image--20`}
-                data-black-overlay="7"
-            >
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="rn-page-title text-center pt--100">
-                                <h2 className="title theme-gradient">Video Creation Contest</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* End Breadcrump Area */}
+            <Breadcrumb
+              title="Video Creation Contest"
+              description="Create a short promotional video for the society and enter the contest."
+            />
 
             {/* Start Portfolio Details */}
             <div className="rn-portfolio-details ptb--120 bg_color--1">
@@ -90,7 +84,7 @@ const ContestRegister = (props) => {
             </div>
             <div className="blog-comment-form pb--120 bg_color--1">
                 <div className="container">
-                    <Formik
+                    <ValidatedFormik
                         className="inner"
                         validationSchema={schema}
                         onSubmit={async (values) => {
@@ -103,13 +97,17 @@ const ContestRegister = (props) => {
                                         name: values.name,
                                         surname: values.surname,
                                         email: values.email,
-                                        comments: values.comments
+                                        comments: values.comments,
+                                        policyTerms: values.policyTerms,
                                     }
                                 );
+                                if (responseData?.message !== "Success") return;
+
                                 dispatch(showNotification({ severity: 'success', summary: 'Success', detail: 'You successfully changed your password' }));
                                 navigate("/");
                                 return;
                             } catch (err) {
+                                // The shared request hook reports submission failures.
                             }
                         }}
                         initialValues={{
@@ -117,6 +115,7 @@ const ContestRegister = (props) => {
                             surname: '',
                             email: '',
                             comments: '',
+                            policyTerms: false,
                         }}
                     >
                         {() => (
@@ -229,7 +228,7 @@ const ContestRegister = (props) => {
 
                             </Form>
                         )}
-                    </Formik>
+                    </ValidatedFormik>
                 </div>
             </div>
             {/* End Form Area */}
@@ -238,7 +237,7 @@ const ContestRegister = (props) => {
             {/* Start Back To Top */}
             <div className="backto-top">
                 <ScrollToTop showUnder={160}>
-                    <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+                    <FiChevronUp size={26} />
                 </ScrollToTop>
             </div>
             {/* End Back To Top */}

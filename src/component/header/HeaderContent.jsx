@@ -1,23 +1,30 @@
-import React, { Fragment, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/user";
-import { Link, useNavigate, useLocation } from "@/util/navigation";
-import { FiMenu, FiX } from "react-icons/fi";
-import ImageFb from "../../elements/ui/media/ImageFb";
+import {
+  Fragment,
+  useState,
+} from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useSelector } from "react-redux";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "@/util/navigation";
+import LogoutAlert from "../../elements/ui/alerts/Logout";
+import NewBadge from "../../elements/ui/badges/NewBadge";
+import { selectArticles } from "../../redux/articles";
+import { selectUser } from "../../redux/user";
+import {
+  ACCESS_1,
+  ACCESS_3,
+  ACCESS_4,
+} from "../../util/defines/common";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { useParams } from "@/util/navigation";
-import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import {
   checkAuthorization,
   decodeJWT,
 } from "../../util/functions/authorization";
-import NewBadge from "../../elements/ui/badges/NewBadge";
-import { ACCESS_1, ACCESS_2, ACCESS_3, ACCESS_4 } from "../../util/defines/common";
-import LogoutAlert from "../../elements/ui/alerts/Logout";
-import { selectArticles } from "../../redux/articles";
-import { encodeForURL } from "../../util/functions/helpers";
-import SolidBadge from "../../elements/ui/badges/SolidBadge";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
 const HeaderContent = (props) => {
   const user = useSelector(selectUser);
@@ -156,7 +163,6 @@ const HeaderContent = (props) => {
           </li>
 
           <li>
-            <SolidBadge className="absolute-badge" text="New" color="green" />
             <Link to={`/internships`}>Internships</Link>
           </li>
 

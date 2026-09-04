@@ -73,11 +73,11 @@
 }
 
 .focus-card-image {
+  display: block;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  object-fit: cover;
+  object-position: center;
   transition: transform 0.45s ease;
 }
 
@@ -92,11 +92,33 @@
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.76);
   color: #ffffff;
-  font-size: 0.7rem;
-  font-weight: 700;
+
+
   letter-spacing: 0.04em;
   text-transform: uppercase;
   backdrop-filter: blur(8px);
+}
+
+.focus-card-region {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 20px);
+  padding: 6px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 5px;
+  background: rgba(16, 41, 31, 0.84);
+  color: #ffffff;
+  line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+
+  svg {
+    flex: 0 0 auto;
+  }
 }
 
 .focus-card-content {
@@ -114,24 +136,24 @@
 .focus-card-title {
   margin: 0;
   color: #10213a;
-  font-size: 1.2rem;
-  font-weight: 700;
+
+
   line-height: 1.35;
 }
 
 .focus-card-details {
   display: flex;
   flex-direction: column;
-  font-size: 0.8rem;
+
   gap: 10px;
 }
 
 .focus-card-meta {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   color: #4b5563;
-  font-size: 1rem;
+
   line-height: 1.45;
 
   svg {
@@ -143,12 +165,18 @@
 
 .future-events-region-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  @media (min-width: 992px) {
+    &--columns-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &--columns-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   @media (max-width: 768px) {
@@ -200,7 +228,7 @@
 
 .future-events-region-title {
   margin-bottom: 0;
-  font-size: 1.05rem;
+
 }
 
 .future-events-region-count {
@@ -211,8 +239,8 @@
   border-radius: 999px;
   background: rgba(37, 99, 235, 0.08);
   color: #1d4ed8;
-  font-size: 0.82rem;
-  font-weight: 700;
+
+
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }

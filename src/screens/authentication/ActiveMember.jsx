@@ -1,21 +1,24 @@
 "use client";
 
 import React from "react";
-import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { FiX } from "react-icons/fi";
-import Alert from "react-bootstrap/Alert";
-import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
-import { useHttpClient } from "../../hooks/http-hook";
-import Loader from "../../elements/ui/Loader";
-import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import { useNavigate } from "@/util/navigation";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
 import { useDispatch } from "react-redux";
-import { showInfoNotification } from "../../redux/information";
+import * as yup from "yup";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import { useNavigate } from "@/util/navigation";
+import PageHelmet from "../../component/common/Helmet";
+import FooterTwo from "../../component/footer/FooterTwo";
+import HeaderTwo from "../../component/header/HeaderTwo";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import Loader from "../../elements/ui/Loader";
+import { useHttpClient } from "../../hooks/http-hook";
+import { showInfoNotification } from "../../redux/information";
 
 const schema = yup.object().shape({
     prSC: yup.boolean(),
@@ -73,16 +76,12 @@ const schema = yup.object().shape({
     // ),
 })
 
-const ActiveMember = (props) => {
+const ActiveMember = () => {
     const { loading, sendRequest } = useHttpClient();
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-
-    const closeHandler = () => {
-
-    };
 
     return (
       <React.Fragment>
@@ -123,7 +122,7 @@ const ActiveMember = (props) => {
 
         <div className="blog-comment-form pb--120 bg_color--1">
           <div className="container">
-            <Formik
+            <ValidatedFormik
               className="inner"
               validationSchema={schema}
               onSubmit={async (values) => {
@@ -151,18 +150,23 @@ const ActiveMember = (props) => {
                 formData.append("phone", values.phone);
                 formData.append("cv", values.cv);
                 // formData.append("letter", values.letter);
-                formData.append("questions", [
-                  values.q1,
-                  values.q2,
-                  values.q3,
-                  values.q4,
-                ]);
+                formData.append(
+                  "questions",
+                  JSON.stringify([
+                    values.q1,
+                    values.q2,
+                    values.q3,
+                    values.q4,
+                  ])
+                );
                 try {
                   const responseData = await sendRequest(
                     "user/active-member",
                     "POST",
                     formData
                   );
+                  if (responseData?.message !== "Done") return;
+
                   dispatch(
                     showInfoNotification({
                       severity: "success",
@@ -172,7 +176,9 @@ const ActiveMember = (props) => {
                     })
                   );
                   navigate("/");
-                } catch (err) {}
+                } catch (err) {
+                  // The shared request hook reports submission failures.
+                }
               }}
               initialValues={{
                 option1: false,
@@ -254,8 +260,12 @@ const ActiveMember = (props) => {
                         component="div"
                       />
                     </div>
-                    <div className="col-lg-6 col-md-12 col-12">
+                    <div
+                      className="col-lg-6 col-md-12 col-12"
+                      data-field-name="phone"
+                    >
                       <PhoneInput
+                        name="phone"
                         placeholder="WhatsApp Phone "
                         onChange={(value) => setFieldValue("phone", value)}
                       ></PhoneInput>
@@ -310,7 +320,7 @@ const ActiveMember = (props) => {
                       />
                     </div>
                     <div className="col-lg-6 col-md-12 col-12 mt--40">
-                      <h4>4. Какви събития би искал/а да видиш в BGSG?</h4>
+                      <h4>4. Какви събития би искал/а да видиш в BGSG?</h4>
                       <Field
                         as="textarea"
                         placeholder="Въпрос 4"
@@ -324,12 +334,16 @@ const ActiveMember = (props) => {
                     </div>
                   </div>
                   <div className="row mt--100">
-                    <div className="col-lg-6 col-md-12 col-12 mt--20 file-input">
+                    <div
+                      className="col-lg-6 col-md-12 col-12 mt--20 file-input"
+                      data-field-name="cv"
+                    >
                       <h3>Качи CV</h3>
                       <Field name="cv">
-                        {({ field }) => (
+                        {() => (
                           <div>
                             <input
+                              name="cv"
                               type="file"
                               accept=".pdf,.docx"
                               onChange={(event) => {
@@ -377,7 +391,7 @@ const ActiveMember = (props) => {
                   </button>
                 </Form>
               )}
-            </Formik>
+            </ValidatedFormik>
           </div>
         </div>
         {/* End Form Area */}
@@ -387,7 +401,7 @@ const ActiveMember = (props) => {
         {/* Start Back To Top */}
         <div className="backto-top">
           <ScrollToTop showUnder={160}>
-            <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+            <FiChevronUp size={26} />
           </ScrollToTop>
         </div>
         {/* End Back To Top */}

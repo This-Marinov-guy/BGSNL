@@ -1,30 +1,49 @@
-import React from 'react'
-import { Link } from "@/util/navigation";
-import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
-import { Card } from 'primereact/card';
-import { capitalizeFirstLetter } from '../../../util/functions/capitalize';
+import PropTypes from "prop-types";
+import React from "react";
+import Image from "next/image";
+import { FiArrowRight } from "@/elements/ui/icons/IconlyIcons";
+import { REGIONS } from "../../../util/defines/REGIONS_DESIGN";
+import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 
-const RegionOptions2 = (props) => {
-    return (
-        <div className='row center_div m--20'>
-            {REGIONS.map((r, index) => {
-                return <div key={index} className='col-lg-4 col-md-6 col-12 mb--20' style={{maxWidth: '13em'}}>
-                    <Card 
-                        title={<div className='hor_section'>
-                            {capitalizeFirstLetter(r, true)}
-                            <Link
-                                to={`/${r}/${props.to}`}
-                                className="rn-button-style--2 rn-btn-green"
-                            >
-                                Select
-                            </Link>
-                    </div>} 
-                    header={<img alt="Card" src={`/assets/images/bg/paralax/${r}.jpg`} style={{ height: '200px', objectFit: 'cover' }} />}>
-                    </Card>
-                </div>
-            })}
-        </div>
-    )
-}
+const RegionOptions2 = ({ onSelectRegion }) => (
+  <section className="signup-region-picker" aria-label="Choose a region">
+    <div className="container">
+      <div className="signup-region-grid">
+        {REGIONS.map((region) => {
+          const regionName = capitalizeFirstLetter(region, true);
+          const imageExtension = region === "rotterdam" ? "jpg" : "webp";
 
-export default RegionOptions2
+          return (
+            <button
+              key={region}
+              type="button"
+              className="signup-region-card"
+              aria-label={`Choose ${regionName}`}
+              onClick={() => onSelectRegion(region)}
+            >
+              <Image
+                src={`/assets/images/bg/paralax/${region}.${imageExtension}`}
+                alt=""
+                fill
+                sizes="(max-width: 767px) calc(100vw - 70px), (max-width: 1199px) 33vw, 25vw"
+              />
+              <span className="signup-region-card__shade" aria-hidden="true" />
+              <span className="signup-region-card__content">
+                <strong>{regionName}</strong>
+                <span className="signup-region-card__action" aria-hidden="true">
+                  <FiArrowRight />
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+);
+
+RegionOptions2.propTypes = {
+  onSelectRegion: PropTypes.func.isRequired,
+};
+
+export default RegionOptions2;

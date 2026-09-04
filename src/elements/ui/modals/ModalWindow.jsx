@@ -1,10 +1,18 @@
 import React, { useEffect } from "react";
-import Modal from "react-bootstrap/Modal";
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 
-const ModalWindow = (props) => {
+const ModalWindow = ({
+  show,
+  title = "Details",
+  onHide,
+  children,
+  freeze = false,
+  style,
+}) => {
   // Was assigned during render, which crashes SSR.
   useEffect(() => {
-    if (!props.freeze) return;
+    if (!freeze) return;
 
     window.onscroll = function () {
       window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -13,20 +21,29 @@ const ModalWindow = (props) => {
     return () => {
       window.onscroll = null;
     };
-  }, [props.freeze]);
+  }, [freeze]);
 
   return (
-    <Modal
-      show={props.show}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      enforceFocus={false}
-      freeze={props.freeze}
+    <Dialog
+      header={title}
+      visible={show}
+      onHide={onHide}
+      closable={Boolean(onHide)}
+      dismissableMask={Boolean(onHide)}
+      style={{ width: "900px", ...style }}
     >
-      {props.children}
-    </Modal>
+      {children}
+    </Dialog>
   );
+};
+
+ModalWindow.propTypes = {
+  show: PropTypes.bool.isRequired,
+  title: PropTypes.node,
+  onHide: PropTypes.func,
+  children: PropTypes.node,
+  freeze: PropTypes.bool,
+  style: PropTypes.object,
 };
 
 export default ModalWindow;

@@ -71,12 +71,15 @@ export const askBeforeRedirect = (basedOnEnv = true) => {
 
 export const encodeForURL = (string) => {
   if (!string) {
-    return "";
+    return "article";
   }
 
-  let encodedString = string.toLowerCase().replace(/ /g, "_");
-
-  return encodeURIComponent(encodedString);
+  return string
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "article";
 };
 
 export const decodeFromURL = (url) => {
@@ -162,7 +165,7 @@ export const estimatePriceByEvent = (
   if (isActiveMember && product?.activeMember?.price) {
     return (
       <div className="d-flex justify-center align-items-center items-center g--4">
-        {product.activeMember.price} euro {includedText}
+        €{product.activeMember.price} {includedText}
         {!isNaN(product.activeMember.price) && options.withMemberBadge && (
           <SolidBadge color="#e5b80b" text="Extra discounted" />
         )}{" "}
@@ -175,7 +178,7 @@ export const estimatePriceByEvent = (
       "FREE"
     ) : (
       <div className="d-flex justify-center align-items-center items-center g--4">
-        {product.member.price} euro {includedText}
+        €{product.member.price} {includedText}
         {!isNaN(product.member.price) && options.withMemberBadge && (
           <SolidBadge color="#add8e6" text="Discounted" />
         )}{" "}
@@ -186,7 +189,7 @@ export const estimatePriceByEvent = (
   if (product?.guest?.price) {
     return (
       <>
-        {product.guest.price} euro {includedText}
+        €{product.guest.price} {includedText}
       </>
     );
   }
@@ -200,9 +203,9 @@ export const estimatePriceByEvent = (
   ) {
     return (
       <span>
-        <s>{product.member.originalPrice} euro</s>
+        <s>€{product.member.originalPrice}</s>
         <br />
-        {product.member.price} euro
+        €{product.member.price}
       </span>
     );
   }
@@ -215,9 +218,9 @@ export const estimatePriceByEvent = (
   ) {
     return (
       <h4>
-        <s>{product.guest.originalPrice} euro</s>
+        <s>€{product.guest.originalPrice}</s>
         <br />
-        {product.guest.price} euro
+        €{product.guest.price}
       </h4>
     );
   }
@@ -310,6 +313,10 @@ export const hasNonEmptyValues = (obj, threshold = 1, max = 3) => {
 };
 
 export const getGeoLocation = () => {
+  if (typeof window === "undefined") {
+    return "nl";
+  }
+
   let location = localStorage.getItem(LOCAL_STORAGE_LOCATION) || "";
 
   if (location) {

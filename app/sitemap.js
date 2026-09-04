@@ -1,5 +1,6 @@
 import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 import { getArticles, getEvents } from "@/util/api/server";
+import { articleSlug } from "@/util/seo/site";
 
 /**
  * Replaces scripts/generate-sitemap.js, which wrote public/sitemap.xml at build
@@ -39,16 +40,6 @@ const REGIONAL_STATIC_ROUTES = [
   { path: "/events/future-events", priority: 0.9, changeFrequency: "daily" },
   { path: "/events/past-events", priority: 0.6, changeFrequency: "weekly" },
 ];
-
-const encodeForURL = (title) => {
-  if (!title) return "article";
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
-};
 
 const toDate = (value) => {
   if (!value) return new Date();
@@ -99,9 +90,9 @@ export default async function sitemap() {
   }
 
   for (const article of articles) {
-    if (!article?.id || !article?.title) continue;
+    if (!article?.id || !article?.title || article.legacyLink) continue;
     entries.push({
-      url: `${BASE_URL}/articles/${article.id}/${encodeForURL(article.title)}`,
+      url: `${BASE_URL}/articles/${article.id}/${articleSlug(article.title)}`,
       lastModified: toDate(
         article.updated_at || article.created_at || article.date
       ),

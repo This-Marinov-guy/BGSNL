@@ -13,13 +13,18 @@
  * prefetching and client navigation are Next's, not a polyfill's.
  */
 
-import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
 import NextLink from "next/link";
 import {
   useParams,
+  useSearchParams as useNextSearchParams,
   usePathname,
   useRouter,
-  useSearchParams as useNextSearchParams,
 } from "next/navigation";
 
 export { useParams, usePathname, useRouter };

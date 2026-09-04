@@ -1,14 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Dialog } from "primereact/dialog";
-import { FiUpload, FiFile, FiX } from "react-icons/fi";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import PropTypes from "prop-types";
-import { DOCUMENT_TYPES } from "../../../util/defines/enum";
-import { useHttpClient } from "../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
-import { showNotification } from "../../../redux/notification";
+import { Dialog } from "@/compat/primereact";
+import {
+  FiFile,
+  FiUpload,
+  FiX,
+} from "@/elements/ui/icons/IconlyIcons";
 import { useRefreshUser } from "../../../hooks/common/api-hooks";
+import { useHttpClient } from "../../../hooks/common/http-hook";
+import { showNotification } from "../../../redux/notification";
+import { DOCUMENT_TYPES } from "../../../util/defines/enum";
 
 const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
+
+const getPdfValidationMessage = (file) => {
+  if (!file) return "";
+  if (file.type !== "application/pdf") {
+    return "Please upload a PDF file only.";
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    return "File size must be less than 5MB.";
+  }
+  return "";
+};
 
 const InternshipApplyModal = ({
   visible,
@@ -21,6 +40,8 @@ const InternshipApplyModal = ({
   const [selectedCV, setSelectedCV] = useState(null);
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const cvInputRef = useRef(null);
+  const coverLetterInputRef = useRef(null);
   const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
   const { refreshUser } = useRefreshUser();
@@ -32,20 +53,19 @@ const InternshipApplyModal = ({
       setSelectedCV(null);
       setSelectedCoverLetter(null);
       setIsSubmitting(false);
+      [cvInputRef, coverLetterInputRef].forEach((inputRef) => {
+        if (inputRef.current) {
+          inputRef.current.value = "";
+          inputRef.current.setCustomValidity("");
+        }
+      });
     }
   }, [visible]);
 
   const handleCVChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.type !== "application/pdf") {
-        alert("Please upload a PDF file only");
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB");
-        return;
-      }
+      e.currentTarget.setCustomValidity(getPdfValidationMessage(file));
       setSelectedCV(file);
     }
   };
@@ -53,20 +73,17 @@ const InternshipApplyModal = ({
   const handleCoverLetterChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.type !== "application/pdf") {
-        alert("Please upload a PDF file only");
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB");
-        return;
-      }
+      e.currentTarget.setCustomValidity(getPdfValidationMessage(file));
       setSelectedCoverLetter(file);
     }
   };
 
   const handleRemoveCoverLetter = () => {
     setSelectedCoverLetter(null);
+    if (coverLetterInputRef.current) {
+      coverLetterInputRef.current.value = "";
+      coverLetterInputRef.current.setCustomValidity("");
+    }
   };
 
   const handleSaveDocument = async (file, documentType, existingDocument) => {
@@ -92,16 +109,8 @@ const InternshipApplyModal = ({
     return response;
   };
 
-  const handleApply = async () => {
-    if (!cvDocument && !selectedCV) {
-      dispatch(
-        showNotification({
-          severity: "error",
-          detail: "Please upload a CV to apply for this internship.",
-        })
-      );
-      return;
-    }
+  const handleApply = async (event) => {
+    event.preventDefault();
 
     setIsSubmitting(true);
 
@@ -199,8 +208,35 @@ const InternshipApplyModal = ({
   const handleClose = () => {
     setSelectedCV(null);
     setSelectedCoverLetter(null);
+    [cvInputRef, coverLetterInputRef].forEach((inputRef) => {
+      if (inputRef.current) {
+        inputRef.current.value = "";
+        inputRef.current.setCustomValidity("");
+      }
+    });
     onHide();
   };
+
+  const actions = (
+    <>
+      <button
+        type="button"
+        className="rn-button-style--2 rn-btn-reverse"
+        onClick={handleClose}
+        disabled={isSubmitting}
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        form="internship-application-form"
+        className="rn-button-style--2 rn-btn-green"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Applying..." : "Apply for Internship"}
+      </button>
+    </>
+  );
 
   return (
     <Dialog
@@ -225,11 +261,17 @@ const InternshipApplyModal = ({
       style={{ width: "600px", maxWidth: "90vw" }}
       onHide={handleClose}
       closable={!isSubmitting}
+      footer={actions}
     >
-      <div className="internship-apply-modal" style={{ padding: "10px 0" }}>
+      <form
+        className="internship-apply-modal"
+        id="internship-application-form"
+        style={{ padding: "10px 0" }}
+        onSubmit={handleApply}
+      >
         {/* CV Section */}
         <div className="mb--30">
-          <h5 style={{ marginBottom: "15px", fontWeight: 600 }}>Your CV</h5>
+          <h5 style={{ marginBottom: "15px" }}>Your CV</h5>
           {cvDocument ? (
             <div
               className="d-flex align-items-center justify-content-between"
@@ -281,10 +323,13 @@ const InternshipApplyModal = ({
             </div>
           )}
 
-          <div>
+          <div data-field-name="cv" data-custom-validation-field>
             <input
+              ref={cvInputRef}
               type="file"
+              name="cv"
               accept=".pdf"
+              required={!cvDocument}
               onChange={handleCVChange}
               disabled={isSubmitting}
               style={{ display: "none" }}
@@ -292,7 +337,7 @@ const InternshipApplyModal = ({
             />
             <label
               htmlFor="cv-file-input-apply"
-              className="rn-button-style--2 rn-btn-green"
+              className="rn-button-style--2 rn-btn-green upload-dropzone"
               style={{
                 display: "inline-block",
                 cursor: isSubmitting ? "not-allowed" : "pointer",
@@ -318,7 +363,14 @@ const InternshipApplyModal = ({
                   {selectedCV.name} ({(selectedCV.size / 1024).toFixed(2)} KB)
                 </span>
                 <button
-                  onClick={() => setSelectedCV(null)}
+                  type="button"
+                  onClick={() => {
+                    setSelectedCV(null);
+                    if (cvInputRef.current) {
+                      cvInputRef.current.value = "";
+                      cvInputRef.current.setCustomValidity("");
+                    }
+                  }}
                   style={{
                     background: "none",
                     border: "none",
@@ -340,7 +392,7 @@ const InternshipApplyModal = ({
 
         {/* Cover Letter Section */}
         <div className="mb--30">
-          <h5 style={{ marginBottom: "15px", fontWeight: 600 }}>
+          <h5 style={{ marginBottom: "15px" }}>
             Cover Letter (Optional)
           </h5>
           {selectedCoverLetter && (
@@ -380,9 +432,11 @@ const InternshipApplyModal = ({
               </a>
             </div>
           )}
-          <div>
+          <div data-field-name="coverLetter" data-custom-validation-field>
             <input
+              ref={coverLetterInputRef}
               type="file"
+              name="coverLetter"
               accept=".pdf"
               onChange={handleCoverLetterChange}
               disabled={isSubmitting}
@@ -391,7 +445,7 @@ const InternshipApplyModal = ({
             />
             <label
               htmlFor="cover-letter-input"
-              className="rn-button-style--2 rn-btn-reverse"
+              className="rn-button-style--2 rn-btn-reverse upload-dropzone"
               style={{
                 display: "inline-block",
                 cursor: isSubmitting ? "not-allowed" : "pointer",
@@ -422,6 +476,7 @@ const InternshipApplyModal = ({
                   {(selectedCoverLetter.size / 1024).toFixed(2)} KB)
                 </span>
                 <button
+                  type="button"
                   onClick={handleRemoveCoverLetter}
                   style={{
                     background: "none",
@@ -442,37 +497,7 @@ const InternshipApplyModal = ({
           </small>
         </div>
 
-        {/* Action Buttons */}
-        <div
-          className="d-flex justify-content-end"
-          style={{ gap: "10px", marginTop: "30px" }}
-        >
-          <button
-            className="rn-button-style--2 rn-btn-reverse"
-            onClick={handleClose}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-          <button
-            className="rn-button-style--2 rn-btn-green"
-            onClick={handleApply}
-            disabled={isSubmitting || (!cvDocument && !selectedCV)}
-          >
-            {isSubmitting ? (
-              <>
-                <i
-                  className="pi pi-spin pi-spinner"
-                  style={{ marginRight: "8px" }}
-                ></i>
-                Applying...
-              </>
-            ) : (
-              "Apply for Internship"
-            )}
-          </button>
-        </div>
-      </div>
+      </form>
     </Dialog>
   );
 };

@@ -20,7 +20,7 @@ Call To Action Wrapper
     .inner {
         > span {
             color: #fff;
-            font-size: 17px;
+
             text-transform: uppercase;
             letter-spacing: 4px;
             display: block;
@@ -28,12 +28,12 @@ Call To Action Wrapper
         }
         h2 {
             color: #ffffff;
-            font-size: 75px;
-            font-weight: 900;
+
+
             font-family: 'Montserrat', sans-serif;
             line-height: 90px;
             @media #{$sm-layout} {
-                font-size: 47px;
+
                 line-height: 70px;
             }
         }

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 import ImageFb from "./media/ImageFb";
 
 const EventImageCarousel = ({ images }) => {
@@ -129,6 +131,8 @@ const EventImageCarousel = ({ images }) => {
               src={images[activeIndex]}
               alt={`Event image ${activeIndex + 1}`}
               className="carousel-main-image"
+              eager={activeIndex === 0}
+              fetchPriority={activeIndex === 0 ? "high" : "auto"}
             />
             <div className="carousel-overlay">
               <span className="carousel-preview-text">Click to preview</span>
@@ -195,27 +199,16 @@ const EventImageCarousel = ({ images }) => {
         )}
       </div>
 
-      {/* Full Screen Preview Modal */}
-      {previewOpen && (
-        <div className="event-preview-modal" onClick={closePreview}>
-          <button className="preview-close" onClick={closePreview}>
-            <img 
-              src="/assets/icons/svgs/x.svg" 
-              alt="Close"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-                display: "block",
-                minWidth: "24px",
-                minHeight: "24px"
-              }}
-            />
-          </button>
-
+      <Dialog
+        header="Image preview"
+        visible={previewOpen}
+        onHide={closePreview}
+        style={{ width: "min(1100px, 95vw)", maxHeight: "95vh" }}
+        contentClassName="event-image-preview-content"
+        dismissableMask
+      >
           <div
             className="preview-content"
-            onClick={(e) => e.stopPropagation()}
           >
             <ImageFb
               src={images[previewIndex]}
@@ -265,10 +258,13 @@ const EventImageCarousel = ({ images }) => {
               </>
             )}
           </div>
-        </div>
-      )}
+      </Dialog>
     </>
   );
+};
+
+EventImageCarousel.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default EventImageCarousel;

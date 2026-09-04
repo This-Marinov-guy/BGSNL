@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "@/util/navigation";
 

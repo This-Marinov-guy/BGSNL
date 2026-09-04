@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
 import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
+import HeaderTwo from "../../component/header/HeaderTwo";
 
 const Policy = React.memo(() => {
   return (
@@ -33,7 +33,7 @@ const Policy = React.memo(() => {
         <p className="mt--10">
           Submit a video with the following specifications:
         </p>
-        <ul style={{ fontSize: "24px" }}>
+        <ul>
           <li>0:20 - 0:40 min long</li>
           <li>Has a background music</li>
           <li>Format 9:16 (instagram reel)</li>
@@ -87,7 +87,7 @@ const Policy = React.memo(() => {
       {/* Start Back To Top */}
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

@@ -1,9 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Tooltip } from "primereact/tooltip";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import { Tooltip } from "@/compat/primereact";
 
 const ImageSelection = ({
   options,
   initialValue,
+  name,
   onSelect,
   placeholder = "Select an image",
 }) => {
@@ -50,8 +56,16 @@ const ImageSelection = ({
           />
         </Tooltip>
       )}
-      <div className="image-select-container rn-form-group" ref={dropdownRef}>
+      <div
+        className="image-select-container rn-form-group"
+        data-custom-validation-field
+        data-field-name={name}
+        ref={dropdownRef}
+      >
         <input
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          name={name}
           onClick={handleToggleDropdown}
           placeholder={placeholder}
           value={selectedOption || ""}
@@ -73,6 +87,19 @@ const ImageSelection = ({
       </div>
     </>
   );
+};
+
+ImageSelection.propTypes = {
+  initialValue: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  name: PropTypes.string.isRequired,
+  onSelect: PropTypes.func,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      src: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    })
+  ).isRequired,
+  placeholder: PropTypes.string,
 };
 
 export default ImageSelection;

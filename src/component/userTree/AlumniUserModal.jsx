@@ -1,193 +1,139 @@
-import React from "react";
-import { FiX } from "react-icons/fi";
-import PropTypes from "prop-types";
 import moment from "moment";
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
+import {
+  IconlyCalendar,
+  IconlyChessKing3D,
+  IconlyChessKnight3D,
+  IconlyChessPawn3D,
+  IconlyChessQueen3D,
+  IconlyChessRook3D,
+} from "@/elements/ui/icons/IconlyIcons";
+
+const getTierDetails = (tier) => {
+  const normalizedTier = String(tier ?? "").trim().toLowerCase();
+  const numericTier = Number.parseInt(normalizedTier, 10);
+
+  if (normalizedTier === "platinum" || numericTier >= 4) {
+    return {
+      Icon: IconlyChessKing3D,
+      key: "platinum",
+      label: "Platinum alumni",
+    };
+  }
+  if (normalizedTier === "gold" || numericTier === 3) {
+    return {
+      Icon: IconlyChessQueen3D,
+      key: "gold",
+      label: "Gold alumni",
+    };
+  }
+  if (normalizedTier === "silver" || numericTier === 2) {
+    return {
+      Icon: IconlyChessRook3D,
+      key: "silver",
+      label: "Silver alumni",
+    };
+  }
+  if (normalizedTier === "bronze" || numericTier === 1) {
+    return {
+      Icon: IconlyChessKnight3D,
+      key: "bronze",
+      label: "Bronze alumni",
+    };
+  }
+
+  return {
+    Icon: IconlyChessPawn3D,
+    key: "standard",
+    label: "BGSNL alumni",
+  };
+};
 
 const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
-  if (!isOpen || !user) return null;
+  if (!user) return null;
+
+  const tier = getTierDetails(user.tier);
+  const TierIcon = tier.Icon;
+  const name = user.name?.trim() || "BGSNL alumnus";
+  const initials = name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((namePart) => namePart.charAt(0))
+    .join("")
+    .toUpperCase();
+  const joinDate = user.joinDate && moment(user.joinDate).isValid()
+    ? moment(user.joinDate).format("DD MMM YYYY")
+    : null;
+  const quote = user.quote?.trim();
 
   return (
-    <div 
-      className="modal-overlay"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 10000,
-        padding: "20px",
-        animation: isClosing ? "fadeOut 0.3s ease-in" : "fadeIn 0.3s ease-out"
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
+    <Dialog
+      header={name}
+      visible={isOpen && !isClosing}
+      onHide={onClose}
+      dismissableMask
+      className={`alumni-profile-dialog alumni-profile-dialog--${tier.key}`}
+      contentClassName="alumni-profile-dialog__content"
     >
-      <div 
-        className="user-modal"
-        style={{
-          backgroundColor: "white",
-          borderRadius: "12px",
-          padding: "30px",
-          maxWidth: "500px",
-          width: "100%",
-          maxHeight: "80vh",
-          overflow: "auto",
-          position: "relative",
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
-          scrollbarWidth: "none", // Firefox
-          msOverflowStyle: "none", // IE and Edge
-          animation: isClosing ? "slideOutDown 0.3s ease-in" : "slideInUp 0.3s ease-out",
-          border: `4px solid ${
-            user.tier === "platinum" ? "#e5e4e2" :
-            user.tier === "gold" ? "#FFD700" :
-            user.tier === "silver" ? "#C0C0C0" :
-            user.tier === "bronze" ? "#CD7F32" :
-            "#017363"
-          }`
-        }}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "15px",
-            right: "15px",
-            background: "none",
-            border: "none",
-            fontSize: "24px",
-            cursor: "pointer",
-            color: "#666",
-            padding: "5px",
-            borderRadius: "50%",
-            width: "35px",
-            height: "35px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "all 0.2s ease"
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.backgroundColor = "#f5f5f5";
-            e.target.style.color = "#333";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.backgroundColor = "transparent";
-            e.target.style.color = "#666";
-          }}
-        >
-          <FiX />
-        </button>
-
-        {/* Modal Content */}
-        <div style={{ textAlign: "center", marginBottom: "25px" }}>
-          <div
-            style={{
-              width: "120px",
-              margin: "0 auto 20px",
-              border: `4px solid ${
-                user.tier === "platinum" ? "#e5e4e2" :
-                user.tier === "gold" ? "#FFD700" :
-                user.tier === "silver" ? "#C0C0C0" :
-                user.tier === "bronze" ? "#CD7F32" :
-                "#017363"
-              }`,
-              borderRadius: "8px",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-              overflow: "hidden"
-            }}
-          >
-            <img
-              src={user.avatar}
-              alt={user.name}
-              style={{ 
-                width: "100%", 
-                height: "auto", 
-                display: "block"
-              }}
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
-            />
+      <article className="alumni-profile user-modal">
+        <div className="alumni-profile__identity">
+          <div className="alumni-profile__avatar">
+            <span
+              className="alumni-profile__initials type-heading-md weight-semibold"
+              aria-hidden="true"
+            >
+              {initials}
+            </span>
+            {user.avatar && (
+              <img
+                src={user.avatar}
+                alt={`${name} alumni portrait`}
+                onError={(event) => {
+                  event.currentTarget.hidden = true;
+                }}
+              />
+            )}
           </div>
-          <h2 style={{ 
-            color: "#017363", 
-            marginBottom: "10px",
-            fontSize: "24px",
-            fontWeight: "bold"
-          }}>
-            {user.name}
-          </h2>
-          <p style={{ 
-            color: "#666", 
-            fontSize: "16px",
-            marginBottom: "0"
-          }}>
-            {user.tier ? 
-              `Tier ${user.tier} Alumni` : 
-              "Alumni"
-            }
-          </p>
-        </div>
 
-        {/* Join Date */}
-        {user.joinDate && (
-          <div style={{ marginBottom: "25px", textAlign: "center" }}>
-            <p style={{ 
-              color: "#666", 
-              fontSize: "14px",
-              margin: 0
-            }}>
-              Member since {moment(user.joinDate).format("DD MMM YYYY")}
+          <div className="alumni-profile__details">
+            <span className="alumni-profile__tier type-caption weight-semibold">
+              <TierIcon aria-hidden="true" />
+              {tier.label}
+            </span>
+
+            {joinDate && (
+              <div className="alumni-profile__membership">
+                <IconlyCalendar size="1em" aria-hidden="true" />
+                <dl>
+                  <dt className="type-caption">Member since</dt>
+                  <dd className="type-body weight-semibold">{joinDate}</dd>
+                </dl>
+              </div>
+            )}
+
+            <p className="alumni-profile__summary type-body">
+              Part of the Bulgarian Society Netherlands alumni community.
             </p>
           </div>
-        )}
+        </div>
 
-        {/* Quote */}
-        {user.quote && (
-          <div style={{ marginBottom: "25px" }}>
-            <div
-              className="quote-container p--30"
-              style={{
-                background: "#f9f9f9",
-                borderLeft: `4px solid ${
-                  user.tier === "platinum" ? "#e5e4e2" : "#FFD700"
-                }`,
-                borderRadius: "4px",
-              }}
+        {quote && (
+          <figure className="alumni-profile__quote quote-container">
+            <span
+              className="alumni-profile__quote-mark type-display"
+              aria-hidden="true"
             >
-              <blockquote style={{ 
-                margin: 0, 
-                fontStyle: "italic",
-                fontSize: "16px",
-                lineHeight: "1.5"
-              }}>
-                &ldquo;{user.quote}&rdquo;
-              </blockquote>
-            </div>
-          </div>
+              &ldquo;
+            </span>
+            <blockquote className="type-subheading">{quote}</blockquote>
+            <figcaption className="type-caption weight-semibold">
+              {name}
+            </figcaption>
+          </figure>
         )}
-
-        {/* No quote message */}
-        {/* {!user.quote && (
-          <div style={{ 
-            textAlign: "center", 
-            color: "#999", 
-            fontStyle: "italic",
-            marginBottom: "25px"
-          }}>
-            No quote available for this member
-          </div>
-        )} */}
-      </div>
-    </div>
+      </article>
+    </Dialog>
   );
 };
 
@@ -198,9 +144,12 @@ AlumniUserModal.propTypes = {
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     name: PropTypes.string,
     avatar: PropTypes.string,
-    tier: PropTypes.string,
+    tier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     quote: PropTypes.string,
-    joinDate: PropTypes.string,
+    joinDate: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(Date),
+    ]),
   }),
   onClose: PropTypes.func.isRequired,
 };

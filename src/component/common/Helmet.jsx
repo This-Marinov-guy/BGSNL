@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Helmet } from "react-helmet";
 
 class PageHelmet extends Component {
   render() {
@@ -54,7 +53,7 @@ class PageHelmet extends Component {
 
     return (
       <React.Fragment>
-        <Helmet>
+        <>
           {/* Primary Meta Tags */}
           <title>{fullTitle}</title>
           <meta name="title" content={fullTitle} />
@@ -97,7 +96,7 @@ class PageHelmet extends Component {
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="default" />
           <meta name="apple-mobile-web-app-title" content="BGSNL" />
-        </Helmet>
+        </>
       </React.Fragment>
     );
   }

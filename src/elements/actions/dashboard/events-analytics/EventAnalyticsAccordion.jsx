@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import moment from "moment";
+import {
+  FiChevronDown,
+  FiChevronUp,
+} from "@/elements/ui/icons/IconlyIcons";
 import { MOMENT_DATE_TIME_YEAR } from "../../../../util/functions/date";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 const EventAnalyticsAccordion = ({ event }) => {
   const [expanded, setExpanded] = useState(false);
@@ -13,7 +16,12 @@ const EventAnalyticsAccordion = ({ event }) => {
         onClick={() => setExpanded(!expanded)}
       >
         <div className="event-analytics-accordion__poster">
-          <img src={event.poster} alt={event.title} />
+          <img
+            src={event.poster}
+            alt={`${event.title} poster`}
+            loading="eager"
+            decoding="async"
+          />
         </div>
         <div className="event-analytics-accordion__summary">
           <div className="event-analytics-accordion__name">{event.title}</div>

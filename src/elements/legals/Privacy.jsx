@@ -1,4 +1,3 @@
-import React from "react";
 import { REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
 
 const Privacy = () => {

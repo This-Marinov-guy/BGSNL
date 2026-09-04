@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
-import EventModal from './EventModal';
-import { Tooltip } from 'primereact/tooltip';
-import { FiInfo } from 'react-icons/fi';
-import { MOMENT_DATE_TIME, dateConvertor } from '../../../../util/functions/date';
-import moment from 'moment';
+import { useState } from "react";
+import moment from "moment";
+import { Tooltip } from "@/compat/primereact";
+import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
+import { MOMENT_DATE_TIME } from "../../../../util/functions/date";
+import EventModal from "./EventModal";
 
 const Event = (props) => {
     const [show, setShow] = useState(false);
+    const isDraft = props.event.status === 'draft';
 
     let price;
-    if (props.event.isSaleClosed) {
+    if (isDraft) {
+        price = 'Not created yet';
+    } else if (props.event.isSaleClosed) {
         price = 'Tickets are closed';
     } else if (props.event.isFree) {
         price = 'FREE'
@@ -20,7 +23,10 @@ const Event = (props) => {
     }
 
     const todayValue = (new Date()).valueOf();
-    const expired = (new Date(props.event.date).valueOf() < todayValue) || (new Date(props.event.ticketTimer).valueOf() < todayValue);
+    const expired = !isDraft && (
+        (new Date(props.event.date).valueOf() < todayValue) ||
+        (new Date(props.event.ticketTimer).valueOf() < todayValue)
+    );
 
     return (
         <>
@@ -28,17 +34,30 @@ const Event = (props) => {
             <EventModal show={show} setShow={setShow} event={props.event} loadData={props.loadData}/>
             <div
                 onClick={() => setShow(true)}
-                style={expired ? { backgroundColor: '#ff4d4d' } : {}}
+                style={isDraft
+                    ? { backgroundColor: '#fff8e1', borderColor: '#f59e0b' }
+                    : expired ? { backgroundColor: '#ff4d4d' } : {}}
                 className='service service__style--2 common-border-2 event-card'
             >
                 <div className='event-card__poster'>
-                    <img src={props.event.poster} alt='Poster' />
+                    {props.event.poster ? (
+                        <img
+                            src={props.event.poster}
+                            alt={`${props.event.title || 'Draft event'} poster`}
+                            loading='eager'
+                            decoding='async'
+                        />
+                    ) : (
+                        <div className='center_div' style={{ height: '100%', minHeight: '180px', color: '#92400e' }}>
+                            Draft — no poster yet
+                        </div>
+                    )}
                 </div>
                 <div className='event-card__content'>
-                    <h5 className='event-card__title'>{props.event.title}</h5>
+                    <h5 className='event-card__title'>{props.event.title || 'Untitled draft'}</h5>
                     <div className='event-card__details'>
-                        <p><strong>Date:</strong> {moment(props.event.date).format(MOMENT_DATE_TIME)}</p>
-                        <p><strong>Location:</strong> {props.event.location}</p>
+                        <p><strong>Date:</strong> {props.event.date ? moment(props.event.date).format(MOMENT_DATE_TIME) : 'Not set'}</p>
+                        <p><strong>Location:</strong> {props.event.location || 'Not set'}</p>
                         <p>
                             <strong>Price</strong>
                             <FiInfo className='price_info tooltip_info'
@@ -47,7 +66,7 @@ const Event = (props) => {
                             : {price}
                         </p>
                         <p>
-                            <strong>Status:</strong> {expired ? <span className='error'>Expired</span> : props.event.status}
+                            <strong>Status:</strong> {isDraft ? 'Draft' : expired ? <span className='error'>Expired</span> : props.event.status}
                         </p>
                     </div>
                 </div>

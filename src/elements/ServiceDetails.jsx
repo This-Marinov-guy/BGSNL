@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import ModalVideo from "react-modal-video";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../component/common/Helmet";
-import ModalVideo from 'react-modal-video';
-import ScrollToTop from 'react-scroll-up';
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../component/header/Header";
 import Footer from "../component/footer/Footer";
-
+import Header from "../component/header/Header";
+import Breadcrumb from "./common/Breadcrumb";
 
 class ServiceDetails extends Component{
     constructor () {
@@ -28,20 +28,10 @@ class ServiceDetails extends Component{
 
                 <Header headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
 
-                {/* Start Breadcrump Area */}
-                <div className="rn-page-title-area pt--120 pb--190 bg_image bg_image--5"  data-black-overlay="5">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="rn-page-title text-center pt--100">
-                                    <h2 className="title theme-gradient">WEBSITE DEVELOPMENT</h2>
-                                    <p>Fresh From The Press Discription</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* End Breadcrump Area */}
+                <Breadcrumb
+                    title="Website Development"
+                    description="A closer look at our website development service."
+                />
 
                 {/* Start Page Wrapper */}
                 <div className="rn-service-details ptb--120 bg_color--1">
@@ -109,7 +99,7 @@ class ServiceDetails extends Component{
                 {/* Start Back To Top */}
                 <div className="backto-top">
                     <ScrollToTop showUnder={160}>
-                        <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+                        <FiChevronUp size={26} />
                     </ScrollToTop>
                 </div>
                 {/* End Back To Top */}

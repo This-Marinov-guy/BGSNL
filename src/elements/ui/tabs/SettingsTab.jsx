@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 import {
   FaCog,
-  FaUser,
-  FaSignOutAlt,
   FaGraduationCap,
-} from "react-icons/fa";
-import { showModal } from "../../../redux/modal";
-import { useDispatch } from "react-redux";
-import { USER_UPDATE_MODAL, ALUMNI } from "../../../util/defines/common";
-import SubscriptionManage from "../buttons/SubscriptionManage";
-import { isProd } from "../../../util/functions/helpers";
-import { logout } from "../../../redux/user";
-import AlumniModal from "../modals/AlumniModal";
+  FaSignOutAlt,
+  FaUser,
+  FiArrowUp,
+} from "@/elements/ui/icons/IconlyIcons";
 import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
+import { showModal } from "../../../redux/modal";
+import { logout } from "../../../redux/user";
+import { USER_UPDATE_MODAL } from "../../../util/defines/common";
+import { isProd } from "../../../util/functions/helpers";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
-import { FiArrowUp } from "react-icons/fi";
+import SubscriptionManage from "../buttons/SubscriptionManage";
+import AlumniModal from "../modals/AlumniModal";
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
@@ -52,6 +52,7 @@ const SettingsTab = ({ user }) => {
               <button
                 className="rn-button-style--2 rn-btn-green"
                 onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
+                type="button"
               >
                 Edit Profile
               </button>
@@ -73,8 +74,9 @@ const SettingsTab = ({ user }) => {
                 <button
                   className="rn-button-style--2 rn-btn-green alumni-button"
                   onClick={() => setIsAlumniModalOpen(true)}
+                  type="button"
                 >
-                  <span className="alumni-icon">🎓</span>
+                  <FaGraduationCap className="alumni-icon" aria-hidden="true" />
                   Become an Alumni
                 </button>
               </div>
@@ -83,19 +85,10 @@ const SettingsTab = ({ user }) => {
 
           {/* Tier 0 Alumni Upgrade */}
           {isFreeAlumni && (
-            <div
-              className="settings-card tier-upgrade-card"
-              style={{
-                border: "2px solid #ff6b35",
-                backgroundColor: "#fff5f2",
-              }}
-            >
+            <div className="settings-card tier-upgrade-card">
               <div className="settings-card-header">
-                <FiArrowUp
-                  className="settings-icon"
-                  style={{ color: "#ff6b35" }}
-                />
-                <h3 style={{ color: "#ff6b35" }}>Upgrade Your Tier</h3>
+                <FiArrowUp className="settings-icon" aria-hidden="true" />
+                <h3>Upgrade Your Tier</h3>
               </div>
               <div className="settings-card-body">
                 <p>
@@ -104,16 +97,10 @@ const SettingsTab = ({ user }) => {
                   premium alumni perks, special events, and more.
                 </p>
                 <AlumniRegistrationButton
-                  className="rn-button-style--2 rn-btn-green"
+                  className="rn-button-style--2 rn-btn-green tier-upgrade-button"
                   asLink={false}
-                  style={{
-                    fontSize: "14px",
-                    padding: "10px 20px",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                    fontWeight: "bold",
-                  }}
                 >
-                  <FiArrowUp size={16} style={{ marginRight: "8px" }} />
+                  <FiArrowUp size={16} aria-hidden="true" />
                   Upgrade Tier
                 </AlumniRegistrationButton>
               </div>
@@ -195,6 +182,7 @@ const SettingsTab = ({ user }) => {
               <button
                 className="rn-button-style--2 rn-btn-reverse-red"
                 onClick={handleLogout}
+                type="button"
               >
                 Sign Out
               </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/user";
 import { isMember } from "../../util/functions/helpers";
@@ -21,6 +22,10 @@ const PurchaseTicket = ({ initialEvent = null }) => {
   ) : (
     <GuestPurchase initialEvent={initialEvent} />
   );
+};
+
+PurchaseTicket.propTypes = {
+  initialEvent: PropTypes.object,
 };
 
 export default PurchaseTicket;

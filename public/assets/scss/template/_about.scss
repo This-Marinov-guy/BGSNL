@@ -134,18 +134,18 @@
 
         h4 {
           color: #ffffff;
-          font-size: 36px;
-          font-weight: 500;
+
+
           margin-bottom: 20px;
           @media #{$sm-layout} {
-            font-size: 26px;
+
             margin-bottom: 12px;
           }
         }
         p {
-          font-size: 18px;
+
           color: #ffffff;
-          font-weight: 300;
+
           margin-bottom: 41px;
           padding-right: 10%;
           @media #{$sm-layout} {
@@ -206,7 +206,7 @@
     }
     p {
       &.description {
-        font-weight: 300;
+
         color: #717173;
         a {
           color: rgba(29, 29, 36, 1);
@@ -221,6 +221,28 @@
 
 .about-wrapper {
   margin-top: 100px;
+
+  .about-showcase-carousel__slide {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: rgba($body-color, 0.08);
+    border-radius: 16px;
+  }
+
+  .about-showcase-carousel__slide picture,
+  .about-showcase-carousel__slide .lazy-load-image-background {
+    display: block !important;
+    width: 100%;
+    height: 100%;
+  }
+
+  .about-showcase-carousel__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .thumbnail {
     position: relative;
     z-index: 2;
@@ -261,17 +283,17 @@
   margin-top: 15px;
   h3 {
     &.title {
-      font-size: 30px;
+
       @extend %fontWeight500;
       margin-bottom: 20px;
       @media #{$sm-layout} {
-        font-size: 26px;
+
         margin-bottom: 8px;
       }
     }
   }
   p {
-    font-weight: 300;
+
     color: rgba(29, 29, 36, 0.75);
   }
 }
@@ -289,8 +311,8 @@
     p {
       &.subtitle {
         color: $heading-color;
-        font-size: 20px;
-        font-weight: 400;
+
+
         background: rgba(255, 26, 80, 0.03);
         padding: 8px 25px;
         display: inline-block;
@@ -303,9 +325,9 @@
     h2 {
       margin-top: 30px;
       margin-bottom: 20px;
-      font-size: 36px;
+
       line-height: 50px;
-      font-weight: 500;
+
       @media #{$lg-layout} {
         margin-top: 7px;
       }
@@ -318,7 +340,7 @@
     }
     p {
       color: rgba(29, 29, 36, 0.75);
-      font-size: 20px;
+
       line-height: 30px;
     }
   }

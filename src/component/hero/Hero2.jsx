@@ -1,8 +1,9 @@
-import React from "react";
 import { useSelector } from "react-redux";
+import {
+  Link,
+  useParams,
+} from "@/util/navigation";
 import { selectUser } from "../../redux/user";
-import { Link, useParams } from "@/util/navigation";
-import ImageFb from "../../elements/ui/media/ImageFb";
 
 const Hero2 = () => {
   const user = useSelector(selectUser);
@@ -13,11 +14,10 @@ const Hero2 = () => {
       {/* <div className="hero-line mb--20" alt="line" /> */}
       <div className="hero slider-activation slider-creative-agency">
         <div className="left-container">
-          <h1 className="title archive theme-gradient">
+          <h1 className="title archive theme-gradient type-display">
             {`Bulgarian Society ${region || "Netherlands"}`}
           </h1>
           <Link
-            style={{ fontSize: "24px" }}
             className={"rn-button-style--2 rn-btn-reverse-green"}
             to={user.token ? `/user` : "/signup"}
           >

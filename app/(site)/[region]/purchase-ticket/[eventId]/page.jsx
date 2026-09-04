@@ -4,7 +4,21 @@ import { buildEventMetadata } from "@/util/seo/event-metadata";
 
 export async function generateMetadata({ params }) {
   const { region, eventId } = await params;
-  return buildEventMetadata(eventId, `/${region}/purchase-ticket/${eventId}`);
+  const metadata = await buildEventMetadata(
+    eventId,
+    `/${region}/event-details/${eventId}`
+  );
+
+  return {
+    ...metadata,
+    robots: {
+      index: false,
+      follow: false,
+      noarchive: true,
+      nosnippet: true,
+      noimageindex: true,
+    },
+  };
 }
 
 export default async function Page({ params }) {

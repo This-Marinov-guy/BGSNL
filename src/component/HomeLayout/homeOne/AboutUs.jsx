@@ -1,9 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Slider from "react-slick";
 import ImageFb from "../../../elements/ui/media/ImageFb";
 import { presentation } from "../../../page-demo/script";
 import { SLIDESHOW } from "../../../util/defines/GLOBAL_INFO";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "@/util/navigation";
 
 const AboutUs = ({ learnMore }) => {
@@ -15,19 +15,24 @@ const AboutUs = ({ learnMore }) => {
         <div className="container">
           <div className="row row--35 align-items-center">
             <div className="col-lg-5 col-md-12">
-              <Slider {...presentation}>
+              <Slider className="about-showcase-carousel" {...presentation}>
                 {SLIDESHOW.map((image, index) => {
                   return (
-                    <LazyLoadImage
-                      key={index}
-                      src={image.src}
-                      alt={image.alt}
-                      className="small-presentation soft-border"
-                    />
+                    <div className="about-showcase-carousel__slide" key={image.src}>
+                      <ImageFb
+                        alt={image.alt}
+                        className="about-showcase-carousel__image"
+                        eager
+                        fallback={image.src}
+                        fetchPriority={index === 0 ? "high" : "auto"}
+                        src={image.src}
+                        type="image/jpeg"
+                      />
+                    </div>
                   );
                 })}
               </Slider>
-              <Link className="center_div" style={{ fontSize: "0.6em" }} to="/events/past-events">
+              <Link className="center_div" to="/events/past-events">
                 (Events showcase)
               </Link>
             </div>
@@ -38,7 +43,7 @@ const AboutUs = ({ learnMore }) => {
                   {learnMore ? (
                     <div className="center_div j-start">
                       <h2 className="title mr--20">{title}</h2>
-                      <Link style={{ fontSize: "0.6em" }} to="/about">
+                      <Link to="/about">
                         (Learn more)
                       </Link>
                     </div>
@@ -93,6 +98,10 @@ const AboutUs = ({ learnMore }) => {
       </div>
     </React.Fragment>
   );
+};
+
+AboutUs.propTypes = {
+  learnMore: PropTypes.bool,
 };
 
 export default AboutUs;

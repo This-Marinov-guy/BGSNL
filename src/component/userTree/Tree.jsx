@@ -209,14 +209,61 @@ export default function Tree({ style, nodes = [], onUserClick }) {
       }
 
       const group = document.createElementNS(svg.namespaceURI, "g");
+      const userData = {
+        id: node.id,
+        name: node.name,
+        avatar: node.avatarUrl,
+        tier: node.tier,
+        quote: node.quote,
+        joinDate: node.joinDate,
+      };
+      const openUserModal = () => {
+        setSelectedUser(userData);
+        setIsModalOpen(true);
+        if (typeof onUserClickRef.current === "function") {
+          onUserClickRef.current(userData);
+        }
+      };
+
+      group.setAttribute("class", "alumni-node");
       group.setAttribute("transform", `translate(${x},${y})`);
+      group.setAttribute("role", "button");
+      group.setAttribute("tabindex", "0");
+      group.setAttribute("focusable", "true");
+      group.setAttribute(
+        "aria-label",
+        `${node.name}, ${tierLabel(node.tier)}. Open alumni profile`
+      );
       group.addEventListener("mouseenter", () =>
         group.classList.add("avatar-hover")
       );
       group.addEventListener("mouseleave", () =>
         group.classList.remove("avatar-hover")
       );
+      group.addEventListener("focus", () =>
+        group.classList.add("avatar-hover")
+      );
+      group.addEventListener("blur", () =>
+        group.classList.remove("avatar-hover")
+      );
+      group.addEventListener("click", (event) => {
+        event.stopPropagation();
+        openUserModal();
+      });
+      group.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        event.preventDefault();
+        openUserModal();
+      });
       gNodes.appendChild(group);
+
+      const accessibleTitle = document.createElementNS(
+        svg.namespaceURI,
+        "title"
+      );
+      accessibleTitle.textContent = node.name;
+      group.appendChild(accessibleTitle);
 
       const ring = document.createElementNS(svg.namespaceURI, "circle");
       ring.setAttribute("class", `avatar-ring avatar-ring-${tierName(node.tier)}`);
@@ -250,7 +297,7 @@ export default function Tree({ style, nodes = [], onUserClick }) {
       img.setAttribute("clip-path", `url(#${clipId})`);
       img.setAttribute("pointer-events", "auto");
       img.setAttribute("preserveAspectRatio", "xMidYMid slice");
-      img.style.cursor = "pointer";
+      img.setAttribute("aria-hidden", "true");
 
       img.addEventListener("error", () => {
         img.setAttribute(
@@ -259,63 +306,43 @@ export default function Tree({ style, nodes = [], onUserClick }) {
         );
       });
 
-      img.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const userData = {
-          id: node.id,
-          name: node.name,
-          avatar: node.avatarUrl,
-          tier: node.tier,
-          quote: node.quote,
-          joinDate: node.joinDate,
-        };
-        setSelectedUser(userData);
-        setIsModalOpen(true);
-        if (typeof onUserClickRef.current === "function") {
-          onUserClickRef.current(userData);
-        }
-      });
       group.appendChild(img);
 
-      const minCardWidth = 90;
-      const charWidth = 6.5;
-      const nameLen = node.name ? node.name.length : 0;
-      const tLabel = tierLabel(node.tier);
-      const maxLen = Math.max(nameLen, tLabel.length);
-      const estWidth = Math.ceil(maxLen * charWidth) + 6;
-      const cardWidth = Math.max(minCardWidth, estWidth);
-      const cardHeight = 36;
+      const label = document.createElementNS(svg.namespaceURI, "text");
+      label.setAttribute("class", "node-label");
+      label.setAttribute("x", "0");
+      label.setAttribute("aria-hidden", "true");
+
+      const nameTspan = document.createElementNS(svg.namespaceURI, "tspan");
+      nameTspan.setAttribute("x", "0");
+      nameTspan.textContent = node.name;
+      label.appendChild(nameTspan);
+      group.appendChild(label);
+
+      const tooltipHeight = 30;
+      const tooltipGap = 10;
+      const tooltipPadding = 14;
+      const fallbackNameWidth = Math.max(0, String(node.name || "").length * 8);
+      const measuredNameWidth = nameTspan.getComputedTextLength?.() || fallbackNameWidth;
+      const cardWidth = Math.max(96, Math.ceil(measuredNameWidth) + tooltipPadding * 2);
       const cardX = -cardWidth / 2;
-      const cardY = avatarR + 6;
+      const cardY = -(avatarR + tooltipGap + tooltipHeight);
+
+      label.setAttribute("y", String(cardY + 20));
 
       const cardRect = document.createElementNS(svg.namespaceURI, "rect");
       cardRect.setAttribute("x", String(cardX));
       cardRect.setAttribute("y", String(cardY));
       cardRect.setAttribute("width", String(cardWidth));
-      cardRect.setAttribute("height", String(cardHeight));
-      cardRect.setAttribute("rx", "6");
+      cardRect.setAttribute("height", String(tooltipHeight));
+      cardRect.setAttribute("rx", "4");
       cardRect.setAttribute("class", "node-label-card");
-      group.appendChild(cardRect);
+      cardRect.setAttribute("aria-hidden", "true");
+      group.insertBefore(cardRect, label);
 
-      const label = document.createElementNS(svg.namespaceURI, "text");
-      label.setAttribute("class", "node-label");
-      label.setAttribute("x", "0");
-      label.setAttribute("y", String(avatarR + 22));
-
-      const nameTspan = document.createElementNS(svg.namespaceURI, "tspan");
-      nameTspan.setAttribute("x", "0");
-      nameTspan.setAttribute("dy", "0");
-      nameTspan.textContent = node.name;
-      label.appendChild(nameTspan);
-
-      const tierTspan = document.createElementNS(svg.namespaceURI, "tspan");
-      tierTspan.setAttribute("x", "0");
-      tierTspan.setAttribute("dy", "1.2em");
-      tierTspan.setAttribute("class", "node-tier-label");
-      tierTspan.textContent = tLabel;
-      label.appendChild(tierTspan);
-
-      group.appendChild(label);
+      minX = Math.min(minX, x + cardX - 8);
+      minY = Math.min(minY, y + cardY - 8);
+      maxX = Math.max(maxX, x - cardX + 8);
 
       // Decorative leaves
       const totalLeaves = 60;
@@ -427,7 +454,7 @@ Tree.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
       avatarUrl: PropTypes.string,
-      tier: PropTypes.number,
+      tier: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       quote: PropTypes.string,
       joinDate: PropTypes.string,
       depth: PropTypes.number.isRequired,

@@ -1,5 +1,6 @@
 import React from 'react'
-import { Dialog } from 'primereact/dialog';
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 import { LOCAL_STORAGE_LANGUAGE_PREFERENCE, PAGE_TRANSLATION_TEXTS } from '../../../util/defines/common';
 import ChangeLanguageBtns from '../buttons/ChangeLanguageBtns';
 
@@ -15,13 +16,21 @@ const LanguageChangeModal = ({ visible, callback, onHide, availableLanguages = [
     );
 
     const titles = Object.values(options).map(item => item.title);
-    const btnText = Object.values(options).map(item => ({
-        text: item.button,
-        value: item.value
-    }));
+    const actions = (
+        <button onClick={onHide} className="rn-button-style--2 rn-btn-reverse">
+            Close
+        </button>
+    );
 
     return (
-        <Dialog modal visible={visible} blockScroll={true} onHide={onHide}>
+        <Dialog
+            modal
+            header="Choose your language"
+            visible={visible}
+            blockScroll={true}
+            onHide={onHide}
+            footer={actions}
+        >
             <div className="center_section center_text">
                 {titles.map((t, i) => {
                     return (
@@ -29,12 +38,16 @@ const LanguageChangeModal = ({ visible, callback, onHide, availableLanguages = [
                     )
                 })}
                 <ChangeLanguageBtns callback={changeLanguage} availableLanguages={availableLanguages} />
-                <button onClick={onHide} className="rn-button-style--2 rn-btn-reverse mt--40">
-                    Close
-                </button>
             </div>
         </Dialog>
     )
 }
+
+LanguageChangeModal.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    callback: PropTypes.func.isRequired,
+    onHide: PropTypes.func.isRequired,
+    availableLanguages: PropTypes.arrayOf(PropTypes.string),
+};
 
 export default LanguageChangeModal

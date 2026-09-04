@@ -1,22 +1,21 @@
-import React, { useState } from "react";
-import { FiX, FiCheck } from "react-icons/fi";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../../util/defines/ALUMNI";
-import { Badge } from "primereact/badge";
-import { useNavigate } from "@/util/navigation";
-import { useHttpClient } from "../../../hooks/common/http-hook";
-import Loader from "../loading/Loader";
 import { useDispatch } from "react-redux";
+import { Badge, Dialog } from "@/compat/primereact";
+import {
+  FiCheck,
+  FiX,
+} from "@/elements/ui/icons/IconlyIcons";
+import { useHttpClient } from "../../../hooks/common/http-hook";
 import { showNotification } from "../../../redux/notification";
+import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../../util/defines/ALUMNI";
+import Loader from "../loading/Loader";
 
 const AlumniTypeModal = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
   const { loading, sendRequest } = useHttpClient();
   const [processingTier, setProcessingTier] = useState(null);
 
   const dispatch = useDispatch();
-
-  if (!isOpen) return null;
 
   const handleSelectMembership = async (index) => {
     try {
@@ -57,84 +56,25 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div
-      className="modal-overlay"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 10000,
-        padding: "20px",
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
+    <Dialog
+      header="Choose Your Alumni Tier"
+      visible={isOpen}
+      onHide={onClose}
+      style={{ width: "900px" }}
+      dismissableMask
     >
       <div
         className="alumni-type-modal"
         style={{
-          backgroundColor: "white",
-          borderRadius: "12px",
-          padding: "30px",
-          maxWidth: "900px",
           width: "100%",
-          maxHeight: "80vh",
-          overflow: "auto",
-          position: "relative",
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)",
           scrollbarWidth: "none", // Firefox
           msOverflowStyle: "none", // IE and Edge
         }}
       >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "15px",
-            right: "15px",
-            background: "none",
-            border: "none",
-            fontSize: "24px",
-            cursor: "pointer",
-            color: "#666",
-            padding: "5px",
-            borderRadius: "50%",
-            width: "35px",
-            height: "35px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <FiX />
-        </button>
-
-        {/* Modal Header */}
         <div style={{ textAlign: "center", marginBottom: "25px" }}>
-          <h2
-            style={{
-              color: "#017363",
-              marginBottom: "20px",
-              fontSize: "28px",
-              fontWeight: "bold",
-            }}
-          >
-            Choose Your Alumni Tier
-          </h2>
           <p
             style={{
               color: "#666",
-              fontSize: "16px",
               marginBottom: "0",
             }}
           >
@@ -197,14 +137,14 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
                   }}
                 >
                   <div style={{ marginRight: "15px" }}>{membership.icon}</div>
-                  <h3 style={{ margin: 0, fontSize: "20px", color: "#017363" }}>
+                  <h3 style={{ margin: 0, color: "#017363" }}>
                     {membership.title}
                   </h3>
                 </div>
                 <div style={{ marginBottom: "15px" }}>
-                  <h4 style={{ fontSize: "24px", margin: "0 0 5px 0" }}>
+                  <h4 style={{ margin: "0 0 5px 0" }}>
                     {membership.price}€{" "}
-                    <span style={{ fontSize: "16px", color: "#666" }}>
+                    <span style={{ color: "#666" }}>
                       / month
                     </span>
                   </h4>
@@ -226,7 +166,6 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
                           display: "flex",
                           alignItems: "flex-start",
                           marginBottom: "8px",
-                          fontSize: "14px",
                         }}
                       >
                         {benefit.strike ? (
@@ -234,7 +173,6 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
                             style={{
                               marginRight: "8px",
                               color: "#dc3545",
-                              fontSize: "16px",
                               flexShrink: 0,
                               marginTop: "2px",
                             }}
@@ -244,7 +182,6 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
                             style={{
                               marginRight: "8px",
                               color: "#28a745",
-                              fontSize: "16px",
                               flexShrink: 0,
                               marginTop: "2px",
                             }}
@@ -270,7 +207,7 @@ const AlumniTypeModal = ({ isOpen, onClose }) => {
           ))}
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 };
 

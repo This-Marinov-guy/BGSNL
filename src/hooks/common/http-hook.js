@@ -49,7 +49,7 @@ export const useHttpClient = (withPageLoading = false) => {
 
       return response.data;
     } catch (err) {
-      !isProd() && console.log(err.response.data ?? err);
+      !isProd() && console.log(err.response?.data ?? err);
 
       const errorMessage = err.response?.data?.message || err.message || "An error occurred";
       const isSessionExpired = errorMessage.toLowerCase().includes("session expired") || 

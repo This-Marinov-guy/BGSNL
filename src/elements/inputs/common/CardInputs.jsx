@@ -1,7 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { Badge } from "primereact/badge";
-import { FiCheck } from "react-icons/fi";
+import { Badge } from "@/compat/primereact";
+import { FiCheck } from "@/elements/ui/icons/IconlyIcons";
 
 const CardItem = ({
   item,
@@ -26,7 +25,7 @@ const CardItem = ({
         {item.description && (
           <h6>{item.description}</h6>
         )}
-        <h4>{item?.price ? `+ ${item.price} euro` : "Free"}</h4>
+        <h4>{item?.price ? `+ €${item.price}` : "Free"}</h4>
       </div>
     </div>
   );

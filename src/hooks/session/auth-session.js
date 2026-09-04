@@ -1,17 +1,30 @@
-import { useEffect, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser, logout } from "../../redux/user";
-import { removeModal, showModal } from "../../redux/modal";
-import { useJWTRefresh } from "../common/api-hooks";
-import { calculateTimeRemaining } from "../../util/functions/date";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import {
+  removeModal,
+  showModal,
+} from "../../redux/modal";
+import {
+  logout,
+  selectUser,
+} from "../../redux/user";
 import {
   INACTIVITY_MODAL,
   JWT_RESET_TIMER,
   LOCAL_STORAGE_SESSION_LIFE,
+  PERSISTENT_SESSION,
   SESSION_TIMEOUT,
   WARNING_THRESHOLD,
-  PERSISTENT_SESSION,
 } from "../../util/defines/common";
+import { calculateTimeRemaining } from "../../util/functions/date";
+import { useJWTRefresh } from "../common/api-hooks";
 
 export const useAuthSession = () => {
   const timeRemainingRef = useRef(SESSION_TIMEOUT);

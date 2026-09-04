@@ -1,20 +1,24 @@
-import React from "react";
 import PropTypes from "prop-types";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import {
+  FaBriefcase,
+  FaCog,
+  FaNewspaper,
+  FaTag,
+  FaTicketAlt,
+  FaUser,
+  FiArrowUp,
+  IconlyClose,
+  IconlyMenu,
+} from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import {
-  FaNewspaper,
-  FaTicketAlt,
-  FaBriefcase,
-  FaUser,
-  FaCog,
-  FaTag,
-} from "react-icons/fa";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+  ACCESS_1,
+  formatRole,
+} from "../../../util/defines/common";
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
-import { formatRole, ACCESS_1 } from "../../../util/defines/common";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
-import { FiArrowUp } from "react-icons/fi";
 
 const UserSidebar = ({
   currentUser,
@@ -50,35 +54,47 @@ const UserSidebar = ({
       {/* Mobile Sidebar Toggle Button */}
       {isMobile && (
         <button
+          aria-controls="user-account-navigation"
+          aria-expanded={isSidebarOpen}
+          aria-label={
+            isSidebarOpen
+              ? "Close account navigation"
+              : "Open account navigation"
+          }
           className={`sidebar-toggle-btn ${
             isSidebarOpen ? "sidebar-open" : ""
           }`}
           onClick={toggleSidebar}
-          aria-label="Toggle Sidebar"
+          type="button"
         >
           {isSidebarOpen ? (
-            <span className="close-icon">
-              <span className="close-line"></span>
-              <span className="close-line"></span>
-            </span>
+            <IconlyClose size={24} aria-hidden />
           ) : (
-            <span className="hamburger-icon">
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-            </span>
+            <IconlyMenu size={24} aria-hidden />
           )}
         </button>
       )}
 
+      {isMobile && isSidebarOpen ? (
+        <button
+          aria-hidden="true"
+          className="user-sidebar-backdrop"
+          onClick={toggleSidebar}
+          tabIndex={-1}
+          type="button"
+        />
+      ) : null}
+
       {/* Sidebar */}
-      <div
+      <aside
+        aria-label="Account navigation"
         className={`user-sidebar ${isMobile ? "mobile" : ""} ${
           isSidebarOpen ? "open" : ""
         }`}
+        id="user-account-navigation"
       >
         {/* User Profile Overview */}
-        <div className="sidebar-user-profile" style={{ fontFamily: "Archive" }}>
+        <div className="sidebar-user-profile archive">
           <LazyLoadImage
             src={currentUser.image}
             alt={`${currentUser.name} profile`}
@@ -89,63 +105,65 @@ const UserSidebar = ({
             <span className="status-active">
               {formatRole(currentUser.roles)}{" "}
               {currentUser?.tier !== undefined && `Tier ${currentUser.tier}`}
-              
             </span>
           </p>
           {currentUser?.tier === 0 && (
-            <div style={{ marginTop: "10px", textAlign: "center" }}>
+            <div className="sidebar-tier-action">
               <AlumniRegistrationButton
-                className="rn-button-style--2 rn-btn-green"
+                className="rn-button-style--2 rn-btn-green sidebar-tier-button"
                 asLink={false}
-                style={{ fontSize: "12px", padding: "8px 16px" }}
               >
-                <FiArrowUp size={16} style={{ marginBottom: "5px" }}/> Update Tier
+                <FiArrowUp size={16} aria-hidden />
+                Update tier
               </AlumniRegistrationButton>
             </div>
           )}
           <p className="sidebar-user-status">
             <span className="status-active">
-              {capitalizeFirstLetter(currentUser.region, true)} <br />{" "}
+              {capitalizeFirstLetter(currentUser.region || "", true)}
             </span>
           </p>
         </div>
 
         {/* Navigation Links */}
-        <nav className="sidebar-nav">
+        <nav aria-label="Account sections" className="sidebar-nav">
           <ul>
-            {ACCOUNT_TABS.map((tab, index) => (
-              <li
-                key={index}
-                className={
-                  activeTab === tab ||
-                  (activeTab === "" && tab === ACCOUNT_TABS[0])
-                    ? "active"
-                    : ""
-                }
-              >
-                <Link
-                  to={`#${tab}`}
-                  onClick={() => {
-                    onTabChange(tab);
-                    if (isMobile) toggleSidebar();
-                  }}
-                >
-                  <span className="sidebar-icon">{getTabIcon(tab)}</span>
-                  <span className="sidebar-label">
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </span>
-                </Link>
-              </li>
-            ))}
+            {ACCOUNT_TABS.map((tab) => {
+              const isActive =
+                activeTab === tab ||
+                (activeTab === "" && tab === ACCOUNT_TABS[0]);
+
+              return (
+                <li key={tab} className={isActive ? "active" : ""}>
+                  <Link
+                    aria-current={isActive ? "page" : undefined}
+                    to={`#${tab}`}
+                    onClick={() => {
+                      onTabChange(tab);
+                      if (isMobile) toggleSidebar();
+                    }}
+                  >
+                    <span className="sidebar-icon">{getTabIcon(tab)}</span>
+                    <span className="sidebar-label">
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
             {isAccess1 && (
               <>
                 <li className="sidebar-divider" />
                 <li>
                   <Link
                     to="/user/internships-dashboard"
-                    onClick={() => { if (isMobile) toggleSidebar(); }}
+                    onClick={() => {
+                      if (isMobile) toggleSidebar();
+                    }}
                   >
-                    <span className="sidebar-icon"><FaBriefcase size={22} /></span>
+                    <span className="sidebar-icon">
+                      <FaBriefcase size={22} />
+                    </span>
                     <span className="sidebar-label">Manage Internships</span>
                   </Link>
                 </li>
@@ -153,7 +171,7 @@ const UserSidebar = ({
             )}
           </ul>
         </nav>
-      </div>
+      </aside>
     </>
   );
 };

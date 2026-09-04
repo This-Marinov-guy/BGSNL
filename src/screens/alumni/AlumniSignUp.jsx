@@ -1,35 +1,56 @@
 "use client";
 
 import React, { useState } from "react";
-import * as yup from "yup";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
 import moment from "moment";
-import { Badge } from "primereact/badge";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Password } from "primereact/password";
-import { FiCheck, FiChevronLeft, FiArrowLeft, FiX } from "react-icons/fi";
+import * as yup from "yup";
+import {
+  Password,
+  Steps,
+} from "@/compat/primereact";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiCheck,
+  FiChevronLeft,
+  FiChevronUp,
+  FiX,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  Link,
+  useParams,
+} from "@/util/navigation";
 import PageHelmet from "../../component/common/Helmet";
-import HeaderTwo from "../../component/header/HeaderTwo";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import Loader from "../../elements/ui/loading/Loader";
-import ImageInput from "../../elements/inputs/common/ImageInput";
 import FooterTwo from "../../component/footer/FooterTwo";
-import ScrollToTop from "react-scroll-up";
-import { FiChevronUp } from "react-icons/fi";
-import { useNavigate } from "@/util/navigation";
-import { useDispatch } from "react-redux";
-import { Link, useParams } from "@/util/navigation";
+import HeaderTwo from "../../component/header/HeaderTwo";
+import ImageInput, {
+  DEFAULT_MAX_IMAGE_SIZE_BYTES,
+} from "../../elements/inputs/common/ImageInput";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
+import Loader from "../../elements/ui/loading/Loader";
+import StepContentTransition from "../../elements/ui/functional/StepContentTransition";
+import { useHttpClient } from "../../hooks/common/http-hook";
 import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../util/defines/ALUMNI";
-import {
-  encryptData,
-  isObjectEmpty,
-} from "../../util/functions/helpers";
-import { Steps } from "primereact/steps";
-import {
-  INCORRECT_MISSING_DATA,
-} from "../../util/defines/common";
-import { showNotification } from "../../redux/notification";
+import { encryptData } from "../../util/functions/helpers";
+
+const isSupportedImage = (value) =>
+  !value ||
+  typeof value === "string" ||
+  ["image/jpg", "image/jpeg", "image/png"].includes(value.type);
+
+const isSupportedImageSize = (value) =>
+  !value ||
+  typeof value === "string" ||
+  value.size <= DEFAULT_MAX_IMAGE_SIZE_BYTES;
 
 const schema = yup.object().shape({
+  image: yup
+    .mixed()
+    .test("fileType", "Please choose a JPG or PNG image", isSupportedImage)
+    .test("fileSize", "Image must be 5 MB or smaller", isSupportedImageSize),
   name: yup.string().required("Name is required"),
   surname: yup.string().required("Surname is required"),
   email: yup.string().email("Please enter a valid email").required(),
@@ -45,42 +66,44 @@ const schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords do not match")
     .required("Passwords do not match"),
+  notificationTerms: yup.bool(),
   policyTerms: yup.bool().required().oneOf([true], "Terms must be accepted"),
 });
 
 const stepConfig = [
   {
     label: "Type",
+    description: "Select the support level that suits you.",
   },
   {
     label: "Details",
+    description: "Add your personal and account details.",
   },
   {
     label: "Payment",
+    description: "Review your details and confirm support.",
   },
 ];
 
-const groupedItemTemplate = (option) => {
-  return (
-    <div className="flex align-items-start justify-content-start">
-      <div>{option.label}</div>
-    </div>
-  );
-};
-
-const AlumniSignUp = (props) => {
+const AlumniSignUp = () => {
   const { region } = useParams();
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
+  const [transitionDirection, setTransitionDirection] = useState("forward");
+
+  const goToStep = (nextStep) => {
+    if (nextStep === activeStep) return;
+
+    setTransitionDirection(nextStep > activeStep ? "forward" : "backward");
+    setActiveStep(nextStep);
+  };
 
   const handleSelectStep = (e) => {
     const newIndex = e.index;
+    const lastAccessibleStep = selectedMembershipIndex !== null ? 1 : 0;
 
-    if (
-      newIndex < activeStep ||
-      (region && (newIndex < 2 || selectedMembershipIndex))
-    ) {
-      setActiveStep(newIndex);
+    if (newIndex <= lastAccessibleStep) {
+      goToStep(newIndex);
     }
   };
 
@@ -88,175 +111,65 @@ const AlumniSignUp = (props) => {
 
   const [selectedMembershipIndex, setSelectedMembershipIndex] = useState(null);
 
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
-  const handleErrorMsg = (errors) => {
-    if (!isObjectEmpty(errors)) {
-      dispatch(showNotification(INCORRECT_MISSING_DATA));
-    }
-  };
-
   let stepComp;
   let stepButtons;
 
   switch (activeStep) {
     case 0:
       stepComp = (
-        <div className="service-area ptb--40">
+        <section className="signup-plan-section" aria-label="Alumni membership plans">
           <div className="container">
-            <div className="center_div mb--20">
-              <div className="d-flex flex-column align-items-center justify-content-center">
-                {selectedMembershipIndex !== null && (
-                  <h3 className="mb--20">
-                    Current choice is:{" "}
-                    {ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex].title}{" "}
-                  </h3>
-                )}
-
-                {/* <p>
-                  Membership plans distinguish only by the price and the billing
-                  period. By becoming a member you receive benefits like:
-                </p>
-                <ul className="row list-style--1 mb--20">
-                  <li className="col-lg-4 col-md-6 col-12">
-                    <FiCheck />
-                    Exclusive member events
-                  </li>
-                  <li className="col-lg-4 col-md-6 col-12">
-                    <FiCheck />
-                    Discounts for events
-                  </li>
-                  <li className="col-lg-4 col-md-6 col-12">
-                    <FiCheck />
-                    Premium collection of event tickets
-                  </li>
-                  <li className="col-lg-4 col-md-6 col-12">
-                    <FiCheck />
-                    Internship opportunities worldwide
-                  </li>
-                  <li className="col-lg-4 col-md-6 col-12">
-                    <FiCheck />
-                    Many more to be explored...
-                  </li>
-                </ul>
-                <p style={{ fontSize: "15px" }}>
-                  *You will automatically be billed on the end of the period,
-                  except if you cancel the subscription from your profile or the
-                  funds in your bank account are insufficient
-                </p> */}
-              </div>
-            </div>
-            <div
-              className="d-flex flex-column flex-md-row justify-content-center service-one-wrapper center_div"
-              style={{ gap: "20px", flexWrap: "wrap" }}
-            >
+            <div className="signup-plan-grid signup-plan-grid--alumni">
               {ALUMNI_MEMBERSHIP_SPECIFICS.map((val, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: "calc(25% - 15px)",
-                    minWidth: "250px",
-                    maxWidth: "300px",
+                <button
+                  key={val.id}
+                  type="button"
+                  className={`signup-plan-card signup-plan-card--alumni${val.label?.text ? " signup-plan-card--featured" : ""}`}
+                  onClick={() => {
+                    setSelectedMembershipIndex(i);
+                    goToStep(1);
                   }}
                 >
-                  <button
-                    style={
-                      selectedMembershipIndex !== null &&
-                      val.title ===
-                        ALUMNI_MEMBERSHIP_SPECIFICS[selectedMembershipIndex]
-                          .title
-                        ? {
-                            backgroundColor: "#017363",
-                            border: `2px solid ${val.borderColor ?? "black"}`,
-                            width: "100%",
-                          }
-                        : {
-                            border: `2px solid ${val.borderColor ?? "black"}`,
-                            width: "100%",
-                          }
-                    }
-                    className="service service__style--2"
-                    onClick={() => {
-                      setSelectedMembershipIndex(i);
-                      setActiveStep(1);
-                    }}
-                  >
-                    {val?.label?.text && (
-                      <Badge
-                        style={{
-                          position: "absolute",
-                          top: "-10px",
-                          right: "-10px",
-                          backgroundColor: val.label.color,
-                        }}
-                        value={val.label.text}
-                      />
-                    )}
-                    <div className="hor_section">
-                      <div className="icon">{val.icon}</div>
-                      <h5 style={{ width: "40%" }}>
-                        {val.price}&#8364; every {"month"}
-                      </h5>
-                    </div>
-                    <div className="content">
-                      <h3>{val.title}</h3>
-                      {val?.description && <p>{val.description}</p>}
-                      {val?.benefits && (
-                        <ul className="list-style--2">
-                          {val.benefits.map((benefit, index) => (
-                            <li
-                              style={{
-                                color: benefit.strike ? "#999" : "inherit",
-                                display: "flex",
-                                alignItems: "center",
-                                marginBottom: "8px",
-                              }}
-                              key={index}
-                            >
-                              {benefit.strike ? (
-                                <FiX
-                                  style={{
-                                    marginRight: "8px",
-                                    color: "#dc3545",
-                                    fontSize: "16px",
-                                    flexShrink: 0,
-                                  }}
-                                />
-                              ) : (
-                                <FiCheck
-                                  style={{
-                                    marginRight: "8px",
-                                    color: "#28a745",
-                                    fontSize: "16px",
-                                    flexShrink: 0,
-                                  }}
-                                />
-                              )}
-                              <span style={{ textAlign: "left" }}>
-                                {benefit.text}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </button>
-                </div>
+                  {val?.label?.text && (
+                    <span className="signup-plan-card__badge">{val.label.text}</span>
+                  )}
+                  <span className="signup-plan-card__topline">
+                    <span className="signup-plan-card__icon" aria-hidden="true">{val.icon}</span>
+                    <span className="signup-plan-card__price">
+                      <strong>{val.price}&#8364;</strong>
+                      <span>per month</span>
+                    </span>
+                  </span>
+                  <span className="signup-plan-card__title">{val.title}</span>
+                  {val?.benefits && (
+                    <ul className="signup-plan-card__benefits">
+                      {val.benefits.map((benefit) => (
+                        <li className={benefit.strike ? "is-unavailable" : ""} key={benefit.text}>
+                          {benefit.strike ? <FiX /> : <FiCheck />}
+                          <span>{benefit.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </button>
               ))}
             </div>
+
+            <p className="signup-renewal-note">
+              Alumni plans renew monthly. You can change or cancel your support
+              from your profile at any time.
+            </p>
           </div>
-        </div>
+        </section>
       );
       stepButtons = null;
       break;
     case 1:
       stepComp = (
-        <div className="blog-comment-form pb--120 bg_color--1">
+        <div className="blog-comment-form signup-form-section pb--120">
           {selectedMembershipIndex !== null && (
             <div className="container">
-              <Formik
+              <ValidatedFormik
                 className="inner"
                 validationSchema={schema}
                 onSubmit={async (values) => {
@@ -286,10 +199,19 @@ const AlumniSignUp = (props) => {
                   );
                   formData.append("origin_url", window.location.origin);
                   formData.append("method", "alumni-signup");
+                  if (region) {
+                    formData.append("region", region);
+                  }
                   formData.append("name", values.name);
                   formData.append("surname", values.surname);
                   formData.append("email", values.email);
                   formData.append("password", await encryptData(values.password));
+                  formData.append("policyTerms", values.policyTerms);
+                  formData.append("notificationTerms", values.notificationTerms);
+                  formData.append(
+                    "notificationTypeTerms",
+                    values.notificationTerms ? "whatsapp & email" : ""
+                  );
                   const responseData = await sendRequest(
                     "security/check-email",
                     "POST",
@@ -298,7 +220,10 @@ const AlumniSignUp = (props) => {
                     }
                   );
 
-                  if (!responseData.hasOwnProperty("status")) {
+                  if (
+                    !responseData ||
+                    !Object.prototype.hasOwnProperty.call(responseData, "status")
+                  ) {
                     return;
                   }
 
@@ -321,31 +246,44 @@ const AlumniSignUp = (props) => {
                   password: "",
                   confirmPassword: "",
                   policyTerms: false,
+                  notificationTerms: false,
                 }}
               >
-                {({ values, setFieldValue, errors, isValid, dirty }) => (
+                {({ setFieldValue }) => (
                   <Form
                     encType="multipart/form-data"
                     id="form"
-                    style={{ padding: "2%" }}
+                    className="signup-application-form"
                   >
-                    <h3 className="center_text">
-                      Fill your details and register
-                    </h3>
-                    <div className="center_div row mb--40 mt--40">
-                      <div className="col-lg-12 col-md-6 col-12">
-                        <h3 className="center_text label">Profile picture</h3>
+                    <header className="signup-form-heading">
+                      <button
+                        aria-label="Back to plans"
+                        type="button"
+                        onClick={() => goToStep(0)}
+                        className="signup-back-button signup-form-heading__back"
+                      >
+                        <FiChevronLeft aria-hidden="true" />
+                      </button>
+                      <h2>Complete your alumni profile</h2>
+                    </header>
+                    <div className="signup-profile-block">
+                      <div className="signup-profile-block__control">
                         <ImageInput
+                          className="signup-profile-image"
+                          dropzone
+                          name="image"
                           onChange={(event) => {
                             setFieldValue("image", event.target.files[0]);
                           }}
                         />
-                        <p className="mt--10 information center_text">
-                          *optional - we will assign you a cool avatar
-                        </p>
+                        <ErrorMessage
+                          className="error center_text"
+                          name="image"
+                          component="div"
+                        />
                       </div>
                     </div>
-                    <h3 className="mt--30 label center_text">
+                    <h3 className="signup-form-section-title">
                       Personal details
                     </h3>
                     <div className="row">
@@ -353,14 +291,17 @@ const AlumniSignUp = (props) => {
                         <div className="rn-form-group">
                           <label
                             style={{
-                              fontSize: "14px",
-                              fontWeight: "500",
                               marginBottom: "5px",
                             }}
                           >
                             Name <span style={{ color: "#dc3545" }}>*</span>
                           </label>
-                          <Field type="text" placeholder="e.g., John" name="name" />
+                          <Field
+                            className="bgsnl-form-control"
+                            type="text"
+                            placeholder="e.g., John"
+                            name="name"
+                          />
                           <ErrorMessage
                             className="error"
                             name="name"
@@ -372,14 +313,13 @@ const AlumniSignUp = (props) => {
                         <div className="rn-form-group">
                           <label
                             style={{
-                              fontSize: "14px",
-                              fontWeight: "500",
                               marginBottom: "5px",
                             }}
                           >
                             Surname <span style={{ color: "#dc3545" }}>*</span>
                           </label>
                           <Field
+                            className="bgsnl-form-control"
                             type="text"
                             placeholder="e.g., Doe"
                             name="surname"
@@ -393,26 +333,26 @@ const AlumniSignUp = (props) => {
                       </div>
                     </div>
 
-                    <h3 className="mt--30 label center_text">Login details</h3>
+                    <h3 className="signup-form-section-title">Login details</h3>
                     <div className="row">
-                      <div className="col-lg-6 col-md-12 col-12">
+                      <div className="col-12">
                         <div className="rn-form-group">
                           <label
                             style={{
-                              fontSize: "14px",
-                              fontWeight: "500",
                               marginBottom: "5px",
                             }}
                           >
                             Email <span style={{ color: "#dc3545" }}>*</span>
                           </label>
                           <Field
+                            className="bgsnl-form-control"
                             type="email"
                             placeholder="e.g., john.doe@example.com"
                             name="email"
                           />
                           <p className="information">
-                            Please enter an email you have access to as important notifications will be sent through it
+                            Use an email you can access. Important membership
+                            notifications will be sent there.
                           </p>
                           <ErrorMessage
                             className="error"
@@ -427,8 +367,6 @@ const AlumniSignUp = (props) => {
                         <div className="rn-form-group">
                           <label
                             style={{
-                              fontSize: "14px",
-                              fontWeight: "500",
                               marginBottom: "5px",
                             }}
                           >
@@ -438,6 +376,7 @@ const AlumniSignUp = (props) => {
                             autoComplete="off"
                             placeholder="Enter your password"
                             name="password"
+                            inputClassName="bgsnl-form-control"
                             onChange={(e) =>
                               setFieldValue("password", e.target.value)
                             }
@@ -457,8 +396,6 @@ const AlumniSignUp = (props) => {
                         <div className="rn-form-group">
                           <label
                             style={{
-                              fontSize: "14px",
-                              fontWeight: "500",
                               marginBottom: "5px",
                             }}
                           >
@@ -468,6 +405,7 @@ const AlumniSignUp = (props) => {
                             autoComplete="off"
                             placeholder="Confirm your password"
                             name="confirmPassword"
+                            inputClassName="bgsnl-form-control"
                             onChange={(e) =>
                               setFieldValue("confirmPassword", e.target.value)
                             }
@@ -483,7 +421,8 @@ const AlumniSignUp = (props) => {
                         </div>
                       </div>
                     </div>
-                    <div className="row">
+                    <h3 className="signup-form-section-title">Agreement</h3>
+                    <div className="row signup-agreements signup-agreements--single">
                       <div className="col-12">
                         <div className="hor_section_nospace mt--40">
                           <Field
@@ -499,7 +438,7 @@ const AlumniSignUp = (props) => {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              society's rules and regulations
+                              society&apos;s rules and regulations
                             </a>
                             <span style={{ color: "#dc3545" }}> *</span>
                           </p>
@@ -509,6 +448,20 @@ const AlumniSignUp = (props) => {
                           name="policyTerms"
                           component="div"
                         />
+                      </div>
+
+                      <div className="col-12">
+                        <div className="hor_section_nospace mt--40">
+                          <Field
+                            style={{ maxWidth: "30px" }}
+                            type="checkbox"
+                            name="notificationTerms"
+                          />
+                          <p className="information">
+                            I consent to being contacted by BGSNL about events
+                            and discounts from us and our sponsors
+                          </p>
+                        </div>
                       </div>
 
                       {/* <div
@@ -532,40 +485,26 @@ const AlumniSignUp = (props) => {
                       </div>
                     </div>  */}
                     </div>
-                    <div className="ver_section mt--20">
+                    <div className="signup-form-actions">
                       <div className="options-btns-div">
-                        {!loading && (
-                          <p
-                            onClick={() =>
-                              setActiveStep((prevProps) => prevProps - 1)
-                            }
-                            className="information"
-                            style={{ cursor: "pointer", marginBottom: 0 }}
-                          >
-                            <FiChevronLeft />
-                            Back
-                          </p>
-                        )}
                         <button
                           disabled={loading}
                           type="submit"
                           className="rn-button-style--2 rn-btn-reverse-green"
-                          onClick={() => handleErrorMsg(errors, isValid)}
                         >
-                          {loading ? <Loader /> : "Payment"}
+                          {loading ? <Loader /> : "Continue to payment"}
                         </button>
                       </div>
                       <Link
                         to="/login"
-                        className="mt--10"
-                        style={{ fontSize: "0.5em" }}
+                        className="signup-login-link"
                       >
                         I already have a member account
                       </Link>
                     </div>
                   </Form>
                 )}
-              </Formik>
+              </ValidatedFormik>
             </div>
           )}
         </div>
@@ -592,66 +531,54 @@ const AlumniSignUp = (props) => {
         logoname="logo.png"
       />
 
-      <h3 className="center_text mt--150">
-        Become an Alumni <br />
-        <Link
-          style={{ fontSize: "0.7em" }}
-          className="rn-button-style--1 center_text"
-          to="/signup"
-        >
-          (or rather be a Member)
-        </Link>
-      </h3>
+      <main className="signup-page">
+        <header className="signup-hero container">
+          <h1>Continue your BGSNL journey</h1>
+          <nav className="signup-audience-switch" aria-label="Application type">
+            <Link className="signup-audience-switch__item" to="/signup">
+              <strong>Member</strong>
+            </Link>
+            <span
+              className="signup-audience-switch__item signup-audience-switch__item--alumni is-active"
+              aria-current="page"
+            >
+              <strong>Alumni</strong>
+            </span>
+          </nav>
+        </header>
 
-      {/* Back Button
-      <div className="container">
-        <div className="row">
-          <div className="col-12">
-            <div className="d-flex justify-content-start align-items-center mt--30 mb--20">
-              <button
-                onClick={() => navigate(-1)}
-                className="d-flex align-items-center"
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#017363",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  padding: "8px 12px",
-                  borderRadius: "4px",
-                  transition: "all 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "#f8f9fa";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = "transparent";
-                }}
-              >
-                <FiArrowLeft style={{ marginRight: "8px", fontSize: "16px" }} />
-                <span className="d-none d-sm-inline">Back to Previous Page</span>
-                <span className="d-inline d-sm-none">Back</span>
-              </button>
-            </div>
-          </div>
+        <div className="signup-steps signup-steps--alumni container">
+          <Steps
+            model={stepConfig}
+            activeIndex={activeStep}
+            onSelect={handleSelectStep}
+            readOnly={false}
+          />
         </div>
-      </div> */}
-
-      <Steps
-        model={stepConfig}
-        activeIndex={activeStep}
-        onSelect={handleSelectStep}
-        readOnly={false}
-        className="mt--20"
-      />
-      {stepComp}
-      {stepButtons}
+        <StepContentTransition
+          direction={transitionDirection}
+          step={activeStep}
+        >
+          <div className="signup-step-panel">
+            <div
+              className="signup-step-note container"
+              data-active-step={activeStep + 1}
+              data-step-count={stepConfig.length}
+              aria-live="polite"
+            >
+              <p>{stepConfig[activeStep]?.description}</p>
+            </div>
+            {stepComp}
+            {stepButtons}
+          </div>
+        </StepContentTransition>
+      </main>
 
       {region && <FooterTwo />}
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
       {/* End Back To Top */}

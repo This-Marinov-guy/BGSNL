@@ -1,26 +1,47 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import PageHelmet from "../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+import {
+  ErrorMessage,
+  Field,
+  Form,
+} from "formik";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import * as yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useHttpClient } from "../../hooks/common/http-hook";
-import { FiChevronUp, FiX } from "react-icons/fi";
-import Header from "../../component/header/Header";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import {
+  FiChevronUp,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  useNavigate,
+  useParams,
+} from "@/util/navigation";
+import PageHelmet from "../../component/common/Helmet";
 import Footer from "../../component/footer/Footer";
-import ModalWindow from "../../elements/ui/modals/ModalWindow";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
+import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
+import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
 import Loader from "../../elements/ui/loading/Loader";
-import { useNavigate, useParams } from "@/util/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import ImageFb from "../../elements/ui/media/ImageFb";
+import ModalWindow from "../../elements/ui/modals/ModalWindow";
+import { useHttpClient } from "../../hooks/common/http-hook";
+import {
+  removeModal,
+  selectModal,
+  showModal,
+} from "../../redux/modal";
+import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
-import { removeModal, selectModal, showModal } from "../../redux/modal";
+import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { formatCorrectedDateTime } from "../../util/functions/date";
-import { NSE_REGISTRATION_MODAL } from "../../util/defines/common";
-import { showNotification } from "../../redux/notification";
-import ImageFb from "../../elements/ui/media/ImageFb";
-import StickyButtonFooter from "../../elements/ui/functional/StickyButtonFooter";
 
 const schema = yup.object().shape({
   fullName: yup.string().trim().required("Името и фамилията са задължителни"),
@@ -66,10 +87,6 @@ const NonSocietyEvent = () => {
 
   const navigate = useNavigate();
 
-  const bgImageUrl = target.bgImageExtra
-    ? target.bgImageExtra
-    : `/assets/images/bg/bg-image-${target.bgImage}.webp`;
-
   const closeModal = () => dispatch(removeModal(NSE_REGISTRATION_MODAL));
 
   const eventSoldOut = target.eventClosed || ticketTimerClosed;
@@ -114,9 +131,11 @@ const NonSocietyEvent = () => {
   const eventUrl = `${baseUrl}/other-event-details/${target.id}`;
 
   const memberUniversity =
-    currentUser?.university === "other"
-      ? currentUser?.otherUniversityName || ""
-      : currentUser?.university || currentUser?.otherUniversityName || "";
+    currentUser?.university === "working"
+      ? currentUser?.profession || ""
+      : currentUser?.university === "other"
+        ? currentUser?.otherUniversityName || ""
+        : currentUser?.university || currentUser?.otherUniversityName || "";
   const memberCourse = currentUser?.course || "";
 
   return (
@@ -137,17 +156,24 @@ const NonSocietyEvent = () => {
       />
 
       {/* Registration Modal */}
-      <ModalWindow show={!eventSoldOut && modal.includes(NSE_REGISTRATION_MODAL)}>
+      <ModalWindow
+        show={!eventSoldOut && modal.includes(NSE_REGISTRATION_MODAL)}
+        title={"Регистрация за " + target.title}
+        onHide={closeModal}
+      >
         {user.token && !currentUser ? (
           <Loader center />
         ) : (
-          <Formik
+          <ValidatedFormik
             enableReinitialize
             validationSchema={schema}
             onSubmit={async (values) => {
               try {
                 const form = new FormData();
                 form.append("event", target.title);
+                if (target.region) {
+                  form.append("region", target.region);
+                }
                 form.append("date", target.timeStamp);
                 form.append("timezone", target.timezone);
                 form.append("user", user.token ? "member" : "guest");
@@ -161,13 +187,15 @@ const NonSocietyEvent = () => {
                 form.append("ticketImg", target.ticket_img);
                 form.append("origin_url", window.location.origin);
                 form.append("notificationTypeTerms", "Any");
+                form.append("policyTerms", values.policyTerms);
+                form.append("payTerms", values.payTerms);
 
                 const response = await sendRequest(
                   "event/register/non-society-event",
                   "POST",
                   form
                 );
-                if (!response) return;
+                if (response?.status !== true) return;
                 dispatch(
                   showNotification({
                     severity: "success",
@@ -200,9 +228,6 @@ const NonSocietyEvent = () => {
                 id="form"
                 style={{ padding: "2%" }}
               >
-                <h3>Регистрация за {target.title}</h3>
-                <FiX className="x_icon" onClick={closeModal} />
-
                 <div className="col-12">
                   <div className="rn-form-group mt--20">
                     <label htmlFor="fullName">Име и фамилия</label>
@@ -254,38 +279,52 @@ const NonSocietyEvent = () => {
                     />
                     <ErrorMessage className="error" name="questions" component="div" />
                   </div>
-                  <div className="hor_section_nospace mt--40">
-                    <Field
-                      style={{ maxWidth: "30px", margin: "10px" }}
-                      type="checkbox"
+                  <div data-field-name="policyTerms">
+                    <div className="hor_section_nospace mt--40">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="policyTerms"
+                      />
+                      <p className="information">
+                        Прочетох и приемам&nbsp;
+                        <a
+                          style={{ color: "#017363" }}
+                          href="/terms-and-legals"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          политиката на сдружението
+                        </a>
+                      </p>
+                    </div>
+                    <ErrorMessage
+                      className="error"
                       name="policyTerms"
+                      component="div"
+                      data-validation-message-for="policyTerms"
                     />
-                    <p className="information">
-                      Прочетох и приемам&nbsp;
-                      <a
-                        style={{ color: "#017363" }}
-                        href="/terms-and-legals"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        политиката на сдружението
-                      </a>
-                    </p>
                   </div>
-                  <ErrorMessage className="error" name="policyTerms" component="div" />
 
-                  <div className="hor_section_nospace mt--20">
-                    <Field
-                      style={{ maxWidth: "30px", margin: "10px" }}
-                      type="checkbox"
+                  <div data-field-name="payTerms">
+                    <div className="hor_section_nospace mt--20">
+                      <Field
+                        style={{ maxWidth: "30px", margin: "10px" }}
+                        type="checkbox"
+                        name="payTerms"
+                      />
+                      <p className="information">
+                        Съгласявам се предоставената информация да бъде споделена
+                        с PwC България за целите на събитието
+                      </p>
+                    </div>
+                    <ErrorMessage
+                      className="error"
                       name="payTerms"
+                      component="div"
+                      data-validation-message-for="payTerms"
                     />
-                    <p className="information">
-                      Съгласявам се предоставената информация да бъде споделена
-                      с PwC България за целите на събитието
-                    </p>
                   </div>
-                  <ErrorMessage className="error" name="payTerms" component="div" />
                 </div>
 
                 <button
@@ -297,34 +336,14 @@ const NonSocietyEvent = () => {
                 </button>
               </Form>
             )}
-          </Formik>
+          </ValidatedFormik>
         )}
       </ModalWindow>
 
-      {/* Breadcrumb Area */}
-      <div
-      className="rn-page-title-area pt--120 pb--190 bg_image"
-      style={{
-        backgroundImage: `url(${bgImageUrl})`,
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}   
-     data-black-overlay="7"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="rn-page-title text-center pt--100">
-                <h2 className="title theme-gradient">
-                  {target.newTitle ?? target.title}
-                </h2>
-                <p>{target.description}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Breadcrumb
+        title={target.newTitle ?? target.title}
+        description={target.description}
+      />
 
       {/* Details Area */}
       <div className="rn-portfolio-details ptb--120 bg_color--1">
@@ -337,7 +356,7 @@ const NonSocietyEvent = () => {
                 style={{ justifyContent: "space-between" }}
               >
                 <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Кога</h3>
+                  <h3>Кога</h3>
                   <p>
                     {target.date}, {target.time}
                   </p>
@@ -349,11 +368,11 @@ const NonSocietyEvent = () => {
                   )}
                 </div>
                 <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Къде</h3>
+                  <h3>Къде</h3>
                   <p>{target.where}</p>
                 </div>
                 <div className="port-view">
-                  <h3 style={{ fontSize: "24px" }}>Вход</h3>
+                  <h3>Вход</h3>
                   <p>{target.entry ?? "Free"}</p>
                 </div>
               </div>
@@ -366,6 +385,8 @@ const NonSocietyEvent = () => {
                   src={target.poster}
                   alt={target.newTitle ?? target.title}
                   className="event-poster-image"
+                  eager
+                  fetchPriority="high"
                 />
               </div>
             </div>
@@ -374,12 +395,12 @@ const NonSocietyEvent = () => {
             <div className="col-lg-7 col-md-12">
               <div className="portfolio-details">
                 <div className="inner">
-                  <h3 style={{ fontSize: "24px" }}>За събитието</h3>
+                  <h3>За събитието</h3>
                   <div dangerouslySetInnerHTML={{ __html: target.text }} />
 
                   {eventSoldOut ? (
                     <div className="purchase-btn text-center mt--40">
-                      <h3 style={{ color: "#f80707", fontSize: "24px" }}>
+                      <h3 style={{ color: "#f80707" }}>
                         Регистрацията е затворена.
                       </h3>
                       <p className="information">
@@ -432,7 +453,7 @@ const NonSocietyEvent = () => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} style={{ fontSize: "26px" }} />
+          <FiChevronUp size={26} />
         </ScrollToTop>
       </div>
 

@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "@/util/navigation";
+import { Link, useParams } from "@/util/navigation";
 
 const PortfolioList2 = (props) => {
   const { target, column, styevariation, special } = props;
+  const { region } = useParams();
 
   return target.map((value, index) => {
     const link = special
@@ -13,10 +14,14 @@ const PortfolioList2 = (props) => {
       <div className={`mt--20 mb--20 ${column}`} key={index}>
         <div className={`portfolio-2 ${styevariation}`}>
           <div className="thumbnail-inner">
-            <div
-              className={`thumbnail`}
-              style={{ backgroundImage: `url(${value.poster})` }}
-            ></div>
+            <div className="thumbnail">
+              <img
+                src={value.poster}
+                alt={`${value.title} poster`}
+                loading="eager"
+                decoding="async"
+              />
+            </div>
           </div>
           <div className="content">
             <div className="inner">

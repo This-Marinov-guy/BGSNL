@@ -52,15 +52,12 @@ const InternshipCard = (props) => {
   // Consistent styles for all titles and text
   const titleStyle = {
     marginBottom: "8px",
-    fontSize: "16px",
-    fontWeight: 700,
     color: "#374151",
     textTransform: "uppercase",
     letterSpacing: "0.5px"
   };
 
   const textStyle = {
-    fontSize: "16px",
     lineHeight: "1.6",
     color: "#4b5563",
     margin: 0
@@ -85,7 +82,7 @@ const InternshipCard = (props) => {
           <h3 className="mb--5">{company}</h3>
           <div className="d-flex align-items-center justify-content-end" style={{ gap: "8px", marginBottom: "8px" }}>
             <div style={{ backgroundColor: "#10b981", width: "8px", height: "8px", borderRadius: "50%" }} />
-            <h5 className="text-break mb--0" style={{ maxWidth: "12em", fontSize: "16px" }}>
+            <h5 className="text-break mb--0" style={{ maxWidth: "12em" }}>
               {specialty}
             </h5>
           </div>
@@ -96,8 +93,6 @@ const InternshipCard = (props) => {
                 color: "#0c4a6e",
                 borderRadius: "9999px",
                 padding: "4px 12px",
-                fontSize: "11px",
-                fontWeight: 600,
                 textTransform: "uppercase",
                 letterSpacing: "0.5px"
               }}
@@ -149,7 +144,7 @@ const InternshipCard = (props) => {
           target="_blank"
           rel="noreferrer"
           className="rn-button-style--2 rn-btn-green"
-          style={{ width: "100%", textAlign: "center", padding: "12px 24px", fontSize: "15px", fontWeight: 600 }}
+          style={{ width: "100%", textAlign: "center", padding: "12px 24px" }}
         >
           Visit Website
         </a>
@@ -159,7 +154,7 @@ const InternshipCard = (props) => {
             <button
               onClick={handleApplyClick}
               className="rn-button-style--2 rn-btn-solid-red"
-              style={{ width: "100%", textAlign: "center", padding: "12px 24px", fontSize: "15px", fontWeight: 600, border: "none", cursor: "pointer" }}
+              style={{ width: "100%", textAlign: "center", padding: "12px 24px", border: "none", cursor: "pointer" }}
             >
               {hasExternalApplyLink ? "Apply Externally" : "Apply for Internship"}
             </button>
@@ -168,7 +163,7 @@ const InternshipCard = (props) => {
         
         {isPreview && (
           <div className="preview-notice">
-            <p style={{ margin: 0, fontSize: "14px" }}><strong>Join our community to apply for this and other opportunities</strong></p>
+            <p style={{ margin: 0 }}><strong>Join our community to apply for this and other opportunities</strong></p>
           </div>
         )}
       </div>

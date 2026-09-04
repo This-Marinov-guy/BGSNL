@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 
-const StickyButtonFooter = ({ children, showOnMobile = true }) => {
+const StickyButtonFooter = ({ children, showOnMobile = true, stickyContent = null }) => {
   const [isSticky, setIsSticky] = useState(false);
   const buttonContainerRef = useRef(null);
 
@@ -40,11 +41,20 @@ const StickyButtonFooter = ({ children, showOnMobile = true }) => {
       {/* Sticky footer (only visible on mobile when appropriate) */}
       {isSticky && (
         <div className="sticky-button-footer">
-          <div className="sticky-button-footer-content">{children}</div>
+          <div className="sticky-button-footer-content">
+            {stickyContent}
+            {children}
+          </div>
         </div>
       )}
     </>
   );
+};
+
+StickyButtonFooter.propTypes = {
+  children: PropTypes.node.isRequired,
+  showOnMobile: PropTypes.bool,
+  stickyContent: PropTypes.node,
 };
 
 export default StickyButtonFooter;

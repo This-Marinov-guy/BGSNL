@@ -1,5 +1,4 @@
-import React from "react";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+
 
 export const CustomPrevArrow = (props) => {
     const { onClick } = props;

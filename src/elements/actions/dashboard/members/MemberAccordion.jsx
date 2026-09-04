@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import { capitalizeAfterSpace } from "../../../../util/functions/capitalize";
+import { useState } from "react";
 import moment from "moment";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiMail,
+  FiPhone,
+} from "@/elements/ui/icons/IconlyIcons";
+import { capitalizeAfterSpace } from "../../../../util/functions/capitalize";
 import { MOMENT_DATE_YEAR } from "../../../../util/functions/date";
-import { FiChevronDown, FiChevronUp, FiMail, FiPhone } from "react-icons/fi";
 
 const MemberAccordion = ({ member }) => {
   const [expanded, setExpanded] = useState(false);
@@ -71,8 +76,16 @@ const MemberAccordion = ({ member }) => {
               )}
               {member.university && (
                 <div className="member-accordion__detail-row">
-                  <strong>University:</strong>
-                  <span>{member.university}</span>
+                  <strong>
+                    {member.university === "working" ? "Profession:" : "University:"}
+                  </strong>
+                  <span>
+                    {member.university === "working"
+                      ? member.profession || "Not specified"
+                      : member.university === "other"
+                        ? member.otherUniversityName || "Other university"
+                        : member.university}
+                  </span>
                 </div>
               )}
             </div>

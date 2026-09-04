@@ -1,12 +1,22 @@
-import React, { useState, Fragment, useEffect } from "react";
-import { Link } from "@/util/navigation";
-import { FiX, FiMenu } from "react-icons/fi";
+import {
+  Fragment,
+  useEffect,
+  useState,
+} from "react";
+import PropTypes from "prop-types";
+import {
+  FiMenu,
+  FiX,
+} from "@/elements/ui/icons/IconlyIcons";
+import {
+  Link,
+  useParams,
+} from "@/util/navigation";
 import ImageFb from "../../elements/ui/media/ImageFb";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { useParams } from "@/util/navigation";
-import HeaderContent from "./HeaderContent";
 import { HOLIDAYS } from "../../util/configs/common";
 import { getActiveStrap } from "../../util/defines/CAMPAIGNS";
+import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import HeaderContent from "./HeaderContent";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
@@ -78,11 +88,11 @@ const HeaderTwo = (props) => {
     <Fragment>
       <header
         className={`header-area formobile-menu header--transparent default-color ${
-          activeStrap && "m--25"
+          activeStrap ? "m--25" : ""
         }`}
       >
         <div
-          className={(isMenuOpened && "menu-open") + " header-wrapper"}
+          className={`${isMenuOpened ? "menu-open " : ""}header-wrapper`}
           id="header-wrapper"
         >
           <div className="header-left">
@@ -92,7 +102,7 @@ const HeaderTwo = (props) => {
           </div>
 
           <div className="header-right header-red">
-            <HeaderContent />
+            <HeaderContent forceRegion={region} />
 
             {/* Start Humberger Menu  */}
             <div className="humberger-menu d-block d-xl-none pl--20">
@@ -122,6 +132,10 @@ const HeaderTwo = (props) => {
       <div className="container header-middle"></div>
     </Fragment>
   );
+};
+
+HeaderTwo.propTypes = {
+  forceRegion: PropTypes.string,
 };
 
 export default HeaderTwo;

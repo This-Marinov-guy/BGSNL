@@ -1,9 +1,10 @@
-import React from "react";
 import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
+import {
+  FiLogIn,
+  FiUserPlus,
+} from "@/elements/ui/icons/IconlyIcons";
 import { useNavigate } from "@/util/navigation";
-import { Dialog } from "primereact/dialog";
-import { FiLogIn, FiUserPlus } from "react-icons/fi";
-import ImageFb from "../media/ImageFb";
 
 const MembersOnlyApplyModal = ({ visible, onHide }) => {
   const navigate = useNavigate();
@@ -32,8 +33,6 @@ const MembersOnlyApplyModal = ({ visible, onHide }) => {
           alignItems: "center",
           gap: "8px",
           padding: "12px 24px",
-          fontSize: "15px",
-          fontWeight: 600,
         }}
       >
         <FiUserPlus size={18} />
@@ -48,8 +47,6 @@ const MembersOnlyApplyModal = ({ visible, onHide }) => {
           alignItems: "center",
           gap: "8px",
           padding: "12px 24px",
-          fontSize: "15px",
-          fontWeight: 600,
           border: "none",
           cursor: "pointer",
         }}
@@ -62,6 +59,7 @@ const MembersOnlyApplyModal = ({ visible, onHide }) => {
 
   return (
     <Dialog
+      header="Members only"
       visible={visible}
       onHide={onHide}
       footer={footer}

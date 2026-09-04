@@ -1,11 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import PropTypes from "prop-types";
-import { useHttpClient } from "../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
-import { showNotification } from "../../../redux/notification";
+import {
+  FiCheck,
+  FiChevronDown,
+  FiX,
+} from "@/elements/ui/icons/IconlyIcons";
 import { useNavigate } from "@/util/navigation";
+import { useHttpClient } from "../../../hooks/common/http-hook";
+import { showNotification } from "../../../redux/notification";
 import ImageInput from "../../inputs/common/ImageInput";
-import { FiChevronDown, FiCheck, FiX } from "react-icons/fi";
 
 const LABELS = ["Bulgarian", "International & Remote"];
 
@@ -115,10 +123,6 @@ const InternshipForm = ({ internship }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.company || !form.specialty || !form.location || !form.label) {
-      dispatch(showNotification({ severity: "warn", detail: "Company, specialty, location and label are required." }));
-      return;
-    }
 
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => formData.append(key, value));
@@ -129,21 +133,33 @@ const InternshipForm = ({ internship }) => {
     }
 
     try {
+      let responseData;
       if (isEdit) {
-        await sendRequest(`internship/edit/${internship._id}`, "PATCH", formData);
-        dispatch(showNotification({ severity: "success", summary: "Internship updated" }));
+        responseData = await sendRequest(
+          `internship/edit/${internship._id}`,
+          "PATCH",
+          formData
+        );
       } else {
-        await sendRequest("internship/add", "POST", formData);
-        dispatch(showNotification({ severity: "success", summary: "Internship created" }));
+        responseData = await sendRequest("internship/add", "POST", formData);
       }
+
+      if (responseData?.status !== true) return;
+
+      dispatch(
+        showNotification({
+          severity: "success",
+          summary: isEdit ? "Internship updated" : "Internship created",
+        })
+      );
       navigate("/user/internships-dashboard");
     } catch {
       dispatch(showNotification({ severity: "error", detail: "Something went wrong. Please try again." }));
     }
   };
 
-  const labelStyle = { display: "block", width: "fit-content", fontWeight: 600, marginBottom: "6px", color: "#374151" };
-  const inputStyle = { width: "100%", padding: "10px 14px", borderRadius: "8px", border: "1px solid rgba(0,0,0,0.15)", fontSize: "15px", marginBottom: "20px" };
+  const labelStyle = { display: "block", width: "fit-content", marginBottom: "6px", color: "#374151" };
+  const inputStyle = { width: "100%", padding: "10px 14px", borderRadius: "8px", border: "1px solid rgba(0,0,0,0.15)", marginBottom: "20px" };
   const textareaStyle = { ...inputStyle, minHeight: "110px", resize: "vertical" };
 
   return (
@@ -168,7 +184,7 @@ const InternshipForm = ({ internship }) => {
 
           <div>
             <label style={labelStyle}>Label *</label>
-            <select name="label" value={form.label} onChange={handleChange} style={inputStyle}>
+            <select name="label" value={form.label} onChange={handleChange} style={inputStyle} required>
               {LABELS.map((l) => <option key={l} value={l}>{l}</option>)}
             </select>
           </div>
@@ -190,12 +206,26 @@ const InternshipForm = ({ internship }) => {
 
           <div>
             <label style={labelStyle}>Website</label>
-            <input name="website" value={form.website} onChange={handleChange} style={inputStyle} />
+            <input
+              name="website"
+              type="url"
+              maxLength={2048}
+              value={form.website}
+              onChange={handleChange}
+              style={inputStyle}
+            />
           </div>
 
           <div>
             <label style={labelStyle}>Apply Link (external, optional)</label>
-            <input name="applyLink" value={form.applyLink} onChange={handleChange} style={inputStyle} />
+            <input
+              name="applyLink"
+              type="url"
+              maxLength={2048}
+              value={form.applyLink}
+              onChange={handleChange}
+              style={inputStyle}
+            />
           </div>
         </div>
 
@@ -205,6 +235,7 @@ const InternshipForm = ({ internship }) => {
             <label style={labelStyle}>Company Logo</label>
 
             <ImageInput
+              name="logo"
               key={imageInputKey}
               initialImage={selectedLogoUrl ? "" : (internship?.logo ?? "")}
               onChange={handleLogoChange}
@@ -222,7 +253,7 @@ const InternshipForm = ({ internship }) => {
                     <button
                       type="button"
                       onClick={() => setPickerOpen((v) => !v)}
-                      style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "13px", color: "#017363", background: "none", border: "none", cursor: "pointer", padding: 0, fontWeight: 500 }}
+                      style={{ display: "flex", alignItems: "center", gap: "5px", color: "#017363", background: "none", border: "none", cursor: "pointer", padding: 0 }}
                     >
                       Change <FiChevronDown size={14} />
                     </button>
@@ -243,14 +274,12 @@ const InternshipForm = ({ internship }) => {
                       display: "flex",
                       alignItems: "center",
                       gap: "6px",
-                      fontSize: "13px",
                       color: "#374151",
                       background: "#f9fafb",
                       border: "1px solid #e5e7eb",
                       borderRadius: "8px",
                       cursor: "pointer",
                       padding: "7px 14px",
-                      fontWeight: 500,
                     }}
                   >
                     Reuse existing logo <FiChevronDown size={14} />
@@ -273,7 +302,7 @@ const InternshipForm = ({ internship }) => {
                       width: "260px",
                     }}
                   >
-                    <p style={{ fontSize: "12px", color: "#6b7280", marginBottom: "10px", fontWeight: 500 }}>
+                    <p style={{ color: "#6b7280", marginBottom: "10px" }}>
                       Select a logo
                     </p>
                     <div

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import ImageFb from "../media/ImageFb";
+import PropTypes from "prop-types";
+import PageLoading from "./PageLoading";
 
 const InitialLoadingScreen = ({ onLoadComplete, isReady }) => {
   const [isFading, setIsFading] = useState(false);
@@ -35,16 +36,14 @@ const InitialLoadingScreen = ({ onLoadComplete, isReady }) => {
 
   return (
     <div className={`initial-loading-screen ${isFading ? "fade-out" : "fade-in"}`}>
-      <div className="initial-loading-content">
-        <ImageFb
-          className="initial-loading-logo"
-          src="/assets/images/logo/logo.webp"
-          fallback="/assets/images/logo/logo.jpg"
-          alt="Bulgarian Society Netherlands Logo"
-        />
-      </div>
+      <PageLoading />
     </div>
   );
+};
+
+InitialLoadingScreen.propTypes = {
+  isReady: PropTypes.bool.isRequired,
+  onLoadComplete: PropTypes.func,
 };
 
 export default InitialLoadingScreen;

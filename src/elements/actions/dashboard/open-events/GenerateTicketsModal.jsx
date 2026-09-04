@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Dialog } from "primereact/dialog";
+import PropTypes from "prop-types";
+import { Dialog } from "@/compat/primereact";
 import CustomSpinner from "../../../ui/loading/CustomSpinner";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
@@ -38,16 +39,13 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (submitEvent) => {
+    submitEvent.preventDefault();
     setLoading(true);
     let success = false;
 
     for (let i = 0; i < inputs.length; i++) {
       const element = inputs[i];
-
-      if (!element.name || !element.surname || !element.email) {
-        continue;
-      }
 
       const data = {
         eventId: event.id,
@@ -76,7 +74,9 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
         if (responseData.status) {
           success = true;
         }
-      } catch (err) {}
+      } catch (err) {
+        // The shared request hook reports individual ticket failures.
+      }
     }
 
     if (success) {
@@ -100,6 +100,27 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
     setLoading(false);
   };
 
+  const actions = loading ? (
+    <CustomSpinner />
+  ) : (
+    <>
+      <button
+        type="button"
+        onClick={onHide}
+        className="rn-button-style--2 rn-btn-reverse"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        form="generate-guest-tickets-form"
+        className="rn-button-style--2 rn-btn-reverse-green"
+      >
+        Submit
+      </button>
+    </>
+  );
+
   return (
     <Dialog
       header="Generate Free Guest Tickets"
@@ -107,72 +128,72 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
       style={{ maxWidth: "90%" }}
       onHide={onHide}
       dismissableMask
+      footer={actions}
     >
-      {inputs.map((inputSet, index) => (
-        <div className="multi-input-set mt--10" key={index}>
-          <div className="hor_section_nospace mobile">
-            <input
-              type="text"
-              value={inputSet.name}
-              placeholder={`Name`}
-              onChange={(e) => handleInputChange(index, "name", e.target.value)}
-            />
-            <input
-              type="text"
-              value={inputSet.surname}
-              placeholder={`Surname`}
-              onChange={(e) =>
-                handleInputChange(index, "surname", e.target.value)
-              }
-            />
-            <input
-              type="email"
-              value={inputSet.email}
-              placeholder={`Email`}
-              onChange={(e) =>
-                handleInputChange(index, "email", e.target.value)
-              }
-            />
-            <button onClick={() => removeInput(index)} className="rn-btn">
-              x
-            </button>
+      <form id="generate-guest-tickets-form" onSubmit={handleSubmit}>
+        {inputs.map((inputSet, index) => (
+          <div className="multi-input-set mt--10" key={index}>
+            <div className="hor_section_nospace mobile">
+              <input
+                type="text"
+                name={`guests[${index}].name`}
+                value={inputSet.name}
+                placeholder="Name"
+                required
+                onChange={(e) => handleInputChange(index, "name", e.target.value)}
+              />
+              <input
+                type="text"
+                name={`guests[${index}].surname`}
+                value={inputSet.surname}
+                placeholder="Surname"
+                required
+                onChange={(e) =>
+                  handleInputChange(index, "surname", e.target.value)
+                }
+              />
+              <input
+                type="email"
+                name={`guests[${index}].email`}
+                value={inputSet.email}
+                placeholder="Email"
+                required
+                onChange={(e) =>
+                  handleInputChange(index, "email", e.target.value)
+                }
+              />
+              <button
+                type="button"
+                onClick={() => removeInput(index)}
+                className="rn-btn"
+              >
+                x
+              </button>
+            </div>
+            <hr className="mt--10" />
           </div>
-          <hr className="mt--10" />
-        </div>
-      ))}
+        ))}
 
-      <button
-        onClick={addInput}
-        className="rn-button-style--2 rn-btn-reverse-green"
-        style={{ margin: "auto" }}
-      >
-        Add Guest{" "}
-      </button>
+        <button
+          type="button"
+          onClick={addInput}
+          className="rn-button-style--2 rn-btn-reverse-green"
+          style={{ margin: "auto" }}
+        >
+          Add Guest{" "}
+        </button>
 
-      <div className="mt--40 center_div">
-        {loading ? (
-          <CustomSpinner />
-        ) : (
-          <>
-            <button
-              onClick={onHide}
-              className="rn-button-style--2 rn-btn-reverse mr--5"
-            >
-              Cancel
-            </button>
-            <button
-              disabled={loading}
-              type="submit"
-              onClick={handleSubmit}
-              className="rn-button-style--2 rn-btn-reverse-green"
-            >
-              Submit
-            </button>
-          </>
-        )}
-      </div>
+      </form>
     </Dialog>
   );
+};
+
+GenerateTicketsModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  onHide: PropTypes.func.isRequired,
+  event: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }).isRequired,
 };
 
 export default GenerateTicketsModal;

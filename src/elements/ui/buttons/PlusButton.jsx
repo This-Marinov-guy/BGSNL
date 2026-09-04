@@ -1,5 +1,4 @@
-import React from 'react'
-import { FiPlus } from "react-icons/fi";
+import { FiPlus } from "@/elements/ui/icons/IconlyIcons";
 
 const PlusButton = (props) => {
   const {className, ...rest} = props;

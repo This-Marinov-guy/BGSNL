@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { clarityTrack, gaTrack } from "../util/functions/helpers";
-import { Toaster, toast } from "sonner";
+import { Toaster, toast } from "react-hot-toast";
 import {
   selectNotification,
   selectNotificationIndex,
@@ -17,6 +17,35 @@ import GoogleCalendarModal from "../elements/ui/modals/GoogleCalendarModal";
 import { getActiveStrap } from "../util/defines/CAMPAIGNS";
 import Strap from "../elements/banners/Strap";
 import { InternshipApplyModalProvider } from "../hooks/common/use-internship-apply-modal";
+import GlobalFormValidation from "../elements/ui/forms/GlobalFormValidation";
+import {
+  IconlyClose,
+  IconlyDanger,
+  IconlyInfo,
+} from "../elements/ui/icons/IconlyIcons";
+
+const TOAST_VARIANTS = {
+  success: {
+    fallbackTitle: "Success",
+    Icon: null,
+  },
+  info: {
+    fallbackTitle: "Information",
+    Icon: IconlyInfo,
+  },
+  warn: {
+    fallbackTitle: "Warning",
+    Icon: IconlyDanger,
+  },
+  warning: {
+    fallbackTitle: "Warning",
+    Icon: IconlyDanger,
+  },
+  error: {
+    fallbackTitle: "Error",
+    Icon: null,
+  },
+};
 
 const MainLayout = ({ children }) => {
   const notification = useSelector(selectNotification);
@@ -45,30 +74,51 @@ const MainLayout = ({ children }) => {
   useEffect(() => {
     if (notification.severity) {
       const duration = notification.life ?? 8000;
-      const title = notification.summary || "";
+      const variantName = notification.severity === "warning"
+        ? "warn"
+        : notification.severity;
+      const variant = TOAST_VARIANTS[notification.severity] ?? TOAST_VARIANTS.info;
+      const title = notification.summary || variant.fallbackTitle;
       const description = notification.detail || "";
+      const { Icon } = variant;
 
-      const toastOptions = {
-        duration,
-        ...(description && { description }),
-      };
+      toast.custom(
+        (activeToast) => (
+          <div
+            aria-atomic="true"
+            aria-live={variantName === "error" ? "assertive" : "polite"}
+            className={`bgsnl-toast bgsnl-toast--${variantName}`}
+            data-visible={activeToast.visible}
+            role={variantName === "error" ? "alert" : "status"}
+          >
+            {Icon ? (
+              <span className="bgsnl-toast__icon" aria-hidden="true">
+                <Icon size={20} />
+              </span>
+            ) : null}
 
-      switch (notification.severity) {
-        case "success":
-          toast.success(title, toastOptions);
-          break;
-        case "error":
-          toast.error(title, toastOptions);
-          break;
-        case "warn":
-          toast.warning(title, toastOptions);
-          break;
-        case "info":
-          toast.info(title, toastOptions);
-          break;
-        default:
-          toast(title, toastOptions);
-      }
+            <div className="bgsnl-toast__content">
+              <div className="bgsnl-toast__title">{title}</div>
+              {description ? (
+                <div className="bgsnl-toast__detail">{description}</div>
+              ) : null}
+            </div>
+
+            <button
+              aria-label="Dismiss notification"
+              className="bgsnl-toast__close"
+              onClick={() => toast.dismiss(activeToast.id)}
+              type="button"
+            >
+              <IconlyClose size={16} />
+            </button>
+          </div>
+        ),
+        {
+          duration,
+          position: notification.position || "top-center",
+        }
+      );
     }
   }, [notificationIndex, notification]);
 
@@ -79,11 +129,8 @@ const MainLayout = ({ children }) => {
       <BirthdayModal />
       <CookiesModal />
       <GoogleCalendarModal />
-      <Toaster
-        position="top-center"
-        richColors
-        closeButton
-      />
+      <Toaster gutter={12} position="top-center" />
+      <GlobalFormValidation />
       <Strap strap={activeStrap} />
       {children}
     </InternshipApplyModalProvider>

@@ -1,8 +1,16 @@
-import React from "react";
-import { Link } from "@/util/navigation";
-import { FiCalendar, FiLock } from "react-icons/fi";
-import { MOMENT_DATE_TIME, formatCorrectedDateTime } from "../../util/functions/date";
 import moment from "moment";
+import PropTypes from "prop-types";
+import {
+  FiCalendar,
+  FiLock,
+  IconlyLocation,
+} from "@/elements/ui/icons/IconlyIcons";
+import { Link } from "@/util/navigation";
+import { capitalizeFirstLetter } from "../../util/functions/capitalize";
+import {
+  formatCorrectedDateTime,
+  MOMENT_DATE_TIME,
+} from "../../util/functions/date";
 
 export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) => {
   return (
@@ -24,9 +32,14 @@ export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) 
 };
 
 const Card = ({ card, region, isOtherEvent }) => {
+  const eventRegion = card.region ?? region;
+  const cityLabel =
+    eventRegion && eventRegion !== "other"
+      ? capitalizeFirstLetter(eventRegion, true)
+      : null;
   const link = isOtherEvent
     ? `/other-event-details/${card.id}`
-    : `/${card.region ?? region}/event-details/${card.id}`;
+    : `/${eventRegion}/event-details/${card.id}`;
 
   const dateLabel = card.correctedDate
     ? formatCorrectedDateTime(card.correctedDate)
@@ -38,12 +51,19 @@ const Card = ({ card, region, isOtherEvent }) => {
     <article className="focus-card">
       <Link to={link} className="focus-card-link">
         <div className="focus-card-media ">
-          <div
+          <img
             className="focus-card-image"
-            style={{
-              backgroundImage: `url(${card.poster})`,
-            }}
+            src={card.poster}
+            alt={`${card.title} poster`}
+            loading="eager"
+            decoding="async"
           />
+          {cityLabel && (
+            <span className="focus-card-region type-small weight-semibold">
+              <IconlyLocation size="1em" aria-hidden="true" />
+              {cityLabel}
+            </span>
+          )}
           {card.memberOnly && (
             <div className="focus-card-badge">
               <FiLock />
@@ -65,6 +85,35 @@ const Card = ({ card, region, isOtherEvent }) => {
       </Link>
     </article>
   );
+};
+
+const eventCardPropType = PropTypes.shape({
+  correctedDate: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date),
+  ]),
+  date: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(Date),
+  ]),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  memberOnly: PropTypes.bool,
+  poster: PropTypes.string.isRequired,
+  region: PropTypes.string,
+  title: PropTypes.string.isRequired,
+});
+
+FocusCards.propTypes = {
+  cards: PropTypes.arrayOf(eventCardPropType).isRequired,
+  centerItems: PropTypes.bool,
+  isOtherEvent: PropTypes.bool,
+  region: PropTypes.string,
+};
+
+Card.propTypes = {
+  card: eventCardPropType.isRequired,
+  isOtherEvent: PropTypes.bool,
+  region: PropTypes.string,
 };
 
 export default FocusCards;

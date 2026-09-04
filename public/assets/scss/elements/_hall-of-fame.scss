@@ -171,7 +171,7 @@
       position: absolute;
       top: 10px;
       left: 20px;
-      font-size: 60px;
+
       color: rgba(0,0,0,0.1);
       font-family: Georgia, serif;
       z-index: 0;
@@ -181,9 +181,224 @@
       position: relative;
       z-index: 1;
       font-style: italic;
-      font-size: 18px;
+
       line-height: 1.6;
       color: #555;
     }
+  }
+}
+
+.bgsnl-modal.alumni-profile-dialog {
+  --alumni-accent: #017363;
+  --alumni-tier-surface: #92cbbd;
+  width: min(660px, calc(100vw - 32px));
+  border: 0 !important;
+}
+
+.bgsnl-modal.alumni-profile-dialog .bgsnl-modal__header {
+  border-bottom: 0;
+}
+
+.bgsnl-modal.alumni-profile-dialog--platinum {
+  --alumni-accent: #9a8654;
+  --alumni-tier-surface: #d8c68d;
+}
+
+.bgsnl-modal.alumni-profile-dialog--gold {
+  --alumni-accent: #b07a12;
+  --alumni-tier-surface: #dfb84c;
+}
+
+.bgsnl-modal.alumni-profile-dialog--silver {
+  --alumni-accent: #777e89;
+  --alumni-tier-surface: #c9ced3;
+}
+
+.bgsnl-modal.alumni-profile-dialog--bronze {
+  --alumni-accent: #a35f2d;
+  --alumni-tier-surface: #cf925f;
+}
+
+.alumni-profile-dialog__content.bgsnl-modal__body {
+  padding: 0;
+}
+
+.alumni-profile {
+  color: #24322c;
+}
+
+.alumni-profile__identity {
+  display: grid;
+  grid-template-columns: minmax(130px, 170px) minmax(0, 1fr);
+  gap: clamp(22px, 4vw, 38px);
+  align-items: center;
+  padding: clamp(24px, 5vw, 42px);
+  background: #f7f4ec;
+}
+
+.alumni-profile__avatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  overflow: hidden;
+  color: var(--alumni-accent);
+  background: #e7ece8;
+  border: 3px solid var(--alumni-accent);
+  border-radius: 8px;
+  aspect-ratio: 1;
+
+  img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.alumni-profile__initials {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--alumni-accent);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+}
+
+.alumni-profile__details {
+  min-width: 0;
+}
+
+.alumni-profile__tier {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 13px 8px 8px;
+  color: #111513;
+  background: var(--alumni-tier-surface);
+  border: 0;
+  border-radius: 5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  svg,
+  img {
+    flex: 0 0 auto;
+    width: 2.75rem;
+    height: 2.75rem;
+    object-fit: contain;
+  }
+}
+
+.alumni-profile__membership {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 22px;
+
+  > svg {
+    flex: 0 0 auto;
+    width: 1.5em;
+    height: 1.5em;
+    color: var(--alumni-accent);
+  }
+
+  dl,
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  dt {
+    color: #68736d;
+  }
+
+  dd {
+    color: #15241d;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.alumni-profile__summary {
+  max-width: 38ch;
+  margin: 20px 0 0;
+  color: #58645e;
+  line-height: 1.55;
+}
+
+.alumni-profile__quote {
+  position: relative;
+  margin: 0;
+  padding: clamp(28px, 5vw, 44px);
+  overflow: hidden;
+  background: #fff;
+
+  blockquote {
+    position: relative;
+    z-index: 1;
+    max-width: 46ch;
+    margin: 0;
+    color: #26362f;
+    font-family: Georgia, serif;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  figcaption {
+    position: relative;
+    z-index: 1;
+    margin-top: 16px;
+    color: var(--alumni-accent);
+  }
+}
+
+.alumni-tier-chess-icon {
+  display: block;
+  height: 4.75rem;
+  width: 4.75rem;
+}
+
+.alumni-profile__quote-mark {
+  position: absolute;
+  top: -26px;
+  right: 20px;
+  color: color-mix(in srgb, var(--alumni-accent) 10%, transparent);
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 575px) {
+  .alumni-profile__identity {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px 18px 24px;
+  }
+
+  .alumni-profile__avatar {
+    grid-row: 1 / 3;
+  }
+
+  .alumni-profile__details {
+    display: contents;
+  }
+
+  .alumni-profile__tier,
+  .alumni-profile__membership {
+    grid-column: 2;
+  }
+
+  .alumni-profile__membership {
+    margin-top: 0;
+  }
+
+  .alumni-profile__summary {
+    grid-column: 1 / -1;
+    margin-top: 2px;
+  }
+
+  .alumni-profile__quote {
+    padding: 24px 20px 28px;
   }
 }

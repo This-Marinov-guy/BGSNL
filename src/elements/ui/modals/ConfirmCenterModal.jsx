@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog } from 'primereact/dialog';
+import { Dialog } from "@/compat/primereact";
 import { useHttpClient } from '../../../hooks/common/http-hook';
 import Loader from '../loading/Loader';
 

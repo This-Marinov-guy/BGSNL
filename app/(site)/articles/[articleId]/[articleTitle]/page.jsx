@@ -1,33 +1,84 @@
 import Article from "@/screens/information/articles/Article";
 import { getArticle, getArticles } from "@/util/api/server";
-import { stripHtml, toMetadata } from "@/util/seo/event-metadata";
+import { permanentRedirect } from "next/navigation";
+import { articleSlug, stripHtml, toMetadata } from "@/util/seo/site";
+import {
+  buildArticleSchema,
+  buildBreadcrumbSchema,
+  serializeJsonLd,
+} from "@/util/seo/structured-data";
 
 export async function generateMetadata({ params }) {
   const { articleId, articleTitle } = await params;
-  const path = `/articles/${articleId}/${articleTitle}`;
+  const article = await getArticle(articleId);
 
-  // The single-post endpoint returns only { title, content, translations },
-  // with no image — the thumbnail only exists on the list endpoint, so the
-  // share image is looked up there (both responses are fetch-cached).
-  const [article, all] = await Promise.all([getArticle(articleId), getArticles()]);
+  if (article) {
+    const canonicalSlug = articleSlug(article.title);
+    if (articleTitle !== canonicalSlug) {
+      permanentRedirect(`/articles/${articleId}/${canonicalSlug}`);
+    }
+  }
+
+  const path = `/articles/${articleId}/${
+    article ? articleSlug(article.title) : articleTitle
+  }`;
 
   if (!article) return toMetadata({ path, type: "article" });
-
-  const listed = all.find((a) => String(a.id) === String(articleId));
 
   return toMetadata({
     title: article.title,
     description:
       article.excerpt || article.description || stripHtml(article.content),
-    image: listed?.thumbnail,
+    imageAlt: `${article.title} — BGSNL article`,
     path,
     type: "article",
+    useGeneratedImage: true,
   });
 }
 
 export default async function Page({ params }) {
-  const { articleId } = await params;
-  const article = await getArticle(articleId);
+  const { articleId, articleTitle } = await params;
+  const [article, all] = await Promise.all([getArticle(articleId), getArticles()]);
 
-  return <Article initialArticle={article} />;
+  if (article) {
+    const canonicalSlug = articleSlug(article.title);
+    if (articleTitle !== canonicalSlug) {
+      permanentRedirect(`/articles/${articleId}/${canonicalSlug}`);
+    }
+  }
+
+  const path = `/articles/${articleId}/${articleTitle}`;
+  const listed = all.find((item) => String(item.id) === String(articleId));
+  const articleSchema = buildArticleSchema({
+    article: article ? { ...listed, ...article, id: articleId } : null,
+    image: listed?.thumbnail,
+    path,
+  });
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Articles", path: "/articles" },
+    { name: article?.title || "Article", path },
+  ]);
+
+  return (
+    <>
+      {articleSchema ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleSchema) }}
+        />
+      ) : null}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
+      />
+      <Article
+        initialArticle={
+          article && listed?.thumbnail
+            ? { ...article, thumbnail: listed.thumbnail }
+            : article
+        }
+      />
+    </>
+  );
 }

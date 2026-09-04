@@ -1,22 +1,28 @@
-import React, { Component, Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
-import VisibilitySensor from "react-visibility-sensor";
+import PropTypes from "prop-types";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import CustomSpinner from "../ui/loading/CustomSpinner";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 
 // `initialData` comes from the server render (About fetches common/get-about-data),
 // so the figures are in the HTML instead of behind spinners.
 const CounterOne = ({ initialData = {} }) => {
   const [didViewCountUp, setDidViewCountUp] = useState(false);
   const [data, setData] = useState(initialData);
+  const counterRef = useRef(null);
 
   const { loading, sendRequest } = useHttpClient();
+  const hasStat = (key) => Object.prototype.hasOwnProperty.call(data, key);
 
   useEffect(() => {
     const fetchCounts = async () => {
-      const response = await sendRequest("common/get-about-data");
-      setData(response);
+      try {
+        const response = await sendRequest("common/get-about-data");
+
+        if (response) setData(response);
+      } catch {
+        // Keep the server-rendered figures when a background refresh fails.
+      }
     };
 
     fetchCounts();
@@ -25,40 +31,40 @@ const CounterOne = ({ initialData = {} }) => {
   const STATISTICS = [
     {
       countNum:
-        (loading && !Object.keys(data).length) || !data.hasOwnProperty("cities") ? (
+        (loading && !Object.keys(data).length) || !hasStat("cities") ? (
           <CustomSpinner />
         ) : (
           data?.cities
         ),
-      countTitle: "Cities, part of our network",
+      countTitle: "Cities in our network",
     },
     {
       countNum:
-        (loading && !Object.keys(data).length) || !data.hasOwnProperty("events") ? (
+        (loading && !Object.keys(data).length) || !hasStat("events") ? (
           <CustomSpinner />
         ) : (
           data?.events
         ),
       icon: "+",
-      countTitle: "Events that we have hosted by today",
+      countTitle: "Events hosted so far",
     },
     {
       countNum:
-        (loading && !Object.keys(data).length) || !data.hasOwnProperty("members") ? (
+        (loading && !Object.keys(data).length) || !hasStat("members") ? (
           <CustomSpinner />
         ) : (
           data?.members
         ),
-      countTitle: "Members, part of the society",
+      countTitle: "Members in our society",
     },
     {
       countNum:
-        (loading && !Object.keys(data).length) || !data.hasOwnProperty("alumnis") ? (
+        (loading && !Object.keys(data).length) || !hasStat("alumnis") ? (
           <CustomSpinner />
         ) : (
           data?.alumnis
         ),
-      countTitle: "Alumnis, supporters of the society",
+      countTitle: "Alumni supporting our community",
     },
     // {
     //   countNum:
@@ -73,7 +79,7 @@ const CounterOne = ({ initialData = {} }) => {
     // },
     {
       countNum:
-        (loading && !Object.keys(data).length) || !data.hasOwnProperty("tickets") ? (
+        (loading && !Object.keys(data).length) || !hasStat("tickets") ? (
           <CustomSpinner />
         ) : (
           data?.tickets
@@ -83,11 +89,30 @@ const CounterOne = ({ initialData = {} }) => {
     },
   ];
 
-  const onVisibilityChange = (isVisible) => {
-    if (isVisible) {
+  useEffect(() => {
+    const counterElement = counterRef.current;
+
+    if (!counterElement) return undefined;
+
+    if (!("IntersectionObserver" in window)) {
       setDidViewCountUp(true);
+      return undefined;
     }
-  };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setDidViewCountUp(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "10px 0px" },
+    );
+
+    observer.observe(counterElement);
+
+    return () => observer.disconnect();
+  }, []);
 
   /**
    * react-countup renders its start value (0) until the element scrolls into
@@ -104,31 +129,36 @@ const CounterOne = ({ initialData = {} }) => {
 
   return (
     <Fragment>
-      <div className="row center_div">
-        {STATISTICS.map((value, index) => (
-          <div
-            className="counterup_style--1 col-lg-4 col-md-4 col-sm-6 col-12"
-            key={index}
-          >
-            <h5 className="counter">
-              {value.icon}
-              {mounted ? (
-                <VisibilitySensor
-                  onChange={onVisibilityChange}
-                  offset={{ top: 10 }}
-                  delayedCall
-                >
-                  <CountUp end={didViewCountUp ? value.countNum : 0} />
-                </VisibilitySensor>
-              ) : (
-                value.countNum
-              )}
-            </h5>
-            <p className="description">{value.countTitle}</p>
-          </div>
-        ))}
+      <div ref={counterRef} className="about-summary__grid">
+        {STATISTICS.map((value) => {
+          const isNumericCount =
+            typeof value.countNum === "number" ||
+            (typeof value.countNum === "string" &&
+              Number.isFinite(Number(value.countNum)));
+
+          return (
+            <article className="counterup_style--1" key={value.countTitle}>
+              <p className="description">{value.countTitle}</p>
+              <h5 className="counter">
+                {value.icon}
+                {mounted && isNumericCount ? (
+                  <CountUp
+                    end={didViewCountUp ? Number(value.countNum) : 0}
+                  />
+                ) : (
+                  value.countNum
+                )}
+              </h5>
+            </article>
+          );
+        })}
       </div>
     </Fragment>
   );
 };
+
+CounterOne.propTypes = {
+  initialData: PropTypes.object,
+};
+
 export default CounterOne;

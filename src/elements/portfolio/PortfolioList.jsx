@@ -27,6 +27,7 @@ const PortfolioList = (props) => {
                 className="thumbnail portfolio-img"
                 src={value.poster}
                 alt="Event Images"
+                eager
               />
             </Link>
           </div>

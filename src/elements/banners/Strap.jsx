@@ -1,7 +1,5 @@
-import React from "react";
 import { useDispatch } from "react-redux";
 import { changeLocalStorageIndex } from "../../redux/modal";
-import { Link } from "@/util/navigation";
 
 const Strap = (props) => {
   const { strap } = props;

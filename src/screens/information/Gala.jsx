@@ -1,13 +1,12 @@
 "use client";
 
 import React from "react";
-import Breadcrumb from "../../elements/common/Breadcrumb";
+import ScrollToTop from "@/component/common/ScrollToTop";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import PageHelmet from "../../component/common/Helmet";
-import ScrollToTop from "react-scroll-up";
-import ImageFb from "../../elements/ui/media/ImageFb";
-import { FiChevronUp } from "react-icons/fi";
-import Header from "../../component/header/Header";
 import FooterTwo from "../../component/footer/FooterTwo";
+import Header from "../../component/header/Header";
+import Breadcrumb from "../../elements/common/Breadcrumb";
 
 const Gala = () => {
     return <React.Fragment>
@@ -17,9 +16,10 @@ const Gala = () => {
             colorblack="color--black"
             logoname="logo.png"
         />
-        {/* Start Breadcrump Area */}
-        <Breadcrumb title={"Gala"} />
-        {/* End Breadcrump Area */}
+        <Breadcrumb
+            title="Gala"
+            description="Discover the artists, ideas, and community behind the Bulgarian Society gala."
+        />
         {/* <div className="container mt--80 mb--80">
 
             <h2 className="title">Society Gala</h2>
@@ -102,7 +102,7 @@ const Gala = () => {
         {/* Start Back To Top */}
         <div className="backto-top">
             <ScrollToTop showUnder={160}>
-                <FiChevronUp size={26} style={{ fontSize: '26px' }} />
+                <FiChevronUp size={26} />
             </ScrollToTop>
         </div>
         {/* End Back To Top */}

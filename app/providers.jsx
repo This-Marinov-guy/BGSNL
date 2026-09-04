@@ -1,13 +1,17 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Provider, useSelector } from "react-redux";
-import { PrimeReactProvider } from "primereact/api";
+import PrimeSSRProvider from "./prime-ssr-provider";
 
 import { store } from "@/redux/store";
 import MainLayout from "@/layouts/MainLayout";
 import CampaignLayout from "@/layouts/CampaignLayout";
 import GlobalError from "@/component/common/GlobalError";
+import GlobalBackground, {
+  GLOBAL_BACKGROUND_REVEAL_EVENT,
+} from "@/component/common/GlobalBackground";
 import GlobalModals from "@/elements/ui/modals/GlobalModals";
 import InactivityModal from "@/elements/ui/modals/InactivityModal";
 import InitialLoadingScreen from "@/elements/ui/loading/InitialLoadingScreen";
@@ -50,7 +54,10 @@ const AppShell = ({ children }) => {
     return () => window.removeEventListener("load", handleLoad);
   }, []);
 
-  const handleLoadingComplete = () => setShowInitialLoading(false);
+  const handleLoadingComplete = () => {
+    setShowInitialLoading(false);
+    window.dispatchEvent(new Event(GLOBAL_BACKGROUND_REVEAL_EVENT));
+  };
 
   if (process.env.NEXT_PUBLIC_MAINTENANCE == "1") {
     return <Maintenance />;
@@ -89,14 +96,27 @@ const AppShell = ({ children }) => {
   );
 };
 
+AppShell.propTypes = {
+  children: PropTypes.node,
+};
+
 export default function Providers({ children }) {
   return (
     <Provider store={store}>
-      <PrimeReactProvider>
-        <MainLayout>
-          <AppShell>{children}</AppShell>
-        </MainLayout>
-      </PrimeReactProvider>
+      <PrimeSSRProvider>
+        <div className="global-site-shell">
+          <GlobalBackground />
+          <div className="global-site-content">
+            <MainLayout>
+              <AppShell>{children}</AppShell>
+            </MainLayout>
+          </div>
+        </div>
+      </PrimeSSRProvider>
     </Provider>
   );
 }
+
+Providers.propTypes = {
+  children: PropTypes.node,
+};

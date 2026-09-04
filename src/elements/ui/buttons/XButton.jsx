@@ -1,5 +1,4 @@
-import React from 'react'
-import { FiX } from "react-icons/fi";
+import { FiX } from "@/elements/ui/icons/IconlyIcons";
 
 const XButton = (props) => {
   const { className, ...rest } = props;

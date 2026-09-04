@@ -6,26 +6,51 @@
   box-sizing: border-box;
 }
 
+:root {
+  --type-caption: #{$type-size-caption};
+  --type-small: #{$type-size-small};
+  --type-minimum: #{$type-size-minimum};
+  --type-body: #{$type-size-body};
+  --type-lead: #{$type-size-lead};
+  --type-subheading: #{$type-size-subheading};
+  --type-navigation: #{$type-size-navigation};
+  --type-heading-sm: #{$type-size-heading-sm};
+  --type-heading-md: #{$type-size-heading-md};
+  --type-heading-lg: #{$type-size-heading-lg};
+  --type-display: #{$type-size-display};
+  --line-tight: #{$type-line-tight};
+  --line-heading: #{$type-line-heading};
+  --line-body: #{$type-line-body};
+  --line-relaxed: #{$type-line-relaxed};
+  --weight-regular: #{$type-weight-regular};
+  --weight-medium: #{$type-weight-medium};
+  --weight-semibold: #{$type-weight-semibold};
+  --weight-bold: #{$type-weight-bold};
+  --weight-black: #{$type-weight-black};
+}
+
 .archive {
   font-family: $title-font;
 }
 
 .archive-title {
   font-family: $title-font;
-  font-size: 0.9em;
+  font-size: $type-size-minimum;
 }
 
 .bold {
   color: $heading-color;
-  font-weight: 600;
 }
 
 img {
   max-width: 100%;
 }
 html {
+  font-size: 100%;
   overflow: hidden;
   overflow-y: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
   overflow: hidden;
@@ -43,12 +68,82 @@ span {
   font-family: $body-font;
 }
 
-.reading span {
-  font-weight: 80 !important;
+p {
+  text-wrap: pretty;
+}
+
+// The semantic small component is the only text allowed below 1rem.
+small,
+.type-small {
+  font-size: $type-size-small !important;
+  line-height: $type-line-body;
+}
+
+.type-caption {
+  font-size: $type-size-caption !important;
+  line-height: $type-line-body;
+}
+
+.type-lead {
+  font-size: $type-size-lead;
+  line-height: $type-line-body;
+}
+
+.type-body {
+  font-size: $type-size-body;
+  line-height: $type-line-body;
+}
+
+.type-subheading {
+  font-size: $type-size-subheading;
+  line-height: $type-line-heading;
+}
+
+.type-heading-sm {
+  font-size: $type-size-heading-sm;
+  line-height: $type-line-heading;
+}
+
+.type-heading-md {
+  font-size: $type-size-heading-md;
+  line-height: $type-line-tight;
+}
+
+.type-heading-lg {
+  font-size: $type-size-heading-lg;
+  line-height: $type-line-tight;
+}
+
+.type-display {
+  font-size: $type-size-display !important;
+  line-height: $type-line-tight;
 }
 
 a {
   transition: all 0.4s ease-in-out 0s;
+}
+
+strong,
+b,
+.bold,
+.weight-bold {
+  font-weight: $type-weight-bold;
+}
+
+.weight-regular {
+  font-weight: $type-weight-regular;
+}
+
+.weight-medium {
+  font-weight: $type-weight-medium;
+}
+
+.weight-semibold {
+  font-weight: $type-weight-semibold;
+}
+
+.weight-black {
+  font-weight: $type-weight-black;
 }
 
 h1,
@@ -64,8 +159,9 @@ h6,
 .h5,
 .h6 {
   font-family: $heading-font;
-  line-height: 1.2074;
+  line-height: $type-line-heading;
   color: $heading-color;
+  text-wrap: balance;
 }
 h1,
 .h1 {
@@ -92,62 +188,23 @@ h6,
   font-size: $h6;
 }
 
-@media #{$md-layout} {
-  h1,
-  .h1 {
-    font-size: $h1 - 4;
-  }
-
-  h2,
-  .h2 {
-    font-size: $h2 - 2;
-  }
-  h3,
-  .h3 {
-    font-size: $h3 - 2;
-  }
-}
-
-@media #{$sm-layout} {
-  h1,
-  .h1 {
-    font-size: $h1 - 6;
-  }
-
-  h2,
-  .h2 {
-    font-size: $h2 - 20;
-  }
-  h3,
-  .h3 {
-    font-size: $h3 - 2;
-  }
-}
-
-@media #{$large-mobile} {
-  h1,
-  .h1 {
-    font-size: $h1 - 8;
-  }
-}
-
 h1,
 .h1,
 h2,
 .h2,
 h3,
 .h3 {
-  font-weight: 500;
+  font-weight: $type-weight-semibold;
 }
 h4,
 .h4,
 h5,
 .h5 {
-  font-weight: 600;
+  font-weight: $type-weight-medium;
 }
 h6,
 .h6 {
-  font-weight: 500;
+  font-weight: $type-weight-medium;
 }
 a:hover,
 a:focus,
@@ -166,14 +223,34 @@ button,
 select {
   background: transparent;
 }
+
+label,
+nav a {
+  font-weight: $type-weight-medium;
+}
+
+.header-area .mainmenunav .mainmenu a {
+  font-size: $type-size-navigation;
+}
+
+button,
+[role="button"],
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+[class*="rn-btn"],
+[class*="rn-button"] {
+  font-weight: $type-weight-semibold;
+}
 input,
 label,
 select,
 textarea {
   width: 100%;
-  font-size: 20px;
+  font-size: $type-size-body;
   border-radius: 10px !important;
 }
+
 input,
 select {
   height: 40px;

@@ -1,27 +1,41 @@
-import React from "react";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
-import { InputText } from "primereact/inputtext";
-import { FiSearch } from "react-icons/fi";
+import PropTypes from "prop-types";
+import { InputText } from "@/compat/primereact";
+import { FiSearch } from "@/elements/ui/icons/IconlyIcons";
 
-const SearchField = (props) => {
-  const { placeholder = "Search", onChange, ...otherProps } = props;
+const SearchField = ({
+  ariaLabel = "Search",
+  className = "",
+  inputClassName = "",
+  name = "search",
+  onChange,
+  placeholder = "Search",
+  value,
+  ...otherProps
+}) => {
 
   return (
-    <div {...otherProps}>
-      <IconField iconPosition="left">
-        <InputIcon>
-          <FiSearch style={{ fontSize: "0.8em" }} />
-        </InputIcon>
-        <InputText
-          name="search"
-          style={{ paddingLeft: "2.5em" }}
-          placeholder={placeholder}
-          onChange={onChange}
-        />
-      </IconField>
+    <div className={`search-field ${className}`.trim()} {...otherProps}>
+      <FiSearch className="search-field-icon" size={18} />
+      <InputText
+        aria-label={ariaLabel}
+        className={`form-control search-field-input ${inputClassName}`.trim()}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
     </div>
   );
+};
+
+SearchField.propTypes = {
+  ariaLabel: PropTypes.string,
+  className: PropTypes.string,
+  inputClassName: PropTypes.string,
+  name: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default SearchField;
