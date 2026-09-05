@@ -1,79 +1,117 @@
 import { useState } from "react";
 import moment from "moment";
-import { Tooltip } from "@/compat/primereact";
-import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
+import PropTypes from "prop-types";
 import { MOMENT_DATE_TIME } from "../../../../util/functions/date";
+import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import EventModal from "./EventModal";
 
-const Event = (props) => {
-    const [show, setShow] = useState(false);
-    const isDraft = props.event.status === 'draft';
+const formatPrice = (value) => {
+  const amount = Number(value);
+  return Number.isFinite(amount)
+    ? `€${amount.toLocaleString("en-NL", { maximumFractionDigits: 2 })}`
+    : "—";
+};
 
-    let price;
-    if (isDraft) {
-        price = 'Not created yet';
-    } else if (props.event.isSaleClosed) {
-        price = 'Tickets are closed';
-    } else if (props.event.isFree) {
-        price = 'FREE'
-    } else if (!!props.event.product){
-        price = props.event.product?.guest.price + ' / ' + (props.event.IsMemberFree ? 'FREE' : (props.event.product?.member?.price ?? '-')) + (props.event.product?.activeMember ? ' / ' + props.event.product?.activeMember.price : '')
-    } else {
-        price = 'TBA';
-    }
+const Event = ({ event, loadData }) => {
+  const [show, setShow] = useState(false);
+  const isDraft = event.status === "draft";
+  const now = Date.now();
+  const isExpired = !isDraft && event.date && new Date(event.date).valueOf() < now;
+  const salesClosed = !isDraft && (
+    event.isSaleClosed ||
+    (event.ticketTimer && new Date(event.ticketTimer).valueOf() < now)
+  );
 
-    const todayValue = (new Date()).valueOf();
-    const expired = !isDraft && (
-        (new Date(props.event.date).valueOf() < todayValue) ||
-        (new Date(props.event.ticketTimer).valueOf() < todayValue)
-    );
+  let price = "TBA";
+  if (isDraft) price = "Not set";
+  else if (salesClosed) price = "Sales closed";
+  else if (event.isFree) price = "Free";
+  else if (event.product) {
+    const prices = [
+      formatPrice(event.product?.guest?.price),
+      event.isMemberFree ? "Free" : formatPrice(event.product?.member?.price),
+      event.product?.activeMember?.price != null
+        ? formatPrice(event.product.activeMember.price)
+        : null,
+    ].filter(Boolean);
+    price = prices.join(" · ");
+  }
 
-    return (
-        <>
-            <Tooltip target=".price_info" />
-            <EventModal show={show} setShow={setShow} event={props.event} loadData={props.loadData}/>
-            <div
-                onClick={() => setShow(true)}
-                style={isDraft
-                    ? { backgroundColor: '#fff8e1', borderColor: '#f59e0b' }
-                    : expired ? { backgroundColor: '#ff4d4d' } : {}}
-                className='service service__style--2 common-border-2 event-card'
-            >
-                <div className='event-card__poster'>
-                    {props.event.poster ? (
-                        <img
-                            src={props.event.poster}
-                            alt={`${props.event.title || 'Draft event'} poster`}
-                            loading='eager'
-                            decoding='async'
-                        />
-                    ) : (
-                        <div className='center_div' style={{ height: '100%', minHeight: '180px', color: '#92400e' }}>
-                            Draft — no poster yet
-                        </div>
-                    )}
-                </div>
-                <div className='event-card__content'>
-                    <h5 className='event-card__title'>{props.event.title || 'Untitled draft'}</h5>
-                    <div className='event-card__details'>
-                        <p><strong>Date:</strong> {props.event.date ? moment(props.event.date).format(MOMENT_DATE_TIME) : 'Not set'}</p>
-                        <p><strong>Location:</strong> {props.event.location || 'Not set'}</p>
-                        <p>
-                            <strong>Price</strong>
-                            <FiInfo className='price_info tooltip_info'
-                                data-pr-tooltip="Guest / Member / Active Member"
-                                data-pr-position="top" />
-                            : {price}
-                        </p>
-                        <p>
-                            <strong>Status:</strong> {isDraft ? 'Draft' : expired ? <span className='error'>Expired</span> : props.event.status}
-                        </p>
-                    </div>
-                </div>
+  const status = isDraft
+    ? "Draft"
+    : isExpired
+      ? "Past"
+      : salesClosed
+        ? "Sales closed"
+        : capitalizeFirstLetter(event.status || "Open", true);
+
+  return (
+    <>
+      <EventModal
+        show={show}
+        setShow={setShow}
+        event={event}
+        loadData={loadData}
+      />
+      <article className={`event-card${isDraft ? " event-card--draft" : ""}`}>
+        <button
+          type="button"
+          className="event-card__trigger"
+          onClick={() => setShow(true)}
+          aria-label={`Open ${event.title || "untitled draft"}`}
+        >
+          <div className="event-card__poster">
+            {event.poster ? (
+              <img
+                src={event.poster}
+                alt={`${event.title || "Draft event"} poster`}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <span>No poster</span>
+            )}
+          </div>
+          <div className="event-card__content">
+            <div className="event-card__heading">
+              <div>
+                <span className={`event-card__status event-card__status--${status.toLowerCase().replaceAll(" ", "-")}`}>
+                  {status}
+                </span>
+                <h3 className="event-card__title">{event.title || "Untitled draft"}</h3>
+              </div>
+              <span className="event-card__region">
+                {capitalizeFirstLetter(event.region || "Region not set", true)}
+              </span>
             </div>
-        </>
+            <dl className="event-card__details">
+              <div>
+                <dt>Date</dt>
+                <dd>{event.date ? moment(event.date).format(MOMENT_DATE_TIME) : "Not set"}</dd>
+              </div>
+              <div>
+                <dt>Location</dt>
+                <dd>{event.location || "Not set"}</dd>
+              </div>
+              <div>
+                <dt>Guest · member · active</dt>
+                <dd>{price}</dd>
+              </div>
+              <div>
+                <dt>Capacity</dt>
+                <dd>{event.ticketLimit ?? "Not set"}</dd>
+              </div>
+            </dl>
+          </div>
+        </button>
+      </article>
+    </>
+  );
+};
 
-    )
-}
+Event.propTypes = {
+  event: PropTypes.object.isRequired,
+  loadData: PropTypes.func.isRequired,
+};
 
-export default Event
+export default Event;

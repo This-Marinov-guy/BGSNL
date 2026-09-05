@@ -2,7 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const PROJECT_ROOT = process.cwd();
-const SCSS_ROOTS = ["public", "src"];
+const STYLE_ROOTS = ["public", "src"];
 const MINIMUMS = {
   px: 16,
   rem: 1,
@@ -10,14 +10,19 @@ const MINIMUMS = {
   "%": 100,
 };
 
-const collectScssFiles = async (directory) => {
+const collectStyleFiles = async (directory) => {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = await Promise.all(
     entries.map(async (entry) => {
       const entryPath = path.join(directory, entry.name);
 
-      if (entry.isDirectory()) return collectScssFiles(entryPath);
-      return entry.isFile() && entry.name.endsWith(".scss") ? [entryPath] : [];
+      if (entry.isDirectory()) return collectStyleFiles(entryPath);
+      const isStyleFile =
+        entry.isFile() &&
+        (entry.name.endsWith(".scss") ||
+          (entry.name.endsWith(".css") && !entry.name.endsWith(".min.css")));
+
+      return isStyleFile ? [entryPath] : [];
     }),
   );
 
@@ -29,8 +34,8 @@ const getLineNumber = (source, index) =>
 
 const violations = [];
 
-for (const root of SCSS_ROOTS) {
-  const files = await collectScssFiles(path.join(PROJECT_ROOT, root));
+for (const root of STYLE_ROOTS) {
+  const files = await collectStyleFiles(path.join(PROJECT_ROOT, root));
 
   for (const file of files) {
     const source = await readFile(file, "utf8");
@@ -76,7 +81,7 @@ for (const root of SCSS_ROOTS) {
 }
 
 if (violations.length) {
-  console.error("SCSS font-size rule failed:\n");
+  console.error("Stylesheet font-size rule failed:\n");
   for (const violation of violations) {
     console.error(
       `- ${violation.file}:${violation.line} — ${violation.value} (${violation.reason})`,
@@ -85,4 +90,4 @@ if (violations.length) {
   process.exit(1);
 }
 
-console.log("SCSS font-size rule passed: regular text is at least 1rem.");
+console.log("Stylesheet font-size rule passed: regular text is at least 1rem.");

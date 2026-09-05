@@ -29,6 +29,7 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import ImageInput, {
   DEFAULT_MAX_IMAGE_SIZE_BYTES,
 } from "../../elements/inputs/common/ImageInput";
+import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
 import Loader from "../../elements/ui/loading/Loader";
 import StepContentTransition from "../../elements/ui/functional/StepContentTransition";
@@ -53,6 +54,11 @@ const schema = yup.object().shape({
     .test("fileSize", "Image must be 5 MB or smaller", isSupportedImageSize),
   name: yup.string().required("Name is required"),
   surname: yup.string().required("Surname is required"),
+  phone: yup
+    .string()
+    .min(8, "Please enter a valid phone number")
+    .max(40, "Please enter a valid phone number")
+    .required("Mobile number is required"),
   email: yup.string().email("Please enter a valid email").required(),
   password: yup
     .string()
@@ -204,6 +210,7 @@ const AlumniSignUp = () => {
                   }
                   formData.append("name", values.name);
                   formData.append("surname", values.surname);
+                  formData.append("phone", values.phone);
                   formData.append("email", values.email);
                   formData.append("password", await encryptData(values.password));
                   formData.append("policyTerms", values.policyTerms);
@@ -242,6 +249,7 @@ const AlumniSignUp = () => {
                 initialValues={{
                   name: "",
                   surname: "",
+                  phone: "",
                   email: "",
                   password: "",
                   confirmPassword: "",
@@ -249,7 +257,7 @@ const AlumniSignUp = () => {
                   notificationTerms: false,
                 }}
               >
-                {({ setFieldValue }) => (
+                {({ values, setFieldValue }) => (
                   <Form
                     encType="multipart/form-data"
                     id="form"
@@ -327,6 +335,27 @@ const AlumniSignUp = () => {
                           <ErrorMessage
                             className="error"
                             name="surname"
+                            component="div"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div
+                          className="rn-form-group phone-input-container"
+                          data-field-name="phone"
+                        >
+                          <label style={{ marginBottom: "5px" }}>
+                            Mobile number <span style={{ color: "#dc3545" }}>*</span>
+                          </label>
+                          <PhoneInput
+                            name="phone"
+                            placeholder="Mobile number"
+                            initialValue={values.phone}
+                            onChange={(value) => setFieldValue("phone", value)}
+                          />
+                          <ErrorMessage
+                            className="error"
+                            name="phone"
                             component="div"
                           />
                         </div>

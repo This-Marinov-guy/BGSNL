@@ -4,6 +4,7 @@ import {
   IconlyDiscount,
 } from "@/elements/ui/icons/IconlyIcons";
 import { PROMO_CODES } from "../../../util/defines/PROMO_CODES";
+import UserTabHeader from "./UserTabHeader";
 
 const capitalizeCity = (str) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -63,10 +64,7 @@ const PromotionsTab = () => {
 
   return (
     <div className="tab-content-wrapper">
-      <div className="tab-header">
-        <h2>Promotions</h2>
-        <p>Exclusive discounts and offers for BGSNL members from our partners.</p>
-      </div>
+      <UserTabHeader title="Promotions" />
       <div className="tab-body">
         {byCity.length > 0 ? (
           <div className="promotions-by-city">

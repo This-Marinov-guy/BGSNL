@@ -1,34 +1,25 @@
 import PropTypes from "prop-types";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import UserCard from "../cards/UserCard";
 
-const UserProfileHeader = ({ currentUser, hasBirthday, onUserRefresh }) => {
+/*
+ * The profile summary panel (avatar + name + role/tier) that used to sit above
+ * the card is gone: the sidebar already shows all three, so it was duplicating
+ * them on the one tab where the sidebar is guaranteed to be visible. The
+ * birthday hat it carried moved onto the sidebar avatar, which is now the only
+ * profile image on the page and also hosts the edit affordance.
+ */
+const UserProfileHeader = ({ currentUser, onUserRefresh }) => {
   return (
-    <div className="user-profile-header">
-      <div>
-        {hasBirthday && (
-          <img
-            src="/assets/images/special/birthday-hat.png"
-            alt="hat"
-            className="birthday-hat"
-          />
-        )}
-        <LazyLoadImage
-          src={currentUser.image}
-          alt="profile"
-          className="profile-image"
-        />
-      </div>
+    <section className="user-profile-header">
       <div className="profile-header-info">
         <UserCard user={currentUser} onUserRefresh={onUserRefresh} />
       </div>
-    </div>
+    </section>
   );
 };
 
 UserProfileHeader.propTypes = {
   currentUser: PropTypes.object.isRequired,
-  hasBirthday: PropTypes.bool,
   onUserRefresh: PropTypes.func,
 };
 

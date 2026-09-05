@@ -1,0 +1,108 @@
+/* Circular "?" hint with a tooltip bubble — see src/elements/ui/icons/InfoHint.jsx */
+.info-hint {
+  display: inline-flex;
+  margin-left: 0.5rem;
+  position: relative;
+  vertical-align: middle;
+}
+
+.info-hint__trigger {
+  align-items: center;
+  background: rgb(1 115 99 / 8%);
+  border: 1px solid rgb(1 115 99 / 35%);
+  border-radius: 50%;
+  color: #017363;
+  cursor: help;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 1.15rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+  width: 1.15rem;
+}
+
+/*
+ * The glyph is a filled path, so there is no font weight to raise. Painting the
+ * stroke underneath the fill thickens it outwards instead, which is what "make
+ * the ? bolder" means at this size.
+ */
+.info-hint__trigger svg {
+  paint-order: stroke fill;
+  stroke: currentColor;
+  stroke-width: 1.1;
+}
+
+.info-hint__trigger:hover,
+.info-hint__trigger:focus-visible {
+  background: rgb(1 115 99 / 16%);
+  border-color: #017363;
+}
+
+/*
+ * Portalled to <body> and fixed, not absolute: ancestors of the trigger clip an
+ * absolutely positioned bubble (`.user-content-area` uses `overflow-x: clip`).
+ * `left`/`top` and the arrow offset come from the component as inline styles.
+ */
+.info-hint__bubble {
+  background: #14322d;
+  border-radius: 0.45rem;
+  box-shadow: 0 0.6rem 1.5rem rgb(2 84 32 / 22%);
+  color: #fff;
+  /* Pinned, not inherited: triggers sit inside headings, which sized this up. */
+  font-size: 1rem;
+  font-weight: 400;
+  left: 0;
+  line-height: 1.4;
+  opacity: 0;
+  padding: 0.5rem 0.7rem;
+  pointer-events: none;
+  position: fixed;
+  text-align: left;
+  text-transform: none;
+  top: 0;
+  transition:
+    opacity 160ms ease,
+    visibility 160ms ease;
+  visibility: hidden;
+  /*
+   * min() keeps the bubble inside the viewport on narrow screens, where a fixed
+   * max-width centred on a trigger near the edge would otherwise overflow.
+   */
+  width: max-content;
+  max-width: min(16rem, calc(100vw - 2rem));
+  z-index: 1200;
+}
+
+.info-hint__bubble::after {
+  border: 0.35rem solid transparent;
+  content: "";
+  left: var(--info-hint-arrow, 50%);
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.info-hint__bubble--top::after {
+  border-top-color: #14322d;
+  top: 100%;
+}
+
+.info-hint__bubble--bottom::after {
+  border-bottom-color: #14322d;
+  bottom: 100%;
+}
+
+.info-hint__bubble--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-hint__trigger,
+  .info-hint__bubble {
+    transition: none;
+  }
+}

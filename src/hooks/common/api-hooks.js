@@ -58,7 +58,7 @@ export const useJWTRefresh = () => {
         return responseData.data.token;
       }
     } catch (err) {
-      return null;
+      return err.response?.status === 401 ? false : null;
     }
   };
 

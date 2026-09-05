@@ -383,7 +383,11 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  font-family: $heading-font !important;
+
+  * {
+    font-family: inherit !important;
+  }
 }
 
 .event-ticket-price-icon {

@@ -5,6 +5,7 @@ import { FaBriefcase } from "@/elements/ui/icons/IconlyIcons";
 import Pagination from "../../common/Pagination";
 import InternshipCard from "../cards/InternshipCard";
 import { useHttpClient } from "../../../hooks/common/http-hook";
+import UserTabHeader from "./UserTabHeader";
 
 const InternshipsTab = ({
   currentUser,
@@ -76,13 +77,7 @@ const InternshipsTab = ({
 
   return (
     <div className="tab-content-wrapper">
-      <div className="tab-header">
-        <h2>Available Internships</h2>
-        <p>
-          Exclusive internship opportunities for BGSNL members. New positions
-          are added regularly.
-        </p>
-      </div>
+      <UserTabHeader title="Internships" />
       <div>
         <TabView
           activeIndex={activeIndex}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Password } from "@/compat/primereact";
 import {
   Link,
@@ -16,7 +16,7 @@ import {
   removeNotification,
   showNotification,
 } from "../../redux/notification";
-import { login } from "../../redux/user";
+import { login, selectIsAuth } from "../../redux/user";
 import {
   BIRTHDAY_MODAL,
   GENERAL_ERROR,
@@ -24,6 +24,8 @@ import {
 import ForgottenPassword from "./ForgottenPassword";
 
 const Login = () => {
+  const isAuthenticated = useSelector(selectIsAuth);
+
   const [loginFormValues, setLoginFormValues] = useState({
     email: "",
     password: "",
@@ -43,6 +45,12 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/user#profile", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const changeFormInputHandler = (event) => {
     setLoginFormValues((prevState) => {

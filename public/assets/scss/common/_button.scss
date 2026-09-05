@@ -111,15 +111,15 @@ a {
 
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     border: 2px solid #fff;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 6px;
     display: inline-block;
 
     transition: 0.3s;
     @media #{$sm-layout} {
-      padding: 9px 12px;
+      padding: 7px 12px;
     }
 
     &.rn-btn-green {
@@ -210,7 +210,7 @@ a {
     }
 
     &.rn-btn-small {
-      padding: 10px 20px;
+      padding: 6px 14px;
     }
 
     &.btn-primary-color {

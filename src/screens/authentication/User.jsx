@@ -163,9 +163,16 @@ const User = () => {
   }, []);
 
   useEffect(() => {
-    const hash = window.location.hash.substring(1).split("?")[0];
-    setTab(ACCOUNT_TABS.includes(hash) ? hash : ACCOUNT_TABS[0]);
-  }, [location.hash]);
+    const syncTabWithHash = () => {
+      const hash = window.location.hash.substring(1).split("?")[0];
+      setTab(ACCOUNT_TABS.includes(hash) ? hash : ACCOUNT_TABS[0]);
+    };
+
+    syncTabWithHash();
+    window.addEventListener("hashchange", syncTabWithHash);
+
+    return () => window.removeEventListener("hashchange", syncTabWithHash);
+  }, []);
 
   if (isPageLoading) {
     return <HeaderLoadingError />;
@@ -203,6 +210,7 @@ const User = () => {
         {/* Sidebar */}
         <UserSidebar
           currentUser={currentUser}
+          hasBirthday={hasBirthday}
           activeTab={tab || ACCOUNT_TABS[0]}
           onTabChange={handleTabChange}
           isMobile={isMobile}
@@ -236,12 +244,10 @@ const User = () => {
               <TabContent
                 tab={tab}
                 currentUser={currentUser}
-                hasBirthday={hasBirthday}
                 onUserRefresh={(data) => {
                   setCurrentUser(data.user);
                   setHasBirthday(data.hasBirthday);
                 }}
-                navigate={navigate}
                 first={first}
                 rows={rows}
                 onPageChange={onPageChange}

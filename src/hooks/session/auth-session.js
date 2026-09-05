@@ -48,12 +48,10 @@ export const useAuthSession = () => {
       // Set a very long timeout (effectively never expires)
       targetRef.current = Date.now() + (365 * 24 * 60 * 60 * 1000); // 1 year
       timeRemainingRef.current = targetRef.current;
-      
-      // Still set up JWT refresh timer for token renewal
-      refreshJWTinAPITimerRef.current = setTimeout(() => {
-        refreshJWTinAPI();
-      }, JWT_RESET_TIMER);
-      
+
+      // Token renewal is scheduled once in the session effect below, where
+      // the current token is always supplied. User activity must not create
+      // additional refresh requests with an undefined token.
       return;
     }
 
@@ -79,7 +77,7 @@ export const useAuthSession = () => {
         clearInterval(intervalCheckRef.current);
       }
     }, 1000);
-  }, [dispatch, refreshJWTinAPI]);
+  }, [dispatch]);
 
   const handleUserActivity = useCallback(() => {
     localStorage.setItem(LOCAL_STORAGE_SESSION_LIFE, targetRef.current);

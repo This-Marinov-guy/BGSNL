@@ -30,26 +30,43 @@
 
 /* Ticket Section Styles */
 .tickets-grid {
+  align-items: center;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  justify-items: center;
 
+  /*
+   * No card chrome: the ticket artwork already is the card, so a background,
+   * a shadow and a hover lift behind it only framed it twice.
+   */
   .ticket-item {
+    align-items: center;
+    background: transparent;
+    box-shadow: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /*
+   * `ticket-image` now sits on the .media-trigger button itself, so sizing still
+   * has to reach through it to the <img> — otherwise the picture renders at its
+   * intrinsic size.
+   */
+  .ticket-image,
+  .ticket-image > button {
+    display: block;
+    width: 100%;
+  }
+
+  .ticket-image img {
     border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
-    }
-
-    .ticket-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    display: block;
+    height: auto;
+    margin: 0 auto;
+    max-width: 100%;
+    width: 100%;
   }
 }
 
@@ -141,12 +158,186 @@
   }
 }
 
-/* Settings Grid */
-.settings-grid {
+.settings-groups {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 25px;
-  margin-top: 20px;
+  gap: 1.35rem;
+  max-width: 68rem;
+}
+
+.settings-group {
+  min-width: 0;
+}
+
+.settings-group__title {
+  margin: 0 0 0.45rem;
+  color: var(--color-body-light);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.settings-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgb(1 115 99 / 12%);
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 72%);
+}
+
+.settings-list__item {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 0.35rem 0.8rem;
+  padding: 0.8rem 0.9rem;
+  border-bottom: 1px solid rgb(1 115 99 / 10%);
+  transition: background-color 180ms ease;
+
+  &:hover {
+    background: rgb(232 244 241 / 42%);
+  }
+}
+
+.settings-list__item:last-child {
+  border-bottom: 0;
+}
+
+.settings-list__icon {
+  align-items: center;
+  background: rgb(1 115 99 / 8%);
+  border-radius: 0.5rem;
+  color: var(--color-primary);
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+.settings-list__title {
+  color: var(--color-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.1rem;
+}
+
+.settings-list__description {
+  color: var(--color-body-light);
+  font-size: 1rem;
+  line-height: 1.35;
+  margin: 0;
+  max-width: 54ch;
+  text-wrap: pretty;
+}
+
+.settings-list__action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: flex-end;
+}
+
+/* A row whose action is gated off (no subscription yet) keeps no empty column. */
+.settings-list__action:empty {
+  display: none;
+}
+
+.settings-list__action .subscription-actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.settings-action {
+  display: inline-flex;
+  width: auto;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #b9c8c1;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #315d4c;
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+
+  &:hover:not(:disabled) {
+    border-color: #7fa294;
+    background: #f0f6f3;
+    color: #174638;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgb(1 115 99 / 16%);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.settings-action--primary {
+  border-color: #017363;
+  background: #017363;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    border-color: #017363;
+    background: #fff;
+    color: #017363;
+  }
+}
+
+.settings-action--danger {
+  border-color: rgb(158 13 51 / 24%);
+  background: #fff;
+  color: #8f1737;
+
+  &:hover:not(:disabled) {
+    border-color: rgb(158 13 51 / 42%);
+    background: rgb(158 13 51 / 6%);
+    color: #74112c;
+  }
+}
+
+.settings-list__item--danger .settings-list__icon {
+  background: rgb(158 13 51 / 10%);
+  color: var(--color-danger);
+}
+
+@media (max-width: 767px) {
+  .settings-list__item {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .settings-list__action {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-left: 2.8rem;
+  }
+
+  .settings-list__action .subscription-actions {
+    justify-content: flex-start;
+  }
 }
 
 .settings-card {
@@ -272,6 +463,52 @@
     padding-bottom: 8px;
   }
 
+  /*
+   * Carries the title's bottom spacing itself so the title can drop its own
+   * margin here and the edit button stays optically aligned with the heading.
+   */
+  .column-header {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    .column-title {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  /*
+   * Bare icon button: the pen alone, no circle or fill. Keeps a small padding
+   * so the hit area stays comfortably larger than the ~0.95rem glyph, and a
+   * negative margin so that padding does not visually push the pen off the
+   * heading's right edge.
+   */
+  .column-edit-btn {
+    align-items: center;
+    background: none;
+    border: 0;
+    color: #017363;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    margin-right: -0.35rem;
+    padding: 0.35rem;
+    transition: color 160ms ease;
+  }
+
+  .column-edit-btn:hover {
+    color: #014f44;
+  }
+
+  .column-edit-btn:focus-visible {
+    outline: 2px solid #017363;
+    outline-offset: 2px;
+  }
+
   .list-style--1 {
     list-style: none;
     padding: 0;
@@ -347,8 +584,7 @@
 /* Responsive Adjustments */
 @media (max-width: 767px) {
   .tickets-grid,
-  .internships-grid,
-  .settings-grid {
+  .internships-grid {
     grid-template-columns: 1fr;
   }
 
@@ -415,25 +651,22 @@
   }
 
   .tab-header {
-    background: rgb(232 244 241 / 64%);
-    border: 0;
-    border-radius: 0.8rem;
-    margin-bottom: clamp(1.25rem, 3vw, 2rem);
-    padding: clamp(1rem, 2.5vw, 1.6rem);
+    background: transparent;
+    border-bottom: 1px solid rgb(1 115 99 / 28%);
+    border-radius: 0;
+    margin-bottom: clamp(1rem, 2vw, 1.4rem);
+    padding: 0 0 0.85rem;
     text-align: left;
 
-    h2 {
-      color: var(--color-heading);
-      margin-bottom: 0.55rem;
-      text-wrap: balance;
-    }
-
-    p {
-      color: var(--color-body-light);
-      line-height: 1.6;
+    .tab-title {
+      color: var(--color-danger);
+      font-size: clamp(2rem, 3.2vw, 3rem);
+      line-height: 0.95;
       margin: 0;
-      max-width: 65ch;
-      text-wrap: pretty;
+      max-width: 14ch;
+      overflow-wrap: anywhere;
+      text-transform: uppercase;
+      text-wrap: balance;
     }
   }
 
@@ -443,13 +676,11 @@
 
   .tickets-grid,
   .internships-grid,
-  .settings-grid,
   .promotions-grid {
     gap: clamp(1rem, 2vw, 1.5rem);
   }
 
   .internships-grid,
-  .settings-grid,
   .promotions-grid {
     display: grid;
     grid-template-columns: repeat(
@@ -458,7 +689,6 @@
     );
   }
 
-  .ticket-item,
   .settings-card,
   .promotion-card {
     transition:
@@ -467,7 +697,6 @@
       transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .ticket-item:hover,
   .settings-card:hover,
   .promotion-card:hover {
     box-shadow: 0 1rem 2.5rem rgb(2 84 32 / 12%);
@@ -662,12 +891,53 @@
     margin-bottom: 1rem;
     padding: 0;
   }
+
+  .user-details-card {
+    background: #fff;
+    border: 1px solid rgb(1 115 99 / 12%);
+    border-radius: 0.85rem;
+    box-shadow: 0 0.65rem 1.8rem rgb(2 84 32 / 7%);
+    padding: clamp(1rem, 2vw, 1.4rem);
+  }
+
+  .user-details-card .pricing-body {
+    margin: 0;
+    text-align: left;
+  }
+
+  .user-details-card .user-info-grid {
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .user-details-card .user-info-column {
+    background: rgb(232 244 241 / 48%);
+    border-radius: 0.7rem;
+    min-width: 0;
+    padding: 1rem;
+  }
+
+  .user-details-card .user-info-column .list-style--1 li {
+    margin-bottom: 0.7rem;
+    overflow-wrap: anywhere;
+  }
+
+  .user-details-card .user-info-column .list-style--1 li:last-child {
+    margin-bottom: 0;
+  }
+
+  .user-details-card .user-quote-section,
+  .user-details-card .user-cv-section {
+    border-top: 1px solid rgb(1 115 99 / 15%);
+    margin-top: 1.25rem !important;
+    padding-top: 1.25rem;
+  }
 }
 
 @media (max-width: 575px) {
   .user-page-container {
     .tab-header {
-      padding: 1rem;
+      padding: 0 0 0.75rem;
     }
 
     .settings-card,
@@ -677,8 +947,13 @@
   }
 }
 
+@media (max-width: 767px) {
+  .user-page-container .user-details-card .user-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .user-page-container .ticket-item,
   .user-page-container .settings-card,
   .user-page-container .promotion-card,
   .user-page-container .settings-card button,

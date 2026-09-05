@@ -65,18 +65,40 @@ import Loader from "../../ui/loading/Loader";
 import LongLoading from "../../ui/loading/LongLoading";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 
+const EVENT_FORM_STEPS = [
+  {
+    title: "Event details",
+    description: "Name, place and schedule",
+  },
+  {
+    title: "Tickets & media",
+    description: "Pricing, capacity and artwork",
+  },
+  {
+    title: "Extras & publish",
+    description: "Optional settings and final review",
+  },
+];
+
 const EventForm = (props) => {
-  const { loading, sendRequest, forceStartLoading } = useHttpClient();
+  const { loading, sendRequest } = useHttpClient();
 
   const [visible, setVisible] = useState(false);
   const [confirmResolver, setConfirmResolver] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showBlockingLoader, setShowBlockingLoader] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [furthestStep, setFurthestStep] = useState(0);
+  const [draftId, setDraftId] = useState(null);
+  const [draftStatus, setDraftStatus] = useState("idle");
+  const [lastSavedAt, setLastSavedAt] = useState(null);
   const [extraImagesData, setExtraImagesData] = useState({
     existing: [],
     newFiles: [],
     all: []
   });
   const [extraImagesTouched, setExtraImagesTouched] = useState(false);
+  const [savedImages, setSavedImages] = useState([]);
 
   const navigate = useNavigate();
 
@@ -116,6 +138,7 @@ const EventForm = (props) => {
         },
       }
     : storedInitialData;
+  const canSaveDraft = !edit || initialData?.status === EVENT_DRAFT;
   const bgs = Array.from({ length: BG_INDEX }, (_, i) => ({
     src: `/assets/images/bg/bg-image-${i + 1}.webp`,
     value: i + 1,
@@ -176,6 +199,13 @@ const EventForm = (props) => {
   useEffect(() => {
     askBeforeRedirect();
   }, []);
+
+  useEffect(() => {
+    if (initialData?.status === EVENT_DRAFT) {
+      setDraftId(initialData.id ?? eventId ?? null);
+    }
+    setSavedImages(initialData?.images ?? []);
+  }, [eventId, initialData?.id, initialData?.images, initialData?.status]);
 
   const schema = yup.object().shape({
     region: yup.string().required("Region is required"),
@@ -655,7 +685,7 @@ const EventForm = (props) => {
     const formData = new FormData();
     const orderedImages = extraImagesTouched
       ? extraImagesData.all ?? []
-      : (initialData?.images ?? []).map((url) => ({
+      : savedImages.map((url) => ({
           isExisting: true,
           url,
         }));
@@ -723,48 +753,116 @@ const EventForm = (props) => {
     return formData;
   };
 
-  const submitValues = async (values, saveAsDraft = false) => {
+  const submitValues = async (
+    values,
+    saveAsDraft = false,
+    { stayOnPage = false, quiet = false } = {}
+  ) => {
     try {
       if (!saveAsDraft) await waitForConfirmation();
 
       setSubmitting(true);
-      forceStartLoading();
+      setShowBlockingLoader(!quiet);
+      if (quiet) setDraftStatus("saving");
 
-      const responseData = props.edit
-        ? await sendRequest(
-            `future-event/edit-event/${eventId}`,
-            "PATCH",
-            buildFormData(values, saveAsDraft)
-          )
-        : await sendRequest(
-            "future-event/add-event",
-            "POST",
-            buildFormData(values, saveAsDraft)
+      const existingDraftId = draftId ||
+        (initialData?.status === EVENT_DRAFT
+          ? initialData.id ?? eventId
+          : null);
+      const existingEventId = props.edit ? eventId : null;
+      const recordId = existingDraftId || existingEventId;
+      const responseData = await sendRequest(
+        recordId
+          ? `future-event/edit-event/${recordId}`
+          : "future-event/add-event",
+        recordId ? "PATCH" : "POST",
+        buildFormData(values, saveAsDraft),
+        {},
+        true,
+        !quiet
+      );
+
+      if (responseData?.status) {
+        if (saveAsDraft) {
+          setDraftId(responseData.event.id);
+          setDraftStatus("saved");
+          setLastSavedAt(new Date());
+          setSavedImages(responseData.event.images ?? []);
+        }
+
+        if (!stayOnPage) {
+          navigate("/user/dashboard");
+          dispatch(
+            showNotification(
+              saveAsDraft
+                ? EVENT_DRAFT_SAVED
+                : props.edit && initialData?.status !== EVENT_DRAFT
+                  ? EVENT_EDITED
+                  : EVENT_ADDED
+            )
           );
+        }
 
-      if (responseData.status) {
-        navigate("/user/dashboard");
         dispatch(
-          showNotification(
-            saveAsDraft
-              ? EVENT_DRAFT_SAVED
-              : props.edit && initialData?.status !== EVENT_DRAFT
-                ? EVENT_EDITED
-                : EVENT_ADDED
-          )
-        );
-        dispatch(
-          props.edit
+          recordId
             ? editEventFromAll(responseData.event)
             : addEventToAll(responseData.event)
         );
+        return responseData.event;
       }
+      if (quiet) setDraftStatus("error");
+      return null;
     } catch (err) {
       // Request errors are surfaced by useHttpClient.
+      if (quiet) setDraftStatus("error");
+      return null;
     } finally {
       setSubmitting(false);
+      setShowBlockingLoader(false);
     }
   };
+
+  const moveToStep = async (targetStep, values, setFieldValue) => {
+    if (targetStep === currentStep) return;
+
+    let savedDraft = true;
+
+    if (canSaveDraft) {
+      savedDraft = await submitValues(values, true, {
+        stayOnPage: true,
+        quiet: true,
+      });
+    }
+
+    if (!savedDraft) return;
+
+    if (savedDraft !== true) {
+      ["poster", "ticketImg", "bgImageExtra"].forEach((field) => {
+        if (savedDraft[field]) {
+          setFieldValue(field, savedDraft[field], false);
+        }
+      });
+
+      if (savedDraft.images) {
+        setSavedImages(savedDraft.images);
+        setExtraImagesTouched(false);
+      }
+    }
+
+    const nextStep = Math.max(
+      0,
+      Math.min(targetStep, EVENT_FORM_STEPS.length - 1)
+    );
+    setCurrentStep(nextStep);
+    setFurthestStep((step) => Math.max(step, nextStep));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const moveToNextStep = (values, setFieldValue) =>
+    moveToStep(currentStep + 1, values, setFieldValue);
+
+  const moveToPreviousStep = (values, setFieldValue) =>
+    moveToStep(currentStep - 1, values, setFieldValue);
 
   return (
     <>
@@ -774,7 +872,7 @@ const EventForm = (props) => {
         visible={visible}
         setVisible={setVisible}
       />
-      <LongLoading visible={submitting} />
+      <LongLoading visible={showBlockingLoader} />
       <ValidatedFormik
         className="container"
         validationSchema={schema}
@@ -936,29 +1034,64 @@ const EventForm = (props) => {
           <Form
             encType="multipart/form-data"
             id="form"
-            style={{ padding: "2%" }}
+            className="event-form-workspace"
           >
+            <nav className="event-form-stepper" aria-label="Event creation steps">
+              {EVENT_FORM_STEPS.map((step, index) => (
+                <button
+                  key={step.title}
+                  type="button"
+                  className={`event-form-stepper__item${
+                    index === currentStep ? " is-active" : ""
+                  }${index < furthestStep ? " is-complete" : ""}`}
+                  aria-current={index === currentStep ? "step" : undefined}
+                  disabled={index > furthestStep}
+                  onClick={() => moveToStep(index, values, setFieldValue)}
+                >
+                  <span className="event-form-stepper__number">{index + 1}</span>
+                  <span>
+                    <strong>{step.title}</strong>
+                    <small>{step.description}</small>
+                  </span>
+                </button>
+              ))}
+            </nav>
+
+            <div className={`event-draft-status is-${draftStatus}`} role="status">
+              <span className="event-draft-status__dot" aria-hidden="true" />
+              {draftStatus === "saving" && "Saving draft…"}
+              {draftStatus === "saved" &&
+                `Draft saved${
+                  lastSavedAt
+                    ? ` at ${lastSavedAt.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}`
+                    : ""
+                }`}
+              {draftStatus === "error" && "Draft could not be saved. Try again."}
+              {draftStatus === "idle" &&
+                (canSaveDraft
+                  ? "Your progress saves when you continue to the next step."
+                  : "Changes are saved when you submit the event.")}
+            </div>
+
             {/* ========== REQUIRED SECTIONS ========== */}
-            <div
-              style={{
-                backgroundColor: "#fff9f0",
-                padding: "20px",
-                borderRadius: "8px",
-                border: "2px solid #ffc107",
-                marginBottom: "40px",
-              }}
+            <section
+              className="event-form-step"
+              hidden={currentStep !== 0}
+              aria-labelledby="event-step-details"
             >
-              <div
-                className="d-flex align-items-center"
-                style={{ gap: "8px", marginBottom: "20px" }}
-              >
-                <h2 style={{ margin: 0, color: "#dc3545" }}>
-                  Required Information
-                </h2>
-                <small style={{ color: "#6c757d", fontStyle: "italic" }}>
-                  All fields marked with * are mandatory
-                </small>
-              </div>
+              <header className="event-form-step__header">
+                <div>
+                  <span className="event-form-step__eyebrow">Step 1 of 3</span>
+                  <h2 id="event-step-details">Event details</h2>
+                  <p>Start with the information guests need to identify the event.</p>
+                </div>
+                <span className="event-form-required-note">
+                  <strong>* Required</strong> · all other fields are optional
+                </span>
+              </header>
 
               <h3 className="label">Basic Information</h3>
               <div className="row">
@@ -1118,6 +1251,24 @@ const EventForm = (props) => {
                   </div>
                 </div>
               </div>
+            </section>
+
+            <section
+              className="event-form-step"
+              hidden={currentStep !== 1}
+              aria-labelledby="event-step-tickets"
+            >
+              <header className="event-form-step__header">
+                <div>
+                  <span className="event-form-step__eyebrow">Step 2 of 3</span>
+                  <h2 id="event-step-tickets">Tickets &amp; media</h2>
+                  <p>Set sales rules, capacity and the event artwork.</p>
+                </div>
+                <span className="event-form-required-note">
+                  <strong>* Required</strong> · all other fields are optional
+                </span>
+              </header>
+
               <h3 className="mt--30 label">Price Details</h3>
               <div className="row">
                 <div className="col-lg-4 col-12">
@@ -1649,30 +1800,21 @@ const EventForm = (props) => {
                   />
                 </div>
               </div>
-            </div>
-            {/* End of Required Sections */}
+            </section>
 
-            {/* ========== OPTIONAL SECTIONS ========== */}
-            <div
-              style={{
-                backgroundColor: "#f0f8ff",
-                padding: "20px",
-                borderRadius: "8px",
-                border: "2px dashed #17a2b8",
-                marginBottom: "40px",
-              }}
+            <section
+              className="event-form-step event-form-step--optional"
+              hidden={currentStep !== 2}
+              aria-labelledby="event-step-extras"
             >
-              <div
-                className="d-flex align-items-center"
-                style={{ gap: "8px", marginBottom: "20px" }}
-              >
-                <h2 style={{ margin: 0, color: "#17a2b8" }}>
-                  Optional Settings
-                </h2>
-                <small style={{ color: "#6c757d", fontStyle: "italic" }}>
-                  Customize your event with these additional options
-                </small>
-              </div>
+              <header className="event-form-step__header">
+                <div>
+                  <span className="event-form-step__eyebrow">Step 3 of 3</span>
+                  <h2 id="event-step-extras">Extras &amp; publish</h2>
+                  <p>Add optional sales tools, custom questions and related content.</p>
+                </div>
+                <span className="event-form-optional-note">Everything on this step is optional</span>
+              </header>
 
               <h3 className="label mt--40">Manage Sales</h3>
               <div className="row mt--20">
@@ -1759,7 +1901,7 @@ const EventForm = (props) => {
               <div className="row center_text" style={{ width: "100%", margin: 0 }}>
                 <div className="col-12 mt--20" style={{ width: "100%", padding: "0 15px", boxSizing: "border-box" }}>
                   <MultiImageUpload
-                    existingImages={initialData?.images ?? []}
+                    existingImages={savedImages}
                     onImagesChange={handleExtraImagesChange}
                     name="extraImagesValidation"
                     onValidationChange={(message) =>
@@ -1989,15 +2131,14 @@ const EventForm = (props) => {
                 onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
                 initialValues={values.extraInputsForm}
               />
-            </div>
-            {/* End of Optional Sections */}
+            </section>
 
             <ConfirmDialog />
-            <div className="mt--40 mb--20 center_div">
+            <footer className="event-form-actions">
               <button
                 onClick={() => navigate("/user/dashboard")}
                 type="button"
-                className="rn-button-style--2 rn-btn-reverse mr--5"
+                className="event-form-button event-form-button--ghost"
               >
                 Dashboard
               </button>
@@ -2006,27 +2147,49 @@ const EventForm = (props) => {
                   disabled={loading || submitting}
                   type="button"
                   onClick={() => submitValues(values, true)}
-                  className="rn-button-style--2 rn-btn-reverse mr--5"
+                  className="event-form-button event-form-button--draft"
                 >
-                  <span>Save as Draft</span>
+                  <span>Save as draft</span>
                 </button>
               )}
-              <button
-                disabled={loading || submitting}
-                type="submit"
-                className="rn-button-style--2 rn-btn-reverse-green"
-              >
-                {loading ? (
-                  <Loader />
-                ) : (
-                  <span>
-                    {props.edit && initialData?.status !== EVENT_DRAFT
-                      ? "Edit Event"
-                      : "Submit Event"}
-                  </span>
+              <div className="event-form-actions__primary">
+                {currentStep > 0 && (
+                  <button
+                    type="button"
+                    className="event-form-button event-form-button--ghost"
+                    onClick={() => moveToPreviousStep(values, setFieldValue)}
+                  >
+                    Back
+                  </button>
                 )}
-              </button>
-            </div>
+                {currentStep < EVENT_FORM_STEPS.length - 1 ? (
+                  <button
+                    disabled={submitting}
+                    type="button"
+                    className="event-form-button event-form-button--primary"
+                    onClick={() => moveToNextStep(values, setFieldValue)}
+                  >
+                    {draftStatus === "saving" ? "Saving…" : "Save & continue"}
+                  </button>
+                ) : (
+                  <button
+                    disabled={loading || submitting}
+                    type="submit"
+                    className="event-form-button event-form-button--primary"
+                  >
+                    {loading ? (
+                      <Loader />
+                    ) : (
+                      <span>
+                        {props.edit && initialData?.status !== EVENT_DRAFT
+                          ? "Update event"
+                          : "Submit event"}
+                      </span>
+                    )}
+                  </button>
+                )}
+              </div>
+            </footer>
           </Form>
         )}
       </ValidatedFormik>

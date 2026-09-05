@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
   FaBriefcase,
@@ -8,13 +9,18 @@ import {
   FaTicketAlt,
   FaUser,
   FiArrowUp,
+  FiCalendar,
+  FiEdit2,
   IconlyClose,
   IconlyMenu,
 } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
+import { showModal } from "../../../redux/modal";
 import {
   ACCESS_1,
+  ACCESS_4,
   formatRole,
+  USER_UPDATE_MODAL,
 } from "../../../util/defines/common";
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
@@ -22,32 +28,50 @@ import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 
 const UserSidebar = ({
   currentUser,
+  hasBirthday,
   activeTab,
   onTabChange,
   isMobile,
   isSidebarOpen,
   toggleSidebar,
 }) => {
+  const dispatch = useDispatch();
   const getTabIcon = (tab) => {
     switch (tab) {
       case "news":
-        return <FaNewspaper size={22} />;
+        return <FaNewspaper />;
       case "tickets":
-        return <FaTicketAlt size={22} />;
+        return <FaTicketAlt />;
       case "internships":
-        return <FaBriefcase size={22} />;
+        return <FaBriefcase />;
       case "profile":
-        return <FaUser size={22} />;
+        return <FaUser />;
       case "promotions":
-        return <FaTag size={22} />;
+        return <FaTag />;
       case "settings":
-        return <FaCog size={22} />;
+        return <FaCog />;
       default:
-        return <FaUser size={22} />;
+        return <FaUser />;
     }
   };
 
-  const isAccess1 = currentUser.roles?.some((r) => ACCESS_1.includes(r));
+  const hasRole = (access) => currentUser.roles?.some((r) => access.includes(r));
+  /*
+   * Administration links mirror the role gates the header dropdown already
+   * uses: the events dashboard is open to ACCESS_4, internships to ACCESS_1.
+   */
+  const adminLinks = [
+    hasRole(ACCESS_4) && {
+      icon: <FiCalendar />,
+      label: "Manage Events",
+      to: "/user/dashboard",
+    },
+    hasRole(ACCESS_1) && {
+      icon: <FaBriefcase />,
+      label: "Manage Internships",
+      to: "/user/internships-dashboard",
+    },
+  ].filter(Boolean);
 
   return (
     <>
@@ -94,19 +118,44 @@ const UserSidebar = ({
         id="user-account-navigation"
       >
         {/* User Profile Overview */}
-        <div className="sidebar-user-profile archive">
-          <LazyLoadImage
-            src={currentUser.image}
-            alt={`${currentUser.name} profile`}
-            className="sidebar-profile-image"
-          />
-          <h2 className="sidebar-user-name">{currentUser.name}</h2>
-          <p className="sidebar-user-status">
-            <span className="status-active">
-              {formatRole(currentUser.roles)}{" "}
-              {currentUser?.tier !== undefined && `Tier ${currentUser.tier}`}
+        <div className="sidebar-user-profile">
+          <button
+            aria-label="Edit profile information"
+            className="sidebar-profile-avatar"
+            onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
+            type="button"
+          >
+            {hasBirthday && (
+              <img
+                alt=""
+                aria-hidden="true"
+                className="birthday-hat"
+                src="/assets/images/special/birthday-hat.png"
+              />
+            )}
+            <LazyLoadImage
+              src={currentUser.image}
+              alt={`${currentUser.name} profile`}
+              className="sidebar-profile-image"
+            />
+            <span aria-hidden="true" className="sidebar-profile-avatar__overlay">
+              <FiEdit2 size="1.05rem" />
             </span>
-          </p>
+          </button>
+          <div className="sidebar-profile-copy">
+            <h2 className="sidebar-user-name archive">{currentUser.name}</h2>
+            <p className="sidebar-user-status">
+              <span className="status-active">
+                {formatRole(currentUser.roles)}{" "}
+                {currentUser?.tier !== undefined && `Tier ${currentUser.tier}`}
+              </span>
+              {currentUser.region ? (
+                <span className="sidebar-user-region">
+                  {capitalizeFirstLetter(currentUser.region, true)}
+                </span>
+              ) : null}
+            </p>
+          </div>
           {currentUser?.tier === 0 && (
             <div className="sidebar-tier-action">
               <AlumniRegistrationButton
@@ -118,11 +167,6 @@ const UserSidebar = ({
               </AlumniRegistrationButton>
             </div>
           )}
-          <p className="sidebar-user-status">
-            <span className="status-active">
-              {capitalizeFirstLetter(currentUser.region || "", true)}
-            </span>
-          </p>
         </div>
 
         {/* Navigation Links */}
@@ -151,25 +195,31 @@ const UserSidebar = ({
                 </li>
               );
             })}
-            {isAccess1 && (
-              <>
-                <li className="sidebar-divider" />
-                <li>
-                  <Link
-                    to="/user/internships-dashboard"
-                    onClick={() => {
-                      if (isMobile) toggleSidebar();
-                    }}
-                  >
-                    <span className="sidebar-icon">
-                      <FaBriefcase size={22} />
-                    </span>
-                    <span className="sidebar-label">Manage Internships</span>
-                  </Link>
-                </li>
-              </>
-            )}
           </ul>
+
+          {/* The heading only exists when at least one link sits under it. */}
+          {adminLinks.length > 0 && (
+            <>
+              <h3 className="sidebar-nav-heading" id="sidebar-administration">
+                Administration
+              </h3>
+              <ul aria-labelledby="sidebar-administration">
+                {adminLinks.map((link) => (
+                  <li key={link.to}>
+                    <Link
+                      to={link.to}
+                      onClick={() => {
+                        if (isMobile) toggleSidebar();
+                      }}
+                    >
+                      <span className="sidebar-icon">{link.icon}</span>
+                      <span className="sidebar-label">{link.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </nav>
       </aside>
     </>
@@ -178,6 +228,7 @@ const UserSidebar = ({
 
 UserSidebar.propTypes = {
   currentUser: PropTypes.object.isRequired,
+  hasBirthday: PropTypes.bool,
   activeTab: PropTypes.string.isRequired,
   onTabChange: PropTypes.func.isRequired,
   isMobile: PropTypes.bool.isRequired,

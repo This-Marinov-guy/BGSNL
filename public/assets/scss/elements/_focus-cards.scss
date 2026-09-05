@@ -244,3 +244,80 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+
+.future-events-page-layout {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .future-events-page-layout {
+    display: grid;
+    width: min(calc(100% - 48px), 1320px);
+    margin: 0 auto;
+    grid-template-columns: minmax(0, 1.45fr) minmax(420px, 0.9fr);
+    gap: 32px;
+    align-items: start;
+  }
+
+  .future-events-page-layout__events {
+    min-width: 0;
+    grid-column: 1;
+    grid-row: 1;
+
+    .portfolio-area {
+      background: transparent;
+    }
+
+    .container {
+      width: 100%;
+      max-width: none;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .row {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    [class*="col-"] {
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .future-events-region-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .future-events-page-layout__calendar {
+    position: sticky;
+    top: 96px;
+    min-width: 0;
+    grid-column: 2;
+    grid-row: 1;
+
+    .calendar-subscription__area {
+      background: transparent;
+    }
+
+    .calendar-subscription__container {
+      max-width: none;
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    .calendar-subscription__header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      text-wrap: balance;
+    }
+
+    .calendar-subscription__buttons-button {
+      width: 100%;
+    }
+  }
+}

@@ -43,42 +43,109 @@
     align-items: center;
     background: rgb(232 244 241 / 72%);
     border-radius: 0.8rem;
-    display: flex;
-    flex-direction: column;
-    padding: 1.25rem 1rem;
-    text-align: center;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    padding: 0.85rem;
+    text-align: left;
+
+    /*
+     * Deliberately not `overflow: hidden` — the birthday hat sits at
+     * top: -1.2rem and has to escape the button box.
+     */
+    .sidebar-profile-avatar {
+      background: none;
+      border: 0;
+      border-radius: 0.65rem;
+      cursor: pointer;
+      display: block;
+      height: 3.5rem;
+      padding: 0;
+      position: relative;
+      width: 3.5rem;
+    }
+
+    .sidebar-profile-avatar:focus-visible {
+      outline: 2px solid #017363;
+      outline-offset: 2px;
+    }
+
+    .birthday-hat {
+      left: 50%;
+      position: absolute;
+      top: -1.2rem;
+      transform: translateX(-50%);
+      width: 2.3rem;
+      z-index: 2;
+    }
+
+    .sidebar-profile-avatar__overlay {
+      align-items: center;
+      background: rgb(20 50 45 / 62%);
+      border-radius: 0.65rem;
+      color: #fff;
+      display: flex;
+      inset: 0;
+      justify-content: center;
+      opacity: 0;
+      position: absolute;
+      transition: opacity 180ms ease;
+      z-index: 3;
+    }
+
+    .sidebar-profile-avatar:hover .sidebar-profile-avatar__overlay,
+    .sidebar-profile-avatar:focus-visible .sidebar-profile-avatar__overlay {
+      opacity: 1;
+    }
 
     .sidebar-profile-image {
       background: #fff;
       border: 1px solid rgb(1 115 99 / 16%);
-      border-radius: 0.75rem;
-      box-shadow: 0 0.7rem 1.8rem rgb(2 84 32 / 12%);
-      height: 5rem;
+      border-radius: 0.65rem;
+      box-shadow: 0 0.45rem 1.2rem rgb(2 84 32 / 10%);
+      display: block;
+      height: 3.5rem;
       object-fit: cover;
-      width: 5rem;
+      width: 3.5rem;
+    }
+
+    .sidebar-profile-copy {
+      min-width: 0;
     }
 
     .sidebar-user-name {
       color: var(--color-heading);
-      margin: 1rem 0 0.35rem;
+      font-size: 1.35rem;
+      line-height: 1;
+      margin: 0 0 0.35rem;
       overflow-wrap: anywhere;
       text-wrap: balance;
     }
 
     .sidebar-user-status {
       color: var(--color-body-light);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.45rem;
       line-height: 1.4;
-      margin: 0.2rem 0;
+      margin: 0;
     }
 
     .status-active {
       color: var(--color-success);
     }
+
+    .sidebar-user-region::before {
+      color: rgb(2 84 32 / 42%);
+      content: "·";
+      margin-right: 0.45rem;
+    }
   }
 
   .sidebar-tier-action {
-    margin-top: 0.75rem;
-    text-align: center;
+    grid-column: 1 / -1;
+    margin-top: 0.15rem;
+    text-align: left;
   }
 
   .sidebar-tier-button {
@@ -90,7 +157,7 @@
   }
 
   .sidebar-nav {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
 
     ul {
       list-style: none;
@@ -103,9 +170,17 @@
       margin-bottom: 0.35rem;
     }
 
-    li.sidebar-divider {
-      height: 0.65rem;
-      pointer-events: none;
+    /*
+     * Section label for the role-gated links. The heading is only rendered when
+     * a link sits under it, so it never leaves a stray label behind.
+     */
+    .sidebar-nav-heading {
+      border-top: 1px solid rgb(1 115 99 / 14%);
+      color: var(--color-body-light);
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 1rem 0 0.5rem;
+      padding: 0.75rem 0.65rem 0;
     }
 
     a {
@@ -113,9 +188,9 @@
       border-radius: inherit;
       color: var(--color-body);
       display: flex;
-      gap: 0.75rem;
-      min-height: 3.25rem;
-      padding: 0.55rem 0.75rem;
+      gap: 0.65rem;
+      min-height: 2.85rem;
+      padding: 0.45rem 0.65rem;
       text-decoration: none;
       transition:
         background-color 180ms ease,
@@ -151,15 +226,15 @@
     .sidebar-icon {
       align-items: center;
       background: rgb(1 115 99 / 9%);
-      border-radius: 0.6rem;
+      border-radius: 0.5rem;
       display: inline-flex;
-      flex: 0 0 2.35rem;
-      height: 2.35rem;
+      flex: 0 0 2rem;
+      height: 2rem;
       justify-content: center;
       transition:
         background-color 180ms ease,
         transform 180ms ease;
-      width: 2.35rem;
+      width: 2rem;
     }
 
     a:hover .sidebar-icon {
@@ -251,55 +326,13 @@
 }
 
 .user-profile-header {
-  align-items: center;
-  background: rgb(232 244 241 / 78%);
-  border: 1px solid rgb(1 115 99 / 12%);
-  border-radius: 1rem;
-  display: flex;
-  margin-bottom: 2rem;
-  padding: clamp(1.25rem, 3vw, 2rem);
+  display: block;
+  margin: 0;
 
-  .profile-header-image {
-    position: relative;
-
-    .birthday-hat {
-      left: 50%;
-      position: absolute;
-      top: -2.2rem;
-      transform: translateX(-50%);
-      width: 4.4rem;
-      z-index: 2;
-    }
-
-    .profile-image {
-      border: 1px solid rgb(1 115 99 / 14%);
-      border-radius: 50%;
-      box-shadow: 0 1rem 2.5rem rgb(2 84 32 / 13%);
-      height: 8.75rem;
-      object-fit: cover;
-      width: 8.75rem;
-    }
-  }
-
+  /* The card is the only child now, so the old spacer padding above it goes. */
   .profile-header-info {
-    flex: 1;
     min-width: 0;
-    padding-left: 1.8rem;
-
-    h2 {
-      margin-bottom: 0.75rem;
-      text-wrap: balance;
-    }
-
-    p {
-      color: var(--color-body);
-      margin-bottom: 0.5rem;
-      overflow-wrap: anywhere;
-    }
-
-    .subscription-button {
-      margin-top: 1rem;
-    }
+    padding: 0;
   }
 }
 
@@ -359,18 +392,8 @@
     min-height: calc(100dvh - 9rem);
   }
 
-  .user-profile-header {
-    align-items: flex-start;
-    flex-direction: column;
-
-    .profile-header-image {
-      margin-bottom: 1.25rem;
-    }
-
-    .profile-header-info {
-      padding-left: 0;
-      width: 100%;
-    }
+  .user-profile-header .profile-header-info {
+    width: 100%;
   }
 }
 

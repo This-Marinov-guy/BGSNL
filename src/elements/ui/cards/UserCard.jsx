@@ -5,18 +5,21 @@ import {
 import moment from "moment";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { Tooltip } from "@/compat/primereact";
 import {
   FiCheckCircle,
   FiEdit2,
   FiFile,
-  FiHelpCircle,
   FiPlus,
 } from "@/elements/ui/icons/IconlyIcons";
+import InfoHint from "@/elements/ui/icons/InfoHint";
 import { useRefreshUser } from "../../../hooks/common/api-hooks";
 import { useHttpClient } from "../../../hooks/common/http-hook";
+import { showModal } from "../../../redux/modal";
 import { showNotification } from "../../../redux/notification";
-import { ALUMNI } from "../../../util/defines/common";
+import {
+  ALUMNI,
+  USER_UPDATE_MODAL,
+} from "../../../util/defines/common";
 import { DOCUMENT_TYPES } from "../../../util/defines/enum";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
 import CVUploadModal from "../modals/CVUploadModal";
@@ -168,7 +171,7 @@ const UserCard = ({ user, onUserRefresh }) => {
   };
 
   return (
-    <div className="service gradient-border-2 mt--20">
+    <article className="user-details-card">
       {/* <h2 className='archive-title' >Greetings, {user.name}!</h2> */}
       {/* <div className="hor_section mb--10">
         <p className="mt--10" style={{ fontFamily: "Archive" }}>
@@ -180,7 +183,17 @@ const UserCard = ({ user, onUserRefresh }) => {
         <div className="user-info-grid">
           {/* Personal Information Column */}
           <div className="user-info-column">
-            <h4 className="column-title">Personal Information</h4>
+            <div className="column-header">
+              <h4 className="column-title">Personal Information</h4>
+              <button
+                aria-label="Edit personal information"
+                className="column-edit-btn"
+                onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
+                type="button"
+              >
+                <FiEdit2 aria-hidden size="0.95rem" />
+              </button>
+            </div>
             <ul className="list-style--1">
               <li>
                 <span className="bold">Full Name: </span>
@@ -269,15 +282,9 @@ const UserCard = ({ user, onUserRefresh }) => {
             <div className="d-flex align-items-center justify-content-between mb--10">
               <h4 className="column-title mb--0 d-flex align-items-center">
                 Alumni Quote
-                <FiHelpCircle
-                  className="quote-help-icon"
-                  data-pr-tooltip="Your quote will be displayed on the Alumni Tree page for other members to see. Share your wisdom, experience, or a memorable moment!"
-                  data-pr-position="top"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "pointer",
-                    color: "#017363",
-                  }}
+                <InfoHint
+                  label="About the alumni quote"
+                  text="Your quote will be displayed on the Alumni Tree page for other members to see. Share your wisdom, experience, or a memorable moment!"
                 />
               </h4>
               {!isEditingQuote && (
@@ -299,8 +306,6 @@ const UserCard = ({ user, onUserRefresh }) => {
                 </button>
               )}
             </div>
-
-            <Tooltip target=".quote-help-icon" style={{ maxWidth: "300px" }} />
 
             {isEditingQuote ? (
               <form onSubmit={handleSaveQuote}>
@@ -383,15 +388,9 @@ const UserCard = ({ user, onUserRefresh }) => {
           <div className="d-flex align-items-center justify-content-between mb--10">
             <h4 className="column-title mb--0 d-flex align-items-center">
               CV
-              <FiHelpCircle
-                className="cv-help-icon"
-                data-pr-tooltip="Upload your CV to share with potential employers and partners. Only PDF format is accepted."
-                data-pr-position="top"
-                style={{
-                  marginLeft: "8px",
-                  cursor: "pointer",
-                  color: "#017363",
-                }}
+              <InfoHint
+                label="About the CV upload"
+                text="Upload your CV to share with potential employers and partners. Only PDF format is accepted."
               />
             </h4>
             <button
@@ -411,8 +410,6 @@ const UserCard = ({ user, onUserRefresh }) => {
               )}
             </button>
           </div>
-
-          <Tooltip target=".cv-help-icon" style={{ maxWidth: "300px" }} />
 
           <div>
             {hasCV ? (
@@ -463,7 +460,7 @@ const UserCard = ({ user, onUserRefresh }) => {
           isSaving={isSavingCV}
         />
       </div>
-    </div>
+    </article>
   );
 };
 

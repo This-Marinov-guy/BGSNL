@@ -6,6 +6,7 @@ import {
 import { useDispatch } from "react-redux";
 import {
   FaGripVertical,
+  FiArrowLeft,
   FiEdit2,
   FiPlus,
   FiTrash2,
@@ -219,18 +220,20 @@ const InternshipList = () => {
           </p>
         </div>
         <div
-          className="d-flex flex-wrap align-items-center"
+          className="workspace-heading-actions"
           style={{
-            gap: "10px",
             width: isCompactLayout ? "100%" : "auto",
-            justifyContent: isCompactLayout ? "stretch" : "flex-end",
           }}
         >
+          <Link className="workspace-account-link" to="/user#profile">
+            <FiArrowLeft aria-hidden="true" />
+            <span>Back to account</span>
+          </Link>
           <Link
             to="/user/add-internship"
             className="rn-button-style--2 rn-btn-green"
             style={{
-              width: isCompactLayout ? "100%" : "auto",
+              flex: isCompactLayout ? "1 1 12rem" : "0 0 auto",
               textAlign: "center",
             }}
           >

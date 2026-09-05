@@ -19,6 +19,7 @@ import {
   useEffect,
   useMemo,
 } from "react";
+import PropTypes from "prop-types";
 import NextLink from "next/link";
 import {
   useParams,
@@ -26,6 +27,7 @@ import {
   usePathname,
   useRouter,
 } from "next/navigation";
+import { notifyRouteChangeStart } from "@/component/common/RouteProgress";
 
 export { useParams, usePathname, useRouter };
 
@@ -40,13 +42,41 @@ const toPath = (to) => {
  * `state` and `reloadDocument` have no Next equivalent and are dropped.
  */
 export const Link = forwardRef(function Link(
-  { to, href, replace, state, reloadDocument, ...rest },
+  { to, href, replace, state, reloadDocument, onNavigate, ...rest },
   ref
 ) {
+  /*
+   * next/link fires onNavigate only for same-origin client-side navigations —
+   * not for external hrefs, downloads, or cmd/ctrl-clicks that open a new tab —
+   * which is exactly the set of clicks the progress bar should react to.
+   */
+  const handleNavigate = useCallback(
+    (event) => {
+      onNavigate?.(event);
+      if (!event.defaultPrevented) notifyRouteChangeStart();
+    },
+    [onNavigate]
+  );
+
   return (
-    <NextLink ref={ref} href={toPath(to ?? href)} replace={replace} {...rest} />
+    <NextLink
+      ref={ref}
+      href={toPath(to ?? href)}
+      onNavigate={handleNavigate}
+      replace={replace}
+      {...rest}
+    />
   );
 });
+
+Link.propTypes = {
+  href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  onNavigate: PropTypes.func,
+  reloadDocument: PropTypes.bool,
+  replace: PropTypes.bool,
+  state: PropTypes.any,
+  to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+};
 
 /**
  * react-router's useNavigate(). Supports the numeric history forms used here:
@@ -62,6 +92,7 @@ export const useNavigate = () => {
         return to < 0 ? router.back() : router.forward();
       }
       const path = toPath(to);
+      notifyRouteChangeStart();
       return options.replace ? router.replace(path) : router.push(path);
     },
     [router]

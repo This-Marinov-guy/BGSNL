@@ -10,7 +10,10 @@ import {
   useSelector,
 } from "react-redux";
 import * as yup from "yup";
-import { Dropdown } from "@/compat/primereact";
+import {
+  Dropdown,
+  Password,
+} from "@/compat/primereact";
 import Loader from "../../../elements/ui/loading/Loader";
 import StepContentTransition from "../../../elements/ui/functional/StepContentTransition";
 import { useRefreshUser } from "../../../hooks/common/api-hooks";
@@ -104,8 +107,6 @@ const schema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Passwords do not match"),
 });
 
-const alumniSchema = schema.omit(["phone"]);
-
 const groupedItemTemplate = (option) => {
   const isNoMatch = option.label === "No matching universities";
 
@@ -152,7 +153,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
     >
       <ValidatedFormik
         className="inner"
-        validationSchema={isAlumni ? alumniSchema : schema}
+        validationSchema={schema}
         onSubmit={async (values) => {
           try {
             const isWorking =
@@ -253,6 +254,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
       >
         {({ values, setFieldValue }) => (
           <Form
+            className="user-update-form"
             encType="multipart/form-data"
             id="form"
             style={{ padding: "2%" }}
@@ -282,17 +284,31 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
             <div className="row">
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
-                  <Field type="text" placeholder="Name" name="name" />
+                  <label htmlFor="user-update-name">
+                    Name <span className="required-mark">*</span>
+                  </label>
+                  <Field
+                    className="bgsnl-form-control"
+                    id="user-update-name"
+                    name="name"
+                    placeholder="e.g., John"
+                    type="text"
+                  />
                   <ErrorMessage className="error" name="name" component="div" />
                 </div>
               </div>
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
+                  <label htmlFor="user-update-surname">
+                    Surname <span className="required-mark">*</span>
+                  </label>
                   <Field
-                    type="text"
-                    placeholder="Surname"
+                    className="bgsnl-form-control"
+                    id="user-update-surname"
                     name="surname"
-                  ></Field>
+                    placeholder="e.g., Doe"
+                    type="text"
+                  />
                   <ErrorMessage
                     className="error"
                     name="surname"
@@ -335,30 +351,38 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                 </div>
               )}
 
-              {!isAlumni && (
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group" data-field-name="phone">
-                    <PhoneInput
-                      name="phone"
-                      placeholder="WhatsApp Phone "
-                      initialValue={values.phone}
-                      onChange={(value) => setFieldValue("phone", value)}
-                    ></PhoneInput>
-                    <p className="information">
-                      Please type your number with + and country code
-                    </p>
-                    <ErrorMessage
-                      className="error"
-                      name="phone"
-                      component="div"
-                    />
-                  </div>
+              <div className="col-lg-6 col-md-12 col-12">
+                <div className="rn-form-group" data-field-name="phone">
+                  <label>WhatsApp Phone</label>
+                  <PhoneInput
+                    name="phone"
+                    placeholder="WhatsApp Phone "
+                    initialValue={values.phone}
+                    onChange={(value) => setFieldValue("phone", value)}
+                  ></PhoneInput>
+                  <p className="information">
+                    Please type your number with + and country code
+                  </p>
+                  <ErrorMessage
+                    className="error"
+                    name="phone"
+                    component="div"
+                  />
                 </div>
-              )}
+              </div>
 
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
-                  <Field type="email" placeholder="Email" name="email" />
+                  <label htmlFor="user-update-email">
+                    Email <span className="required-mark">*</span>
+                  </label>
+                  <Field
+                    className="bgsnl-form-control"
+                    id="user-update-email"
+                    name="email"
+                    placeholder="e.g., john.doe@email.com"
+                    type="email"
+                  />
                   <ErrorMessage
                     className="error"
                     name="email"
@@ -378,6 +402,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                         <>
                           <div className="col-lg-6 col-md-12 col-12">
                             <div data-field-name="university">
+                              <label>University</label>
                               <Dropdown
                                 value={values.university}
                                 filter
@@ -386,7 +411,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                                 }}
                                 options={uniOptions}
                                 name="university"
-                                className="p-dropdown-custom"
+                                className="p-dropdown-custom bgsnl-form-control"
                                 placeholder="Select your university"
                                 filterPlaceholder="Search universities"
                                 appendTo={
@@ -413,11 +438,16 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                           {values.university === "other" && (
                             <div className="col-lg-6 col-md-12 col-12">
                               <div className="rn-form-group">
+                                <label htmlFor="user-update-other-university">
+                                  University name
+                                </label>
                                 <Field
-                                  type="text"
-                                  placeholder="State the university"
+                                  className="bgsnl-form-control"
+                                  id="user-update-other-university"
                                   name="otherUniversityName"
-                                ></Field>
+                                  placeholder="State the university"
+                                  type="text"
+                                />
                                 <ErrorMessage
                                   className="error"
                                   name="otherUniversityName"
@@ -428,13 +458,18 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                           )}
                           <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
+                              <label htmlFor="user-update-graduation">
+                                Graduation Year
+                              </label>
                               <Field
-                                type="number"
-                                min="1900"
+                                className="bgsnl-form-control"
+                                id="user-update-graduation"
                                 max="2200"
-                                placeholder="Graduation Year"
+                                min="1900"
                                 name="graduationDate"
-                              ></Field>
+                                placeholder="e.g., 2026"
+                                type="number"
+                              />
                               <ErrorMessage
                                 className="error"
                                 name="graduationDate"
@@ -444,11 +479,16 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                           </div>
                           <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
+                              <label htmlFor="user-update-course">
+                                Study Program
+                              </label>
                               <Field
-                                type="text"
-                                placeholder="Study Program"
+                                className="bgsnl-form-control"
+                                id="user-update-course"
                                 name="course"
-                              ></Field>
+                                placeholder="e.g., Computer Science"
+                                type="text"
+                              />
                               <ErrorMessage
                                 className="error"
                                 name="course"
@@ -458,11 +498,16 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                           </div>
                           <div className="col-lg-6 col-md-12 col-12">
                             <div className="rn-form-group">
+                              <label htmlFor="user-update-student-number">
+                                Student Number
+                              </label>
                               <Field
-                                type="text"
-                                placeholder="Student Number"
+                                className="bgsnl-form-control"
+                                id="user-update-student-number"
                                 name="studentNumber"
-                              ></Field>
+                                placeholder="e.g., s1234567"
+                                type="text"
+                              />
                               <ErrorMessage
                                 className="error"
                                 name="studentNumber"
@@ -475,10 +520,15 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                       {values.isWorking && (
                         <div className="col-lg-6 col-md-12 col-12">
                           <div className="rn-form-group">
+                            <label htmlFor="user-update-profession">
+                              Profession
+                            </label>
                             <Field
-                              type="text"
-                              placeholder="Profession"
+                              className="bgsnl-form-control"
+                              id="user-update-profession"
                               name="profession"
+                              placeholder="e.g., Software Engineer"
+                              type="text"
                             />
                             <ErrorMessage
                               className="error"
@@ -494,11 +544,21 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
               )}
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
-                  <Field
-                    type="password"
-                    placeholder="Change Password"
+                  <label htmlFor="user-update-password">Change Password</label>
+                  <Password
+                    autoComplete="new-password"
+                    feedback={false}
+                    id="user-update-password"
+                    inputClassName="bgsnl-form-control"
                     name="password"
-                  ></Field>
+                    onChange={(event) =>
+                      setFieldValue("password", event.target.value)
+                    }
+                    placeholder="Leave blank to keep current"
+                    toggleMask
+                    unstyled
+                    value={values.password}
+                  />
                   <ErrorMessage
                     className="error"
                     name="password"
@@ -508,11 +568,23 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
               </div>
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
-                  <Field
-                    type="password"
-                    placeholder="Confirm Password"
+                  <label htmlFor="user-update-confirm-password">
+                    Confirm Password
+                  </label>
+                  <Password
+                    autoComplete="new-password"
+                    feedback={false}
+                    id="user-update-confirm-password"
+                    inputClassName="bgsnl-form-control"
                     name="confirmPassword"
-                  ></Field>
+                    onChange={(event) =>
+                      setFieldValue("confirmPassword", event.target.value)
+                    }
+                    placeholder="Repeat the new password"
+                    toggleMask
+                    unstyled
+                    value={values.confirmPassword}
+                  />
                   <ErrorMessage
                     className="error"
                     name="confirmPassword"

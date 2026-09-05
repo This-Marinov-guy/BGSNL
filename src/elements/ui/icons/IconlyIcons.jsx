@@ -5,10 +5,10 @@ const IconlySvg = ({ size, title, children, ...props }) => (
   <svg
     aria-hidden={title ? undefined : "true"}
     focusable="false"
-    height={size || "2em"}
+    height={size || "1rem"}
     role={title ? "img" : undefined}
     viewBox="0 0 24 24"
-    width={size || "2em"}
+    width={size || "1rem"}
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -670,3 +670,62 @@ export const FontAwesomeIcon = ({ icon: Icon, ...props }) => <Icon {...props} />
 FontAwesomeIcon.propTypes = {
   icon: PropTypes.elementType.isRequired,
 };
+
+/*
+ * Media-viewer toolbar icons. Iconly has no download, rotate or share glyph, so
+ * these are stroke-drawn rather than filled like the set above — at toolbar size
+ * on the dark viewer chrome the two styles read the same weight, and a filled
+ * rotate/share traced by hand would not.
+ */
+export const IconlyDownload = (props) => (
+  <IconlySvg {...props}>
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <path d="M7 10l5 5 5-5" />
+      <path d="M12 15V3" />
+    </g>
+  </IconlySvg>
+);
+
+export const IconlyRotate = (props) => (
+  <IconlySvg {...props}>
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M23 4v6h-6" />
+      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+    </g>
+  </IconlySvg>
+);
+
+export const IconlyShare = (props) => (
+  <IconlySvg {...props}>
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="M8.59 13.51l6.83 3.98" />
+      <path d="M15.41 6.51l-6.83 3.98" />
+    </g>
+  </IconlySvg>
+);
+
+export const FiDownload = IconlyDownload;
+export const FiRotateCw = IconlyRotate;
+export const FiShare2 = IconlyShare;

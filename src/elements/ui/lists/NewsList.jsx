@@ -248,7 +248,7 @@ const NewsList = ({ withTitle = true }) => {
 
   return (
     <section
-      className={`news-newspaper${isFullView ? " is-full-view" : ""}`}
+      className={`news-newspaper${withTitle ? "" : " news-newspaper--embedded"}${isFullView ? " is-full-view" : ""}`}
       aria-labelledby="news-newspaper-title"
       aria-modal={isFullView ? "true" : undefined}
       role={isFullView ? "dialog" : undefined}

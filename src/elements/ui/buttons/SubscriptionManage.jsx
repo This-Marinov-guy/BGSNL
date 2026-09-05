@@ -59,14 +59,14 @@ const SubscriptionManage = ({ onAction, isAlumni }) => {
             <div className="subscription-actions">
                 <ConfirmPopup />
                 <button 
-                    className="rn-button-style--2 rn-btn-green subscription-btn"
+                    className="settings-action"
                     onClick={handleManage}
                     disabled={loading}
                 >
                     <span>Payment Details</span>
                 </button>
                 <button 
-                    className="rn-button-style--2 rn-btn-reverse-red subscription-btn"
+                    className="settings-action settings-action--danger"
                     onClick={confirm1}
                     disabled={loading}
                 >
@@ -77,7 +77,8 @@ const SubscriptionManage = ({ onAction, isAlumni }) => {
 }
 
 SubscriptionManage.propTypes = {
-    onAction: PropTypes.func
+    isAlumni: PropTypes.bool,
+    onAction: PropTypes.func,
 };
 
 export default SubscriptionManage

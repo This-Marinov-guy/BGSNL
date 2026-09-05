@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHttpClient } from "../common/http-hook";
 import { useJWTRefresh } from "../common/api-hooks";
-import { login, selectUser } from "../../redux/user";
+import { login } from "../../redux/user";
 import { isObjectEmpty } from "../../util/functions/helpers";
 import {
   LOCAL_STORAGE_USER_DATA,
@@ -12,7 +12,6 @@ import { decodeJWT } from "../../util/functions/authorization";
 export const useAppInitialization = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const { sendRequest } = useHttpClient();
@@ -72,7 +71,11 @@ export const useAppInitialization = () => {
       // This ensures the user stays logged in indefinitely
       let refreshedToken = jwtToken;
       const newToken = await refreshJWTinAPI(jwtToken, false);
-      if (newToken) {
+      if (newToken === false) {
+        console.log("Stored authentication token was rejected");
+        clearUserStorage();
+        return;
+      } else if (newToken) {
         refreshedToken = newToken;
         console.log("Token refreshed successfully on page load");
       } else {

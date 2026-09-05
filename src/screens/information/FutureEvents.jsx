@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import calendarMotion from "@assets/images/svg/motion/calendar-motion.json";
 import Lottie from "react-lottie-player";
+import PropTypes from "prop-types";
 import {
   useDispatch,
   useSelector,
@@ -28,8 +29,11 @@ import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import {
   checkObjectOfArraysEmpty,
-  hasNonEmptyValues,
 } from "../../util/functions/helpers";
+
+const eventsByRegionPropType = PropTypes.objectOf(
+  PropTypes.arrayOf(PropTypes.object)
+);
 
 /**
  * `initialEvents` is the region-keyed map fetched on the server by the route,
@@ -67,8 +71,6 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
       );
     }
   }
-  const isMoreThanOneEvent = hasNonEmptyValues(events);
-
   useEffect(() => {
     reloadEvents();
   }, []);
@@ -186,6 +188,12 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
   );
 };
 
+FutureEventsContent.propTypes = {
+  displayAll: PropTypes.bool,
+  initialEvents: eventsByRegionPropType,
+  nullable: PropTypes.bool,
+};
+
 const FutureOtherEventsContent = () => {
   return (
     <div className="portfolio-area pt--40 pb--10 bg_color--5">
@@ -222,7 +230,7 @@ const FutureOtherEventsContent = () => {
   );
 };
 
-const FutureEvents = ({ initialEvents, ...props }) => {
+const FutureEvents = ({ initialEvents }) => {
   const { region } = useParams();
 
   return (
@@ -239,26 +247,37 @@ const FutureEvents = ({ initialEvents, ...props }) => {
         description="See what is coming up and plan your next gathering with the Bulgarian community near you."
       />
 
-      {/* Add Calendar Subscription Component Here */}
-      <CalendarSubscriptionComponent />
+      <div className="future-events-page-layout">
+        <aside
+          className="future-events-page-layout__calendar"
+          aria-label="Event calendar"
+        >
+          <CalendarSubscriptionComponent />
+        </aside>
 
-      {/* Start Future Events Area */}
-      {region ? (
-        <>
-          {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
-          <FutureEventsContent nullable={false} initialEvents={initialEvents} />
-        </>
-      ) : (
-        <>
-          {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
-          <FutureEventsContent
-            displayAll
-            nullable={false}
-            initialEvents={initialEvents}
-          />
-        </>
-      )}
-      {/* End Future Events Area */}
+        <div className="future-events-page-layout__events">
+          {/* Start Future Events Area */}
+          {region ? (
+            <>
+              {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
+              <FutureEventsContent
+                nullable={false}
+                initialEvents={initialEvents}
+              />
+            </>
+          ) : (
+            <>
+              {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
+              <FutureEventsContent
+                displayAll
+                nullable={false}
+                initialEvents={initialEvents}
+              />
+            </>
+          )}
+          {/* End Future Events Area */}
+        </div>
+      </div>
 
       {/* Start Back To Top */}
       <div className="backto-top">
@@ -271,6 +290,10 @@ const FutureEvents = ({ initialEvents, ...props }) => {
       <Footer />
     </React.Fragment>
   );
+};
+
+FutureEvents.propTypes = {
+  initialEvents: eventsByRegionPropType,
 };
 
 export { FutureEvents, FutureEventsContent, FutureOtherEventsContent };

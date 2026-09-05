@@ -16,6 +16,35 @@ import { isProd } from "../../../util/functions/helpers";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import SubscriptionManage from "../buttons/SubscriptionManage";
 import AlumniModal from "../modals/AlumniModal";
+import UserTabHeader from "./UserTabHeader";
+
+/**
+ * One row of the settings list.
+ *
+ * These used to be free-standing cards in a grid, which read as six competing
+ * panels for what is really a flat list of account actions. The row keeps the
+ * icon/title/description/action of the old card, laid out on a single line.
+ */
+const SettingsRow = ({ action, description, icon, title, variant }) => (
+  <li className={`settings-list__item${variant ? ` settings-list__item--${variant}` : ""}`}>
+    <span aria-hidden="true" className="settings-list__icon">
+      {icon}
+    </span>
+    <div className="settings-list__text">
+      <h3 className="settings-list__title">{title}</h3>
+      <p className="settings-list__description">{description}</p>
+    </div>
+    <div className="settings-list__action">{action}</div>
+  </li>
+);
+
+SettingsRow.propTypes = {
+  action: PropTypes.node,
+  description: PropTypes.node,
+  icon: PropTypes.node,
+  title: PropTypes.node.isRequired,
+  variant: PropTypes.string,
+};
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
@@ -32,166 +61,103 @@ const SettingsTab = ({ user }) => {
 
   return (
     <div className="tab-content-wrapper">
-      <div className="tab-header">
-        <h2>Account Settings</h2>
-        <p>Manage your account preferences and personal information.</p>
-      </div>
+      <UserTabHeader title="Settings" />
       <div className="tab-body">
-        <div className="settings-grid">
-          {/* Profile Settings */}
-          <div className="settings-card">
-            <div className="settings-card-header">
-              <FaUser className="settings-icon" />
-              <h3>Profile Information</h3>
-            </div>
-            <div className="settings-card-body">
-              <p>
-                Update your personal details, profile picture, and contact
-                information.
-              </p>
-              <button
-                className="rn-button-style--2 rn-btn-green"
-                onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
-                type="button"
-              >
-                Edit Profile
-              </button>
-            </div>
-          </div>
+        <div className="settings-groups">
+          <section className="settings-group" aria-labelledby="settings-account">
+            <h2 id="settings-account" className="settings-group__title">Account</h2>
+            <ul className="settings-list">
+              <SettingsRow
+                action={
+                  <button
+                    className="settings-action settings-action--primary"
+                    onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
+                    type="button"
+                  >
+                    Edit profile
+                  </button>
+                }
+                description="Update your details, contact information and profile photo."
+                icon={<FaUser />}
+                title="Profile information"
+              />
+            </ul>
+          </section>
 
-          {/* Alumni Program */}
-          {!isAlumni && (
-            <div className="settings-card alumni-card">
-              <div className="settings-card-header">
-                <FaGraduationCap className="settings-icon" />
-                <h3>Alumni Program</h3>
-              </div>
-              <div className="settings-card-body">
-                <p>
-                  Join our exclusive alumni program to access special benefits,
-                  networking opportunities, and exclusive events.
-                </p>
+          <section className="settings-group" aria-labelledby="settings-membership">
+            <h2 id="settings-membership" className="settings-group__title">Membership</h2>
+            <ul className="settings-list">
+            {!isAlumni && (
+            <SettingsRow
+              action={
                 <button
-                  className="rn-button-style--2 rn-btn-green alumni-button"
+                  className="settings-action"
                   onClick={() => setIsAlumniModalOpen(true)}
                   type="button"
                 >
-                  <FaGraduationCap className="alumni-icon" aria-hidden="true" />
-                  Become an Alumni
+                  Become an alumni
                 </button>
-              </div>
-            </div>
+              }
+              description="Join the alumni network and access alumni benefits."
+              icon={<FaGraduationCap />}
+              title="Alumni programme"
+            />
           )}
 
-          {/* Tier 0 Alumni Upgrade */}
           {isFreeAlumni && (
-            <div className="settings-card tier-upgrade-card">
-              <div className="settings-card-header">
-                <FiArrowUp className="settings-icon" aria-hidden="true" />
-                <h3>Upgrade Your Tier</h3>
-              </div>
-              <div className="settings-card-body">
-                <p>
-                  As a tier 0 alumni, you&apos;re missing out on exclusive
-                  benefits and features. Upgrade your subscription to unlock
-                  premium alumni perks, special events, and more.
-                </p>
+            <SettingsRow
+              action={
                 <AlumniRegistrationButton
-                  className="rn-button-style--2 rn-btn-green tier-upgrade-button"
+                  className="settings-action"
                   asLink={false}
                 >
-                  <FiArrowUp size={16} aria-hidden="true" />
-                  Upgrade Tier
+                  Upgrade tier
                 </AlumniRegistrationButton>
-              </div>
-            </div>
+              }
+              description="Upgrade your alumni membership to unlock the full set of benefits."
+              icon={<FiArrowUp aria-hidden="true" />}
+              title="Alumni tier"
+            />
           )}
 
-          {/* Notification Settings */}
-          {/* <div className="settings-card">
-            <div className="settings-card-header">
-              <FaBell className="settings-icon" />
-              <h3>Notifications</h3>
-            </div>
-            <div className="settings-card-body">
-              <p>
-                Manage your notification preferences for events, news, and
-                updates.
-              </p>
-              <button className="rn-button-style--2 rn-btn-green">
-                Notification Settings
-              </button>
-            </div>
-          </div> */}
+          {!isFreeAlumni && (
+            <SettingsRow
+              action={
+                (!isProd() || user?.subscription) && (
+                  <SubscriptionManage isAlumni={isAlumni} />
+                )
+              }
+              description="View invoices, update payment details or cancel renewal."
+              icon={<FaCog />}
+              title="Subscription"
+            />
+          )}
+            </ul>
+          </section>
 
-          {/* Privacy & Security */}
-          {/* <div className="settings-card">
-            <div className="settings-card-header">
-              <FaShieldAlt className="settings-icon" />
-              <h3>Privacy & Security</h3>
-            </div>
-            <div className="settings-card-body">
-              <p>Control your privacy settings and manage account security.</p>
-              <button className="rn-button-style--2 rn-btn-green">
-                Privacy Settings
-              </button>
-            </div>
-          </div> */}
-
-          {/* Appearance */}
-          {/* <div className="settings-card">
-            <div className="settings-card-header">
-              <FaPalette className="settings-icon" />
-              <h3>Appearance</h3>
-            </div>
-            <div className="settings-card-body">
-              <p>Customize the look and feel of your dashboard and interface.</p>
-              <button className="rn-button-style--2 rn-btn-green">
-                Theme Settings
-              </button>
-            </div>
-          </div> */}
-
-          {/* Subscription Management */}
-          {!isFreeAlumni && <div className="settings-card">
-            <div className="settings-card-header">
-              <FaCog className="settings-icon" />
-              <h3>Subscription Management</h3>
-            </div>
-            <div className="settings-card-body">
-              <p>Manage your membership, payment information and invoices.</p>
-              {(!isProd() || user?.subscription) && (
-                <div className="subscription-actions">
-                  <SubscriptionManage isAlumni={isAlumni}/>
-                </div>
-              )}
-              {/* <button className="rn-button-style--2 rn-btn-green">
-                Subscription Settings
-              </button> */}
-            </div>
-          </div>}
-
-          {/* Logout */}
-          <div className="settings-card danger-card">
-            <div className="settings-card-header">
-              <FaSignOutAlt className="settings-icon" />
-              <h3>Sign Out</h3>
-            </div>
-            <div className="settings-card-body">
-              <p>Sign out of your account from this device.</p>
-              <button
-                className="rn-button-style--2 rn-btn-reverse-red"
-                onClick={handleLogout}
-                type="button"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
+          <section className="settings-group" aria-labelledby="settings-session">
+            <h2 id="settings-session" className="settings-group__title">Session</h2>
+            <ul className="settings-list">
+              <SettingsRow
+                action={
+                  <button
+                    className="settings-action settings-action--danger"
+                    onClick={handleLogout}
+                    type="button"
+                  >
+                    Sign out
+                  </button>
+                }
+                description="Sign out of your account on this device."
+                icon={<FaSignOutAlt />}
+                title="Sign out"
+                variant="danger"
+              />
+            </ul>
+          </section>
         </div>
       </div>
 
-      {/* Alumni Program Modal */}
       <AlumniModal
         isOpen={isAlumniModalOpen}
         onClose={() => setIsAlumniModalOpen(false)}
