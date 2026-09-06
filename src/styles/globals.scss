@@ -102,18 +102,20 @@ body {
 }
 
 /*
- * Navigation progress bar — see src/component/common/RouteProgress.jsx.
- * Driven entirely by `data-phase` swaps so each phase interrupts the previous
- * one from its current width; keyframes would restart from zero and jump.
- * Sits above the static logo header (z-index 10000).
+ * Indeterminate navigation loader — see src/component/common/RouteProgress.jsx.
+ * It communicates that the next route is loading without suggesting a
+ * measurable percentage. Sits above the static logo header (z-index 10000).
  */
 .route-progress {
-  height: 3px;
+  height: 5px;
   left: 0;
+  opacity: 0;
+  overflow: hidden;
   pointer-events: none;
   position: fixed;
   right: 0;
   top: 0;
+  transition: opacity 180ms ease-out;
   z-index: 10001;
 }
 
@@ -123,36 +125,36 @@ body {
     var(--site-thread-primary),
     var(--site-thread-secondary)
   );
-  border-radius: 0 3px 3px 0;
+  border-radius: 999px;
+  box-shadow: 0 1px 7px rgb(1 115 99 / 32%);
   height: 100%;
-  opacity: 0;
-  width: 0;
+  transform: translate3d(-110%, 0, 0) scaleX(0.72);
+  transform-origin: center;
+  width: clamp(10rem, 36vw, 30rem);
+  will-change: transform;
 }
 
-/* Resets instantly, so the next navigation starts from the left edge again. */
-.route-progress[data-phase="idle"] .route-progress__bar {
-  transition: opacity 180ms ease-out;
-}
-
-/*
- * Creeps toward — but never reaches — 90%, so the bar keeps moving however long
- * the route takes to commit, without ever implying it has finished.
- */
-.route-progress[data-phase="pending"] .route-progress__bar {
+.route-progress[data-phase="pending"] {
   opacity: 1;
-  transition:
-    width 8s cubic-bezier(0.05, 0.9, 0.15, 1),
-    opacity 120ms ease-out;
-  width: 90%;
 }
 
-/* Rushes the remaining gap shut, then fades out. */
+.route-progress[data-phase="pending"] .route-progress__bar,
 .route-progress[data-phase="finishing"] .route-progress__bar {
-  opacity: 0;
-  transition:
-    width 180ms ease-out,
-    opacity 200ms ease-out 120ms;
-  width: 100%;
+  animation: route-loading 1.15s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+
+@keyframes route-loading {
+  0% {
+    transform: translate3d(-110%, 0, 0) scaleX(0.72);
+  }
+
+  48% {
+    transform: translate3d(50vw, 0, 0) scaleX(1);
+  }
+
+  100% {
+    transform: translate3d(calc(100vw + 110%), 0, 0) scaleX(0.72);
+  }
 }
 
 /*
@@ -176,15 +178,11 @@ body {
     animation: none;
   }
 
-  /*
-   * The bar still appears and still fades, it just stops travelling — the
-   * feedback survives, the motion does not. The [data-phase] qualifier is
-   * required: it matches the specificity of the phase rules above, which this
-   * has to override on source order.
-   */
+  /* The indicator remains visible, but its travelling motion is removed. */
   .route-progress[data-phase] .route-progress__bar {
-    transition-duration: 180ms;
-    transition-property: opacity;
+    animation: none;
+    transform: none;
+    width: 100%;
   }
 }
 
@@ -296,32 +294,6 @@ textarea.bgsnl-form-control {
   border-color: $body-color !important;
   box-shadow: 0 0 0 3px rgb(1 115 99 / 13%) !important;
   outline: none;
-}
-
-/*
- * Labels for the "Update your details" modal.
- *
- * The signup page positions `.rn-form-group label` absolutely, but that rule is
- * scoped to `.signup-application-form`, so it does not reach this modal — which
- * is why SignUp carries inline label styles at every field. Scoping the same
- * treatment to the form here keeps the markup clean instead of repeating an
- * inline style a dozen times.
- */
-.user-update-form .rn-form-group label,
-.user-update-form [data-field-name="university"] > label {
-  background: transparent;
-  border-radius: 0;
-  color: #34423b;
-  display: block;
-  font-weight: $type-weight-semibold;
-  margin: 0 0 5px;
-  padding: 0;
-  position: static;
-  width: auto;
-}
-
-.user-update-form .required-mark {
-  color: #dc3545;
 }
 
 .p-datepicker-dropdown {
@@ -1151,6 +1123,252 @@ textarea.bgsnl-form-control {
   }
 }
 
+/* Update profile uses the same shared control and floating-label treatment as
+ * the login form. Composite controls only define their shell here; text input
+ * appearance continues to come from `.bgsnl-form-control` above. */
+.user-update-modal {
+  border: 0 !important;
+  width: min(56rem, calc(100vw - 2rem)) !important;
+}
+
+.user-update-modal .bgsnl-modal__header {
+  border: 0;
+  padding: 1.5rem 1.5rem 0.75rem;
+}
+
+.user-update-modal__body {
+  padding: 0 !important;
+}
+
+.user-update-form {
+  padding: 0.75rem 1.5rem 1.5rem;
+}
+
+.user-update-form__photo {
+  background: rgb(232 244 241 / 62%);
+  border-radius: 0.9rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+}
+
+.user-update-form__photo-control {
+  display: grid;
+  gap: 0.65rem;
+  justify-items: center;
+}
+
+.user-update-form__image.rn-form-group {
+  margin: 0 !important;
+}
+
+.user-update-form__image .image_input_window {
+  border: 1px solid #cdd6d1 !important;
+  border-radius: 0.9rem !important;
+  height: 7.5rem !important;
+  outline: 0;
+  width: 7.5rem !important;
+}
+
+.user-update-form__image .image_input_window:hover,
+.user-update-form__image .image_input_window:focus-visible,
+.user-update-form__image .image_input_window.is-dragging {
+  background: rgb(232 244 241 / 72%) !important;
+  border-color: $body-color !important;
+  box-shadow: 0 0 0 3px rgb(1 115 99 / 13%);
+}
+
+.user-update-form__image .image_input_window img {
+  border-radius: inherit !important;
+}
+
+.user-update-form__photo-help {
+  margin: 0 !important;
+  text-align: center;
+}
+
+.user-update-form__fields,
+.user-update-form__fields .row {
+  row-gap: 1.5rem;
+}
+
+.user-update-form .rn-form-group {
+  margin: 0;
+  position: relative;
+  width: 100%;
+}
+
+.user-update-form .required-mark {
+  color: #9e0d33;
+}
+
+.user-update-form [data-field-name="university"] > .p-select {
+  background: #fff !important;
+  border: 1px solid #cdd6d1 !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  padding: 0 !important;
+}
+
+.user-update-form [data-field-name="university"] > .p-select:focus-within,
+.user-update-form
+  [data-field-name="university"]
+  > .p-select:has(.p-select-trigger[aria-expanded="true"]) {
+  border-color: $body-color !important;
+  box-shadow: 0 0 0 3px rgb(1 115 99 / 13%) !important;
+}
+
+.user-update-form [data-field-name="university"] .p-select-trigger {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: inherit;
+  box-shadow: none !important;
+  height: 48px;
+  outline: 0 !important;
+  padding: 0;
+  width: 100%;
+}
+
+.user-update-form [data-field-name="university"] .p-select-label {
+  color: #171d1a !important;
+  height: 48px !important;
+  justify-content: flex-start;
+  padding: 0 1rem !important;
+  text-align: left;
+}
+
+.user-update-form [data-field-name="university"] .p-select-label.p-placeholder {
+  color: #6b7280 !important;
+}
+
+.user-update-form [data-field-name="university"] .p-select-indicator {
+  align-items: center;
+  display: flex;
+  flex: 0 0 3rem;
+  height: 48px;
+  justify-content: center;
+  width: 3rem;
+}
+
+.user-update-form .phone_code {
+  background: #fff;
+  border: 1px solid #cdd6d1;
+  border-radius: 10px;
+  box-sizing: border-box;
+  height: 50px;
+  min-height: 50px;
+}
+
+.user-update-form .phone_code:focus-within,
+.user-update-form .phone_code:has(.p-select-trigger[aria-expanded="true"]) {
+  border-color: $body-color;
+  box-shadow: 0 0 0 3px rgb(1 115 99 / 13%);
+  outline: 0;
+}
+
+.user-update-form .phone_code .p-select,
+.user-update-form .phone_code .p-select-trigger,
+.user-update-form .phone_code .p-select-label,
+.user-update-form .phone_code .phone_code_content .p-inputnumber-input {
+  height: 48px !important;
+  min-height: 48px !important;
+}
+
+.user-update-form .phone_code .p-select {
+  background: #f6faf8 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.user-update-form .phone_code .phone_code_content .p-inputnumber-input {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.user-update-form .information,
+.user-update-form .error {
+  line-height: 1.45;
+  margin: 0.5rem 0 0;
+  text-wrap: pretty;
+}
+
+.user-update-form .information {
+  color: #66716b;
+}
+
+.user-update-form .error {
+  color: #9e0d33;
+}
+
+.user-update-form__work-status {
+  background: rgb(232 244 241 / 62%);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.user-update-form__work-status label {
+  align-items: flex-start;
+  background: transparent;
+  color: #34423b;
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  text-wrap: pretty;
+  width: 100%;
+}
+
+.user-update-form__checkbox {
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
+}
+
+.user-update-form__actions {
+  background: rgb(232 244 241 / 48%);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.user-update-form__actions .rn-button-style--2 {
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+@media (max-width: 575px) {
+  .user-update-modal .bgsnl-modal__header {
+    padding: 1.25rem 1rem 0.75rem;
+  }
+
+  .user-update-form {
+    padding: 0.5rem 1rem 1rem;
+  }
+
+  .user-update-form__photo {
+    margin-bottom: 1.75rem;
+    padding: 1rem;
+  }
+
+  .user-update-form__actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user-update-form :is(.bgsnl-form-control, .image_input_window) {
+    transition-duration: 1ms !important;
+  }
+}
+
 /*
  * Moved out of src/layouts/common/RegionLayout.module.css during the Next
  * migration: CSS Modules reject global selectors, and that file declared
@@ -1269,9 +1487,4 @@ form[data-validation-submitted="true"]
 
 .bgsnl-toast > :first-child {
   margin-right: 0.35rem;
-}
-
-/* <strong> at 700 read heavier than the rest of the toast; 600 sits with it. */
-.bgsnl-toast strong {
-  font-weight: 600;
 }

@@ -59,16 +59,18 @@ const SubscriptionManage = ({ onAction, isAlumni }) => {
             <div className="subscription-actions">
                 <ConfirmPopup />
                 <button 
-                    className="settings-action"
+                    className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
                     onClick={handleManage}
                     disabled={loading}
+                    type="button"
                 >
                     <span>Payment Details</span>
                 </button>
                 <button 
-                    className="settings-action settings-action--danger"
+                    className="settings-action rn-button-style--2 rn-btn-reverse-red rn-btn-small"
                     onClick={confirm1}
                     disabled={loading}
+                    type="button"
                 >
                     <span>Cancel Subscription</span>
                 </button>

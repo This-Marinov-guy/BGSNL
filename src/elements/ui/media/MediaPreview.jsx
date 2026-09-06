@@ -99,10 +99,12 @@ const MediaPreview = ({ src, alt = "", fileName = "image", open, onClose }) => {
           return;
       }
       event.preventDefault();
+      event.stopPropagation();
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    // Capture first so Escape closes only the viewer, not a dialog underneath.
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [open, onClose, zoomBy, reset]);
 
   const handleDownload = async () => {
@@ -272,7 +274,12 @@ const MediaPreview = ({ src, alt = "", fileName = "image", open, onClose }) => {
         </button>
       </div>
 
-      <div className="media-preview__stage">
+      <div
+        className="media-preview__stage"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
         <img
           alt={alt}
           className="media-preview__image"

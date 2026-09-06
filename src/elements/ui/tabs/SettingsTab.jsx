@@ -18,6 +18,11 @@ import SubscriptionManage from "../buttons/SubscriptionManage";
 import AlumniModal from "../modals/AlumniModal";
 import UserTabHeader from "./UserTabHeader";
 
+const SETTINGS_PRIMARY_ACTION =
+  "settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small";
+const SETTINGS_DANGER_ACTION =
+  "settings-action rn-button-style--2 rn-btn-reverse-red rn-btn-small";
+
 /**
  * One row of the settings list.
  *
@@ -70,7 +75,7 @@ const SettingsTab = ({ user }) => {
               <SettingsRow
                 action={
                   <button
-                    className="settings-action settings-action--primary"
+                    className={SETTINGS_PRIMARY_ACTION}
                     onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
                     type="button"
                   >
@@ -91,7 +96,7 @@ const SettingsTab = ({ user }) => {
             <SettingsRow
               action={
                 <button
-                  className="settings-action"
+                  className={SETTINGS_PRIMARY_ACTION}
                   onClick={() => setIsAlumniModalOpen(true)}
                   type="button"
                 >
@@ -108,7 +113,7 @@ const SettingsTab = ({ user }) => {
             <SettingsRow
               action={
                 <AlumniRegistrationButton
-                  className="settings-action"
+                  className={SETTINGS_PRIMARY_ACTION}
                   asLink={false}
                 >
                   Upgrade tier
@@ -141,7 +146,7 @@ const SettingsTab = ({ user }) => {
               <SettingsRow
                 action={
                   <button
-                    className="settings-action settings-action--danger"
+                    className={SETTINGS_DANGER_ACTION}
                     onClick={handleLogout}
                     type="button"
                   >

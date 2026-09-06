@@ -17,7 +17,7 @@ import { REGION_INSTAGRAM } from "../../util/defines/REGIONS_DESIGN";
 
 const PastEventsContent = () => {
   return (
-    <div className="portfolio-area pt--40 pb--120 bg_color--5">
+    <div className="portfolio-area pt--40 pb--120 bg_color--1">
       <div className="rn-slick-dot">
         <div className="container">
           <div className="row mb--10">

@@ -76,9 +76,7 @@ const Login = () => {
       dispatch(
         showNotification({
           severity: "success",
-          summary: "Welcome Back",
-          detail:
-            "Hop in the User section to see your tickets, news and your information",
+          detail: "Welcome back",
         })
       );
 

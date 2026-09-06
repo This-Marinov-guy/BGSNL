@@ -8,6 +8,8 @@ const ModalWindow = ({
   onHide,
   children,
   freeze = false,
+  className,
+  contentClassName,
   style,
 }) => {
   // Was assigned during render, which crashes SSR.
@@ -29,6 +31,8 @@ const ModalWindow = ({
       visible={show}
       onHide={onHide}
       closable={Boolean(onHide)}
+      className={className}
+      contentClassName={contentClassName}
       dismissableMask={Boolean(onHide)}
       style={{ width: "900px", ...style }}
     >
@@ -43,6 +47,8 @@ ModalWindow.propTypes = {
   onHide: PropTypes.func,
   children: PropTypes.node,
   freeze: PropTypes.bool,
+  className: PropTypes.string,
+  contentClassName: PropTypes.string,
   style: PropTypes.object,
 };
 

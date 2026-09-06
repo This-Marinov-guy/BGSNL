@@ -62,6 +62,7 @@ const RouteProgress = () => {
       return;
     }
 
+    // Keep the indeterminate motion running while the indicator fades away.
     goTo("finishing");
     timers.current.push(setTimeout(() => goTo("idle"), FINISH_MS));
   };

@@ -127,6 +127,26 @@ export const IconlyDocument = (props) => (
   </IconlySvg>
 );
 
+export const IconlyCopy = (props) => (
+  <IconlySvg {...props}>
+    <path
+      d="M8.25 7.25h8.5a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2h-8.5a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2Z"
+      fill="none"
+      stroke="currentColor"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+    <path
+      d="M15.75 7.25v-1a2 2 0 0 0-2-2h-7.5a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+    />
+  </IconlySvg>
+);
+
 export const IconlyQuestion = (props) => (
   <IconlySvg {...props}>
 <path fillRule="evenodd" clipRule="evenodd" d="M11.5917 17.9483C11.0397 17.9483 10.5917 18.3953 10.5917 18.9483V19.0183C10.5917 19.5713 11.0397 19.9833 11.5917 19.9833C12.1437 19.9833 12.5917 19.5013 12.5917 18.9483C12.5917 18.3953 12.1437 17.9483 11.5917 17.9483Z" fill="currentColor"/>

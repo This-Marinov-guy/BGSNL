@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Provider, useSelector } from "react-redux";
 import PrimeSSRProvider from "./prime-ssr-provider";
@@ -9,12 +9,9 @@ import { store } from "@/redux/store";
 import MainLayout from "@/layouts/MainLayout";
 import CampaignLayout from "@/layouts/CampaignLayout";
 import GlobalError from "@/component/common/GlobalError";
-import GlobalBackground, {
-  GLOBAL_BACKGROUND_REVEAL_EVENT,
-} from "@/component/common/GlobalBackground";
+import GlobalBackground from "@/component/common/GlobalBackground";
 import GlobalModals from "@/elements/ui/modals/GlobalModals";
 import InactivityModal from "@/elements/ui/modals/InactivityModal";
-import InitialLoadingScreen from "@/elements/ui/loading/InitialLoadingScreen";
 import PageLoading from "@/elements/ui/loading/PageLoading";
 import Maintenance from "@/screens/Maintenance";
 import RouteProgress from "@/component/common/RouteProgress";
@@ -30,35 +27,16 @@ import { removeLogsOnProd } from "@/util/functions/helpers";
  * The <Routes> tree is gone — App Router supplies `children` instead.
  */
 const AppShell = ({ children }) => {
-  // DO not change order!
-  const { isLoading } = useAppInitialization();
+  // DO not change order! Still called for its side effects; the splash screen
+  // that consumed its `isLoading` flag is gone.
+  useAppInitialization();
   const { getTimeRemaining } = useAuthSession();
-  const [showInitialLoading, setShowInitialLoading] = useState(true);
-  const [isWindowLoaded, setIsWindowLoaded] = useState(false);
 
   const modal = useSelector(selectModal);
 
   useEffect(() => {
     removeLogsOnProd();
   }, []);
-
-  // Handle window load event
-  useEffect(() => {
-    const handleLoad = () => setIsWindowLoaded(true);
-
-    if (document.readyState === "complete") {
-      setIsWindowLoaded(true);
-    } else {
-      window.addEventListener("load", handleLoad);
-    }
-
-    return () => window.removeEventListener("load", handleLoad);
-  }, []);
-
-  const handleLoadingComplete = () => {
-    setShowInitialLoading(false);
-    window.dispatchEvent(new Event(GLOBAL_BACKGROUND_REVEAL_EVENT));
-  };
 
   if (process.env.NEXT_PUBLIC_MAINTENANCE == "1") {
     return <Maintenance />;
@@ -78,8 +56,8 @@ const AppShell = ({ children }) => {
          * useAppInitialization() resolved. That check can never resolve during
          * SSR (it runs in an effect), so keeping it would mean every crawler
          * received a "Loading..." document — the exact problem this migration
-         * exists to fix. The page now always renders; <InitialLoadingScreen />
-         * below still covers it visually until init and window load complete.
+         * exists to fix. The page now always renders, with no splash screen
+         * covering it.
          *
          * The Suspense boundary is also what client components calling
          * useSearchParams() need during prerender.
@@ -88,12 +66,6 @@ const AppShell = ({ children }) => {
           <CampaignLayout>{children}</CampaignLayout>
         </Suspense>
       </GlobalError>
-      {showInitialLoading && (
-        <InitialLoadingScreen
-          onLoadComplete={handleLoadingComplete}
-          isReady={!isLoading && isWindowLoaded}
-        />
-      )}
     </>
   );
 };
@@ -107,7 +79,7 @@ export default function Providers({ children }) {
     <Provider store={store}>
       <PrimeSSRProvider>
         <div className="global-site-shell">
-          <GlobalBackground />
+          <GlobalBackground initiallyRevealed />
           <div className="global-site-content">
             <MainLayout>
               <AppShell>{children}</AppShell>

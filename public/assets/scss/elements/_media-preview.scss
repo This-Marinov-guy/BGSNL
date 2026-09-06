@@ -8,8 +8,8 @@
   justify-content: center;
   padding: 5rem 1rem 3rem;
   position: fixed;
-  /* Above the sidebar (1100) and the static logo header (10000). */
-  z-index: 10050;
+  /* Above application dialogs so previews opened from a modal remain visible. */
+  z-index: 11100;
 }
 
 .media-preview:focus {

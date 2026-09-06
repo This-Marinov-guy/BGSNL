@@ -2,6 +2,7 @@ import {
   Fragment,
   useState,
 } from "react";
+import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
 import {
@@ -12,11 +13,9 @@ import {
 } from "@/util/navigation";
 import LogoutAlert from "../../elements/ui/alerts/Logout";
 import NewBadge from "../../elements/ui/badges/NewBadge";
-import { selectArticles } from "../../redux/articles";
 import { selectUser } from "../../redux/user";
 import {
   ACCESS_1,
-  ACCESS_3,
   ACCESS_4,
 } from "../../util/defines/common";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
@@ -29,8 +28,6 @@ import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 const HeaderContent = (props) => {
   const user = useSelector(selectUser);
   const [logoutAlert, setLogoutAlert] = useState(false);
-
-  const articles = useSelector(selectArticles);
 
   const profileImage = user.token ? decodeJWT(user.token).image : "";
 
@@ -183,18 +180,6 @@ const HeaderContent = (props) => {
                       <li>
                         <Link to="/user/add-event">Add Event</Link>
                       </li>
-                      {checkAuthorization(user.token, ACCESS_3) && (
-                        <>
-                          <li>
-                            <Link to="/user/members">Members</Link>
-                          </li>
-                          <li>
-                            <Link to="/user/events-analytics">
-                              Events Analytics
-                            </Link>
-                          </li>
-                        </>
-                      )}
                       {checkAuthorization(user.token, ACCESS_1) && (
                         <li>
                           <Link to="/user/internships-dashboard">
@@ -278,6 +263,11 @@ const HeaderContent = (props) => {
       </nav>
     </>
   );
+};
+
+HeaderContent.propTypes = {
+  dark: PropTypes.bool,
+  forceRegion: PropTypes.string,
 };
 
 export default HeaderContent;

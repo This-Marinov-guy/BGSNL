@@ -30,13 +30,6 @@ import {
  * animation, which the previous toast.custom() implementation had to forgo:
  * custom toasts get no icon, no default styling and no animation at all.
  */
-const TOAST_FALLBACK_TITLES = {
-  success: "Success",
-  info: "Information",
-  warn: "Warning",
-  warning: "Warning",
-};
-
 /*
  * Restores the filled palette the old custom toasts used, now applied through
  * the library instead of hand-rolled CSS. `style` is passed per call rather
@@ -98,32 +91,9 @@ const MainLayout = ({ children }) => {
       notification.severity === "warning" ? "warn" : notification.severity;
     const summary = notification.summary || "";
     const detail = notification.detail || "";
+    const message = detail || summary;
 
-    /*
-     * Error toasts drop the heading — every one of them puts the real message
-     * in `detail`, so a generic "Error"/"You got an error :(" line above it
-     * only pushed the useful text down. The summary fallback keeps a
-     * detail-less error from rendering as an empty toast.
-     */
-    const title =
-      severity === "error"
-        ? ""
-        : summary || TOAST_FALLBACK_TITLES[severity] || "";
-    const body = severity === "error" ? detail || summary : detail;
-
-    const message = title ? (
-      <span>
-        <strong>{title}</strong>
-        {body ? (
-          <>
-            <br />
-            {body}
-          </>
-        ) : null}
-      </span>
-    ) : (
-      body
-    );
+    if (!message) return;
 
     const theme = TOAST_THEMES[severity] ?? TOAST_THEMES.info;
     const options = {

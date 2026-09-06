@@ -147,6 +147,8 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
 
   return (
     <ModalWindow
+      className="user-update-modal"
+      contentClassName="user-update-modal__body"
       show={modal.includes(USER_UPDATE_MODAL)}
       title="Update your details"
       onHide={closeHandler}
@@ -256,15 +258,12 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
           <Form
             className="user-update-form"
             encType="multipart/form-data"
-            id="form"
-            style={{ padding: "2%" }}
+            id="user-update-form"
           >
-            <div className="row mb--40 mt--40">
-              <div
-                className="col-lg-12 col-md-12 col-12 d-flex flex-column"
-                style={{ gap: "10px" }}
-              >
+            <div className="user-update-form__photo">
+              <div className="user-update-form__photo-control">
                 <ImageInput
+                  className="user-update-form__image"
                   name="image"
                   onChange={(event) => {
                     setFieldValue("image", event.target.files[0]);
@@ -278,10 +277,12 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                     />
                   }
                 />
-                <p className="information">Click on the image to change it</p>
+                <p className="information user-update-form__photo-help">
+                  Select your photo to replace it
+                </p>
               </div>
             </div>
-            <div className="row">
+            <div className="row user-update-form__fields">
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group">
                   <label htmlFor="user-update-name">
@@ -319,49 +320,50 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
 
               {!isAlumni && (
                 <div className="col-12">
-                  <div className="signup-agreements signup-working-checkbox">
-                    <div data-field-name="isWorking">
-                      <label className="hor_section_nospace">
-                        <Field
-                          style={{ maxWidth: "30px" }}
-                          type="checkbox"
-                          name="isWorking"
-                          checked={values.isWorking}
-                          onChange={(event) => {
-                            const isWorking = event.target.checked;
-                            setFieldValue("isWorking", isWorking);
-                            setFieldValue(
-                              "university",
-                              isWorking ? "working" : ""
-                            );
-                            setFieldValue("otherUniversityName", "");
-                            setFieldValue("graduationDate", "");
-                            setFieldValue("course", "");
-                            setFieldValue("studentNumber", "");
-                            setFieldValue("profession", "");
-                          }}
-                        />
-                        <p className="information">
-                          I&apos;m currently working. Use my profession instead
-                          of study details.
-                        </p>
-                      </label>
-                    </div>
+                  <div
+                    className="user-update-form__work-status"
+                    data-field-name="isWorking"
+                  >
+                    <label>
+                      <Field
+                        className="user-update-form__checkbox"
+                        type="checkbox"
+                        name="isWorking"
+                        checked={values.isWorking}
+                        onChange={(event) => {
+                          const isWorking = event.target.checked;
+                          setFieldValue("isWorking", isWorking);
+                          setFieldValue(
+                            "university",
+                            isWorking ? "working" : ""
+                          );
+                          setFieldValue("otherUniversityName", "");
+                          setFieldValue("graduationDate", "");
+                          setFieldValue("course", "");
+                          setFieldValue("studentNumber", "");
+                          setFieldValue("profession", "");
+                        }}
+                      />
+                      <span>
+                        I&apos;m currently working. Use my profession instead of
+                        study details.
+                      </span>
+                    </label>
                   </div>
                 </div>
               )}
 
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group" data-field-name="phone">
-                  <label>WhatsApp Phone</label>
+                  <label>WhatsApp phone</label>
                   <PhoneInput
                     name="phone"
-                    placeholder="WhatsApp Phone "
+                    placeholder="Phone number"
                     initialValue={values.phone}
                     onChange={(value) => setFieldValue("phone", value)}
-                  ></PhoneInput>
+                  />
                   <p className="information">
-                    Please type your number with + and country code
+                    Include your country code
                   </p>
                   <ErrorMessage
                     className="error"
@@ -401,9 +403,13 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                       {!values.isWorking && (
                         <>
                           <div className="col-lg-6 col-md-12 col-12">
-                            <div data-field-name="university">
+                            <div
+                              className="rn-form-group"
+                              data-field-name="university"
+                            >
                               <label>University</label>
                               <Dropdown
+                                ariaLabel="University"
                                 value={values.university}
                                 filter
                                 onChange={(e) => {
@@ -593,7 +599,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                 </div>
               </div>
             </div>
-            <div className="mt--40 options-btns-div center_div">
+            <div className="user-update-form__actions">
               <button
                 disabled={loading}
                 type="button"

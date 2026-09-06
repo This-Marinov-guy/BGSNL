@@ -994,7 +994,8 @@ label {
 }
 
 .login_form label,
-.contact-form label {
+.contact-form label,
+.user-update-form .rn-form-group > label {
   background: $label-color;
   border-radius: 6px;
   color: #232b27;
