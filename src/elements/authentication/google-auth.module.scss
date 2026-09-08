@@ -1,0 +1,12 @@
+.loginGoogle, .connectionForm, .passwordForm {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  p { margin: 0; }
+  button { justify-self: start; }
+}
+.loginGoogle { margin-top: 1.5rem; }
+.connectionForm { padding: 1.25rem; background: var(--color-white, #fff); border-radius: 0.75rem; }
+.passwordForm { max-width: 32rem; }
+.googleControl { width: 100%; max-width: 25rem; min-width: 0; }
+.error { padding: 1rem; color: #861330; p { color: inherit; } }

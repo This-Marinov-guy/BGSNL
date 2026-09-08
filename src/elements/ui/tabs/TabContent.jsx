@@ -13,6 +13,7 @@ import ProfileTab from "./ProfileTab";
 import PromotionsTab from "./PromotionsTab";
 import SettingsTab from "./SettingsTab";
 import TicketsTab from "./TicketsTab";
+import HelpSection from "@/elements/support/HelpSection";
 
 const TabContent = ({
   tab,
@@ -20,6 +21,17 @@ const TabContent = ({
   onUserRefresh,
   INIT_ITEMS_PER_PAGE
 }) => {
+  if ([TICKETS, INTERNSHIPS, PROMOTIONS].includes(tab) && !currentUser.hasBenefits) {
+    return (
+      <div className="tab-content-wrapper">
+        <div className="tab-body">
+          <h2>Membership benefits are unavailable</h2>
+          <p>Review your subscription in Settings to access these benefits.</p>
+          <a className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" href="/user#settings">Open settings</a>
+        </div>
+      </div>
+    );
+  }
   // Determine content based on current tab
   if (tab === NEWS) {
     return <NewsTab />;
@@ -39,6 +51,8 @@ const TabContent = ({
     return <PromotionsTab />;
   } else if (tab === SETTINGS) {
     return <SettingsTab user={currentUser} />;
+  } else if (tab === "help") {
+    return <HelpSection currentUser={currentUser} />;
   } else {
     return null;
   }

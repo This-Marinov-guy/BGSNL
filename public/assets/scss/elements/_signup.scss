@@ -676,28 +676,6 @@
     margin-bottom: 24px;
   }
 
-  .rn-form-group label {
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 14px;
-    display: inline-flex;
-    width: auto;
-    height: auto;
-    margin: 0 !important;
-    padding: 4px 8px;
-    border: 0;
-    border-radius: 6px;
-    background: $label-color;
-    color: #232b27;
-    font-size: $type-size-minimum;
-    font-weight: 700;
-    line-height: 1;
-    text-align: left;
-    transform: translateY(-50%);
-    white-space: nowrap;
-  }
-
   .rn-form-group input:not([type="checkbox"]):not([type="file"]):not(.p-inputnumber-input):not(.p-datepicker-input),
   .p-dropdown-custom,
   .p-password,

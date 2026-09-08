@@ -18,7 +18,35 @@ ul, ol {
   --site-background: #fbf8f1;
   --site-thread-primary: #017363;
   --site-thread-secondary: #9e0d33;
+  // Above floating page controls and logo headers, below shared modals (11000).
+  --layer-support: 10500;
+  --support-launcher-width: 6.25rem;
   color-scheme: light;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --support-launcher-width: 3.25rem;
+  }
+}
+
+/*
+ * Support is portalled to <body>, while some modal and slide-over backdrops
+ * live inside the app stacking context. Drop the widget behind that context
+ * whenever an overlay is open so it cannot sit above a blocking surface.
+ * The widget's own full-screen mobile dialog is explicitly excluded.
+ */
+body:has(
+  [aria-modal="true"]:not([data-support-widget-dialog]),
+  .p-overlay-mask,
+  .modal-backdrop,
+  .event-preview-modal,
+  .media-preview,
+  .user-sidebar-backdrop,
+  [class*="Backdrop"],
+  [class*="backdrop"]
+) [data-support-widget-root] {
+  z-index: 0;
 }
 
 html,
@@ -76,6 +104,10 @@ body {
  * descendant (the sticky header, the mobile menu panels).
  */
 .site-page-transition {
+  // Keep a page's first-child top margin inside this wrapper. During the slide
+  // animation the wrapper becomes the containing block for the fixed header;
+  // its top edge must therefore remain pinned to the viewport from frame one.
+  display: flow-root;
   animation:
     bgsnl-page-fade 240ms cubic-bezier(0.33, 1, 0.68, 1),
     bgsnl-page-slide 420ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -875,6 +907,64 @@ textarea.bgsnl-form-control {
   color: $heading-color;
   font-size: clamp(1.25rem, 2.2vw, 1.6rem);
   letter-spacing: -0.02em;
+}
+
+.account-state {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: clamp(8rem, 12vw, 10rem) 1rem 3rem;
+  text-align: center;
+}
+
+.account-state__content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 42rem;
+  width: 100%;
+}
+
+.account-state__content picture {
+  display: block;
+}
+
+.account-state__logo {
+  background: $white;
+  border: 1px solid rgb(1 115 99 / 15%);
+  border-radius: 50%;
+  box-shadow: 0 1.25rem 3.5rem rgb(2 84 32 / 12%);
+  display: block;
+  height: clamp(7rem, 11vw, 9rem);
+  object-fit: contain;
+  width: clamp(7rem, 11vw, 9rem);
+}
+
+.account-state__content h3,
+.account-state__content h4,
+.account-state__content p {
+  margin: 0;
+}
+
+.account-state__content h3 {
+  color: $heading-color;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  letter-spacing: -0.02em;
+}
+
+.account-state__content p {
+  max-width: 36rem;
+}
+
+.account-state__actions {
+  margin: 0 !important;
+  width: 100%;
+}
+
+.account-state__actions .options-btns-div {
+  margin: 1.25rem auto 0;
 }
 
 @media (max-width: 575px) {

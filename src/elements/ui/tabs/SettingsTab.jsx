@@ -1,21 +1,15 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import {
   FaCog,
-  FaGraduationCap,
   FaSignOutAlt,
   FaUser,
-  FiArrowUp,
 } from "@/elements/ui/icons/IconlyIcons";
-import { useAlumniRegistration } from "../../../hooks/alumni/use-alumni-registration";
 import { showModal } from "../../../redux/modal";
 import { logout } from "../../../redux/user";
 import { USER_UPDATE_MODAL } from "../../../util/defines/common";
-import { isProd } from "../../../util/functions/helpers";
-import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import SubscriptionManage from "../buttons/SubscriptionManage";
-import AlumniModal from "../modals/AlumniModal";
+import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
 import UserTabHeader from "./UserTabHeader";
 
 const SETTINGS_PRIMARY_ACTION =
@@ -53,12 +47,6 @@ SettingsRow.propTypes = {
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
-  const [isAlumniModalOpen, setIsAlumniModalOpen] = useState(false);
-  const { handleAlumniRegistrationClick } = useAlumniRegistration();
-
-  const isAlumni = user?.isAlumni;
-  const isFreeAlumni = isAlumni && user?.tier === 0;
-
   const handleLogout = () => {
     dispatch(logout());
     window.location.href = "/";
@@ -89,54 +77,17 @@ const SettingsTab = ({ user }) => {
             </ul>
           </section>
 
+          <ConnectedAccounts />
+
           <section className="settings-group" aria-labelledby="settings-membership">
             <h2 id="settings-membership" className="settings-group__title">Membership</h2>
             <ul className="settings-list">
-            {!isAlumni && (
-            <SettingsRow
-              action={
-                <button
-                  className={SETTINGS_PRIMARY_ACTION}
-                  onClick={() => setIsAlumniModalOpen(true)}
-                  type="button"
-                >
-                  Become an alumni
-                </button>
-              }
-              description="Join the alumni network and access alumni benefits."
-              icon={<FaGraduationCap />}
-              title="Alumni programme"
-            />
-          )}
-
-          {isFreeAlumni && (
-            <SettingsRow
-              action={
-                <AlumniRegistrationButton
-                  className={SETTINGS_PRIMARY_ACTION}
-                  asLink={false}
-                >
-                  Upgrade tier
-                </AlumniRegistrationButton>
-              }
-              description="Upgrade your alumni membership to unlock the full set of benefits."
-              icon={<FiArrowUp aria-hidden="true" />}
-              title="Alumni tier"
-            />
-          )}
-
-          {!isFreeAlumni && (
-            <SettingsRow
-              action={
-                (!isProd() || user?.subscription) && (
-                  <SubscriptionManage isAlumni={isAlumni} />
-                )
-              }
-              description="View invoices, update payment details or cancel renewal."
-              icon={<FaCog />}
-              title="Subscription"
-            />
-          )}
+              <SettingsRow
+                action={user?.subscription?.customerId ? <SubscriptionManage canCancel={user.isSubscribed} /> : null}
+                description="Review invoices, update your payment method or cancel through Stripe."
+                icon={<FaCog />}
+                title="Billing"
+              />
             </ul>
           </section>
 
@@ -163,11 +114,6 @@ const SettingsTab = ({ user }) => {
         </div>
       </div>
 
-      <AlumniModal
-        isOpen={isAlumniModalOpen}
-        onClose={() => setIsAlumniModalOpen(false)}
-        onJoinNow={handleAlumniRegistrationClick}
-      />
     </div>
   );
 };

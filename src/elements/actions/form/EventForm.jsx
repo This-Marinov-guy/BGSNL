@@ -1,6 +1,8 @@
 import {
   useCallback,
   useEffect,
+  useId,
+  useRef,
   useState,
 } from "react";
 import {
@@ -16,10 +18,12 @@ import {
 import * as yup from "yup";
 import {
   ConfirmDialog,
+  Dialog,
   Tooltip,
 } from "@/compat/primereact";
 import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
 import {
+  Link,
   useNavigate,
   useParams,
 } from "@/util/navigation";
@@ -46,7 +50,6 @@ import {
 import { decodeJWT } from "../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import {
-  askBeforeRedirect,
   hasOverlap,
   isPlainObject,
 } from "../../../util/functions/helpers";
@@ -80,6 +83,342 @@ const EVENT_FORM_STEPS = [
   },
 ];
 
+const EVENT_FORM_GUARD_STATE = "__bgsnlEventFormGuard";
+
+const UnsavedEventGuard = ({
+  active,
+  defaultEmail,
+  onEmailReminder,
+  onSaveDraft,
+  saving,
+}) => {
+  const navigate = useNavigate();
+  const [pendingNavigation, setPendingNavigation] = useState(null);
+  const [savingDraft, setSavingDraft] = useState(false);
+  const [emailingReminder, setEmailingReminder] = useState(false);
+  const [reminderEmail, setReminderEmail] = useState(defaultEmail);
+  const [reminderError, setReminderError] = useState("");
+  const [saveError, setSaveError] = useState(false);
+  const guardId = useId();
+  const reminderInputId = useId();
+  const activeRef = useRef(active);
+  const bypassRef = useRef(false);
+  const collapsingSentinelRef = useRef(false);
+  const hasSentinelRef = useRef(false);
+  const navigateRef = useRef(navigate);
+  const onEmailReminderRef = useRef(onEmailReminder);
+  const onSaveDraftRef = useRef(onSaveDraft);
+  const guardIdRef = useRef(`event-form-${guardId}`);
+  const isBusy = saving || savingDraft || emailingReminder;
+  const isDialogVisible = Boolean(pendingNavigation);
+
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
+
+  useEffect(() => {
+    navigateRef.current = navigate;
+    onEmailReminderRef.current = onEmailReminder;
+    onSaveDraftRef.current = onSaveDraft;
+  }, [navigate, onEmailReminder, onSaveDraft]);
+
+  useEffect(() => {
+    if (!isDialogVisible) return;
+    setReminderEmail(defaultEmail);
+    setReminderError("");
+  }, [defaultEmail, isDialogVisible]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (!activeRef.current || bypassRef.current) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (
+        !activeRef.current ||
+        bypassRef.current ||
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      const anchor = event.target.closest?.("a[href]");
+      if (
+        !anchor ||
+        anchor.hasAttribute("download") ||
+        (anchor.target && anchor.target !== "_self")
+      ) {
+        return;
+      }
+
+      const href = anchor.getAttribute("href");
+      if (!href || href.startsWith("javascript:")) return;
+
+      let destination;
+      try {
+        destination = new URL(anchor.href, window.location.href);
+      } catch {
+        return;
+      }
+
+      if (!["http:", "https:"].includes(destination.protocol)) return;
+
+      const current = new URL(window.location.href);
+      const isSameDocumentHash =
+        destination.origin === current.origin &&
+        destination.pathname === current.pathname &&
+        destination.search === current.search &&
+        destination.hash !== current.hash;
+      if (isSameDocumentHash) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      setSaveError(false);
+      setPendingNavigation({ type: "url", url: destination.href });
+    };
+
+    const handlePopState = (event) => {
+      if (bypassRef.current) return;
+
+      if (collapsingSentinelRef.current) {
+        collapsingSentinelRef.current = false;
+        return;
+      }
+
+      if (!activeRef.current) return;
+      if (event.state?.[EVENT_FORM_GUARD_STATE] === guardIdRef.current) return;
+
+      window.history.forward();
+      setSaveError(false);
+      setPendingNavigation({ type: "back" });
+    };
+
+    document.addEventListener("click", handleDocumentClick, true);
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick, true);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    const guardId = guardIdRef.current;
+    const isCurrentSentinel =
+      window.history.state?.[EVENT_FORM_GUARD_STATE] === guardId;
+
+    if (active && !bypassRef.current) {
+      if (!hasSentinelRef.current || !isCurrentSentinel) {
+        window.history.pushState(
+          {
+            ...window.history.state,
+            [EVENT_FORM_GUARD_STATE]: guardId,
+          },
+          "",
+          window.location.href
+        );
+        hasSentinelRef.current = true;
+      }
+      return;
+    }
+
+    if (!active && hasSentinelRef.current && isCurrentSentinel) {
+      collapsingSentinelRef.current = true;
+      hasSentinelRef.current = false;
+      window.history.back();
+    }
+  }, [active]);
+
+  const keepEditing = () => {
+    if (isBusy) return;
+    setPendingNavigation(null);
+    setReminderError("");
+    setSaveError(false);
+  };
+
+  const leavePage = () => {
+    if (!pendingNavigation) return;
+
+    const destination = pendingNavigation;
+    const isCurrentSentinel =
+      window.history.state?.[EVENT_FORM_GUARD_STATE] === guardIdRef.current;
+    bypassRef.current = true;
+    setPendingNavigation(null);
+    setReminderError("");
+    setSaveError(false);
+
+    if (destination.type === "back") {
+      window.history.go(isCurrentSentinel ? -2 : -1);
+    } else {
+      const url = new URL(destination.url);
+      if (url.origin === window.location.origin) {
+        navigateRef.current(
+          `${url.pathname}${url.search}${url.hash}`,
+          { replace: isCurrentSentinel }
+        );
+      } else {
+        window.location.assign(url.href);
+      }
+    }
+
+    window.setTimeout(() => {
+      bypassRef.current = false;
+    }, 1000);
+  };
+
+  const saveDraftAndLeave = async () => {
+    setSavingDraft(true);
+    setSaveError(false);
+    const savedDraft = await onSaveDraftRef.current();
+    setSavingDraft(false);
+
+    if (savedDraft) {
+      leavePage();
+      return;
+    }
+
+    setSaveError(true);
+  };
+
+  const emailReminderAndLeave = async () => {
+    const receiver = reminderEmail.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(receiver)) {
+      setReminderError("Enter a valid email address.");
+      return;
+    }
+
+    setEmailingReminder(true);
+    setReminderError("");
+    setSaveError(false);
+
+    const savedDraft = await onSaveDraftRef.current();
+    if (!savedDraft?.id) {
+      setEmailingReminder(false);
+      setSaveError(true);
+      return;
+    }
+
+    const reminder = await onEmailReminderRef.current(savedDraft.id, receiver);
+    setEmailingReminder(false);
+
+    if (reminder?.status) {
+      leavePage();
+      return;
+    }
+
+    setReminderError(
+      "The draft was saved, but the reminder could not be sent. Please try again."
+    );
+  };
+
+  return (
+    <Dialog
+      visible={isDialogVisible}
+      onHide={keepEditing}
+      header="Save this event as a draft?"
+      closable={!isBusy}
+      dismissableMask={false}
+      className="event-unsaved-dialog"
+      footerClassName="event-unsaved-dialog__footer"
+      footer={
+        <div className="event-unsaved-dialog__actions">
+          <button
+            type="button"
+            className="event-form-button event-form-button--ghost"
+            disabled={isBusy}
+            onClick={keepEditing}
+          >
+            Keep editing
+          </button>
+          <button
+            type="button"
+            className="event-form-button event-unsaved-dialog__discard"
+            disabled={isBusy}
+            onClick={leavePage}
+          >
+            Leave without saving
+          </button>
+          <button
+            type="button"
+            className="event-form-button event-form-button--primary"
+            disabled={isBusy}
+            onClick={saveDraftAndLeave}
+          >
+            {savingDraft ? "Saving draft…" : "Save draft & leave"}
+          </button>
+        </div>
+      }
+    >
+      <p className="event-unsaved-dialog__message">
+        You have changes that have not been saved yet. Save a draft so you can
+        finish the event later.
+      </p>
+      <div className="event-unsaved-dialog__reminder">
+        <div className="rn-form-group">
+          <label htmlFor={reminderInputId}>Reminder email</label>
+          <input
+            id={reminderInputId}
+            className="bgsnl-form-control"
+            type="email"
+            value={reminderEmail}
+            autoComplete="email"
+            aria-describedby={`${reminderInputId}-message`}
+            aria-invalid={Boolean(reminderError)}
+            onChange={(event) => {
+              setReminderEmail(event.target.value);
+              setReminderError("");
+            }}
+          />
+        </div>
+        <button
+          type="button"
+          className="event-form-button event-form-button--draft"
+          disabled={isBusy}
+          onClick={emailReminderAndLeave}
+        >
+          {emailingReminder ? "Saving & sending…" : "Email link & leave"}
+        </button>
+      </div>
+      <p
+        id={`${reminderInputId}-message`}
+        className={
+          reminderError
+            ? "event-unsaved-dialog__error"
+            : "event-unsaved-dialog__hint"
+        }
+        role={reminderError ? "alert" : undefined}
+      >
+        {reminderError || "We’ll save the draft and email its continue link."}
+      </p>
+      {saveError && (
+        <p className="event-unsaved-dialog__error" role="alert">
+          We could not save the draft. Please try again or keep editing.
+        </p>
+      )}
+    </Dialog>
+  );
+};
+
+UnsavedEventGuard.propTypes = {
+  active: PropTypes.bool.isRequired,
+  defaultEmail: PropTypes.string.isRequired,
+  onEmailReminder: PropTypes.func.isRequired,
+  onSaveDraft: PropTypes.func.isRequired,
+  saving: PropTypes.bool.isRequired,
+};
+
 const EventForm = (props) => {
   const { loading, sendRequest } = useHttpClient();
 
@@ -105,7 +444,8 @@ const EventForm = (props) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const { eventId } = useParams();
-  const roles = decodeJWT(user.token)?.roles ?? [];
+  const userClaims = decodeJWT(user.token);
+  const roles = userClaims?.roles ?? [];
   const regionOptions = hasOverlap(roles, ACCESS_2)
     ? ADMIN_EVENT_REGIONS
     : REGIONS;
@@ -195,10 +535,6 @@ const EventForm = (props) => {
       setConfirmResolver(() => resolve);
     });
   };
-
-  useEffect(() => {
-    askBeforeRedirect();
-  }, []);
 
   useEffect(() => {
     if (initialData?.status === EVENT_DRAFT) {
@@ -822,7 +1158,7 @@ const EventForm = (props) => {
     }
   };
 
-  const moveToStep = async (targetStep, values, setFieldValue) => {
+  const moveToStep = async (targetStep, values, resetForm) => {
     if (targetStep === currentStep) return;
 
     let savedDraft = true;
@@ -837,16 +1173,20 @@ const EventForm = (props) => {
     if (!savedDraft) return;
 
     if (savedDraft !== true) {
+      const syncedValues = { ...values };
       ["poster", "ticketImg", "bgImageExtra"].forEach((field) => {
         if (savedDraft[field]) {
-          setFieldValue(field, savedDraft[field], false);
+          syncedValues[field] = savedDraft[field];
         }
       });
 
       if (savedDraft.images) {
         setSavedImages(savedDraft.images);
-        setExtraImagesTouched(false);
+        syncedValues.images = savedDraft.images;
       }
+
+      setExtraImagesTouched(false);
+      resetForm({ values: syncedValues });
     }
 
     const nextStep = Math.max(
@@ -858,11 +1198,11 @@ const EventForm = (props) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const moveToNextStep = (values, setFieldValue) =>
-    moveToStep(currentStep + 1, values, setFieldValue);
+  const moveToNextStep = (values, resetForm) =>
+    moveToStep(currentStep + 1, values, resetForm);
 
-  const moveToPreviousStep = (values, setFieldValue) =>
-    moveToStep(currentStep - 1, values, setFieldValue);
+  const moveToPreviousStep = (values, resetForm) =>
+    moveToStep(currentStep - 1, values, resetForm);
 
   return (
     <>
@@ -1030,12 +1370,33 @@ const EventForm = (props) => {
           },
         }}
       >
-        {({ values, setFieldValue }) => (
+        {({ dirty, resetForm, values, setFieldValue }) => (
           <Form
             encType="multipart/form-data"
             id="form"
             className="event-form-workspace"
           >
+            <UnsavedEventGuard
+              active={canSaveDraft && (dirty || extraImagesTouched)}
+              defaultEmail={userClaims?.email ?? ""}
+              saving={submitting}
+              onEmailReminder={(eventDraftId, email) =>
+                sendRequest(
+                  `future-event/draft/${eventDraftId}/reminder`,
+                  "POST",
+                  { email },
+                  {},
+                  false,
+                  false
+                )
+              }
+              onSaveDraft={() =>
+                submitValues(values, true, {
+                  stayOnPage: true,
+                  quiet: true,
+                })
+              }
+            />
             <nav className="event-form-stepper" aria-label="Event creation steps">
               {EVENT_FORM_STEPS.map((step, index) => (
                 <button
@@ -1046,7 +1407,7 @@ const EventForm = (props) => {
                   }${index < furthestStep ? " is-complete" : ""}`}
                   aria-current={index === currentStep ? "step" : undefined}
                   disabled={index > furthestStep}
-                  onClick={() => moveToStep(index, values, setFieldValue)}
+                  onClick={() => moveToStep(index, values, resetForm)}
                 >
                   <span className="event-form-stepper__number">{index + 1}</span>
                   <span>
@@ -2135,13 +2496,12 @@ const EventForm = (props) => {
 
             <ConfirmDialog />
             <footer className="event-form-actions">
-              <button
-                onClick={() => navigate("/user/dashboard")}
-                type="button"
+              <Link
+                to="/user/dashboard"
                 className="event-form-button event-form-button--ghost"
               >
                 Dashboard
-              </button>
+              </Link>
               {(!props.edit || initialData?.status === EVENT_DRAFT) && (
                 <button
                   disabled={loading || submitting}
@@ -2157,7 +2517,7 @@ const EventForm = (props) => {
                   <button
                     type="button"
                     className="event-form-button event-form-button--ghost"
-                    onClick={() => moveToPreviousStep(values, setFieldValue)}
+                    onClick={() => moveToPreviousStep(values, resetForm)}
                   >
                     Back
                   </button>
@@ -2167,7 +2527,7 @@ const EventForm = (props) => {
                     disabled={submitting}
                     type="button"
                     className="event-form-button event-form-button--primary"
-                    onClick={() => moveToNextStep(values, setFieldValue)}
+                    onClick={() => moveToNextStep(values, resetForm)}
                   >
                     {draftStatus === "saving" ? "Saving…" : "Save & continue"}
                   </button>

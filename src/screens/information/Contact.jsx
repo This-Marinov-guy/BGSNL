@@ -51,13 +51,12 @@ const Contact = () => {
 
       <div className="backto-top">
         <ScrollToTop showUnder={160}>
-          <button
-            type="button"
+          <span
             className="contact-back-to-top"
-            aria-label="Back to top"
+            aria-hidden="true"
           >
             <FiChevronUp size={26} />
-          </button>
+          </span>
         </ScrollToTop>
       </div>
 

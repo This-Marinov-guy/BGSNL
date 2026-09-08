@@ -1,86 +1,33 @@
-import React from 'react'
-import { useHttpClient } from '../../../hooks/common/http-hook'
-import { ConfirmPopup, confirmPopup } from "@/compat/primereact";
-import { useDispatch } from 'react-redux';
-import { showNotification } from '../../../redux/notification';
-import CustomSpinner from '../loading/CustomSpinner';
-import PropTypes from 'prop-types';
-import { ALUMNI, MEMBER } from '../../../util/defines/common';
+"use client";
 
-const SubscriptionManage = ({ onAction, isAlumni }) => {
-    const { loading, sendRequest } = useHttpClient();
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { useHttpClient } from "@/hooks/common/http-hook";
 
-    const dispatch = useDispatch();
-
-    const confirm1 = (event) => {
-        confirmPopup({
-            target: event.currentTarget,
-            message: 'Are you sure you want to cancel your membership at end of billing cycle?',
-            icon: 'pi pi-exclamation-triangle',
-            defaultFocus: 'reject',
-            accept: handleCancel,
-            reject: () => { }
-        });
-    };
-
-    async function handleManage() {
-        try {
-            const responseData = await sendRequest(
-              "payment/subscription/customer-portal",
-              "POST",
-              {
-                url: window.location.href,
-                type: isAlumni ? ALUMNI : MEMBER,
-              }
-            );
-            if (responseData.url) {
-                window.location.assign(responseData.url);
-            }
-            if (onAction) onAction();
-        } catch (err) {
-            console.error('Error managing subscription:', err);
-        }
-    }
-
-    const handleCancel = async () => {
-        try {
-            const responseData = await sendRequest("user/cancel-membership", "DELETE");
-            if (responseData.message) {
-                dispatch(showNotification({ severity: 'success', summary: 'Success', detail: responseData.message }));
-            }
-            if (onAction) onAction();
-        } catch (err) {
-            console.error('Error canceling subscription:', err);
-        }
-    }
-
-    return (
-        loading ? <div className='center_div'><CustomSpinner/></div> :
-            <div className="subscription-actions">
-                <ConfirmPopup />
-                <button 
-                    className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
-                    onClick={handleManage}
-                    disabled={loading}
-                    type="button"
-                >
-                    <span>Payment Details</span>
-                </button>
-                <button 
-                    className="settings-action rn-button-style--2 rn-btn-reverse-red rn-btn-small"
-                    onClick={confirm1}
-                    disabled={loading}
-                    type="button"
-                >
-                    <span>Cancel Subscription</span>
-                </button>
-            </div>
-    )
+export default function SubscriptionManage({ canCancel = true }) {
+  const { sendRequest } = useHttpClient();
+  const [pending, setPending] = useState(null);
+  const openPortal = async (action) => {
+    if (pending) return;
+    setPending(action || "manage");
+    try {
+      const response = await sendRequest("payment/subscription/customer-portal", "POST", {
+        url: window.location.href, ...(action ? { action } : {}),
+      });
+      if (response?.url) window.location.assign(response.url);
+    } finally { setPending(null); }
+  };
+  return (
+    <div className="subscription-actions" aria-busy={!!pending}>
+      <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
+        onClick={() => openPortal()} disabled={!!pending} type="button">
+        {pending === "manage" ? "Opening Stripe…" : "Manage billing"}
+      </button>
+      {canCancel && <button className="settings-action rn-button-style--2 rn-btn-reverse-red rn-btn-small"
+        onClick={() => openPortal("cancel")} disabled={!!pending} type="button">
+        {pending === "cancel" ? "Opening Stripe…" : "Cancel subscription"}
+      </button>}
+    </div>
+  );
 }
-
-SubscriptionManage.propTypes = {
-    isAlumni: PropTypes.bool,
-    onAction: PropTypes.func,
-};
-
-export default SubscriptionManage
+SubscriptionManage.propTypes = { canCancel: PropTypes.bool };

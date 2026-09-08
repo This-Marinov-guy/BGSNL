@@ -993,9 +993,26 @@ label {
   width: 100%;
 }
 
+/*
+ * The absolute label below anchors to its field group, so every group needs a
+ * positioning context — previously only signup, purchase and the event
+ * workspace set one locally.
+ */
+.rn-form-group {
+  position: relative;
+}
+
+/*
+ * Canonical form label: the floating "notch" sitting on the field's top border,
+ * as the login form draws it. One definition shared by every form on the site.
+ *
+ * The child combinator is load-bearing: a label that *wraps* its control
+ * (checkbox rows, the dashboard filter selects) must stay in flow, and pulling
+ * it out of the layout would drop it on top of its own input.
+ */
 .login_form label,
 .contact-form label,
-.user-update-form .rn-form-group > label {
+.rn-form-group > label {
   background: $label-color;
   border-radius: 6px;
   color: #232b27;
@@ -1062,6 +1079,14 @@ label {
   gap: 18px;
   margin-top: 24px;
   text-align: center;
+}
+
+.login_actions::before {
+  background: rgb(1 115 99 / 16%);
+  content: "";
+  display: block;
+  height: 1px;
+  width: 100%;
 }
 
 .login_text_link {

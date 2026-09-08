@@ -88,6 +88,14 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
       })).filter((group) => group.events.length > 0)
     : [];
 
+  const visibleEvents = visibleRegionGroups.flatMap(({ regionName, events: regionEvents }) =>
+    regionEvents.map((event) => ({
+      ...event,
+      region: event.region ?? regionName,
+    }))
+  );
+  const showThreeEventRow = displayAll && visibleEvents.length === 3;
+
   // A single region, or a long list of regions, gets the full page width so
   // its event cards can run horizontally. Two or three active regions remain
   // compact columns for an easy cross-city overview.
@@ -130,10 +138,19 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
               ) : (
                 <div className="col-lg-12">
                   <div
-                    className={`future-events-region-list ${regionListLayout}`}
+                    className={`future-events-region-list ${regionListLayout}${
+                      showThreeEventRow ? " future-events-three-events" : ""
+                    }`}
                     data-active-regions={visibleRegionGroups.length}
                   >
-                    {visibleRegionGroups.map(({ regionName, events: regionEvents }) => (
+                    {showThreeEventRow ? (
+                      <section className="future-events-region-section">
+                        <FocusCards
+                          cards={visibleEvents}
+                          centerItems={false}
+                        />
+                      </section>
+                    ) : visibleRegionGroups.map(({ regionName, events: regionEvents }) => (
                       <section
                         className="future-events-region-section"
                         key={regionName}
@@ -164,7 +181,11 @@ const FutureEventsContent = ({ displayAll, nullable = true, initialEvents }) => 
                 </div>
               )
             ) : (
-              <div className="col-lg-12">
+              <div
+                className={`col-lg-12${
+                  events?.length === 3 ? " future-events-three-events" : ""
+                }`}
+              >
                 {eventsLoading ? (
                   <EventsLoading />
                 ) : events && events.length > 0 ? (

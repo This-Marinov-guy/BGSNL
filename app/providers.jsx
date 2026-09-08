@@ -15,6 +15,7 @@ import InactivityModal from "@/elements/ui/modals/InactivityModal";
 import PageLoading from "@/elements/ui/loading/PageLoading";
 import Maintenance from "@/screens/Maintenance";
 import RouteProgress from "@/component/common/RouteProgress";
+import SupportWidget from "@/elements/support/SupportWidget";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import { useAppInitialization } from "@/hooks/session/app-init";
 import { useAuthSession } from "@/hooks/session/auth-session";
@@ -46,6 +47,7 @@ const AppShell = ({ children }) => {
     <>
       <ScrollToTop />
       <RouteProgress />
+      <SupportWidget />
       {modal.includes(INACTIVITY_MODAL) && (
         <InactivityModal timeRemaining={getTimeRemaining()} />
       )}

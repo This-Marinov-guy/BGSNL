@@ -55,7 +55,7 @@ export const InternshipApplyModalProvider = ({ children }) => {
       resolvedUser = response?.user || null;
     }
 
-    if (resolvedUser?.status !== USER_STATUSES[ACTIVE]) {
+    if (!resolvedUser?.hasBenefits) {
       return false;
     }
 

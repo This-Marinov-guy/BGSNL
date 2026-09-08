@@ -41,7 +41,7 @@ const UserCard = ({ user, onUserRefresh }) => {
   const { refreshUser } = useRefreshUser();
 
   // Check if user is tier 1+ alumni (tier >= 1)
-  const hasPaidAlumniTier = isAlumni && user?.tier >= 1;
+  const hasPaidAlumniTier = user.hasBenefits && isAlumni && user?.tier >= 1;
 
   // Sync quoteValue with user.quote when user data updates (after refresh)
   useEffect(() => {
@@ -231,7 +231,7 @@ const UserCard = ({ user, onUserRefresh }) => {
           </div>
 
           {/* Community Links Column */}
-          <div className="user-info-column">
+          {user.hasBenefits && <div className="user-info-column">
             <h4 className="column-title">Community</h4>
             <ul className="list-style--1">
               {REGION_WHATSAPP[user.region] && (
@@ -273,7 +273,7 @@ const UserCard = ({ user, onUserRefresh }) => {
                 </li>
               )}
             </ul>
-          </div>
+          </div>}
         </div>
 
         {/* Alumni Quote Section - Only for tier 1+ */}
@@ -289,19 +289,16 @@ const UserCard = ({ user, onUserRefresh }) => {
               </h4>
               {!isEditingQuote && (
                 <button
+                  aria-label={user?.quote ? "Edit alumni quote" : "Add alumni quote"}
                   type="button"
                   className="rn-button-style--2 rn-btn-small rn-btn-green"
                   onClick={() => setIsEditingQuote(true)}
                   style={{ padding: "5px 15px" }}
                 >
                   {user?.quote ? (
-                    <>
-                      <FiEdit2 size={12} /> Edit
-                    </>
+                    <FiEdit2 aria-hidden size={16} />
                   ) : (
-                    <>
-                      <FiPlus size={12} /> Add Quote
-                    </>
+                    <FiPlus aria-hidden size={16} />
                   )}
                 </button>
               )}
@@ -394,19 +391,16 @@ const UserCard = ({ user, onUserRefresh }) => {
               />
             </h4>
             <button
+              aria-label={hasCV ? "Edit CV" : "Add CV"}
               type="button"
               className="rn-button-style--2 rn-btn-small rn-btn-green"
               onClick={() => setShowCVModal(true)}
               style={{ padding: "5px 15px" }}
             >
               {hasCV ? (
-                <>
-                  <FiEdit2 size={16} />
-                </>
+                <FiEdit2 aria-hidden size={16} />
               ) : (
-                <>
-                  <FiPlus size={16} />
-                </>
+                <FiPlus aria-hidden size={16} />
               )}
             </button>
           </div>
@@ -482,6 +476,7 @@ UserCard.propTypes = {
     tier: PropTypes.number,
     cv: PropTypes.string,
     documents: PropTypes.array,
+    hasBenefits: PropTypes.bool,
   }).isRequired,
   onUserRefresh: PropTypes.func,
 };

@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Message } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
@@ -24,7 +24,8 @@ import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
 import TabContent from "../../elements/ui/tabs/TabContent";
 import { useHttpClient } from "../../hooks/common/http-hook";
-import { selectUser } from "../../redux/user";
+import { selectUser, updateAccount } from "../../redux/user";
+import BillingStatusBanner from "@/elements/subscriptions/BillingStatusBanner";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
 import { ACCOUNT_TABS } from "../../util/defines/enum";
 
@@ -64,6 +65,9 @@ const User = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const { sendRequest } = useHttpClient();
+  const request = useRef(sendRequest);
+  request.current = sendRequest;
+  const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
 
@@ -139,28 +143,38 @@ const User = () => {
       return;
     }
 
+    let mounted = true;
+    let refreshing = false;
     const fetchCurrentUser = async () => {
+      if (refreshing || document.visibilityState === "hidden") return;
+      refreshing = true;
       try {
-        const responseData = await sendRequest(
-          `user/current?withTickets=${true}&withChristmas=${true}`
-        );
-
-        if (!responseData?.user) {
-          throw new Error("The account response did not include a user.");
+        const response = await request.current("user/current?withTickets=true&withChristmas=true", "GET", null, {}, false, false);
+        if (!mounted) return;
+        if (!response?.user) {
+          setLoadFailed(true);
+          return;
         }
-
-        setCurrentUser(responseData.user);
-        setHasBirthday(responseData.celebrate);
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        setLoadFailed(true);
+        setCurrentUser(response.user);
+        setHasBirthday(response.celebrate);
+        setLoadFailed(false);
+        dispatch(updateAccount(response.user));
       } finally {
-        setIsPageLoading(false);
+        refreshing = false;
+        if (mounted) setIsPageLoading(false);
       }
     };
-
     fetchCurrentUser();
-  }, []);
+    const timer = setInterval(fetchCurrentUser, 60000);
+    window.addEventListener("focus", fetchCurrentUser);
+    document.addEventListener("visibilitychange", fetchCurrentUser);
+    return () => {
+      mounted = false;
+      clearInterval(timer);
+      window.removeEventListener("focus", fetchCurrentUser);
+      document.removeEventListener("visibilitychange", fetchCurrentUser);
+    };
+  }, [user.token, dispatch]);
 
   useEffect(() => {
     const syncTabWithHash = () => {
@@ -203,7 +217,7 @@ const User = () => {
           setHasBirthday(data.hasBirthday);
         }}
       />
-      <Christmas currentUser={currentUser} />
+      {currentUser.hasBenefits && <Christmas currentUser={currentUser} />}
 
       {/* Start User Page Container with Sidebar */}
       <main className="user-page-container" id="user-account-content">
@@ -220,6 +234,7 @@ const User = () => {
 
         {/* Main Content Area */}
         <div className="user-content-area">
+          <BillingStatusBanner user={currentUser} />
           {currentUser?.tier === 0 && <Message 
             severity="info"
             text="As a tier 0 alumni, you are not eligible to any bonuses from the alumni program. Please upgrade your subscription from the settings tab."
@@ -228,7 +243,7 @@ const User = () => {
 
           <div className="content-container">
             {/* Campaign Section */}
-            {campaignUserActions &&
+            {currentUser.hasBenefits && campaignUserActions &&
               React.cloneElement(campaignUserActions.userAction.component, {
                 calendarImage: currentUser.mmmCampaign2025?.calendarImage,
               })}
@@ -263,7 +278,7 @@ const User = () => {
       <FooterTwo forceRegion={currentUser.region ?? null} />
       {/* End Footer Style  */}
       {/* Start Back To Top */}
-      <div className="backto-top">
+      <div className="backto-top user-page-back-to-top">
         <ScrollToTop showUnder={160}>
           <FiChevronUp size={26} />
         </ScrollToTop>

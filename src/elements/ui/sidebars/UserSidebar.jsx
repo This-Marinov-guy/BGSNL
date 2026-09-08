@@ -11,14 +11,18 @@ import {
   FiArrowUp,
   FiCalendar,
   FiEdit2,
+  FiUsers,
   IconlyClose,
   IconlyMenu,
+  IconlyQuestion,
+  IconlyMessage,
 } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import { showModal } from "../../../redux/modal";
 import {
   ACCESS_1,
   ACCESS_4,
+  SUPPORT_ACCESS,
   formatRole,
   USER_UPDATE_MODAL,
 } from "../../../util/defines/common";
@@ -50,6 +54,8 @@ const UserSidebar = ({
         return <FaTag />;
       case "settings":
         return <FaCog />;
+      case "help":
+        return <IconlyQuestion />;
       default:
         return <FaUser />;
     }
@@ -61,6 +67,16 @@ const UserSidebar = ({
    * uses: the events dashboard is open to ACCESS_4, internships to ACCESS_1.
    */
   const adminLinks = [
+    hasRole(ACCESS_1) && {
+      icon: <FiUsers />,
+      label: "Accounts",
+      to: "/user/accounts",
+    },
+    currentUser.status === "active" && hasRole(SUPPORT_ACCESS) && {
+      icon: <IconlyMessage />,
+      label: "Support inbox",
+      to: "/user/support",
+    },
     hasRole(ACCESS_4) && {
       icon: <FiCalendar />,
       label: "Manage Events",
@@ -146,8 +162,8 @@ const UserSidebar = ({
             <h2 className="sidebar-user-name archive">{currentUser.name}</h2>
             <p className="sidebar-user-status">
               <span className="status-active">
-                {formatRole(currentUser.roles)}{" "}
-                {currentUser?.tier !== undefined && `Tier ${currentUser.tier}`}
+                {currentUser.billingLocked || currentUser.status === "locked" ? "Benefits locked" : formatRole(currentUser.roles)}{" "}
+                {currentUser?.isAlumni && Number.isInteger(currentUser.tier) && !currentUser.billingLocked && `Tier ${currentUser.tier}`}
               </span>
               {currentUser.region ? (
                 <span className="sidebar-user-region">

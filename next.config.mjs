@@ -33,7 +33,13 @@ const nextConfig = {
     return privateRouteSources.map((source) => ({
       source,
       headers: [
-        ...privateIndexingHeaders,
+        ...privateIndexingHeaders.map((header) =>
+          header.key === "Referrer-Policy" && (source === "/login" || source.startsWith("/user"))
+            ? { ...header, value: process.env.NODE_ENV === "development" ? "no-referrer-when-downgrade" : "strict-origin-when-cross-origin" }
+            : header),
+        ...(source === "/login" || source.startsWith("/user")
+          ? [{ key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" }]
+          : []),
         ...(source.startsWith("/user")
           ? [{ key: "Cache-Control", value: "private, no-store" }]
           : []),

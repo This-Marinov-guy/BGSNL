@@ -897,20 +897,6 @@
     margin: 0 0 1rem;
   }
 
-  .rn-form-group label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    width: auto;
-    margin: 0 0 0.4rem !important;
-    padding: 0;
-    background: transparent;
-    color: #34423b !important;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
   .rn-form-group > input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
   .rn-form-group > select,
   .rn-form-group > textarea,
@@ -1101,6 +1087,88 @@
   }
 }
 
+.bgsnl-modal.event-unsaved-dialog {
+  width: min(35rem, calc(100vw - 2rem));
+  border: 0 !important;
+}
+
+.event-unsaved-dialog .bgsnl-modal__header {
+  padding: 1.5rem 1.5rem 0.45rem;
+  border-bottom: 0;
+}
+
+.event-unsaved-dialog .bgsnl-modal__body {
+  padding: 0.5rem 1.5rem 1rem;
+}
+
+.event-unsaved-dialog__message {
+  margin: 0;
+  color: #405048;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.event-unsaved-dialog__reminder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  background: #f4f8f6;
+}
+
+.event-unsaved-dialog__reminder .rn-form-group {
+  min-width: 0;
+  margin: 0;
+}
+
+.event-unsaved-dialog__reminder .event-form-button {
+  min-height: 3.125rem;
+}
+
+.event-unsaved-dialog__hint {
+  margin: 0.55rem 0 0;
+  color: #66716b;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.event-unsaved-dialog__error {
+  margin: 0.8rem 0 0;
+  color: #9a2630;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.event-unsaved-dialog__footer.bgsnl-modal__footer {
+  padding: 0.75rem 1.5rem 1.5rem;
+  border-top: 0;
+}
+
+.event-unsaved-dialog__actions {
+  display: grid !important;
+  width: 100%;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  justify-content: stretch !important;
+}
+
+.event-unsaved-dialog__actions .event-form-button {
+  white-space: nowrap;
+}
+
+.event-unsaved-dialog__discard {
+  border-color: transparent;
+  background: transparent;
+  color: #9a2630;
+
+  &:hover:not(:disabled) {
+    background: #fff1f0;
+    color: #7f1d26;
+  }
+}
+
 @media (max-width: 991px) {
   .event-workspace-heading {
     align-items: start;
@@ -1209,6 +1277,18 @@
   .event-form-step__header {
     margin: -1rem -1rem 1rem;
     padding: 1rem;
+  }
+
+  .event-unsaved-dialog__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .event-unsaved-dialog__reminder {
+    grid-template-columns: 1fr;
+  }
+
+  .event-unsaved-dialog__actions .event-form-button--primary {
+    grid-row: 1;
   }
 
   .event-card__region {

@@ -164,6 +164,14 @@ export const IconlyImage = (props) => (
   </IconlySvg>
 );
 
+export const IconlyScreenshot = (props) => (
+  <IconlySvg {...props}>
+    <path d="M8 5h2l1-1.5h4L16 5h1.5A2.5 2.5 0 0 1 20 7.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5v-8A2.5 2.5 0 0 1 6.5 5H8Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    <circle cx="12" cy="11.5" r="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M2 8V4a2 2 0 0 1 2-2h4M16 2h4a2 2 0 0 1 2 2v4M22 16v4a2 2 0 0 1-2 2h-4M8 22H4a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  </IconlySvg>
+);
+
 export const IconlyUpload = (props) => (
   <IconlySvg {...props}>
 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -211,6 +219,28 @@ export const IconlyMessage = (props) => (
             <path d="M14.939,0 C16.28,0 17.57,0.53 18.519,1.481 C19.469,2.43 20,3.71 20,5.05 L20,5.05 L20,12.95 C20,15.74 17.73,18 14.939,18 L14.939,18 L5.06,18 C2.269,18 0,15.74 0,12.95 L0,12.95 L0,5.05 C0,2.26 2.259,0 5.06,0 L5.06,0 Z M16.07,5.2 C15.86,5.189 15.66,5.26 15.509,5.4 L15.509,5.4 L11,9 C10.42,9.481 9.589,9.481 9,9 L9,9 L4.5,5.4 C4.189,5.17 3.759,5.2 3.5,5.47 C3.23,5.74 3.2,6.17 3.429,6.47 L3.429,6.47 L3.56,6.6 L8.11,10.15 C8.67,10.59 9.349,10.83 10.06,10.83 C10.769,10.83 11.46,10.59 12.019,10.15 L12.019,10.15 L16.53,6.54 L16.61,6.46 C16.849,6.17 16.849,5.75 16.599,5.46 C16.46,5.311 16.269,5.22 16.07,5.2 Z"></path>
         </g>
     </g>
+  </IconlySvg>
+);
+
+export const IconlyHeadset = (props) => (
+  <IconlySvg {...props}>
+    <path
+      d="M4 13v-2a8 8 0 0 1 16 0v2"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.9"
+    />
+    <path
+      d="M4 12.5h1.25A1.75 1.75 0 0 1 7 14.25v2A1.75 1.75 0 0 1 5.25 18H4v-5.5Zm16 0h-1.25A1.75 1.75 0 0 0 17 14.25v2A1.75 1.75 0 0 0 18.75 18H20v-5.5ZM17 18c-.55 1.22-1.78 2-3.14 2H12"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.9"
+    />
+    <circle cx="11" cy="20" r="1" fill="currentColor" />
   </IconlySvg>
 );
 

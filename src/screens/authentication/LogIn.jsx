@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Password } from "@/compat/primereact";
 import {
@@ -22,9 +22,11 @@ import {
   GENERAL_ERROR,
 } from "../../util/defines/common";
 import ForgottenPassword from "./ForgottenPassword";
+import GoogleLogin from "@/elements/authentication/GoogleLogin";
 
 const Login = () => {
   const isAuthenticated = useSelector(selectIsAuth);
+  const loginDestination = useRef(null);
 
   const [loginFormValues, setLoginFormValues] = useState({
     email: "",
@@ -41,6 +43,7 @@ const Login = () => {
   const { sendRequest } = useHttpClient();
 
   const [loading, setLoading] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -48,7 +51,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/user#profile", { replace: true });
+      navigate(loginDestination.current || "/user#profile", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -58,60 +61,33 @@ const Login = () => {
     });
   };
 
+  const finishLogin = (responseData) => {
+    if (!responseData?.token) {
+      dispatch(showNotification(GENERAL_ERROR));
+      return;
+    }
+    const previous = sessionStorage.getItem("prevUrl");
+    let destination = "/user#profile";
+    if (previous?.startsWith("/") && !previous.startsWith("//") && !previous.includes("\\")) destination = previous;
+    if (responseData.billingLocked || responseData.status === "locked" || responseData.billingVerificationUnavailable) destination = "/user#settings";
+    loginDestination.current = destination;
+    sessionStorage.removeItem("prevUrl");
+    dispatch(removeNotification());
+    dispatch(login(responseData));
+    dispatch(showNotification({ severity: "success", detail: "Welcome back" }));
+    if (responseData.celebrate) dispatch(showModal(BIRTHDAY_MODAL));
+  };
+
   const loginHandler = async (event) => {
     event.preventDefault();
+    if (loading || googlePending) return;
     setLoading(true);
     try {
-      const responseData = await sendRequest(`security/login`, "POST", {
+      const responseData = await sendRequest("security/login", "POST", {
         email: loginFormValues.email,
         password: loginFormValues.password,
       });
-
-      if (!Object.hasOwn(responseData, "token")) {
-        return dispatch(showNotification(GENERAL_ERROR));
-      }
-
-      dispatch(removeNotification());
-      dispatch(login(responseData));
-      dispatch(
-        showNotification({
-          severity: "success",
-          detail: "Welcome back",
-        })
-      );
-
-      // internship advertising
-      // dispatch(
-      //   showNotification({
-      //     ...INFO_STYLE,
-      //     position: "bottom-center",
-      //     content: () => (
-      //       <>
-      //         <p>
-      //           Fancy an entry-level job or an internship?
-      //           <Button
-      //             size="small"
-      //             label="Check out our suggestion!"
-      //             link
-      //             onClick={() => {
-      //               dispatch(removeNotification());
-      //               navigate("/user#internships");
-      //             }}
-      //           />
-      //         </p>
-      //       </>
-      //     ),
-      //   })
-      // );
-
-      if (responseData.celebrate) {
-        dispatch(showModal(BIRTHDAY_MODAL));
-      }
-
-      navigate(sessionStorage.getItem("prevUrl") ?? `/${responseData.region}`);
-      sessionStorage.removeItem("prevUrl");
-    } catch {
-      // useHttpClient reports request failures through the global notification UI.
+      if (responseData) finishLogin(responseData);
     } finally {
       setLoading(false);
     }
@@ -183,7 +159,7 @@ const Login = () => {
                     />
                   </div>
                   <button
-                    disabled={loading}
+                    disabled={loading || googlePending}
                     type="submit"
                     className="login_submit"
                   >
@@ -191,6 +167,9 @@ const Login = () => {
                   </button>
                 </form>
               ) : null}
+
+
+              <GoogleLogin onLogin={finishLogin} disabled={loading} onPendingChange={setGooglePending} />
 
               <div className="login_actions">
                 <button

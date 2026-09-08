@@ -1,9 +1,6 @@
 "use client";
 
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect } from "react";
 import {
   useDispatch,
   useSelector,
@@ -13,15 +10,10 @@ import {
   useNavigate,
 } from "@/util/navigation";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import AccountLocked from "../../elements/ui/modals/AccountLocked";
 import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
-import { LOCAL_STORAGE_USER_DATA } from "../../util/defines/common";
-import {
-  ACTIVE,
-  USER_STATUSES,
-} from "../../util/defines/enum";
-import { checkAuthorization } from "../../util/functions/authorization";
+import { accountRouteState } from "../../util/functions/account-route-state.mjs";
+import PropTypes from "prop-types";
 
 const AuthLayout = ({ children, access = [] }) => {
   const location = useLocation();
@@ -30,82 +22,25 @@ const AuthLayout = ({ children, access = [] }) => {
 
   const navigate = useNavigate();
 
-  const [isActive, setIsActive] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const routeState = accountRouteState(user, access, location.pathname);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA); 
-      const isAuth = !!(user && user.token) || !!userData || (user.version == process.env.NEXT_PUBLIC_AUTH_VERSION);
-      const routePath = location.pathname + location.hash + location.search;
+    if (routeState === "anonymous") {
+      try { sessionStorage.setItem("prevUrl", location.pathname + location.hash + location.search); }
+      catch { /* A blocked storage setting must not prevent the login redirect. */ }
+      navigate("/login", { replace: true });
+    } else if (routeState === "locked") {
+      navigate("/user#settings", { replace: true });
+    } else if (routeState === "forbidden") {
+      dispatch(showNotification({ severity: "error", detail: "You do not have access to this page" }));
+      navigate("/user", { replace: true });
+    }
+  }, [routeState, location.pathname, location.hash, location.search, navigate, dispatch]);
 
-      if (!isAuth) {
-        sessionStorage.setItem("prevUrl", routePath);
-        // dispatch(
-        //   showNotification({
-        //     severity: "warn",
-        //     detail: "Please log in to your account to proceed to the page!",
-        //   })
-        // );
-        setIsActive(false);
-        setIsLoading(false);
-        navigate("/login");
-        return;
-      }
-
-      const token =
-        user?.token || (userData ? JSON.parse(userData).token : null);
-
-      if (user.status && user.status !== USER_STATUSES[ACTIVE]) {
-        setIsActive(false);
-        setIsLoading(false);
-        return;
-      }
-
-      if (access.length > 0) {
-        try {
-          const authorized = checkAuthorization(token, access);
-          if (!authorized) {
-            dispatch(
-              showNotification({
-                severity: "error",
-                detail: "You do not have access to this page",
-              })
-            );
-            setIsActive(true);
-            setIsLoading(false);
-            return navigate("/user");
-          }
-        } catch (error) {
-          dispatch(
-            showNotification({
-              severity: "error",
-              detail:
-                "An error occurred while checking your access. Please try again.",
-            })
-          );
-          setIsActive(true);
-          setIsLoading(false);
-          return navigate("/user");
-        }
-      }
-
-      setIsActive(true);
-      setIsLoading(false);
-    };
-
-    checkAuth();
-  }, []);
-
-  if (isLoading) {
-    return <HeaderLoadingError />;
-  }
-
-  if (!isActive) {
-    return <AccountLocked />;
-  }
+  if (routeState !== "allowed") return <HeaderLoadingError />;
 
   return children;
 };
 
+AuthLayout.propTypes = { children: PropTypes.node, access: PropTypes.arrayOf(PropTypes.string) };
 export default React.memo(AuthLayout);

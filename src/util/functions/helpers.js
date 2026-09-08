@@ -4,11 +4,8 @@ import Resizer from "react-image-file-resizer";
 import ReactGA from "react-ga4";
 import { serverEndpoint } from "../defines/common";
 import CryptoJS from "crypto-js";
-import { checkAuthorization } from "./authorization";
 import {
-  ACCESS_3,
   ACCESS_4,
-  ALUMNI,
   LOCAL_STORAGE_LOCATION,
   LOCAL_STORAGE_COOKIE_CONSENT,
 } from "../defines/common";
@@ -103,7 +100,7 @@ export const encryptData = async (data) => {
     data: stringifiedData,
   });
 
-  if (!response?.data.hasOwnProperty("encryptedData")) {
+  if (!Object.prototype.hasOwnProperty.call(response?.data || {}, "encryptedData")) {
     return null;
   }
 
@@ -140,9 +137,8 @@ export const estimatePriceByEvent = (
   }
 ) => {
   const { product } = selectedEvent;
-  const isMember = !user?.isAlumni && !!user?.token;
-  const isActiveMember = isMember && checkAuthorization(user.token, ACCESS_4);
-  const isMemberDataFull = user?.name && user?.surname && user?.email;
+  const isMember = !!user?.token && user?.memberDiscount === true;
+  const isActiveMember = isMember && user?.roles?.some((role) => ACCESS_4.includes(role));
 
   const includedText =
     options.withIncludedText &&
@@ -371,7 +367,7 @@ export function isTodayInRange(start, end) {
 }
 
 export const isMember = (user) => {
-  return !!user?.token && !user?.isAlumni && !user?.roles?.includes(ALUMNI);
+  return !!user?.token && user?.memberDiscount === true;
 };
 
 export function modifyHeading(text) {

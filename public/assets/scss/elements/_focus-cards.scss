@@ -211,6 +211,22 @@
   }
 }
 
+@media (min-width: 992px) {
+  .future-events-three-events {
+    grid-template-columns: minmax(0, 1fr);
+
+    .focus-cards-grid {
+      width: 100%;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .focus-card {
+      width: 100%;
+      max-width: none;
+    }
+  }
+}
+
 .future-events-region-header {
   display: flex;
   align-items: center;

@@ -40,8 +40,8 @@ const ScrollToTop = ({ children, showUnder = 160, style }) => {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       style={{
         position: "fixed",
-        bottom: 50,
-        right: 30,
+        bottom: "max(1.25rem, env(safe-area-inset-bottom))",
+        right: "calc(max(1.25rem, env(safe-area-inset-right)) + var(--support-launcher-width, 6.25rem) + 0.75rem)",
         border: 0,
         padding: 0,
         cursor: "pointer",

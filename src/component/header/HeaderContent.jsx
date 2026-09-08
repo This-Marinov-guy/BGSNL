@@ -1,10 +1,17 @@
 import {
   Fragment,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useSelector } from "react-redux";
+import {
+  IconlyArrowDown,
+  IconlyLogout,
+  IconlyProfile,
+} from "@/elements/ui/icons/IconlyIcons";
 import {
   Link,
   useLocation,
@@ -17,7 +24,9 @@ import { selectUser } from "../../redux/user";
 import {
   ACCESS_1,
   ACCESS_4,
+  SUPPORT_ACCESS,
 } from "../../util/defines/common";
+import { ACCOUNT_TABS } from "../../util/defines/enum";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import {
   checkAuthorization,
@@ -25,17 +34,73 @@ import {
 } from "../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
+const getAccountInitials = (account) => {
+  const nameParts = [account?.name, account?.surname]
+    .map((part) => String(part || "").trim())
+    .filter(Boolean);
+
+  if (nameParts.length) {
+    return nameParts
+      .map((part) => Array.from(part)[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  }
+
+  const emailName = String(account?.email || "").split("@")[0];
+  const emailParts = emailName.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+
+  if (emailParts.length > 1) {
+    return `${Array.from(emailParts[0])[0]}${Array.from(emailParts.at(-1))[0]}`
+      .toUpperCase();
+  }
+
+  return Array.from(emailParts[0] || "U").slice(0, 2).join("").toUpperCase();
+};
+
 const HeaderContent = (props) => {
   const user = useSelector(selectUser);
+  const accountMenuRef = useRef(null);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [logoutAlert, setLogoutAlert] = useState(false);
 
-  const profileImage = user.token ? decodeJWT(user.token).image : "";
+  const account = user.token ? decodeJWT(user.token) : null;
+  const profileImage = user.image || account?.image || "";
+  const initials = getAccountInitials(account);
 
   const region = props.forceRegion ?? useParams().region;
 
   const navigate = useNavigate();
   const location = useLocation();
   const routePath = location.pathname;
+
+  useEffect(() => {
+    if (!accountMenuOpen) return undefined;
+
+    const closeOnOutsideClick = (event) => {
+      if (!accountMenuRef.current?.contains(event.target)) {
+        setAccountMenuOpen(false);
+      }
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setAccountMenuOpen(false);
+        accountMenuRef.current
+          ?.querySelector(".header-account-trigger")
+          ?.focus();
+      }
+    };
+
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [accountMenuOpen]);
+
+  const closeAccountMenu = () => setAccountMenuOpen(false);
 
   return (
     <>
@@ -167,19 +232,20 @@ const HeaderContent = (props) => {
             <Link to={`/${region ? region + "/" : ""}contact`}>Contact</Link>
           </li>
 
-          {user.token && (
+          {user.authInitialized && user.token && (
             <>
-              {checkAuthorization(user.token, ACCESS_4) && (
+              {checkAuthorization(user.token, [...new Set([...ACCESS_4, ...SUPPORT_ACCESS])]) && (
                 <li className="has-dropdown">
                   <a style={{ cursor: "pointer" }}>Dashboard</a>
                   <ul className="submenu">
                     <>
-                      <li>
-                        <Link to="/user/dashboard">Events</Link>
-                      </li>
-                      <li>
-                        <Link to="/user/add-event">Add Event</Link>
-                      </li>
+                      {checkAuthorization(user.token, ACCESS_1) && (
+                        <li><Link to="/user/accounts">Accounts</Link></li>
+                      )}
+                      {checkAuthorization(user.token, ACCESS_4) && <>
+                        <li><Link to="/user/dashboard">Events</Link></li>
+                        <li><Link to="/user/add-event">Add Event</Link></li>
+                      </>}
                       {checkAuthorization(user.token, ACCESS_1) && (
                         <li>
                           <Link to="/user/internships-dashboard">
@@ -187,62 +253,88 @@ const HeaderContent = (props) => {
                           </Link>
                         </li>
                       )}
+                      {checkAuthorization(user.token, SUPPORT_ACCESS) && <li><Link to="/user/support">Support</Link></li>}
                     </>
                   </ul>
                 </li>
               )}
-              <li className="has-dropdown">
-                <a
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                  }}
+              <li
+                className={`header-account-menu ${
+                  accountMenuOpen ? "is-open" : ""
+                }`}
+                ref={accountMenuRef}
+              >
+                <button
+                  aria-controls="header-account-dropdown"
+                  aria-expanded={accountMenuOpen}
+                  aria-haspopup="true"
+                  aria-label={
+                    accountMenuOpen ? "Close account menu" : "Open account menu"
+                  }
+                  className="header-account-trigger"
+                  onClick={() => setAccountMenuOpen((isOpen) => !isOpen)}
+                  type="button"
                 >
                   {profileImage ? (
                     <LazyLoadImage
                       src={profileImage}
-                      alt="Profile"
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        border: "2px solid #fff",
-                      }}
+                      alt=""
+                      className="header-account-avatar"
                     />
                   ) : (
-                    <span>Profile</span>
+                    <span className="header-account-avatar header-account-avatar--fallback">
+                      <IconlyProfile size="1.15rem" aria-hidden />
+                    </span>
                   )}
-                </a>
-                <ul className="submenu">
-                  <li>
-                    <Link to={`/user#profile`}>Profile</Link>
-                  </li>
-                  <li>
-                    <Link to={`/user#news`}>News</Link>
-                  </li>
-                  <li>
-                    <Link to={`/user#tickets`}>Tickets</Link>
-                  </li>
-                  <li>
-                    <Link to={`/user#internships`}>Internships</Link>
-                  </li>
-                  <li>
-                    <Link to={`/user#promotions`}>Promotions</Link>
-                  </li>
-                  <li>
-                    <Link to={`/user#settings`}>Settings</Link>
-                  </li>
-                </ul>
+                  <span className="header-account-trigger__label">{initials}</span>
+                  <IconlyArrowDown
+                    aria-hidden
+                    className="header-account-trigger__chevron"
+                  />
+                </button>
+                <div
+                  className="header-account-dropdown"
+                  hidden={!accountMenuOpen}
+                  id="header-account-dropdown"
+                >
+                  <div className="header-account-summary">
+                    <strong>Your account</strong>
+                    {account?.email ? <span>{account.email}</span> : null}
+                  </div>
+                  <ul aria-label="Account sections">
+                    {ACCOUNT_TABS.map((tab) => (
+                      <li key={tab}>
+                        <Link onClick={closeAccountMenu} to={`/user#${tab}`}>
+                          {capitalizeFirstLetter(tab)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    className="header-account-logout"
+                    onClick={() => {
+                      closeAccountMenu();
+                      setLogoutAlert(true);
+                    }}
+                    type="button"
+                  >
+                    <IconlyLogout size="1rem" aria-hidden />
+                    <span>Log Out</span>
+                  </button>
+                </div>
               </li>
             </>
           )}
 
-          <li>
-            <div className="header-btn">
-              {!user.token ? (
+          {!user.authInitialized ? (
+            <li className="header-account-loading">
+              <span aria-label="Checking account status" role="status">
+                <span aria-hidden="true" className="header-account-spinner" />
+              </span>
+            </li>
+          ) : !user.token ? (
+            <li>
+              <div className="header-btn">
                 <button
                   onClick={() => {
                     sessionStorage.setItem("prevUrl", routePath);
@@ -252,13 +344,9 @@ const HeaderContent = (props) => {
                 >
                   <span>Log In</span>
                 </button>
-              ) : (
-                <button onClick={() => setLogoutAlert(true)} className="rn-btn">
-                  <span>Log Out</span>
-                </button>
-              )}
-            </div>
-          </li>
+              </div>
+            </li>
+          ) : null}
         </ul>
       </nav>
     </>

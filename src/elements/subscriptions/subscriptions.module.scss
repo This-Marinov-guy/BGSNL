@@ -1,0 +1,34 @@
+.planPicker {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  background: var(--color-white, #fff);
+  border-radius: 0.75rem;
+
+  h3, p { margin: 0; }
+  p { color: var(--color-body, #42584f); }
+  label { margin: 0; }
+  select { width: 100%; min-width: 0; }
+  button { justify-self: start; }
+}
+
+.dangerBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  margin-bottom: 1.5rem;
+  background: #fff0f1;
+  color: #861330;
+  border-radius: 0.75rem;
+
+  > svg { flex-shrink: 0; }
+  > div { min-width: 0; }
+  h2 { margin: 0 0 0.75rem; color: inherit; }
+  p { color: inherit; }
+}
+
+@media (max-width: 575px) {
+  .dangerBanner { flex-direction: column; }
+  .planPicker button { width: 100%; }
+}

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHttpClient } from "../common/http-hook";
 import { useJWTRefresh } from "../common/api-hooks";
-import { login } from "../../redux/user";
+import { login, finishAuthInitialization } from "../../redux/user";
 import { isObjectEmpty } from "../../util/functions/helpers";
 import {
   LOCAL_STORAGE_USER_DATA,
@@ -58,6 +58,10 @@ export const useAppInitialization = () => {
       } catch (err) {
         console.error("Error during initialization:", err);
         clearUserStorage();
+      } finally {
+        // Protected pages must wait for both successful and failed restores;
+        // a saved token alone cannot supply the server-verified account roles.
+        dispatch(finishAuthInitialization());
         setIsLoading(false);
       }
     };

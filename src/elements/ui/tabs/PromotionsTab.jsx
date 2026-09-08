@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+import { useHttpClient } from "@/hooks/common/http-hook";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import {
@@ -7,14 +9,12 @@ import {
   IconlyLocation,
 } from "@/elements/ui/icons/IconlyIcons";
 import { showNotification } from "../../../redux/notification";
-import { PROMO_CODES } from "../../../util/defines/PROMO_CODES";
 import UserTabHeader from "./UserTabHeader";
 
 const capitalizeCity = (str) =>
   str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
-const getPromosByCity = () => {
-  const codes = PROMO_CODES || {};
+const getPromosByCity = (codes = {}) => {
   return Object.entries(codes).map(([city, value]) => {
     const promos = Array.isArray(value) ? value : [value];
     return { city, promos };
@@ -113,13 +113,29 @@ PromotionCard.propTypes = {
 };
 
 const PromotionsTab = () => {
-  const byCity = getPromosByCity();
+  const { sendRequest } = useHttpClient();
+  const request = useRef(sendRequest);
+  request.current = sendRequest;
+  const [codes, setCodes] = useState(null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    let mounted = true;
+    setFailed(false);
+    request.current("user/promotions", "GET", null, {}, false, false).then((response) => {
+      if (!mounted) return;
+      if (!response?.promotions) { setFailed(true); return; }
+      setCodes(response.promotions);
+    });
+    return () => { mounted = false; };
+  }, [attempt]);
+  const byCity = getPromosByCity(codes || {});
 
   return (
     <div className="tab-content-wrapper">
       <UserTabHeader title="Promotions" />
       <div className="tab-body">
-        {byCity.length > 0 ? (
+        {failed ? <div role="status"><p>Promotions could not be loaded. An active subscription is required.</p><button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => setAttempt((value) => value + 1)} type="button">Try again</button></div> : !codes ? <p role="status">Loading your promotions…</p> : byCity.length > 0 ? (
           <div className="promotions-by-city">
             {byCity.map(({ city, promos }) => (
               <section key={city} className="promotions-city-section">
