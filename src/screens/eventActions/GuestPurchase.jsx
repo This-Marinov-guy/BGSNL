@@ -34,6 +34,7 @@ import CardInputs from "../../elements/inputs/common/CardInputs";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
 import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
+import BillingStatusBanner from "../../elements/subscriptions/BillingStatusBanner";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
@@ -265,6 +266,16 @@ const GuestPurchase = ({ initialEvent = null }) => {
             </div>
 
             <div className="col-12">
+              {userIsLoggedIn && user.memberDiscount !== true && (
+                <BillingStatusBanner
+                  user={user}
+                  context="ticket"
+                  missedDiscount={
+                    membershipSaving ? formatEuro(membershipSaving) : null
+                  }
+                />
+              )}
+
               {showMembershipOffer && (
                 <div className="purchase-membership-banner purchase-form-membership-banner">
                   <MembershipOfferBanner

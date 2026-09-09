@@ -1,10 +1,12 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import InternshipApplyModal from "../../elements/ui/modals/InternshipApplyModal";
+import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
+import { getInternshipApplyAccess } from "../../elements/ui/modals/internship-access.mjs";
 import { useRefreshUser } from "./api-hooks";
 import { selectUser } from "../../redux/user";
-import { ACTIVE, DOCUMENT_TYPES, USER_STATUSES } from "../../util/defines/enum";
+import { DOCUMENT_TYPES } from "../../util/defines/enum";
 
 const InternshipApplyModalContext = createContext({
   openInternshipApplyModal: async () => false,
@@ -27,12 +29,12 @@ export const InternshipApplyModalProvider = ({ children }) => {
     onUserRefresh: null,
   });
 
-  const closeInternshipApplyModal = () => {
+  const closeInternshipApplyModal = useCallback(() => {
     setModalState((currentState) => ({
       ...currentState,
       visible: false,
     }));
-  };
+  }, []);
 
   const openInternshipApplyModal = async ({
     internship,
@@ -40,23 +42,19 @@ export const InternshipApplyModalProvider = ({ children }) => {
     onApply,
     onUserRefresh,
   }) => {
-    if (!internship) {
+    if (!internship || !authUser?.token) {
       return false;
     }
 
     let resolvedUser = user;
 
-    if (
-      !resolvedUser &&
-      authUser?.token &&
-      authUser?.status === USER_STATUSES[ACTIVE]
-    ) {
+    if (!resolvedUser) {
       const response = await refreshUser();
-      resolvedUser = response?.user || null;
-    }
-
-    if (!resolvedUser?.hasBenefits) {
-      return false;
+      resolvedUser = response?.user || {
+        ...authUser,
+        hasBenefits: false,
+        billingVerificationUnavailable: true,
+      };
     }
 
     setModalState({
@@ -75,13 +73,19 @@ export const InternshipApplyModalProvider = ({ children }) => {
     modalState.internship?._id ||
     modalState.internship?.id ||
     `${modalState.internship?.company || "internship"}-${modalState.internship?.specialty || "apply"}`;
+  const access = getInternshipApplyAccess(modalState.user);
 
   return (
     <InternshipApplyModalContext.Provider
       value={{ openInternshipApplyModal, closeInternshipApplyModal }}
     >
       {children}
-      {modalState.internship && modalState.user && (
+      <MembersOnlyApplyModal
+        visible={modalState.visible && access.mode === "account"}
+        onHide={closeInternshipApplyModal}
+        user={modalState.user}
+      />
+      {modalState.internship && access.mode === "apply" && (
         <InternshipApplyModal
           key={modalKey}
           visible={modalState.visible}

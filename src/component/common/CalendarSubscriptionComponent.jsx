@@ -1,7 +1,7 @@
 import {
   FaApple,
-  FaGoogle,
-  FaMicrosoft,
+  GoogleBrandIcon,
+  IconlyOutlook,
 } from "@/elements/ui/icons/IconlyIcons";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import {
@@ -32,36 +32,65 @@ const CalendarSubscriptionComponent = () => {
             your preferred platform:
           </p>
           <div className="calendar-subscription__buttons">
-            <a
-              href={googleCalendarPublicLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="calendar-subscription__buttons-button calendar-subscription__buttons-button--google"
-            >
-              <FaGoogle className="calendar-subscription__icon" /> Add to Google
-              Calendar
-            </a>
+            <span className="calendar-subscription__action">
+              <a
+                href={googleCalendarPublicLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="calendar-subscription__buttons-button calendar-subscription__buttons-button--google"
+                aria-label="Add calendar to Google Calendar"
+                aria-describedby="calendar-google-tooltip"
+              >
+                <GoogleBrandIcon className="calendar-subscription__icon" />
+              </a>
+              <span
+                className="calendar-subscription__tooltip"
+                id="calendar-google-tooltip"
+                role="tooltip"
+              >
+                Add to Google Calendar
+              </span>
+            </span>
 
             {/* downloads .ics file */}
-            <a
-              href={icsLink}
-              download="calendar.ics"
-              className="calendar-subscription__buttons-button calendar-subscription__buttons-button--apple"
-              title="Download ICS file for Apple Calendar"
-            >
-              <FaApple className="calendar-subscription__icon" /> Download ICS
-              File
-            </a>
+            <span className="calendar-subscription__action">
+              <a
+                href={icsLink}
+                download="calendar.ics"
+                className="calendar-subscription__buttons-button calendar-subscription__buttons-button--apple"
+                aria-label="Download calendar for Apple Calendar"
+                aria-describedby="calendar-apple-tooltip"
+              >
+                <FaApple className="calendar-subscription__icon" />
+              </a>
+              <span
+                className="calendar-subscription__tooltip"
+                id="calendar-apple-tooltip"
+                role="tooltip"
+              >
+                Download for Apple Calendar
+              </span>
+            </span>
 
-            <a
-              href={outlookWebLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="calendar-subscription__buttons-button calendar-subscription__buttons-button--outlook"
-            >
-              <FaMicrosoft className="calendar-subscription__icon" /> Add to
-              Outlook Calendar
-            </a>
+            <span className="calendar-subscription__action">
+              <a
+                href={outlookWebLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="calendar-subscription__buttons-button calendar-subscription__buttons-button--outlook"
+                aria-label="Add calendar to Outlook"
+                aria-describedby="calendar-outlook-tooltip"
+              >
+                <IconlyOutlook className="calendar-subscription__icon" />
+              </a>
+              <span
+                className="calendar-subscription__tooltip"
+                id="calendar-outlook-tooltip"
+                role="tooltip"
+              >
+                Add to Outlook Calendar
+              </span>
+            </span>
           </div>
 
           {/* google iframe calendar */}

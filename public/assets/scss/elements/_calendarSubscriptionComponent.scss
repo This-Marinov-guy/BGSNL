@@ -1,6 +1,5 @@
 .calendar-subscription {
   &__area {
-    padding-top: 40px;
     padding-bottom: 10px;
     background-color: #f9f9f9;
   }
@@ -31,35 +30,72 @@
   &__buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     flex-wrap: wrap;
 
     &-button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 220px;
-      gap: 8px;
-      padding: 10px 20px;
+      width: 3rem;
+      height: 3rem;
+      flex: 0 0 3rem;
+      padding: 0;
 
       color: #fff;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
+      border: 2px solid transparent;
+      border-radius: 0.5rem;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
       cursor: pointer;
 
-      white-space: nowrap;
+      &:hover {
+        background-color: transparent;
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus-visible {
+        outline: 3px solid rgba(16, 152, 173, 0.3);
+        outline-offset: 3px;
+      }
 
       &--google {
-        background-color: #4285f4;
+        color: #4285f4;
+        background-color: #fff;
+        border-color: #d5e3fb;
+        box-shadow: 0 0.35rem 0.9rem rgb(66 133 244 / 12%);
+
+        &:hover {
+          color: #4285f4;
+          background-color: #f7faff;
+          border-color: #4285f4;
+        }
       }
 
       &--apple {
-        background-color: #a2aaad;
+        background-color: #4b5563;
+
+        &:hover {
+          color: #4b5563;
+          border-color: #4b5563;
+        }
       }
 
       &--outlook {
         background-color: #0078d4;
+
+        &:hover {
+          color: #0078d4;
+          border-color: #0078d4;
+        }
       }
 
       &--download {
@@ -68,15 +104,70 @@
     }
   }
 
-  &__icon {
+  &__action {
+    position: relative;
+    display: inline-flex;
 
+    &:hover,
+    &:focus-within {
+      .calendar-subscription__tooltip {
+        visibility: visible;
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+  }
+
+  &__tooltip {
+    position: absolute;
+    bottom: calc(100% + 0.65rem);
+    left: 50%;
+    z-index: 5;
+    width: max-content;
+    max-width: 13rem;
+    padding: 0.45rem 0.65rem;
+    visibility: hidden;
+    color: #fff;
+    font-family: "LeagueSpartan", "Roboto", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    background: #10291f;
+    border-radius: 0.35rem;
+    box-shadow: 0 0.5rem 1.25rem rgb(16 41 31 / 18%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 0.35rem);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease,
+      visibility 180ms ease;
+
+    &::after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-top: 0.4rem solid #10291f;
+      border-right: 0.4rem solid transparent;
+      border-left: 0.4rem solid transparent;
+      content: "";
+      transform: translateX(-50%);
+    }
+  }
+
+  &__icon {
+    width: 1.45rem;
+    height: 1.45rem;
   }
 
   &__iframe-container {
     margin-top: 30px;
     position: relative;
-    padding-bottom: 56.25%; // aspect ratio for responsive iframe (16:9)
-    height: 0;
+    height: clamp(28rem, 62dvh, 38rem);
+    padding-bottom: 0;
     overflow: hidden;
 
     iframe {

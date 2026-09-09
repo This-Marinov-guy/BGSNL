@@ -9,6 +9,8 @@ import { showModal } from "../../../redux/modal";
 import { logout } from "../../../redux/user";
 import { USER_UPDATE_MODAL } from "../../../util/defines/common";
 import SubscriptionManage from "../buttons/SubscriptionManage";
+import SubscriptionStart from "@/elements/subscriptions/SubscriptionStart";
+import { canStartSubscription, hasBillingReference } from "@/elements/subscriptions/subscription-checkout.mjs";
 import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
 import UserTabHeader from "./UserTabHeader";
 
@@ -47,6 +49,8 @@ SettingsRow.propTypes = {
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
+  const canSubscribe = canStartSubscription(user);
+  const canManageBilling = hasBillingReference(user?.subscription);
   const handleLogout = () => {
     dispatch(logout());
     window.location.href = "/";
@@ -83,8 +87,20 @@ const SettingsTab = ({ user }) => {
             <h2 id="settings-membership" className="settings-group__title">Membership</h2>
             <ul className="settings-list">
               <SettingsRow
-                action={user?.subscription?.customerId ? <SubscriptionManage canCancel={user.isSubscribed} /> : null}
-                description="Review invoices, update your payment method or cancel through Stripe."
+                action={
+                  <div className="subscription-actions">
+                    {canSubscribe && <SubscriptionStart />}
+                    {canManageBilling && <SubscriptionManage canCancel={user.isSubscribed} subscription={user.subscription} />}
+                    {!canSubscribe && !canManageBilling && (
+                      <a className={SETTINGS_PRIMARY_ACTION} href="/user#help">Contact support</a>
+                    )}
+                  </div>
+                }
+                description={canSubscribe
+                  ? "Start a Member or Alumni subscription and complete your payment securely."
+                  : canManageBilling
+                    ? "Review invoices, update your payment method or cancel your subscription."
+                    : "Contact support for help with your membership."}
                 icon={<FaCog />}
                 title="Billing"
               />

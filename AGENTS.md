@@ -10,6 +10,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## UI design rules
 
+- Center standard modals horizontally and vertically in the viewport on desktop
+  and mobile, unless a different position is explicitly requested. Keep intentional
+  exceptions such as the bottom-right Help widget and fullscreen media previews.
+- Step navigation must fit its container without scrolling. On mobile, keep each
+  label visible below its step number.
 - Do not add eyebrow labels above headings.
 - Do not use a border on modal frames.
 - Do not use single-edge or partial borders as decorative accents. Prefer spacing,

@@ -12,23 +12,191 @@
   button { justify-self: start; }
 }
 
-.dangerBanner {
+.checkoutForm {
+  display: grid;
+  gap: 1.25rem;
+
+  p, label { margin: 0; }
+  p { color: var(--color-body, #42584f); }
+  select { width: 100%; min-width: 0; }
+  button { max-width: 100%; white-space: normal; text-align: center; }
+}
+
+.checkoutField, .checkoutMessage {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.checkoutField { margin: 0.5rem 0 0; }
+
+.checkoutLabelRow {
+  align-items: center;
   display: flex;
-  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.membershipHelpButton {
+  align-items: center;
+  background: #e8f4f1;
+  border: 0;
+  border-radius: 50%;
+  color: #017363;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 28px;
+  height: 28px;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  width: 28px;
+
+  svg { height: 18px; width: 18px; }
+
+  &:hover {
+    background: #017363;
+    color: #f9fbfa;
+    transform: translateY(-1px);
+  }
+
+  &:active { transform: translateY(0) scale(0.98); }
+
+  &:focus-visible {
+    outline: 3px solid rgb(1 115 99 / 22%);
+    outline-offset: 2px;
+  }
+
+  &:disabled { cursor: not-allowed; opacity: 0.55; }
+}
+
+.membershipGuideMask {
+  background: rgb(18 24 22 / 18%);
+  z-index: 11010;
+}
+
+.membershipGuideModal {
+  width: min(720px, calc(100vw - 32px));
+}
+
+.membershipGuideBody { padding-top: 6px; }
+
+.membershipTypeGrid {
+  display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.membershipTypeCard {
+  background: #f9fbfa;
+  border: 1px solid #cad8d3;
+  border-radius: 14px;
+  color: #1f2925;
+  cursor: pointer;
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  text-align: left;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+
+  picture { display: block; height: 180px; overflow: hidden; }
+
+  &:hover,
+  &[aria-pressed="true"] {
+    border-color: #017363;
+    box-shadow: 0 12px 28px rgb(1 82 71 / 13%);
+    transform: translateY(-2px);
+  }
+
+  &:active { transform: translateY(0) scale(0.99); }
+
+  &:focus-visible {
+    outline: 3px solid rgb(1 115 99 / 22%);
+    outline-offset: 2px;
+  }
+}
+
+.membershipTypeImage {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.membershipTypeCopy {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem;
+
+  > strong {
+    color: #102f27;
+    font-family: "LeagueSpartan", "Roboto", sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.1;
+  }
+
+  > span:not(.membershipTypeAction) {
+    color: #53625c;
+    line-height: 1.45;
+  }
+}
+
+.membershipTypeAction {
+  color: #017363;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.dangerBanner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem 1rem;
   padding: clamp(1rem, 3vw, 1.75rem);
   margin-bottom: 1.5rem;
   background: #fff0f1;
   color: #861330;
   border-radius: 0.75rem;
 
-  > svg { flex-shrink: 0; }
-  > div { min-width: 0; }
-  h2 { margin: 0 0 0.75rem; color: inherit; }
+  h2 { margin: 0; color: inherit; }
   p { color: inherit; }
 }
 
+.dangerIcon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.dangerContent {
+  grid-column: 2;
+  min-width: 0;
+
+  p:last-child { margin-bottom: 0; }
+}
+
+.dangerLink {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+
+  &:hover,
+  &:focus-visible {
+    color: inherit;
+    text-decoration-thickness: 0.12em;
+  }
+}
+
 @media (max-width: 575px) {
-  .dangerBanner { flex-direction: column; }
+  .dangerIcon { width: 2.5rem; height: 2.5rem; }
+  .dangerContent { grid-column: 1 / -1; }
   .planPicker button { width: 100%; }
+  .membershipHelpButton { width: 28px; }
+  .membershipTypeGrid { grid-template-columns: 1fr; }
+  .membershipTypeCard {
+    grid-template-columns: 112px minmax(0, 1fr);
+
+    picture { height: 100%; min-height: 150px; }
+  }
+  .membershipTypeCopy { padding: 0.9rem; }
 }

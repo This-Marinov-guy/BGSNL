@@ -180,6 +180,7 @@ Mainmenu Area
 }
 
 .header-account-trigger {
+  animation: header-account-control-appear 280ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
   align-items: center;
   border: 0;
   border-radius: 999px;
@@ -209,6 +210,7 @@ Mainmenu Area
 }
 
 .header-account-avatar {
+  animation: header-account-avatar-appear 320ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both;
   background: #fff;
   border: 2px solid rgb(255 255 255 / 88%);
   border-radius: 50%;
@@ -388,6 +390,28 @@ Mainmenu Area
   }
 }
 
+@keyframes header-account-control-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes header-account-avatar-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes header-account-spin {
   to {
     transform: rotate(360deg);
@@ -432,6 +456,8 @@ Mainmenu Area
 
 @media (prefers-reduced-motion: reduce) {
   .header-account-dropdown,
+  .header-account-trigger,
+  .header-account-avatar,
   .header-account-trigger__chevron {
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;

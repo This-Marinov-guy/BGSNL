@@ -136,6 +136,13 @@
     border-radius: 50%;
   }
 
+  .restriction-icon-image {
+    display: block;
+    width: 5rem;
+    height: 5rem;
+    object-fit: contain;
+  }
+
   h4 {
 
     margin-bottom: 14px;
@@ -155,6 +162,38 @@
 
 
     border-radius: 10px !important;
+  }
+}
+
+.account-restriction-card {
+  display: grid;
+  justify-items: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem);
+  color: var(--color-body);
+  text-align: center;
+  background: #f1f6f3;
+  border: 1px solid rgb(1 115 99 / 12%);
+  border-radius: 0.9rem;
+
+  &__icon {
+    display: block;
+    width: clamp(5.5rem, 10vw, 7.5rem);
+    height: clamp(5.5rem, 10vw, 7.5rem);
+    margin-bottom: 1rem;
+    object-fit: contain;
+  }
+
+  h3 {
+    margin: 0 0 0.65rem;
+    color: var(--color-heading);
+    text-wrap: balance;
+  }
+
+  p {
+    max-width: 52ch;
+    margin: 0 auto 1.35rem;
+    color: var(--color-body-light);
+    line-height: 1.6;
   }
 }
 

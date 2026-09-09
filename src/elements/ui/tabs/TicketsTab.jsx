@@ -4,7 +4,6 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import {
   FiEye,
-  FiLock,
 } from "@/elements/ui/icons/IconlyIcons";
 import MediaPreview from "@/elements/ui/media/MediaPreview";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
@@ -25,7 +24,12 @@ const TicketsTab = ({ currentUser }) => {
         {isTier0Alumni ? (
           <div className="tier-restriction-card">
             <div className="restriction-icon">
-              <FiLock />
+              <img
+                alt=""
+                aria-hidden="true"
+                className="restriction-icon-image"
+                src="/assets/images/svg/3d/lock.png"
+              />
             </div>
             <h4>Tickets Not Available</h4>
             <p>

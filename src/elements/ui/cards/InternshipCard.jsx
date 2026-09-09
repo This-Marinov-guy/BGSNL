@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { ACTIVE, USER_STATUSES } from "../../../util/defines/enum";
 import { selectUser } from "../../../redux/user";
 import { useInternshipApplyModal } from "../../../hooks/common/use-internship-apply-modal";
 
@@ -27,8 +26,9 @@ const InternshipCard = (props) => {
   const { user, isPreview = false, onUserRefresh, onApplyWhenGuest } = props;
   const authUser = useSelector(selectUser);
   const { openInternshipApplyModal } = useInternshipApplyModal();
-  const isLoggedIn =
-    (user?.status || authUser?.status) === USER_STATUSES[ACTIVE];
+  // Non-active accounts are still signed in. The shared modal directs them to
+  // resolve their account instead of asking them to register or log in again.
+  const isLoggedIn = Boolean(authUser?.token);
 
   const hasExternalApplyLink = Boolean(applyLink?.trim());
 

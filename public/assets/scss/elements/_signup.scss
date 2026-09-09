@@ -101,6 +101,7 @@
 
   .p-steps,
   .p-stepper {
+    --bgsnl-step-number-size: 30px;
     width: 100%;
     max-width: 100%;
     margin: 0;
@@ -1224,11 +1225,6 @@
     .p-steps,
     .p-stepper {
       padding: 5px 0;
-    }
-
-    .p-steps-title,
-    .p-step-title {
-      display: none;
     }
   }
 

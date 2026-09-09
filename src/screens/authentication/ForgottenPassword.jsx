@@ -198,7 +198,10 @@ const ForgottenPassword = (props) => {
                         We have sent an email containing the token. <br /> In order to verify it is you, we will need it back!
                     </p>
                     <h4 className="col-12 center_div">Verification Token</h4>
-                    <div className="col-12 mt--10" data-field-name="token">
+                    <div
+                        className="col-12 mt--10 center_div"
+                        data-field-name="token"
+                    >
                         <InputOtp
                             value={formValues.token}
                             name="token"

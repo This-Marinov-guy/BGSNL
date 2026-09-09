@@ -20,7 +20,9 @@ test("role changes are reflected immediately, without rendering forbidden childr
   assert.equal(accountRouteState({ ...staff, roles: undefined }, ["admin"], "/user/support"), "forbidden");
 });
 
-test("locked accounts keep account Help but cannot enter staff routes", () => {
-  assert.equal(accountRouteState({ ...staff, status: "locked" }, [], "/user"), "allowed");
-  assert.equal(accountRouteState({ ...staff, status: "locked" }, ["admin"], "/user/support"), "locked");
+test("restricted accounts keep account Settings and Help but cannot enter staff routes", () => {
+  for (const status of ["locked", "payment_awaiting", "frozen", "suspended"]) {
+    assert.equal(accountRouteState({ ...staff, status }, [], "/user"), "allowed");
+    assert.equal(accountRouteState({ ...staff, status }, ["admin"], "/user/support"), "locked");
+  }
 });

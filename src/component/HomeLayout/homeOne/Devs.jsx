@@ -21,6 +21,18 @@ const teamMembers = [
     ],
   },
   {
+    id: 1,
+    name: "Konstantin Sonev",
+    title: "AI Engineer",
+    imgSrc: "/assets/images/developers/koko.jpeg",
+    socialLinks: [
+      {
+        platform: "linkedin",
+        url: "https://www.linkedin.com/in/konstantin-sonev-9b19ab263/",
+      },
+    ],
+  },
+  {
     id: 2,
     name: "Presiyan Penkov",
     title: "Software Developer",
@@ -59,8 +71,7 @@ const teamMembers = [
 ];
 
 const Devs = () => {
-  let teamSize = teamMembers.length;
-  let columnSize = Math.floor(teamSize / 12);
+  let columnSize = 3;
 
   const dispatch = useDispatch();
 
@@ -108,7 +119,7 @@ const Devs = () => {
 
             <div className="row">
 
-              <div className="col-lg-6 col-12">
+              <div className="col-lg-6 col-12 mb--20">
                 <div className="d-flex flex-wrap center_div">
                   {teamMembers.length > 0 ? (
                     teamMembers.map((member) => (
@@ -134,7 +145,7 @@ const Devs = () => {
                   alt="Github"
                   style={{ width: "60px", height: "60px" }}
                 />
-                <h3 className="description mt--10">
+                <h3 style={{textAlign: 'center'}} className="description mt--10">
                   We are an open-source project, feel free to contribute and gain your spot here.
                 </h3>
               </a>

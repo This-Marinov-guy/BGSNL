@@ -51,9 +51,9 @@
 .pagination button { min-height: 2.6rem; padding: .45rem .9rem; border-radius: .55rem; background: #e5f0eb; color: #017363; }
 .pagination button:disabled { opacity: .45; cursor: not-allowed; }
 
-.modalBackdrop { position: fixed; z-index: 10050; inset: 0; display: flex; justify-content: flex-end; background: rgb(15 30 23 / 48%); backdrop-filter: blur(2px); }
-.editor { width: min(44rem, 100%); height: 100dvh; overflow-y: auto; background: #fff; box-shadow: -1rem 0 3rem rgb(10 24 17 / 18%); animation: editorIn 240ms cubic-bezier(.2,.8,.2,1); }
-.editorHeader { position: sticky; z-index: 2; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem clamp(1rem, 4vw, 2rem); border-bottom: 1px solid #e0e7e2; background: rgb(255 255 255 / 96%); backdrop-filter: blur(10px); }
+.modalBackdrop { --editor-gutter: clamp(10px, 4vw, 40px); position: fixed; z-index: 11000; inset: 0; display: flex; align-items: center; justify-content: center; padding: var(--editor-gutter); background: rgb(15 30 23 / 48%); backdrop-filter: blur(2px); }
+.editor { width: min(44rem, 100%); max-height: calc(100dvh - 2 * var(--editor-gutter)); min-height: 0; overflow-y: auto; border: 0; border-radius: 14px; background: #fff; box-shadow: 0 1.5rem 4rem rgb(10 24 17 / 18%); animation: editorIn 240ms cubic-bezier(.2,.8,.2,1); }
+.editorHeader { position: sticky; z-index: 2; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem clamp(1rem, 4vw, 2rem); border: 0; background: rgb(255 255 255 / 96%); backdrop-filter: blur(10px); }
 .editorHeader > div { display: flex; align-items: center; gap: .8rem; min-width: 0; }
 .editorHeader h2 { margin: 0; font-size: 1.45rem; overflow-wrap: anywhere; }
 .editorHeader p { margin: .15rem 0 0; color: #66766d; }
@@ -79,7 +79,7 @@
 .secondaryButton { background: #edf1ee; color: #31443a; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-@keyframes editorIn { from { transform: translateX(2rem); opacity: .6; } to { transform: translateX(0); opacity: 1; } }
+@keyframes editorIn { from { transform: translateY(.75rem) scale(.985); opacity: .6; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
 @media (max-width: 767px) {
   .page { width: 96%; padding-bottom: 2rem; }

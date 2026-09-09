@@ -1,5 +1,6 @@
 // React and Redux Required
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { clarityTrack, gaTrack } from "../util/functions/helpers";
@@ -52,6 +53,7 @@ const TOAST_ICONS = {
 const MainLayout = ({ children }) => {
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
+  const [toastPortalTarget, setToastPortalTarget] = useState(null);
 
   const activeStrap = getActiveStrap();
 
@@ -67,6 +69,10 @@ const MainLayout = ({ children }) => {
   const errorToastIds = useRef([]);
 
   const { reloadArticles } = useArticlesLoad();
+
+  useEffect(() => {
+    setToastPortalTarget(document.body);
+  }, []);
 
   // Scroll reset on navigation now lives in <ScrollToTop /> (app/providers.jsx).
   // The old `[window.location.pathname]` dependency evaluated during render,
@@ -136,7 +142,17 @@ const MainLayout = ({ children }) => {
       <BirthdayModal />
       <CookiesModal />
       <GoogleCalendarModal />
-      <Toaster gutter={12} position="top-center" />
+      {toastPortalTarget
+        ? createPortal(
+            <Toaster
+              containerClassName="bgsnl-toast-layer"
+              containerStyle={{ zIndex: "var(--layer-toast)" }}
+              gutter={12}
+              position="top-center"
+            />,
+            toastPortalTarget,
+          )
+        : null}
       <GlobalFormValidation />
       <Strap strap={activeStrap} />
       {children}

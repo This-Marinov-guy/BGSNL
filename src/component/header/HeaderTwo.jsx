@@ -21,7 +21,8 @@ import HeaderContent from "./HeaderContent";
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
 
-  const region = props.forceRegion ?? useParams().region;
+  const requestedRegion = props.forceRegion ?? useParams().region;
+  const region = REGIONS.includes(requestedRegion) ? requestedRegion : null;
 
   const activeStrap = getActiveStrap();
 

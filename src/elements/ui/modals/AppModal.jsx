@@ -34,10 +34,12 @@ const AppModal = ({
   contentClassName,
   headerClassName,
   footerClassName,
+  maskClassName,
   style,
   contentStyle,
   headerStyle,
   ariaLabel,
+  suspended = false,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPresent, setIsPresent] = useState(open);
@@ -63,7 +65,7 @@ const AppModal = ({
   }, [open]);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || suspended) return undefined;
 
     const previouslyFocused = document.activeElement;
     const handleKeyDown = (event) => {
@@ -103,7 +105,7 @@ const AppModal = ({
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocused?.focus?.({ preventScroll: true });
     };
-  }, [closable, onClose, open]);
+  }, [closable, onClose, open, suspended]);
 
   useEffect(() => {
     if (!open || !modal || !blockScroll) return undefined;
@@ -128,7 +130,9 @@ const AppModal = ({
       className={joinClasses(
         "bgsnl-modal-mask",
         "p-overlay-mask",
+        maskClassName,
         !modal && "bgsnl-modal-mask--modeless",
+        suspended && "bgsnl-modal-mask--suspended",
         open ? "is-open" : "is-closing"
       )}
       onMouseDown={handleMaskClick}
@@ -136,8 +140,10 @@ const AppModal = ({
       <section
         aria-label={title == null ? ariaLabel ?? "Dialog" : undefined}
         aria-labelledby={title != null ? titleId : undefined}
-        aria-modal={modal ? "true" : undefined}
+        aria-hidden={suspended ? "true" : undefined}
+        aria-modal={modal && !suspended ? "true" : undefined}
         className={joinClasses("bgsnl-modal", "p-dialog", className)}
+        inert={suspended ? true : undefined}
         ref={dialogRef}
         role="dialog"
         style={style}
@@ -217,10 +223,12 @@ AppModal.propTypes = {
   contentClassName: PropTypes.string,
   headerClassName: PropTypes.string,
   footerClassName: PropTypes.string,
+  maskClassName: PropTypes.string,
   style: PropTypes.object,
   contentStyle: PropTypes.object,
   headerStyle: PropTypes.object,
   ariaLabel: PropTypes.string,
+  suspended: PropTypes.bool,
 };
 
 export default AppModal;

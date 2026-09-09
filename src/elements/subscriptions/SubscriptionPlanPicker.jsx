@@ -65,12 +65,12 @@ export default function SubscriptionPlanPicker({ user, alumniOnly = false }) {
             ))}
           </select>
           <p id={`${id}-help`}>
-            {freeSelected ? "Tier 0 has no paid benefits. If you have a running subscription, confirm its cancellation in Stripe first. You become a free alumni when it ends."
+            {freeSelected ? "Tier 0 has no paid benefits. If you have an active paid subscription, cancel it first. You will become a free Alumni when the current billing period ends."
               : blocked ? "Open Manage billing to resolve the payment issue, pending change or cancellation first."
-              : "You will review and confirm the change in Stripe before it takes effect. Stripe shows any prorated charge or credit. Paid benefits require a successful payment."}
+              : "Review and confirm the change before it takes effect. Any prorated charge or credit will be shown before payment. Paid benefits require a successful payment."}
           </p>
           <button aria-describedby={`${id}-help`} className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" disabled={!selected || pending || (blocked && !freeSelected)} type="submit">
-            {pending ? "Please wait…" : freeSelected && !user?.isSubscribed ? "Switch to free alumni" : "Review in Stripe"}
+            {pending ? (freeSelected ? "Switching…" : "Opening payment…") : freeSelected && !user?.isSubscribed ? "Switch to free Alumni" : "Continue to payment"}
           </button>
         </>
       )}

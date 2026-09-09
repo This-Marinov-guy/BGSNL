@@ -1,4 +1,3 @@
-import moment from "moment";
 import PropTypes from "prop-types";
 import {
   IconlyCalendar,
@@ -7,10 +6,7 @@ import {
   IconlyTicket,
 } from "@/elements/ui/icons/IconlyIcons";
 import ImageFb from "../ui/media/ImageFb";
-import {
-  formatCorrectedDateTime,
-  MOMENT_DATE_TIME,
-} from "../../util/functions/date";
+import { getEventDateTimePresentation } from "../../util/functions/date";
 import TicketClosingCountdown from "../ui/functional/TicketClosingCountdown";
 
 const formatEuro = (value) =>
@@ -36,9 +32,10 @@ const PurchaseEventSummary = ({
   usesMemberPrice = false,
 }) => {
   const eventTitle = event.newTitle || event.title;
-  const eventDate = event.correctedDate
-    ? formatCorrectedDateTime(event.correctedDate)
-    : moment(event.date).format(MOMENT_DATE_TIME);
+  const eventDate = getEventDateTimePresentation(
+    event.date,
+    event.correctedDate
+  );
   const guestPrice = getNumericPrice(event.product?.guest?.price);
   const memberPrice = event.isMemberFree
     ? 0
@@ -55,16 +52,18 @@ const PurchaseEventSummary = ({
       }${factsInsideOverview ? " is-inside-overview" : ""}`}
       aria-label="Event details"
     >
-      <div className="purchase-event-fact">
+      <div className="purchase-event-fact purchase-event-fact--date">
+        {eventDate.isUpdated && (
+          <span className="event-date-updated-badge type-small">Updated</span>
+        )}
         <span className="purchase-event-fact-icon">
           <IconlyCalendar aria-hidden />
         </span>
         <div>
           <span className="purchase-event-fact-label type-caption">Date</span>
-          <strong>{eventDate}</strong>
-          {event.correctedDate && (
-            <small className="purchase-event-updated">Updated date and time</small>
-          )}
+          <strong>
+            <time dateTime={eventDate.value}>{eventDate.label}</time>
+          </strong>
         </div>
       </div>
 

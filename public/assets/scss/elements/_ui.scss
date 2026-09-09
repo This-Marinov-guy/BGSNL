@@ -322,21 +322,35 @@ hr {
   max-width: 95% !important;
 }
 
-/* Shared application modal */
+.internship-access-modal__lock {
+  display: block;
+  width: 8rem;
+  height: 8rem;
+  margin: 0 auto 1rem;
+  object-fit: contain;
+}
+
+/* Standard dialogs stay centered at every breakpoint. Intentionally positioned
+ * surfaces, such as the Help widget and fullscreen media viewer, use their own shell. */
 .bgsnl-modal-mask {
+  --modal-gutter: clamp(16px, 4vw, 40px);
   align-items: center;
   animation: bgsnl-modal-mask-in 180ms ease-out both;
   background: rgb(18 24 22 / 58%);
   display: flex;
   inset: 0;
   justify-content: center;
-  padding: clamp(16px, 4vw, 40px);
+  padding: var(--modal-gutter);
   position: fixed;
   z-index: 11000;
 }
 
 .bgsnl-modal-mask--modeless {
   background: transparent;
+  pointer-events: none;
+}
+
+.bgsnl-modal-mask--suspended {
   pointer-events: none;
 }
 
@@ -347,13 +361,15 @@ hr {
 .bgsnl-modal {
   animation: bgsnl-modal-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   background: #fff;
-  border: 1px solid rgb(1 115 99 / 13%);
+  border: 0;
   border-radius: 14px;
   box-shadow: 0 24px 70px rgb(15 28 24 / 24%);
   color: #1f1f25;
   display: flex;
   flex-direction: column;
-  max-height: min(86vh, 900px);
+  max-height: min(900px, calc(100dvh - 2 * var(--modal-gutter)));
+  min-height: 0;
+  min-width: 0;
   overflow: hidden;
   pointer-events: auto;
   width: min(560px, calc(100vw - 32px));
@@ -366,7 +382,7 @@ hr {
 .bgsnl-modal__header {
   align-items: flex-start;
   background: #fff;
-  border-bottom: 1px solid #e8ece9;
+  border: 0;
   display: flex;
   flex: 0 0 auto;
   gap: 20px;
@@ -434,6 +450,8 @@ hr {
   color: #36403a;
   flex: 1 1 auto;
   font-weight: 400;
+  min-height: 0;
+  min-width: 0;
   overflow-y: auto;
   padding: 22px;
   scrollbar-width: thin;
@@ -461,7 +479,7 @@ hr {
 .bgsnl-modal__footer {
   align-items: center;
   background: #fff;
-  border-top: 1px solid #e8ece9;
+  border: 0;
   display: flex;
   flex: 0 0 auto;
   flex-wrap: wrap;
@@ -525,12 +543,11 @@ hr {
 
 @media (max-width: 575px) {
   .bgsnl-modal-mask {
-    align-items: flex-end;
-    padding: 10px;
+    --modal-gutter: 10px;
   }
 
   .bgsnl-modal {
-    border-radius: 14px 14px 10px 10px;
+    border-radius: 14px;
     max-height: calc(100dvh - 20px);
     width: 100% !important;
   }
@@ -573,9 +590,75 @@ hr {
 
 .p-stepper,
 .p-steps {
+  --bgsnl-step-number-size: 2rem;
   margin-inline: auto;
   max-width: 90vw;
   width: 90%;
+}
+
+/* Fit the steps into their container rather than hiding a scrolling strip.
+ * Long labels wrap, including when the stepper is inside a narrow dialog. */
+.p-stepper .p-steplist {
+  overflow: visible;
+}
+
+.p-stepper .p-step {
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.5rem 0.25rem;
+}
+
+.p-stepper .p-step-header {
+  gap: 0.5rem;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.p-stepper .p-step-number {
+  flex: 0 0 var(--bgsnl-step-number-size);
+  height: var(--bgsnl-step-number-size);
+  min-width: var(--bgsnl-step-number-size);
+  width: var(--bgsnl-step-number-size);
+}
+
+.p-stepper .p-step-title {
+  min-width: 0;
+  overflow: visible;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+@media (max-width: 767px) {
+  .p-stepper .p-steplist {
+    align-items: start;
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+  }
+
+  .p-stepper .p-step {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .p-stepper .p-step-header {
+    flex-direction: column;
+    padding: 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .p-stepper .p-step-title {
+    padding-inline: 0.25rem;
+  }
+
+  .p-stepper .p-stepper-separator {
+    inset-inline-start: calc(50% + var(--bgsnl-step-number-size) / 2 + 0.25rem);
+    position: absolute;
+    top: calc(var(--bgsnl-step-number-size) / 2);
+    width: calc(100% - var(--bgsnl-step-number-size) - 0.5rem);
+  }
 }
 
 .p-stepper .p-step.p-step-active .p-step-number,

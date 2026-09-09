@@ -1,4 +1,3 @@
-import moment from "moment";
 import PropTypes from "prop-types";
 import {
   FiCalendar,
@@ -7,10 +6,7 @@ import {
 } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
-import {
-  formatCorrectedDateTime,
-  MOMENT_DATE_TIME,
-} from "../../util/functions/date";
+import { getEventDateTimePresentation } from "../../util/functions/date";
 
 export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) => {
   return (
@@ -20,7 +16,7 @@ export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) 
       }`}
     >
       {cards.map((card) => (
-        <Card
+        <FocusCard
           key={card.id || `${card.title}-${card.date}`}
           card={card}
           region={region}
@@ -31,7 +27,7 @@ export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) 
   );
 };
 
-const Card = ({ card, region, isOtherEvent }) => {
+export const FocusCard = ({ card, region, isOtherEvent }) => {
   const eventRegion = card.region ?? region;
   const cityLabel =
     eventRegion && eventRegion !== "other"
@@ -41,11 +37,10 @@ const Card = ({ card, region, isOtherEvent }) => {
     ? `/other-event-details/${card.id}`
     : `/${eventRegion}/event-details/${card.id}`;
 
-  const dateLabel = card.correctedDate
-    ? formatCorrectedDateTime(card.correctedDate)
-    : moment(card.date).isValid()
-      ? moment(card.date).format(MOMENT_DATE_TIME)
-      : card.date;
+  const { label: dateLabel } = getEventDateTimePresentation(
+    card.date,
+    card.correctedDate
+  );
 
   return (
     <article className="focus-card">
@@ -110,7 +105,7 @@ FocusCards.propTypes = {
   region: PropTypes.string,
 };
 
-Card.propTypes = {
+FocusCard.propTypes = {
   card: eventCardPropType.isRequired,
   isOtherEvent: PropTypes.bool,
   region: PropTypes.string,

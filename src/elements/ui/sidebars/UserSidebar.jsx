@@ -41,6 +41,17 @@ const UserSidebar = ({
 }) => {
   const dispatch = useDispatch();
   const getTabIcon = (tab) => {
+    if (!currentUser.hasBenefits && ["tickets", "internships", "promotions"].includes(tab)) {
+      return (
+        <img
+          alt=""
+          aria-hidden="true"
+          className="sidebar-restricted-icon"
+          src="/assets/images/svg/3d/lock.png"
+        />
+      );
+    }
+
     switch (tab) {
       case "news":
         return <FaNewspaper />;
@@ -162,8 +173,10 @@ const UserSidebar = ({
             <h2 className="sidebar-user-name archive">{currentUser.name}</h2>
             <p className="sidebar-user-status">
               <span className="status-active">
-                {currentUser.billingLocked || currentUser.status === "locked" ? "Benefits locked" : formatRole(currentUser.roles)}{" "}
-                {currentUser?.isAlumni && Number.isInteger(currentUser.tier) && !currentUser.billingLocked && `Tier ${currentUser.tier}`}
+                {formatRole(currentUser.roles)}{" "}
+                {currentUser?.isAlumni &&
+                  Number.isInteger(currentUser.tier) &&
+                  `Tier ${currentUser.tier}`}
               </span>
               {currentUser.region ? (
                 <span className="sidebar-user-region">

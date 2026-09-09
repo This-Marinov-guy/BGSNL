@@ -12,6 +12,7 @@ import { REGION_EMAIL } from "../../../util/defines/REGIONS_DESIGN";
 import PageLoading from "../loading/PageLoading";
 import {
   ACTIVE,
+  FROZEN,
   LOCKED,
   PAYMENT_AWAITING,
   SUSPENDED,
@@ -24,6 +25,7 @@ import { ALUMNI } from "../../../util/defines/common";
 import { decodeJWT } from "../../../util/functions/authorization";
 import ImageFb from "../media/ImageFb";
 import { IconlyArrowRight } from "../icons/IconlyIcons";
+import { getAccountStatusNotice } from "@/elements/subscriptions/account-status-notice.mjs";
 
 const AccountLocked = () => {
   const { loading, sendRequest } = useHttpClient();
@@ -32,6 +34,7 @@ const AccountLocked = () => {
 
   const user = useSelector(selectUser);
   const { isSubscribed, status, region, roles, isAlumni: isAlumniUser } = user;
+  const statusNotice = getAccountStatusNotice(user);
 
   // Check if user is already an alumni
   const isAlumni =
@@ -170,6 +173,7 @@ const AccountLocked = () => {
       );
       break;
 
+    case USER_STATUSES[FROZEN]:
     case USER_STATUSES[SUSPENDED]:
       icon = (
         <div className="d-flex justify-content-center align-items-center mb-3">
@@ -177,24 +181,18 @@ const AccountLocked = () => {
             src="/assets/images/svg/3d/snow.png"
             width={120}
             height={120}
-            alt="Lock"
+            alt=""
           />
         </div>
       );
 
       bodyContent = (
         <div className="center_section center_text">
-          <h3>Your account is suspended!</h3>
-          <p>
-            <span>
-              We have noticed some violation from your side. Unfortunately, we
-              will need to block your account until further notice. Please
-              contact:{" "}
-              <a href={`mailto:${REGION_EMAIL["support"]}`}>
-                {REGION_EMAIL["support"]}
-              </a>
-            </span>
-          </p>
+          <h3>{statusNotice.title}</h3>
+          <p>{statusNotice.description}</p>
+          <a href={statusNotice.href} className="rn-button-style--2 rn-btn-reverse rn-btn-small">
+            {statusNotice.actionLabel}
+          </a>
 
           <button
             onClick={() => navigate(-1)}

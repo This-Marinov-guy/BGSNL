@@ -1,7 +1,32 @@
+import moment from "moment";
+
 export const MOMENT_DATE_TIME_YEAR = "Do MMM YYYY h:mm a";
 export const MOMENT_DATE_TIME = "Do MMM h:mm a";
 export const MOMENT_DATE_YEAR = "Do MMM YYYY";
 export const MOMENT_DATE = "Do MMM";
+export const EVENT_DATE_TIME = "Do MMM HH:mm";
+
+export const getEventDateTimePresentation = (date, correctedDate) => {
+  const original = moment(date);
+  const correction = moment(correctedDate);
+  const hasOriginal = Boolean(date) && original.isValid();
+  const hasCorrection = Boolean(correctedDate) && correction.isValid();
+  const isUpdated =
+    hasOriginal && hasCorrection && !original.isSame(correction, "minute");
+  const displayedDate = hasCorrection && (!hasOriginal || isUpdated)
+    ? correction
+    : hasOriginal
+      ? original
+      : null;
+
+  return {
+    isUpdated,
+    label: displayedDate
+      ? displayedDate.format(EVENT_DATE_TIME)
+      : correctedDate || date || "",
+    value: displayedDate ? displayedDate.toISOString() : undefined,
+  };
+};
 
 // Format used for "updated" / corrected event date+time. Renders in the
 // reader's local timezone so each user sees the moment in their own time.

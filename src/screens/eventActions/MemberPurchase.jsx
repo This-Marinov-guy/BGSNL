@@ -257,7 +257,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
                     showNotification({
                       severity: "warn",
                       detail:
-                        "You already have a member ticket for this event - you can still proceed but will pay the guest price!",
+                        "You have already used the member price for this event. Additional tickets use the guest price.",
                       life: 4000,
                     })
                   );
@@ -342,7 +342,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
                     <Message
                       severity="warn"
                       className="mb--20"
-                      text="You already have a member ticket - if you proceed, you will pay the guest price"
+                      text="Your member-priced ticket is already purchased. This additional ticket uses the guest price."
                     />
                   )}
 

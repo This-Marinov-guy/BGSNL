@@ -1,6 +1,7 @@
 import {
   Fragment,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -34,6 +35,9 @@ import {
 } from "../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
+const useBrowserLayoutEffect =
+  typeof window === "undefined" ? useEffect : useLayoutEffect;
+
 const getAccountInitials = (account) => {
   const nameParts = [account?.name, account?.surname]
     .map((part) => String(part || "").trim())
@@ -61,6 +65,12 @@ const getAccountInitials = (account) => {
 const HeaderContent = (props) => {
   const user = useSelector(selectUser);
   const accountMenuRef = useRef(null);
+  const navigationRef = useRef(null);
+  const headerMotionRef = useRef({
+    animation: null,
+    state: null,
+    width: null,
+  });
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [logoutAlert, setLogoutAlert] = useState(false);
 
@@ -68,11 +78,57 @@ const HeaderContent = (props) => {
   const profileImage = user.image || account?.image || "";
   const initials = getAccountInitials(account);
 
-  const region = props.forceRegion ?? useParams().region;
+  const requestedRegion = props.forceRegion ?? useParams().region;
+  const region = REGIONS.includes(requestedRegion) ? requestedRegion : null;
 
   const navigate = useNavigate();
   const location = useLocation();
   const routePath = location.pathname;
+  const authenticationState = !user.authInitialized
+    ? "loading"
+    : user.token
+      ? "authenticated"
+      : "anonymous";
+
+  useBrowserLayoutEffect(() => {
+    const headerPanel = navigationRef.current?.closest(".header-right");
+    if (!headerPanel) return undefined;
+
+    const nextWidth = headerPanel.getBoundingClientRect().width;
+    const previous = headerMotionRef.current;
+    const stateChanged = previous.state && previous.state !== authenticationState;
+    const distance = previous.width === null ? 0 : nextWidth - previous.width;
+
+    previous.animation?.cancel();
+
+    if (
+      stateChanged &&
+      Math.abs(distance) > 0.5 &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      previous.animation = headerPanel.animate(
+        [
+          { transform: `translate3d(${distance}px, 0, 0)` },
+          { transform: "translate3d(0, 0, 0)" },
+        ],
+        {
+          duration: 380,
+          easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+        }
+      );
+    } else {
+      previous.animation = null;
+    }
+
+    previous.state = authenticationState;
+    previous.width = nextWidth;
+
+    return undefined;
+  }, [authenticationState]);
+
+  useEffect(() => () => {
+    headerMotionRef.current.animation?.cancel();
+  }, []);
 
   useEffect(() => {
     if (!accountMenuOpen) return undefined;
@@ -106,7 +162,7 @@ const HeaderContent = (props) => {
     <>
       <LogoutAlert visible={logoutAlert} onHide={() => setLogoutAlert(false)} />
 
-      <nav className={"mainmenunav d-lg-block"}>
+      <nav className={"mainmenunav d-lg-block"} ref={navigationRef}>
         <ul className={props.dark ? "mainmenu dark_nav" : "mainmenu"}>
           <li className="has-dropdown">
             <a style={{ cursor: "pointer" }}>Regions</a>

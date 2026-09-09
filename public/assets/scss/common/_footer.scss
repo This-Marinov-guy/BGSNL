@@ -158,6 +158,22 @@ Footer Styles
       }
     }
   }
+
+  .social-share.social-style--2 {
+    li a {
+      align-items: center;
+      display: inline-flex;
+      height: 2rem;
+      justify-content: flex-start;
+      line-height: 1;
+      width: 2rem;
+    }
+
+    svg {
+      height: 2rem;
+      width: 2rem;
+    }
+  }
 }
 
 /* Footer Style Two  */

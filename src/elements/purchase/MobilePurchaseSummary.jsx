@@ -1,6 +1,5 @@
 "use client";
 
-import moment from "moment";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import {
@@ -9,10 +8,7 @@ import {
   IconlyLocation,
 } from "@/elements/ui/icons/IconlyIcons";
 import ImageFb from "../ui/media/ImageFb";
-import {
-  formatCorrectedDateTime,
-  MOMENT_DATE_TIME,
-} from "../../util/functions/date";
+import { getEventDateTimePresentation } from "../../util/functions/date";
 
 const MobilePurchaseSummary = ({ event, price }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -21,9 +17,10 @@ const MobilePurchaseSummary = ({ event, price }) => {
   if (!isVisible) return null;
 
   const eventTitle = event.newTitle || event.title;
-  const eventDate = event.correctedDate
-    ? formatCorrectedDateTime(event.correctedDate)
-    : moment(event.date).format(MOMENT_DATE_TIME);
+  const eventDate = getEventDateTimePresentation(
+    event.date,
+    event.correctedDate
+  );
 
   return (
     <aside
@@ -54,12 +51,17 @@ const MobilePurchaseSummary = ({ event, price }) => {
       </div>
 
       <div className="purchase-mobile-summary-copy">
-        <strong className="purchase-mobile-summary-title type-small">
-          {eventTitle}
-        </strong>
+        <div className="purchase-mobile-summary-heading">
+          <strong className="purchase-mobile-summary-title type-small">
+            {eventTitle}
+          </strong>
+          {eventDate.isUpdated && (
+            <span className="event-date-updated-badge type-small">Updated</span>
+          )}
+        </div>
         <span className="purchase-mobile-summary-detail type-caption">
           <IconlyCalendar aria-hidden />
-          {eventDate}
+          <time dateTime={eventDate.value}>{eventDate.label}</time>
         </span>
         <span className="purchase-mobile-summary-detail type-caption">
           <IconlyLocation aria-hidden />

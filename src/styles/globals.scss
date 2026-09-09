@@ -20,7 +20,9 @@ ul, ol {
   --site-thread-secondary: #9e0d33;
   // Above floating page controls and logo headers, below shared modals (11000).
   --layer-support: 10500;
-  --support-launcher-width: 6.25rem;
+  // Portalled notifications stay above every app modal, drawer, and backdrop.
+  --layer-toast: 12000;
+  --support-launcher-width: 6.75rem;
   color-scheme: light;
 }
 
@@ -1564,6 +1566,9 @@ form[data-validation-submitted="true"]
  * the library options in src/layouts/MainLayout.jsx; only what the options
  * cannot express lives here.
  */
+.bgsnl-toast-layer {
+  z-index: var(--layer-toast) !important;
+}
 
 /*
  * `iconTheme` sets the indicator's colour but not its size, and the library

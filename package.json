@@ -1,6 +1,6 @@
 {
   "name": "bgsnl",
-  "version": "3.3.1",
+  "version": "4.0.1",
   "private": true,
   "dependencies": {
     "@primereact/ui": "^11.1.0",
@@ -58,6 +58,8 @@
     "test:dev-services": "node --test scripts/dev-services.test.mjs",
     "test:support": "node --test scripts/support-state.test.mjs",
     "test:account-routing": "node --test scripts/account-route-state.test.mjs",
+    "test:account-status": "node --test scripts/account-status-notice.test.mjs",
+    "test:subscription-checkout": "node --test scripts/subscription-checkout.test.mjs",
     "start": "next start",
     "build": "npm run check:font-sizes && next build --webpack",
     "check:font-sizes": "node scripts/check-scss-font-sizes.mjs",

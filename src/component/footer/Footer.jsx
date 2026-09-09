@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "@/util/navigation";
 import {
@@ -7,6 +8,7 @@ import {
   REGION_SECOND_COLOR,
   REGION_SOCIALS,
   KVK,
+  REGIONS,
 } from "../../util/defines/REGIONS_DESIGN";
 import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
 import { useDispatch } from "react-redux";
@@ -14,7 +16,8 @@ import { showModal } from "../../redux/modal";
 import { DONATION_MODAL } from "../../util/defines/common";
 
 const Footer = ({ forceRegion }) => {
-  const region = forceRegion ?? useParams().region;
+  const requestedRegion = forceRegion ?? useParams().region;
+  const region = REGIONS.includes(requestedRegion) ? requestedRegion : null;
 
   const dispatch = useDispatch();
 
@@ -83,7 +86,7 @@ const Footer = ({ forceRegion }) => {
                           </Link>
                         </li>
                         <li>
-                          <Link to={`/${region}/contact`}>Contact</Link>
+                          <Link to={region ? `/${region}/contact` : "/contact"}>Contact</Link>
                         </li>
                         <li>
                           <Link to="/terms-and-legals" target="_blank" rel="noopener noreferrer">
@@ -144,6 +147,10 @@ const Footer = ({ forceRegion }) => {
       </footer>
     </Fragment>
   );
+};
+
+Footer.propTypes = {
+  forceRegion: PropTypes.string,
 };
 
 export default Footer;

@@ -261,8 +261,269 @@
   text-transform: uppercase;
 }
 
+.future-events-filter-panel {
+  display: grid;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #edf4f0;
+  border-radius: 6px;
+}
+
+.future-events-filter-heading {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+
+  label {
+    color: #53635b;
+    font-family: "LeagueSpartan", "Roboto", sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  strong {
+    color: #10291f;
+    font-family: "LeagueSpartan", "Roboto", sans-serif;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+}
+
+.future-events-region-select {
+  max-width: 24rem;
+  cursor: pointer;
+}
+
+.future-events-carousel-shell {
+  position: relative;
+  min-width: 0;
+  padding: 0 0 2.2rem;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.future-events-carousel {
+  position: relative;
+  min-width: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+
+  .slick-list {
+    margin: 0 -0.6rem;
+    padding: 0.6rem 0 1.25rem;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    animation: future-events-carousel-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .slick-track {
+    display: flex !important;
+    align-items: stretch;
+    background: transparent !important;
+  }
+
+  .slick-slide {
+    height: auto;
+    padding: 0 0.6rem;
+
+    > div,
+    .future-events-carousel-slide {
+      height: 100%;
+    }
+  }
+
+  .focus-card {
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  .future-events-carousel-arrow {
+    position: absolute;
+    top: calc(50% - 1rem);
+    z-index: 3;
+    display: inline-flex !important;
+    width: 2.75rem;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #fff;
+    background: #017363;
+    border: 2px solid #017363;
+    border-radius: 6px;
+    box-shadow: 0 0.5rem 1.25rem rgb(16 41 31 / 18%);
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease,
+      opacity 200ms ease;
+
+    &::before {
+      content: none;
+    }
+
+    svg {
+      width: 1.4rem;
+      height: 1.4rem;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: #017363;
+      background: #fff;
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgb(1 115 99 / 24%);
+      outline-offset: 2px;
+    }
+
+    &.slick-disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  .future-events-carousel-arrow--previous {
+    left: -0.35rem;
+  }
+
+  .future-events-carousel-arrow--next {
+    right: -0.35rem;
+  }
+
+  .slick-dots {
+    bottom: -1.25rem;
+    display: flex !important;
+    gap: 0.65rem;
+    align-items: center;
+    justify-content: center;
+
+    li {
+      position: relative;
+      width: 0.75rem;
+      height: 0.75rem;
+      margin: 0;
+      opacity: 1;
+
+      button {
+        position: relative;
+        display: block;
+        width: 0.75rem;
+        min-width: 0.75rem;
+        height: 0.75rem;
+        min-height: 0.75rem;
+        padding: 0;
+        background: rgb(1 115 99 / 22%);
+        border: 0;
+        border-radius: 50% !important;
+        box-shadow: none;
+
+        &::before,
+        &::after {
+          display: none !important;
+          content: none !important;
+        }
+
+        &:focus-visible {
+          outline: 2px solid #017363;
+          outline-offset: 3px;
+        }
+      }
+
+      &.slick-active button {
+        background: #017363;
+      }
+    }
+  }
+}
+
+.future-events-filter-empty {
+  margin: 0;
+  padding: 1.5rem;
+  color: #4e5b54;
+  background: #fff;
+  border-left: 4px solid #9e0d33;
+}
+
+@keyframes future-events-carousel-enter {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 575px) {
+  .future-events-filter-panel {
+    padding: 0.85rem;
+  }
+
+  .future-events-filter-heading {
+    align-items: flex-start;
+  }
+
+  .future-events-region-select {
+    max-width: none;
+  }
+
+  .future-events-carousel .slick-list {
+    margin: 0 -0.35rem;
+  }
+
+  .future-events-carousel .slick-slide {
+    padding: 0 0.35rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .future-events-page-layout__calendar {
+    .calendar-subscription__description {
+      display: none;
+    }
+
+    .calendar-subscription__iframe-container {
+      height: clamp(38rem, 105dvh, 44rem);
+      padding-bottom: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .future-events-carousel .slick-list {
+    animation-duration: 1ms !important;
+  }
+
+  .future-events-carousel *,
+  .future-events-region-select {
+    transition-duration: 1ms !important;
+  }
+}
+
 .future-events-page-layout {
   min-width: 0;
+
+  .future-events-page-layout__events .portfolio-area {
+    background: transparent !important;
+  }
 }
 
 @media (min-width: 1100px) {
@@ -333,7 +594,7 @@
     }
 
     .calendar-subscription__buttons-button {
-      width: 100%;
+      width: 3rem;
     }
   }
 }

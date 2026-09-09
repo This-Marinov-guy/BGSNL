@@ -1,29 +1,68 @@
 "use client";
 
 import PropTypes from "prop-types";
+import { useId } from "react";
 import { IconlyDanger } from "@/elements/ui/icons/IconlyIcons";
-import SubscriptionManage from "@/elements/ui/buttons/SubscriptionManage";
+import { getAccountStatusNotice } from "./account-status-notice.mjs";
 import styles from "./subscriptions.module.scss";
 
-export default function BillingStatusBanner({ user }) {
-  if (!user?.billingVerificationUnavailable && !user?.billingLocked && !["locked", "payment_awaiting", "frozen"].includes(user?.status)) return null;
-  const failed = user.lockReason === "payment_failed";
-  const suspended = user.status === "frozen";
+export default function BillingStatusBanner({
+  user,
+  context = "account",
+  missedDiscount = null,
+  showMissingBenefits = false,
+}) {
+  const titleId = useId();
+  const notice =
+    getAccountStatusNotice(user) ||
+    (showMissingBenefits && user?.hasBenefits !== true
+      ? {
+          title: "Account attention needed",
+          description:
+            "Your account does not currently have active membership benefits. Review your account settings to resolve the issue before using member benefits.",
+          href: "/user#settings",
+          actionLabel: "Go to settings",
+        }
+      : null);
+  if (!notice) return null;
+
+  const actionLink = (
+    // Native fragment navigation triggers the account page's hashchange listener.
+    <a className={styles.dangerLink} href={notice.href}>
+      {notice.actionLabel}
+    </a>
+  );
+
   return (
-    <section className={styles.dangerBanner} role="alert" aria-labelledby="billing-warning-title">
-      <IconlyDanger aria-hidden />
-      <div>
-        <h2 id="billing-warning-title">{user.billingVerificationUnavailable ? "We could not verify your subscription" : failed ? "Your account is locked" : "Your membership benefits are unavailable"}</h2>
-        <p>{user.billingVerificationUnavailable ? "Billing is temporarily unavailable. Your profile and settings are still accessible, but benefits cannot be used until we verify your subscription. Please try again shortly."
-          : suspended ? "Your account is suspended. Please contact support for help."
-          : failed ? "We could not collect your subscription payment. All membership benefits are locked. Update your payment method and pay the outstanding invoice, or cancel your subscription in the Stripe customer portal."
-            : user.lockReason === "subscription_ended" ? "Your subscription has ended. You can still manage your account and choose a new plan in Settings."
-              : "Your subscription needs attention. Open Stripe billing to check your payment or cancel your subscription. Your profile and settings remain available."}</p>
-        {failed && <p>Benefits return after payment is confirmed. Cancelling does not restore paid benefits or automatically settle an outstanding invoice.</p>}
-        {user.subscription?.customerId && <SubscriptionManage canCancel={user.isSubscribed} />}
+    <section className={styles.dangerBanner} role="alert" aria-labelledby={titleId}>
+      <IconlyDanger className={styles.dangerIcon} aria-hidden />
+      <h2 id={titleId}>{notice.title}</h2>
+      <div className={styles.dangerContent}>
+        {context === "ticket" ? (
+          <p>
+            Guest checkout only—this ticket won’t be saved to your account. Restore
+            access to get your {missedDiscount && (
+              <><strong>{missedDiscount} member discount</strong> and keep it in your account. </>
+            )}{!missedDiscount && <>member discount and keep it in your account. </>}
+            {actionLink}
+          </p>
+        ) : (
+          <>
+            <p>
+              {notice.description}
+              {!notice.paymentNote && <> {actionLink}</>}
+            </p>
+            {notice.paymentNote && <p>{notice.paymentNote} {actionLink}</p>}
+          </>
+        )}
       </div>
     </section>
   );
 }
 
-BillingStatusBanner.propTypes = { user: PropTypes.object };
+BillingStatusBanner.propTypes = {
+  user: PropTypes.object,
+  context: PropTypes.oneOf(["account", "ticket"]),
+  missedDiscount: PropTypes.string,
+  showMissingBenefits: PropTypes.bool,
+};

@@ -40,7 +40,7 @@ const AlumniInfoPage = () => {
                   className="mb--30"
                   style={{ lineHeight: "1.6" }}
                 >
-                  Connect with fellow Bulgarians and support each other's
+                  Connect with fellow Bulgarians and support each other&apos;s
                   success. Be a pillar of the Bulgarian community in the
                   Netherlands and gain exclusive benefits in return.
                 </p>
@@ -87,43 +87,20 @@ const AlumniInfoPage = () => {
       </div>
 
       {/* Benefits Grid Section */}
-      <div className="service-area ptb--60">
+      <div className="service-area alumni-benefits ptb--60">
         <div className="container">
           <div className="row">
             {/* Free Membership Card */}
             <div className="col-lg-4 col-md-6 col-12 mb--30">
-              <div
-                className="service service__style--2"
-                style={{
-                  border: "2px solid black",
-                  borderRadius: "15px",
-                  padding: "30px",
-                  height: "100%",
-                  textAlign: "center",
-                }}
-              >
-                <div className="icon mb--20">
-                  {/* Placeholder for card image */}
-                  <div
-                    style={{
-                      color: "#ffc107",
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      style={{
-                        color: "black",
-                        height: "75px",
-                        marginLeft: "20px",
-                      }}
-                      icon={faMoneyCheckDollar}
-                    />
+              <div className="service service__style--2 alumni-benefit-banner alumni-benefit-banner--green">
+                <div className="icon alumni-benefit-banner__icon">
+                  <div>
+                    <FontAwesomeIcon icon={faMoneyCheckDollar} />
                   </div>
                 </div>
                 <div className="content">
-                  <h3 style={{ marginBottom: "15px" }}>
-                    Start for free
-                  </h3>
-                  <p style={{ lineHeight: "1.5" }}>
+                  <h3>Start for free</h3>
+                  <p>
                     If you have ever been a Bulgarian Society Netherlands
                     member, you can enter the Alumni program for free.
                     <br />
@@ -137,45 +114,18 @@ const AlumniInfoPage = () => {
 
             {/* Fast Networking */}
             <div className="col-lg-4 col-md-6 col-12 mb--30">
-              <div
-                className="service service__style--2"
-                style={{
-                  border: "2px solid #28a745",
-                  borderRadius: "15px",
-                  padding: "30px",
-                  height: "100%",
-                  textAlign: "center",
-                  backgroundColor: "#d4edda",
-                }}
-              >
-                <div className="icon mb--20">
-                  <div
-                    style={{
-                      color: "#ffc107",
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      style={{
-                        color: "#28a745",
-                        height: "75px",
-                        marginLeft: "20px",
-                      }}
-                      icon={faHexagonNodes}
-                    />
+              <div className="service service__style--2 alumni-benefit-banner alumni-benefit-banner--red">
+                <div className="icon alumni-benefit-banner__icon">
+                  <div>
+                    <FontAwesomeIcon icon={faHexagonNodes} />
                   </div>
                 </div>
                 <div className="content">
-                  <h3 style={{ marginBottom: "15px" }}>
-                    Connect with
-                  </h3>
-                  <div
-                    style={{
-                      marginBottom: "10px",
-                    }}
-                  >
+                  <h3>Connect with</h3>
+                  <div className="alumni-benefit-banner__stat">
                     500+ members
                   </div>
-                  <p style={{ lineHeight: "1.5" }}>
+                  <p>
                     That is how many people are orbiting around the BGSNL
                     community and inside it.
                   </p>
@@ -185,43 +135,15 @@ const AlumniInfoPage = () => {
 
             {/* Mobile App */}
             <div className="col-lg-4 col-md-6 col-12 mb--30">
-              <div
-                className="service service__style--2"
-                style={{
-                  border: "2px solid #ab1c02",
-                  borderRadius: "15px",
-                  padding: "30px",
-                  height: "100%",
-                  textAlign: "center",
-                  backgroundColor: "#E57373",
-                }}
-              >
-                <div className="icon mb--20">
-                  <div
-                    style={{
-                      color: "#28a745",
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      style={{
-                        color: "#ab1c02",
-                        height: "75px",
-                        marginLeft: "20px",
-                      }}
-                      icon={faHandHoldingHeart}
-                    />
+              <div className="service service__style--2 alumni-benefit-banner alumni-benefit-banner--green">
+                <div className="icon alumni-benefit-banner__icon">
+                  <div>
+                    <FontAwesomeIcon icon={faHandHoldingHeart} />
                   </div>
                 </div>
                 <div className="content">
-                  <h3 style={{ marginBottom: "15px" }}>
-                    Support a community
-                  </h3>
-                  <p
-                    style={{
-                      lineHeight: "1.5",
-                      marginBottom: "15px",
-                    }}
-                  >
+                  <h3>Support a community</h3>
+                  <p>
                     By taking care of the community, you are taking care of
                     yourself. Our program includes special events, exclusive
                     access and even appreciation gifts

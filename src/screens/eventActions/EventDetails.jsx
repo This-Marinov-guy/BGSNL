@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import moment from "moment";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import ScrollToTop from "@/component/common/ScrollToTop";
@@ -22,6 +21,8 @@ import {
 import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
+import BillingStatusBanner from "../../elements/subscriptions/BillingStatusBanner";
+import { getAccountStatusNotice } from "../../elements/subscriptions/account-status-notice.mjs";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
@@ -31,10 +32,7 @@ import TicketClosingCountdown from "../../elements/ui/functional/TicketClosingCo
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
-import {
-  formatCorrectedDateTime,
-  MOMENT_DATE_TIME,
-} from "../../util/functions/date";
+import { getEventDateTimePresentation } from "../../util/functions/date";
 import {
   estimatePriceByEvent,
   isMember,
@@ -130,9 +128,17 @@ const EventDetails = ({ initialEvent = null }) => {
       ? `Save ${formatEuro(memberSaving)} and keep your ticket as a member`
       : "Keep your ticket as a member";
   const purchasePath = `/${region}/purchase-ticket/${eventId}`;
-  const showMembershipOffer =
-    !selectedEvent.ticketLink && !userIsLoggedIn;
-  const factsInsideBookingCard = !showMembershipOffer;
+  const showMembershipOffer = !selectedEvent.ticketLink && !userIsLoggedIn;
+  const showAccountAttention =
+    !selectedEvent.ticketLink &&
+    userIsLoggedIn &&
+    (user.hasBenefits !== true || Boolean(getAccountStatusNotice(user)));
+  const useGuestEventLayout = showMembershipOffer || showAccountAttention;
+  const factsInsideBookingCard = !useGuestEventLayout;
+  const eventDate = getEventDateTimePresentation(
+    selectedEvent.date,
+    selectedEvent.correctedDate
+  );
 
   const rememberEventPage = () => {
     sessionStorage.setItem(
@@ -177,22 +183,18 @@ const EventDetails = ({ initialEvent = null }) => {
       }${factsInsideBookingCard ? " event-details-facts--inside-booking" : ""}`}
       aria-label="Event details"
     >
-      <div className="event-detail-item">
+      <div className="event-detail-item event-detail-item--date">
+        {eventDate.isUpdated && (
+          <span className="event-date-updated-badge type-small">Updated</span>
+        )}
         <span className="event-detail-icon">
           <IconlyCalendar />
         </span>
         <div>
           <span className="event-detail-label type-caption">Date</span>
           <strong>
-            {selectedEvent.correctedDate
-              ? formatCorrectedDateTime(selectedEvent.correctedDate)
-              : moment(selectedEvent.date).format(MOMENT_DATE_TIME)}
+            <time dateTime={eventDate.value}>{eventDate.label}</time>
           </strong>
-          {selectedEvent.correctedDate && (
-            <span className="event-detail-update type-caption">
-              Updated date and time
-            </span>
-          )}
         </div>
       </div>
 
@@ -296,7 +298,7 @@ const EventDetails = ({ initialEvent = null }) => {
                     </div>
                   </div>
 
-                  {!userIsLoggedIn && memberSaving !== null && (
+                  {useGuestEventLayout && memberSaving !== null && (
                     <div
                       className="event-price-comparison "
                       aria-label="Price comparison"
@@ -324,6 +326,17 @@ const EventDetails = ({ initialEvent = null }) => {
                   <MembershipOfferBanner
                     title={membershipOfferTitle}
                     onAction={rememberEventPage}
+                  />
+                )}
+
+                {showAccountAttention && (
+                  <BillingStatusBanner
+                    user={user}
+                    context="ticket"
+                    missedDiscount={
+                      memberSaving !== null ? formatEuro(memberSaving) : null
+                    }
+                    showMissingBenefits
                   />
                 )}
 

@@ -237,6 +237,13 @@
       width: 2rem;
     }
 
+    .sidebar-restricted-icon {
+      display: block;
+      width: 1.55rem;
+      height: 1.55rem;
+      object-fit: contain;
+    }
+
     a:hover .sidebar-icon {
       transform: scale(1.04);
     }
