@@ -35,7 +35,7 @@ export const FocusCard = ({ card, region, isOtherEvent }) => {
       : null;
   const link = isOtherEvent
     ? `/other-event-details/${card.id}`
-    : `/${eventRegion}/event-details/${card.id}`;
+    : `/${eventRegion}/event-details/${card.slug || card.id}`;
 
   const { label: dateLabel } = getEventDateTimePresentation(
     card.date,

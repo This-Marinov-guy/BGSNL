@@ -3,8 +3,9 @@ import { useState } from "react";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import Spinner from "react-bootstrap/Spinner";
+import PropTypes from "prop-types";
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ returnUrl }) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -14,7 +15,7 @@ const CheckoutForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!stripe || !elements) {
+        if (!stripe || !elements || !returnUrl) {
             // Stripe.js has not yet loaded.
             // Make sure to disable form submission until Stripe.js has loaded.
             return <Spinner
@@ -33,12 +34,12 @@ const CheckoutForm = () => {
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                // Make sure to change this to your payment completion page
-                return_url: `${window.location.origin}/donation/success`,
+                // Use the protected URL returned with this exact PaymentIntent.
+                return_url: returnUrl,
             },
         });
 
-        if (error.type === "card_error" || error.type === "validation_error") {
+        if (error?.type === "card_error" || error?.type === "validation_error") {
             setMessage(error.message);
         } else {
             setMessage("An unexpected error occured.");
@@ -50,7 +51,7 @@ const CheckoutForm = () => {
     return (
         <form className="payment_form" id="payment-form" onSubmit={handleSubmit}>
             <PaymentElement id="payment-element" />
-            <button disabled={isProcessing || !stripe || !elements} id="submit" className="rn-button-style--2 rn-btn-reverse-green mt--40"
+            <button disabled={isProcessing || !stripe || !elements || !returnUrl} id="submit" className="rn-button-style--2 rn-btn-reverse-green mt--40"
             >
                 <span id="button-text">
                     {isProcessing ? "Processing ... " : "Pay now"}
@@ -62,4 +63,5 @@ const CheckoutForm = () => {
     );
 }
 
+CheckoutForm.propTypes = { returnUrl: PropTypes.string.isRequired };
 export default CheckoutForm

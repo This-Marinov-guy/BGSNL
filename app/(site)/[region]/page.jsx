@@ -3,6 +3,8 @@ import { getEventsByRegion } from "@/util/api/server";
 import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 import { humanizeRegion, toMetadata } from "@/util/seo/site";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }) {
   const { region } = await params;
   const regionName = humanizeRegion(region);

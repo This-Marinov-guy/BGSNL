@@ -4,6 +4,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -31,12 +32,17 @@ import { ACCOUNT_TABS } from "../../util/defines/enum";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import {
   checkAuthorization,
-  decodeJWT,
+  sessionClaims,
 } from "../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 
 const useBrowserLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const subscribeToHydration = () => () => {};
+const hydratedSnapshot = () => true;
+const serverSnapshot = () => false;
+const serverUser = { authInitialized: false, session: null, image: "" };
 
 const getAccountInitials = (account) => {
   const nameParts = [account?.name, account?.surname]
@@ -63,7 +69,11 @@ const getAccountInitials = (account) => {
 };
 
 const HeaderContent = (props) => {
-  const user = useSelector(selectUser);
+  const storedUser = useSelector(selectUser);
+  // Account initialisation can finish while a streamed payment page is still
+  // arriving. Hydrate the same neutral header the server rendered first.
+  const hydrated = useSyncExternalStore(subscribeToHydration, hydratedSnapshot, serverSnapshot);
+  const user = hydrated ? storedUser : serverUser;
   const accountMenuRef = useRef(null);
   const navigationRef = useRef(null);
   const headerMotionRef = useRef({
@@ -74,7 +84,7 @@ const HeaderContent = (props) => {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [logoutAlert, setLogoutAlert] = useState(false);
 
-  const account = user.token ? decodeJWT(user.token) : null;
+  const account = user.session ? sessionClaims(user.session) : null;
   const profileImage = user.image || account?.image || "";
   const initials = getAccountInitials(account);
 
@@ -86,7 +96,7 @@ const HeaderContent = (props) => {
   const routePath = location.pathname;
   const authenticationState = !user.authInitialized
     ? "loading"
-    : user.token
+    : user.session
       ? "authenticated"
       : "anonymous";
 
@@ -240,7 +250,7 @@ const HeaderContent = (props) => {
               <li className="has-dropdown">
                 <a style={{ cursor: "pointer" }}>About</a>
                 <ul className="submenu">
-                  {!user.token && (
+                  {!user.session && (
                     <li>
                       <Link to="/join-the-society">How to join</Link>
                     </li>
@@ -288,28 +298,28 @@ const HeaderContent = (props) => {
             <Link to={`/${region ? region + "/" : ""}contact`}>Contact</Link>
           </li>
 
-          {user.authInitialized && user.token && (
+          {user.authInitialized && user.session && (
             <>
-              {checkAuthorization(user.token, [...new Set([...ACCESS_4, ...SUPPORT_ACCESS])]) && (
+              {checkAuthorization(user.session, [...new Set([...ACCESS_4, ...SUPPORT_ACCESS])]) && (
                 <li className="has-dropdown">
                   <a style={{ cursor: "pointer" }}>Dashboard</a>
                   <ul className="submenu">
                     <>
-                      {checkAuthorization(user.token, ACCESS_1) && (
+                      {checkAuthorization(user.session, ACCESS_1) && (
                         <li><Link to="/user/accounts">Accounts</Link></li>
                       )}
-                      {checkAuthorization(user.token, ACCESS_4) && <>
+                      {checkAuthorization(user.session, ACCESS_4) && <>
                         <li><Link to="/user/dashboard">Events</Link></li>
                         <li><Link to="/user/add-event">Add Event</Link></li>
                       </>}
-                      {checkAuthorization(user.token, ACCESS_1) && (
+                      {checkAuthorization(user.session, ACCESS_1) && (
                         <li>
                           <Link to="/user/internships-dashboard">
                             Internships
                           </Link>
                         </li>
                       )}
-                      {checkAuthorization(user.token, SUPPORT_ACCESS) && <li><Link to="/user/support">Support</Link></li>}
+                      {checkAuthorization(user.session, SUPPORT_ACCESS) && <li><Link to="/user/support">Support</Link></li>}
                     </>
                   </ul>
                 </li>
@@ -388,7 +398,7 @@ const HeaderContent = (props) => {
                 <span aria-hidden="true" className="header-account-spinner" />
               </span>
             </li>
-          ) : !user.token ? (
+          ) : !user.session ? (
             <li>
               <div className="header-btn">
                 <button

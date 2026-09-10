@@ -1,12 +1,16 @@
 import Success from "@/screens/redirects/Success";
+import PropTypes from "prop-types";
 
 export const metadata = {
-  title: "Success",
+  title: "Payment confirmation",
   robots: { index: false, follow: false },
 };
 
-export default function Page() {
+export const dynamic = "force-dynamic";
+
+export default function Page({ searchParams }) {
   return (
-    <Success />
+    <Success searchParams={searchParams} />
   );
 }
+Page.propTypes = { searchParams: PropTypes.object.isRequired };

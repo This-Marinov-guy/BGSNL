@@ -7,18 +7,15 @@ import {
   stopPageLoading,
 } from "../../redux/loading";
 import axios from "axios";
-import { isProd } from "../../util/functions/helpers";
-import { selectUser, refreshToken } from "../../redux/user";
+import { clearSession } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
 import { serverEndpoint } from "../../util/defines/common";
-import { useJWTRefresh } from "./api-hooks";
+import { csrfHeaders, clearCsrf } from "../../util/auth/browser-request.mjs";
 
 export const useHttpClient = (withPageLoading = false) => {
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
 
-  const user = useSelector(selectUser);
-  const { refreshJWTinAPI } = useJWTRefresh();
 
   const forceStartLoading = () => dispatch(startLoading());
 
@@ -33,56 +30,29 @@ export const useHttpClient = (withPageLoading = false) => {
     if (withLoading && !loading) forceStartLoading();
     if (withPageLoading) dispatch(startPageLoading());
 
-    if (user && !!user.token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${user.token}`;
-    }
-
     try {
-      //for production --> process.env.NEXT_PUBLIC_SERVER_URL
-      //for testing -----> process.env.NEXT_PUBLIC_TEST_SERVER_URL
       const response = await axios.request({
         url: serverEndpoint + url,
         method,
         data,
-        headers,
+        headers: {
+          ...headers,
+          ...await csrfHeaders(method),
+        },
+        withCredentials: true,
+        timeout: 60000,
       });
+      if (response.headers["x-bgsnl-session-changed"] === "1") clearCsrf();
 
       return response.data;
     } catch (err) {
-      !isProd() && console.log(err.response?.data ?? err);
-
       const errorMessage = err.response?.data?.message || err.message || "An error occurred";
       const isSessionExpired = errorMessage.toLowerCase().includes("session expired") || 
                                errorMessage.toLowerCase().includes("token expired") ||
                                err.response?.status === 401;
 
-      // If session expired, try to refresh token first
-      if (isSessionExpired && user?.token) {
-        try {
-          const newToken = await refreshJWTinAPI(user.token, false);
-          if (newToken) {
-            // Token refreshed successfully, update Redux store and axios headers
-            dispatch(refreshToken(newToken));
-            axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-            
-            // Retry the original request with the new token
-            const retryResponse = await axios.request({
-              url: serverEndpoint + url,
-              method,
-              data,
-              headers: {
-                ...headers,
-                Authorization: `Bearer ${newToken}`,
-              },
-            });
-            
-            return retryResponse.data;
-          }
-        } catch (refreshError) {
-          // Token refresh failed, fall through to show error
-          !isProd() && console.log("Token refresh failed:", refreshError);
-        }
-      }
+      if (isSessionExpired) dispatch(clearSession());
+      if (err.response?.status === 403) clearCsrf();
 
       // Show error notification if refresh failed or error is not session-related
       if (withError) {

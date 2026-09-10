@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { articleSlug } from "@/util/seo/site";
+import { paymentCookieName, validPaymentToken } from "@/util/payments/return-policy.mjs";
 
 /**
  * Normalise legacy article links before rendering starts. The old client used
@@ -8,6 +9,18 @@ import { articleSlug } from "@/util/seo/site";
  * HTTP 308 instead of a redirect marker inside a streamed 200 response.
  */
 export default function proxy(request) {
+  if (["/success", "/fail", "/donation/success", "/payment/pending"].includes(request.nextUrl.pathname)) {
+    const checkout = request.nextUrl.searchParams.get("checkout");
+    const cookieName = paymentCookieName(checkout);
+    if (!cookieName || !validPaymentToken(request.cookies.get(cookieName)?.value)) {
+      const response = NextResponse.redirect(new URL("/", request.url));
+      response.headers.set("Cache-Control", "private, no-store");
+      return response;
+    }
+    // This only rejects obviously unauthorised requests before streaming. A
+    // well-formed cookie is still verified against the API/Stripe by the page.
+    return NextResponse.next();
+  }
   const match = request.nextUrl.pathname.match(
     /^\/articles\/([^/]+)\/([^/]+)$/
   );
@@ -34,5 +47,5 @@ export default function proxy(request) {
 }
 
 export const config = {
-  matcher: "/articles/:articleId/:articleTitle",
+  matcher: ["/articles/:articleId/:articleTitle", "/success", "/fail", "/donation/success", "/payment/pending"],
 };

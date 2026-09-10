@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { accountRouteState } from "../src/util/functions/account-route-state.mjs";
 
-const staff = { authInitialized: true, token: "test-session", status: "active", roles: ["admin"] };
+const staff = { authInitialized: true, session: "test-session", status: "active", roles: ["admin"] };
 
 test("protected routes wait for a saved session before deciding staff access", () => {
   assert.equal(accountRouteState({ authInitialized: false }, ["admin"], "/user/support"), "restoring");
@@ -12,7 +12,7 @@ test("protected routes wait for a saved session before deciding staff access", (
 
 test("failed restoration or logout cannot render a private page", () => {
   assert.equal(accountRouteState({ authInitialized: true, version: 1 }, ["admin"], "/user/support"), "anonymous");
-  assert.equal(accountRouteState({ ...staff, token: null }, ["admin"], "/user/support"), "anonymous");
+  assert.equal(accountRouteState({ ...staff, session: null }, ["admin"], "/user/support"), "anonymous");
 });
 
 test("role changes are reflected immediately, without rendering forbidden children", () => {

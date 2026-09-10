@@ -11,6 +11,7 @@
   overflow: hidden;
   padding: clamp(1.75rem, 4vw, 3rem) 0 clamp(2rem, 4vw, 3.5rem);
   position: relative;
+  scrollbar-width: none;
   width: 100%;
 }
 
@@ -53,8 +54,7 @@
   scroll-behavior: smooth;
   scroll-padding-inline: max(2rem, calc((100vw - 60rem) / 2));
   scroll-snap-type: inline mandatory;
-  scrollbar-color: var(--newspaper-green) transparent;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 }
 
 .news-newspaper__pages:focus-visible {
@@ -62,20 +62,9 @@
   outline-offset: -2px;
 }
 
-.news-newspaper__pages::-webkit-scrollbar {
-  height: 4px;
-}
-
-.news-newspaper__pages::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.news-newspaper__pages::-webkit-scrollbar-thumb {
-  background: var(--newspaper-green);
-  border-radius: 999px;
-}
-
-.news-newspaper__pages::-webkit-scrollbar-button {
+.news-newspaper::-webkit-scrollbar,
+.news-newspaper__pages::-webkit-scrollbar,
+.news-newspaper__pagination::-webkit-scrollbar {
   display: none;
 }
 
@@ -403,6 +392,7 @@
 .news-newspaper__pagination {
   display: flex;
   gap: 0.25rem;
+  scrollbar-width: none;
 }
 
 .news-newspaper__pagination button {

@@ -10,8 +10,10 @@ import { articleSlug } from "@/util/seo/site";
 
 const BASE_URL = "https://www.bulgariansociety.nl";
 
-// Re-fetch at most once an hour.
+// Tag revalidation runs after event publication/archival; the interval is the
+// fallback should the deployment integration be unavailable.
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const STATIC_ROUTES = [
   { path: "/", priority: 1.0, changeFrequency: "daily" },
@@ -25,6 +27,9 @@ const STATIC_ROUTES = [
   { path: "/terms-and-legals", priority: 0.5, changeFrequency: "yearly" },
   { path: "/partners", priority: 0.7, changeFrequency: "monthly" },
   { path: "/partners/pwc-bulgaria", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/events/future-events", priority: 0.9, changeFrequency: "daily" },
+  { path: "/events/past-events", priority: 0.6, changeFrequency: "weekly" },
   { path: "/articles", priority: 0.9, changeFrequency: "weekly" },
   { path: "/articles/toni-villa", priority: 0.7, changeFrequency: "yearly" },
   {
@@ -42,18 +47,15 @@ const REGIONAL_STATIC_ROUTES = [
 ];
 
 const toDate = (value) => {
-  if (!value) return new Date();
+  if (!value) return null;
   const d = new Date(value);
-  return isNaN(d.getTime()) ? new Date() : d;
+  return isNaN(d.getTime()) ? null : d;
 };
 
 export default async function sitemap() {
-  const now = new Date();
-
   const entries = [
     ...STATIC_ROUTES.map((r) => ({
       url: `${BASE_URL}${r.path}`,
-      lastModified: now,
       changeFrequency: r.changeFrequency,
       priority: r.priority,
     })),
@@ -62,7 +64,6 @@ export default async function sitemap() {
   for (const region of REGIONS) {
     entries.push({
       url: `${BASE_URL}/${region}`,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 0.9,
     });
@@ -70,7 +71,6 @@ export default async function sitemap() {
     for (const r of REGIONAL_STATIC_ROUTES) {
       entries.push({
         url: `${BASE_URL}/${region}${r.path}`,
-        lastModified: now,
         changeFrequency: r.changeFrequency,
         priority: r.priority,
       });
@@ -81,9 +81,10 @@ export default async function sitemap() {
 
   for (const event of events) {
     if (!event?.id || !event?.region) continue;
+    const lastModified = toDate(event.lastUpdate?.timestamp || event.updated_at || event.createdAt || event.created_at);
     entries.push({
-      url: `${BASE_URL}/${event.region}/event-details/${event.id}`,
-      lastModified: toDate(event.updated_at || event.created_at),
+      url: `${BASE_URL}/${event.region}/event-details/${event.slug || event.id}`,
+      ...(lastModified ? { lastModified } : {}),
       changeFrequency: "weekly",
       priority: 0.8,
     });
@@ -91,11 +92,12 @@ export default async function sitemap() {
 
   for (const article of articles) {
     if (!article?.id || !article?.title || article.legacyLink) continue;
+    const lastModified = toDate(
+      article.updated_at || article.created_at || article.date
+    );
     entries.push({
       url: `${BASE_URL}/articles/${article.id}/${articleSlug(article.title)}`,
-      lastModified: toDate(
-        article.updated_at || article.created_at || article.date
-      ),
+      ...(lastModified ? { lastModified } : {}),
       changeFrequency: "monthly",
       priority: 0.7,
     });

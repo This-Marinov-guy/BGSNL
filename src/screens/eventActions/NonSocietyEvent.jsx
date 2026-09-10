@@ -100,10 +100,10 @@ const NonSocietyEvent = () => {
         console.log(err);
       }
     };
-    if (user.token) {
+    if (user.session) {
       fetchCurrentUser();
     }
-  }, [user.token]);
+  }, [user.session]);
 
   useEffect(() => {
     if (!target.ticketTimer || ticketTimerClosed) return undefined;
@@ -161,7 +161,7 @@ const NonSocietyEvent = () => {
         title={"Регистрация за " + target.title}
         onHide={closeModal}
       >
-        {user.token && !currentUser ? (
+        {user.session && !currentUser ? (
           <Loader center />
         ) : (
           <ValidatedFormik
@@ -176,7 +176,7 @@ const NonSocietyEvent = () => {
                 }
                 form.append("date", target.timeStamp);
                 form.append("timezone", target.timezone);
-                form.append("user", user.token ? "member" : "guest");
+                form.append("user", user.session ? "member" : "guest");
                 form.append("name", values.fullName.trim());
                 form.append("email", values.email);
                 form.append("phone", currentUser?.phone || "-");

@@ -31,7 +31,7 @@ const REDUCED_VIEW_TRANSITION = {
   exit: { opacity: 1, y: 0 },
 };
 
-function DeskSession({ token, staff, active }) {
+function DeskSession({ session, staff, active }) {
   const reduceMotion = useReducedMotion();
   const [view, setView] = useState("list");
   const [selected, setSelected] = useState(null);
@@ -48,13 +48,13 @@ function DeskSession({ token, staff, active }) {
   const refresh = () => setReload((value) => value + 1);
 
   useEffect(() => {
-    if (!active || !token) return undefined;
+    if (!active || !session) return undefined;
     const controller = new AbortController();
-    supportRequest("profile", { token, signal: controller.signal }).then((result) => {
+    supportRequest("profile", { session, signal: controller.signal }).then((result) => {
       if (!controller.signal.aborted) setProfile(result);
     }).catch((failure) => { if (!controller.signal.aborted) setError(failure.message); });
     return () => controller.abort();
-  }, [active, token]);
+  }, [active, session]);
 
   useEffect(() => {
     if (!active || view !== "list") return undefined;
@@ -64,8 +64,8 @@ function DeskSession({ token, staff, active }) {
       if (fetching || document.hidden) return;
       fetching = true;
       try {
-        if (token || staff) {
-          const response = await supportRequest(`${staff ? "inbox" : "conversations"}?page=${page}&status=${status}`, { token, signal: controller.signal });
+        if (session || staff) {
+          const response = await supportRequest(`${staff ? "inbox" : "conversations"}?page=${page}&status=${status}`, { session, signal: controller.signal });
           if (!controller.signal.aborted) { setItems(response.conversations); setHasMore(response.hasMore); }
         } else {
           const saved = guestReports();
@@ -91,7 +91,7 @@ function DeskSession({ token, staff, active }) {
     const timer = setInterval(fetchList, 20000);
     document.addEventListener("visibilitychange", fetchList);
     return () => { controller.abort(); clearInterval(timer); document.removeEventListener("visibilitychange", fetchList); };
-  }, [active, token, staff, view, page, status, reload]);
+  }, [active, session, staff, view, page, status, reload]);
 
   function back() { setView("list"); setSelected(null); refresh(); }
   function open(record) { setSelected(record.id); setView("thread"); }
@@ -102,13 +102,13 @@ function DeskSession({ token, staff, active }) {
 
   const viewTransition = reduceMotion ? REDUCED_VIEW_TRANSITION : VIEW_TRANSITION;
 
-  return <div className={styles.desk} data-private data-hj-suppress data-clarity-mask data-dd-privacy="mask">
+  return <div className={styles.desk} data-support-desk data-html2canvas-ignore="true" data-private data-hj-suppress data-clarity-mask data-dd-privacy="mask">
     <AnimatePresence initial={false} mode="wait">
       {view === "new" && <motion.div key="new" className={styles.view} variants={viewTransition} initial="initial" animate="visible" exit="exit">
-        {!staff && <ReportForm token={token} profile={profile} onCreated={open} onBack={back} active={active} />}
+        {!staff && <ReportForm session={session} profile={profile} onCreated={open} onBack={back} active={active} />}
       </motion.div>}
       {view === "thread" && <motion.div key={`thread-${selected}`} className={styles.view} variants={viewTransition} initial="initial" animate="visible" exit="exit">
-        <Conversation id={selected} token={token} secret={token ? undefined : guestReports().find(({ id }) => id === selected)?.secret} staff={staff} active={active} onBack={back} />
+        <Conversation id={selected} session={session} secret={session ? undefined : guestReports().find(({ id }) => id === selected)?.secret} staff={staff} active={active} onBack={back} />
       </motion.div>}
       {view === "list" && <motion.div key="list" className={styles.listView} variants={viewTransition} initial="initial" animate="visible" exit="exit">
       <div className={styles.listHeading}><h3 className="type-subheading">{staff ? "Support inbox" : "Your reports"}</h3>{!staff && <button className="rn-button-style--2 rn-btn-green rn-btn-small" onClick={() => setView("new")} type="button"><IconlyPlus size="1.25rem" /> New report</button>}</div>
@@ -124,7 +124,7 @@ function DeskSession({ token, staff, active }) {
       </button></li>)}</ul>}
       {(page > 1 || hasMore) && <nav className={styles.row} aria-label="Report pages"><button className={styles.textButton} type="button" disabled={page === 1 || loading} onClick={() => setPage((value) => value - 1)}>Previous</button><span>Page {page}</span><button className={styles.textButton} type="button" disabled={!hasMore || loading} onClick={() => setPage((value) => value + 1)}>Next</button></nav>}
       {notice && <p role="status" className={styles.notice}>{notice}</p>}
-      {!staff && <div className={styles.listFooter}>{token ? <a href="/user#help">Account help</a> : <>
+      {!staff && <div className={styles.listFooter}>{session ? <a href="/user#help">Account help</a> : <>
         <small>Guest conversations are private to this browser. On a shared device, forget access when you’re done.</small>
         {guestReports().length > 0 && (confirmForget ? <div className={styles.notice}><p>Forget guest access on this device? Reports stay with our team, but you won’t be able to reopen them here.</p><div className={styles.row}><button className={styles.textButton} type="button" onClick={() => setConfirmForget(false)}>Keep access</button><button className="rn-button-style--2 rn-btn-small" type="button" onClick={forget}>Forget access</button></div></div> : <button className={styles.textButton} type="button" onClick={() => setConfirmForget(true)}>Forget guest access</button>)}
       </>}</div>}
@@ -132,10 +132,10 @@ function DeskSession({ token, staff, active }) {
     </AnimatePresence>
   </div>;
 }
-DeskSession.propTypes = { token: PropTypes.string, staff: PropTypes.bool, active: PropTypes.bool };
+DeskSession.propTypes = { session: PropTypes.object, staff: PropTypes.bool, active: PropTypes.bool };
 
 export default function SupportDesk({ staff = false, active = true }) {
-  const { token } = useSelector(selectUser);
-  return <DeskSession key={`${supportScope(token)}:${staff}`} token={token} staff={staff} active={active} />;
+  const { session } = useSelector(selectUser);
+  return <DeskSession key={`${supportScope(session)}:${staff}`} session={session} staff={staff} active={active} />;
 }
 SupportDesk.propTypes = { staff: PropTypes.bool, active: PropTypes.bool };

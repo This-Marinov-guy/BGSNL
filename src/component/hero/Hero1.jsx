@@ -49,13 +49,13 @@ const Hero1 = ({ initialEvents = {} }) => {
 
         return (
           event?.hidden !== true &&
-          (user.token || !event?.memberOnly) &&
+          (user.session || !event?.memberOnly) &&
           Number.isFinite(date) &&
           date > now
         );
       })
       .sort((first, second) => eventDateValue(first) - eventDateValue(second));
-  }, [initialEvents, region, user.token]);
+  }, [initialEvents, region, user.session]);
 
   const eventRotationKey = upcomingEvents.map((event) => event.id).join("|");
   const activeEvent = upcomingEvents.length
@@ -80,9 +80,9 @@ const Hero1 = ({ initialEvents = {} }) => {
       category: "",
       title: `Bulgarian Society ${capitalizeFirstLetter(region, true) || "Netherlands"}`,
       description: "",
-      buttonText: user.token ? "Go To Profile" : "Become a Member",
+      buttonText: user.session ? "Go To Profile" : "Become a Member",
       style: " rn-btn-reverse-green",
-      buttonLink: user.token ? `/user` : "/signup",
+      buttonLink: user.session ? `/user` : "/signup",
     },
   ];
 
@@ -119,7 +119,7 @@ const Hero1 = ({ initialEvents = {} }) => {
                   ) : (
                     ""
                   )}
-                  {user.token ? (
+                  {user.session ? (
                     <div className="slide-btn">
                       <Link
                         className={"rn-button-style--2 rn-btn-reverse-green"}
@@ -169,7 +169,7 @@ const Hero1 = ({ initialEvents = {} }) => {
                   Next in {capitalizeFirstLetter(activeEvent.region, true)}:
                 </span>{" "}
                 <Link
-                  to={`/${activeEvent.region}/event-details/${activeEvent.id}`}
+                  to={`/${activeEvent.region}/event-details/${activeEvent.slug || activeEvent.id}`}
                 >
                   {activeEvent.title}
                 </Link>{" "}

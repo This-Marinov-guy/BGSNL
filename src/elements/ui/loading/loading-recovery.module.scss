@@ -1,0 +1,35 @@
+.notice {
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-top: .5rem;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+  animation: reveal 280ms ease-out both;
+
+  p { margin: 0; }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .75rem;
+
+  :is(button, a) {
+    min-height: 2.75rem;
+    margin: 0;
+  }
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notice { animation: none; }
+}

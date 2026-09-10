@@ -30,9 +30,9 @@ test("broken storage fails safely, and at most 20 valid guest references are ret
 });
 
 test("account switches clear the UI boundary while token refresh preserves it", () => {
-  const token = (userId, iat) => `header.${Buffer.from(JSON.stringify({ userId, iat })).toString("base64url")}.signature`;
+  const token = (userId, iat) => ({ userId, iat });
   assert.equal(supportScope(null), "guest");
-  assert.equal(supportScope("broken"), "invalid-session");
+  assert.equal(supportScope({}), "guest");
   assert.equal(supportScope(token("a", 1)), supportScope(token("a", 2)));
   assert.notEqual(supportScope(token("a", 1)), supportScope(token("b", 1)));
 });

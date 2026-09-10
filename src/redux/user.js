@@ -1,93 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LOCAL_STORAGE_USER_DATA } from "../util/defines/common";
+import { sessionIsActive, announceSessionChange } from "../util/auth/browser-session.mjs";
+import { endBrowserSession } from "../util/auth/browser-request.mjs";
 
+const accountFields = ["hasBenefits", "memberDiscount", "billingLocked", "billingVerificationUnavailable", "lockReason", "tier", "subscription", "roles", "region", "status", "isSubscribed", "isAlumni", "image"];
+const empty = () => ({ authInitialized: false, session: null, roles: [], status: "", image: "", hasBenefits: false, memberDiscount: false, isSubscribed: false, isAlumni: false });
 export const userSlice = createSlice({
-  name: "user",
-  initialState: {
-    authInitialized: false,
-    image: '',
-    version: null,
-    token: null,
-    status: '',
-    isSubscribed: false,
-    isAlumni: false,
-    hasBenefits: false,
-    memberDiscount: false,
-  },
+  name: "user", initialState: empty(),
   reducers: {
-    login: {
-      reducer(state, action) {
-        state.authInitialized = true;
-        const { version,token, status, isSubscribed, isAlumni, image } = action.payload;
-        for (const key of ["hasBenefits", "memberDiscount", "billingLocked", "billingVerificationUnavailable", "lockReason", "tier", "subscription", "roles", "region"]) state[key] = action.payload[key];
-        state.image = image;
-        state.version = version;
-        state.token = token;
-        state.status = status;
-        state.isSubscribed = isSubscribed;
-        state.isAlumni = isAlumni;
-        
-        // Store user data - no expiration check on frontend
-        localStorage.setItem(
-          LOCAL_STORAGE_USER_DATA,
-          JSON.stringify({
-            token,
-          })
-        );
-      },
-      prepare(values) {
-        return {
-          payload: {
-            ...values,
-          },
-        };
-      },
-    },
-
-    logout: (state) => {
+    login: (state, { payload }) => {
+      if (!sessionIsActive(payload?.session)) return;
+      Object.assign(state, empty());
       state.authInitialized = true;
-      state.image = '';
-      state.version = null;
-      state.token = null;
-      state.status = '';
-      state.isSubscribed = false;
-      state.isAlumni = false;
-      state.hasBenefits = false;
-      state.memberDiscount = false;
-      state.billingLocked = false;
-      state.lockReason = null;
-      state.subscription = null;
-      state.roles = [];
-      state.tier = null;
-      state.region = null;
-      localStorage.removeItem(LOCAL_STORAGE_USER_DATA);
+      state.session = payload.session;
+      for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload.session, key)) state[key] = payload.session[key];
+      for (const key of accountFields) if (Object.hasOwn(payload, key)) state[key] = payload[key];
+      for (const key of ["roles", "status", "region", "image"]) state.session[key] = state[key] ?? state.session[key];
     },
-
+    clearSession: () => ({ ...empty(), authInitialized: true }),
     finishAuthInitialization: (state) => { state.authInitialized = true; },
-
-    updateAccount: (state, action) => {
-      for (const key of ["status", "isSubscribed", "isAlumni", "hasBenefits", "memberDiscount", "billingLocked", "billingVerificationUnavailable", "lockReason", "tier", "subscription", "roles", "region", "image"]) {
-        if (Object.prototype.hasOwnProperty.call(action.payload, key)) state[key] = action.payload[key];
-      }
+    updateAccount: (state, { payload }) => {
+      for (const key of accountFields) if (Object.hasOwn(payload, key)) state[key] = payload[key];
+      if (state.session) for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload, key)) state.session[key] = payload[key];
     },
-
-    refreshToken: (state, action) => {
-      const token = action.payload;
-
-      state.token = action.payload;
-
-      localStorage.setItem(
-        LOCAL_STORAGE_USER_DATA,
-        JSON.stringify({
-          token,
-        })
-      );
-    }
-
+    refreshSession: (state, { payload }) => {
+      if (!state.session || !sessionIsActive(payload) || payload.auth_time !== state.session.auth_time ||
+          payload.sid !== state.session.sid || payload.exp < state.session.exp ||
+          payload.sessionVersion < state.session.sessionVersion || payload.accessExp < state.session.accessExp) return;
+      state.session = payload;
+      for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload, key)) state[key] = payload[key];
+    },
   },
 });
-
-export const selectIsAuth = (state) => !!state.user.token;
+export const { login, clearSession, finishAuthInitialization, updateAccount, refreshSession } = userSlice.actions;
+export const logout = () => async (dispatch) => {
+  await endBrowserSession();
+  dispatch(clearSession());
+  announceSessionChange();
+};
+export const selectIsAuth = (state) => sessionIsActive(state.user.session);
 export const selectUser = (state) => state.user;
-export const { login, logout, refreshToken, updateAccount, finishAuthInitialization } = userSlice.actions;
 export default userSlice.reducer;

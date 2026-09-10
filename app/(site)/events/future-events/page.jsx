@@ -3,6 +3,8 @@ import { getEventsByRegion } from "@/util/api/server";
 import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 import { toMetadata } from "@/util/seo/site";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = toMetadata({
   title: "Future Events",
   description: "Upcoming events organised by the Bulgarian Society Netherlands.",

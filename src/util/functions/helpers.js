@@ -10,7 +10,7 @@ import {
   LOCAL_STORAGE_COOKIE_CONSENT,
 } from "../defines/common";
 import SolidBadge from "../../elements/ui/badges/SolidBadge";
-import axios from "axios";
+import { browserFetch } from "../auth/browser-request.mjs";
 
 export const isProd = () => {
   return process.env.NODE_ENV === "production";
@@ -25,6 +25,7 @@ export const removeLogsOnProd = () => {
 };
 
 export const gaTrack = () => {
+  if (window.location.pathname === "/account/confirm") return;
   const consent = localStorage.getItem(LOCAL_STORAGE_COOKIE_CONSENT);
   if (!isProd() || consent !== "1") {
     return;
@@ -38,6 +39,7 @@ export const gaTrack = () => {
 };
 
 export const clarityTrack = () => {
+  if (window.location.pathname === "/account/confirm") return;
   const consent = localStorage.getItem(LOCAL_STORAGE_COOKIE_CONSENT);
   if (!isProd() || consent !== "1") {
     return;
@@ -96,9 +98,10 @@ export const encryptData = async (data) => {
 
   const stringifiedData = JSON.stringify(data);
 
-  const response = await axios.post(`${serverEndpoint}security/encrypt-data`, {
-    data: stringifiedData,
+  const result = await browserFetch(`${serverEndpoint}security/encrypt-data`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: stringifiedData }),
   });
+  const response = { data: result.ok ? await result.json() : null };
 
   if (!Object.prototype.hasOwnProperty.call(response?.data || {}, "encryptedData")) {
     return null;
@@ -137,7 +140,7 @@ export const estimatePriceByEvent = (
   }
 ) => {
   const { product } = selectedEvent;
-  const isMember = !!user?.token && user?.memberDiscount === true;
+  const isMember = !!user?.session && user?.memberDiscount === true;
   const isActiveMember = isMember && user?.roles?.some((role) => ACCESS_4.includes(role));
 
   const includedText =
@@ -222,6 +225,54 @@ export const estimatePriceByEvent = (
   }
 
   return "TBA";
+};
+
+export const hasAppliedTicketDiscount = (
+  selectedEvent,
+  user = {},
+  { blockDiscounts = false } = {}
+) => {
+  if (!selectedEvent?.product || blockDiscounts || selectedEvent.isFree) {
+    return false;
+  }
+
+  const { product } = selectedEvent;
+  const toTicketPrice = (value) => {
+    if (value === null || value === undefined || value === "") return null;
+    const numericValue = Number(value);
+    return Number.isFinite(numericValue) ? numericValue : null;
+  };
+  const memberPriceEnabled = !!user?.session && user?.memberDiscount === true;
+  const activeMemberPrice = toTicketPrice(product.activeMember?.price);
+  const memberPrice = toTicketPrice(product.member?.price);
+  const activeMemberPriceEnabled =
+    memberPriceEnabled &&
+    user?.roles?.some((role) => ACCESS_4.includes(role)) &&
+    activeMemberPrice !== null;
+
+  if (memberPriceEnabled && selectedEvent.isMemberFree) {
+    return true;
+  }
+
+  const appliedTier = activeMemberPriceEnabled
+    ? product.activeMember
+    : memberPriceEnabled && memberPrice !== null
+      ? product.member
+      : product.guest;
+  const appliedPrice = toTicketPrice(appliedTier?.price);
+  const originalPrice = toTicketPrice(appliedTier?.originalPrice);
+  const discountPercent = Number(appliedTier?.discount);
+  const guestPrice = toTicketPrice(product.guest?.price);
+
+  if (appliedPrice === null) return false;
+  if (Number.isFinite(discountPercent) && discountPercent > 0) return true;
+  if (originalPrice !== null && originalPrice > appliedPrice) return true;
+
+  return (
+    memberPriceEnabled &&
+    guestPrice !== null &&
+    appliedPrice < guestPrice
+  );
 };
 
 export const checkObjectOfArraysEmpty = (obj) => {
@@ -367,7 +418,7 @@ export function isTodayInRange(start, end) {
 }
 
 export const isMember = (user) => {
-  return !!user?.token && user?.memberDiscount === true;
+  return !!user?.session && user?.memberDiscount === true;
 };
 
 export function modifyHeading(text) {

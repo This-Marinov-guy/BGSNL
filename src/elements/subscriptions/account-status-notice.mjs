@@ -1,4 +1,9 @@
 // Presentation only: account status and benefit eligibility come from the API.
+export function needsBillingAttention(user) {
+  return !!user && ["active", "locked", "payment_awaiting"].includes(user.status) &&
+    (!!user.billingLocked || !!user.billingVerificationUnavailable || ["locked", "payment_awaiting"].includes(user.status));
+}
+
 export function getAccountStatusNotice(user) {
   if (!user) return null;
 

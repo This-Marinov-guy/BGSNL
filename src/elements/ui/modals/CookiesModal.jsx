@@ -20,6 +20,7 @@ const CookiesModal = () => {
 
   const handleAcceptAll = () => {
     localStorage.setItem(LOCAL_STORAGE_COOKIE_CONSENT, "1");
+    window.dispatchEvent(new Event("bgsnl-cookie-consent-change"));
     setVisible(false);
     // Reload to activate tracking scripts if needed, or rely on next visit/navigation
     // Ideally, we'd trigger the tracking initialization here, but a reload ensures clean state
@@ -28,6 +29,7 @@ const CookiesModal = () => {
 
   const handleMandatoryOnly = () => {
     localStorage.setItem(LOCAL_STORAGE_COOKIE_CONSENT, "mandatory");
+    window.dispatchEvent(new Event("bgsnl-cookie-consent-change"));
     setVisible(false);
   };
 
@@ -41,7 +43,8 @@ const CookiesModal = () => {
             <div className="content">
               <h4 className="title">Cookie Consent</h4>
               <p>
-                We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. 
+                Choose whether to allow optional analytics. Essential storage is
+                used to keep the website secure and working.
                 <Link to="/terms-and-legals#cookies" className="ml--5 theme-color">
                   Learn more
                 </Link>

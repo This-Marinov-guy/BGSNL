@@ -180,6 +180,23 @@
   background-position: center;
 }
 
+// Keep the legal watermark independent of document length and out of the footer.
+.legal-page__content {
+  display: flow-root;
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: url(/assets/images/watermark.png) center 18rem / min(80vw, 36rem) auto no-repeat;
+    opacity: .35;
+  }
+}
+
 
 @media (min-width: 1200px){
     .container {

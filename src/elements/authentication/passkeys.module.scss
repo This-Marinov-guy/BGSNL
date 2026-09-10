@@ -1,0 +1,53 @@
+.login {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  min-width: 0;
+  gap: 0.75rem;
+  p { margin: 0; }
+}
+.loginSpinner {
+  animation: passkey-spin 800ms linear infinite;
+  @media (prefers-reduced-motion: reduce) { animation-duration: 2s; }
+}
+@keyframes passkey-spin { to { transform: rotate(360deg); } }
+.screenReaderStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.settings { min-width: 0; margin-top: 1.5rem; }
+.panelBody { grid-column: 1 / -1; min-width: 0; }
+.status { margin: 0.75rem 0; p { margin: 0 0 0.75rem; } }
+.list { display: grid; gap: 0.75rem; list-style: none; padding: 0; margin: 1rem 0; }
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--color-white, #fff);
+  > div { min-width: 0; overflow-wrap: anywhere; }
+  h4, p { margin: 0; }
+  p { margin-top: 0.25rem; }
+}
+
+.settings .item .remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  margin: 0;
+
+  &:focus-visible {
+    outline: 3px solid var(--color-danger, #9e0d33);
+    outline-offset: 3px;
+  }
+}

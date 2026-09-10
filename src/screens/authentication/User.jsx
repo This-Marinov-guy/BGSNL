@@ -25,9 +25,13 @@ import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
 import TabContent from "../../elements/ui/tabs/TabContent";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser, updateAccount } from "../../redux/user";
-import BillingStatusBanner from "@/elements/subscriptions/BillingStatusBanner";
+import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
+import BillingAttentionProvider from "@/elements/subscriptions/BillingAttentionProvider";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
 import { ACCOUNT_TABS } from "../../util/defines/enum";
+import AccountCampaignAnnouncement from "@/elements/campaigns/AccountCampaignAnnouncement";
+import { SESSION_NOTICE_KEY } from "@/util/auth/browser-session.mjs";
+import { showNotification } from "../../redux/notification";
 
 const User = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -137,11 +141,18 @@ const User = () => {
   );
 
   useEffect(() => {
-    if (!user.token) {
+    if (!user.session) {
       sessionStorage.setItem("prevUrl", routePath);
       navigate("/login");
       return;
     }
+    try {
+      const notice = JSON.parse(sessionStorage.getItem(SESSION_NOTICE_KEY) || "null");
+      if (notice && ["success", "error", "info"].includes(notice.severity) && typeof notice.detail === "string") {
+        sessionStorage.removeItem(SESSION_NOTICE_KEY);
+        dispatch(showNotification({ severity: notice.severity, detail: notice.detail.slice(0, 700) }));
+      }
+    } catch { /* Ignore malformed UI-only flash data. */ }
 
     let mounted = true;
     let refreshing = false;
@@ -174,7 +185,7 @@ const User = () => {
       window.removeEventListener("focus", fetchCurrentUser);
       document.removeEventListener("visibilitychange", fetchCurrentUser);
     };
-  }, [user.token, dispatch]);
+  }, [user.session?.userId, user.session?.sessionVersion, dispatch]);
 
   useEffect(() => {
     const syncTabWithHash = () => {
@@ -218,6 +229,12 @@ const User = () => {
         }}
       />
       {currentUser.hasBenefits && <Christmas currentUser={currentUser} />}
+      <AccountCampaignAnnouncement
+        key={currentUser._id || currentUser.id}
+        accountId={currentUser._id || currentUser.id}
+        session={user.session}
+        blocked={isSidebarOpen}
+      />
 
       {/* Start User Page Container with Sidebar */}
       <main className="user-page-container" id="user-account-content">
@@ -234,7 +251,8 @@ const User = () => {
 
         {/* Main Content Area */}
         <div className="user-content-area">
-          <BillingStatusBanner user={currentUser} />
+          <BillingAttentionProvider user={currentUser}>
+          <AccountBillingAlert user={currentUser} />
           {currentUser?.tier === 0 && <Message 
             severity="info"
             text="As a tier 0 alumni, you are not eligible to any bonuses from the alumni program. Please upgrade your subscription from the settings tab."
@@ -270,6 +288,7 @@ const User = () => {
               />
             </section>
           </div>
+          </BillingAttentionProvider>
         </div>
       </main>
       {/* End User Collection */}

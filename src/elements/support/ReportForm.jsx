@@ -1,8 +1,11 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { showNotification } from "@/redux/notification";
 import { IconlyArrowLeft, IconlySend } from "@/elements/ui/icons/IconlyIcons";
 import { supportRequest } from "./support-api";
+import { attachReportScreenshot, startReportScreenshot } from "./support-screenshot.mjs";
 import { createGuestAccess, forgetGuestReport, rememberGuestReport } from "./support-state.mjs";
 import styles from "./support.module.scss";
 
@@ -33,35 +36,49 @@ function clientEnvironment() {
   };
 }
 
-export default function ReportForm({ token, profile, onCreated, onBack, active }) {
+export default function ReportForm({ session, profile, onCreated, onBack, active }) {
   const id = useId();
+  const dispatch = useDispatch();
   const [contactMethod, setContactMethod] = useState("email");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const pending = useRef(null);
   const formRef = useRef(null);
   const heading = useRef(null);
+  const submitting = useRef(false);
 
   useEffect(() => { if (active) heading.current?.focus({ preventScroll: true }); }, [active]);
 
   async function submit(event) {
     event.preventDefault();
-    if (busy) return;
+    if (submitting.current) return;
     const form = new FormData(event.currentTarget);
     const data = { subject: String(form.get("subject") || ""), text: String(form.get("text") || ""),
-      contact: token ? undefined : { name: String(form.get("name") || ""), [contactMethod]: String(form.get("contact") || "") },
+      contact: session ? undefined : { name: String(form.get("name") || ""), [contactMethod]: String(form.get("contact") || "") },
       website: String(form.get("website") || ""), pagePath: window.location.pathname, environment: clientEnvironment() };
     // A failed/ambiguous submission must keep its identity and payload. Do not
     // turn Retry into a second conversation.
     if (!pending.current) {
-      const access = token ? { id: crypto.randomUUID() } : createGuestAccess();
+      const access = session ? { id: crypto.randomUUID() } : createGuestAccess();
       pending.current = { access, data: { ...data, id: access.id } };
     }
+    submitting.current = true;
     setBusy(true); setError("");
     try {
       const { access, data: payload } = pending.current;
-      if (!token) rememberGuestReport(access);
-      const result = await supportRequest("conversations", { token, secret: access.secret, data: payload });
+      if (!session) rememberGuestReport(access);
+      if (!pending.current.screenshot) {
+        pending.current.screenshot = startReportScreenshot();
+        pending.current.screenshotId = crypto.randomUUID();
+      }
+      const result = await supportRequest("conversations", { session, secret: access.secret, data: payload });
+      const operation = pending.current;
+      void attachReportScreenshot({ screenshot: operation.screenshot, messageId: operation.screenshotId,
+        conversationId: result.conversation.id, session, secret: access.secret }, supportRequest).then((attached) => {
+        if (!attached) dispatch(showNotification({ severity: "info", detail: "Your report was sent, but the automatic screenshot could not be attached." }));
+      }).catch(() => {
+        dispatch(showNotification({ severity: "info", detail: "Your report was sent, but the automatic screenshot could not be attached." }));
+      });
       pending.current = null;
       formRef.current?.reset();
       onCreated(result.conversation);
@@ -69,11 +86,11 @@ export default function ReportForm({ token, profile, onCreated, onBack, active }
       // Validation is a definite rejection, so fields can be corrected. Keep
       // the operation ID for network failures and server-unavailable responses.
       if ([401, 403, 422, 429].includes(failure.status)) {
-        if (!token) forgetGuestReport(pending.current.access.id);
+        if (!session) forgetGuestReport(pending.current.access.id);
         pending.current = null;
       }
       setError(failure.message);
-    } finally { setBusy(false); }
+    } finally { submitting.current = false; setBusy(false); }
   }
 
   return <div className={styles.formView}>
@@ -82,7 +99,7 @@ export default function ReportForm({ token, profile, onCreated, onBack, active }
     <p>Tell us what happened. Don’t include passwords, payment details or sensitive documents.</p>
     <form className={styles.form} onSubmit={submit} ref={formRef}>
       <fieldset disabled={busy || (!!error && !!pending.current)}>
-        {token ? <p className={styles.identity}>Reporting as <strong>{profile?.contact?.name || "your signed-in account"}</strong>{profile?.contact?.email && <small>{profile.contact.email}</small>}</p> : <>
+        {session ? <p className={styles.identity}>Reporting as <strong>{profile?.contact?.name || "your signed-in account"}</strong>{profile?.contact?.email && <small>{profile.contact.email}</small>}</p> : <>
           <div className="rn-form-group"><label htmlFor={`${id}-name`}>Your name</label><input className="bgsnl-form-control" id={`${id}-name`} name="name" autoComplete="name" maxLength={160} required /></div>
           <div className={styles.methodSwitch} aria-label="Contact method">
             {[["email", "Email"], ["phone", "Phone"]].map(([value, label]) => <button key={value} type="button" aria-pressed={contactMethod === value} onClick={() => setContactMethod(value)}>{label}</button>)}
@@ -93,11 +110,11 @@ export default function ReportForm({ token, profile, onCreated, onBack, active }
         <div className="rn-form-group"><label htmlFor={`${id}-message`}>What happened?</label><textarea className="bgsnl-form-control" id={`${id}-message`} name="text" rows={4} maxLength={4000} placeholder="Include the steps that led to the problem…" required /></div>
         <div className={styles.honeypot} aria-hidden="true"><label htmlFor={`${id}-website`}>Leave this empty<input id={`${id}-website`} name="website" tabIndex={-1} autoComplete="off" /></label></div>
       </fieldset>
-      {!token && <small>Guest replies stay in this browser for up to 90 days. Contact details help our team follow up; they are not used to verify your identity.</small>}
-      <small>Replies appear here. We don’t provide live chat. <a href="/terms-and-legals" target="_blank" rel="noreferrer">Privacy information</a></small>
+      {!session && <small>Guest replies stay in this browser for up to 90 days. Contact details help our team follow up; they are not used to verify your identity.</small>}
+      <small>A full-page screenshot is attached automatically, excluding support and masking form values and marked private content. Replies appear here. We don’t provide live chat. <a href="/terms-and-legals" target="_blank" rel="noreferrer">Privacy information</a></small>
       {error && <p role="alert" className={styles.error}>{error}{pending.current && " Retry sends the same report, without duplicating it."}</p>}
       <button className="rn-button-style--2 rn-btn-green rn-btn-small" type="submit" disabled={busy || !active}><IconlySend size="1.25rem" /> {busy ? "Sending…" : pending.current && error ? "Retry report" : "Send report"}</button>
     </form>
   </div>;
 }
-ReportForm.propTypes = { token: PropTypes.string, profile: PropTypes.object, onCreated: PropTypes.func.isRequired, onBack: PropTypes.func.isRequired, active: PropTypes.bool };
+ReportForm.propTypes = { session: PropTypes.object, profile: PropTypes.object, onCreated: PropTypes.func.isRequired, onBack: PropTypes.func.isRequired, active: PropTypes.bool };

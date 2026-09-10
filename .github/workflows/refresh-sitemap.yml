@@ -1,0 +1,24 @@
+name: Refresh public event sitemap
+
+on:
+  repository_dispatch:
+    types: [event-sitemap-changed]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  revalidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invalidate public event discovery cache
+        env:
+          SITEMAP_REVALIDATE_URL: ${{ secrets.SITEMAP_REVALIDATE_URL }}
+          SITEMAP_REVALIDATE_TOKEN: ${{ secrets.SITEMAP_REVALIDATE_TOKEN }}
+        run: |
+          test -n "$SITEMAP_REVALIDATE_URL"
+          test -n "$SITEMAP_REVALIDATE_TOKEN"
+          curl --fail --silent --show-error --retry 3 --retry-all-errors \
+            --request POST \
+            --header "x-bgsnl-revalidate-key: $SITEMAP_REVALIDATE_TOKEN" \
+            "$SITEMAP_REVALIDATE_URL"

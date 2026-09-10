@@ -1,3 +1,4 @@
+import { showNotification } from "../../../redux/notification";
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 import { useDispatch } from "react-redux";
@@ -17,10 +18,9 @@ const LogoutAlert = ({ visible, onHide }) => {
       <p>Continue logging out?</p>
       <button
         className="rn-button-style--2 rn-btn-reverse-red mr--10"
-        onClick={() => {
-          dispatch(logout());
-          onHide();
-          navigate(0);
+        onClick={async () => {
+          try { await dispatch(logout()); onHide(); navigate(0); }
+          catch { dispatch(showNotification({ severity: "error", detail: "Could not sign out. Please retry." })); }
         }}
       >
         LOG OUT

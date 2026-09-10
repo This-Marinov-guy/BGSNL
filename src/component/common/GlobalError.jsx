@@ -4,7 +4,7 @@ import { usePathname, useNavigate } from "@/util/navigation";
 import axios from 'axios';
 import HeaderTwo from '../header/HeaderTwo';
 import { AXIOM_DATASET, getAxiomEndpoint, isAxiomLoggingEnabled } from '../../util/configs/axiom';
-import { LOCAL_STORAGE_USER_DATA } from '../../util/defines/common';
+import { store } from "../../redux/store";
 
 // Custom fallback component
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
@@ -49,23 +49,13 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
     );
 };
 
-// Function to get user data from localStorage
-const getUserData = () => {
-    try {
-        const userData = localStorage.getItem(LOCAL_STORAGE_USER_DATA);
-        if (userData) {
-            return JSON.parse(userData);
-        }
-        return null;
-    } catch (e) {
-        return null;
-    }
-};
+// Error reports never read or serialize authentication credentials.
+const getUserData = () => store.getState().user;
 
 // Function to check if user is logged in
 const isUserLoggedIn = () => {
     const userData = getUserData();
-    return !!(userData && userData.token);
+    return !!(userData && userData.session);
 };
 
 // Function to log errors to Axiom
@@ -78,7 +68,7 @@ const logErrorToAxiom = (error, componentStack, errorInfo) => {
     
     // Get user data
     const userData = getUserData();
-    const userToken = userData?.token;
+    const userToken = userData?.session;
     
     // Create the payload for Axiom
     const errorPayload = {
@@ -90,11 +80,10 @@ const logErrorToAxiom = (error, componentStack, errorInfo) => {
             name: error.name,
             stack: error.stack,
             componentStack: componentStack,
-            url: window.location.href,
+            url: window.location.pathname,
             path: window.location.pathname,
             userAgent: navigator.userAgent,
             logged_in: !!userToken,
-            ...(userToken && { token: userToken }),
             screenSize: {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -171,7 +160,7 @@ const GlobalError = ({ children }) => {
 
                     // Get user data
                     const userData = getUserData();
-                    const userToken = userData?.token;
+                    const userToken = userData?.session;
 
                     // Create payload for console errors
                     const errorPayload = {
@@ -180,11 +169,10 @@ const GlobalError = ({ children }) => {
                         type: 'console_error',
                         data: {
                             message: errorMessage,
-                            url: window.location.href,
+                            url: window.location.pathname,
                             path: window.location.pathname,
                             userAgent: navigator.userAgent,
                             logged_in: !!userToken,
-                            ...(userToken && { token: userToken }),
                             screenSize: {
                                 width: window.innerWidth,
                                 height: window.innerHeight,

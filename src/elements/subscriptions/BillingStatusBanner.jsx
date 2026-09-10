@@ -6,6 +6,35 @@ import { IconlyDanger } from "@/elements/ui/icons/IconlyIcons";
 import { getAccountStatusNotice } from "./account-status-notice.mjs";
 import styles from "./subscriptions.module.scss";
 
+export function BillingStatusBannerSkeleton() {
+  return (
+    <section
+      aria-busy="true"
+      aria-label="Checking account benefits"
+      className={`${styles.dangerBanner} ${styles.dangerBannerSkeleton}`}
+      role="status"
+    >
+      <span className="visually-hidden">Checking account benefits</span>
+      <span
+        aria-hidden="true"
+        className={`${styles.skeletonBlock} ${styles.skeletonIcon}`}
+      />
+      <span
+        aria-hidden="true"
+        className={`${styles.skeletonBlock} ${styles.skeletonTitle}`}
+      />
+      <div aria-hidden="true" className={styles.dangerContent}>
+        <span
+          className={`${styles.skeletonBlock} ${styles.skeletonLine}`}
+        />
+        <span
+          className={`${styles.skeletonBlock} ${styles.skeletonLine} ${styles.skeletonLineShort}`}
+        />
+      </div>
+    </section>
+  );
+}
+
 export default function BillingStatusBanner({
   user,
   context = "account",
@@ -34,7 +63,11 @@ export default function BillingStatusBanner({
   );
 
   return (
-    <section className={styles.dangerBanner} role="alert" aria-labelledby={titleId}>
+    <section
+      className={`${styles.dangerBanner} ${styles.dangerBannerReady}`}
+      role="alert"
+      aria-labelledby={titleId}
+    >
       <IconlyDanger className={styles.dangerIcon} aria-hidden />
       <h2 id={titleId}>{notice.title}</h2>
       <div className={styles.dangerContent}>

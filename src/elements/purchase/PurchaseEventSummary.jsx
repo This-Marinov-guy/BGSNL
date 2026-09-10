@@ -5,6 +5,7 @@ import {
   IconlyTimeCircle,
   IconlyTicket,
 } from "@/elements/ui/icons/IconlyIcons";
+import GoldenTicketMotionIcon from "@/elements/ui/icons/GoldenTicketMotionIcon";
 import ImageFb from "../ui/media/ImageFb";
 import { getEventDateTimePresentation } from "../../util/functions/date";
 import TicketClosingCountdown from "../ui/functional/TicketClosingCountdown";
@@ -25,6 +26,7 @@ const getNumericPrice = (value) => {
 
 const PurchaseEventSummary = ({
   event,
+  discountApplied = false,
   factsInsideOverview = false,
   price,
   priceBadge,
@@ -118,7 +120,11 @@ const PurchaseEventSummary = ({
 
           <div className="purchase-ticket-heading">
             <div className="purchase-event-price">
-              <IconlyTicket aria-hidden />
+              {discountApplied ? (
+                <GoldenTicketMotionIcon className="purchase-discount-motion-icon" />
+              ) : (
+                <IconlyTicket aria-hidden />
+              )}
               <strong className="type-heading-md">{price}</strong>
               {priceBadge}
             </div>
@@ -154,6 +160,7 @@ const PurchaseEventSummary = ({
 };
 
 PurchaseEventSummary.propTypes = {
+  discountApplied: PropTypes.bool,
   event: PropTypes.shape({
     correctedDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),

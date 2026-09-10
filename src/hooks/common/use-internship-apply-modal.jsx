@@ -42,7 +42,7 @@ export const InternshipApplyModalProvider = ({ children }) => {
     onApply,
     onUserRefresh,
   }) => {
-    if (!internship || !authUser?.token) {
+    if (!internship || !authUser?.session) {
       return false;
     }
 

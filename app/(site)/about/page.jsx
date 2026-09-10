@@ -2,6 +2,8 @@ import About from "@/screens/information/About";
 import { getAboutData } from "@/util/api/server";
 import { toMetadata } from "@/util/seo/site";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = toMetadata({
   title: "About Us",
   description:

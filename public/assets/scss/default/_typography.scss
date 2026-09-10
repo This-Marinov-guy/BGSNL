@@ -261,3 +261,56 @@ select {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+// Both footer variants share the live site's typography. Keep these roles here
+// so restoring the footer does not change headings, links, or buttons elsewhere.
+.footer-area {
+  .footer-left .inner h2 {
+    font-size: min(4.6875rem, 14cqi);
+    font-weight: $type-weight-black;
+
+    @media #{$lg-layout} {
+      font-size: min(3.125rem, 14cqi);
+    }
+
+    @media #{$sm-layout} {
+      font-size: min(2.8125rem, 14cqi);
+    }
+  }
+
+  .footer-left .rn-button-style--2 {
+    font-size: $type-size-minimum;
+    font-weight: $type-weight-medium;
+    letter-spacing: 2px;
+  }
+
+  .footer-left a.rn-button-style--2 {
+    line-height: 1.7142857143;
+  }
+
+  .footer-link h4 {
+    font-size: 1.375rem;
+    font-weight: $type-weight-medium;
+    line-height: 1.2074;
+  }
+
+  .footer-link .ft-link a {
+    font-size: 1.25rem;
+    font-weight: $type-weight-medium;
+    line-height: 1.7142857143;
+  }
+
+  .copyright-text p {
+    font-size: $type-size-minimum;
+    font-weight: $type-weight-medium;
+    line-height: 1.875;
+
+    @media #{$sm-layout} {
+      line-height: $type-line-relaxed;
+    }
+
+    &.information {
+      font-weight: $type-weight-light;
+    }
+  }
+}

@@ -2,7 +2,6 @@ import React, { useEffect, useId, useState } from "react";
 import emailjs from "emailjs-com";
 import { useParams } from "@/util/navigation";
 import PropTypes from "prop-types";
-import { IconlySend } from "@/elements/ui/icons/IconlyIcons";
 import Loader from "../ui/loading/Loader";
 import { REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
 import { useHttpClient } from "../../hooks/common/http-hook";
@@ -40,7 +39,6 @@ function ContactForm(props) {
     const templateID = process.env.NEXT_PUBLIC_TEMPLATE || "default_template";
     const userID = process.env.NEXT_PUBLIC_PUBLIC_KEY || "default_key";
     const contactPayload = Object.fromEntries(new FormData(form).entries());
-    const submittedEmail = String(contactPayload.email || "");
 
     setIsLoading(true);
     showresult(null);
@@ -73,15 +71,6 @@ function ContactForm(props) {
         userID
       );
       console.log(emailResult.text);
-
-      void sendRequest(
-        "common/marketing-email",
-        "POST",
-        { email: submittedEmail, city: region ?? "netherlands" },
-        {},
-        false,
-        false
-      );
 
       setIsSubmitted(true);
       form.reset();

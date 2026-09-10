@@ -1,39 +1,6 @@
-import { hasOverlap } from "./helpers";
+import { sessionIsActive } from "../auth/browser-session.mjs";
 
-export const decodeJWT = (token) => {
-    try {
-        const [header, payload, signature] = token.split('.');
-    
-        const decodedPayload = atob(payload);
-    
-        const decodedPayloadJSON = JSON.parse(decodedPayload);
-    
-        return decodedPayloadJSON;
-    } catch (err) {
-        return null;
-    }
-}
-
-export const isTokenExpired = (token) => {
-    const {exp, version} = decodeJWT(token);
-
-    const currentTime = Math.floor(Date.now() / 1000); 
-
-    return (exp < currentTime) && (version != process.env.NEXT_PUBLIC_AUTH_VERSION); 
-}
-
-export const checkAuthorization = (token, roles) => {
-    if (!token) {
-        return false;
-    }
-
-    const user = decodeJWT(token);
-    
-    const userRoles = user?.roles ?? [];
-
-    if (userRoles && hasOverlap(userRoles, roles)) {
-        return true;
-    } else {
-        return false;
-    }
-}
+// Presentation only: the API verifies the HttpOnly cookie's JWT independently.
+export const sessionClaims = (session) => session || {};
+export const checkAuthorization = (session, roles) =>
+  sessionIsActive(session) && roles.some((role) => session.roles?.includes(role));

@@ -45,7 +45,10 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
-import { estimatePriceByEvent } from "../../util/functions/helpers";
+import {
+  estimatePriceByEvent,
+  hasAppliedTicketDiscount,
+} from "../../util/functions/helpers";
 import {
   appendExtraInputsToForm,
   buildSchemaExtraInputs,
@@ -98,6 +101,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const dispatch = useDispatch();
 
   const { region, eventId } = useParams();
+  const eventRecordId = initialEvent?.id || selectedEvent?.id || eventId;
 
   const user = useSelector(selectUser);
 
@@ -118,7 +122,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
     const getEventDetails = async () => {
       try {
         const responseData = await sendRequest(
-          `future-event/full-event-details/${eventId}`,
+          `future-event/full-event-details/${eventRecordId}`,
           "GET",
           null,
           {},
@@ -137,7 +141,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
 
     fetchCurrentUser();
     getEventDetails();
-  }, []);
+  }, [eventRecordId, sendRequest]);
 
   if (loadingPage || !currentUser) {
     return <HeaderLoadingError />;
@@ -155,12 +159,17 @@ const MemberPurchase = ({ initialEvent = null }) => {
 
   const displayedTicketPrice = estimatePriceByEvent(
     selectedEvent,
-    { ...currentUser, token: user.token ?? "" },
+    { ...currentUser, session: user.session ?? "" },
     {
       withIncludedText: false,
       blockDiscounts: alreadyRegistered,
       withMemberBadge: true,
     }
+  );
+  const discountApplied = hasAppliedTicketDiscount(
+    selectedEvent,
+    { ...currentUser, session: user.session ?? "" },
+    { blockDiscounts: alreadyRegistered }
   );
   const checkoutActionLabel =
     selectedEvent.isFree ||
@@ -200,6 +209,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
         >
           <div className="purchase-event-sidebar">
             <PurchaseEventSummary
+              discountApplied={discountApplied}
               event={selectedEvent}
               factsInsideOverview
               price={displayedTicketPrice}
@@ -273,7 +283,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
 
                 if (responseData?.status && responseData?.free) {
                   sessionStorage.setItem("prevUrl", window.location.href);
-                  navigate("/success");
+                  dispatch(showNotification({ severity: "warn", detail: "Your free booking was submitted, but its confirmation link is missing. Please check your email or contact support before booking again.", life: 8000 }));
                 }
               } catch (err) {
                 // handled by http-hook

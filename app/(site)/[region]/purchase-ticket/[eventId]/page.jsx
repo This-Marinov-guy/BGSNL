@@ -1,6 +1,9 @@
+/* eslint-disable react/prop-types */
 import PurchaseTicket from "@/screens/eventActions/PurchaseTicket";
 import { getEventDetails } from "@/util/api/server";
 import { buildEventMetadata } from "@/util/seo/event-metadata";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { region, eventId } = await params;

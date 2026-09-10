@@ -1,11 +1,13 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { getLoadingDestination } from "@/elements/ui/loading/loading-recovery.mjs";
 
 export const ROUTE_CHANGE_START_EVENT = "bgsnl:route-change-start";
 
@@ -16,19 +18,16 @@ export const ROUTE_CHANGE_START_EVENT = "bgsnl:route-change-start";
  * call sites feed the bar without being touched, mirroring the window-event
  * idiom GlobalBackground already uses for its reveal signal.
  */
-export const notifyRouteChangeStart = () => {
+export const notifyRouteChangeStart = (href) => {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new Event(ROUTE_CHANGE_START_EVENT));
+  const destination = getLoadingDestination(href, window.location.href);
+  if (destination) window.dispatchEvent(new CustomEvent(ROUTE_CHANGE_START_EVENT, { detail: { href: destination } }));
 };
 
 // Prefetched routes commit within a frame or two. A bar that flashes for those
 // reads as a glitch, so nothing is shown until a navigation outlives this.
 const SHOW_AFTER_MS = 160;
-// Linking to the URL you are already on never changes `pathname`, so nothing
-// would ever clear the bar. Give every navigation a hard ceiling, and end it
-// the same way a real commit does rather than snapping the bar away.
-const GIVE_UP_AFTER_MS = 8000;
-// Long enough for the fill to reach 100% before the bar fades away.
+// Fade only when navigation commits; this component renders only the bar.
 const FINISH_MS = 320;
 
 /**
@@ -39,24 +38,28 @@ const FINISH_MS = 320;
  */
 const RouteProgress = () => {
   const pathname = usePathname();
+  const search = useSearchParams()?.toString() ?? "";
   const [phase, setPhase] = useState("idle");
+  const destinationRef = useRef(null);
+  const committedUrl = useRef(null);
   // The pathname effect needs to read the phase without re-subscribing on every
   // change, so the ref shadows the state it renders from.
   const phaseRef = useRef("idle");
   const timers = useRef([]);
 
-  const clearTimers = () => {
+  const clearTimers = useCallback(() => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
-  };
+  }, []);
 
-  const goTo = (next) => {
+  const goTo = useCallback((next) => {
     phaseRef.current = next;
     setPhase(next);
-  };
+  }, []);
 
-  // Runs the bar out to 100% and fades it, the only graceful way to end a cycle.
-  const finish = () => {
+  const finish = useCallback(() => {
+    clearTimers();
+    destinationRef.current = null;
     if (phaseRef.current !== "pending") {
       goTo("idle");
       return;
@@ -65,39 +68,48 @@ const RouteProgress = () => {
     // Keep the indeterminate motion running while the indicator fades away.
     goTo("finishing");
     timers.current.push(setTimeout(() => goTo("idle"), FINISH_MS));
-  };
+  }, [clearTimers, goTo]);
 
   useEffect(() => {
-    const handleStart = () => {
+    const start = (href) => {
+      if (!href || destinationRef.current === href) return;
       clearTimers();
-      // Idle carries no width transition, so this rewinds the bar to the left
-      // edge instantly and the next cycle starts clean.
+      destinationRef.current = href;
       goTo("idle");
-
-      timers.current.push(
-        setTimeout(() => goTo("pending"), SHOW_AFTER_MS),
-        setTimeout(() => {
-          clearTimers();
-          finish();
-        }, GIVE_UP_AFTER_MS)
-      );
+      timers.current.push(setTimeout(() => goTo("pending"), SHOW_AFTER_MS));
+    };
+    const handleStart = (event) => start(event.detail?.href);
+    // Native same-origin links also get feedback. Listen after application
+    // handlers so cancelled clicks never start a false loading timeout.
+    const handleClick = (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = event.target.closest?.("a[href]");
+      if (!anchor || anchor.hasAttribute("download") || (anchor.target && anchor.target !== "_self")) return;
+      const href = getLoadingDestination(anchor.href, window.location.href);
+      if (href) start(href);
+    };
+    const handleHistory = () => {
+      const url = `${window.location.pathname}${window.location.search}`;
+      if (url !== committedUrl.current) start(`${url}${window.location.hash}`);
     };
 
     window.addEventListener(ROUTE_CHANGE_START_EVENT, handleStart);
+    document.addEventListener("click", handleClick);
+    window.addEventListener("popstate", handleHistory);
 
     return () => {
       window.removeEventListener(ROUTE_CHANGE_START_EVENT, handleStart);
+      document.removeEventListener("click", handleClick);
+      window.removeEventListener("popstate", handleHistory);
       clearTimers();
     };
-  }, []);
+  }, [clearTimers, goTo]);
 
-  // A new pathname landing is the only reliable "navigation committed" signal.
-  // This also runs on mount, where the pending phase is impossible, so the
-  // first-render case needs no special guard.
+  // Query-only navigation must finish too; hash links never start the timer.
   useEffect(() => {
-    clearTimers();
+    committedUrl.current = `${window.location.pathname}${window.location.search}`;
     finish();
-  }, [pathname]);
+  }, [pathname, search, finish]);
 
   return (
     <div aria-hidden="true" className="route-progress" data-phase={phase}>

@@ -3,6 +3,7 @@
   "version": "4.0.1",
   "private": true,
   "dependencies": {
+    "@simplewebauthn/browser": "14.0.0",
     "@primereact/ui": "^11.1.0",
     "@primeuix/themes": "^3.0.0",
     "@reduxjs/toolkit": "^2.12.0",
@@ -52,6 +53,7 @@
     "yup": "^1.3.3"
   },
   "scripts": {
+    "test:passkeys": "node --test scripts/passkeys.test.mjs",
     "dev": "next dev --webpack",
     "dev:all": "node ../start-local.mjs",
     "dev:check": "node ../start-local.mjs --check",

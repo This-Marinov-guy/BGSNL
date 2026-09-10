@@ -14,7 +14,7 @@ const PortfolioList = (props) => {
             <Link
               to={
                 props.style === "society"
-                  ? `/${value.region ?? region}/event-details/${value.id}`
+                  ? `/${value.region ?? region}/event-details/${value.slug || value.id}`
                   : `/${value.region ?? region}/other-event-details/${value.id}`
               }
               className={

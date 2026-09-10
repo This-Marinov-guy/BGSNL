@@ -25,7 +25,7 @@ function PhotoDraft({ file, onRemove, disabled }) {
 }
 PhotoDraft.propTypes = { file: PropTypes.object.isRequired, onRemove: PropTypes.func.isRequired, disabled: PropTypes.bool };
 
-export default function Conversation({ id, token, secret, staff, active, onBack }) {
+export default function Conversation({ id, session, secret, staff, active, onBack }) {
   const [record, setRecord] = useState(null);
   const [error, setError] = useState("");
   const [draft, setDraft] = useState("");
@@ -54,7 +54,7 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
       if (fetching || mutation.current || document.hidden) return;
       fetching = true;
       try {
-        const response = await supportRequest(endpoint, { token, secret, signal: controller.signal });
+        const response = await supportRequest(endpoint, { session, secret, signal: controller.signal });
         if (!controller.signal.aborted) {
           accept(response.conversation);
           if (pending.current && response.conversation.messages.some((message) => message.id === pending.current.id)) {
@@ -73,7 +73,7 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
     const timer = setInterval(refresh, 20000);
     document.addEventListener("visibilitychange", refresh);
     return () => { controller.abort(); clearInterval(timer); document.removeEventListener("visibilitychange", refresh); };
-  }, [active, token, secret, endpoint, accept, reload]);
+  }, [active, session, secret, endpoint, accept, reload]);
 
   useEffect(() => {
     if (!active || !list.current) return;
@@ -91,7 +91,7 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
       const data = new FormData();
       data.append("id", pending.current.id); data.append("text", pending.current.text);
       for (const file of pending.current.files) data.append("images", file);
-      const result = await supportRequest(`${endpoint}/messages`, { token, secret, data });
+      const result = await supportRequest(`${endpoint}/messages`, { session, secret, data });
       stick.current = true; accept(result.conversation); setDraft(""); setPhotos([]); setPhotoError(""); pending.current = null;
     } catch (failure) {
       if ([401, 403, 409, 422, 429].includes(failure.status)) pending.current = null;
@@ -132,7 +132,7 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
       }
       const data = new FormData();
       data.append("id", pendingScreenshot.current.id); data.append("text", ""); data.append("images", pendingScreenshot.current.file);
-      const result = await supportRequest(`${endpoint}/messages`, { token, secret, data });
+      const result = await supportRequest(`${endpoint}/messages`, { session, secret, data });
       stick.current = true; accept(result.conversation); pendingScreenshot.current = null;
     } catch (failure) {
       if ([401, 403, 409, 422, 429].includes(failure.status)) pendingScreenshot.current = null;
@@ -155,7 +155,7 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
   async function changeStatus(status) {
     if (mutation.current) return;
     mutation.current = true; setBusy(true); setError("");
-    try { const result = await supportRequest(`${endpoint}/status`, { token, secret, data: { status, revision: record.revision } }); accept(result.conversation); }
+    try { const result = await supportRequest(`${endpoint}/status`, { session, secret, data: { status, revision: record.revision } }); accept(result.conversation); }
     catch (failure) { setError(failure.message); setReload((value) => value + 1); }
     finally { mutation.current = false; setBusy(false); }
   }
@@ -165,7 +165,7 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
     const height = list.current?.scrollHeight || 0;
     stick.current = false;
     try {
-      const result = await supportRequest(`${endpoint}?before=${record.messages[0].order}`, { token, secret });
+      const result = await supportRequest(`${endpoint}?before=${record.messages[0].order}`, { session, secret });
       accept(result.conversation);
       requestAnimationFrame(() => { if (list.current) list.current.scrollTop += list.current.scrollHeight - height; });
     } catch (failure) { setError(failure.message); }
@@ -213,4 +213,4 @@ export default function Conversation({ id, token, secret, staff, active, onBack 
     </form>)}
   </section>;
 }
-Conversation.propTypes = { id: PropTypes.string.isRequired, token: PropTypes.string, secret: PropTypes.string, staff: PropTypes.bool, active: PropTypes.bool, onBack: PropTypes.func.isRequired };
+Conversation.propTypes = { id: PropTypes.string.isRequired, session: PropTypes.object, secret: PropTypes.string, staff: PropTypes.bool, active: PropTypes.bool, onBack: PropTypes.func.isRequired };

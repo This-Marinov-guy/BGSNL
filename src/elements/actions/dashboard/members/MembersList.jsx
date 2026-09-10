@@ -5,7 +5,7 @@ import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { selectUser } from "../../../../redux/user";
 import {
   checkAuthorization,
-  decodeJWT,
+  sessionClaims,
 } from "../../../../util/functions/authorization";
 import { ACCESS_2 } from "../../../../util/defines/common";
 import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
@@ -30,7 +30,7 @@ const MembersList = () => {
   const [loading, setLoading] = useState(true);
 
   const user = useSelector(selectUser);
-  const { roles, region } = decodeJWT(user.token);
+  const { roles, region } = sessionClaims(user.session);
   const isAdmin = hasOverlap(roles, ACCESS_2);
 
   const [searchParams] = useSearchParams();

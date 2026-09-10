@@ -1,12 +1,15 @@
+/* eslint-disable react/prop-types */
 import Article from "@/screens/information/articles/Article";
 import { getArticle, getArticles } from "@/util/api/server";
-import { permanentRedirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { articleSlug, stripHtml, toMetadata } from "@/util/seo/site";
 import {
   buildArticleSchema,
   buildBreadcrumbSchema,
   serializeJsonLd,
 } from "@/util/seo/structured-data";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { articleId, articleTitle } = await params;
@@ -23,7 +26,11 @@ export async function generateMetadata({ params }) {
     article ? articleSlug(article.title) : articleTitle
   }`;
 
-  if (!article) return toMetadata({ path, type: "article" });
+  if (!article) {
+    return {
+      robots: { index: false, follow: false },
+    };
+  }
 
   return toMetadata({
     title: article.title,
@@ -40,24 +47,24 @@ export default async function Page({ params }) {
   const { articleId, articleTitle } = await params;
   const [article, all] = await Promise.all([getArticle(articleId), getArticles()]);
 
-  if (article) {
-    const canonicalSlug = articleSlug(article.title);
-    if (articleTitle !== canonicalSlug) {
-      permanentRedirect(`/articles/${articleId}/${canonicalSlug}`);
-    }
+  if (!article) notFound();
+
+  const canonicalSlug = articleSlug(article.title);
+  if (articleTitle !== canonicalSlug) {
+    permanentRedirect(`/articles/${articleId}/${canonicalSlug}`);
   }
 
   const path = `/articles/${articleId}/${articleTitle}`;
   const listed = all.find((item) => String(item.id) === String(articleId));
   const articleSchema = buildArticleSchema({
-    article: article ? { ...listed, ...article, id: articleId } : null,
+    article: { ...listed, ...article, id: articleId },
     image: listed?.thumbnail,
     path,
   });
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: "Home", path: "/" },
     { name: "Articles", path: "/articles" },
-    { name: article?.title || "Article", path },
+    { name: article.title, path },
   ]);
 
   return (
@@ -74,7 +81,7 @@ export default async function Page({ params }) {
       />
       <Article
         initialArticle={
-          article && listed?.thumbnail
+          listed?.thumbnail
             ? { ...article, thumbnail: listed.thumbnail }
             : article
         }

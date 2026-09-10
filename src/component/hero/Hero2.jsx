@@ -19,9 +19,9 @@ const Hero2 = () => {
           </h1>
           <Link
             className={"rn-button-style--2 rn-btn-reverse-green"}
-            to={user.token ? `/user` : "/signup"}
+            to={user.session ? `/user` : "/signup"}
           >
-            {user.token ? "Go To Profile" : "Become a Member"}
+            {user.session ? "Go To Profile" : "Become a Member"}
           </Link>{" "}
         </div>
 

@@ -20,7 +20,7 @@ import Strap from "../elements/banners/Strap";
 import { InternshipApplyModalProvider } from "../hooks/common/use-internship-apply-modal";
 import GlobalFormValidation from "../elements/ui/forms/GlobalFormValidation";
 import {
-  IconlyDanger,
+  FiAlertTriangle,
   IconlyInfo,
 } from "../elements/ui/icons/IconlyIcons";
 
@@ -46,8 +46,8 @@ const TOAST_THEMES = {
 
 // Only the blank-type toasts need one; success and error draw their own.
 const TOAST_ICONS = {
-  info: <IconlyInfo className="bgsnl-toast__icon" size="1.5rem" />,
-  warn: <IconlyDanger className="bgsnl-toast__icon" size="1.5rem" />,
+  info: <IconlyInfo className="bgsnl-toast__icon" size={25} />,
+  warn: <FiAlertTriangle className="bgsnl-toast__icon" size={25} />,
 };
 
 const MainLayout = ({ children }) => {
@@ -79,15 +79,16 @@ const MainLayout = ({ children }) => {
   // which crashes server rendering.
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_CLARITY_ENABLE == "1") {
-      clarityTrack();
-    }
+    const startOptionalAnalytics = () => {
+      if (process.env.NEXT_PUBLIC_CLARITY_ENABLE == "1") clarityTrack();
+      if (process.env.NEXT_PUBLIC_GTM_ENABLE == "1") gaTrack();
+    };
 
-    if (process.env.NEXT_PUBLIC_GTM_ENABLE == "1") {
-      gaTrack();
-    }
+    startOptionalAnalytics();
+    window.addEventListener("bgsnl-cookie-consent-change", startOptionalAnalytics);
 
     reloadArticles();
+    return () => window.removeEventListener("bgsnl-cookie-consent-change", startOptionalAnalytics);
   }, []);
 
   useEffect(() => {

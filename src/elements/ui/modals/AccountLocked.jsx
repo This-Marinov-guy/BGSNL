@@ -22,7 +22,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/user";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import { ALUMNI } from "../../../util/defines/common";
-import { decodeJWT } from "../../../util/functions/authorization";
+import { sessionClaims } from "../../../util/functions/authorization";
 import ImageFb from "../media/ImageFb";
 import { IconlyArrowRight } from "../icons/IconlyIcons";
 import { getAccountStatusNotice } from "@/elements/subscriptions/account-status-notice.mjs";
@@ -40,7 +40,7 @@ const AccountLocked = () => {
   const isAlumni =
     isAlumniUser ||
     roles?.includes(ALUMNI) ||
-    (user?.token && (decodeJWT(user.token)["userId"] ?? "").includes(ALUMNI));
+    (user?.session && (sessionClaims(user.session)["userId"] ?? "").includes(ALUMNI));
 
   const handleManageSubscription = async () => {
     try {

@@ -6,7 +6,7 @@ import { selectEventDrafts, selectEventsDashboard } from "../../../../redux/even
 import { selectUser } from "../../../../redux/user";
 import { ACCESS_2, ACCESS_4 } from "../../../../util/defines/common";
 import { ADMIN_EVENT_REGIONS, REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
-import { decodeJWT } from "../../../../util/functions/authorization";
+import { sessionClaims } from "../../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
 import { FiArrowLeft } from "../../../ui/icons/IconlyIcons";
@@ -18,7 +18,7 @@ const EventList = () => {
     const { reloadEvents, eventsLoading } = useLoadEvents();
 
     const user = useSelector(selectUser);
-    const { roles = [], region = "" } = decodeJWT(user.token) ?? {};
+    const { roles = [], region = "" } = sessionClaims(user.session) ?? {};
     const isAuthorized = hasOverlap(roles, ACCESS_2);
     const canAddEvents = hasOverlap(roles, ACCESS_4);
     const dashboardRegions = isAuthorized ? ADMIN_EVENT_REGIONS : REGIONS;
@@ -47,8 +47,8 @@ const EventList = () => {
     ).length;
 
     useEffect(() => {
-        if (user.token) reloadEvents(true);
-    }, [user.token]);
+        if (user.session) reloadEvents(true);
+    }, [user.session]);
 
     return (
         <>

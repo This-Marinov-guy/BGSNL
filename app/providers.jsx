@@ -2,7 +2,7 @@
 
 import React, { Suspense, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import PrimeSSRProvider from "./prime-ssr-provider";
 
 import { store } from "@/redux/store";
@@ -11,7 +11,6 @@ import CampaignLayout from "@/layouts/CampaignLayout";
 import GlobalError from "@/component/common/GlobalError";
 import GlobalBackground from "@/component/common/GlobalBackground";
 import GlobalModals from "@/elements/ui/modals/GlobalModals";
-import InactivityModal from "@/elements/ui/modals/InactivityModal";
 import PageLoading from "@/elements/ui/loading/PageLoading";
 import Maintenance from "@/screens/Maintenance";
 import RouteProgress from "@/component/common/RouteProgress";
@@ -19,8 +18,6 @@ import SupportWidget from "@/elements/support/SupportWidget";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import { useAppInitialization } from "@/hooks/session/app-init";
 import { useAuthSession } from "@/hooks/session/auth-session";
-import { selectModal } from "@/redux/modal";
-import { INACTIVITY_MODAL } from "@/util/defines/common";
 import { removeLogsOnProd } from "@/util/functions/helpers";
 
 /**
@@ -31,9 +28,7 @@ const AppShell = ({ children }) => {
   // DO not change order! Still called for its side effects; the splash screen
   // that consumed its `isLoading` flag is gone.
   useAppInitialization();
-  const { getTimeRemaining } = useAuthSession();
-
-  const modal = useSelector(selectModal);
+  useAuthSession();
 
   useEffect(() => {
     removeLogsOnProd();
@@ -46,11 +41,8 @@ const AppShell = ({ children }) => {
   return (
     <>
       <ScrollToTop />
-      <RouteProgress />
+      <Suspense fallback={null}><RouteProgress /></Suspense>
       <SupportWidget />
-      {modal.includes(INACTIVITY_MODAL) && (
-        <InactivityModal timeRemaining={getTimeRemaining()} />
-      )}
       <GlobalModals />
       <GlobalError>
         {/*

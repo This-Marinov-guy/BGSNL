@@ -1,4 +1,5 @@
 "use client";
+import { announceSessionChange } from "../../util/auth/browser-session.mjs";
 
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +24,8 @@ import {
 } from "../../util/defines/common";
 import ForgottenPassword from "./ForgottenPassword";
 import GoogleLogin from "@/elements/authentication/GoogleLogin";
+import PasskeyLogin from "@/elements/authentication/PasskeyLogin";
+import authStyles from "@/elements/authentication/google-auth.module.scss";
 
 const Login = () => {
   const isAuthenticated = useSelector(selectIsAuth);
@@ -44,6 +47,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
   const [googlePending, setGooglePending] = useState(false);
+  const [passkeyPending, setPasskeyPending] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -62,7 +66,7 @@ const Login = () => {
   };
 
   const finishLogin = (responseData) => {
-    if (!responseData?.token) {
+    if (!responseData?.session) {
       dispatch(showNotification(GENERAL_ERROR));
       return;
     }
@@ -74,13 +78,14 @@ const Login = () => {
     sessionStorage.removeItem("prevUrl");
     dispatch(removeNotification());
     dispatch(login(responseData));
+    announceSessionChange();
     dispatch(showNotification({ severity: "success", detail: "Welcome back" }));
     if (responseData.celebrate) dispatch(showModal(BIRTHDAY_MODAL));
   };
 
   const loginHandler = async (event) => {
     event.preventDefault();
-    if (loading || googlePending) return;
+    if (loading || googlePending || passkeyPending) return;
     setLoading(true);
     try {
       const responseData = await sendRequest("security/login", "POST", {
@@ -159,7 +164,7 @@ const Login = () => {
                     />
                   </div>
                   <button
-                    disabled={loading || googlePending}
+                    disabled={loading || googlePending || passkeyPending}
                     type="submit"
                     className="login_submit"
                   >
@@ -169,7 +174,10 @@ const Login = () => {
               ) : null}
 
 
-              <GoogleLogin onLogin={finishLogin} disabled={loading} onPendingChange={setGooglePending} />
+              <div className={authStyles.loginProviders} role="group" aria-label="Other sign-in options">
+                <GoogleLogin onLogin={finishLogin} disabled={loading || passkeyPending} onPendingChange={setGooglePending} />
+                <PasskeyLogin onLogin={finishLogin} disabled={loading || googlePending} onPendingChange={setPasskeyPending} />
+              </div>
 
               <div className="login_actions">
                 <button

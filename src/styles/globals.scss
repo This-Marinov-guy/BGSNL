@@ -1581,5 +1581,14 @@ form[data-validation-submitted="true"]
 }
 
 .bgsnl-toast > :first-child {
+  flex-shrink: 0;
   margin-right: 0.35rem;
+}
+
+// Match the built-in danger indicator (20px scaled by 1.25). Long messages
+// must not squeeze the warning triangle or information icon.
+.bgsnl-toast > .bgsnl-toast__icon {
+  flex: 0 0 25px;
+  width: 25px;
+  height: 25px;
 }

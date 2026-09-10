@@ -1,24 +1,9 @@
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Fade from "react-bootstrap/Fade";
-import { useNavigate } from "@/util/navigation";
 import HeaderTwo from "../../../component/header/HeaderTwo";
 import ImageFb from "../media/ImageFb";
+import LoadingRecovery, { LoadingRecoveryActions } from "../loading/LoadingRecovery";
 
 const HeaderLoadingError = ({ isError = false, message = "" }) => {
-  const navigate = useNavigate();
-  const [showBtns, setShowBtns] = useState(isError);
-
-  useEffect(() => {
-    if (isError) {
-      setShowBtns(true);
-      return undefined;
-    }
-
-    const timer = window.setTimeout(() => setShowBtns(true), 5000);
-    return () => window.clearTimeout(timer);
-  }, [isError]);
-
   return (
     <>
       <HeaderTwo />
@@ -30,8 +15,8 @@ const HeaderLoadingError = ({ isError = false, message = "" }) => {
       >
         <div
           className="account-state__content"
-          role={isError ? "alert" : "status"}
-          aria-live={isError ? "assertive" : "polite"}
+          role={isError ? "alert" : undefined}
+          aria-live={isError ? "assertive" : undefined}
         >
           {!isError ? (
             <ImageFb
@@ -43,34 +28,9 @@ const HeaderLoadingError = ({ isError = false, message = "" }) => {
               src="/assets/images/logo/logo.webp"
             />
           ) : null}
-          <h3>{isError ? "Account unavailable" : "Loading your account"}</h3>
+          <h3 role={isError ? undefined : "status"}>{isError ? "Account unavailable" : "Loading your account"}</h3>
           {isError && message ? <p>{message}</p> : null}
-          <Fade in={showBtns}>
-            <div className="error-button account-state__actions">
-              {!isError ? (
-                <h4>
-                  This is taking longer than expected. You can retry or return
-                  to the previous page.
-                </h4>
-              ) : null}
-              <div className="options-btns-div">
-                <button
-                  onClick={() => window.location.reload()}
-                  className="rn-button-style--2 rn-btn-reverse-green"
-                  type="button"
-                >
-                  Try again
-                </button>
-                <button
-                  onClick={() => navigate(-1)}
-                  className="rn-button-style--2 rn-btn-reverse"
-                  type="button"
-                >
-                  Go back
-                </button>
-              </div>
-            </div>
-          </Fade>
+          {isError ? <LoadingRecoveryActions /> : <LoadingRecovery />}
         </div>
       </main>
     </>

@@ -24,7 +24,7 @@ const InactivityModal = ({ timeRemaining }) => {
       return;
     }
 
-    refreshJWTinAPI(user.token);
+    refreshJWTinAPI(user.session);
     dispatch(removeModal(INACTIVITY_MODAL));
   };
 

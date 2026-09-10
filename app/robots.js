@@ -11,6 +11,7 @@ const PRIVATE_PATHS = [
   "/success",
   "/fail",
   "/donation/success",
+  "/payment/",
   "/dev/",
   ...REGIONS.flatMap((region) => [
     `/${region}/signup`,
@@ -24,7 +25,16 @@ const DISCOVERY_AGENTS = [
   "PerplexityBot",
 ];
 
-const TRAINING_AGENTS = ["GPTBot", "ClaudeBot"];
+const TRAINING_AGENTS = [
+  "Amazonbot",
+  "Applebot-Extended",
+  "Bytespider",
+  "CCBot",
+  "ClaudeBot",
+  "Google-Extended",
+  "GPTBot",
+  "meta-externalagent",
+];
 
 const USER_FETCH_AGENTS = ["ChatGPT-User", "Claude-User", "Perplexity-User"];
 
@@ -46,8 +56,7 @@ export default function robots() {
       },
       {
         userAgent: TRAINING_AGENTS,
-        allow: "/",
-        disallow: PRIVATE_PATHS,
+        disallow: "/",
       },
       {
         userAgent: USER_FETCH_AGENTS,

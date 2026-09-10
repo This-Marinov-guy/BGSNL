@@ -8,6 +8,11 @@ const Rules = () => {
           Bulgarian Society Netherlands Rules and Regulations
         </h2>
         <h5 style={{ textAlign: "right" }}>Last updated: May 22, 2023</h5>
+        <p className="ml--20">
+          This historic rules document is retained for transparency. It is not
+          the contract for paid Member or Alumni subscriptions or event sales;
+          the current Terms and Conditions apply where wording conflicts.
+        </p>
       </div>
       <div className="container mt--80 mb--80">
         <h3>Article 1. Structure of the organization and the roles within</h3>

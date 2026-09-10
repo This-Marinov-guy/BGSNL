@@ -1,12 +1,16 @@
 import Fail from "@/screens/redirects/Fail";
+import PropTypes from "prop-types";
 
 export const metadata = {
-  title: "Payment Failed",
+  title: "Checkout not completed",
   robots: { index: false, follow: false },
 };
 
-export default function Page() {
+export const dynamic = "force-dynamic";
+
+export default function Page({ searchParams }) {
   return (
-    <Fail />
+    <Fail searchParams={searchParams} />
   );
 }
+Page.propTypes = { searchParams: PropTypes.object.isRequired };

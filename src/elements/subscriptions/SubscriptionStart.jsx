@@ -4,8 +4,8 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import AppModal from "@/elements/ui/modals/AppModal";
-import ImageFb from "@/elements/ui/media/ImageFb";
 import { IconlyQuestion } from "@/elements/ui/icons/IconlyIcons";
+import MembershipTypeCard from "./MembershipTypeCard";
 import { paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
 
@@ -15,16 +15,37 @@ const MEMBERSHIP_TYPES = [
   {
     type: "member",
     title: "Member",
-    description: "For current students and recent graduates in the Netherlands.",
-    image: "/assets/images/bg/login-community.jpg",
+    description: "Join the society during your academic years, get event discounts, explore internship options and get the chance to enter a society's committee or a board.",
+    image: "/assets/images/alumni/members.jpg",
   },
   {
     type: "alumni",
     title: "Alumni",
-    description: "For graduates who want to stay connected with the BGSNL community.",
-    image: "/assets/images/alumni/landing.jpg",
+    description: "Support the society as a postgraduate alumnus. Network with our community, take part in alumni events and help us carry out our mission.",
+    image: "/assets/images/alumni/alumni.jpeg",
   },
 ];
+
+function SubscriptionOptionsSkeleton() {
+  return (
+    <div role="status" aria-label="Loading subscription options" className={styles.checkoutSkeleton}>
+      <div aria-hidden="true" className={styles.checkoutSkeletonFields}>
+        {["type", "plan"].map((field) => (
+          <div className={styles.checkoutField} key={field}>
+            <span className={`${styles.skeletonBlock} ${styles.checkoutSkeletonLabel}`} />
+            <span className={`${styles.skeletonBlock} ${styles.checkoutSkeletonControl}`} />
+          </div>
+        ))}
+        <div className={styles.checkoutMessage}>
+          <span className={`${styles.skeletonBlock} ${styles.skeletonLine}`} />
+          <span className={`${styles.skeletonBlock} ${styles.skeletonLine}`} />
+          <span className={`${styles.skeletonBlock} ${styles.skeletonLine} ${styles.skeletonLineShort}`} />
+        </div>
+        <span className={`${styles.skeletonBlock} ${styles.checkoutSkeletonButton}`} />
+      </div>
+    </div>
+  );
+}
 
 // Kept independent of account/API state so the checkout interaction can be
 // verified with an in-memory catalog, without touching a real Stripe customer.
@@ -78,6 +99,7 @@ export function SubscriptionCheckoutForm({
   };
 
   const chooseMembershipType = (nextType) => {
+    if (pending || !plans?.some((plan) => plan.type === nextType)) return;
     setType(nextType);
     setPriceId("");
     setCheckoutError("");
@@ -111,7 +133,7 @@ export function SubscriptionCheckoutForm({
           <p>{loadError ? "We could not load the available subscriptions." : "No paid subscriptions are available right now."}</p>
           <button className={ACTION_CLASS} type="button" onClick={() => setAttempt((value) => value + 1)}>Try again</button>
         </div>
-      ) : !plans ? <p role="status">Loading subscription options…</p> : (
+      ) : !plans ? <SubscriptionOptionsSkeleton /> : (
         <>
           <div className={`rn-form-group ${styles.checkoutField}`}>
             <div className={styles.checkoutLabelRow}>
@@ -162,28 +184,13 @@ export function SubscriptionCheckoutForm({
       >
         <div className={styles.membershipTypeGrid}>
           {MEMBERSHIP_TYPES.map((membership) => (
-            <button
-              aria-pressed={type === membership.type}
-              className={styles.membershipTypeCard}
+            <MembershipTypeCard
+              disabled={pending || !plans?.some((plan) => plan.type === membership.type)}
               key={membership.type}
-              onClick={() => chooseMembershipType(membership.type)}
-              type="button"
-            >
-              <ImageFb
-                alt=""
-                className={styles.membershipTypeImage}
-                eager
-                src={membership.image}
-                type="image/jpeg"
-              />
-              <span className={styles.membershipTypeCopy}>
-                <strong>{membership.title}</strong>
-                <span>{membership.description}</span>
-                <span className={styles.membershipTypeAction}>
-                  Choose {membership.title}
-                </span>
-              </span>
-            </button>
+              membership={membership}
+              onChoose={chooseMembershipType}
+              selected={type === membership.type}
+            />
           ))}
         </div>
       </AppModal>

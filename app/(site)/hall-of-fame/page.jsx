@@ -2,6 +2,8 @@ import HallOfFame from "@/screens/information/HallOfFame";
 import { getAlumniTree } from "@/util/api/server";
 import { toMetadata } from "@/util/seo/site";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = toMetadata({
   title: "Hall of Fame",
   description:

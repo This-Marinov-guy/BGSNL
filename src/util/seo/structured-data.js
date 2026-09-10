@@ -124,13 +124,16 @@ function eventPrice(event) {
   );
 }
 
-export function buildEventSchema({ event, region, path }) {
-  if (!event) return null;
+export function buildEventSchema({ event, region, path, availability = null }) {
+  // Member-only events are not publicly bookable and should not be submitted
+  // as Google Event rich-result candidates.
+  if (!event || event.memberOnly) return null;
 
   const url = absoluteUrl(path, SITE_URL);
   const regionName = humanizeRegion(region);
   const price = eventPrice(event);
-  const soldOut = event.isSaleClosed || event.status === false;
+  const soldOut = availability === false || event.isSaleClosed || Number(event.ticketsRemaining) <= 0 ||
+    (event.ticketTimer && new Date(event.ticketTimer).getTime() <= Date.now());
 
   return {
     "@context": "https://schema.org",
@@ -141,8 +144,7 @@ export function buildEventSchema({ event, region, path }) {
       event.description || event.text || "A BGSNL community event."
     ),
     startDate: event.correctedDate || event.start_date || event.date,
-    endDate:
-      event.end_date || event.correctedDate || event.start_date || event.date,
+    ...(event.end_date ? { endDate: event.end_date } : {}),
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: {
@@ -150,8 +152,9 @@ export function buildEventSchema({ event, region, path }) {
       name: event.location || `${regionName}, Netherlands`,
       address: {
         "@type": "PostalAddress",
-        addressRegion: regionName,
         addressCountry: "NL",
+        ...(event.venueAddress ? { streetAddress: event.venueAddress } : {}),
+        ...(event.venueLocality || regionName ? { addressLocality: event.venueLocality || regionName } : {}),
       },
     },
     image: [
@@ -172,6 +175,7 @@ export function buildEventSchema({ event, region, path }) {
               ? "https://schema.org/SoldOut"
               : "https://schema.org/InStock",
             url,
+            ...(event.ticketTimer ? { validThrough: event.ticketTimer } : {}),
           },
         }
       : {}),

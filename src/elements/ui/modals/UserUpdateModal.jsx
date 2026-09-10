@@ -34,6 +34,7 @@ import ImageInput from "../../inputs/common/ImageInput";
 import PhoneInput from "../../inputs/common/PhoneInput";
 import ValidatedFormik from "../forms/ValidatedFormik";
 import ModalWindow from "./ModalWindow";
+import { showNotification } from "../../../redux/notification";
 
 const emptyStringToNull = (value, originalValue) =>
   originalValue === "" ? null : value;
@@ -66,7 +67,7 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .trim()
-    .max(320, "Email is too long")
+    .max(254, "Email is too long")
     .email("Please enter a valid email")
     .required("Email is required"),
   university: yup.string(),
@@ -153,6 +154,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
       title="Update your details"
       onHide={closeHandler}
     >
+      <p>Email and password changes require confirmation sent to your current email. A new email address must also be verified.</p>
       <ValidatedFormik
         className="inner"
         validationSchema={schema}
@@ -207,34 +209,15 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
               values.notificationTypeTerms
             );
 
-            let responseData;
-            let checkEmail = false;
-
-            if (currentUser.email !== values.email) {
-              checkEmail = true;
-
-              responseData = await sendRequest("security/check-email", "POST", {
-                email: values.email,
-              });
+            const responseEditUser = await sendRequest("user/edit-info", "PATCH", formData);
+            if (responseEditUser?.status === true) {
+              if (onUserRefresh) refreshUser(onUserRefresh);
+              closeHandler();
+              dispatch(showNotification({ severity: responseEditUser.confirmationRequired ? "info" : "success",
+                detail: responseEditUser.message || "Your profile has been updated." }));
             }
-
-            if (!checkEmail || responseData?.status === true) {
-              const responseEditUser = await sendRequest(
-                `user/edit-info`,
-                "PATCH",
-                formData
-              );
-
-              if (responseEditUser?.status === true) {
-                // Refresh user data in the background
-                if (onUserRefresh) {
-                  refreshUser(onUserRefresh);
-                }
-                closeHandler();
-              }
-            }
-          } catch (err) {
-            console.log(err);
+          } catch {
+            dispatch(showNotification({ severity: "error", detail: "Could not submit your profile changes. Please try again." }));
           }
         }}
         initialValues={{

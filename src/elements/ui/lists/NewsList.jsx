@@ -277,9 +277,9 @@ const NewsList = ({ withTitle = true }) => {
                 A living record of opportunities, stories and ways to take
                 part in Bulgarian life across the Netherlands.
               </p>
-              <p className="newspaper-page__direction">
+              {/* <p className="newspaper-page__direction">
                 Scroll, swipe or use the arrows to read the edition.
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -304,10 +304,7 @@ const NewsList = ({ withTitle = true }) => {
             aria-label={`Page ${index + 2}: ${item.title}`}
           >
             <header className="newspaper-page__story-header">
-              <span>
-                {String(index + 2).padStart(2, "0")} /{" "}
-                {String(pageCount).padStart(2, "0")}
-              </span>
+              <span>{index + 2}</span>
             </header>
 
             <div className="newspaper-page__story-grid">
@@ -360,7 +357,7 @@ const NewsList = ({ withTitle = true }) => {
               aria-label={`Go to news page ${index + 1}`}
               aria-current={index === activePage ? "page" : undefined}
             >
-              {String(index + 1).padStart(2, "0")}
+              {index + 1}
             </button>
           ))}
         </div>

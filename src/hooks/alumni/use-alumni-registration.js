@@ -48,7 +48,7 @@ export const useAlumniRegistration = () => {
     }
 
     // If user is not logged in, navigate to registration page
-    if (!user?.token) {
+    if (!user?.session) {
       navigate("/alumni/register");
       return;
     }
@@ -79,7 +79,7 @@ export const useAlumniRegistration = () => {
     showErrorModal,
     setShowErrorModal: setGlobalShowErrorModal,
     handleAlumniRegistrationClick,
-    isUserLoggedIn: !!user?.token,
+    isUserLoggedIn: !!user?.session,
     isUserAlumni: user?.isAlumni || user?.roles?.includes(ALUMNI),
   };
 };

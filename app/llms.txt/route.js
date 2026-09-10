@@ -8,6 +8,7 @@ import {
 } from "@/util/seo/site";
 
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const PUBLIC_PAGES = [
   ["About BGSNL", "/about", "Mission, history and national organisation."],
@@ -82,7 +83,7 @@ export async function GET() {
       lines.push(
         link(
           event.newTitle || event.title || "BGSNL event",
-          `/${event.region}/event-details/${event.id}`,
+          `/${event.region}/event-details/${event.slug || event.id}`,
           [
             formatDate(event.date) ? `Date: ${formatDate(event.date)}` : null,
             event.location ? `Location: ${event.location}` : null,
@@ -123,7 +124,8 @@ export async function GET() {
   return new Response(lines.join("\n"), {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      "Cache-Control":
+        "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
       "X-Content-Type-Options": "nosniff",
     },
   });

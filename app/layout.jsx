@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Providers from "./providers";
+import WebsiteAnalytics from "@/component/common/WebsiteAnalytics";
+import PropTypes from "prop-types";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_IMAGE,
@@ -112,18 +114,10 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
         />
 
-        <script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="4ygyBA6xhw5zT9BfG2gpgg"
-          async
-        />
-        <script
-          defer
-          data-website-id="dfid_78wk1IMWgxBq23ebbRgUn"
-          data-domain="bulgariansociety.nl"
-          src="https://datafa.st/js/script.js"
-        />
+        <WebsiteAnalytics />
       </body>
     </html>
   );
 }
+
+RootLayout.propTypes = { children: PropTypes.node };

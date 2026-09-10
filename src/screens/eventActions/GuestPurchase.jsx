@@ -11,7 +11,7 @@ import {
   Form,
 } from "formik";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import * as yup from "yup";
 import { InputNumber } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
@@ -47,6 +47,8 @@ import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
 import Loader from "../../elements/ui/loading/Loader";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
+import { showNotification } from "../../redux/notification";
+import { hasAppliedTicketDiscount } from "../../util/functions/helpers";
 import {
   appendExtraInputsToForm,
   buildSchemaExtraInputs,
@@ -113,6 +115,7 @@ const formatEuro = (value) =>
 // `initialEvent` is fetched on the server by the route. The guest flow needs
 // no authenticated user, so it renders fully server-side.
 const GuestPurchase = ({ initialEvent = null }) => {
+  const dispatch = useDispatch();
   const { sendRequest } = useHttpClient();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -130,9 +133,10 @@ const GuestPurchase = ({ initialEvent = null }) => {
   });
 
   const { region, eventId } = useParams();
+  const eventRecordId = initialEvent?.id || selectedEvent?.id || eventId;
 
   const user = useSelector(selectUser);
-  const userIsLoggedIn = Boolean(user?.token);
+  const userIsLoggedIn = Boolean(user?.session);
 
   const navigate = useNavigate();
 
@@ -140,7 +144,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
     setLoadingPage(true);
 
     const fetchCurrentUser = async () => {
-      if (!user?.token) return;
+      if (!user?.session) return;
 
       try {
         const responseData = await sendRequest(
@@ -160,7 +164,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
     const getEventDetails = async () => {
       try {
         const responseData = await sendRequest(
-          `future-event/full-event-details/${eventId}`,
+          `future-event/full-event-details/${eventRecordId}`,
           "GET",
           null,
           {},
@@ -179,7 +183,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
 
     getEventDetails();
     fetchCurrentUser();
-  }, []);
+  }, [eventRecordId, sendRequest, user?.session]);
 
   // Keep server-rendered content on screen while the mount-time refetch runs.
   if (loadingPage && !selectedEvent) {
@@ -220,6 +224,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
     : selectedEvent.product?.guest?.price != null
       ? `€${selectedEvent.product.guest.price}`
       : "Price unavailable";
+  const discountApplied = hasAppliedTicketDiscount(selectedEvent, user);
   const checkoutActionLabel = selectedEvent.isFree
     ? "Get ticket"
     : "Proceed to payment";
@@ -253,6 +258,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
           <div className="col-12 purchase-checkout-content">
             <div className="purchase-event-sidebar">
               <PurchaseEventSummary
+                discountApplied={discountApplied}
                 event={selectedEvent}
                 factsInsideOverview={!showMembershipOffer}
                 price={displayedTicketPrice}
@@ -346,7 +352,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
 
                     if (responseData?.status && responseData?.free) {
                       sessionStorage.setItem("prevUrl", window.location.href);
-                      navigate("/success");
+                      dispatch(showNotification({ severity: "warn", detail: "Your free booking was submitted, but its confirmation link is missing. Please check your email or contact support before booking again.", life: 8000 }));
                     }
                   } catch (err) {
                     // handled by http-hook

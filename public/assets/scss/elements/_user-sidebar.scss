@@ -15,7 +15,6 @@
   gap: clamp(1rem, 2.2vw, 2rem);
   grid-template-columns: minmax(15rem, 17.5rem) minmax(0, 1fr);
   margin: clamp(7rem, 9vw, 9rem) auto 0;
-  min-height: calc(100dvh - 11rem);
   padding: 0 clamp(1rem, 2.5vw, 2.5rem) 4rem;
   position: relative;
   width: min(100%, 100rem);
@@ -135,11 +134,11 @@
       color: var(--color-success);
     }
 
-    .sidebar-user-region::before {
-      color: rgb(2 84 32 / 42%);
-      content: "·";
-      margin-right: 0.45rem;
-    }
+    // .sidebar-user-region::before {
+    //   color: rgb(2 84 32 / 42%);
+    //   content: "·";
+    //   margin-right: 0.45rem;
+    // }
   }
 
   .sidebar-tier-action {
@@ -325,7 +324,6 @@
   border-radius: 1rem;
   box-shadow: 0 1.25rem 3.5rem rgb(2 84 32 / 9%);
   box-sizing: border-box;
-  min-height: calc(100dvh - 12rem);
   padding: clamp(1.1rem, 2.5vw, 2rem);
 }
 
@@ -379,7 +377,6 @@
   .user-page-container {
     display: block;
     margin-top: 7rem;
-    min-height: calc(100dvh - 8rem);
     padding-inline: clamp(0.75rem, 3vw, 1.5rem);
   }
 
@@ -409,10 +406,6 @@
     opacity: 1;
     transform: translateX(0);
     visibility: visible;
-  }
-
-  .user-content-area .content-container {
-    min-height: calc(100dvh - 9rem);
   }
 
   .user-profile-header .profile-header-info {

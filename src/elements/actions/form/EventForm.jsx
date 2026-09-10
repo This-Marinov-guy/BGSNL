@@ -47,7 +47,7 @@ import {
   BG_INDEX,
   REGIONS,
 } from "../../../util/defines/REGIONS_DESIGN";
-import { decodeJWT } from "../../../util/functions/authorization";
+import { sessionClaims } from "../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import {
   hasOverlap,
@@ -444,7 +444,7 @@ const EventForm = (props) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const { eventId } = useParams();
-  const userClaims = decodeJWT(user.token);
+  const userClaims = sessionClaims(user.session);
   const roles = userClaims?.roles ?? [];
   const regionOptions = hasOverlap(roles, ACCESS_2)
     ? ADMIN_EVENT_REGIONS

@@ -25,7 +25,7 @@ import {
 
 const Policy = React.memo(() => {
   // The hash is only known on the client; reading it during render crashed SSR.
-  const [tab, setTab] = useState("rules");
+  const [tab, setTab] = useState(TERMS);
   let activeTab = null;
 
   useEffect(() => {
@@ -51,13 +51,14 @@ const Policy = React.memo(() => {
   }
 
   return (
-    <div className="watermark">
+    <div className="legal-page">
       <PageHelmet pageTitle="Policy" />
       <HeaderTwo
         headertransparent="header--transparent"
         colorblack="color--black"
         logoname="logo.png"
       />
+      <main className="legal-page__content">
       <div className="mt--200 mb--40 btn_row row">
         {LEGAL_TABS.map((t, i) => (
           <Link
@@ -77,6 +78,7 @@ const Policy = React.memo(() => {
         ))}
       </div>
       {activeTab}
+      </main>
       {/* Start Footer Style  */}
       <FooterTwo />
       {/* End Footer Style  */}

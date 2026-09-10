@@ -28,7 +28,7 @@ const InternshipCard = (props) => {
   const { openInternshipApplyModal } = useInternshipApplyModal();
   // Non-active accounts are still signed in. The shared modal directs them to
   // resolve their account instead of asking them to register or log in again.
-  const isLoggedIn = Boolean(authUser?.token);
+  const isLoggedIn = Boolean(authUser?.session);
 
   const hasExternalApplyLink = Boolean(applyLink?.trim());
 
@@ -160,7 +160,7 @@ const InternshipCard = (props) => {
             </button>
           </>
         )}
-        
+
         {isPreview && (
           <div className="preview-notice">
             <p style={{ margin: 0 }}><strong>Join our community to apply for this and other opportunities</strong></p>

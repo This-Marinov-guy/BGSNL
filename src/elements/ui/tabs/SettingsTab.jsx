@@ -7,10 +7,10 @@ import {
 } from "@/elements/ui/icons/IconlyIcons";
 import { showModal } from "../../../redux/modal";
 import { logout } from "../../../redux/user";
+import { showNotification } from "../../../redux/notification";
 import { USER_UPDATE_MODAL } from "../../../util/defines/common";
-import SubscriptionManage from "../buttons/SubscriptionManage";
-import SubscriptionStart from "@/elements/subscriptions/SubscriptionStart";
-import { canStartSubscription, hasBillingReference } from "@/elements/subscriptions/subscription-checkout.mjs";
+import BillingActions from "@/elements/subscriptions/BillingActions";
+import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
 import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
 import UserTabHeader from "./UserTabHeader";
 
@@ -49,11 +49,9 @@ SettingsRow.propTypes = {
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
-  const canSubscribe = canStartSubscription(user);
-  const canManageBilling = hasBillingReference(user?.subscription);
-  const handleLogout = () => {
-    dispatch(logout());
-    window.location.href = "/";
+  const handleLogout = async () => {
+    try { await dispatch(logout()); window.location.href = "/"; }
+    catch { dispatch(showNotification({ severity: "error", detail: "Could not sign out. Please retry." })); }
   };
 
   return (
@@ -85,22 +83,13 @@ const SettingsTab = ({ user }) => {
 
           <section className="settings-group" aria-labelledby="settings-membership">
             <h2 id="settings-membership" className="settings-group__title">Membership</h2>
+            <AccountBillingAlert user={user} showAction={false} />
             <ul className="settings-list">
               <SettingsRow
                 action={
-                  <div className="subscription-actions">
-                    {canSubscribe && <SubscriptionStart />}
-                    {canManageBilling && <SubscriptionManage canCancel={user.isSubscribed} subscription={user.subscription} />}
-                    {!canSubscribe && !canManageBilling && (
-                      <a className={SETTINGS_PRIMARY_ACTION} href="/user#help">Contact support</a>
-                    )}
-                  </div>
+                  <BillingActions user={user} />
                 }
-                description={canSubscribe
-                  ? "Start a Member or Alumni subscription and complete your payment securely."
-                  : canManageBilling
-                    ? "Review invoices, update your payment method or cancel your subscription."
-                    : "Contact support for help with your membership."}
+                description='Control your payment methods, change subscription type or cancel current subscription'
                 icon={<FaCog />}
                 title="Billing"
               />

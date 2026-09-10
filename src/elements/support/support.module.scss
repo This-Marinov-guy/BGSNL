@@ -24,7 +24,7 @@
   transition: transform 280ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease, visibility 0s linear 280ms;
 }
 .isOpen { opacity: 1; visibility: visible; transform: translateY(0) scale(1); transition-delay: 0s; }
-.widgetHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; padding: 1.25rem; background: #eef5f1; h2 { margin: 0 0 .25rem; } small { display: block; color: #496155; } }
+.widgetHeader { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; gap: .75rem; padding: .5rem 1.25rem; background: #eef5f1; h2 { margin: 0; } }
 .iconButton, .textButton, .reportItem, .methodSwitch button {
   border: 0; cursor: pointer; color: var(--site-thread-primary); transition: background 180ms, color 180ms, transform 180ms;
   &:focus-visible { outline: 3px solid #9e0d33; outline-offset: 3px; }
@@ -79,7 +79,19 @@
 .conversation > .error, .closed { margin: .5rem 1.25rem; flex-shrink: 0; }
 .helpSection { display: grid; gap: 1.5rem; }
 .quickLinks { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; a { color: var(--site-thread-primary); text-decoration: underline; text-underline-offset: .2em; } }
-.embedded { height: min(48rem, 85dvh); min-height: 32rem; background: #fff; border-radius: 1rem; overflow: hidden; > .desk { height: 100%; } }
+.embedded {
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+
+  // Inline panels follow their content; only long chat histories scroll.
+  // The floating widget retains its own viewport-constrained layout.
+  .messages {
+    flex: 0 1 auto;
+    min-height: 0;
+    max-height: min(32rem, 65dvh);
+  }
+}
 .inboxPage { max-width: 64rem; padding-bottom: 3rem; > header { margin-bottom: 1.5rem; } }
 .inboxPage:global(.user-workspace-page) { padding-top: clamp(8rem, 11vw, 10.5rem); }
 @media (max-height: 600px) {
@@ -96,10 +108,9 @@
   }
   .launcherLabel { display: none; }
   .widgetPanel { inset: 0; width: 100%; height: 100dvh; max-height: 100dvh; border-radius: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); box-shadow: none; }
-  .widgetHeader { padding: 1rem; }
+  .widgetHeader { padding: .5rem 1rem; }
   .listView, .formView, .threadHeader, .composer { padding: 1rem; }
   .messages { padding: 1rem; }
-  .embedded { min-height: 30rem; height: 78dvh; }
   .inboxPage { width: 96%; }
   .inboxPage .composer { padding-right: calc(5rem + env(safe-area-inset-right)); }
 }

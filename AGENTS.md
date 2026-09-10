@@ -10,6 +10,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## UI design rules
 
+- Size content panels to their contents, without fixed or viewport-based minimum
+  heights or equal-height stretching. Keep intentional viewport-sized overlays
+  such as mobile navigation, the Help widget, and fullscreen media previews.
 - Center standard modals horizontally and vertically in the viewport on desktop
   and mobile, unless a different position is explicitly requested. Keep intentional
   exceptions such as the bottom-right Help widget and fullscreen media previews.

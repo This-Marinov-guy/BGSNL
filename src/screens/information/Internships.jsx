@@ -150,7 +150,7 @@ const Internships = ({ initialInternships = [] }) => {
         const internshipsData = await sendRequest("internship/list", "GET", null, {}, false, false);
         setInternships(internshipsData?.internships ?? []);
 
-        if (user?.token) {
+        if (user?.session) {
           const responseData = await sendRequest(`user/current?withTickets=false&withChristmas=false`);
           setCurrentUser(responseData.user);
         } else {
@@ -164,7 +164,7 @@ const Internships = ({ initialInternships = [] }) => {
     };
 
     fetchData();
-  }, [user?.token]);
+  }, [user?.session]);
 
   if (loading) {
     return <PageLoading />;
@@ -423,7 +423,7 @@ const Internships = ({ initialInternships = [] }) => {
                   added regularly!
                 </p>
                 <div className="cta-actions">
-                  {user.token ? (
+                  {user.session ? (
                     <button
                       className="rn-button-style--2 rn-btn-green"
                       onClick={() => navigate("/user#internships")}

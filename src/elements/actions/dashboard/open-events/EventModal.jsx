@@ -252,7 +252,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
               <IconlyEdit aria-hidden="true" />
               <span>{isDraft ? "Edit draft" : "Edit event"}</span>
             </button>
-            {!isDraft && checkAuthorization(user.token, ACCESS_3) ? (
+            {!isDraft && checkAuthorization(user.session, ACCESS_3) ? (
               <button
                 className="rn-button-style--2 rn-btn-green"
                 onClick={() => setTicketGeneratorVisible(true)}

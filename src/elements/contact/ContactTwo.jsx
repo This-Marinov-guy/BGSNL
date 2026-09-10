@@ -61,10 +61,6 @@ const ContactTwo = ({
             className="contact-details-panel"
             aria-labelledby="contact-details-title"
           >
-            <div className="contact-details-panel__heading">
-              <h2 id="contact-details-title">Contact {regionName}</h2>
-            </div>
-
             <div className="contact-details-panel__identity">
               <ImageFb
                 alt={`Bulgarian Society ${regionName} logo`}

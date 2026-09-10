@@ -1,6 +1,7 @@
+import { browserFetch } from "../../util/auth/browser-request.mjs";
 import { serverEndpoint } from "@/util/defines/common";
 
-export async function supportRequest(path, { token, secret, data, signal } = {}) {
+export async function supportRequest(path, { secret, data, signal } = {}) {
   const controller = new AbortController();
   const abort = () => controller.abort();
   signal?.addEventListener("abort", abort, { once: true });
@@ -8,11 +9,11 @@ export async function supportRequest(path, { token, secret, data, signal } = {})
   const formData = typeof FormData !== "undefined" && data instanceof FormData;
   const timer = setTimeout(abort, formData ? 60000 : 20000);
   try {
-    const response = await fetch(`${serverEndpoint}support/${path}`, {
-      method: data === undefined ? "GET" : "POST", cache: "no-store", credentials: "omit",
+    const response = await browserFetch(`${serverEndpoint}support/${path}`, {
+      method: data === undefined ? "GET" : "POST", cache: "no-store",
       redirect: "error", referrerPolicy: "no-referrer", signal: controller.signal,
       headers: { ...(data === undefined || formData ? {} : { "Content-Type": "application/json" }),
-        ...(token ? { Authorization: `Bearer ${token}` } : secret ? { "X-Support-Token": secret } : {}) },
+        ...(secret ? { "X-Support-Token": secret } : {}) },
       ...(data === undefined ? {} : { body: formData ? data : JSON.stringify(data) }),
     });
     const result = await response.json().catch(() => null);

@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHttpClient } from "./http-hook";
 import { loadEvents, loadEventsDashboard } from "../../redux/events";
-import { refreshToken } from "../../redux/user";
-import axios from "axios";
-import { serverEndpoint } from "../../util/defines/common";
+import { refreshSession } from "../../redux/user";
+import { browserFetch } from "../../util/auth/browser-request.mjs";
 import { loadArticles, loadSingleArticle } from "../../redux/articles";
 import { startPageLoading, stopPageLoading } from "../../redux/loading";
 
@@ -41,27 +40,12 @@ export const useLoadEvents = () => {
 
 export const useJWTRefresh = () => {
   const dispatch = useDispatch();
-
-  const refreshJWTinAPI = async (jwtToken, updateUser = true) => {
-    try {
-      const responseData = await axios.request({
-        url: serverEndpoint + "user/refresh-token",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-
-      if (updateUser) {
-        dispatch(refreshToken(responseData.data.token));
-      } else {
-        return responseData.data.token;
-      }
-    } catch (err) {
-      return err.response?.status === 401 ? false : null;
-    }
+  const refreshJWTinAPI = async () => {
+    const response = await browserFetch("/api/user/refresh-token");
+    const data = await response.json();
+    if (response.ok && data.session) dispatch(refreshSession(data.session));
+    return response.ok;
   };
-
   return { refreshJWTinAPI };
 };
 

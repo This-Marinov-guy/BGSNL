@@ -10,10 +10,12 @@ import ScrollToTop from "@/component/common/ScrollToTop";
 import {
   FiChevronUp,
   IconlyCalendar,
+  IconlyDanger,
   IconlyLocation,
   IconlyTicket,
   IconlyTimeCircle,
 } from "@/elements/ui/icons/IconlyIcons";
+import GoldenTicketMotionIcon from "@/elements/ui/icons/GoldenTicketMotionIcon";
 import {
   Link,
   useParams,
@@ -21,7 +23,9 @@ import {
 import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
-import BillingStatusBanner from "../../elements/subscriptions/BillingStatusBanner";
+import BillingStatusBanner, {
+  BillingStatusBannerSkeleton,
+} from "../../elements/subscriptions/BillingStatusBanner";
 import { getAccountStatusNotice } from "../../elements/subscriptions/account-status-notice.mjs";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
@@ -35,6 +39,7 @@ import { selectUser } from "../../redux/user";
 import { getEventDateTimePresentation } from "../../util/functions/date";
 import {
   estimatePriceByEvent,
+  hasAppliedTicketDiscount,
   isMember,
 } from "../../util/functions/helpers";
 
@@ -63,6 +68,8 @@ const EventDetails = ({ initialEvent = null }) => {
   const user = useSelector(selectUser);
 
   const { region, eventId } = useParams();
+  const eventRecordId = initialEvent?.id || selectedEvent?.id || eventId;
+  const eventUrlId = selectedEvent?.slug || initialEvent?.slug || eventId;
 
   const { loading, sendRequest } = useHttpClient();
 
@@ -70,7 +77,7 @@ const EventDetails = ({ initialEvent = null }) => {
     const getEventDetails = async () => {
       try {
         const responseData = await sendRequest(
-          `event/event-details/${eventId}`,
+          `event/event-details/${eventRecordId}`,
           "GET",
           null,
           {},
@@ -84,7 +91,7 @@ const EventDetails = ({ initialEvent = null }) => {
     };
 
     getEventDetails();
-  }, []);
+  }, [eventRecordId, sendRequest]);
 
   // Only fall back to the loader when there is nothing to show yet — otherwise
   // the mount-time refetch would replace server-rendered content with a spinner.
@@ -104,7 +111,8 @@ const EventDetails = ({ initialEvent = null }) => {
     new Set([selectedEvent.poster, ...(selectedEvent.images || [])].filter(Boolean))
   );
   const userIsMember = isMember(user);
-  const userIsLoggedIn = Boolean(user?.token);
+  const discountApplied = hasAppliedTicketDiscount(selectedEvent, user);
+  const userIsLoggedIn = Boolean(user?.session);
   const ticketIsFree =
     selectedEvent.isFree || (userIsMember && selectedEvent.isMemberFree);
   const ticketActionLabel = ticketIsFree ? "Get ticket" : "Buy ticket";
@@ -127,13 +135,18 @@ const EventDetails = ({ initialEvent = null }) => {
     : memberSaving !== null
       ? `Save ${formatEuro(memberSaving)} and keep your ticket as a member`
       : "Keep your ticket as a member";
-  const purchasePath = `/${region}/purchase-ticket/${eventId}`;
-  const showMembershipOffer = !selectedEvent.ticketLink && !userIsLoggedIn;
+  const purchasePath = `/${region}/purchase-ticket/${eventRecordId}`;
+  const accountBannerLoading =
+    !selectedEvent.ticketLink && !user.authInitialized;
+  const showMembershipOffer =
+    !selectedEvent.ticketLink && user.authInitialized && !userIsLoggedIn;
   const showAccountAttention =
     !selectedEvent.ticketLink &&
+    user.authInitialized &&
     userIsLoggedIn &&
     (user.hasBenefits !== true || Boolean(getAccountStatusNotice(user)));
-  const useGuestEventLayout = showMembershipOffer || showAccountAttention;
+  const useGuestEventLayout =
+    accountBannerLoading || showMembershipOffer || showAccountAttention;
   const factsInsideBookingCard = !useGuestEventLayout;
   const eventDate = getEventDateTimePresentation(
     selectedEvent.date,
@@ -143,7 +156,7 @@ const EventDetails = ({ initialEvent = null }) => {
   const rememberEventPage = () => {
     sessionStorage.setItem(
       "prevUrl",
-      `/${region}/event-details/${eventId}`
+      `/${region}/event-details/${eventUrlId}`
     );
   };
 
@@ -237,6 +250,16 @@ const EventDetails = ({ initialEvent = null }) => {
         Save {formatEuro(memberSaving)} by becoming a member
       </Link>
     ) : null;
+  const stickyAccountSaving =
+    showAccountAttention && memberSaving !== null ? (
+      <a
+        className="event-sticky-account-saving type-caption"
+        href="/user#settings"
+      >
+        <IconlyDanger aria-hidden />
+        <span>Save {formatEuro(memberSaving)} by unlocking your account</span>
+      </a>
+    ) : null;
 
   return (
     <React.Fragment>
@@ -286,7 +309,11 @@ const EventDetails = ({ initialEvent = null }) => {
                           className="event-ticket-price-icon"
                           aria-hidden="true"
                         >
-                          <IconlyTicket />
+                          {discountApplied ? (
+                            <GoldenTicketMotionIcon />
+                          ) : (
+                            <IconlyTicket />
+                          )}
                         </span>
                         <span className="type-heading-lg">{price}</span>
                       </span>
@@ -322,14 +349,15 @@ const EventDetails = ({ initialEvent = null }) => {
 
                 {factsInsideBookingCard && eventFacts}
 
-                {showMembershipOffer && (
+                {accountBannerLoading ? (
+                  <BillingStatusBannerSkeleton />
+                ) : showMembershipOffer ? (
                   <MembershipOfferBanner
+                    className="event-account-banner-reveal"
                     title={membershipOfferTitle}
                     onAction={rememberEventPage}
                   />
-                )}
-
-                {showAccountAttention && (
+                ) : showAccountAttention ? (
                   <BillingStatusBanner
                     user={user}
                     context="ticket"
@@ -338,12 +366,15 @@ const EventDetails = ({ initialEvent = null }) => {
                     }
                     showMissingBenefits
                   />
-                )}
+                ) : null}
 
                 {selectedEvent.isSaleClosed ? (
                   <p className="event-sale-status ">Ticket sales are closed.</p>
                 ) : (
-                  <StickyButtonFooter stickyContent={stickyMembershipSaving}>
+                  <StickyButtonFooter
+                    stickyContent={stickyMembershipSaving}
+                    stickyContentAfter={stickyAccountSaving}
+                  >
                     {purchaseActions}
                   </StickyButtonFooter>
                 )}

@@ -1,51 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import PropTypes from "prop-types";
+import { mountGoogleCredentialControl } from "./google-credential-control.mjs";
 import styles from "./google-auth.module.scss";
 
-export default function GoogleCredentialButton({ challenge, onCredential, onError, busy = false }) {
+export default function GoogleCredentialButton({ challenge, onCredential, onError, onNotice, onInteraction, busy = false, autoPrompt = false }) {
   const container = useRef(null);
-  const handlers = useRef({ onCredential, onError });
-  handlers.current = { onCredential, onError };
+  const handlers = useRef({ onCredential, onError, onNotice, onInteraction });
+  handlers.current = { onCredential, onError, onNotice, onInteraction };
   const [ready, setReady] = useState(false);
+  const lifecycle = useRef({ active: false, settled: false });
+
+  useEffect(() => {
+    lifecycle.current = { active: true, settled: false };
+    return () => { lifecycle.current.active = false; };
+  }, [challenge]);
+  const reportError = useCallback((message) => {
+    if (!lifecycle.current.active || lifecycle.current.settled) return;
+    lifecycle.current.settled = true;
+    handlers.current.onError(message);
+  }, []);
 
   useEffect(() => {
     if (ready) return undefined;
-    const timeout = setTimeout(() => handlers.current.onError("Google could not load. Check your connection or use your password."), 15000);
+    const timeout = setTimeout(() => reportError("Google could not load. Check your connection and browser content-blocker settings, then refresh the page and try again. Your BGSNL password still works."), 15000);
     return () => clearTimeout(timeout);
-  }, [ready]);
+  }, [ready, reportError]);
 
   useEffect(() => {
-    const remaining = new Date(challenge.expiresAt).getTime() - Date.now();
-    const timeout = setTimeout(() => handlers.current.onError("This Google sign-in request expired. Please try again."), Math.max(0, remaining));
-    return () => clearTimeout(timeout);
-  }, [challenge]);
-
-  useEffect(() => {
-    if (!ready || !container.current || !window.google?.accounts?.id) return undefined;
-    const target = container.current;
-    let active = true;
-    target.replaceChildren();
-    window.google.accounts.id.initialize({
-      client_id: challenge.clientId, nonce: challenge.nonce,
-      auto_select: false, button_auto_select: false, use_fedcm_for_button: true, ux_mode: "popup",
-      callback: (response) => {
-        if (active && response.credential) handlers.current.onCredential(response.credential);
+    if (!ready || !container.current || lifecycle.current.settled) return undefined;
+    return mountGoogleCredentialControl({
+      googleId: window.google?.accounts?.id, target: container.current, challenge, autoPrompt,
+      onCredential: (credential) => {
+        if (!lifecycle.current.active || lifecycle.current.settled) return;
+        lifecycle.current.settled = true;
+        handlers.current.onCredential(credential);
       },
+      onError: reportError,
+      onNotice: (message) => handlers.current.onNotice?.(message),
+      onInteraction: () => handlers.current.onInteraction?.(),
     });
-    window.google.accounts.id.renderButton(target, {
-      theme: "outline", size: "large", shape: "rectangular", text: "continue_with",
-      width: Math.min(400, Math.max(200, Math.floor(target.clientWidth))),
-    });
-    return () => { active = false; target.replaceChildren(); };
-  }, [ready, challenge]);
+  }, [ready, challenge, autoPrompt, reportError]);
 
   return (
     <div className={styles.googleControl} aria-busy={busy}>
       <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive"
-        onReady={() => setReady(true)} onError={() => handlers.current.onError("Google could not load. Please use your password or try again.")} />
+        onReady={() => setReady(true)} onError={() => reportError("Google could not load. Check your connection and browser content-blocker settings, then refresh the page and try again. Your BGSNL password still works.")} />
       {!ready && <p role="status">Loading Google sign-in…</p>}
       <div ref={container} inert={busy ? true : undefined} />
       {busy && <p role="status">Verifying your Google account…</p>}
@@ -56,4 +58,7 @@ export default function GoogleCredentialButton({ challenge, onCredential, onErro
 GoogleCredentialButton.propTypes = {
   challenge: PropTypes.object.isRequired, onCredential: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired, busy: PropTypes.bool,
+  autoPrompt: PropTypes.bool,
+  onNotice: PropTypes.func,
+  onInteraction: PropTypes.func,
 };

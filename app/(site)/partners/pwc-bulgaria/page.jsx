@@ -2,6 +2,8 @@ import PwcPartner from "@/screens/information/PwcPartner";
 import { getInternships } from "@/util/api/server";
 import { toMetadata } from "@/util/seo/event-metadata";
 
+export const dynamic = "force-dynamic";
+
 // Ported from the STATIC_META table in the old root middleware.js.
 export const metadata = toMetadata({
   title: "PwC Bulgaria x BGSNL",

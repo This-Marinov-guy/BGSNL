@@ -1,8 +1,10 @@
 /* global Intl */
 const ENDED_STATUSES = new Set(["canceled", "incomplete_expired"]);
 
+export const hasSubscriptionId = (subscription) => typeof subscription?.id === "string" && /^sub_[A-Za-z0-9]+$/.test(subscription.id.trim());
+
 export function hasBillingReference(subscription) {
-  return (typeof subscription?.id === "string" && /^sub_[A-Za-z0-9]+$/.test(subscription.id.trim())) ||
+  return hasSubscriptionId(subscription) ||
     (typeof subscription?.customerId === "string" && /^cus_[A-Za-z0-9]+$/.test(subscription.customerId.trim()));
 }
 
@@ -10,6 +12,17 @@ export function hasBillingReference(subscription) {
 export function canStartSubscription(user) {
   return !!user && ["active", "locked", "payment_awaiting"].includes(user.status) &&
     (!user.subscription?.id || ENDED_STATUSES.has(user.subscription.status));
+}
+
+export function canManageSubscription(user) {
+  return !canStartSubscription(user) && hasBillingReference(user?.subscription);
+}
+
+export function billingAction(user, reason) {
+  if (!["active", "locked", "payment_awaiting"].includes(user?.status) ||
+      ["account_restricted", "account_sync_pending", "unsupported_plan"].includes(reason)) return "support";
+  if (canStartSubscription(user) && reason !== "unavailable") return "start";
+  return canManageSubscription(user) ? "manage" : "support";
 }
 
 export function paidSubscriptionPlans(plans) {

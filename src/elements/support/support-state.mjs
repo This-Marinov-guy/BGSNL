@@ -29,13 +29,8 @@ export function createGuestAccess() {
 // This is only a React cache boundary, never an authorization decision. Every
 // request is verified by the API. Token refreshes keep an unfinished draft;
 // logout or switching accounts destroys the previous account's rendered data.
-export function supportScope(token) {
-  if (!token) return "guest";
-  try {
-    const encoded = token.split(".")[1].replaceAll("-", "+").replaceAll("_", "/");
-    const payload = JSON.parse(atob(encoded));
-    return `account:${payload.userId}`;
-  } catch { return "invalid-session"; }
+export function supportScope(session) {
+  return session?.userId ? `account:${session.userId}` : "guest";
 }
 
 export function mergeConversation(previous, incoming) {

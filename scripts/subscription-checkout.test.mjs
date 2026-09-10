@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import {
-  canStartSubscription, hasBillingReference, paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel,
+  canManageSubscription, canStartSubscription, hasBillingReference, hasSubscriptionId, paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel,
 } from "../src/elements/subscriptions/subscription-checkout.mjs";
 
 test("billing management requires a subscription or customer identifier", () => {
@@ -9,6 +10,27 @@ test("billing management requires a subscription or customer identifier", () => 
     assert.equal(hasBillingReference(subscription), false);
   assert.equal(hasBillingReference({ id: "sub_active" }), true);
   assert.equal(hasBillingReference({ customerId: "cus_existing" }), true);
+});
+
+test("cancellation requires a subscription ID, not just a customer or entitlement flag", () => {
+  for (const subscription of [undefined, null, {}, { customerId: "cus_existing" }, { id: "" }, { id: "  " }, { id: "undefined" }])
+    assert.equal(hasSubscriptionId(subscription), false);
+  assert.equal(hasSubscriptionId({ id: "sub_existing" }), true);
+  assert.equal(hasSubscriptionId({ id: "sub_existing", isSubscribed: false }), true);
+});
+
+test("cancel opens the shared confirmation modal and only confirmation requests the Stripe cancellation flow", async () => {
+  const component = await readFile(new URL("../src/elements/ui/buttons/SubscriptionManage.jsx", import.meta.url), "utf8");
+  const actions = await readFile(new URL("../src/elements/subscriptions/BillingActions.jsx", import.meta.url), "utf8");
+  assert.match(component, /canCancel && hasSubscriptionId\(subscription\)/);
+  assert.match(component, /onClick=\{\(\) => \{ setError\(""\); setConfirmCancel\(true\); \}\}/);
+  assert.match(component, /action === "cancel" && \(!showCancel \|\| !confirmCancel\)/);
+  assert.match(component, /<AppModal open=\{confirmCancel && showCancel\}/);
+  assert.match(component, /Keep subscription/);
+  assert.match(component, /onClick=\{\(\) => openPortal\("cancel"\)\}/);
+  assert.match(component, /inFlight\.current/);
+  assert.match(actions, /<SubscriptionManage subscription=\{user\.subscription\} \/>/);
+  assert.doesNotMatch(actions, /primaryOnly|isSubscribed/);
 });
 
 test("missing, empty and customer-only subscriptions offer checkout", () => {
@@ -29,6 +51,30 @@ test("only ended subscriptions can start again; restricted accounts cannot buy a
   for (const user of [null, undefined, {}, { status: "frozen" }, { status: "suspended" }]) {
     assert.equal(canStartSubscription(user), false);
   }
+});
+
+test("Start subscription takes precedence over Manage billing, including old Stripe references", () => {
+  for (const status of ["active", "locked", "payment_awaiting"]) {
+    for (const subscription of [undefined, {}, { customerId: "cus_existing" },
+      { id: "sub_old", status: "canceled" }, { id: "sub_old", status: "incomplete_expired" }]) {
+      const user = { status, subscription };
+      assert.equal(canStartSubscription(user), true);
+      assert.equal(canManageSubscription(user), false);
+    }
+  }
+});
+
+test("existing subscriptions keep billing access, while accounts without either action use support", () => {
+  for (const status of ["active", "trialing", "past_due", "unpaid", "paused", "incomplete"]) {
+    const user = { status: "locked", subscription: { id: "sub_existing", status } };
+    assert.equal(canStartSubscription(user), false);
+    assert.equal(canManageSubscription(user), true);
+  }
+  for (const status of ["frozen", "suspended"]) {
+    assert.equal(canManageSubscription({ status, subscription: { customerId: "cus_existing" } }), true);
+    assert.equal(canManageSubscription({ status }), false);
+  }
+  for (const user of [undefined, null, {}]) assert.equal(canManageSubscription(user), false);
 });
 
 const member = { priceId: "price_member6", type: "member", amount: 1500, currency: "eur", interval: "month", intervalCount: 6, label: "Member · 6 months" };

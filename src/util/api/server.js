@@ -24,7 +24,7 @@ const TEST_API_URL = (
   process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://127.0.0.1:8080/api/"
 ).replace(/\/+$/, "");
 
-const API_URL =
+export const API_URL =
   process.env.NODE_ENV === "production" ? PRODUCTION_API_URL : TEST_API_URL;
 
 /**
@@ -46,11 +46,16 @@ if (typeof window !== "undefined") {
  *    env var, deliberately without the NEXT_PUBLIC_ prefix so Next refuses to
  *    inline it into client bundles. Browsers cannot send it: it is not in the
  *    API's Access-Control-Allow-Headers.
- *  - the browser Origin allow-list, kept here as a fallback so the site keeps
- *    working if the key has not been configured on the API yet. Once both
- *    sides have the key, the key is what actually identifies us.
+ * Production SSR requires this key. Origin can be forged outside a browser;
+ * it is CORS admission, not server-to-server authentication.
  */
 const SERVER_KEY = process.env.BGSNL_SERVER_KEY || "";
+
+const assertServerKey = () => {
+  if (process.env.NODE_ENV === "production" && SERVER_KEY.length < 32) {
+    throw new Error("BGSNL_SERVER_KEY must be configured for production SSR API requests.");
+  }
+};
 
 export const API_HEADERS = {
   ...(SERVER_KEY ? { "x-bgsnl-server-key": SERVER_KEY } : {}),
@@ -59,40 +64,46 @@ export const API_HEADERS = {
 };
 
 /**
- * Never throws. A page whose data fetch failed should still render its shell
- * (the client effect will retry after hydration), not return a 500.
+ * Public content must not silently become an empty, indexable page on an API
+ * outage. A 404 is content absence; every other failed upstream request throws
+ * so Next can retain/revalidate its last cached response or serve an error.
  */
 async function apiGet(
   endpoint,
-  { revalidate = 300, timeout = 8000, fallbackToProduction = false } = {}
+  { revalidate = 300, timeout = 8000, fallbackToProduction = false, tags = [] } = {}
 ) {
+  assertServerKey();
   const baseUrls = [API_URL];
 
   if (fallbackToProduction && PRODUCTION_API_URL !== API_URL) {
     baseUrls.push(PRODUCTION_API_URL);
   }
 
+  let failure;
   for (const baseUrl of baseUrls) {
     try {
       const res = await fetch(`${baseUrl}/${endpoint}`, {
         headers: API_HEADERS,
         signal: AbortSignal.timeout(timeout),
-        next: { revalidate },
+        next: { revalidate, tags },
       });
 
       if (res.ok) return await res.json();
-    } catch {
+      if (res.status === 404) return null;
+      failure = new Error(`Public API returned ${res.status} for ${endpoint}`);
+    } catch (error) {
       // Try the next configured public API when one is available.
+      failure = error;
     }
   }
 
-  return null;
+  throw failure || new Error(`Public API could not be reached for ${endpoint}`);
 }
 
 /* ---------------------------------------------------------------- events -- */
 
 export async function getEvents() {
-  const data = await apiGet("event/events-list");
+  const data = await apiGet("event/events-list", { tags: ["public-events"] });
   return data?.events ?? [];
 }
 
@@ -118,7 +129,10 @@ export async function getEventsByRegion(regions) {
 export async function getEventDetails(eventId) {
   if (!eventId) return null;
   // Shorter budget: this one blocks metadata generation.
-  const data = await apiGet(`event/event-details/${eventId}`, { timeout: 3000 });
+  const data = await apiGet(`event/event-details/${eventId}`, {
+    timeout: 3000,
+    tags: ["public-events", `public-event:${eventId}`],
+  });
   return data?.event ?? null;
 }
 

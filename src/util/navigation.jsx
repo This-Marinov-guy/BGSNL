@@ -42,9 +42,21 @@ const toPath = (to) => {
  * `state` and `reloadDocument` have no Next equivalent and are dropped.
  */
 export const Link = forwardRef(function Link(
-  { to, href, replace, state, reloadDocument, onNavigate, ...rest },
+  {
+    to,
+    href,
+    replace,
+    state,
+    reloadDocument,
+    onNavigate,
+    prefetch = false,
+    ...rest
+  },
   ref
 ) {
+  // These legacy router props intentionally do not reach the DOM.
+  void state;
+  void reloadDocument;
   /*
    * next/link fires onNavigate only for same-origin client-side navigations —
    * not for external hrefs, downloads, or cmd/ctrl-clicks that open a new tab —
@@ -52,10 +64,11 @@ export const Link = forwardRef(function Link(
    */
   const handleNavigate = useCallback(
     (event) => {
-      onNavigate?.(event);
-      if (!event.defaultPrevented) notifyRouteChangeStart();
+      let prevented = false;
+      onNavigate?.({ ...event, preventDefault: () => { prevented = true; event.preventDefault(); } });
+      if (!prevented) notifyRouteChangeStart(toPath(to ?? href));
     },
-    [onNavigate]
+    [onNavigate, to, href]
   );
 
   return (
@@ -63,6 +76,7 @@ export const Link = forwardRef(function Link(
       ref={ref}
       href={toPath(to ?? href)}
       onNavigate={handleNavigate}
+      prefetch={prefetch}
       replace={replace}
       {...rest}
     />
@@ -72,6 +86,7 @@ export const Link = forwardRef(function Link(
 Link.propTypes = {
   href: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   onNavigate: PropTypes.func,
+  prefetch: PropTypes.bool,
   reloadDocument: PropTypes.bool,
   replace: PropTypes.bool,
   state: PropTypes.any,
@@ -92,7 +107,7 @@ export const useNavigate = () => {
         return to < 0 ? router.back() : router.forward();
       }
       const path = toPath(to);
-      notifyRouteChangeStart();
+      notifyRouteChangeStart(path);
       return options.replace ? router.replace(path) : router.push(path);
     },
     [router]
@@ -142,7 +157,7 @@ export const useSearchParams = () => {
       );
       const qs = params.toString();
       const url = qs ? `${pathname}?${qs}` : pathname;
-
+      notifyRouteChangeStart(url);
       return options.replace ? router.replace(url) : router.push(url);
     },
     [router, pathname, searchParams]
@@ -157,9 +172,15 @@ export const Navigate = ({ to, replace = false }) => {
   const path = toPath(to);
 
   useEffect(() => {
+    notifyRouteChangeStart(path);
     if (replace) router.replace(path);
     else router.push(path);
   }, [router, path, replace]);
 
   return null;
+};
+
+Navigate.propTypes = {
+  to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  replace: PropTypes.bool,
 };

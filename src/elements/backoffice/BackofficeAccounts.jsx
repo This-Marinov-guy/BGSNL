@@ -9,7 +9,7 @@ import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import { showNotification } from "@/redux/notification";
 import { selectUser } from "@/redux/user";
-import { decodeJWT } from "@/util/functions/authorization";
+import { sessionClaims } from "@/util/functions/authorization";
 import { capitalizeFirstLetter } from "@/util/functions/capitalize";
 import styles from "./backoffice.module.scss";
 
@@ -235,8 +235,8 @@ export default function BackofficeAccounts() {
   const sendRequestRef = useRef(sendRequest);
   sendRequestRef.current = sendRequest;
   const currentAccountId = useMemo(() => {
-    try { return user.token ? decodeJWT(user.token).userId : ""; } catch { return ""; }
-  }, [user.token]);
+    try { return user.session ? sessionClaims(user.session).userId : ""; } catch { return ""; }
+  }, [user.session]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {

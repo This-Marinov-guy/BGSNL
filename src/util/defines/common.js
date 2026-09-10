@@ -1,26 +1,8 @@
 import { capitalizeAfterSpace } from "../functions/capitalize";
-import { isProd } from "../functions/helpers";
 import { REGION_EMAIL } from "./REGIONS_DESIGN";
 
-//Server
-const PROD_SERVER_ENDPOINT =
-    process.env.NEXT_PUBLIC_SERVER_URL || "https://kanatitsa.bulgariansociety.nl/api/";
-const TEST_SERVER_ENDPOINT =
-    process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://localhost:8080/api/";
-
-const isLocalPreviewHost = () => {
-    if (typeof window === "undefined") {
-        return !isProd();
-    }
-
-    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(
-        window.location.hostname
-    );
-};
-
-export const serverEndpoint = isLocalPreviewHost()
-    ? TEST_SERVER_ENDPOINT
-    : PROD_SERVER_ENDPOINT;
+// Browser traffic is same-origin; only the website server holds API credentials.
+export const serverEndpoint = "/api/";
 
 // Local Storage
 export const LOCAL_STORAGE_USER_DATA = 'BGSNL_user_data';
@@ -30,10 +12,7 @@ export const LOCAL_STORAGE_LOCATION = "BGSNL_location";
 export const LOCAL_STORAGE_COOKIE_CONSENT = "BGSNL_cookie_consent";
 
 // authentication
-export const SESSION_TIMEOUT = 0; // Disabled - no automatic expiration
 export const WARNING_THRESHOLD = 0; // Disabled - no warning threshold
-export const JWT_RESET_TIMER = 14.5 * 60 * 1000; // 14minutes 30secs in milliseconds
-export const PERSISTENT_SESSION = true; // Enable persistent sessions
 
 // member roles
 export const SUPER_ADMIN = 'super_admin';
