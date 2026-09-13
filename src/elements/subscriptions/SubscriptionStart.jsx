@@ -205,7 +205,7 @@ SubscriptionCheckoutForm.propTypes = {
   onMembershipGuideChange: PropTypes.func,
 };
 
-export default function SubscriptionStart() {
+export default function SubscriptionStart({ linkStyle = false }) {
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
   request.current = sendRequest;
@@ -231,10 +231,12 @@ export default function SubscriptionStart() {
 
   return (
     <>
-      <button className={`settings-action ${ACTION_CLASS}`} type="button" onClick={() => setOpen(true)}>Start subscription</button>
+      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" onClick={() => setOpen(true)}>Start subscription</button>
       <AppModal open={open} onClose={close} title="Choose your subscription" closable={!pending && !membershipGuideOpen} dismissableMask={!pending && !membershipGuideOpen} suspended={membershipGuideOpen}>
         {open && <SubscriptionCheckoutForm loadPlans={loadPlans} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
       </AppModal>
     </>
   );
 }
+
+SubscriptionStart.propTypes = { linkStyle: PropTypes.bool };

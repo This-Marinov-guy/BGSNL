@@ -230,7 +230,7 @@ const InternshipList = () => {
             <span>Back to account</span>
           </Link>
           <Link
-            to="/user/add-internship"
+            to="/user/dashboard/internships/new"
             className="rn-button-style--2 rn-btn-green"
             style={{
               flex: isCompactLayout ? "1 1 12rem" : "0 0 auto",
@@ -439,7 +439,7 @@ const InternshipList = () => {
             }}
           >
             <Link
-              to={`/user/edit-internship/${item._id}`}
+              to={`/user/dashboard/internships/${item._id}/edit`}
               className="rn-button"
               style={{
                 padding: "6px 14px",

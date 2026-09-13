@@ -1,16 +1,8 @@
-import AuthLayout from "@/layouts/authentication/AuthLayout";
-import { ACCESS_1 } from "@/util/defines/common";
-import EditInternship from "@/screens/userActions/EditInternship";
-
-export const metadata = {
-  title: "Edit Internship",
-  robots: { index: false, follow: false },
-};
-
-export default function Page() {
-  return (
-    <AuthLayout access={ACCESS_1}>
-      <EditInternship />
-    </AuthLayout>
-  );
+import { redirect } from "next/navigation";
+export default async function Page({ params, searchParams }) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(await searchParams || {})) {
+    for (const item of Array.isArray(value) ? value : [value]) if (item != null) query.append(key, item);
+  }
+  redirect(`/user/dashboard/internships/${encodeURIComponent((await params).internshipId)}/edit` + (query.size ? `?${query}` : ""));
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
 import {
@@ -16,7 +16,8 @@ import {
   IconlyShow,
   IconlyTicket,
 } from "@/elements/ui/icons/IconlyIcons";
-import MediaPreview from "@/elements/ui/media/MediaPreview";
+import dynamic from "next/dynamic";
+const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
 import { useNavigate } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import {
@@ -166,6 +167,13 @@ const EventModal = ({ event, show, setShow, loadData }) => {
         ? `/assets/images/bg/bg-image-${event.bgImage}.webp`
         : null;
 
+  const galleryImages = useMemo(() => [
+    { src: event.poster, alt: `${eventTitle} poster` },
+    { src: event.ticketImg, alt: `${eventTitle} ticket` },
+    { src: backgroundImage, alt: `${eventTitle} background` },
+    ...(event.images || []).map((src, index) => ({ src, alt: `${eventTitle} image ${index + 1}` })),
+  ], [event.poster, event.ticketImg, event.images, eventTitle, backgroundImage]);
+
   const closeModal = () => setShow(false);
 
   const onDelete = async () => {
@@ -190,7 +198,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
 
   const editEvent = () => {
     dispatch(loadSingleEventDashboard(event));
-    navigate(`/user/edit-event/${event.id}`);
+    navigate(`/user/dashboard/events/${event.id}/edit`);
   };
 
   const modalHeader = (
@@ -231,6 +239,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
         event={event}
       />
       <Dialog
+        suspended={!!previewMedia}
         className="event-details-modal"
         contentClassName="event-details-modal__body"
         dismissableMask
@@ -483,7 +492,8 @@ const EventModal = ({ event, show, setShow, loadData }) => {
         </div>
       </Dialog>
       {previewMedia ? (
-        <MediaPreview
+        <ImageGallery
+          images={galleryImages}
           alt={previewMedia.alt}
           fileName={previewMedia.fileName}
           onClose={() => setPreviewMedia(null)}

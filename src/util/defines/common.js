@@ -27,9 +27,18 @@ export const ALUMNI = 'alumni';
 
 export const ACCESS_1 = [SUPER_ADMIN];
 export const ACCESS_2 = [...ACCESS_1, ADMIN, SOCIETY_ADMIN];
-export const SUPPORT_ACCESS = [...ACCESS_2, SUPPORT];
+// Support tickets are staffed by admins and dedicated support accounts only —
+// society board members manage members/events/internships, not the inbox.
+export const SUPPORT_ACCESS = [...ACCESS_1, ADMIN, SUPPORT];
 export const ACCESS_3 = [...ACCESS_2, BOARD_MEMBER];
 export const ACCESS_4 = [...ACCESS_3, COMMITTEE_MEMBER, ACTIVE_MEMBER];
+
+// A billing hold ("locked"/"payment_awaiting") should not block admin/super
+// admin from reaching admin panels — staff running the org should not need a
+// paid membership. A genuine administrative hold (frozen/suspended) is not in
+// this list and must keep blocking everyone, admins included.
+export const BILLING_LOCK_EXEMPT = [SUPER_ADMIN, ADMIN];
+export const BILLING_LOCKED_STATUSES = ["locked", "payment_awaiting"];
 
 // event status
 export const EVENT_OPENED = 'opened';

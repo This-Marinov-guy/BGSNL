@@ -1,62 +1,23 @@
-import React, { useEffect } from 'react';
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 import { ErrorBoundary } from 'react-error-boundary';
-import { usePathname, useNavigate } from "@/util/navigation";
+import { usePathname } from "@/util/navigation";
 import axios from 'axios';
-import HeaderTwo from '../header/HeaderTwo';
+import RecoveryScreen from "./RecoveryScreen";
 import { AXIOM_DATASET, getAxiomEndpoint, isAxiomLoggingEnabled } from '../../util/configs/axiom';
 import { store } from "../../redux/store";
 
-// Custom fallback component
-const ErrorFallback = ({ error, resetErrorBoundary }) => {
-    const navigate = useNavigate();
+const ErrorFallback = ({ error, resetErrorBoundary }) => (
+    <RecoveryScreen kind="error" error={error} onRetry={resetErrorBoundary} />
+);
 
-    return (
-        <>
-            <HeaderTwo
-                headertransparent="header--transparent"
-                colorblack="color--black"
-                logoname="logo.png"
-            />
-            <div className="container">
-                <div className="mt--200">
-                    <h3 className="center_text mb--10">Something went wrong - If the issue persists please report it!</h3>
-                    <h5 className="center_text mb--80">Your feedback helps us make the platform better. We appreciate it!</h5>
-                    
-                    {process.env.NODE_ENV !== 'production' && (
-                        <div className="alert alert-danger">
-                            <p className="mb--10"><strong>Error Details (only visible in development):</strong></p>
-                            <p>{error.message}</p>
-                        </div>
-                    )}
-                    
-                    <div className="options-btns-div mt--60">
-                        <button
-                            onClick={resetErrorBoundary}
-                            className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                            Try again
-                        </button>
-                        <button
-                            onClick={() => navigate(-1)}
-                            className="rn-button-style--2 rn-btn-reverse"
-                        >
-                            Go Back
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+ErrorFallback.propTypes = {
+    error: PropTypes.shape({ message: PropTypes.string }),
+    resetErrorBoundary: PropTypes.func.isRequired,
 };
 
 // Error reports never read or serialize authentication credentials.
 const getUserData = () => store.getState().user;
-
-// Function to check if user is logged in
-const isUserLoggedIn = () => {
-    const userData = getUserData();
-    return !!(userData && userData.session);
-};
 
 // Function to log errors to Axiom
 const logErrorToAxiom = (error, componentStack, errorInfo) => {
@@ -216,5 +177,7 @@ const GlobalError = ({ children }) => {
         </ErrorBoundary>
     );
 };
+
+GlobalError.propTypes = { children: PropTypes.node };
 
 export default GlobalError;

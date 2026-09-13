@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import EventDetails from "@/screens/eventActions/EventDetails";
+import RecoveryScreen from "@/component/common/RecoveryScreen";
 import { getEventDetails } from "@/util/api/server";
 import { buildEventMetadata } from "@/util/seo/event-metadata";
 import {
@@ -8,7 +9,7 @@ import {
   serializeJsonLd,
 } from "@/util/seo/structured-data";
 import { humanizeRegion } from "@/util/seo/site";
-import { notFound, permanentRedirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,11 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const { region, eventId } = await params;
   const event = await getEventDetails(eventId);
-  if (!event) notFound();
+  // Not a bare notFound(): this deep in the tree, that call only sets the
+  // response's soft-404 metadata (see [region]/layout.jsx) — it never
+  // reliably replaces the streamed Suspense fallback, leaving visitors
+  // staring at the loading skeleton. Render the empty state directly instead.
+  if (!event) return <RecoveryScreen kind="not-found" />;
 
   const canonicalId = event.slug || event.id;
   const path = `/${event.region}/event-details/${canonicalId}`;

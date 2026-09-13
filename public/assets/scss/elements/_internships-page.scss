@@ -86,9 +86,10 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    
-    svg {
 
+    svg {
+      width: 2rem;
+      height: 2rem;
       color: #ffffff;
     }
   }
@@ -342,6 +343,11 @@
 
     color: var(--color-gray);
     margin-bottom: 30px;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
   }
   
   h3 {
@@ -371,6 +377,11 @@
 
     color: var(--color-gray);
     margin-bottom: 30px;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
   }
   
   h3 {

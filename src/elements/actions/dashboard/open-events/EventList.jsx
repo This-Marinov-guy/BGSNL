@@ -46,9 +46,13 @@ const EventList = () => {
         (event) => event.isSaleClosed || (event.ticketTimer && new Date(event.ticketTimer).valueOf() < now)
     ).length;
 
+    const sessionId = user.session?.sid;
+    const roleScope = [...roles].sort().join(",");
     useEffect(() => {
-        if (user.session) reloadEvents(true);
-    }, [user.session]);
+        if (sessionId) reloadEvents(true);
+        // Activity renews the session object regularly. Only a change in the
+        // login or permission scope should reload and unmount open previews.
+    }, [sessionId, region, roleScope]);
 
     return (
         <>
@@ -67,7 +71,7 @@ const EventList = () => {
                 </Link>
                 {canAddEvents && (
                     <Link
-                        to="/user/add-event"
+                        to="/user/dashboard/events/new"
                         className="rn-button-style--2 rn-btn-reverse-green"
                     >
                         <span>Create event</span>

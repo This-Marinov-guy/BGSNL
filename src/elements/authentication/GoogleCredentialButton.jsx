@@ -11,10 +11,12 @@ export default function GoogleCredentialButton({ challenge, onCredential, onErro
   const handlers = useRef({ onCredential, onError, onNotice, onInteraction });
   handlers.current = { onCredential, onError, onNotice, onInteraction };
   const [ready, setReady] = useState(false);
+  const [rendered, setRendered] = useState(false);
   const lifecycle = useRef({ active: false, settled: false });
 
   useEffect(() => {
     lifecycle.current = { active: true, settled: false };
+    setRendered(false);
     return () => { lifecycle.current.active = false; };
   }, [challenge]);
   const reportError = useCallback((message) => {
@@ -41,6 +43,7 @@ export default function GoogleCredentialButton({ challenge, onCredential, onErro
       onError: reportError,
       onNotice: (message) => handlers.current.onNotice?.(message),
       onInteraction: () => handlers.current.onInteraction?.(),
+      onRendered: () => setRendered(true),
     });
   }, [ready, challenge, autoPrompt, reportError]);
 
@@ -49,7 +52,7 @@ export default function GoogleCredentialButton({ challenge, onCredential, onErro
       <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive"
         onReady={() => setReady(true)} onError={() => reportError("Google could not load. Check your connection and browser content-blocker settings, then refresh the page and try again. Your BGSNL password still works.")} />
       {!ready && <p role="status">Loading Google sign-in…</p>}
-      <div ref={container} inert={busy ? true : undefined} />
+      <div ref={container} className={styles.googleControlReveal} data-visible={rendered} inert={busy ? true : undefined} />
       {busy && <p role="status">Verifying your Google account…</p>}
     </div>
   );

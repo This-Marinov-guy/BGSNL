@@ -3,7 +3,7 @@
 export const GOOGLE_PROMPT_WAIT_MS = 12000;
 export const GOOGLE_POPUP_GUIDANCE = "Google opens in a separate window. Allow the sign-in pop-up if your browser asks. If no window opens, use the blocked-pop-up icon in the address bar to allow pop-ups for this site, then try again.";
 
-export function mountGoogleCredentialControl({ googleId, target, challenge, autoPrompt = false, onCredential, onError, onNotice = () => {}, onInteraction = () => {} }) {
+export function mountGoogleCredentialControl({ googleId, target, challenge, autoPrompt = false, onCredential, onError, onNotice = () => {}, onInteraction = () => {}, onRendered = () => {} }) {
   let active = true;
   let delivered = false;
   let noticeShown = false;
@@ -96,6 +96,7 @@ export function mountGoogleCredentialControl({ googleId, target, challenge, auto
       },
     };
     let lastWidth;
+    let firstRenderReported = false;
     const renderButton = () => {
       if (!active || delivered) return;
       // Preserve Google's returning-account photo/name when its session permits
@@ -106,6 +107,9 @@ export function mountGoogleCredentialControl({ googleId, target, challenge, auto
       target.replaceChildren();
       googleId.renderButton(target, { ...buttonOptions, width,
         text: "continue_with" });
+      // Only the first paint should trigger the reveal transition; later
+      // resize-driven re-renders must not re-fade an already visible button.
+      if (!firstRenderReported) { firstRenderReported = true; onRendered(); }
     };
     renderButton();
     if (typeof ResizeObserver !== "undefined") {

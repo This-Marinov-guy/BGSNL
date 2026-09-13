@@ -6,6 +6,42 @@
   button { justify-self: start; }
 }
 .loginGoogle { margin-top: 1.5rem; }
+.loginGoogleStage {
+  position: relative;
+  min-height: 44px;
+
+  > * { grid-area: stage; }
+  display: grid;
+  grid-template-areas: "stage";
+}
+.loginGoogleSkeleton {
+  background: linear-gradient(90deg, #eef0f2 25%, #f7f8f9 37%, #eef0f2 63%);
+  background-size: 400% 100%;
+  border-radius: 4px;
+  display: block;
+  height: 40px;
+  opacity: 1;
+  transition: opacity 180ms ease;
+  animation: googleSkeletonPulse 1.4s ease infinite;
+
+  [data-loading="false"] > & { opacity: 0; }
+}
+@keyframes googleSkeletonPulse {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+.loginGoogleContent {
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(0.25rem);
+  transition: opacity 220ms ease, transform 220ms ease;
+
+  &[data-visible="true"] { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loginGoogleSkeleton { animation: none; }
+  .loginGoogleContent { transition: opacity 120ms ease; transform: none; }
+}
 .loginProviders {
   display: grid;
   // Google disables its personalized account button below 200px.
@@ -86,6 +122,18 @@
   .googleControl { flex: 1 1 12.5rem; }
 }
 .googleControl { width: 100%; max-width: 25rem; min-width: 0; }
+.googleControlReveal {
+  opacity: 0;
+  transform: translateY(0.25rem);
+  transition: opacity 220ms ease, transform 220ms ease;
+
+  &[data-visible="true"] { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 120ms ease;
+    transform: none;
+  }
+}
 
 // Share the original Google outline style across settings and login retries.
 // The ready state continues to use Google's own SDK-rendered button.

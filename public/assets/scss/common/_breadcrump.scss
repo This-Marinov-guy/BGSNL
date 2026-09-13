@@ -80,7 +80,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
-  justify-content: flex-end;
+  justify-content: flex-start;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -192,8 +192,60 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: url(/assets/images/watermark.png) center 18rem / min(80vw, 36rem) auto no-repeat;
+    background-image: url(/assets/images/watermark.png);
+    background-position: center top;
+    background-repeat: repeat-y;
+    background-size: min(80vw, 36rem) auto;
     opacity: .35;
+  }
+}
+
+.legal-page__signature {
+  align-items: center;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 16px;
+  justify-content: flex-start;
+  padding-bottom: clamp(3rem, 5vw, 5rem);
+  text-align: right;
+}
+
+.legal-page__signature-logo {
+  border-radius: 50%;
+  display: block;
+  height: 88px;
+  object-fit: contain;
+  width: 88px;
+}
+
+.legal-page__signature-copy {
+  align-items: flex-end;
+  color: $theme-color-3;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+
+  span {
+    color: #40524b;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  strong {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 575px) {
+  .legal-page__signature {
+    gap: 12px;
+    padding-bottom: 3rem;
+  }
+
+  .legal-page__signature-logo {
+    height: 72px;
+    width: 72px;
   }
 }
 

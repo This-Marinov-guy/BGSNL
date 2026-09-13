@@ -48,7 +48,7 @@ const EditEvent = (props) => {
         dispatch(loadSingleEventDashboard(responseData.event));
 
         if (!event) {
-          navigate('/user/dashboard');
+          navigate('/user/dashboard/events');
         }
       } catch (err) {
       } finally {

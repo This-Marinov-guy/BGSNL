@@ -1127,7 +1127,7 @@ const EventForm = (props) => {
         }
 
         if (!stayOnPage) {
-          navigate("/user/dashboard");
+          navigate("/user/dashboard/events");
           dispatch(
             showNotification(
               saveAsDraft
@@ -2497,7 +2497,7 @@ const EventForm = (props) => {
             <ConfirmDialog />
             <footer className="event-form-actions">
               <Link
-                to="/user/dashboard"
+                to="/user/dashboard/events"
                 className="event-form-button event-form-button--ghost"
               >
                 Dashboard

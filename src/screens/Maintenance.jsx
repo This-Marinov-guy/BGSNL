@@ -1,30 +1,42 @@
 "use client";
 
-import { Fragment } from "react";
+import { useState } from "react";
+import GlobalBackground from "../component/common/GlobalBackground";
 import StaticHeaderLogo from "../component/header/StaticHeaderLogo";
+import styles from "./Maintenance.module.scss";
 
-const Maintenance = () => {
-    return (
-        <Fragment>
-            <StaticHeaderLogo />
-            {/* Start Page Error  */}
-            <div className="error-page-inner bg_color--4">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="inner">
-                                <h1 className="theme-gradient">Maintenance Break</h1>
-                                <p style={{ color: 'white' }}>We are making some changes that require time - please check again in 10-15 minutes! </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* End Page Error  */}
+export default function Maintenance() {
+  const [refreshing, setRefreshing] = useState(false);
+  const refresh = () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    window.location.reload();
+  };
 
-
-        </Fragment>
-    );
-};
-
-export default Maintenance;
+  return (
+    <div className={styles.page}>
+      <GlobalBackground initiallyRevealed />
+      <StaticHeaderLogo />
+      <main className={styles.content} aria-labelledby="maintenance-title">
+        <h1 id="maintenance-title" className="page-breadcrumb__title archive">We’ll be back soon.</h1>
+        <p className={styles.description}>
+          We’re updating the Bulgarian Society website.
+          Thanks for your patience while we get everything ready.
+        </p>
+        <button className={styles.refresh} type="button" onClick={refresh} disabled={refreshing}>
+          {refreshing ? "Refreshing…" : "Refresh page"}
+        </button>
+        <p className={styles.note} role="status">
+          {refreshing ? "Checking if the website is ready…" : "Please check back in a little while."}
+        </p>
+      </main>
+      <footer className={styles.footer}>
+        <p>Need to reach us in the meantime?</p>
+        <div className={styles.links}>
+          <a href="mailto:info@bulgariansociety.nl">Email us</a>
+          <a href="https://www.instagram.com/bulgariansociety.netherlands/" target="_blank" rel="noopener noreferrer">Instagram<span className={styles.srOnly}> (opens in a new tab)</span></a>
+        </div>
+      </footer>
+    </div>
+  );
+}

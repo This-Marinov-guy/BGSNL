@@ -34,10 +34,6 @@ const AppShell = ({ children }) => {
     removeLogsOnProd();
   }, []);
 
-  if (process.env.NEXT_PUBLIC_MAINTENANCE == "1") {
-    return <Maintenance />;
-  }
-
   return (
     <>
       <ScrollToTop />
@@ -69,6 +65,9 @@ AppShell.propTypes = {
 };
 
 export default function Providers({ children }) {
+  // Maintenance must not start sessions, API requests or modals.
+  if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
+
   return (
     <Provider store={store}>
       <PrimeSSRProvider>

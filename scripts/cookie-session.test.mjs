@@ -235,7 +235,7 @@ test("the website manifest covers existing API browser routes but not integratio
   const routeFiles = { security: "security-routes.js", user: "users-routes.js", common: "common-routes.js", event: "Events/events-routes.js",
     "future-event": "Events/future-events-routes.js", payment: "payments-routes.js", internship: "internship-routes.js", dashboard: "dashboard-routes.js",
     backoffice: "backoffice-routes.js", support: "support-routes.js", wordpress: "Integration/wordpress-routes.js", contest: "contest-routes.js", special: "special-routes.js" };
-  const privatePaths = ["payment/result", "user/export-vital-stats", "event/sync-calendar-events", "security/session/refresh", "security/session/activity", "security/session/logout"];
+  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "event/sync-calendar-events", "security/session/refresh", "security/session/activity", "security/session/logout"];
   for (const [group, file] of Object.entries(routeFiles)) {
     const source = await readFile(new URL(`../../BGSNL-API/routes/${file}`, import.meta.url), "utf8");
     for (const [, method, route] of source.matchAll(/\b(?:\w*Router|router)\.(get|post|patch|delete)\(\s*["']([^"']+)["']/g)) {
@@ -248,7 +248,7 @@ test("the website manifest covers existing API browser routes but not integratio
 });
 test("confirmation has no global analytics scripts", async () => {
   const analytics = await readFile(new URL("../src/component/common/WebsiteAnalytics.jsx", import.meta.url), "utf8");
-  assert.match(analytics, /pathname === "\/account\/confirm"\) return null/);
+  assert.match(analytics, /if \(pathname === "\/account\/confirm"(?: \|\| !analyticsAllowed)?\) return null/);
   const helpers = await readFile(new URL("../src/util/functions/helpers.js", import.meta.url), "utf8");
   for (const name of ["gaTrack", "clarityTrack"]) assert.match(helpers, new RegExp(`${name} = \\(\\) => \\{\\s+if \\(window.location.pathname === "/account/confirm"\\) return`));
 });

@@ -1,6 +1,8 @@
-import AuthLayout from "@/layouts/authentication/AuthLayout";
-import { SUPPORT_ACCESS } from "@/util/defines/common";
-import SupportInbox from "@/elements/support/SupportInbox";
-export const dynamic = "force-dynamic";
-export const metadata = { title: "Support inbox", robots: { index: false, follow: false } };
-export default function Page() { return <AuthLayout access={SUPPORT_ACCESS}><SupportInbox /></AuthLayout>; }
+import { redirect } from "next/navigation";
+export default async function Page({ searchParams }) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(await searchParams || {})) {
+    for (const item of Array.isArray(value) ? value : [value]) if (item != null) query.append(key, item);
+  }
+  redirect("/user/dashboard/support" + (query.size ? `?${query}` : ""));
+}

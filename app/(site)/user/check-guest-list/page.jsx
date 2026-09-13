@@ -1,16 +1,8 @@
-import AuthLayout from "@/layouts/authentication/AuthLayout";
-import { ACCESS_4 } from "@/util/defines/common";
-import CheckTicket from "@/screens/redirects/CheckTicket";
-
-export const metadata = {
-  title: "Check Guest List",
-  robots: { index: false, follow: false },
-};
-
-export default function Page() {
-  return (
-    <AuthLayout access={ACCESS_4}>
-      <CheckTicket />
-    </AuthLayout>
-  );
+import { redirect } from "next/navigation";
+export default async function Page({ searchParams }) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(await searchParams || {})) {
+    for (const item of Array.isArray(value) ? value : [value]) if (item != null) query.append(key, item);
+  }
+  redirect("/user/dashboard/guest-list" + (query.size ? `?${query}` : ""));
 }

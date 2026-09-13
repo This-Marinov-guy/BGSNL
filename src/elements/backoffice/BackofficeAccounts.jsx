@@ -12,6 +12,7 @@ import { selectUser } from "@/redux/user";
 import { sessionClaims } from "@/util/functions/authorization";
 import { capitalizeFirstLetter } from "@/util/functions/capitalize";
 import styles from "./backoffice.module.scss";
+import { isEditableAccountRole, protectedAccountRoles } from "./role-policy.mjs";
 
 const EMPTY_OPTIONS = { cities: [], roles: [], statuses: [] };
 const ROLE_LABELS = {
@@ -26,7 +27,6 @@ const ROLE_LABELS = {
   vip: "VIP",
   super_admin: "Super admin",
 };
-const ACCOUNT_TYPE_ROLES = new Set(["member", "alumni"]);
 
 const formatDateInput = (value) => value ? String(value).slice(0, 10) : "";
 const formatCity = (value) => value ? capitalizeFirstLetter(value, true) : "Not assigned";
@@ -88,7 +88,7 @@ const editorState = (account) => ({
   profession: account.profession || "",
   status: account.status || "",
   roles: Array.isArray(account.roles)
-    ? account.roles.filter((role) => !ACCOUNT_TYPE_ROLES.has(role))
+    ? account.roles.filter(isEditableAccountRole)
     : [],
 });
 
@@ -116,7 +116,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
   };
 
   const toggleRole = (role) => {
-    if (ACCOUNT_TYPE_ROLES.has(role) || isSelf) return;
+    if (!isEditableAccountRole(role) || isSelf) return;
     setForm((current) => ({
       ...current,
       roles: current.roles.includes(role)
@@ -189,8 +189,13 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
             <legend>Access and status</legend>
             {isSelf && <p className={styles.selfNotice}>Your own roles and status are protected to prevent accidental loss of access.</p>}
             <EditorField className={styles.statusField} id="account-editor-status" label="Account status"><select id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</select></EditorField>
+            {protectedAccountRoles(account.roles).length > 0 && (
+              <p className={styles.selfNotice}>
+                Read-only roles: {protectedAccountRoles(account.roles).map((role) => ROLE_LABELS[role]).join(", ")}.
+              </p>
+            )}
             <div className={styles.roles} aria-label="Account roles">
-              {options.roles.filter((role) => !ACCOUNT_TYPE_ROLES.has(role)).map((role) => {
+              {options.roles.filter(isEditableAccountRole).map((role) => {
                 return <label key={role} className={styles.roleOption}><input type="checkbox" checked={form.roles.includes(role)} disabled={isSelf} onChange={() => toggleRole(role)} /><span>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span></label>;
               })}
             </div>

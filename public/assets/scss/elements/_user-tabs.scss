@@ -244,6 +244,10 @@
   border-bottom: 0;
 }
 
+.settings-list__alert:empty {
+  display: none;
+}
+
 .settings-list__icon {
   align-items: center;
   background: rgb(1 115 99 / 8%);

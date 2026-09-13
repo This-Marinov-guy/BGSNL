@@ -9,6 +9,7 @@ import {
   useLocation,
   useNavigate,
 } from "@/util/navigation";
+import { getAccountStatusNotice } from "../../elements/subscriptions/account-status-notice.mjs";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
@@ -30,12 +31,14 @@ const AuthLayout = ({ children, access = [] }) => {
       catch { /* A blocked storage setting must not prevent the login redirect. */ }
       navigate("/login", { replace: true });
     } else if (routeState === "locked") {
+      const notice = getAccountStatusNotice(user);
+      dispatch(showNotification({ severity: "warn", detail: notice?.description || notice?.title || "Your account needs attention before you can access this page." }));
       navigate("/user#settings", { replace: true });
     } else if (routeState === "forbidden") {
       dispatch(showNotification({ severity: "error", detail: "You do not have access to this page" }));
       navigate("/user", { replace: true });
     }
-  }, [routeState, location.pathname, location.hash, location.search, navigate, dispatch]);
+  }, [routeState, location.pathname, location.hash, location.search, navigate, dispatch, user]);
 
   if (routeState !== "allowed") return <HeaderLoadingError />;
 

@@ -21,8 +21,18 @@ test("role changes are reflected immediately, without rendering forbidden childr
 });
 
 test("restricted accounts keep account Settings and Help but cannot enter staff routes", () => {
+  const nonAdminStaff = { ...staff, roles: ["support"] };
   for (const status of ["locked", "payment_awaiting", "frozen", "suspended"]) {
-    assert.equal(accountRouteState({ ...staff, status }, [], "/user"), "allowed");
+    assert.equal(accountRouteState({ ...nonAdminStaff, status }, [], "/user"), "allowed");
+    assert.equal(accountRouteState({ ...nonAdminStaff, status }, ["support"], "/user/support"), "locked");
+  }
+});
+
+test("a billing hold does not block admin/super admin from admin routes, but a real hold still does", () => {
+  for (const status of ["locked", "payment_awaiting"]) {
+    assert.equal(accountRouteState({ ...staff, status }, ["admin"], "/user/support"), "allowed");
+  }
+  for (const status of ["frozen", "suspended"]) {
     assert.equal(accountRouteState({ ...staff, status }, ["admin"], "/user/support"), "locked");
   }
 });

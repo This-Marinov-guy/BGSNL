@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { LOCAL_STORAGE_COOKIE_CONSENT } from "../../util/defines/common";
+import styles from "./cookies.module.scss";
 
 const Cookies = () => {
   const [consent, setConsent] = useState(null);
@@ -27,12 +28,25 @@ const Cookies = () => {
           analytics is not required to use the website. Continuing to browse is
           not treated as consent for optional cookies.
         </p>
-        <p className="ml--20">
-          Current choice: <strong>{consent === "1" ? "optional analytics accepted" : "essential only"}</strong>.
-        </p>
-        <div className="ml--20 btn_row">
-          <button type="button" className="rn-btn rn-btn-green" onClick={() => choose("mandatory")}>Use essential only</button>
-          <button type="button" className="rn-btn rn-btn-solid-green" onClick={() => choose("1")}>Accept optional analytics</button>
+        <div className={`ml--20 ${styles.choice}`} role="group" aria-label="Cookie preferences">
+          <button
+            id="essential-cookies-choice"
+            type="button"
+            aria-pressed={consent !== "1"}
+            className={styles.option}
+            onClick={() => choose("mandatory")}
+          >
+            Essential only
+          </button>
+          <button
+            id="optional-analytics-choice"
+            type="button"
+            aria-pressed={consent === "1"}
+            className={styles.option}
+            onClick={() => choose("1")}
+          >
+            Optional analytics
+          </button>
         </div>
 
         <h3 className="mt--40">2. Categories and providers</h3>

@@ -352,6 +352,10 @@
   &.is-roomy {
     white-space: normal;
   }
+
+  &.is-closed {
+    color: #dc3545;
+  }
 }
 
 .event-booking-card {
@@ -513,7 +517,7 @@
 }
 
 .event-sale-status {
-  color: #ffd4cf;
+  color: #dc3545;
   padding: 14px;
   border: 1px solid rgba(255, 118, 102, 0.45);
 }

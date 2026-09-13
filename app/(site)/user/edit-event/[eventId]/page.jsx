@@ -1,16 +1,8 @@
-import AuthLayout from "@/layouts/authentication/AuthLayout";
-import { ACCESS_4 } from "@/util/defines/common";
-import EditEvent from "@/screens/userActions/EditEvent";
-
-export const metadata = {
-  title: "Edit Event",
-  robots: { index: false, follow: false },
-};
-
-export default function Page() {
-  return (
-    <AuthLayout access={ACCESS_4}>
-      <EditEvent />
-    </AuthLayout>
-  );
+import { redirect } from "next/navigation";
+export default async function Page({ params, searchParams }) {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(await searchParams || {})) {
+    for (const item of Array.isArray(value) ? value : [value]) if (item != null) query.append(key, item);
+  }
+  redirect(`/user/dashboard/events/${encodeURIComponent((await params).eventId)}/edit` + (query.size ? `?${query}` : ""));
 }

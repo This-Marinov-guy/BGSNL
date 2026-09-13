@@ -203,6 +203,10 @@
   p { color: inherit; }
 }
 
+.dangerBannerFlushBottom {
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
 .dangerIcon {
   width: 3rem;
   height: 3rem;
@@ -295,6 +299,32 @@
   &:focus-visible {
     color: inherit;
     text-decoration-thickness: 0.12em;
+  }
+}
+
+.textButton {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-primary);
+    text-decoration-thickness: 0.12em;
+  }
+}
+
+.dangerBanner .textButton {
+  color: inherit;
+
+  &:hover,
+  &:focus-visible {
+    color: inherit;
   }
 }
 

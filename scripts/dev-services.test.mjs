@@ -22,6 +22,11 @@ test("runtime overrides connect the local stack without modifying or exposing cr
   assert.equal(result.website.DB_PASS, undefined);
   assert.equal(result.website.NEXT_PUBLIC_TEST_SERVER_URL, "http://localhost:8080/api/");
   assert.equal(result.api.BILLING_WORKER_ENABLED, "false");
+  assert.equal(result.api.BGSNL_REDIS_URL, "redis://127.0.0.1:6380/0");
+  assert.equal(result.api.BGSNL_REDIS_PREFIX, "bgsnl:development:v1:");
+  const configured = localEnvironments({ ...api, BGSNL_REDIS_URL: "redis://127.0.0.1:6390/0", BGSNL_REDIS_PREFIX: "custom:" }, mailer, {});
+  assert.equal(configured.api.BGSNL_REDIS_URL, "redis://127.0.0.1:6390/0");
+  assert.equal(configured.api.BGSNL_REDIS_PREFIX, "custom:");
   assert.equal(result.mailer.EMAIL_EVENT_MAINTENANCE_ENABLED, "false");
   assert.equal(result.mailer.EMAIL_SES_EVENT_CONSUMER_ENABLED, "false");
   for (const env of Object.values(result)) { assert.equal(env.NODE_ENV, "development"); assert.equal(env.APP_ENV, "dev"); }

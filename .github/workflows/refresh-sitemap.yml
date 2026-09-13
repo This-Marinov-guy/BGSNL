@@ -4,21 +4,74 @@ on:
   repository_dispatch:
     types: [event-sitemap-changed]
   workflow_dispatch:
+  schedule:
+    # Daily fallback; event publication/archival requests the immediate refresh.
+    - cron: '17 6 * * *'
 
 permissions: {}
 
+concurrency:
+  group: refresh-public-sitemap
+  cancel-in-progress: false
+
 jobs:
   revalidate:
+    # Enable automatic runs only once Next.js is live; manual runs verify rollout.
+    if: ${{ github.event_name == 'workflow_dispatch' || vars.SITEMAP_REFRESH_ENABLED == 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE_URL: https://www.bulgariansociety.nl
     steps:
-      - name: Invalidate public event discovery cache
+      - name: Refresh public event discovery cache
         env:
-          SITEMAP_REVALIDATE_URL: ${{ secrets.SITEMAP_REVALIDATE_URL }}
+          SITEMAP_REVALIDATE_URL: ${{ secrets.SITEMAP_REVALIDATE_URL || 'https://www.bulgariansociety.nl/api/revalidate' }}
           SITEMAP_REVALIDATE_TOKEN: ${{ secrets.SITEMAP_REVALIDATE_TOKEN }}
+        shell: bash
         run: |
-          test -n "$SITEMAP_REVALIDATE_URL"
-          test -n "$SITEMAP_REVALIDATE_TOKEN"
-          curl --fail --silent --show-error --retry 3 --retry-all-errors \
+          set -euo pipefail
+          if [ -z "$SITEMAP_REVALIDATE_TOKEN" ]; then
+            echo '::error::Set the SITEMAP_REVALIDATE_TOKEN repository secret to match the production website.'
+            exit 1
+          fi
+          curl --fail --silent --show-error --proto '=https' \
+            --connect-timeout 10 --max-time 45 --retry 3 --retry-delay 5 --retry-all-errors \
             --request POST \
             --header "x-bgsnl-revalidate-key: $SITEMAP_REVALIDATE_TOKEN" \
+            --output "$RUNNER_TEMP/sitemap-revalidate.json" \
             "$SITEMAP_REVALIDATE_URL"
+          if ! jq --exit-status '.revalidated == true' "$RUNNER_TEMP/sitemap-revalidate.json" >/dev/null; then
+            echo '::error::The website did not confirm revalidation. Verify the Next.js deployment and endpoint.'
+            exit 1
+          fi
+
+      - name: Fetch and validate the public sitemap
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --proto '=https' \
+            --connect-timeout 10 --max-time 45 --retry 2 --retry-delay 5 --retry-all-errors \
+            --output "$RUNNER_TEMP/sitemap.xml" "$SITE_URL/sitemap.xml"
+          curl --fail --silent --show-error --proto '=https' \
+            --connect-timeout 10 --max-time 45 --retry 2 --retry-delay 5 --retry-all-errors \
+            --output "$RUNNER_TEMP/llms.txt" "$SITE_URL/llms.txt"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          import xml.etree.ElementTree as ET
+
+          namespace = '{http://www.sitemaps.org/schemas/sitemap/0.9}'
+          root = ET.parse(Path(os.environ['RUNNER_TEMP']) / 'sitemap.xml').getroot()
+          if root.tag != namespace + 'urlset':
+              raise SystemExit('Expected a sitemap URL set, not an HTML fallback or sitemap index.')
+          urls = [item.text for item in root.findall(f'{namespace}url/{namespace}loc')]
+          expected = urlsplit(os.environ['SITE_URL'])
+          if not urls or any(urlsplit(url).scheme != expected.scheme or urlsplit(url).netloc != expected.netloc for url in urls):
+              raise SystemExit('Sitemap is empty or contains unexpected URL origins.')
+          discovery = (Path(os.environ['RUNNER_TEMP']) / 'llms.txt').read_text()
+          if f"Sitemap: {os.environ['SITE_URL']}/sitemap.xml" not in discovery:
+              raise SystemExit('llms.txt is missing its canonical sitemap link.')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write(f'Public discovery refreshed and checked: {len(urls)} sitemap URLs.\n')
+          PY

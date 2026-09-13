@@ -114,7 +114,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteSchema) }}
         />
 
-        <WebsiteAnalytics />
+        {process.env.NEXT_PUBLIC_MAINTENANCE !== "1" && <WebsiteAnalytics />}
       </body>
     </html>
   );

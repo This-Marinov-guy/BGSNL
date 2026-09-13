@@ -15,6 +15,7 @@ const routes = {
     "wordpress/posts", "wordpress/posts/:id",
   ],
   POST: [
+    "backoffice/access-requests",
     "security/login", "security/profile-change/confirm", "security/check-email", "security/signup", "security/alumni-signup",
     "security/send-password-token", "security/verify-token", "security/encrypt-data",
     "security/google/login/challenge", "security/google/login", "security/google/link/challenge", "security/google/link", "security/google/disconnect",

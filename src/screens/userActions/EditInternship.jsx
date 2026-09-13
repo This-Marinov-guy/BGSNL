@@ -51,7 +51,7 @@ const EditInternship = () => {
       <div className="container mt--200 mb--60">
         <div className="mb--30">
           <Link
-            to="/user/internships-dashboard"
+            to="/user/dashboard/internships"
             className="d-inline-flex align-items-center"
             style={{ color: "#6b7280", textDecoration: "none", gap: "6px" }}
           >

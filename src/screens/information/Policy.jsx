@@ -15,6 +15,7 @@ import Cookies from "../../elements/legals/Cookies";
 import Privacy from "../../elements/legals/Privacy";
 import Rules from "../../elements/legals/Rules";
 import Terms from "../../elements/legals/Terms";
+import ImageFb from "../../elements/ui/media/ImageFb";
 import {
   COOKIES,
   LEGAL_TABS,
@@ -78,6 +79,21 @@ const Policy = React.memo(() => {
         ))}
       </div>
       {activeTab}
+      <div className="container legal-page__signature">
+        <ImageFb
+          alt=""
+          aria-hidden="true"
+          className="legal-page__signature-logo"
+          fallback="/assets/images/logo/logo.jpg"
+          height={88}
+          src="/assets/images/logo/logo.webp"
+          width={88}
+        />
+        <div className="legal-page__signature-copy">
+          <span>Signed by</span>
+          <strong>Bulgarian Society Netherlands</strong>
+        </div>
+      </div>
       </main>
       {/* Start Footer Style  */}
       <FooterTwo />

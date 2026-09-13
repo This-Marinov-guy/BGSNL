@@ -20,8 +20,11 @@ import {
 import { Link } from "@/util/navigation";
 import { showModal } from "../../../redux/modal";
 import {
-  ACCESS_1,
+  ACCESS_2,
+  ACCESS_3,
   ACCESS_4,
+  BILLING_LOCKED_STATUSES,
+  BILLING_LOCK_EXEMPT,
   SUPPORT_ACCESS,
   formatRole,
   USER_UPDATE_MODAL,
@@ -73,30 +76,48 @@ const UserSidebar = ({
   };
 
   const hasRole = (access) => currentUser.roles?.some((r) => access.includes(r));
+  // Mirrors accountRouteState's "locked" redirect: any status other than
+  // active bounces admin routes back to Settings, unless a billing hold
+  // (locked/payment_awaiting) is waived for admin/super admin.
+  const billingExempt = BILLING_LOCKED_STATUSES.includes(currentUser.status) && hasRole(BILLING_LOCK_EXEMPT);
+  const adminNavLocked = !!currentUser.status && currentUser.status !== "active" && !billingExempt;
+  const restrictedIcon = (
+    <img
+      alt=""
+      aria-hidden="true"
+      className="sidebar-restricted-icon"
+      src="/assets/images/svg/3d/lock.png"
+    />
+  );
   /*
-   * Administration links mirror the role gates the header dropdown already
-   * uses: the events dashboard is open to ACCESS_4, internships to ACCESS_1.
+   * Administration links mirror the role gates the header dropdown and each
+   * panel's own page/API access already use: super admin and admin reach
+   * every panel; society board members manage members/events/internships
+   * (not support); board members manage only members and events, and
+   * committee members only events — both scoped server-side to their own
+   * region; support only reaches the ticket inbox.
    */
   const adminLinks = [
-    hasRole(ACCESS_1) && {
-      icon: <FiUsers />,
-      label: "Accounts",
-      to: "/user/accounts",
+    { icon: <FiCalendar />, label: "Administration", to: "/user/dashboard" },
+    hasRole(ACCESS_3) && {
+      icon: adminNavLocked ? restrictedIcon : <FiUsers />,
+      label: "Manage Members",
+      to: "/user/dashboard/members",
     },
-    currentUser.status === "active" && hasRole(SUPPORT_ACCESS) && {
-      icon: <IconlyMessage />,
-      label: "Support inbox",
-      to: "/user/support",
+    (currentUser.status === "active" || billingExempt) && hasRole(SUPPORT_ACCESS) && {
+      icon: adminNavLocked ? restrictedIcon : <IconlyMessage />,
+      label: "Support Tickets",
+      to: "/user/dashboard/support",
     },
     hasRole(ACCESS_4) && {
-      icon: <FiCalendar />,
+      icon: adminNavLocked ? restrictedIcon : <FiCalendar />,
       label: "Manage Events",
-      to: "/user/dashboard",
+      to: "/user/dashboard/events",
     },
-    hasRole(ACCESS_1) && {
-      icon: <FaBriefcase />,
+    hasRole(ACCESS_2) && {
+      icon: adminNavLocked ? restrictedIcon : <FaBriefcase />,
       label: "Manage Internships",
-      to: "/user/internships-dashboard",
+      to: "/user/dashboard/internships",
     },
   ].filter(Boolean);
 

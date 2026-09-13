@@ -83,8 +83,10 @@ const SettingsTab = ({ user }) => {
 
           <section className="settings-group" aria-labelledby="settings-membership">
             <h2 id="settings-membership" className="settings-group__title">Membership</h2>
-            <AccountBillingAlert user={user} showAction={false} />
             <ul className="settings-list">
+              <li className="settings-list__alert">
+                <AccountBillingAlert user={user} showAction={false} flushBottom />
+              </li>
               <SettingsRow
                 action={
                   <BillingActions user={user} />

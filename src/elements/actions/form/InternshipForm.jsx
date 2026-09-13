@@ -152,7 +152,7 @@ const InternshipForm = ({ internship }) => {
           summary: isEdit ? "Internship updated" : "Internship created",
         })
       );
-      navigate("/user/internships-dashboard");
+      navigate("/user/dashboard/internships");
     } catch {
       dispatch(showNotification({ severity: "error", detail: "Something went wrong. Please try again." }));
     }
@@ -380,7 +380,7 @@ const InternshipForm = ({ internship }) => {
         </button>
         <button
           type="button"
-          onClick={() => navigate("/user/internships-dashboard")}
+          onClick={() => navigate("/user/dashboard/internships")}
           className="rn-button-style--2"
           style={{ minWidth: "100px" }}
         >

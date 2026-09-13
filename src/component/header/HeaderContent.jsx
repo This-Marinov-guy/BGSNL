@@ -24,7 +24,7 @@ import LogoutAlert from "../../elements/ui/alerts/Logout";
 import NewBadge from "../../elements/ui/badges/NewBadge";
 import { selectUser } from "../../redux/user";
 import {
-  ACCESS_1,
+  ACCESS_2,
   ACCESS_4,
   SUPPORT_ACCESS,
 } from "../../util/defines/common";
@@ -305,21 +305,22 @@ const HeaderContent = (props) => {
                   <a style={{ cursor: "pointer" }}>Dashboard</a>
                   <ul className="submenu">
                     <>
-                      {checkAuthorization(user.session, ACCESS_1) && (
-                        <li><Link to="/user/accounts">Accounts</Link></li>
+                      <li><Link to="/user/dashboard">Administration</Link></li>
+                      {checkAuthorization(user.session, ACCESS_2) && (
+                        <li><Link to="/user/dashboard/members">Manage Members</Link></li>
                       )}
                       {checkAuthorization(user.session, ACCESS_4) && <>
-                        <li><Link to="/user/dashboard">Events</Link></li>
-                        <li><Link to="/user/add-event">Add Event</Link></li>
+                        <li><Link to="/user/dashboard/events">Events</Link></li>
+                        <li><Link to="/user/dashboard/events/new">Add Event</Link></li>
                       </>}
-                      {checkAuthorization(user.session, ACCESS_1) && (
+                      {checkAuthorization(user.session, ACCESS_2) && (
                         <li>
-                          <Link to="/user/internships-dashboard">
+                          <Link to="/user/dashboard/internships">
                             Internships
                           </Link>
                         </li>
                       )}
-                      {checkAuthorization(user.session, SUPPORT_ACCESS) && <li><Link to="/user/support">Support</Link></li>}
+                      {checkAuthorization(user.session, SUPPORT_ACCESS) && <li><Link to="/user/dashboard/support">Support Tickets</Link></li>}
                     </>
                   </ul>
                 </li>

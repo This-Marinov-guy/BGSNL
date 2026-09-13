@@ -66,24 +66,39 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
     }
   };
 
-  if (!challenge && !failed && !preparing) return null;
+  // Nothing to show yet while the automatic challenge fetch is in flight: a
+  // reserved-height skeleton avoids the surrounding form jumping once either
+  // the real button or the retry fallback appears.
+  const loading = !challenge && !failed;
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    if (loading) { setEntered(false); return undefined; }
+    const frame = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(frame);
+  }, [loading, challenge, failed]);
+
   return (
     <div className={styles.loginGoogle} inert={disabled ? true : undefined}>
-      {challenge ? <GoogleCredentialButton challenge={challenge} busy={busy} onCredential={complete}
-        onInteraction={feedback.begin}
-        onNotice={(message) => {
-          const notification = feedback.notice(message);
-          if (notification) dispatch(showNotification(notification));
-        }}
-        onError={(message) => { notifyError(message); setChallenge(null); }} />
-        : <GoogleButton disabled={disabled || busy || preparing} busy={preparing}
-          onClick={() => {
-            if (disabled || busy || preparing) return;
-            feedback.begin(); setPreparing(true); setAttempt((value) => value + 1);
-          }}>
-          <span className={styles.providerFullLabel}>Continue with Google</span>
-          <span className={styles.providerShortLabel}>Google</span>
-        </GoogleButton>}
+      <div className={styles.loginGoogleStage} data-loading={loading}>
+        <span className={styles.loginGoogleSkeleton} aria-hidden="true" />
+        <div className={styles.loginGoogleContent} data-visible={entered}>
+          {challenge ? <GoogleCredentialButton challenge={challenge} busy={busy} onCredential={complete}
+            onInteraction={feedback.begin}
+            onNotice={(message) => {
+              const notification = feedback.notice(message);
+              if (notification) dispatch(showNotification(notification));
+            }}
+            onError={(message) => { notifyError(message); setChallenge(null); }} />
+            : failed ? <GoogleButton disabled={disabled || busy || preparing} busy={preparing}
+              onClick={() => {
+                if (disabled || busy || preparing) return;
+                feedback.begin(); setPreparing(true); setAttempt((value) => value + 1);
+              }}>
+              <span className={styles.providerFullLabel}>Continue with Google</span>
+              <span className={styles.providerShortLabel}>Google</span>
+            </GoogleButton> : null}
+        </div>
+      </div>
     </div>
   );
 }

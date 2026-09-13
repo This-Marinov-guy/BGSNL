@@ -1,0 +1,44 @@
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: fit-content;
+  max-width: calc(100% - 20px);
+}
+
+.option {
+  flex: 1 1 auto;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid #b7c1bb;
+  border-radius: 8px;
+  background: #fff;
+  color: #39463f;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+
+  &:hover {
+    background: #eef5f0;
+    border-color: #198754;
+  }
+
+  &[aria-pressed="true"] {
+    background: #198754;
+    border-color: #198754;
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #198754;
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none;
+  }
+}

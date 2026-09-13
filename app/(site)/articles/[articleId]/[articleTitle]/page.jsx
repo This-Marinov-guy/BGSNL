@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import Article from "@/screens/information/articles/Article";
+import RecoveryScreen from "@/component/common/RecoveryScreen";
 import { getArticle, getArticles } from "@/util/api/server";
-import { notFound, permanentRedirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { articleSlug, stripHtml, toMetadata } from "@/util/seo/site";
 import {
   buildArticleSchema,
@@ -47,7 +48,10 @@ export default async function Page({ params }) {
   const { articleId, articleTitle } = await params;
   const [article, all] = await Promise.all([getArticle(articleId), getArticles()]);
 
-  if (!article) notFound();
+  // Not a bare notFound(): this deep in the tree, that call never reliably
+  // replaces the streamed Suspense fallback (see the [region] layout's
+  // notFound() comment) — visitors would be stuck on the loading skeleton.
+  if (!article) return <RecoveryScreen kind="not-found" />;
 
   const canonicalSlug = articleSlug(article.title);
   if (articleTitle !== canonicalSlug) {

@@ -75,7 +75,7 @@ const TicketClosingCountdown = ({
 
   if (isClosed || closingState?.remainingTime === 0) {
     return (
-      <strong className="event-detail-countdown">Ticket sales are closed</strong>
+      <strong className="event-detail-countdown is-closed">Ticket sales are closed</strong>
     );
   }
 
