@@ -353,8 +353,8 @@ const focusValidationTarget = (target) => {
   focusTarget.focus({ preventScroll: true });
 };
 
-const FormikValidationEffects = ({ ownerId, validationSchema }) => {
-  const { errors, isValidating, submitCount, values } = useFormikContext();
+const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedErrors }) => {
+  const { errors, isValidating, submitCount, touched, values } = useFormikContext();
   const dispatch = useDispatch();
   const markerRef = useRef(null);
   const handledSubmitRef = useRef(0);
@@ -364,6 +364,27 @@ const FormikValidationEffects = ({ ownerId, validationSchema }) => {
     const form = findOwnedForm(markerRef.current, ownerId);
     if (form) form.noValidate = true;
   }, [ownerId]);
+
+  useEffect(() => {
+    // Step navigation validates without submitting the entire form. Present
+    // only touched errors so future steps do not show premature error states.
+    if (!highlightTouchedErrors || isValidating || submitCount > 0) return;
+    const form = findOwnedForm(markerRef.current, ownerId);
+    if (!form) return;
+    clearValidationState(form);
+    const entries = flattenErrorEntries(errors).filter(({ path }) => getIn(touched, path));
+    form.dataset.validationSubmitted = entries.length ? "true" : "false";
+    const fieldsByPath = collectFieldsByError(form, entries);
+    for (const { path } of entries) {
+      for (const field of fieldsByPath.get(path) || []) {
+        field.setAttribute("aria-invalid", "true");
+        field.dataset.formValidationInvalid = "true";
+        findFieldContainer(field)?.classList.add("has-validation-error");
+        // Composite date/image inputs can sit inside a wrapper below the label.
+        field.closest(".rn-form-group, .form-group")?.classList.add("has-validation-error");
+      }
+    }
+  }, [errors, highlightTouchedErrors, isValidating, ownerId, submitCount, touched]);
 
   useEffect(() => {
     if (submitCount === 0) {
@@ -510,6 +531,7 @@ const FormikValidationEffects = ({ ownerId, validationSchema }) => {
 };
 
 FormikValidationEffects.propTypes = {
+  highlightTouchedErrors: PropTypes.bool,
   ownerId: PropTypes.string.isRequired,
   validationSchema: PropTypes.oneOfType([
     PropTypes.func,
@@ -517,7 +539,7 @@ FormikValidationEffects.propTypes = {
   ]),
 };
 
-const ValidatedFormik = ({ children, validationSchema, ...props }) => {
+const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = false, ...props }) => {
   const ownerId = useId();
 
   return (
@@ -537,6 +559,7 @@ const ValidatedFormik = ({ children, validationSchema, ...props }) => {
             <FormikValidationEffects
               ownerId={ownerId}
               validationSchema={validationSchema}
+              highlightTouchedErrors={highlightTouchedErrors}
             />
             {addOwnerToFirstForm(renderedChildren, ownerId)}
           </>
@@ -547,6 +570,7 @@ const ValidatedFormik = ({ children, validationSchema, ...props }) => {
 };
 
 ValidatedFormik.propTypes = {
+  highlightTouchedErrors: PropTypes.bool,
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   validationSchema: PropTypes.oneOfType([
     PropTypes.func,

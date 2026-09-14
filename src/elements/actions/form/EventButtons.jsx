@@ -11,7 +11,7 @@ const EventButtons = () => {
                     Add Event
                 </Link>
                 <Link
-                    to='/user/dashboard/events/new'
+                    to='/user/dashboard/events/create'
                     className="rn-button-style--2 rn-btn-green"
                 >
                     All Events

@@ -1,3 +1,4 @@
+import { SelectInput } from "@/compat/primereact";
 import React from 'react'
 import PropTypes from 'prop-types'
 import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
@@ -8,7 +9,11 @@ const Filter = ({ regions = REGIONS }) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const handleRegionChange = (event) => {
-        setSearchParams({ region: event.target.value });
+        setSearchParams((current) => {
+            if (event.target.value) current.set("region", event.target.value);
+            else current.delete("region");
+            return current;
+        });
     };
 
     return (
@@ -16,12 +21,12 @@ const Filter = ({ regions = REGIONS }) => {
             <form>
                 <label>
                     <span>Region</span>
-                    <select defaultValue={searchParams.get("region") || ''} onChange={handleRegionChange}>
+                    <SelectInput value={searchParams.get("region") || ''} onChange={handleRegionChange}>
                         <option value="">All</option>
                         {regions.map((val, index) => (
                             <option value={val} key={index}>{capitalizeFirstLetter(val, true)}</option>
                         ))}
-                    </select>
+                    </SelectInput>
                 </label>
             </form>
         </aside>

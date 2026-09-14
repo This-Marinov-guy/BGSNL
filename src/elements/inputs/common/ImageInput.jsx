@@ -200,8 +200,8 @@ const ImageInput = (props) => {
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "cover",
-              borderRadius: "10%",
+              objectFit: "contain",
+              borderRadius: 0,
             }}
           />
         )}

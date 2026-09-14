@@ -30,7 +30,7 @@ const routes = {
     "support/inbox/:id/messages", "support/inbox/:id/status", "contest/register", "special/add-card",
   ],
   PATCH: ["security/change-password", "user/edit-info", "user/alumni-quote", "user/edit-document/:id", "event/check-guest-list",
-    "future-event/edit-event/:id", "internship/edit/:id", "internship/reorder", "backoffice/accounts/:type/:id"],
+    "future-event/edit-event/:id", "future-event/sales/:id", "internship/edit/:id", "internship/reorder", "backoffice/accounts/:type/:id"],
   DELETE: ["user/cancel-membership", "user/delete-document/:id", "future-event/delete-event/:id", "internship/delete/:id"],
 };
 const allowed = Object.fromEntries(Object.entries(routes).map(([method, paths]) => [method,

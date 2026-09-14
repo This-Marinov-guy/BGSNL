@@ -11,8 +11,8 @@
 .headingIcon { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; flex: 0 0 auto; border-radius: 1rem; background: #e2eee8; color: #017363; }
 .headingIcon svg { width: 1.75rem; height: 1.75rem; }
 
-.tabs { display: inline-grid; grid-template-columns: 1fr 1fr; min-width: min(100%, 24rem); gap: .25rem; margin-bottom: 1rem; padding: .25rem; border-radius: .85rem; background: #eef2ee; }
-.tabs button { min-height: 2.9rem; padding: .55rem 1.5rem; border: 0; border-radius: .65rem; background: transparent; color: #536158; font-weight: 700; cursor: pointer; }
+.tabs { display: inline-grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: min(100%, 36rem); min-width: 0; gap: .25rem; margin-bottom: 1rem; padding: .25rem; border-radius: .85rem; background: #eef2ee; }
+.tabs button { min-width: 0; min-height: 2.9rem; padding: .55rem .75rem; white-space: normal; border: 0; border-radius: .65rem; background: transparent; color: #536158; font-weight: 700; cursor: pointer; }
 .tabs button[aria-selected="true"] { background: #fff; color: #017363; box-shadow: 0 .15rem .6rem rgb(28 52 42 / 9%); }
 
 .directory { min-width: 0; padding: clamp(1rem, 2.5vw, 1.75rem); border: 1px solid #dce5df; border-radius: 1.25rem; background: #fff; box-shadow: 0 .75rem 2.5rem rgb(27 54 42 / 6%); }

@@ -1,271 +1,77 @@
-import React, { useState, useEffect, useRef } from "react";
+"use client";
+
+import { useId, useState } from "react";
 import PropTypes from "prop-types";
-import { Dialog } from "@/compat/primereact";
-import ImageFb from "./media/ImageFb";
+import dynamic from "next/dynamic";
+import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 
-const EventImageCarousel = ({ images }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+const ImageGallery = dynamic(() => import("./media/ImageGallery"), { ssr: false });
+
+const EventImageCarousel = ({ images, title = "Event" }) => {
+  const [order, setOrder] = useState(() => images.map((_, index) => index));
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewIndex, setPreviewIndex] = useState(0);
-  const [maxHeight, setMaxHeight] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const containerRef = useRef(null);
+  const groupId = useId();
+  const reduceMotion = useReducedMotion();
+  const mainIndex = order[0];
+  const transition = { duration: reduceMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] };
 
-  if (!images || images.length === 0) return null;
-
-  // Calculate max height from all images (only for mobile)
-  useEffect(() => {
-    let resizeTimer;
-    
-    // Check if mobile on mount and resize
-    const checkMobile = () => {
-      const mobile = window.innerWidth < 769;
-      setIsMobile(mobile);
-      return mobile;
-    };
-    
-    checkMobile(); // Initial check
-    
-    const calculateMaxHeight = () => {
-      // Only calculate dynamic height on mobile devices
-      const mobile = checkMobile();
-      if (!mobile) {
-        setMaxHeight(null); // Use fixed height from CSS on desktop
-        return;
-      }
-      
-      if (!containerRef.current || images.length === 0) return;
-      
-      const containerWidth = containerRef.current.offsetWidth;
-      if (!containerWidth) return;
-      
-      const heights = [];
-      
-      const promises = images.map((src) => {
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.onload = () => {
-            // Calculate height based on container width while maintaining aspect ratio
-            const aspectRatio = img.height / img.width;
-            const calculatedHeight = containerWidth * aspectRatio;
-            heights.push(calculatedHeight);
-            resolve();
-          };
-          img.onerror = () => {
-            // Fallback height for mobile
-            const fallbackHeight = 250;
-            heights.push(fallbackHeight);
-            resolve();
-          };
-          img.src = src;
-        });
-      });
-
-      Promise.all(promises).then(() => {
-        if (heights.length > 0) {
-          const max = Math.max(...heights);
-          setMaxHeight(Math.ceil(max));
-        }
-      });
-    };
-
-    // Initial calculation with delay to ensure container is rendered
-    const timer = setTimeout(() => {
-      calculateMaxHeight();
-    }, 150);
-    
-    // Recalculate on window resize with debounce
-    const handleResize = () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        calculateMaxHeight();
-      }, 150);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
-    
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(resizeTimer);
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
-    };
-  }, [images]);
-
-  const handlePrevious = () => {
-    setActiveIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  const swapImage = (slot) => {
+    setOrder((current) => {
+      const next = [...current];
+      [next[0], next[slot]] = [next[slot], next[0]];
+      return next;
+    });
   };
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  const openPreview = (index) => {
-    setPreviewIndex(index);
-    setPreviewOpen(true);
-  };
-
-  const closePreview = () => {
-    setPreviewOpen(false);
-  };
-
-  const handlePreviewPrevious = () => {
-    setPreviewIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const handlePreviewNext = () => {
-    setPreviewIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  return (
-    <>
-      <div className="event-carousel-container" ref={containerRef}>
-        {/* Main Carousel */}
-        <div 
-          className="event-carousel-main"
-          style={maxHeight && isMobile ? { height: `${maxHeight}px` } : {}}
-        >
-          <div className="carousel-image-wrapper" onClick={() => openPreview(activeIndex)}>
-            <ImageFb
-              src={images[activeIndex]}
-              alt={`Event image ${activeIndex + 1}`}
-              className="carousel-main-image"
-              eager={activeIndex === 0}
-              fetchPriority={activeIndex === 0 ? "high" : "auto"}
-            />
-            <div className="carousel-overlay">
-              <span className="carousel-preview-text">Click to preview</span>
-            </div>
-          </div>
-
-          {images.length > 1 && (
-            <>
-              <button
-                className="carousel-btn carousel-btn-prev"
-                onClick={handlePrevious}
-                aria-label="Previous image"
-              >
-                <img 
-                  src="/assets/icons/svgs/arrow-left.svg" 
-                  alt="Previous"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    display: "block",
-                    minWidth: "20px",
-                    minHeight: "20px"
-                  }}
-                />
-              </button>
-              <button
-                className="carousel-btn carousel-btn-next"
-                onClick={handleNext}
-                aria-label="Next image"
-              >
-                <img 
-                  src="/assets/icons/svgs/arrow-right.svg" 
-                  alt="Next"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    display: "block",
-                    minWidth: "20px",
-                    minHeight: "20px"
-                  }}
-                />
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Thumbnail Navigation */}
-        {images.length > 1 && (
-          <div className="event-carousel-thumbnails">
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className={`carousel-thumbnail ${
-                  index === activeIndex ? "active" : ""
-                }`}
-                onClick={() => setActiveIndex(index)}
-              >
-                <ImageFb src={image} alt={`Thumbnail ${index + 1}`} />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <Dialog
-        header="Image preview"
-        visible={previewOpen}
-        onHide={closePreview}
-        style={{ width: "min(1100px, 95vw)", maxHeight: "95vh" }}
-        contentClassName="event-image-preview-content"
-        dismissableMask
-      >
-          <div
-            className="preview-content"
-          >
-            <ImageFb
-              src={images[previewIndex]}
-              alt={`Preview ${previewIndex + 1}`}
-              className="preview-image"
-            />
-
-            {images.length > 1 && (
-              <>
-                <button
-                  className="preview-btn preview-btn-prev"
-                  onClick={handlePreviewPrevious}
-                >
-                  <img 
-                    src="/assets/icons/svgs/arrow-left.svg" 
-                    alt="Previous"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      display: "block",
-                      minWidth: "24px",
-                      minHeight: "24px"
-                    }}
-                  />
-                </button>
-                <button
-                  className="preview-btn preview-btn-next"
-                  onClick={handlePreviewNext}
-                >
-                  <img 
-                    src="/assets/icons/svgs/arrow-right.svg" 
-                    alt="Next"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      display: "block",
-                      minWidth: "24px",
-                      minHeight: "24px"
-                    }}
-                  />
-                </button>
-                <div className="preview-counter">
-                  {previewIndex + 1} / {images.length}
-                </div>
-              </>
-            )}
-          </div>
-      </Dialog>
-    </>
+  const image = (index, main = false) => (
+    <motion.img
+      key={index}
+      layoutId={`event-image-${index}`}
+      initial={false}
+      transition={transition}
+      src={images[index]}
+      alt={`${title} image ${index + 1}`}
+      className={main ? "carousel-main-image" : "carousel-thumbnail-image"}
+      loading={main ? "eager" : "lazy"}
+      fetchPriority={main && index === 0 ? "high" : "auto"}
+      draggable={false}
+    />
   );
+
+  if (!images.length) return null;
+
+  return <>
+    <LayoutGroup id={groupId}>
+      <div className="event-carousel-container">
+        <div className="event-carousel-main">
+          <button type="button" className="carousel-image-wrapper" onClick={() => setPreviewOpen(true)} aria-label={`Preview ${title} image ${mainIndex + 1}`}>
+            {image(mainIndex, true)}
+          </button>
+        </div>
+        {order.length > 1 && <div className="event-carousel-thumbnails" role="group" aria-label="Choose the main event image">
+          {order.slice(1).map((index, slot) => (
+            <button key={slot} type="button" className="carousel-thumbnail" onClick={() => swapImage(slot + 1)} aria-label={`Show ${title} image ${index + 1} as main image`}>
+              {image(index)}
+            </button>
+          ))}
+        </div>}
+        <span className="visually-hidden" aria-live="polite" aria-atomic="true">Showing image {mainIndex + 1} of {images.length}</span>
+      </div>
+    </LayoutGroup>
+    {previewOpen && <ImageGallery
+      images={images.map((src, index) => ({ src, alt: `${title} image ${index + 1}` }))}
+      src={images[mainIndex]}
+      alt={`${title} image ${mainIndex + 1}`}
+      fileName={`${title}-image-${mainIndex + 1}`}
+      open
+      onClose={() => setPreviewOpen(false)}
+    />}
+  </>;
 };
 
 EventImageCarousel.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
+  title: PropTypes.string,
 };
 
 export default EventImageCarousel;
-

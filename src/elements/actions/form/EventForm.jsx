@@ -1,3 +1,4 @@
+import { SelectInput } from "@/compat/primereact";
 import {
   useCallback,
   useEffect,
@@ -9,6 +10,7 @@ import {
   ErrorMessage,
   Field,
   Form,
+  setIn,
 } from "formik";
 import PropTypes from "prop-types";
 import {
@@ -19,6 +21,7 @@ import * as yup from "yup";
 import {
   ConfirmDialog,
   Dialog,
+  Steps,
   Tooltip,
 } from "@/compat/primereact";
 import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
@@ -44,7 +47,6 @@ import {
 import { START_TIMER } from "../../../util/defines/enum";
 import {
   ADMIN_EVENT_REGIONS,
-  BG_INDEX,
   REGIONS,
 } from "../../../util/defines/REGIONS_DESIGN";
 import { sessionClaims } from "../../../util/functions/authorization";
@@ -59,27 +61,27 @@ import InputsBuilder from "../../inputs/builders/InputsBuilder";
 import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
 import SubEventBuilder from "../../inputs/builders/SubEventBuilder";
 import { CalendarWithClock } from "../../inputs/common/Calendar";
-import ImageInput from "../../inputs/common/ImageInput";
-import ImageSelection from "../../inputs/ImageSelection";
 import MultiImageUpload from "../../inputs/MultiImageUpload";
 import PromotionalPrices from "../../inputs/PromotionalPrice";
 import ValidatedFormik from "../../ui/forms/ValidatedFormik";
 import Loader from "../../ui/loading/Loader";
+import StepContentTransition from "../../ui/functional/StepContentTransition";
+import { blockingEventStep, eventDraftProgress } from "../../../util/functions/event-step-validation.mjs";
 import LongLoading from "../../ui/loading/LongLoading";
 import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
+import EventTicketsMedia from "./EventTicketsMedia";
+import RegionEventDrafts from "./RegionEventDrafts";
+import DraftSaveButton from "./DraftSaveButton";
 
 const EVENT_FORM_STEPS = [
   {
-    title: "Event details",
-    description: "Name, place and schedule",
+    label: "Event details",
   },
   {
-    title: "Tickets & media",
-    description: "Pricing, capacity and artwork",
+    label: "Tickets & media",
   },
   {
-    title: "Extras & publish",
-    description: "Optional settings and final review",
+    label: "Extras & publish",
   },
 ];
 
@@ -426,8 +428,12 @@ const EventForm = (props) => {
   const [confirmResolver, setConfirmResolver] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [showBlockingLoader, setShowBlockingLoader] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [furthestStep, setFurthestStep] = useState(0);
+  const [movingStep, setMovingStep] = useState(false);
+  const [transitionDirection, setTransitionDirection] = useState("forward");
+  const stepMoveRef = useRef(false);
+  const formRef = useRef(null);
+  const formikRef = useRef(null);
+  const isBusy = submitting || movingStep;
   const [draftId, setDraftId] = useState(null);
   const [draftStatus, setDraftStatus] = useState("idle");
   const [lastSavedAt, setLastSavedAt] = useState(null);
@@ -446,9 +452,11 @@ const EventForm = (props) => {
   const { eventId } = useParams();
   const userClaims = sessionClaims(user.session);
   const roles = userClaims?.roles ?? [];
-  const regionOptions = hasOverlap(roles, ACCESS_2)
+  const canManageAllRegions = hasOverlap(roles, ACCESS_2);
+  const accountRegion = REGIONS.includes(userClaims?.region) ? userClaims.region : "";
+  const regionOptions = canManageAllRegions
     ? ADMIN_EVENT_REGIONS
-    : REGIONS;
+    : REGIONS.filter((region) => region === accountRegion);
 
   const edit = props.edit;
   const storedInitialData = edit ? props.initialData : null;
@@ -456,6 +464,8 @@ const EventForm = (props) => {
     storedInitialData?.status === EVENT_DRAFT
       ? storedInitialData.draftData ?? {}
       : null;
+  const [currentStep, setCurrentStep] = useState(() => eventDraftProgress(draftData?.formProgress, EVENT_FORM_STEPS.length).currentStep);
+  const [furthestStep, setFurthestStep] = useState(() => eventDraftProgress(draftData?.formProgress, EVENT_FORM_STEPS.length).furthestStep);
   const initialData = draftData
     ? {
         ...storedInitialData,
@@ -479,10 +489,6 @@ const EventForm = (props) => {
       }
     : storedInitialData;
   const canSaveDraft = !edit || initialData?.status === EVENT_DRAFT;
-  const bgs = Array.from({ length: BG_INDEX }, (_, i) => ({
-    src: `/assets/images/bg/bg-image-${i + 1}.webp`,
-    value: i + 1,
-  }));
 
   const handleExtraImagesChange = (data) => {
     setExtraImagesData(data);
@@ -594,7 +600,7 @@ const EventForm = (props) => {
           isSaleClosed || isFree || isMemberFree || isTicketLink,
         then: () => yup.mixed().nullable(),
         otherwise: () =>
-          yup.number().min(1, "Must be greater than 0").nullable(),
+          yup.number().transform((value, originalValue) => originalValue === "" ? null : value).min(1, "Must be greater than 0").nullable(),
       }),
 
     earlyBird: yup
@@ -853,17 +859,6 @@ const EventForm = (props) => {
         otherwise: () => yup.string().nullable(),
       }),
 
-    bgImage: yup
-      .number()
-      .integer("Choose a valid background image")
-      .min(1, "Choose a valid background image")
-      .max(BG_INDEX, "Choose a valid background image")
-      .required("Choose a background image"),
-    bgImageSelection: yup
-      .number()
-      .oneOf([1, 2], "Choose which background image to display")
-      .required("Choose which background image to display"),
-
     subEvent: yup
       .object({
         description: yup.string().max(1000, "Description is too long"),
@@ -998,16 +993,6 @@ const EventForm = (props) => {
           typeof value === "string" ||
           ["image/jpg", "image/jpeg", "image/png"].includes(value?.type)
       ),
-    bgImageExtra: yup
-      .mixed()
-      .test(
-        "fileType",
-        "Please choose a JPG or PNG image",
-        (value) =>
-          !value ||
-          typeof value === "string" ||
-          ["image/jpg", "image/jpeg", "image/png"].includes(value.type)
-      ),
     extraImagesValidation: yup.string().test(
       "fileValidation",
       "Extra images are invalid",
@@ -1017,7 +1002,7 @@ const EventForm = (props) => {
     ),
   });
 
-  const buildFormData = (values, saveAsDraft) => {
+  const buildFormData = (values, saveAsDraft, draftStep) => {
     const formData = new FormData();
     const orderedImages = extraImagesTouched
       ? extraImagesData.all ?? []
@@ -1058,6 +1043,8 @@ const EventForm = (props) => {
     });
 
     Object.entries(values).forEach(([key, val]) => {
+      // Notes belong only to draftData, never to a published event payload.
+      if (key === "note") return;
       if (key === "promoCodes") {
         if (val.isEnabled && val.codes?.length > 0) {
           const validPromoCodes = val.codes.filter(
@@ -1083,17 +1070,33 @@ const EventForm = (props) => {
 
     formData.append("status", saveAsDraft ? EVENT_DRAFT : "opened");
     if (saveAsDraft) {
-      formData.append("draftData", JSON.stringify(values));
+      formData.append("draftData", JSON.stringify({
+        ...values,
+        formProgress: eventDraftProgress({ currentStep: draftStep, furthestStep: Math.max(furthestStep, draftStep) }, EVENT_FORM_STEPS.length),
+      }));
     }
 
     return formData;
   };
 
+  const requireDraftRegion = (values) => {
+    const region = canManageAllRegions ? values.region : accountRegion;
+    if (ADMIN_EVENT_REGIONS.includes(region)) return true;
+    formikRef.current?.setFieldTouched("region", true, false);
+    formikRef.current?.setFieldError("region", "Choose a region before saving a draft.");
+    setTransitionDirection("backward");
+    setCurrentStep(0);
+    dispatch(showNotification({ severity: "error", summary: "Region required", detail: "Choose a region before saving a draft." }));
+    requestAnimationFrame(() => formRef.current?.querySelector('button[name="region"]')?.focus());
+    return false;
+  };
+
   const submitValues = async (
     values,
     saveAsDraft = false,
-    { stayOnPage = false, quiet = false } = {}
+    { stayOnPage = false, quiet = false, draftStep = currentStep } = {}
   ) => {
+    if (saveAsDraft && !requireDraftRegion(values)) return null;
     try {
       if (!saveAsDraft) await waitForConfirmation();
 
@@ -1112,7 +1115,7 @@ const EventForm = (props) => {
           ? `future-event/edit-event/${recordId}`
           : "future-event/add-event",
         recordId ? "PATCH" : "POST",
-        buildFormData(values, saveAsDraft),
+        buildFormData(canManageAllRegions ? values : { ...values, region: accountRegion }, saveAsDraft, draftStep),
         {},
         true,
         !quiet
@@ -1158,51 +1161,70 @@ const EventForm = (props) => {
     }
   };
 
-  const moveToStep = async (targetStep, values, resetForm) => {
-    if (targetStep === currentStep) return;
-
-    let savedDraft = true;
-
-    if (canSaveDraft) {
-      savedDraft = await submitValues(values, true, {
-        stayOnPage: true,
-        quiet: true,
-      });
-    }
-
-    if (!savedDraft) return;
-
-    if (savedDraft !== true) {
-      const syncedValues = { ...values };
-      ["poster", "ticketImg", "bgImageExtra"].forEach((field) => {
-        if (savedDraft[field]) {
-          syncedValues[field] = savedDraft[field];
+  const moveToStep = async (targetStep, formik) => {
+    if (targetStep === currentStep || submitting || stepMoveRef.current) return;
+    stepMoveRef.current = true;
+    setMovingStep(true);
+    const { values, resetForm, validateForm, setTouched, touched } = formik;
+    try {
+      if (targetStep > currentStep) {
+        const errors = await validateForm();
+        const blocked = blockingEventStep(errors, targetStep);
+        if (blocked) {
+          await setTouched(blocked.paths.reduce((result, path) => setIn(result, path, true), touched), false);
+          if (blocked.step !== currentStep) {
+            setTransitionDirection(blocked.step > currentStep ? "forward" : "backward");
+            setCurrentStep(blocked.step);
+          }
+          dispatch(showNotification({ severity: "error", summary: "Complete the required fields", detail: "Check the highlighted fields before continuing." }));
+          requestAnimationFrame(() => {
+            const field = formRef.current?.querySelector(`[name="${blocked.paths[0]}"], [data-field-name="${blocked.paths[0]}"]`);
+            const control = field?.matches("input, select, textarea, button") ? field : field?.querySelector("input:not([type=hidden]), select, textarea, button");
+            (control || field)?.scrollIntoView({ block: "center", behavior: "smooth" });
+            control?.focus({ preventScroll: true });
+          });
+          return;
         }
-      });
+      }
+      const nextStep = Math.max(0, Math.min(targetStep, EVENT_FORM_STEPS.length - 1));
+      let savedDraft = true;
 
-      if (savedDraft.images) {
-        setSavedImages(savedDraft.images);
-        syncedValues.images = savedDraft.images;
+      if (canSaveDraft) {
+        savedDraft = await submitValues(values, true, {
+          stayOnPage: true,
+          quiet: true,
+          draftStep: nextStep,
+        });
       }
 
-      setExtraImagesTouched(false);
-      resetForm({ values: syncedValues });
+      if (!savedDraft) return;
+
+      if (savedDraft !== true) {
+        const syncedValues = { ...values };
+        ["poster", "ticketImg", "bgImageExtra"].forEach((field) => {
+          if (savedDraft[field]) {
+            syncedValues[field] = savedDraft[field];
+          }
+        });
+
+        if (savedDraft.images) {
+          setSavedImages(savedDraft.images);
+          syncedValues.images = savedDraft.images;
+        }
+
+        setExtraImagesTouched(false);
+        resetForm({ values: syncedValues });
+      }
+
+      setTransitionDirection(nextStep > currentStep ? "forward" : "backward");
+      setCurrentStep(nextStep);
+      setFurthestStep((step) => Math.max(step, nextStep));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      stepMoveRef.current = false;
+      setMovingStep(false);
     }
-
-    const nextStep = Math.max(
-      0,
-      Math.min(targetStep, EVENT_FORM_STEPS.length - 1)
-    );
-    setCurrentStep(nextStep);
-    setFurthestStep((step) => Math.max(step, nextStep));
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  const moveToNextStep = (values, resetForm) =>
-    moveToStep(currentStep + 1, values, resetForm);
-
-  const moveToPreviousStep = (values, resetForm) =>
-    moveToStep(currentStep - 1, values, resetForm);
 
   return (
     <>
@@ -1214,15 +1236,17 @@ const EventForm = (props) => {
       />
       <LongLoading visible={showBlockingLoader} />
       <ValidatedFormik
+        highlightTouchedErrors
         className="container"
         validationSchema={schema}
         onSubmit={(values) => submitValues(values)}
         initialValues={{
+          note: typeof initialData?.note === "string" ? initialData.note : "",
           memberOnly: initialData?.memberOnly ?? false,
           hidden: initialData?.hidden ?? false,
           extraInputsForm: initialData?.extraInputsForm ?? [],
           subEvent: initialData?.subEvent ?? null,
-          region: initialData?.region ?? "",
+          region: canManageAllRegions ? initialData?.region ?? "" : accountRegion,
           title: initialData?.title ?? "",
           description: initialData?.description ?? "",
           date: initialData?.date ?? "",
@@ -1370,8 +1394,12 @@ const EventForm = (props) => {
           },
         }}
       >
-        {({ dirty, resetForm, values, setFieldValue }) => (
+        {(formik) => {
+          const { dirty, values, setFieldValue } = formik;
+          formikRef.current = formik;
+          return (
           <Form
+            ref={formRef}
             encType="multipart/form-data"
             id="form"
             className="event-form-workspace"
@@ -1379,7 +1407,7 @@ const EventForm = (props) => {
             <UnsavedEventGuard
               active={canSaveDraft && (dirty || extraImagesTouched)}
               defaultEmail={userClaims?.email ?? ""}
-              saving={submitting}
+              saving={isBusy}
               onEmailReminder={(eventDraftId, email) =>
                 sendRequest(
                   `future-event/draft/${eventDraftId}/reminder`,
@@ -1397,27 +1425,25 @@ const EventForm = (props) => {
                 })
               }
             />
-            <nav className="event-form-stepper" aria-label="Event creation steps">
-              {EVENT_FORM_STEPS.map((step, index) => (
-                <button
-                  key={step.title}
-                  type="button"
-                  className={`event-form-stepper__item${
-                    index === currentStep ? " is-active" : ""
-                  }${index < furthestStep ? " is-complete" : ""}`}
-                  aria-current={index === currentStep ? "step" : undefined}
-                  disabled={index > furthestStep}
-                  onClick={() => moveToStep(index, values, resetForm)}
-                >
-                  <span className="event-form-stepper__number">{index + 1}</span>
-                  <span>
-                    <strong>{step.title}</strong>
-                    <small>{step.description}</small>
-                  </span>
-                </button>
-              ))}
-            </nav>
+            <fieldset className="event-form-controls" disabled={isBusy} aria-busy={isBusy}>
+            <div className="event-form-steps">
+              <Steps
+                model={EVENT_FORM_STEPS.map((step, index) => ({
+                  ...step,
+                  disabled: index > furthestStep,
+                }))}
+                activeIndex={currentStep}
+                onSelect={({ index }) => moveToStep(index, formik)}
+                readOnly={isBusy}
+                aria-label="Event creation steps"
+              />
+              <p className="event-form-steps__note">
+                {EVENT_FORM_STEPS[currentStep]?.description}
+              </p>
+            </div>
 
+            <StepContentTransition step={currentStep} direction={transitionDirection}>
+            <div className="event-form-step-panel">
             <div className={`event-draft-status is-${draftStatus}`} role="status">
               <span className="event-draft-status__dot" aria-hidden="true" />
               {draftStatus === "saving" && "Saving draft…"}
@@ -1445,7 +1471,6 @@ const EventForm = (props) => {
             >
               <header className="event-form-step__header">
                 <div>
-                  <span className="event-form-step__eyebrow">Step 1 of 3</span>
                   <h2 id="event-step-details">Event details</h2>
                   <p>Start with the information guests need to identify the event.</p>
                 </div>
@@ -1454,7 +1479,14 @@ const EventForm = (props) => {
                 </span>
               </header>
 
-              <h3 className="label">Basic Information</h3>
+              <RegionEventDrafts
+                region={values.region}
+                scope={user.session?.sid}
+                visible={!edit && currentStep === 0}
+                currentDraftId={draftId || undefined}
+                disabled={isBusy}
+              />
+
               <div className="row">
                 <div className="col-lg-6 col-md-12 col-12">
                   <div className="rn-form-group">
@@ -1466,9 +1498,18 @@ const EventForm = (props) => {
                       Region <span style={{ color: "#dc3545" }}>*</span>
                     </label>
                     <Field
-                      disabled={props.edit && initialData?.status !== EVENT_DRAFT}
-                      as="select"
+                      disabled={!canManageAllRegions || (props.edit && initialData?.status !== EVENT_DRAFT)}
+                      as={SelectInput}
                       name="region"
+                      onChange={(event) => {
+                        const region = event.target.value;
+                        if (!edit && !draftId && !dirty && !extraImagesTouched) {
+                          // Choosing a region alone does not create unsaved event content.
+                          formik.resetForm({ values: { ...values, region } });
+                        } else {
+                          setFieldValue("region", region);
+                        }
+                      }}
                     >
                       <option value="" disabled>
                         Select Region
@@ -1510,8 +1551,9 @@ const EventForm = (props) => {
                   </div>
                 </div>
               </div>
+
               <div className="row">
-                <div className="col-lg-6 col-md-12 col-12">
+                <div className="col-lg-6 col-12">
                   <div className="rn-form-group">
                     <label
                       style={{
@@ -1532,31 +1574,7 @@ const EventForm = (props) => {
                     />
                   </div>
                 </div>
-                <div className="col-lg-6 col-md-12 col-12">
-                  <div className="rn-form-group">
-                    <label
-                      style={{
-                        marginBottom: "5px",
-                        color: "#6c757d",
-                      }}
-                    >
-                      Sub-Title
-                    </label>
-                    <Field
-                      type="text"
-                      placeholder="e.g., An unforgettable night by the sea"
-                      name="description"
-                    ></Field>
-                    <ErrorMessage
-                      className="error"
-                      name="description"
-                      component="div"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg-12 col-md-12 col-12">
+                <div className="col-lg-6 col-12">
                   <div className="rn-form-group">
                     <label
                       style={{
@@ -1621,546 +1639,14 @@ const EventForm = (props) => {
             >
               <header className="event-form-step__header">
                 <div>
-                  <span className="event-form-step__eyebrow">Step 2 of 3</span>
                   <h2 id="event-step-tickets">Tickets &amp; media</h2>
-                  <p>Set sales rules, capacity and the event artwork.</p>
                 </div>
                 <span className="event-form-required-note">
                   <strong>* Required</strong> · all other fields are optional
                 </span>
               </header>
 
-              <h3 className="mt--30 label">Price Details</h3>
-              <div className="row">
-                <div className="col-lg-4 col-12">
-                  <div className="hor_section_nospace mt--20">
-                    <Field
-                      style={{ maxWidth: "30px" }}
-                      type="checkbox"
-                      name="isFree"
-                    ></Field>
-                    <p className="information">Make event FREE for all</p>
-                  </div>
-                </div>
-                <div className="col-lg-4 col-12">
-                  <div className="hor_section_nospace mt--20 mb--20">
-                    <Field
-                      style={{ maxWidth: "30px" }}
-                      type="checkbox"
-                      name="isMemberFree"
-                    ></Field>
-                    <p className="information">
-                      Make event FREE for members only
-                    </p>
-                  </div>
-                </div>
-                <div className="col-lg-4 col-12">
-                  <div className="hor_section_nospace mt--20 mb--20">
-                    <Field
-                      style={{ maxWidth: "30px" }}
-                      type="checkbox"
-                      name="isTicketLink"
-                    ></Field>
-                    <p className="information">
-                      Buy tickets from external platform (outside the website)
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {!(values.isSaleClosed || values.isFree) &&
-                (values.isTicketLink ? (
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="rn-form-group">
-                        <label
-                          style={{
-                            marginBottom: "5px",
-                          }}
-                        >
-                          External Platform Ticket Link{" "}
-                          <span style={{ color: "#dc3545" }}>*</span>
-                        </label>
-                        <Field
-                          type="text"
-                          placeholder="e.g., https://ticketmaster.com/event/12345"
-                          name="ticketLink"
-                        />
-                        <small style={{ color: "#6c757d" }}>
-                          Link will redirect users to external ticket platform
-                        </small>
-                        <ErrorMessage
-                          className="error"
-                          name="ticketLink"
-                          component="div"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="row">
-                    <div className="col-lg-4 col-md-6 col-12">
-                      <h5 className="mt--10">Basic Price</h5>
-                      <div className="rn-form-group">
-                        <label
-                          style={{
-                            marginBottom: "5px",
-                          }}
-                        >
-                          Guest Price (€){" "}
-                          <span style={{ color: "#dc3545" }}>*</span>
-                        </label>
-                        <Field
-                          type="number"
-                          placeholder="e.g., 15.00"
-                          name="guestPrice"
-                          min={1}
-                          step="0.01"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="guestPrice"
-                          component="div"
-                        />
-                      </div>
-                      <div className="rn-form-group">
-                        <label
-                          style={{
-                            marginBottom: "5px",
-                            color: "#6c757d",
-                          }}
-                        >
-                          Including
-                        </label>
-                        <Field
-                          type="text"
-                          placeholder="e.g., 2 drinks, coat check"
-                          name="entryIncluding"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="entryIncluding"
-                          component="div"
-                        />
-                      </div>
-                    </div>
-                    {!values.isMemberFree && (
-                      <>
-                        <div className="col-lg-4 col-md-6 col-12">
-                          <h5 className="mt--10">Member Price</h5>
-                          <div className="rn-form-group">
-                            <label
-                              style={{
-                                marginBottom: "5px",
-                              }}
-                            >
-                              Member Price (€){" "}
-                              <span style={{ color: "#dc3545" }}>*</span>
-                            </label>
-                            <Field
-                              type="number"
-                              placeholder="e.g., 10.00"
-                              name="memberPrice"
-                              min={1}
-                              step="0.01"
-                            />
-                            <ErrorMessage
-                              className="error"
-                              name="memberPrice"
-                              component="div"
-                            />
-                          </div>
-                          <div className="rn-form-group">
-                            <label
-                              style={{
-                                marginBottom: "5px",
-                                color: "#6c757d",
-                              }}
-                            >
-                              Including
-                            </label>
-                            <Field
-                              type="text"
-                              placeholder="e.g., 3 drinks, coat check"
-                              name="memberIncluding"
-                            />
-                            <ErrorMessage
-                              className="error"
-                              name="memberIncluding"
-                              component="div"
-                            />
-                          </div>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-12">
-                          <h5 className="mt--10">Active Member Price</h5>
-                          <div className="rn-form-group">
-                            <label
-                              style={{
-                                marginBottom: "5px",
-                                color: "#6c757d",
-                              }}
-                            >
-                              Active Member Price (€)
-                            </label>
-                            <Field
-                              type="number"
-                              placeholder="e.g., 8.00"
-                              name="activeMemberPrice"
-                              min={1}
-                              step="0.01"
-                            />
-                            <ErrorMessage
-                              className="error"
-                              name="activeMemberPrice"
-                              component="div"
-                            />
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ))}
-              <h3 className="mt--30 label">Images</h3>
-              <div className="row">
-                <div className="col-lg-4 col-md-6 col-12 mt--20">
-                  <div
-                    style={{
-                      border: "1px solid #e9ecef",
-                      borderRadius: "12px",
-                      padding: "20px",
-                      backgroundColor: "#ffffff",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    }}
-                  >
-                    <hr />
-                    <div
-                      className="d-flex align-items-center justify-content-center"
-                      style={{ gap: "8px" }}
-                    >
-                      <h5 className="center_text" style={{ margin: 0 }}>
-                        Poster Image <span style={{ color: "#dc3545" }}>*</span>
-                      </h5>
-                      <Tooltip target=".poster-tooltip" />
-                      <FiInfo
-                        className="poster-tooltip"
-                        style={{ cursor: "help", color: "#6c757d" }}
-                        data-pr-tooltip="Main promotional image for your event (displayed on event page)"
-                        data-pr-position="right"
-                      />
-                    </div>
-                    <div data-field-name="poster">
-                      <ImageInput
-                        name="poster"
-                        initialImage={values.poster}
-                        onChange={(event) => {
-                          setFieldValue("poster", event.target.files[0]);
-                        }}
-                      />
-                    </div>
-                    <ErrorMessage
-                      className="error center_div"
-                      name="poster"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-4 col-md-6 col-12 mt--20">
-                  <div
-                    style={{
-                      border: "1px solid #e9ecef",
-                      borderRadius: "12px",
-                      padding: "20px",
-                      backgroundColor: "#ffffff",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    }}
-                  >
-                    <hr />
-                    <div
-                      className="d-flex align-items-center justify-content-center"
-                      style={{ gap: "8px" }}
-                    >
-                      <h5 className="center_text" style={{ margin: 0 }}>
-                        Ticket Image <span style={{ color: "#dc3545" }}>*</span>
-                      </h5>
-                      <Tooltip target=".ticket-img-tooltip" />
-                      <FiInfo
-                        className="ticket-img-tooltip"
-                        style={{ cursor: "help", color: "#6c757d" }}
-                        data-pr-tooltip="Background image for digital tickets (must be 300:97 ratio, e.g., 1500x485px)"
-                        data-pr-position="right"
-                      />
-                    </div>
-                    <div data-field-name="ticketImg">
-                      <ImageInput
-                        name="ticketImg"
-                        initialImage={values.ticketImg}
-                        onChange={(event) => {
-                          setFieldValue("ticketImg", event.target.files[0]);
-                        }}
-                      />
-                    </div>
-                    <p className="mt--10 information center_text">
-                      *ticket must be jpg or png in resolution 300:97 (like 1500
-                      x 485)
-                    </p>
-                    <ErrorMessage
-                      className="error center_div"
-                      name="ticketImg"
-                      component="div"
-                    />
-                    <div className="row" style={{justifyContent: "start", alignItems: "start"}}>
-                      <div
-                        className="col-lg-4 col-md-6 col-6"
-                        style={{ margin: "auto" }}
-                      >
-                        <h5 className="center_text">Name on ticket color</h5>
-                        <div className="center_div_col">
-                          <p className="center_div">
-                            <Field
-                              type="radio"
-                              name="ticketColor"
-                              value="#faf9f6"
-                            />
-                            Light
-                          </p>
-                          <p className="center_div">
-                            <Field
-                              type="radio"
-                              name="ticketColor"
-                              value="#272528"
-                            />
-                            Dark
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        className="col-lg-4 col-md-6 col-6"
-                        style={{ margin: "auto" }}
-                      >
-                        <h5 className="center_text">With Guest Name</h5>
-                        <div className="center_div_col">
-                          <p className="center_div">
-                            <Field
-                              type="radio"
-                              name="ticketName"
-                              value={"true"}
-                            />
-                            Yes
-                          </p>
-                          <p className="center_div">
-                            <Field
-                              type="radio"
-                              name="ticketName"
-                              value={"false"}
-                            />
-                            No
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        className="col-lg-4 col-md-6 col-6"
-                        style={{ margin: "auto" }}
-                      >
-                        <h5 className="center_text">With QR</h5>
-                        <div className="center_div_col">
-                          <p className="center_div">
-                            <Field
-                              type="radio"
-                              name="ticketQR"
-                              value={"true"}
-                            />
-                            Yes
-                          </p>
-                          <p className="center_div">
-                            <Field
-                              type="radio"
-                              name="ticketQR"
-                              value={"false"}
-                            />
-                            No
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-4 col-md-6 col-12 mt--20">
-                  <div
-                    style={{
-                      border: "1px solid #e9ecef",
-                      borderRadius: "12px",
-                      padding: "20px",
-                      backgroundColor: "#ffffff",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    }}
-                  >
-                    <hr />
-                    <div
-                      className="d-flex align-items-center justify-content-center"
-                      style={{ gap: "8px" }}
-                    >
-                      <h5 className="center_text" style={{ margin: 0 }}>
-                        Background Image{" "}
-                        <span style={{ color: "#dc3545" }}>*</span>
-                      </h5>
-                      <Tooltip target=".bg-image-tooltip" />
-                      <FiInfo
-                        className="bg-image-tooltip"
-                        style={{ cursor: "help", color: "#6c757d" }}
-                        data-pr-tooltip="Choose a background image for the event page (default or custom)"
-                        data-pr-position="right"
-                      />
-                    </div>
-                    <div
-                      className="rn-form-group"
-                      style={{ margin: "auto", width: "250px" }}
-                    >
-                      <ImageSelection
-                        name="bgImage"
-                        placeholder="Choose default background"
-                        initialValue={values.bgImage}
-                        onSelect={(option) => setFieldValue("bgImage", option)}
-                        options={bgs}
-                      />
-                      <ErrorMessage
-                        className="error center_text"
-                        name="bgImage"
-                        component="div"
-                        data-validation-message-for="bgImage"
-                      />
-                      <h5>or choose your own</h5>
-                      <div data-field-name="bgImageExtra">
-                        <ImageInput
-                          name="bgImageExtra"
-                          initialImage={values.bgImageExtra}
-                          style={{ height: "150px" }}
-                          onChange={(event) => {
-                            setFieldValue("bgImageExtra", event.target.files[0]);
-                            setFieldValue("bgImageSelection", 2);
-                          }}
-                        />
-                        <ErrorMessage
-                          className="error center_text"
-                          name="bgImageExtra"
-                          component="div"
-                        />
-                      </div>
-                      <p className="mt--10 information center_text">
-                        *choose a wide one
-                      </p>
-                      {values.bgImage && values.bgImageExtra && (
-                        <div className="col-12" style={{ margin: "auto" }}>
-                          <h5 className="center_text">
-                            Select which one to display
-                          </h5>
-                          <div className="center_div" style={{ gap: "50px" }}>
-                            <p className="center_div">
-                              <Field
-                                type="radio"
-                                name="bgImageSelection"
-                                value={1}
-                              />
-                              Default Backgrounds
-                            </p>
-                            <p className="center_div">
-                              <Field
-                                type="radio"
-                                name="bgImageSelection"
-                                value={2}
-                              />
-                              Extra Background
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <h3 className="label mt--20">Ticket Settings</h3>
-              <div className="row">
-                <div className="col-lg-6 col-12">
-                  <div className="rn-form-group">
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ gap: "8px", marginBottom: "5px" }}
-                    >
-                      <label
-                        style={{
-                          margin: 0,
-                        }}
-                      >
-                        Ticket Limit <span style={{ color: "#dc3545" }}>*</span>
-                      </label>
-                      <Tooltip target=".ticket-limit-tooltip" />
-                      <FiInfo
-                        className="ticket-limit-tooltip"
-                        style={{ cursor: "help", color: "#6c757d" }}
-                        data-pr-tooltip="Maximum number of tickets available for sale"
-                        data-pr-position="right"
-                      />
-                    </div>
-                    <Field
-                      type="number"
-                      placeholder="e.g., 100"
-                      name="ticketLimit"
-                      min={1}
-                      step={1}
-                    />
-                    <ErrorMessage
-                      className="error"
-                      name="ticketLimit"
-                      component="div"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6 col-12">
-                  <div className="rn-form-group">
-                    <div
-                      className="d-flex align-items-center"
-                      style={{ gap: "8px", marginBottom: "5px" }}
-                    >
-                      <label
-                        style={{
-                          margin: 0,
-                        }}
-                      >
-                        Ticket Timer <span style={{ color: "#dc3545" }}>*</span>
-                      </label>
-                      <Tooltip target=".ticket-timer-tooltip" />
-                      <FiInfo
-                        className="ticket-timer-tooltip"
-                        style={{ cursor: "help", color: "#6c757d" }}
-                        data-pr-tooltip="Deadline for ticket sales (sales stop at this date/time)"
-                        data-pr-position="right"
-                      />
-                    </div>
-                    <div className="d-flex align-items-center gap-3">
-                      <div className="flex-grow-1">
-                        <div data-field-name="ticketTimer">
-                          <CalendarWithClock
-                            name="ticketTimer"
-                            mode="single"
-                            locale="en-nl"
-                            placeholder="Select ticket sales deadline"
-                            captionLayout="dropdown"
-                            min={values.date ? new Date(values.date) : new Date()}
-                            initialValue={values.ticketTimer}
-                            onSelect={(value) => {
-                              setFieldValue("ticketTimer", value);
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <ErrorMessage
-                    className="error"
-                    name="ticketTimer"
-                    component="div"
-                  />
-                </div>
-              </div>
+              <EventTicketsMedia />
             </section>
 
             <section
@@ -2170,7 +1656,6 @@ const EventForm = (props) => {
             >
               <header className="event-form-step__header">
                 <div>
-                  <span className="event-form-step__eyebrow">Step 3 of 3</span>
                   <h2 id="event-step-extras">Extras &amp; publish</h2>
                   <p>Add optional sales tools, custom questions and related content.</p>
                 </div>
@@ -2494,46 +1979,68 @@ const EventForm = (props) => {
               />
             </section>
 
-            <ConfirmDialog />
             <footer className="event-form-actions">
               <Link
                 to="/user/dashboard/events"
+                aria-disabled={isBusy}
+                tabIndex={isBusy ? -1 : undefined}
+                onClick={(event) => { if (isBusy) event.preventDefault(); }}
                 className="event-form-button event-form-button--ghost"
               >
                 Dashboard
               </Link>
               {(!props.edit || initialData?.status === EVENT_DRAFT) && (
-                <button
-                  disabled={loading || submitting}
-                  type="button"
-                  onClick={() => submitValues(values, true)}
-                  className="event-form-button event-form-button--draft"
-                >
-                  <span>Save as draft</span>
-                </button>
+                <DraftSaveButton
+                  note={values.note}
+                  onBeforeOpen={() => requireDraftRegion(values)}
+                  defaultEmail={userClaims?.email ?? ""}
+                  disabled={loading || isBusy}
+                  onSave={async (note) => {
+                    const savedDraft = await submitValues({ ...values, note }, true, { quiet: true, stayOnPage: true });
+                    if (savedDraft) {
+                      const syncedValues = { ...values, note };
+                      ["poster", "ticketImg", "bgImageExtra", "images"].forEach((field) => {
+                        if (savedDraft[field]) syncedValues[field] = savedDraft[field];
+                      });
+                      setExtraImagesTouched(false);
+                      formik.resetForm({ values: syncedValues });
+                    }
+                    return savedDraft;
+                  }}
+                  onEmailReminder={(eventDraftId, email) => sendRequest(
+                    `future-event/draft/${eventDraftId}/reminder`, "POST", { email }, {}, false, false
+                  )}
+                  onComplete={(email) => {
+                    navigate("/user/dashboard/events");
+                    dispatch(showNotification(email ? {
+                      severity: "success", summary: "Draft saved", detail: `A continue link has been queued for ${email}.`,
+                    } : EVENT_DRAFT_SAVED));
+                  }}
+                />
               )}
               <div className="event-form-actions__primary">
                 {currentStep > 0 && (
                   <button
                     type="button"
                     className="event-form-button event-form-button--ghost"
-                    onClick={() => moveToPreviousStep(values, resetForm)}
+                    disabled={isBusy}
+                    onClick={() => moveToStep(currentStep - 1, formik)}
                   >
                     Back
                   </button>
                 )}
                 {currentStep < EVENT_FORM_STEPS.length - 1 ? (
                   <button
-                    disabled={submitting}
+                    disabled={isBusy}
                     type="button"
                     className="event-form-button event-form-button--primary"
-                    onClick={() => moveToNextStep(values, resetForm)}
+                    onClick={() => moveToStep(currentStep + 1, formik)}
                   >
-                    {draftStatus === "saving" ? "Saving…" : "Save & continue"}
+                    {movingStep ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{draftStatus === "saving" ? "Saving…" : "Checking…"}</span></> : "Save & continue"}
                   </button>
                 ) : (
                   <button
-                    disabled={loading || submitting}
+                    disabled={loading || isBusy}
                     type="submit"
                     className="event-form-button event-form-button--primary"
                   >
@@ -2550,8 +2057,13 @@ const EventForm = (props) => {
                 )}
               </div>
             </footer>
+            </div>
+            </StepContentTransition>
+            <ConfirmDialog />
+            </fieldset>
           </Form>
-        )}
+          );
+        }}
       </ValidatedFormik>
     </>
   );

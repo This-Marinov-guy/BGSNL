@@ -124,6 +124,13 @@ const clearFormValidation = (form) => {
 };
 
 const renderFieldValidation = (field) => {
+  const visibleControl = field.matches("[data-native-select]")
+    ? field.closest(".bgsnl-select-input")?.querySelector("button[role='combobox']")
+    : null;
+  if (visibleControl) {
+    visibleControl.setAttribute("aria-invalid", "true");
+    visibleControl.dataset.formValidationInvalid = "true";
+  }
   field.setAttribute("aria-invalid", "true");
   field.dataset.formValidationInvalid = "true";
   const container = fieldContainer(field);
@@ -155,6 +162,10 @@ const renderFieldValidation = (field) => {
     }
   }
   messageElement.textContent = message;
+  if (visibleControl) {
+    visibleControl.setAttribute("aria-errormessage", messageElement.id);
+    visibleControl.dataset.formValidationErrorMessage = "true";
+  }
   if (!field.hasAttribute("aria-errormessage")) {
     field.setAttribute("aria-errormessage", messageElement.id);
     field.dataset.formValidationErrorMessage = "true";

@@ -20,7 +20,6 @@ const AddEvent = () => {
             <span className="event-workspace-heading__eyebrow">Events</span>
             <h1>Create an event</h1>
           </div>
-          <p>Build the event in three focused steps. Progress is saved as a draft as you continue.</p>
         </header>
         <EventForm />
       </main>

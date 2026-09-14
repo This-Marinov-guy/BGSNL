@@ -280,7 +280,7 @@ const EventDetails = ({ initialEvent = null }) => {
           >
             <section className="event-details-media" aria-label="Event images">
               {eventImages.length > 1 ? (
-                <EventImageCarousel images={eventImages} />
+                <EventImageCarousel key={JSON.stringify(eventImages)} images={eventImages} title={eventTitle} />
               ) : (
                 <div className="event-poster-wrapper">
                   <ImageFb

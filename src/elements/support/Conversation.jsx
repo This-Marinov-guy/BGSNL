@@ -1,4 +1,7 @@
 "use client";
+
+import { SelectInput } from "@/compat/primereact";
+
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { IconlyArrowLeft, IconlyClose, IconlyImage, IconlyScreenshot, IconlySend } from "@/elements/ui/icons/IconlyIcons";
@@ -179,7 +182,7 @@ export default function Conversation({ id, session, secret, staff, active, onBac
         {staff && <div className={styles.contact}><strong>{record.contact.name}</strong><span>{record.contact.email || record.contact.phone}</span>{record.contact.email && record.contact.phone && <span>{record.contact.phone}</span>}<small>{record.contact.source === "guest" ? "Guest · contact details not verified" : "Signed-in account"}</small><small>Reported page: {record.pagePath}</small>
           {record.environment && <details className={styles.diagnostics}><summary>Device details</summary><span>{[record.environment.deviceType, record.environment.browser, record.environment.platform].filter(Boolean).join(" · ")}</span>{record.environment.viewport?.width && <span>Viewport: {record.environment.viewport.width} × {record.environment.viewport.height}{record.environment.devicePixelRatio ? ` at ${record.environment.devicePixelRatio}×` : ""}</span>}{record.environment.screen?.width && <span>Screen: {record.environment.screen.width} × {record.environment.screen.height}</span>}{record.environment.timezone && <span>{record.environment.timezone}{record.environment.language ? ` · ${record.environment.language}` : ""}</span>}{record.environment.userAgent && <span className={styles.userAgent}>{record.environment.userAgent}</span>}</details>}
         </div>}
-        <div className={styles.row}>{staff ? <div className={`${styles.statusControl} rn-form-group`}><label htmlFor={statusInputId}>Status</label><select id={statusInputId} className="bgsnl-form-control" value={record.status} disabled={busy} onChange={(event) => changeStatus(event.target.value)}>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></div> : record.status !== "closed" && <button className={styles.textButton} type="button" disabled={busy} onClick={() => changeStatus(record.status === "resolved" ? "open" : "resolved")}>{record.status === "resolved" ? "Reopen report" : "Mark as resolved"}</button>}</div>
+        <div className={styles.row}>{staff ? <div className={`${styles.statusControl} rn-form-group`}><label htmlFor={statusInputId}>Status</label><SelectInput id={statusInputId} className="bgsnl-form-control" value={record.status} disabled={busy} onChange={(event) => changeStatus(event.target.value)}>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</SelectInput></div> : record.status !== "closed" && <button className={styles.textButton} type="button" disabled={busy} onClick={() => changeStatus(record.status === "resolved" ? "open" : "resolved")}>{record.status === "resolved" ? "Reopen report" : "Mark as resolved"}</button>}</div>
       </>}
     </div>
     {!record && !error && <p role="status" className={styles.loading}>Loading conversation…</p>}

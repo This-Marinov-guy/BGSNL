@@ -2,6 +2,7 @@
 
 import React, {
   useEffect,
+  useRef,
   useState,
 } from "react";
 import {
@@ -16,6 +17,7 @@ import {
 } from "@/util/navigation";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import EventForm from "../../elements/actions/form/EventForm";
+import EventEditSummary from "../../elements/actions/form/EventEditSummary";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import {
@@ -23,10 +25,12 @@ import {
   selectSingleEventDashboard,
 } from "../../redux/events";
 
-const EditEvent = (props) => {
-  const [pageLoading, setPageLoading] = useState(false);
+const EditEvent = () => {
+  const [pageLoading, setPageLoading] = useState(true);
 
-  const { loading, sendRequest } = useHttpClient();
+  const { sendRequest } = useHttpClient();
+  const requestRef = useRef(sendRequest);
+  requestRef.current = sendRequest;
 
   const navigate = useNavigate();
 
@@ -37,31 +41,25 @@ const EditEvent = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let active = true;
+    setPageLoading(true);
     const reloadEvent = async () => {
-      if (event && event.id === eventId ) {
-        return setPageLoading(false);
+      const response = await requestRef.current(`future-event/full-event-details/${eventId}`);
+      if (!active) return;
+      if (!response?.event) {
+        navigate("/user/dashboard/events", { replace: true });
+        return;
       }
-      
-      try {
-        setPageLoading(true);
-        const responseData = await sendRequest(`future-event/full-event-details/${eventId}`);
-        dispatch(loadSingleEventDashboard(responseData.event));
-
-        if (!event) {
-          navigate('/user/dashboard/events');
-        }
-      } catch (err) {
-      } finally {
-        setPageLoading(false);
-      }
+      dispatch(loadSingleEventDashboard(response.event));
+      setPageLoading(false);
     };
-
     reloadEvent();
-  }, [])
+    return () => { active = false; };
+  }, [dispatch, eventId, navigate]);
 
-  if (pageLoading) {
-    return <HeaderLoadingError />
-  } 
+  if (pageLoading || !event || event.id !== eventId) {
+    return <HeaderLoadingError />;
+  }
 
   return (
     <React.Fragment>
@@ -72,8 +70,9 @@ const EditEvent = (props) => {
       />
       <div className="container mt--200">
         <h3 className="center_text">Edit Event</h3>
+        <EventEditSummary key={event.id} event={event} />
       </div>
-      <EventForm edit initialData={event} />
+      <EventForm key={event.id} edit initialData={event} />
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}

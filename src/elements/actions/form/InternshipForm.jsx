@@ -1,3 +1,4 @@
+import { SelectInput } from "@/compat/primereact";
 import {
   useEffect,
   useRef,
@@ -184,9 +185,9 @@ const InternshipForm = ({ internship }) => {
 
           <div>
             <label style={labelStyle}>Label *</label>
-            <select name="label" value={form.label} onChange={handleChange} style={inputStyle} required>
+            <SelectInput name="label" value={form.label} onChange={handleChange} style={inputStyle} required>
               {LABELS.map((l) => <option key={l} value={l}>{l}</option>)}
-            </select>
+            </SelectInput>
           </div>
 
           <div>

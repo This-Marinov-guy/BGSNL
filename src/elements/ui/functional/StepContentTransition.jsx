@@ -61,6 +61,7 @@ const StepContentTransition = ({ children, direction, step }) => {
         <div
           className={`signup-step-transition__leaving is-${animationState}`}
           aria-hidden="true"
+          inert
         >
           {leavingContent}
         </div>

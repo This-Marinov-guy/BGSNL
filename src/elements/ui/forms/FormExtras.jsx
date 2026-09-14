@@ -1,3 +1,4 @@
+import { SelectInput } from "@/compat/primereact";
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
@@ -44,7 +45,7 @@ const FormExtras = ({ inputs }) => {
                                 data-field-name={name}
                             >
                                 <h4>{input.placeholder}</h4>
-                                <Field as='select' name={name} className="col-12 mt--10">
+                                <Field as={SelectInput} name={name} className="col-12 mt--10">
                                     <option value="">Select an option</option>
                                     {input.options && input.options.map((val, i) => (
                                         <option key={i} value={val}>{val}</option>

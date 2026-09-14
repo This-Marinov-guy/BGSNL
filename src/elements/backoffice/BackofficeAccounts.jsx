@@ -1,8 +1,12 @@
 "use client";
 
+import { SelectInput, Calendar } from "@/compat/primereact";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import dynamic from "next/dynamic";
+import { useSearchParams } from "@/util/navigation";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import { FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
@@ -13,6 +17,10 @@ import { sessionClaims } from "@/util/functions/authorization";
 import { capitalizeFirstLetter } from "@/util/functions/capitalize";
 import styles from "./backoffice.module.scss";
 import { isEditableAccountRole, protectedAccountRoles } from "./role-policy.mjs";
+
+const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
+  loading: () => <p role="status">Loading member statistics…</p>,
+});
 
 const EMPTY_OPTIONS = { cities: [], roles: [], statuses: [] };
 const ROLE_LABELS = {
@@ -168,8 +176,8 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
               <EditorField id="account-editor-surname" label="Last name"><input id="account-editor-surname" className="bgsnl-form-control" name="surname" value={form.surname} onChange={change} required /></EditorField>
               <EditorField className={styles.fullField} id="account-editor-email" label="Email"><input id="account-editor-email" className="bgsnl-form-control" name="email" type="email" value={form.email} onChange={change} required /></EditorField>
               <EditorField id="account-editor-phone" label="Mobile number"><input id="account-editor-phone" className="bgsnl-form-control" name="phone" type="tel" value={form.phone} onChange={change} required={account.type === "member"} /></EditorField>
-              <EditorField id="account-editor-birth" label="Date of birth"><input id="account-editor-birth" className="bgsnl-form-control" name="birth" type="date" value={form.birth} onChange={change} required={account.type === "member"} /></EditorField>
-              <EditorField className={styles.fullField} id="account-editor-region" label="City"><select id="account-editor-region" className="bgsnl-form-control" name="region" value={form.region} onChange={change}><option value="">Not assigned</option>{options.cities.map((city) => <option value={city} key={city}>{formatCity(city)}</option>)}</select></EditorField>
+              <EditorField id="account-editor-birth" label="Date of birth"><Calendar inputId="account-editor-birth" name="birth" dateFormat="dd/mm/yy" value={form.birth ? new Date(`${form.birth}T00:00:00`) : null} onChange={({ value }) => setForm(current => ({ ...current, birth: value ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}` : "" }))} required={account.type === "member"} /></EditorField>
+              <EditorField className={styles.fullField} id="account-editor-region" label="City"><SelectInput id="account-editor-region" className="bgsnl-form-control" name="region" value={form.region} onChange={change}><option value="">Not assigned</option>{options.cities.map((city) => <option value={city} key={city}>{formatCity(city)}</option>)}</SelectInput></EditorField>
             </div>
           </fieldset>
 
@@ -188,7 +196,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
           <fieldset>
             <legend>Access and status</legend>
             {isSelf && <p className={styles.selfNotice}>Your own roles and status are protected to prevent accidental loss of access.</p>}
-            <EditorField className={styles.statusField} id="account-editor-status" label="Account status"><select id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</select></EditorField>
+            <EditorField className={styles.statusField} id="account-editor-status" label="Account status"><SelectInput id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</SelectInput></EditorField>
             {protectedAccountRoles(account.roles).length > 0 && (
               <p className={styles.selfNotice}>
                 Read-only roles: {protectedAccountRoles(account.roles).map((role) => ROLE_LABELS[role]).join(", ")}.
@@ -224,6 +232,8 @@ AccountEditor.propTypes = {
 };
 
 export default function BackofficeAccounts() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const statistics = searchParams.get("view") === "statistics";
   const [type, setType] = useState("member");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -252,6 +262,7 @@ export default function BackofficeAccounts() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (statistics) return undefined;
     let active = true;
     const sequence = ++requestSequence.current;
     const params = new URLSearchParams({ type, page: String(page), pageSize: "25" });
@@ -267,9 +278,10 @@ export default function BackofficeAccounts() {
       })
       .finally(() => active && sequence === requestSequence.current && setLoadingList(false));
     return () => { active = false; };
-  }, [type, page, search, city]);
+  }, [type, page, search, city, statistics]);
 
   const chooseType = (nextType) => {
+    if (statistics) setSearchParams((current) => { current.delete("view"); return current; });
     setType(nextType);
     setPage(1);
     setSelected(null);
@@ -289,12 +301,16 @@ export default function BackofficeAccounts() {
           <div><h1>Accounts back office</h1><p>Find and manage member and alumni profiles, account status and administrative roles.</p></div>
         </header>
 
-        <div className={styles.tabs} role="tablist" aria-label="Account type">
-          <button type="button" role="tab" aria-selected={type === "member"} onClick={() => chooseType("member")}>Members</button>
-          <button type="button" role="tab" aria-selected={type === "alumni"} onClick={() => chooseType("alumni")}>Alumni</button>
+        <div className={styles.tabs} role="tablist" aria-label="Member administration">
+          <button type="button" role="tab" aria-selected={!statistics && type === "member"} onClick={() => chooseType("member")}>Members</button>
+          <button type="button" role="tab" aria-selected={!statistics && type === "alumni"} onClick={() => chooseType("alumni")}>Alumni</button>
+          <button type="button" role="tab" aria-selected={statistics} onClick={() => {
+            setSelected(null);
+            setSearchParams((current) => { current.set("view", "statistics"); return current; });
+          }}>Member statistics</button>
         </div>
 
-        <section className={styles.directory} aria-label={`${type} directory`}>
+        {statistics ? <section className={styles.directory} aria-label="Member statistics"><MembersList /></section> : <section className={styles.directory} aria-label={`${type} directory`}>
           <FilterPanel
             controlsClassName={styles.filters}
             summary={(
@@ -305,7 +321,7 @@ export default function BackofficeAccounts() {
             title="Filter accounts"
           >
             <label className={styles.searchField}><span>Search name, email or number</span><div><FiSearch aria-hidden /><input className="bgsnl-form-control" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div></label>
-            <label><span>City</span><select className="bgsnl-form-control" value={city} onChange={(event) => { setCity(event.target.value); setPage(1); }}><option value="">All cities</option>{options.cities.map((item) => <option key={item} value={item}>{formatCity(item)}</option>)}<option value="unassigned">Not assigned</option></select></label>
+            <label><span>City</span><SelectInput className="bgsnl-form-control" value={city} onChange={(event) => { setCity(event.target.value); setPage(1); }}><option value="">All cities</option>{options.cities.map((item) => <option key={item} value={item}>{formatCity(item)}</option>)}<option value="unassigned">Not assigned</option></SelectInput></label>
           </FilterPanel>
 
           {!loadingList && accounts.length === 0 ? (
@@ -332,7 +348,7 @@ export default function BackofficeAccounts() {
             <span>Page {page} of {pagination.totalPages}</span>
             <button type="button" disabled={page >= pagination.totalPages || loadingList} onClick={() => setPage((current) => current + 1)}>Next</button>
           </nav>
-        </section>
+        </section>}
       </main>
       {selected && <AccountEditor account={selected} currentAccountId={currentAccountId} options={options} onClose={() => setSelected(null)} onSaved={saved} />}
     </>

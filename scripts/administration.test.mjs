@@ -12,8 +12,8 @@ test('administration overview follows the existing role scopes', () => {
   assert.deepEqual(available(['support']), ['support']);
   assert.deepEqual(available(['committee_member']), ['events']);
   assert.deepEqual(available(['active_member']), ['events']);
-  assert.deepEqual(available(['board_member']), ['events', 'members', 'event-analytics', 'member-statistics']);
-  assert.deepEqual(available(['society_board_member']), ['events', 'internships', 'members', 'event-analytics', 'member-statistics']);
+  assert.deepEqual(available(['board_member']), ['events', 'members']);
+  assert.deepEqual(available(['society_board_member']), ['events', 'internships', 'members']);
 });
 test('ordinary members reach access requests but cannot open admin panels', () => {
   const user = { authInitialized: true, session: 'test', status: 'active', roles: ['member'] };

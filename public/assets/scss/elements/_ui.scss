@@ -763,6 +763,10 @@ div[data-pc-name="password"] {
   cursor: pointer;
 }
 
+:root {
+  --form-label-background: #{$label-color};
+}
+
 label {
   background-color: $label-color;
   width: auto;

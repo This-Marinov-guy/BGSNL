@@ -1,20 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import PropTypes from "prop-types";
 import {
   FiEye,
 } from "@/elements/ui/icons/IconlyIcons";
-import MediaPreview from "@/elements/ui/media/MediaPreview";
+
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import UserTabHeader from "./UserTabHeader";
+
+const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
+const EMPTY_TICKETS = [];
 
 const TicketsTab = ({ currentUser }) => {
   // Check if user is tier 0 alumni
   const isTier0Alumni = currentUser?.tier === 0;
   // Index of the ticket being previewed; null when the viewer is closed.
   const [previewIndex, setPreviewIndex] = useState(null);
-  const tickets = currentUser?.tickets ?? [];
+  const tickets = currentUser?.tickets ?? EMPTY_TICKETS;
+  const galleryImages = useMemo(() => tickets.map((ticket, index) => ({
+    src: ticket.image,
+    alt: `Ticket ${index + 1}`,
+    download: { url: ticket.image, filename: `ticket-${index + 1}.png` },
+  })), [tickets]);
   const previewTicket = previewIndex === null ? null : tickets[previewIndex];
 
   return (
@@ -79,8 +88,9 @@ const TicketsTab = ({ currentUser }) => {
         )}
       </div>
 
-      {previewTicket ? (
-        <MediaPreview
+      {!isTier0Alumni && previewTicket?.image ? (
+        <ImageGallery
+          images={galleryImages}
           alt={`Ticket ${previewIndex + 1}`}
           fileName={`ticket-${previewIndex + 1}.png`}
           onClose={() => setPreviewIndex(null)}

@@ -81,7 +81,7 @@ export default async function sitemap() {
 
   for (const event of events) {
     if (!event?.id || !event?.region) continue;
-    const lastModified = toDate(event.lastUpdate?.timestamp || event.updated_at || event.createdAt || event.created_at);
+    const lastModified = toDate(event.metadata?.updatedAt || event.updated_at || event.createdAt || event.created_at);
     entries.push({
       url: `${BASE_URL}/${event.region}/event-details/${event.slug || event.id}`,
       ...(lastModified ? { lastModified } : {}),

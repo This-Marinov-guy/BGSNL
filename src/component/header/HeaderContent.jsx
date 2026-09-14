@@ -311,7 +311,7 @@ const HeaderContent = (props) => {
                       )}
                       {checkAuthorization(user.session, ACCESS_4) && <>
                         <li><Link to="/user/dashboard/events">Events</Link></li>
-                        <li><Link to="/user/dashboard/events/new">Add Event</Link></li>
+                        <li><Link to="/user/dashboard/events/create">Add Event</Link></li>
                       </>}
                       {checkAuthorization(user.session, ACCESS_2) && (
                         <li>

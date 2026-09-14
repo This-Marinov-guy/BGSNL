@@ -198,22 +198,22 @@
 }
 
 .signup-step-transition[data-direction="forward"]
-  .signup-step-transition__current.is-staged {
+  > .signup-step-transition__current.is-staged {
   transform: translateX(100%);
 }
 
 .signup-step-transition[data-direction="backward"]
-  .signup-step-transition__current.is-staged {
+  > .signup-step-transition__current.is-staged {
   transform: translateX(-100%);
 }
 
 .signup-step-transition[data-direction="forward"]
-  .signup-step-transition__current.is-running {
+  > .signup-step-transition__current.is-running {
   animation: signup-step-enter-right 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .signup-step-transition[data-direction="backward"]
-  .signup-step-transition__current.is-running {
+  > .signup-step-transition__current.is-running {
   animation: signup-step-enter-left 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
@@ -226,12 +226,12 @@
 }
 
 .signup-step-transition[data-direction="forward"]
-  .signup-step-transition__leaving.is-running {
+  > .signup-step-transition__leaving.is-running {
   animation: signup-step-exit-left 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 .signup-step-transition[data-direction="backward"]
-  .signup-step-transition__leaving.is-running {
+  > .signup-step-transition__leaving.is-running {
   animation: signup-step-exit-right 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
@@ -989,7 +989,7 @@
   height: 64px;
   flex: 0 0 64px;
   border-radius: 10px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 @media only screen and (max-width: 767px) {

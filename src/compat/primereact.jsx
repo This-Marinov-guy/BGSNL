@@ -8,6 +8,8 @@ import {
   isValidElement,
   useEffect,
   useMemo,
+  useId,
+  useRef,
   useState,
 } from "react";
 import { Badge as PrimeBadge } from "@primereact/ui/badge";
@@ -306,7 +308,7 @@ export function Paginator({
           <PrimePaginator.Next />
           <PrimePaginator.Last />
           {rowsPerPageOptions?.length > 0 && (
-            <select
+            <SelectInput
               aria-label="Items per page"
               className="p-paginator-rpp-options"
               value={rows}
@@ -317,7 +319,7 @@ export function Paginator({
                   {option}
                 </option>
               ))}
-            </select>
+            </SelectInput>
           )}
         </PrimePaginator.Content>
       </PrimePaginator.Root>
@@ -409,6 +411,80 @@ export function Dialog({
     </AppModal>
   );
 }
+
+
+// Preserve native select values, form submission, and validity while using the
+// same portalled menu and keyboard interaction as every other input dropdown.
+export const SelectInput = forwardRef(function SelectInput({
+  children, value, defaultValue, onChange, onBlur, onFocus, onInvalid,
+  className, style, id, name, disabled, required, autoFocus, ...props
+}, forwardedRef) {
+  const generatedId = useId();
+  const inputId = id || generatedId;
+  const nativeRef = useRef(null);
+  const triggerRef = useRef(null);
+  const [localValue, setLocalValue] = useState(defaultValue);
+  const textContent = node => Children.toArray(node).map(child => isValidElement(child) ? textContent(child.props.children) : String(child)).join("");
+  const options = Children.toArray(children).filter(isValidElement).map(child => ({
+    label: textContent(child.props.children),
+    value: String(child.props.value ?? textContent(child.props.children)),
+    disabled: Boolean(child.props.disabled),
+  }));
+  const selected = String(value ?? localValue ?? options.find(option => !option.disabled)?.value ?? "");
+  const selectedOption = options.find(option => option.value === selected);
+  const emit = (handler, originalEvent) => handler?.({
+    originalEvent, target: nativeRef.current, currentTarget: nativeRef.current,
+    type: originalEvent?.type, persist() {},
+    preventDefault: () => originalEvent?.preventDefault?.(),
+    stopPropagation: () => originalEvent?.stopPropagation?.(),
+  });
+
+  return <PrimeSelect.Root
+    value={selected} options={options} optionLabel="label" optionValue="value" optionDisabled="disabled"
+    disabled={disabled} invalid={props["aria-invalid"] === true}
+    className={joinClasses("bgsnl-select-input", className)} style={style}
+    data-custom-validation-field data-field-name={name}
+    closeOnEscape
+    onValueChange={event => {
+      const nextValue = String(event.value ?? "");
+      nativeRef.current.value = nextValue;
+      nativeRef.current.dispatchEvent(new globalThis.Event("change", { bubbles: true }));
+    }}
+  >
+    <select {...props} ref={node => {
+      nativeRef.current = node;
+      if (typeof forwardedRef === "function") forwardedRef(node);
+      else if (forwardedRef) forwardedRef.current = node;
+    }} data-native-select name={name} value={selected} disabled={disabled} required={required}
+      tabIndex={-1} aria-hidden="true"
+      onChange={event => { setLocalValue(event.target.value); onChange?.(event); }}
+      onFocus={() => triggerRef.current?.focus()}
+      onInvalid={event => {
+        event.preventDefault();
+        triggerRef.current?.focus();
+        onInvalid?.(event);
+      }}
+    >{children}</select>
+    <PrimeSelect.Trigger ref={triggerRef} id={inputId} type="button" disabled={disabled} autoFocus={autoFocus}
+      name={name} aria-label={props["aria-label"] || (!id ? name || selectedOption?.label : undefined)}
+      aria-labelledby={props["aria-labelledby"]} aria-describedby={props["aria-describedby"]}
+      aria-invalid={props["aria-invalid"] || undefined} aria-required={required}
+      onBlur={event => emit(onBlur, event)} onFocus={event => emit(onFocus, event)}
+    >
+      <PrimeSelect.Value>{() => selectedOption?.label || "Select an option"}</PrimeSelect.Value>
+      <PrimeSelect.Indicator><FiChevronDown aria-hidden /></PrimeSelect.Indicator>
+    </PrimeSelect.Trigger>
+    <PrimeSelect.Portal>
+      <PrimeSelect.Positioner>
+        <PrimeSelect.Popup className="bgsnl-select-input-panel" motionProps={{ name: "bgsnl-input-overlay" }}>
+          <PrimeSelect.List>{instance => instance.options?.map((option, index) =>
+            <PrimeSelect.Option key={option.value} index={index}>{option.label}</PrimeSelect.Option>
+          )}</PrimeSelect.List>
+        </PrimeSelect.Popup>
+      </PrimeSelect.Positioner>
+    </PrimeSelect.Portal>
+  </PrimeSelect.Root>;
+});
 
 const normalizeSelectSearch = (value) =>
   String(value ?? "")
@@ -538,7 +614,7 @@ export function Dropdown({
       </PrimeSelect.Trigger>
       <PrimeSelect.Portal appendTo={appendTo}>
         <PrimeSelect.Positioner>
-          <PrimeSelect.Popup className={panelClassName}>
+          <PrimeSelect.Popup className={panelClassName} motionProps={{ name: "bgsnl-input-overlay" }}>
             {filter && (
               <PrimeSelect.Header>
                 <input
@@ -640,6 +716,9 @@ export const Calendar = forwardRef(function Calendar(
     >
       <PrimeDatePicker.Input
         ref={ref}
+        name={props.name}
+        required={props.required}
+        disabled={props.disabled}
         id={inputId ?? id}
         className={joinClasses("bgsnl-form-control", inputClassName)}
         placeholder={placeholder}
@@ -651,7 +730,7 @@ export const Calendar = forwardRef(function Calendar(
       ) : null}
       <PrimeDatePicker.Portal appendTo={appendTo}>
         <PrimeDatePicker.Positioner>
-          <PrimeDatePicker.Popup motionProps={{ name: "p-datepicker" }}>
+          <PrimeDatePicker.Popup motionProps={{ name: "bgsnl-input-overlay" }}>
             <PrimeDatePicker.Arrow />
             <PrimeDatePicker.Calendar>
               <PrimeDatePicker.Header>
@@ -683,21 +762,21 @@ export const Calendar = forwardRef(function Calendar(
             {showTime ? (
               <PrimeDatePicker.Time>
                 <PrimeDatePicker.Picker type="hour">
-                  <PrimeDatePicker.Increment aria-label="Increase hour">
+                  <PrimeDatePicker.Increment className="p-datepicker-increment-button" type="button" aria-label="Increase hour">
                     <FiChevronUp aria-hidden />
                   </PrimeDatePicker.Increment>
                   <PrimeDatePicker.Hour />
-                  <PrimeDatePicker.Decrement aria-label="Decrease hour">
+                  <PrimeDatePicker.Decrement className="p-datepicker-decrement-button" type="button" aria-label="Decrease hour">
                     <FiChevronDown aria-hidden />
                   </PrimeDatePicker.Decrement>
                 </PrimeDatePicker.Picker>
                 <PrimeDatePicker.Separator />
                 <PrimeDatePicker.Picker type="minute">
-                  <PrimeDatePicker.Increment aria-label="Increase minute">
+                  <PrimeDatePicker.Increment className="p-datepicker-increment-button" type="button" aria-label="Increase minute">
                     <FiChevronUp aria-hidden />
                   </PrimeDatePicker.Increment>
                   <PrimeDatePicker.Minute />
-                  <PrimeDatePicker.Decrement aria-label="Decrease minute">
+                  <PrimeDatePicker.Decrement className="p-datepicker-decrement-button" type="button" aria-label="Decrease minute">
                     <FiChevronDown aria-hidden />
                   </PrimeDatePicker.Decrement>
                 </PrimeDatePicker.Picker>

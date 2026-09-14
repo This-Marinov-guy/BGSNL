@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useId, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useSearchParams } from "@/util/navigation";
 import { useLoadEvents } from "../../../../hooks/common/api-hooks";
@@ -10,12 +10,15 @@ import { sessionClaims } from "../../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
 import { FiArrowLeft } from "../../../ui/icons/IconlyIcons";
+import StepContentTransition from "../../../ui/functional/StepContentTransition";
 import EventsLoading from "../../../ui/loading/EventsLoading";
 import Filter from "../Filter";
 import Event from "./Event";
 
 const EventList = () => {
     const { reloadEvents, eventsLoading } = useLoadEvents();
+    const [showDrafts, setShowDrafts] = useState(false);
+    const draftToggleId = useId();
 
     const user = useSelector(selectUser);
     const { roles = [], region = "" } = sessionClaims(user.session) ?? {};
@@ -24,7 +27,7 @@ const EventList = () => {
     const dashboardRegions = isAuthorized ? ADMIN_EVENT_REGIONS : REGIONS;
 
     const [searchParams] = useSearchParams();
-    const regionParam = dashboardRegions.includes(searchParams.get("region")) ? searchParams.get("region") : '';
+    const regionParam = isAuthorized && dashboardRegions.includes(searchParams.get("region")) ? searchParams.get("region") : '';
     const regionList = isAuthorized ?
         // show by filter
         (regionParam ? dashboardRegions.filter((r) => r === regionParam) : dashboardRegions) :
@@ -33,9 +36,9 @@ const EventList = () => {
 
     const events = useSelector(selectEventsDashboard);
     const drafts = useSelector(selectEventDrafts);
-    const visibleDrafts = regionParam
-        ? drafts.filter((event) => event.region === regionParam)
-        : drafts;
+    const visibleDrafts = drafts.filter(event => isAuthorized
+        ? !regionParam || event.region === regionParam
+        : regionList.includes(event.region));
 
     const visibleEvents = regionList.flatMap((eventRegion) => events[eventRegion] ?? []);
     const now = Date.now();
@@ -71,7 +74,7 @@ const EventList = () => {
                 </Link>
                 {canAddEvents && (
                     <Link
-                        to="/user/dashboard/events/new"
+                        to="/user/dashboard/events/create"
                         className="rn-button-style--2 rn-btn-reverse-green"
                     >
                         <span>Create event</span>
@@ -79,34 +82,40 @@ const EventList = () => {
                 )}
             </div>
         </header>
-        <div className="event-dashboard-stats" aria-label="Event totals">
+        {isAuthorized && <div className="event-dashboard-stats" aria-label="Event totals">
             <div><span>Visible events</span><strong>{visibleEvents.length}</strong></div>
             <div><span>Upcoming</span><strong>{upcomingCount}</strong></div>
             <div><span>Drafts</span><strong>{visibleDrafts.length}</strong></div>
             <div><span>Sales closed</span><strong>{closedCount}</strong></div>
-        </div>
-            {isAuthorized  && <Filter regions={dashboardRegions} />}
+        </div>}
+            {isAuthorized && <Filter regions={dashboardRegions} />}
+            <div className="event-dashboard-view-toggle">
+                <label htmlFor={draftToggleId}>Drafts</label>
+                <button id={draftToggleId} type="button" role="switch" aria-checked={showDrafts} aria-label="Show drafts" className="event-ticket-switch" onClick={() => setShowDrafts(current => !current)}><span /></button>
+            </div>
+            <StepContentTransition step={showDrafts ? 1 : 0} direction={showDrafts ? "forward" : "backward"}>
             {eventsLoading ? <EventsLoading /> : <div className="event-dashboard-content">
-                {visibleDrafts.length > 0 && (
+                {showDrafts && (
                     <section className="region-section region-section--drafts">
                         <header className="region-section__header">
                             <h2>Drafts</h2>
                             <span>{visibleDrafts.length}</span>
                         </header>
                         <div className="events-grid">
-                            {visibleDrafts.map((event) => (
+                            {visibleDrafts.length ? visibleDrafts.map((event) => (
                                 <Event
                                     key={event.id}
                                     event={event}
                                     loadData={() => reloadEvents(true)}
                                 />
-                            ))}
+                            )) : <p className="no-events-message">No drafts for the selected region.</p>}
                         </div>
                     </section>
                 )}
-                {regionList.map((region) => {
+                {!showDrafts && !visibleEvents.length && <p className="no-events-message">No events for the selected region.</p>}
+                {!showDrafts && regionList.map((region) => {
                     const regionEvents = events[region] ?? [];
-                    if (!regionEvents.length && !regionParam) return null;
+                    if (!regionEvents.length) return null;
 
                     return <section className="region-section" key={region}>
                         <header className="region-section__header">
@@ -122,6 +131,7 @@ const EventList = () => {
 
                 })}
             </div>}
+            </StepContentTransition>
         </>
     )
 }

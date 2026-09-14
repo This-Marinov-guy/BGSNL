@@ -400,7 +400,7 @@ textarea.bgsnl-form-control {
 }
 
 .p-datepicker-positioner {
-  z-index: 1080 !important;
+  z-index: 11010 !important;
 }
 
 .p-datepicker-panel,
@@ -528,9 +528,9 @@ textarea.bgsnl-form-control {
   color: #025420 !important;
 }
 
-.p-datepicker-day-selected,
-.p-datepicker-month-selected,
-.p-datepicker-year-selected {
+.p-datepicker-calendar .p-datepicker-day.p-datepicker-day-selected:not(.p-disabled):not([data-disabled]),
+.p-datepicker-calendar .p-datepicker-month.p-datepicker-month-selected:not(.p-disabled):not([data-disabled]),
+.p-datepicker-calendar .p-datepicker-year.p-datepicker-year-selected:not(.p-disabled):not([data-disabled]) {
   background: #017363 !important;
   box-shadow: none !important;
   color: #ffffff !important;
@@ -575,7 +575,9 @@ textarea.bgsnl-form-control {
 }
 
 .p-datepicker-prev-button,
-.p-datepicker-next-button {
+.p-datepicker-next-button,
+.p-datepicker-increment-button,
+.p-datepicker-decrement-button {
   display: inline-flex !important;
   width: 34px !important;
   height: 34px !important;
@@ -591,8 +593,8 @@ textarea.bgsnl-form-control {
   transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
 
   svg {
-    width: 17px !important;
-    height: 17px !important;
+   min-width: 25px !important;
+   min-height: 25px !important;
   }
 
   &:hover:not(:disabled) {
@@ -693,6 +695,11 @@ textarea.bgsnl-form-control {
 .p-select-positioner:has(.university-select-panel) {
   width: min(460px, calc(100vw - 24px)) !important;
   min-width: min(460px, calc(100vw - 24px)) !important;
+}
+
+/* This menu is portalled to body to avoid the modal's scroll clipping. */
+.p-select-positioner:has(.user-update-university-panel) {
+  z-index: 11010 !important;
 }
 
 .university-select-panel {
@@ -1285,6 +1292,11 @@ textarea.bgsnl-form-control {
   row-gap: 1.5rem;
 }
 
+/* Keep floating labels and focus rings inside the animation's clipping area. */
+.user-update-form .signup-step-transition {
+  padding: 1rem 0.25rem 0.25rem;
+}
+
 .user-update-form .rn-form-group {
   margin: 0;
   position: relative;
@@ -1473,6 +1485,9 @@ textarea.bgsnl-form-control {
 
 /* Shared validation state. These selectors intentionally come last so the
  * invalid treatment wins over component focus styles after a submit attempt. */
+form.event-form-workspace[data-validation-submitted="true"]
+  .event-form-step .rn-form-group.has-validation-error
+  :is(input:not([type="hidden"]), select, textarea),
 form[data-validation-submitted="true"]
   :is(input:not([type="hidden"]), select, textarea)[aria-invalid="true"],
 form[data-validation-submitted="true"]
@@ -1514,6 +1529,9 @@ form[data-validation-submitted="true"]
   color: inherit !important;
 }
 
+form.event-form-workspace[data-validation-submitted="true"]
+  .event-form-step .rn-form-group.has-validation-error
+  :is(input:not([type="hidden"]), select, textarea):focus,
 form[data-validation-submitted="true"]
   :is(input, select, textarea)[aria-invalid="true"]:focus,
 form[data-validation-submitted="true"]
@@ -1592,3 +1610,35 @@ form[data-validation-submitted="true"]
   width: 25px;
   height: 25px;
 }
+
+
+/* One motion language for calendar, searchable, and standard input menus. */
+.bgsnl-input-overlay-enter-active { animation: bgsnl-input-overlay-enter 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.bgsnl-input-overlay-leave-active { animation: bgsnl-input-overlay-leave 160ms ease-in both; pointer-events: none; }
+@keyframes bgsnl-input-overlay-enter { from { opacity: 0; transform: translateY(-0.4rem) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes bgsnl-input-overlay-leave { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-0.25rem) scale(0.98); } }
+@media (prefers-reduced-motion: reduce) {
+  .bgsnl-input-overlay-enter-active, .bgsnl-input-overlay-leave-active { animation-duration: 1ms; }
+}
+.bgsnl-select-input { position: relative; display: inline-flex; vertical-align: middle; }
+.bgsnl-select-input > [data-native-select] { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: 0 !important; opacity: 0; pointer-events: none; clip-path: inset(50%); }
+.bgsnl-select-input > .p-select-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; }
+.bgsnl-select-input .p-select-value { min-width: 0; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.bgsnl-select-input .p-select-indicator { flex-shrink: 0; padding: 0 0.65rem; }
+.bgsnl-select-input:has(> button:disabled) { opacity: 0.6; }
+.bgsnl-select-input:focus-within { outline: 2px solid rgb(1 115 99 / 25%); outline-offset: 2px; }
+.bgsnl-select-input-panel { min-width: 100%; max-width: calc(100vw - 2rem); border: 1px solid #d4ddd8; border-radius: 0.65rem; box-shadow: 0 12px 30px rgb(23 34 29 / 14%); overflow: hidden; }
+.bgsnl-select-input-panel .p-select-list { max-height: min(20rem, 60vh); overflow-y: auto; padding: 0.4rem; }
+.bgsnl-select-input-panel .p-select-option { padding: 0.6rem 0.8rem; border-radius: 0.35rem; white-space: normal; overflow-wrap: anywhere; }
+.bgsnl-select-input-panel .p-select-option[data-selected] { background: #e8f1ec; color: #017363; }
+.bgsnl-select-input-panel .p-select-option[data-disabled] { opacity: 0.45; cursor: not-allowed; }
+.p-select-positioner:has(.bgsnl-select-input-panel) { z-index: 11010 !important; }
+.bgsnl-select-input:has([aria-invalid="true"]) { border-color: #9e0d33 !important; }
+
+.bgsnl-select-input > .form-validation-generated-error { position: absolute; top: 100%; left: 0; }
+
+/* Keep migrated selects aligned with the site's ordinary text inputs. */
+.p-select.bgsnl-select-input { height: auto !important; min-height: 3rem !important; padding: 0; border: 1px solid #cbd5cf !important; border-radius: 0.65rem !important; color: #17201c !important; font-weight: 400; }
+.bgsnl-select-input .p-select-value { height: auto !important; min-height: 2.875rem; padding: 0.65rem 0.9rem !important; color: inherit !important; }
+.bgsnl-select-input.has-validation-error, .bgsnl-select-input:has([aria-invalid="true"]) { border: 2px solid #9e0d33 !important; }
+.bgsnl-pagination__rows .bgsnl-select-input { width: auto; min-width: 4.5rem; }

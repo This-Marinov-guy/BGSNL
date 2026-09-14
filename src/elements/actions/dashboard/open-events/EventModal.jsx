@@ -17,10 +17,12 @@ import {
   IconlyTicket,
 } from "@/elements/ui/icons/IconlyIcons";
 import dynamic from "next/dynamic";
+import ImageTooltip from "@/elements/ui/media/ImageTooltip";
 const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
 import { useNavigate } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import {
+  editEventFromAll,
   loadSingleEventDashboard,
   removeEventFromAll,
 } from "../../../../redux/events";
@@ -28,6 +30,7 @@ import { showNotification } from "../../../../redux/notification";
 import { selectUser } from "../../../../redux/user";
 import {
   ACCESS_3,
+  ACCESS_4,
   EVENT_DELETED,
 } from "../../../../util/defines/common";
 import { checkAuthorization } from "../../../../util/functions/authorization";
@@ -38,6 +41,8 @@ import {
 } from "../../../../util/functions/date";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
 import GenerateTicketsModal from "./GenerateTicketsModal";
+
+import { eventSalesClosed, eventStatusLabel } from "../../../../util/functions/event-status.mjs";
 
 const EMPTY_VALUE = "Not set";
 
@@ -92,31 +97,19 @@ const PreviewOverlay = () => (
   </span>
 );
 
-const EventImage = ({ label, src, alt, onPreview }) => (
-  <figure className="event-details-modal__media-item">
-    <figcaption>{label}</figcaption>
-    {src ? (
-      <button
-        aria-label={`Open ${label.toLowerCase()} media preview`}
-        className="event-details-modal__media-preview media-trigger"
-        onClick={onPreview}
-        type="button"
-      >
-        <img
-          alt={alt}
-          className="event-details-modal__media-image"
-          src={src}
-        />
-        <PreviewOverlay />
-      </button>
-    ) : (
-      <div className="event-details-modal__media-empty">
-        <IconlyImage aria-hidden="true" />
-        <span>Not uploaded</span>
-      </div>
-    )}
-  </figure>
-);
+const EventImage = ({ label, src, alt, onPreview }) => src ? (
+  <ImageTooltip label={label}>
+  <button
+    aria-label={`Open ${label.toLowerCase()} media preview`}
+    className="event-details-modal__media-preview media-trigger"
+    onClick={onPreview}
+    type="button"
+  >
+    <img alt={alt} className="event-details-modal__media-image" src={src} />
+    <PreviewOverlay />
+  </button>
+  </ImageTooltip>
+) : null;
 
 EventImage.propTypes = {
   alt: PropTypes.string.isRequired,
@@ -145,6 +138,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [ticketGeneratorVisible, setTicketGeneratorVisible] = useState(false);
   const [previewMedia, setPreviewMedia] = useState(null);
+  const [savingSales, setSavingSales] = useState(false);
   const { sendRequest, loading } = useHttpClient();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
@@ -156,8 +150,10 @@ const EventModal = ({ event, show, setShow, loadData }) => {
   const eventDate = event.correctedDate
     ? formatCorrectedDateTime(event.correctedDate)
     : formatOptionalDate(event.date);
-  const statusLabel = capitalizeFirstLetter(event.status || "Not set", true);
-  const statusModifier = (event.status || "unknown")
+  const statusLabel = eventStatusLabel(event);
+  const salesClosed = statusLabel === "Past" || eventSalesClosed(event);
+  const canToggleSales = !isDraft && !["archived", "cancelled"].includes(event.status) && checkAuthorization(user.session, ACCESS_4);
+  const statusModifier = statusLabel
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
   const backgroundImage =
@@ -168,10 +164,10 @@ const EventModal = ({ event, show, setShow, loadData }) => {
         : null;
 
   const galleryImages = useMemo(() => [
-    { src: event.poster, alt: `${eventTitle} poster` },
-    { src: event.ticketImg, alt: `${eventTitle} ticket` },
-    { src: backgroundImage, alt: `${eventTitle} background` },
-    ...(event.images || []).map((src, index) => ({ src, alt: `${eventTitle} image ${index + 1}` })),
+    { src: event.poster, alt: `${eventTitle} poster`, label: "Poster" },
+    { src: event.ticketImg, alt: `${eventTitle} ticket`, label: "Ticket" },
+    { src: backgroundImage, alt: `${eventTitle} background`, label: "Background" },
+    ...(event.images || []).map((src, index) => ({ src, alt: `${eventTitle} image ${index + 1}`, label: `Additional ${index + 1}` })),
   ], [event.poster, event.ticketImg, event.images, eventTitle, backgroundImage]);
 
   const closeModal = () => setShow(false);
@@ -196,6 +192,22 @@ const EventModal = ({ event, show, setShow, loadData }) => {
     }
   };
 
+  const toggleSales = async () => {
+    if (savingSales) return;
+    setSavingSales(true);
+    try {
+      const response = await sendRequest(
+        `future-event/sales/${event.id}`, "PATCH", { isSaleClosed: !salesClosed }, {}, true, false
+      );
+      if (response?.status && response.event) {
+        dispatch(editEventFromAll(response.event));
+        dispatch(showNotification({ severity: "success", summary: response.event.isSaleClosed ? "Sales closed" : "Sales opened" }));
+      }
+    } finally {
+      setSavingSales(false);
+    }
+  };
+
   const editEvent = () => {
     dispatch(loadSingleEventDashboard(event));
     navigate(`/user/dashboard/events/${event.id}/edit`);
@@ -205,7 +217,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
     <div className="event-details-modal__heading">
       <div className="event-details-modal__title-row">
         <span
-          className={`event-details-modal__status event-details-modal__status--${statusModifier}`}
+          className={`event-card__status event-card__status--${statusModifier}`}
         >
           {statusLabel}
         </span>
@@ -261,6 +273,22 @@ const EventModal = ({ event, show, setShow, loadData }) => {
               <IconlyEdit aria-hidden="true" />
               <span>{isDraft ? "Edit draft" : "Edit event"}</span>
             </button>
+            {canToggleSales && (
+              <button
+                type="button"
+                role="switch"
+                aria-checked={!salesClosed}
+                aria-label="Ticket sales"
+                aria-busy={savingSales}
+                className={`event-details-modal__sales-toggle ${salesClosed ? "is-closed" : "is-open"}`}
+                disabled={savingSales || statusLabel === "Past"}
+                onClick={toggleSales}
+                title={statusLabel === "Past" ? "Sales cannot be reopened for a past event" : salesClosed ? "Open ticket sales" : "Close ticket sales"}
+              >
+                <span className="event-details-modal__sales-track" aria-hidden="true"><span /></span>
+                <span>{savingSales ? "Saving…" : salesClosed ? "Sales closed" : "Sales opened"}</span>
+              </button>
+            )}
             {!isDraft && checkAuthorization(user.session, ACCESS_3) ? (
               <button
                 className="rn-button-style--2 rn-btn-green"
@@ -282,39 +310,85 @@ const EventModal = ({ event, show, setShow, loadData }) => {
           </div>
 
           <section className="event-details-modal__summary">
-            <div className="event-details-modal__poster">
-              {event.poster ? (
-                <button
-                  aria-label="Open poster media preview"
-                  className="event-details-modal__poster-preview media-trigger"
-                  onClick={() =>
-                    setPreviewMedia({
-                      alt: `${eventTitle} poster`,
-                      fileName: `${eventTitle}-poster`,
-                      src: event.poster,
-                    })
-                  }
-                  type="button"
-                >
-                  <img
-                    alt={`${eventTitle} poster`}
-                    className="event-details-modal__poster-image"
-                    src={event.poster}
+            <div className="event-details-modal__media-overview">
+              <div className="event-details-modal__poster">
+                {event.poster ? (
+                  <ImageTooltip label="Poster">
+                  <button
+                    aria-label="Open poster media preview"
+                    className="event-details-modal__poster-preview media-trigger"
+                    onClick={() =>
+                      setPreviewMedia({
+                        alt: `${eventTitle} poster`,
+                        fileName: `${eventTitle}-poster`,
+                        src: event.poster,
+                      })
+                    }
+                    type="button"
+                  >
+                    <img
+                      alt={`${eventTitle} poster`}
+                      className="event-details-modal__poster-image"
+                      src={event.poster}
+                    />
+                    <PreviewOverlay />
+                  </button>
+                  </ImageTooltip>
+                ) : (
+                  <div className="event-details-modal__poster-empty">
+                    <IconlyImage aria-hidden="true" />
+                    <span>No poster uploaded</span>
+                  </div>
+                )}
+              </div>
+              <div className="event-details-modal__media-section" aria-label="Event media">
+                <div className="event-details-modal__media-grid">
+                  <EventImage
+                    alt={`${eventTitle} ticket`}
+                    label="Ticket"
+                    onPreview={() =>
+                      setPreviewMedia({
+                        alt: `${eventTitle} ticket`,
+                        fileName: `${eventTitle}-ticket`,
+                        src: event.ticketImg,
+                      })
+                    }
+                    src={event.ticketImg}
                   />
-                  <PreviewOverlay />
-                </button>
-              ) : (
-                <div className="event-details-modal__poster-empty">
-                  <IconlyImage aria-hidden="true" />
-                  <span>No poster uploaded</span>
+                  <EventImage
+                    alt={`${eventTitle} background`}
+                    label="Background"
+                    onPreview={() =>
+                      setPreviewMedia({
+                        alt: `${eventTitle} background`,
+                        fileName: `${eventTitle}-background`,
+                        src: backgroundImage,
+                      })
+                    }
+                    src={backgroundImage}
+                  />
+                  {event.images?.map((image, index) => (
+                    <EventImage
+                      alt={`${eventTitle} additional image ${index + 1}`}
+                      key={`${image}-${index}`}
+                      label={`Additional ${index + 1}`}
+                      onPreview={() =>
+                        setPreviewMedia({
+                          alt: `${eventTitle} additional image ${index + 1}`,
+                          fileName: `${eventTitle}-image-${index + 1}`,
+                          src: image,
+                        })
+                      }
+                      src={image}
+                    />
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
             <dl className="event-details-modal__summary-facts">
               <EventFact
-                highlight={event.status === "active"}
                 label="Status"
-                value={statusLabel}
+                value={<span className={`event-card__status event-card__status--${statusModifier}`}>{statusLabel}</span>}
               />
               <EventFact label="Date and time" value={eventDate} />
               <EventFact label="Location" value={event.location || EMPTY_VALUE} />
@@ -371,7 +445,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                   />
                   <EventFact
                     label="Sales status"
-                    value={event.isSaleClosed ? "Closed" : "Open"}
+                    value={isDraft ? "Not open" : eventSalesClosed(event) ? "Closed" : "Open"}
                   />
                   <EventFact
                     label="Member ticket"
@@ -442,53 +516,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
             </aside>
           </div>
 
-          <DetailSection
-            className="event-details-modal__media-section"
-            description="Select an image to view it at full size."
-            title="Event media"
-          >
-            <div className="event-details-modal__media-grid">
-              <EventImage
-                alt={`${eventTitle} ticket`}
-                label="Ticket"
-                onPreview={() =>
-                  setPreviewMedia({
-                    alt: `${eventTitle} ticket`,
-                    fileName: `${eventTitle}-ticket`,
-                    src: event.ticketImg,
-                  })
-                }
-                src={event.ticketImg}
-              />
-              <EventImage
-                alt={`${eventTitle} background`}
-                label="Background"
-                onPreview={() =>
-                  setPreviewMedia({
-                    alt: `${eventTitle} background`,
-                    fileName: `${eventTitle}-background`,
-                    src: backgroundImage,
-                  })
-                }
-                src={backgroundImage}
-              />
-              {event.images?.map((image, index) => (
-                <EventImage
-                  alt={`${eventTitle} additional image ${index + 1}`}
-                  key={`${image}-${index}`}
-                  label={`Additional ${index + 1}`}
-                  onPreview={() =>
-                    setPreviewMedia({
-                      alt: `${eventTitle} additional image ${index + 1}`,
-                      fileName: `${eventTitle}-image-${index + 1}`,
-                      src: image,
-                    })
-                  }
-                  src={image}
-                />
-              ))}
-            </div>
-          </DetailSection>
+
         </div>
       </Dialog>
       {previewMedia ? (

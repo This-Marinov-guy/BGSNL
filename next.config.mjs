@@ -62,6 +62,15 @@ const nextConfig = {
   reactStrictMode: false,
   outputFileTracingRoot: __dirname,
 
+  async redirects() {
+    return [
+      { source: "/user/dashboard/event-analytics", destination: "/user/dashboard/events?view=analytics", permanent: false },
+      { source: "/user/events-analytics", destination: "/user/dashboard/events?view=analytics", permanent: false },
+      { source: "/user/dashboard/member-statistics", destination: "/user/dashboard/members?view=statistics", permanent: false },
+      { source: "/user/members", destination: "/user/dashboard/members?view=statistics", permanent: false },
+    ];
+  },
+
   async headers() {
     return [
       ...privateRouteSources.map((source) => ({

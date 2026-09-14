@@ -5,10 +5,10 @@ const IconlySvg = ({ size, title, children, ...props }) => (
   <svg
     aria-hidden={title ? undefined : "true"}
     focusable="false"
-    height={size || "1rem"}
+    height={size || "1.5rem"}
     role={title ? "img" : undefined}
     viewBox="0 0 24 24"
-    width={size || "1rem"}
+    width={size || "1.5rem"}
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >

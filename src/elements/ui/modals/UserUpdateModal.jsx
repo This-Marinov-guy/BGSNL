@@ -154,7 +154,6 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
       title="Update your details"
       onHide={closeHandler}
     >
-      <p>Email and password changes require confirmation sent to your current email. A new email address must also be verified.</p>
       <ValidatedFormik
         className="inner"
         validationSchema={schema}
@@ -301,41 +300,6 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                 </div>
               </div>
 
-              {!isAlumni && (
-                <div className="col-12">
-                  <div
-                    className="user-update-form__work-status"
-                    data-field-name="isWorking"
-                  >
-                    <label>
-                      <Field
-                        className="user-update-form__checkbox"
-                        type="checkbox"
-                        name="isWorking"
-                        checked={values.isWorking}
-                        onChange={(event) => {
-                          const isWorking = event.target.checked;
-                          setFieldValue("isWorking", isWorking);
-                          setFieldValue(
-                            "university",
-                            isWorking ? "working" : ""
-                          );
-                          setFieldValue("otherUniversityName", "");
-                          setFieldValue("graduationDate", "");
-                          setFieldValue("course", "");
-                          setFieldValue("studentNumber", "");
-                          setFieldValue("profession", "");
-                        }}
-                      />
-                      <span>
-                        I&apos;m currently working. Use my profession instead of
-                        study details.
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              )}
-
               <div className="col-lg-6 col-md-12 col-12">
                 <div className="rn-form-group" data-field-name="phone">
                   <label>WhatsApp phone</label>
@@ -377,6 +341,41 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
               </div>
 
               {!isAlumni && (
+                <div className="col-12">
+                  <div
+                    className="user-update-form__work-status"
+                    data-field-name="isWorking"
+                  >
+                    <label>
+                      <Field
+                        className="user-update-form__checkbox"
+                        type="checkbox"
+                        name="isWorking"
+                        checked={values.isWorking}
+                        onChange={(event) => {
+                          const isWorking = event.target.checked;
+                          setFieldValue("isWorking", isWorking);
+                          setFieldValue(
+                            "university",
+                            isWorking ? "working" : ""
+                          );
+                          setFieldValue("otherUniversityName", "");
+                          setFieldValue("graduationDate", "");
+                          setFieldValue("course", "");
+                          setFieldValue("studentNumber", "");
+                          setFieldValue("profession", "");
+                        }}
+                      />
+                      <span>
+                        I&apos;m currently working. Use my profession instead of
+                        study details.
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {!isAlumni && (
                 <div className="col-12 signup-field-mode-transition">
                   <StepContentTransition
                     direction={values.isWorking ? "forward" : "backward"}
@@ -408,7 +407,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                                     ? document.body
                                     : undefined
                                 }
-                                panelClassName="university-select-panel"
+                                panelClassName="university-select-panel user-update-university-panel"
                                 filterFallbackOption={OTHER_UNIVERSITY_OPTION}
                                 filterFallbackGroupLabel="No matching universities"
                                 optionLabel="label"

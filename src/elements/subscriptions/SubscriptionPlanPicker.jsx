@@ -1,5 +1,7 @@
 "use client";
 
+import { SelectInput } from "@/compat/primereact";
+
 import { useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useHttpClient } from "@/hooks/common/http-hook";
@@ -55,7 +57,7 @@ export default function SubscriptionPlanPicker({ user, alumniOnly = false }) {
       ) : !plans ? <p role="status">Loading subscription options…</p> : (
         <>
           <label htmlFor={id}>Membership plan</label>
-          <select id={id} value={selected} onChange={(event) => setSelected(event.target.value)} disabled={pending} required>
+          <SelectInput id={id} value={selected} onChange={(event) => setSelected(event.target.value)} disabled={pending} required>
             <option value="">Select a plan</option>
             {plans.map((plan) => (
               <option key={plan.priceId} value={plan.priceId} disabled={(blocked && plan.tier !== 0) || (user?.subscription?.priceId === plan.priceId && user?.isSubscribed) || (plan.tier === 0 && user?.isAlumni && user?.tier === 0)}>
@@ -63,7 +65,7 @@ export default function SubscriptionPlanPicker({ user, alumniOnly = false }) {
                 {user?.subscription?.priceId === plan.priceId && user?.isSubscribed ? " (current)" : ""}
               </option>
             ))}
-          </select>
+          </SelectInput>
           <p id={`${id}-help`}>
             {freeSelected ? "Tier 0 has no paid benefits. If you have an active paid subscription, cancel it first. You will become a free Alumni when the current billing period ends."
               : blocked ? "Open Manage billing to resolve the payment issue, pending change or cancellation first."

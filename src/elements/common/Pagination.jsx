@@ -1,3 +1,4 @@
+import { SelectInput } from "@/compat/primereact";
 import PropTypes from "prop-types";
 import {
   IconlyArrowLeft,
@@ -130,7 +131,7 @@ const Pagination = ({
       {showRowsSelector && (
         <label className="bgsnl-pagination__rows">
           <span className="bgsnl-pagination__rows-label">Items per page</span>
-          <select
+          <SelectInput
             aria-label="Items per page"
             value={safeRows}
             onChange={(event) =>
@@ -142,7 +143,7 @@ const Pagination = ({
                 {option}
               </option>
             ))}
-          </select>
+          </SelectInput>
         </label>
       )}
     </nav>

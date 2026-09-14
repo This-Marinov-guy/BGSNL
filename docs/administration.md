@@ -8,14 +8,14 @@
 | Internships | `/user/dashboard/internships` |
 | Members and alumni | `/user/dashboard/members` |
 | Support tickets | `/user/dashboard/support` |
-| Event analytics | `/user/dashboard/event-analytics` |
-| Member statistics | `/user/dashboard/member-statistics` |
+
+Event analytics is a view within Events (`/user/dashboard/events?view=analytics`), available to the existing board/admin roles. Member statistics is a tab in Members (`/user/dashboard/members?view=statistics`). Neither has an independent page, overview card or access-request option. Previous analytics/statistics URLs redirect to these views and retain filters.
 
 Event and internship editors use `/<area>/new` and `/<area>/<id>/edit` under the dashboard. Guest-list checks use `/user/dashboard/guest-list`. Old administration URLs redirect while retaining query parameters, including existing ticket QR-code links.
 
 ## Image previews
 
-Event details use `yet-another-react-lightbox` through `ImageGallery.jsx`, loaded on demand. Clicking a poster, ticket, background or gallery image opens the viewer at that image with gallery navigation, zoom, captions and download. The details dialog suspends its focus and Escape handling until the viewer closes.
+Event details use `yet-another-react-lightbox` through `ImageGallery.jsx`, loaded on demand. Clicking a poster, ticket, background or gallery image opens the viewer at that image with gallery navigation, zoom, captions and download. The details dialog suspends its focus and Escape handling until the viewer closes. The user profile’s Tickets tab uses the same gallery to browse, zoom and download ticket images; each download retains its ticket filename.
 
 ## Access requests
 

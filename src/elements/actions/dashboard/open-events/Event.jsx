@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { MOMENT_DATE_TIME } from "../../../../util/functions/date";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import EventModal from "./EventModal";
+import { eventStatusLabel } from "../../../../util/functions/event-status.mjs";
 
 const formatPrice = (value) => {
   const amount = Number(value);
@@ -15,16 +16,10 @@ const formatPrice = (value) => {
 const Event = ({ event, loadData }) => {
   const [show, setShow] = useState(false);
   const isDraft = event.status === "draft";
-  const now = Date.now();
-  const isExpired = !isDraft && event.date && new Date(event.date).valueOf() < now;
-  const salesClosed = !isDraft && (
-    event.isSaleClosed ||
-    (event.ticketTimer && new Date(event.ticketTimer).valueOf() < now)
-  );
+  const note = isDraft && typeof event.draftData?.note === "string" ? event.draftData.note.trim() : "";
 
   let price = "TBA";
   if (isDraft) price = "Not set";
-  else if (salesClosed) price = "Sales closed";
   else if (event.isFree) price = "Free";
   else if (event.product) {
     const prices = [
@@ -37,13 +32,7 @@ const Event = ({ event, loadData }) => {
     price = prices.join(" · ");
   }
 
-  const status = isDraft
-    ? "Draft"
-    : isExpired
-      ? "Past"
-      : salesClosed
-        ? "Sales closed"
-        : capitalizeFirstLetter(event.status || "Open", true);
+  const status = eventStatusLabel(event);
 
   return (
     <>
@@ -102,6 +91,7 @@ const Event = ({ event, loadData }) => {
                 <dd>{event.ticketLimit ?? "Not set"}</dd>
               </div>
             </dl>
+            {note && <p className="event-draft-note"><strong>Note</strong>{note}</p>}
           </div>
         </button>
       </article>

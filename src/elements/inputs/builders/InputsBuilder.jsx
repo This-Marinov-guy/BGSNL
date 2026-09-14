@@ -1,3 +1,4 @@
+import { SelectInput } from "@/compat/primereact";
 import {
   Fragment,
   useState,
@@ -87,7 +88,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                 data-field-name={typeName}
               >
                 <h4 className="col-lg-6 col-12">Select type of input</h4>
-                <select
+                <SelectInput
                   value={value.type}
                   onChange={(event) =>
                     handleInputChange(index, "type", event.target.value)
@@ -100,7 +101,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                   </option>
                   <option value="text">Text</option>
                   <option value="select">Select</option>
-                </select>
+                </SelectInput>
                 <LinkedErrorMessage name={typeName} />
                 <PlusButton onClick={addInput} />
                 <XButton onClick={() => removeInput(index)} />
@@ -114,7 +115,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                       data-field-name={requiredName}
                     >
                       <h4>Is it required</h4>
-                      <select
+                      <SelectInput
                         value={value.required}
                         onChange={(event) =>
                           handleInputChange(
@@ -130,7 +131,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                         </option>
                         <option value={true}>Yes</option>
                         <option value={false}>No</option>
-                      </select>
+                      </SelectInput>
                       <LinkedErrorMessage name={requiredName} />
                     </div>
                     <div
@@ -163,7 +164,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                       data-field-name={requiredName}
                     >
                       <h4 className="mt--10">Is it required</h4>
-                      <select
+                      <SelectInput
                         value={value.required}
                         onChange={(event) =>
                           handleInputChange(
@@ -179,7 +180,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                         </option>
                         <option value={true}>Yes</option>
                         <option value={false}>No</option>
-                      </select>
+                      </SelectInput>
                       <LinkedErrorMessage name={requiredName} />
                     </div>
                     <div
@@ -190,7 +191,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                       <h4 className="mt--10">
                         Let client select multiple values
                       </h4>
-                      <select
+                      <SelectInput
                         value={value.multiselect}
                         onChange={(event) =>
                           handleInputChange(
@@ -206,7 +207,7 @@ const InputsBuilder = ({ initialValues, max = 5, name, onChange }) => {
                         </option>
                         <option value={true}>Yes</option>
                         <option value={false}>No</option>
-                      </select>
+                      </SelectInput>
                       <LinkedErrorMessage name={multiselectName} />
                     </div>
                     <div

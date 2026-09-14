@@ -1,0 +1,37 @@
+.gallery {
+  :global(.yarl__slide_captions_container) {
+    background: transparent;
+    text-align: center;
+  }
+
+  :global(.yarl__slide_description),
+  :global(.yarl__slide_title) {
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0.45rem 0.8rem;
+    border-radius: 6px;
+    background: var(--form-label-background, #add8e6);
+    color: #232b27;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 30000;
+  transform: translate(-50%, -100%);
+  max-width: min(13rem, calc(100vw - 1rem));
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
+  background: var(--form-label-background, #add8e6);
+  color: #232b27;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  pointer-events: none;
+}

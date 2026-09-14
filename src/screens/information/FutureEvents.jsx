@@ -1,5 +1,7 @@
 "use client";
 
+import { SelectInput } from "@/compat/primereact";
+
 import React, {
   useEffect,
   useState,
@@ -249,7 +251,7 @@ const FutureEventsContent = ({
                         {carouselEvents.length} {carouselEvents.length === 1 ? "event" : "events"}
                       </strong>
                     </div>
-                    <select
+                    <SelectInput
                       aria-label="Filter future events by region"
                       className="bgsnl-form-control future-events-region-select"
                       id="future-events-region-select"
@@ -267,7 +269,7 @@ const FutureEventsContent = ({
                           {capitalizeFirstLetter(regionName, true)} ({regionEvents.length})
                         </option>
                       ))}
-                    </select>
+                    </SelectInput>
                   </div>
 
                   {carouselEvents.length ? (

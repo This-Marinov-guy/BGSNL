@@ -1,5 +1,7 @@
 "use client";
 
+import { SelectInput } from "@/compat/primereact";
+
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useHttpClient } from "@/hooks/common/http-hook";
@@ -150,20 +152,20 @@ export function SubscriptionCheckoutForm({
                 <IconlyQuestion aria-hidden />
               </button>
             </div>
-            <select autoFocus className="bgsnl-form-control" id={`${id}-type`} value={type} disabled={pending} required
+            <SelectInput autoFocus className="bgsnl-form-control" id={`${id}-type`} value={type} disabled={pending} required
               onChange={(event) => { setType(event.target.value); setPriceId(""); setCheckoutError(""); }}>
               <option value="">Choose Member or Alumni</option>
               <option value="member" disabled={!plans.some((plan) => plan.type === "member")}>Member</option>
               <option value="alumni" disabled={!plans.some((plan) => plan.type === "alumni")}>Alumni</option>
-            </select>
+            </SelectInput>
           </div>
           <div className={`rn-form-group ${styles.checkoutField}`}>
             <label htmlFor={`${id}-plan`}>{type === "alumni" ? "Alumni tier" : "Membership period"}</label>
-            <select className="bgsnl-form-control" id={`${id}-plan`} value={priceId} disabled={!type || pending} required
+            <SelectInput className="bgsnl-form-control" id={`${id}-plan`} value={priceId} disabled={!type || pending} required
               aria-describedby={`${id}-help`} onChange={(event) => { setPriceId(event.target.value); setCheckoutError(""); }}>
               <option value="">{type === "alumni" ? "Select a tier" : "Select a period"}</option>
               {options.map((plan) => <option key={plan.priceId} value={plan.priceId}>{subscriptionPlanLabel(plan)}</option>)}
-            </select>
+            </SelectInput>
           </div>
           <p id={`${id}-help`}>Subscriptions renew automatically. Paid benefits become available after your payment is confirmed. You can manage or cancel your subscription in Billing.</p>
           {checkoutError && <p role="alert">{checkoutError}</p>}

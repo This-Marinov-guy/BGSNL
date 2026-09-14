@@ -95,7 +95,7 @@ const MembersList = () => {
         style={{ gap: "15px" }}
       >
         <h3 className="center_text" style={{ margin: 0 }}>
-          Members
+          Member statistics
         </h3>
         <button
           className="rn-button-style--2 rn-btn-green"
