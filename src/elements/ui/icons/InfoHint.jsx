@@ -10,6 +10,7 @@ import {
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import { FiHelpCircle } from "./IconlyIcons";
+import { getTooltipContainer, getTooltipPosition } from "../tooltip-position.mjs";
 
 /**
  * A circular "?" affordance that actually shows its hint.
@@ -21,10 +22,8 @@ import { FiHelpCircle } from "./IconlyIcons";
  * hint on a real <button> fixes that and, as a side effect, makes it reachable
  * by keyboard — the bare icon never was.
  *
- * The bubble is portalled to <body> and positioned as `fixed` rather than being
- * absolutely positioned next to the trigger. Ancestors of the trigger clip it
- * otherwise — `.user-content-area` sets `overflow-x: clip`, which sliced the
- * hint off at the panel edge on the profile tab.
+ * Page hints use a fixed body portal to avoid clipping by form panels. Modal
+ * hints use the modal content container so headers and footers remain above them.
  *
  * The bubble stays in the DOM and is hidden with opacity/visibility rather than
  * being conditionally rendered, so `aria-describedby` always resolves and
@@ -102,8 +101,7 @@ const InfoHint = ({ label = "More information", text }) => {
         position
           ? {
               "--info-hint-arrow": `${position.arrow}px`,
-              left: `${position.left}px`,
-              top: `${position.top}px`,
+              ...getTooltipPosition(getTooltipContainer(triggerRef.current), position),
             }
           : undefined
       }
@@ -127,7 +125,7 @@ const InfoHint = ({ label = "More information", text }) => {
         <FiHelpCircle aria-hidden size="0.72rem" />
         <span className="visually-hidden">{label}</span>
       </button>
-      {mounted ? createPortal(bubble, document.body) : bubble}
+      {mounted ? createPortal(bubble, getTooltipContainer(triggerRef.current)) : bubble}
     </span>
   );
 };

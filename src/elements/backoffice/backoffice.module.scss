@@ -53,13 +53,13 @@
 
 .modalBackdrop { --editor-gutter: clamp(10px, 4vw, 40px); position: fixed; z-index: 11000; inset: 0; display: flex; align-items: center; justify-content: center; padding: var(--editor-gutter); background: rgb(15 30 23 / 48%); backdrop-filter: blur(2px); }
 .editor { width: min(44rem, 100%); max-height: calc(100dvh - 2 * var(--editor-gutter)); min-height: 0; overflow-y: auto; border: 0; border-radius: 14px; background: #fff; box-shadow: 0 1.5rem 4rem rgb(10 24 17 / 18%); animation: editorIn 240ms cubic-bezier(.2,.8,.2,1); }
-.editorHeader { position: sticky; z-index: 2; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem clamp(1rem, 4vw, 2rem); border: 0; background: rgb(255 255 255 / 96%); backdrop-filter: blur(10px); }
+.editorHeader { position: sticky; z-index: 2; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem clamp(1rem, 4vw, 2rem); border: 0; background: #fff; }
 .editorHeader > div { display: flex; align-items: center; gap: .8rem; min-width: 0; }
 .editorHeader h2 { margin: 0; font-size: 1.45rem; overflow-wrap: anywhere; }
 .editorHeader p { margin: .15rem 0 0; color: #66766d; }
 .iconButton { display: grid; place-items: center; width: 2.8rem; height: 2.8rem; flex: 0 0 auto; padding: .6rem; border-radius: .7rem; background: transparent; color: #d92d20; }
 .iconButton:hover { background: #fff1f0; color: #d92d20; transform: scale(1.04); }
-.editorForm { display: grid; gap: 1.75rem; padding: 1.5rem clamp(1rem, 4vw, 2rem) 2rem; }
+.editorForm { position: relative; isolation: isolate; display: grid; gap: 1.75rem; padding: 1.5rem clamp(1rem, 4vw, 2rem) 2rem; }
 .editorForm fieldset { display: grid; gap: 1rem; min-width: 0; margin: 0; padding: 0 0 1.5rem; border: 0; border-bottom: 1px solid #e3e9e5; }
 .editorForm legend { margin-bottom: .8rem; color: #075f2c; font-size: 1.15rem; font-weight: 800; }
 .fieldGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -71,7 +71,7 @@
 .roleOption { grid-template-columns: auto 1fr auto; align-items: center; gap: .6rem !important; min-height: 2.9rem; padding: .65rem .75rem; border: 1px solid #dce4df; border-radius: .65rem; background: #fafbf9; cursor: pointer; }
 .roleOption input { width: 1.15rem; height: 1.15rem; margin: 0; accent-color: #017363; }
 .roleOption small { color: #6a776f; font-weight: 600; }
-.editorFooter { position: sticky; bottom: 0; display: grid; grid-template-columns: 1fr 2fr; gap: .75rem; padding: 1rem 0 0; background: #fff; }
+.editorFooter { position: sticky; z-index: 3; bottom: 0; display: grid; grid-template-columns: 1fr 2fr; gap: .75rem; padding: 1rem 0 0; background: #fff; }
 .primaryButton, .secondaryButton { min-height: 3rem; border-radius: .7rem; padding: .7rem 1rem; }
 .primaryButton { background: #017363; color: #fff; }
 .primaryButton:hover:not(:disabled) { background: #025d51; }
@@ -82,16 +82,78 @@
 @keyframes editorIn { from { transform: translateY(.75rem) scale(.985); opacity: .6; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
 @media (max-width: 767px) {
-  .page { width: 96%; padding-bottom: 2rem; }
-  .pageHeader { align-items: flex-start; }
-  .headingIcon { width: 3rem; height: 3rem; }
-  .tabs { width: 100%; }
-  .directory { padding: .85rem; }
+  .page {
+    width: 100%;
+    margin-inline: 0;
+    padding: 6.4rem 0 2rem;
+  }
+
+  .pageHeader {
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding-inline: 0.45rem;
+  }
+
+  .pageHeader h1 {
+    font-size: clamp(1.85rem, 10vw, 2.5rem);
+  }
+
+  .pageHeader p {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .headingIcon {
+    width: 2.65rem;
+    height: 2.65rem;
+    border-radius: 0.65rem;
+  }
+
+  .tabs {
+    display: flex;
+    width: auto;
+    margin: 0 0 0.75rem;
+    overflow-x: auto;
+    border-radius: 0;
+    padding: 0.25rem 0.45rem;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabs button {
+    flex: 0 0 auto;
+    min-height: 2.45rem;
+    padding: 0.45rem 0.7rem;
+    white-space: nowrap;
+  }
+
+  .directory {
+    border-inline: 0;
+    border-radius: 0;
+    padding: .45rem;
+  }
+
   .filters { grid-template-columns: 1fr; }
-  .tableWrap { overflow: visible; border: 0; }
+  .tableWrap {
+    margin-top: 0.75rem;
+    overflow: visible;
+    border: 0;
+  }
+
   .tableWrap table, .tableWrap tbody { display: grid; gap: .75rem; }
   .tableWrap thead { display: none; }
-  .tableWrap tr { display: grid; grid-template-columns: 1fr auto; gap: .7rem 1rem; padding: 1rem; border: 1px solid #dee6e1; border-radius: .8rem; }
+  .tableWrap tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .55rem .75rem;
+    padding: .75rem;
+    border: 1px solid #dee6e1;
+    border-radius: .55rem;
+  }
+
   .tableWrap td { display: block; grid-column: 1 / -1; padding: 0; border: 0; }
   .tableWrap td::before { content: attr(data-label); display: block; margin-bottom: .2rem; color: #6b7871; font-size: 1rem; font-weight: 750; text-transform: uppercase; }
   .tableWrap td:first-child::before, .tableWrap .actionCell::before { display: none; }
@@ -99,7 +161,11 @@
   .editButton span { display: none; }
   .editButton { width: 2.7rem; height: 2.7rem; justify-content: center; padding: .6rem; }
   .roleTags { min-width: 0; }
-  .pagination { justify-content: space-between; }
+  .pagination {
+    justify-content: space-between;
+    padding-inline: 0.45rem;
+  }
+
   .editor { width: 100%; }
   .fieldGrid, .roles { grid-template-columns: 1fr; }
   .fullField { grid-column: auto; }

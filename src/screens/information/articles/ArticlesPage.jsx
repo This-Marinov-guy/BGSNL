@@ -1,6 +1,7 @@
 "use client";
 
 import PropTypes from "prop-types";
+import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -9,7 +10,8 @@ import {
   IconlyDocument,
   IconlySearch,
 } from "@/elements/ui/icons/IconlyIcons";
-import { Link, useSearchParams } from "@/util/navigation";
+import { Link } from "@/util/navigation";
+import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 import PageHelmet from "../../../component/common/Helmet";
 import ScrollToTop from "../../../component/common/ScrollToTop";
 import Footer from "../../../component/footer/Footer";
@@ -37,23 +39,19 @@ const ArticlesPage = ({ initialArticles = [] }) => {
   const articles = storedArticles?.length ? storedArticles : initialArticles;
   const featuredArticle = articles[0];
   const otherArticles = useMemo(() => articles.slice(1), [articles]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterSearchParams();
   const initialPage = Math.max(0, Number(searchParams.get("page") || 1) - 1);
-  const currentPageParam = searchParams.get("page") || "1";
   const [query, setQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => { setQuery(searchInput); setFirst(0); }, 350);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
   const [first, setFirst] = useState(initialPage * INITIAL_ITEMS_PER_PAGE);
   const [rows, setRows] = useState(INITIAL_ITEMS_PER_PAGE);
 
-  useEffect(() => {
-    const scrollToPageStart = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    };
-
-    scrollToPageStart();
-    const frame = window.requestAnimationFrame(scrollToPageStart);
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [currentPageParam]);
+  useEffect(() => { setFirst(initialPage * rows); }, [initialPage, rows]);
 
   const filteredArticles = useMemo(() => {
     const keyword = query.trim().toLocaleLowerCase();
@@ -67,15 +65,10 @@ const ArticlesPage = ({ initialArticles = [] }) => {
     );
   }, [otherArticles, query]);
 
-  const handleSearch = (event) => {
-    setQuery(event.target.value);
-    setFirst(0);
-  };
-
   const onPageChange = (event) => {
     setFirst(event.first);
     setRows(event.rows);
-    setSearchParams({ page: event.page + 1 });
+    setSearchParams(current => { current.set("page", String(event.page + 1)); return current; });
   };
 
   if (!articles?.length) {
@@ -163,17 +156,10 @@ const ArticlesPage = ({ initialArticles = [] }) => {
                 <h2 id="all-articles-title">All articles</h2>
                 <p aria-live="polite">{resultLabel}</p>
               </div>
-              <label className="articles-search">
-                <span>Search articles</span>
-                <IconlySearch size={21} aria-hidden />
-                <input
-                  type="search"
-                  value={query}
-                  onChange={handleSearch}
-                  aria-label="Search articles"
-                />
-              </label>
             </div>
+            <FilterPanel onClear={() => { setSearchInput(""); setQuery(""); setFirst(0); }}>
+              <label><span>Search articles</span><input className="bgsnl-form-control" type="search" value={searchInput} onChange={event => setSearchInput(event.target.value)} /></label>
+            </FilterPanel>
 
             {visibleArticles.length ? (
               <>

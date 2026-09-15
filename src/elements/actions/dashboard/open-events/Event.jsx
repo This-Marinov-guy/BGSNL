@@ -2,7 +2,6 @@ import { useState } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { MOMENT_DATE_TIME } from "../../../../util/functions/date";
-import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import EventModal from "./EventModal";
 import { eventStatusLabel } from "../../../../util/functions/event-status.mjs";
 
@@ -63,15 +62,12 @@ const Event = ({ event, loadData }) => {
           </div>
           <div className="event-card__content">
             <div className="event-card__heading">
-              <div>
+              <div className="event-card__title-row">
                 <span className={`event-card__status event-card__status--${status.toLowerCase().replaceAll(" ", "-")}`}>
                   {status}
                 </span>
                 <h3 className="event-card__title">{event.title || "Untitled draft"}</h3>
               </div>
-              <span className="event-card__region">
-                {capitalizeFirstLetter(event.region || "Region not set", true)}
-              </span>
             </div>
             <dl className="event-card__details">
               <div>
@@ -83,7 +79,7 @@ const Event = ({ event, loadData }) => {
                 <dd>{event.location || "Not set"}</dd>
               </div>
               <div>
-                <dt>Guest · member · active</dt>
+                <dt>Prices</dt>
                 <dd>{price}</dd>
               </div>
               <div>

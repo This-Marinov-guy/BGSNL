@@ -8,6 +8,7 @@ import {
 import { Dialog } from "@/compat/primereact";
 import {
   IconlyCalendar,
+  FiCheck,
   IconlyDelete,
   IconlyEdit,
   IconlyExternalLink,
@@ -273,6 +274,14 @@ const EventModal = ({ event, show, setShow, loadData }) => {
               <IconlyEdit aria-hidden="true" />
               <span>{isDraft ? "Edit draft" : "Edit event"}</span>
             </button>
+            {isDraft && event.readyToPublish === true && checkAuthorization(user.session, ACCESS_4) && (
+              <button className="rn-button-style--2 event-details-modal__complete" type="button" onClick={() => {
+                dispatch(loadSingleEventDashboard(event));
+                navigate(`/user/dashboard/events/${event.id}/edit?complete=1`);
+              }}>
+                <FiCheck aria-hidden="true" /><span>Complete</span>
+              </button>
+            )}
             {canToggleSales && (
               <button
                 type="button"
@@ -447,22 +456,18 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                     label="Sales status"
                     value={isDraft ? "Not open" : eventSalesClosed(event) ? "Closed" : "Open"}
                   />
-                  <EventFact
-                    label="Member ticket"
-                    value={event.isMemberFree ? "Free" : "Priced"}
-                  />
+                  {!event.isFree ? (
+                    <EventFact
+                      label="Member ticket"
+                      value={event.isMemberFree ? "Free" : "Priced"}
+                    />
+                  ) : null}
                 </dl>
               </DetailSection>
 
               <DetailSection title="Pricing">
                 {event.isFree ? (
-                  <div className="event-details-modal__notice event-details-modal__notice--success">
-                    <IconlyTicket aria-hidden="true" />
-                    <div>
-                      <strong>Free event</strong>
-                      <p>No ticket payment is required.</p>
-                    </div>
-                  </div>
+                  <span className="event-details-modal__free-label">Free</span>
                 ) : event.ticketLink ? (
                   <div className="event-details-modal__notice">
                     <IconlyExternalLink aria-hidden="true" />

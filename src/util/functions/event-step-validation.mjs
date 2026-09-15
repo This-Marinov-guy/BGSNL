@@ -1,6 +1,6 @@
 export const eventStepFields = [
   ["region", "location", "title", "date", "text"],
-  ["isFree", "isMemberFree", "isTicketLink", "ticketLink", "guestPrice", "memberPrice", "activeMemberPrice", "entryIncluding", "memberIncluding", "poster", "ticketImg", "ticketColor", "ticketName", "ticketQR", "ticketLimit", "ticketTimer"],
+  ["isFree", "isMemberFree", "isTicketLink", "ticketLink", "guestPrice", "memberPrice", "activeMemberPrice", "entryIncluding", "memberIncluding", "poster", "ticketImg", "ticketColor", "ticketName", "ticketQR", "ticketLimit", "ticketTimer", "extraImagesValidation", "extraInputsForm"],
 ];
 
 function errorPaths(value, prefix) {

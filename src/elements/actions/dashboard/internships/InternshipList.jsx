@@ -6,7 +6,6 @@ import {
 import { useDispatch } from "react-redux";
 import {
   FaGripVertical,
-  FiArrowLeft,
   FiEdit2,
   FiPlus,
   FiTrash2,
@@ -225,10 +224,6 @@ const InternshipList = () => {
             width: isCompactLayout ? "100%" : "auto",
           }}
         >
-          <Link className="workspace-account-link" to="/user#profile">
-            <FiArrowLeft aria-hidden="true" />
-            <span>Back to account</span>
-          </Link>
           <Link
             to="/user/dashboard/internships/new"
             className="rn-button-style--2 rn-btn-green"
@@ -262,10 +257,10 @@ const InternshipList = () => {
           style={{
             display: "flex",
             alignItems: isCompactLayout ? "flex-start" : "center",
-            gap: "16px",
-            padding: "14px 20px",
-            marginBottom: "12px",
-            borderRadius: "10px",
+            gap: isCompactLayout ? "10px" : "16px",
+            padding: isCompactLayout ? "10px 8px" : "14px 20px",
+            marginBottom: isCompactLayout ? "8px" : "12px",
+            borderRadius: isCompactLayout ? "8px" : "10px",
             border:
               dragOverId === item._id && draggedId !== item._id
                 ? "1px solid #017363"
@@ -319,8 +314,8 @@ const InternshipList = () => {
               src={item.logo || FALLBACK_INTERNSHIP_IMAGE}
               alt={item.company}
               style={{
-                width: "60px",
-                height: "40px",
+                width: isCompactLayout ? "52px" : "60px",
+                height: isCompactLayout ? "36px" : "40px",
                 objectFit: "cover",
                 borderRadius: "4px",
               }}
@@ -443,7 +438,7 @@ const InternshipList = () => {
               className="rn-button"
               style={{
                 padding: "6px 14px",
-                minWidth: isCompactLayout ? "96px" : "auto",
+                minWidth: isCompactLayout ? "76px" : "auto",
                 textAlign: "center",
               }}
               title="Edit"
@@ -456,7 +451,7 @@ const InternshipList = () => {
                 padding: "6px 14px",
                 border: "none",
                 cursor: "pointer",
-                minWidth: isCompactLayout ? "96px" : "auto",
+                minWidth: isCompactLayout ? "76px" : "auto",
               }}
               onClick={() => setDeleteTarget(item)}
               title="Delete"

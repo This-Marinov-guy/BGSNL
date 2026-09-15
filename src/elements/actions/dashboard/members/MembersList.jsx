@@ -4,21 +4,18 @@ import { useSearchParams } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { selectUser } from "../../../../redux/user";
 import {
-  checkAuthorization,
   sessionClaims,
 } from "../../../../util/functions/authorization";
 import { ACCESS_2 } from "../../../../util/defines/common";
 import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import {
   capitalizeFirstLetter,
-  capitalizeAfterSpace,
 } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
 import { Skeleton } from "@/compat/primereact";
 import Filter from "../Filter";
 import MemberAccordion from "./MemberAccordion";
 import { exportMembersCSV } from "./exportMembers";
-import moment from "moment";
 
 const MembersList = () => {
   const [members, setMembers] = useState([]);
@@ -41,6 +38,7 @@ const MembersList = () => {
   const { sendRequest } = useHttpClient();
 
   useEffect(() => {
+    let active = true;
     const fetchMembers = async () => {
       try {
         setLoading(true);
@@ -54,19 +52,20 @@ const MembersList = () => {
           false
         );
 
-        if (responseData?.members) {
+        if (active && responseData?.members) {
           setMembers(responseData.members);
           setSummary(responseData.summary);
         }
       } catch (err) {
-        console.error("Error loading members:", err);
+        if (active) console.error("Error loading members:", err);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
 
     fetchMembers();
-  }, [regionParam]);
+    return () => { active = false; };
+  }, [regionParam, isAdmin]);
 
   // Group members by region
   const membersByRegion = {};

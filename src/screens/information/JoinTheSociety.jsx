@@ -1,199 +1,95 @@
 "use client";
 
 import ScrollToTop from "@/component/common/ScrollToTop";
-import {
-  FiAward,
-  FiChevronUp,
-  FiUsers,
-} from "@/elements/ui/icons/IconlyIcons";
+import { FaGraduationCap, FiArrowRight, FiChevronUp, FiUsers } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import PageHelmet from "../../component/common/Helmet";
 import FooterTwo from "../../component/footer/FooterTwo";
 import HeaderTwo from "../../component/header/HeaderTwo";
+import styles from "./joinSociety.module.scss";
 
-const JoinTheSociety = () => {
+const memberships = [
+  {
+    type: "member",
+    title: "Member",
+    audience: "For students",
+    description: "Make the most of your student years with the Bulgarian community.",
+    image: "/assets/images/alumni/members.jpg",
+    imageAlt: "Society member wearing a bear mask and serving banitsa",
+    benefits: ["Discounts on society events", "Internship opportunities", "Join a committee or board"],
+    href: "/signup",
+    action: "Join as Member",
+  },
+  {
+    type: "alumni",
+    title: "Alumni",
+    audience: "For graduates",
+    description: "Stay connected after graduation as you begin your working life.",
+    image: "/assets/images/alumni/alumni.jpeg",
+    imageAlt: "Graduate in a graduation gown holding a diploma",
+    benefits: ["Network with fellow alumni", "Take part in alumni events", "Support the society and its mission"],
+    href: "/alumni/register",
+    action: "Join as Alumni",
+  },
+];
+
+export default function JoinTheSociety() {
   return (
     <>
       <PageHelmet pageTitle="Join the society" />
-      <HeaderTwo
-        headertransparent="header--transparent"
-        colorblack="color--black"
-        logoname="logo.png"
-      />
+      <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
 
-      {/* Cards Section */}
-      <div className="rn-service-area pt--160 pb--80 bg_color--1">
+      <main className="rn-service-area pt--160 pb--80 bg_color--1">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="section-title text-center">
-                <h3 className="subtitle">Two Ways to Join</h3>
-                <h2 className="title">Choose Your Path in the Society</h2>
-                {/* <p className="description">
-                  Whether you're a current student or a graduated alumni, we
-                  have the perfect membership option for you.
-                </p> */}
-              </div>
-            </div>
+          <header className={styles.heading}>
+            <h1>Choose your path in the society</h1>
+          </header>
+
+          <div className={styles.grid}>
+            {memberships.map(membership => (
+              <article className={styles.card} data-membership={membership.type} aria-labelledby={`join-${membership.type}`} key={membership.type}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.cardTitle}>
+                    <h2 id={`join-${membership.type}`}>
+                      {membership.type === "alumni" ? <FaGraduationCap aria-hidden="true" /> : <FiUsers aria-hidden="true" />}
+                      <span>{membership.title}</span>
+                    </h2>
+                    <p className={styles.audience}><strong>{membership.audience}</strong></p>
+                  </div>
+                  <img className={styles.photo} src={membership.image} alt={membership.imageAlt} width={120} height={144} />
+                </div>
+                <p className={styles.description}>{membership.description}</p>
+                <ul className={styles.benefits}>
+                  {membership.benefits.map(benefit => <li key={benefit}>{benefit}</li>)}
+                </ul>
+                <div className={styles.actions}>
+                  <Link to={membership.href} className={styles.action}>
+                    {membership.action}<FiArrowRight aria-hidden="true" />
+                  </Link>
+                  {membership.type === "alumni" && (
+                    <Link to="/welcome-to-alumni" className={styles.learnMore}>Learn more about Alumni</Link>
+                  )}
+                </div>
+              </article>
+            ))}
           </div>
 
-          <div className="row mt--50 justify-content-center">
-            {/* Member Card */}
-            <div className="col-lg-5 col-md-6 col-sm-6 col-12">
-              <div className="service service__style--2 bg-color-blackest radius text-center">
-                <div className="icon">
-                  <img
-                    src="/assets/images/alumni/members.jpg"
-                    alt="Become a Member"
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      border: "3px solid #017363",
-                    }}
-                  />
-                </div>
-                <div className="content">
-                  <h3 className="title">
-                    <FiUsers
-                      style={{ marginRight: "10px", color: "#017363" }}
-                    />
-                    Become a Member
-                  </h3>
-                  <p>
-                    Join the society during your academic years, get event discounts, explore internship options and get the chance to
-                    enter a society's committee or a board.
-                  </p>
-                  {/* <div className="feature-list mt--30">
-                    <ul className="list-style--1">
-                      <li>Access to EXCLUSIVE society events</li>
-                      <li>Member discounts</li>
-                      <li>Option to become an Active Member</li>
-                      <li>Internship opportunities</li>
-                    </ul>
-                  </div> */}
-                </div>
-                <div className="service-button mt--30">
-                  <Link
-                    to="/signup"
-                    className="rn-button-style--2 rn-btn-reverse-green"
-                  >
-                    Join as Member
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Alumni Card */}
-            <div className="col-lg-5 col-md-6 col-sm-6 col-12">
-              <div
-                className="service service__style--2 bg-color-blackest radius text-center"
-                style={{ position: "relative" }}
-              >
-                {/* Learn More Button */}
-                <Link
-                  to="/welcome-to-alumni"
-                  style={{
-                    position: "absolute",
-                    top: "15px",
-                    right: "15px",
-                    backgroundColor: "rgba(229, 184, 11, 0.1)",
-                    border: "1px solid #e5b80b",
-                    borderRadius: "20px",
-                    padding: "6px 12px",
-                    color: "#e5b80b",
-                    textDecoration: "none",
-                    transition: "all 0.3s ease",
-                    zIndex: 10,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = "#e5b80b";
-                    e.target.style.color = "white";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = "rgba(229, 184, 11, 0.1)";
-                    e.target.style.color = "#e5b80b";
-                  }}
-                >
-                  Learn More
-                </Link>
-
-                <div className="icon">
-                  <img
-                    src="/assets/images/alumni/alumni.jpeg"
-                    alt="Become an Alumni"
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      border: "3px solid #e5b80b",
-                    }}
-                  />
-                </div>
-                <div className="content">
-                  <h3 className="title">
-                    <FiAward
-                      style={{ marginRight: "10px", color: "#e5b80b" }}
-                    />
-                    Become an Alumni
-                  </h3>
-                  <p>
-                    Support the society as post-graduate alumni. This program enables you to networking
-                    with our community, alumni events and  aiding our mission.
-                  </p>
-                  {/* <div className="feature-list mt--30">
-                    <ul className="list-style--1">
-                      <li>Premium alumni events</li>
-                      <li>Alumni Tree entry</li>
-                      <li>Voting rights</li>
-                      <li>Personalized merchandise</li>
-                    </ul>
-                  </div> */}
-                </div>
-                <div className="service-button mt--30">
-                  <Link
-                    to="/alumni/register"
-                    className="rn-button-style--2 rn-btn-solid-gold"
-                  >
-                    Join as Alumni
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Info Section */}
           <div className="row mt--80 team_member_border_1">
             <div className="col-lg-12">
               <div className="text-center">
                 <h4>Still Not Sure?</h4>
-                <p className="mb--30">
-                  Contact us for more information about membership benefits and
-                  requirements.
-                </p>
-                <Link
-                  to="/contact"
-                  className="rn-button-style--2 rn-btn-reverse"
-                >
-                  Contact Us
-                </Link>
+                <p className="mb--30">Contact us for more information about membership benefits and requirements.</p>
+                <Link to="/contact" className="rn-button-style--2 rn-btn-reverse">Contact Us</Link>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       <FooterTwo />
-
       <div className="backto-top">
-        <ScrollToTop showUnder={160}>
-          <FiChevronUp size={26} />
-        </ScrollToTop>
+        <ScrollToTop showUnder={160}><FiChevronUp size={26} /></ScrollToTop>
       </div>
     </>
   );
-};
-
-export default JoinTheSociety;
+}

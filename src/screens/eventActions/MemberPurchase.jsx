@@ -213,7 +213,12 @@ const MemberPurchase = ({ initialEvent = null }) => {
               event={selectedEvent}
               factsInsideOverview
               price={displayedTicketPrice}
-              priceBadge={<DynamicTicketBadge product={selectedEvent?.product} />}
+              priceBadge={
+                <DynamicTicketBadge
+                  isMember={!alreadyRegistered}
+                  product={selectedEvent?.product}
+                />
+              }
               showMemberPriceComparison={false}
               usesMemberPrice={!alreadyRegistered}
             />

@@ -5,12 +5,13 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ScrollToTop from "@/component/common/ScrollToTop";
-import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import { FiArrowLeft, FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import EventList from "@/elements/actions/dashboard/open-events/EventList";
 import { selectUser } from "@/redux/user";
 import { ACCESS_3 } from "@/util/defines/common";
 import styles from "./administration.module.scss";
+import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 
 const EventsAnalyticsList = dynamic(() => import("@/elements/actions/dashboard/events-analytics/EventsAnalyticsList"), {
   loading: () => <p role="status">Loading event analytics…</p>,
@@ -31,13 +32,18 @@ export default function EventDashboard() {
     <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className="container user-workspace-page event-admin-page">
       <nav className={styles.views} aria-label="Event administration">
-        <Link href="/user/dashboard">← Administration</Link>
+        <Link className={styles.backLink} href="/user/dashboard" aria-label="Back to administration">
+          <FiArrowLeft size={24} aria-hidden />
+          <span>Administration</span>
+        </Link>
         {canViewAnalytics && <>
-          <Link href={viewUrl("")} aria-current={!analytics ? "page" : undefined} scroll={false}>Manage events</Link>
-          <Link href={viewUrl("analytics")} aria-current={analytics ? "page" : undefined} scroll={false}>Event analytics</Link>
+          <div className={styles.viewTabs}>
+            <Link href={viewUrl("")} aria-current={!analytics ? "page" : undefined} scroll={false}>Manage events</Link>
+            <Link href={viewUrl("analytics")} aria-current={analytics ? "page" : undefined} scroll={false}>Event analytics</Link>
+          </div>
         </>}
       </nav>
-      {analytics ? <EventsAnalyticsList /> : <EventList />}
+      {analytics ? <AnalyticsAvailability title="Event analytics"><EventsAnalyticsList /></AnalyticsAvailability> : <EventList />}
     </main>
     <div className="backto-top"><ScrollToTop showUnder={160}><FiChevronUp size={26} /></ScrollToTop></div>
   </>;

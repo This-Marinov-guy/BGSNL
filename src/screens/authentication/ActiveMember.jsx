@@ -92,7 +92,7 @@ const ActiveMember = () => {
           logoname="logo.png"
         />
 
-        <div className="container mt--200">
+        <div className="container mt--120">
           <h2 className="center_text">Кандидатура за активни членове</h2>
         </div>
         {/* Start Options Area */}

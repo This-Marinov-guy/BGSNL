@@ -1,57 +1,37 @@
 .panel {
-  background: #f4f7f4;
-  border: 1px solid #dce5df;
+  background: var(--form-label-background, #add8e6);
   border-radius: 0.9rem;
-  display: grid;
-  gap: 1rem;
-  padding: clamp(1rem, 2vw, 1.35rem);
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  color: #232b27;
 }
-
-.header {
-  align-items: flex-end;
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-}
-
-.heading {
-  min-width: 0;
-
-  h2 {
-    color: #19251f;
-    font-size: 1.2rem;
-    line-height: 1.2;
-    margin: 0;
-  }
-
-  p {
-    color: #617168;
-    margin: 0.3rem 0 0;
-  }
-}
-
-.summary {
-  color: #53655b;
-  flex: 0 0 auto;
-  font-weight: 700;
-  text-align: right;
-}
-
+.summary { margin-top: 0.5rem; font-weight: 600; }
+.body { padding-top: 0; }
+.description { margin: 0 0 1rem; color: inherit; }
+.controlsRow { display: block; min-width: 0; }
 .controls {
-  align-items: end;
   display: grid;
-  gap: 1rem;
+  align-items: end;
+  gap: 1.25rem;
+  grid-auto-flow: row;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  > * { min-width: 0; }
+  label { display: grid; gap: 0.4rem; margin: 0; color: #232b27; font-weight: 600; }
+  input, select, :global(.p-calendar), :global(.p-select) { width: 100%; min-width: 0; }
+  input, select { background-color: #fff; }
 }
-
-@media (max-width: 575px) {
-  .header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
-  .summary {
-    text-align: left;
-  }
+.clear { display: inline-flex; align-items: center; justify-content: center; justify-self: end; width: 2.75rem; min-width: 2.75rem; height: 2.75rem; border: 1px solid #d92d20; border-radius: 0.5rem; padding: 0; background: #d92d20; color: #fff; cursor: pointer; transition: background-color 160ms ease; }
+.clear svg { width: 1.25rem; height: 1.25rem; }
+.clear:hover { background: #b42318; border-color: #b42318; }
+.clear:focus-visible { outline: 3px solid #d92d20; outline-offset: 3px; }
+.toggle:focus-visible { outline: 3px solid #017363; outline-offset: 3px; }
+.toggle { display: none; }
+@media (max-width: 767px) {
+  .body { padding-top: 0.75rem; }
+  .toggle { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+  .toggle svg { transition: transform 250ms ease; }
+  .rotated { transform: rotate(180deg); }
+  .controls { grid-template-columns: minmax(0, 1fr); }
+  .clear { justify-self: stretch; width: 100%; min-width: 0; }
 }
+@media (prefers-reduced-motion: reduce) { .toggle svg, .clear { transition: none; } }

@@ -68,10 +68,14 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
         <div className="event-region-drafts__header"><h3>Continue from a draft</h3><div className="event-region-drafts__skeleton-navigation"><span /><span /></div></div>
         <div className="event-region-drafts__skeleton-cards">
           {[0, 1, 2].map(index => <div className="event-region-drafts__card" key={index}>
-            <div className="event-region-drafts__skeleton-poster" />
             <div className="event-region-drafts__content">
-              <div className="event-region-drafts__skeleton-title" />
-              <div className="event-region-drafts__skeleton-date" />
+              <div className="event-region-drafts__card-header">
+                <div className="event-region-drafts__facts">
+                  <div className="event-region-drafts__skeleton-title" />
+                  <div className="event-region-drafts__skeleton-date" />
+                </div>
+                <div className="event-region-drafts__skeleton-poster" />
+              </div>
               <div className="event-region-drafts__skeleton-button" />
             </div>
           </div>)}
@@ -102,10 +106,14 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
           const note = typeof draft.draftData?.note === "string" ? draft.draftData.note.trim() : "";
           return (
             <article className="event-region-drafts__card" key={draft.id} aria-roledescription="slide" aria-label={`${index + 1} of ${result.drafts.length}`}>
-              {typeof poster === "string" && poster && <img className="event-region-drafts__poster" src={poster} alt={`${title} poster`} loading="lazy" />}
               <div className="event-region-drafts__content">
-                <h4>{title}</h4>
-                {hasDate ? <time dateTime={date.toISOString()}>{dateFormat.format(date)} · {timeFormat.format(date)}</time> : <p>Date and time not set</p>}
+                <div className="event-region-drafts__card-header">
+                  <div className="event-region-drafts__facts">
+                    <h4>{title}</h4>
+                    {hasDate ? <time dateTime={date.toISOString()}>{dateFormat.format(date)} · {timeFormat.format(date)}</time> : <p>Date and time not set</p>}
+                  </div>
+                  {typeof poster === "string" && poster && <img className="event-region-drafts__poster" src={poster} alt={`${title} poster`} loading="lazy" />}
+                </div>
                 {note && <p className="event-draft-note"><strong>Note</strong>{note}</p>}
                 <Link to={`/user/dashboard/events/${encodeURIComponent(draft.id)}/edit`} className="event-region-drafts__continue" aria-label={`Continue ${title}`} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined} onClick={event => { if (disabled) event.preventDefault(); }}><span>Continue</span><span className="event-region-drafts__continue-icon" aria-hidden="true">↗</span></Link>
               </div>

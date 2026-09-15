@@ -1,12 +1,13 @@
 import { SelectInput } from "@/compat/primereact";
 import React from 'react'
+import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import PropTypes from 'prop-types'
 import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize'
-import { useSearchParams } from "@/util/navigation";
+import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 
-const Filter = ({ regions = REGIONS }) => {
-    const [searchParams, setSearchParams] = useSearchParams();
+const Filter = ({ regions = REGIONS, showRegion = true, children, onClear }) => {
+    const [searchParams, setSearchParams] = useFilterSearchParams();
 
     const handleRegionChange = (event) => {
         setSearchParams((current) => {
@@ -17,9 +18,15 @@ const Filter = ({ regions = REGIONS }) => {
     };
 
     return (
-        <aside className="event-dashboard-filters" aria-label="Dashboard filters">
-            <form>
-                <label>
+        <FilterPanel
+            className="event-dashboard-filters"
+            controlsClassName="event-dashboard-filters__fields"
+            title="Event filters"
+            onClear={() => {
+            setSearchParams(current => { current.delete("region"); return current; });
+            onClear?.();
+        }}>
+                {showRegion && <label>
                     <span>Region</span>
                     <SelectInput value={searchParams.get("region") || ''} onChange={handleRegionChange}>
                         <option value="">All</option>
@@ -27,14 +34,17 @@ const Filter = ({ regions = REGIONS }) => {
                             <option value={val} key={index}>{capitalizeFirstLetter(val, true)}</option>
                         ))}
                     </SelectInput>
-                </label>
-            </form>
-        </aside>
+                </label>}
+                {children}
+        </FilterPanel>
     )
 }
 
 Filter.propTypes = {
     regions: PropTypes.arrayOf(PropTypes.string),
+    showRegion: PropTypes.bool,
+    children: PropTypes.node,
+    onClear: PropTypes.func,
 };
 
 export default Filter

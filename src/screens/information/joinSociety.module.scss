@@ -1,0 +1,194 @@
+.heading {
+  max-width: 48rem;
+  margin: 0 auto 3rem;
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    color: #232227;
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1.5rem;
+  max-width: 68rem;
+  margin: 0 auto;
+}
+
+.card {
+  --join-accent: #017363;
+  --join-button: #017363;
+  --join-button-text: #fff;
+  --join-button-hover: #00594d;
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: #f3f8f5;
+  border: 1px solid #d6e2db;
+  border-radius: 1.1rem;
+  animation: cardReveal 350ms ease backwards;
+  transition: border-color 220ms ease, transform 220ms ease;
+
+  &[data-membership="alumni"] {
+    --join-accent: #80600a;
+    --join-button: #e5b80b;
+    --join-button-text: #302a17;
+    --join-button-hover: #d3a80a;
+    background: #fffaf0;
+    border-color: #e7deca;
+    animation-delay: 80ms;
+  }
+
+  &:focus-within { border-color: var(--join-accent); }
+}
+
+.cardHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardTitle {
+  min-width: 0;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.65rem;
+    color: #24352c;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+
+    span { font: inherit; }
+    svg { flex: none; width: 1.75rem; height: 1.75rem; color: var(--join-accent); }
+  }
+}
+
+.audience {
+  margin: 0;
+  color: var(--join-accent);
+  font-size: 1.25rem;
+  line-height: 1.35;
+
+  strong { color: inherit; font-weight: 700; }
+}
+
+.photo {
+  display: block;
+  width: clamp(5.5rem, 9vw, 7.5rem);
+  height: auto;
+  aspect-ratio: 5 / 6;
+  object-fit: cover;
+  object-position: center 35%;
+  border: 1px solid #d6ddd5;
+  border-radius: 0.65rem;
+}
+
+.description {
+  margin: 0;
+  color: #46554c;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.benefits {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding-left: 1.15rem;
+  color: #24352c;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+
+  li { margin: 0; padding-left: 0.25rem; }
+  li::marker { color: var(--join-accent); }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 0.6rem;
+  background: var(--join-button);
+  color: var(--join-button-text);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+  transition: background-color 180ms ease, transform 180ms ease;
+
+  &:link, &:visited { color: var(--join-button-text); text-decoration: none; }
+
+  svg { flex: none; width: 1.25rem; height: 1.25rem; transition: transform 180ms ease; }
+  &:hover { background: var(--join-button-hover); color: var(--join-button-text); }
+  &:hover svg { transform: translateX(0.2rem); }
+  &:active { transform: scale(0.98); }
+}
+
+.learnMore {
+  color: var(--join-accent);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 180ms ease;
+
+  &:link, &:visited { color: var(--join-accent); }
+  &:hover { color: #302a17; }
+}
+
+.action:focus-visible, .learnMore:focus-visible {
+  outline: 3px solid var(--join-accent);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { border-color: var(--join-accent); transform: translateY(-3px); }
+}
+
+@media (max-width: 767px) {
+  .heading { margin-bottom: 2rem; }
+  .grid { grid-template-columns: minmax(0, 1fr); max-width: 36rem; }
+  .photo { width: 6rem; }
+}
+
+@media (max-width: 374px) {
+  .card { padding: 1.25rem; }
+  .photo { width: 4.75rem; }
+  .audience { font-size: 1.125rem; }
+}
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(0.65rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { animation: none; }
+  .card, .action, .action svg, .learnMore { transition: none; }
+  .action:active, .action:hover svg { transform: none; }
+}

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import AnimatedDisclosure from "../../../ui/functional/AnimatedDisclosure";
 import moment from "moment";
 import {
   FiChevronDown,
-  FiChevronUp,
   FiMail,
   FiPhone,
 } from "@/elements/ui/icons/IconlyIcons";
@@ -10,16 +10,14 @@ import { capitalizeAfterSpace } from "../../../../util/functions/capitalize";
 import { MOMENT_DATE_YEAR } from "../../../../util/functions/date";
 
 const MemberAccordion = ({ member }) => {
-  const [expanded, setExpanded] = useState(false);
 
   const statusColor = member.isPaid ? "#28a745" : "#dc3545";
   const statusText = member.isPaid ? "Active" : "Expired";
 
   return (
-    <div className="member-accordion">
+    <AnimatedDisclosure className="member-accordion" summary={<>
       <div
         className="member-accordion__header"
-        onClick={() => setExpanded(!expanded)}
       >
         <div className="member-accordion__summary">
           <div className="member-accordion__name">
@@ -49,11 +47,10 @@ const MemberAccordion = ({ member }) => {
           </div>
         </div>
         <div className="member-accordion__toggle">
-          {expanded ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
+          <FiChevronDown className="animated-disclosure__chevron" size={20} aria-hidden="true" />
         </div>
       </div>
-
-      {expanded && (
+      </>}>
         <div className="member-accordion__details">
           <div className="row">
             <div className="col-md-2 col-4">
@@ -119,9 +116,10 @@ const MemberAccordion = ({ member }) => {
             </div>
           </div>
         </div>
-      )}
-    </div>
+    </AnimatedDisclosure>
   );
 };
+
+MemberAccordion.propTypes = { member: PropTypes.object.isRequired };
 
 export default MemberAccordion;

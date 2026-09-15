@@ -1,0 +1,10 @@
+.animated-disclosure > summary { display: block; cursor: pointer; list-style: none; }
+.animated-disclosure > summary::-webkit-details-marker { display: none; }
+.animated-disclosure > summary:focus-visible { outline: 2px solid #017363; outline-offset: 3px; border-radius: 0.35rem; }
+.animated-disclosure__body { overflow: hidden; }
+.animated-disclosure__content { display: flow-root; }
+.animated-disclosure__chevron { transition: transform 250ms ease; }
+.animated-disclosure[data-expanded="true"] > summary .animated-disclosure__chevron { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .animated-disclosure__chevron { transition: none; } }
+
+.animated-disclosure > summary.animated-disclosure__summary { display: flex; align-items: center; gap: 0.65rem; }

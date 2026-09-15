@@ -1642,3 +1642,7 @@ form[data-validation-submitted="true"]
 .bgsnl-select-input .p-select-value { height: auto !important; min-height: 2.875rem; padding: 0.65rem 0.9rem !important; color: inherit !important; }
 .bgsnl-select-input.has-validation-error, .bgsnl-select-input:has([aria-invalid="true"]) { border: 2px solid #9e0d33 !important; }
 .bgsnl-pagination__rows .bgsnl-select-input { width: auto; min-width: 4.5rem; }
+
+.p-select-option {
+  font-weight: 600 !important;
+}

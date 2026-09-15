@@ -130,6 +130,36 @@ export const decryptData = (string) => {
   return decryptedData;
 };
 
+const ticketPriceValue = (value) => {
+  if (value === null || value === undefined || value === "") return null;
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : null;
+};
+
+const ticketBuyerState = (user = {}, { blockDiscounts = false } = {}) => {
+  const isMember = !blockDiscounts && !!user?.session && user?.memberDiscount === true;
+  return {
+    isMember,
+    isActiveMember: isMember && user?.roles?.some((role) => ACCESS_4.includes(role)),
+  };
+};
+
+const selectTicketTier = (product, buyerState) => {
+  const activeMemberPrice = ticketPriceValue(product?.activeMember?.price);
+  const memberPrice = ticketPriceValue(product?.member?.price);
+  const guestPrice = ticketPriceValue(product?.guest?.price);
+
+  if (buyerState.isActiveMember && activeMemberPrice !== null) {
+    return product.activeMember;
+  }
+
+  if (buyerState.isMember && memberPrice !== null) {
+    return product.member;
+  }
+
+  return guestPrice !== null ? product.guest : null;
+};
+
 export const estimatePriceByEvent = (
   selectedEvent,
   user = {},
@@ -139,13 +169,14 @@ export const estimatePriceByEvent = (
     withMemberBadge: true,
   }
 ) => {
-  const { product } = selectedEvent;
-  const isMember = !!user?.session && user?.memberDiscount === true;
-  const isActiveMember = isMember && user?.roles?.some((role) => ACCESS_4.includes(role));
+  const buyerState = ticketBuyerState(user, options);
+  const selectedTier = selectTicketTier(selectedEvent?.product, buyerState);
+  const selectedPrice = ticketPriceValue(selectedTier?.price);
+  const selectedOriginalPrice = ticketPriceValue(selectedTier?.originalPrice);
 
   const includedText =
     options.withIncludedText &&
-    (isMember
+    (buyerState.isMember
       ? selectedEvent?.memberIncluding
         ? `(including ${selectedEvent.memberIncluding})`
         : ""
@@ -153,7 +184,7 @@ export const estimatePriceByEvent = (
       ? `(including ${selectedEvent.entryIncluding})`
       : "");
 
-  if (selectedEvent.isFree || (isMember && selectedEvent.isMemberFree)) {
+  if (selectedEvent.isFree || (buyerState.isMember && selectedEvent.isMemberFree)) {
     return "FREE";
   }
 
@@ -161,66 +192,26 @@ export const estimatePriceByEvent = (
     return "Check ticket portal";
   }
 
-  if (isActiveMember && product?.activeMember?.price) {
+  if (selectedTier && selectedPrice !== null) {
+    const memberBadge = buyerState.isActiveMember ? (
+      <SolidBadge color="#e5b80b" text="Extra discounted" />
+    ) : buyerState.isMember ? (
+      <SolidBadge color="#add8e6" text="Discounted" />
+    ) : null;
+
     return (
       <div className="d-flex justify-center align-items-center items-center g--4">
-        €{product.activeMember.price} {includedText}
-        {!isNaN(product.activeMember.price) && options.withMemberBadge && (
-          <SolidBadge color="#e5b80b" text="Extra discounted" />
-        )}{" "}
+        <span>
+          {selectedOriginalPrice !== null && selectedOriginalPrice > selectedPrice && (
+            <>
+              <s>€{selectedTier.originalPrice}</s>
+              <br />
+            </>
+          )}
+          €{selectedTier.price} {includedText}
+        </span>
+        {options.withMemberBadge && memberBadge}{" "}
       </div>
-    );
-  }
-
-  if (isMember && (product?.member?.price || selectedEvent.isMemberFree)) {
-    return selectedEvent.isMemberFree ? (
-      "FREE"
-    ) : (
-      <div className="d-flex justify-center align-items-center items-center g--4">
-        €{product.member.price} {includedText}
-        {!isNaN(product.member.price) && options.withMemberBadge && (
-          <SolidBadge color="#add8e6" text="Discounted" />
-        )}{" "}
-      </div>
-    );
-  }
-
-  if (product?.guest?.price) {
-    return (
-      <>
-        €{product.guest.price} {includedText}
-      </>
-    );
-  }
-
-  if (
-    isMember &&
-    !isActiveMember &&
-    product.member?.price &&
-    product.member?.discount &&
-    product.member?.originalPrice
-  ) {
-    return (
-      <span>
-        <s>€{product.member.originalPrice}</s>
-        <br />
-        €{product.member.price}
-      </span>
-    );
-  }
-
-  if (
-    !isMember &&
-    product.guest?.price &&
-    product.guest?.discount &&
-    product.guest?.originalPrice
-  ) {
-    return (
-      <h4>
-        <s>€{product.guest.originalPrice}</s>
-        <br />
-        €{product.guest.price}
-      </h4>
     );
   }
 
@@ -236,40 +227,23 @@ export const hasAppliedTicketDiscount = (
     return false;
   }
 
-  const { product } = selectedEvent;
-  const toTicketPrice = (value) => {
-    if (value === null || value === undefined || value === "") return null;
-    const numericValue = Number(value);
-    return Number.isFinite(numericValue) ? numericValue : null;
-  };
-  const memberPriceEnabled = !!user?.session && user?.memberDiscount === true;
-  const activeMemberPrice = toTicketPrice(product.activeMember?.price);
-  const memberPrice = toTicketPrice(product.member?.price);
-  const activeMemberPriceEnabled =
-    memberPriceEnabled &&
-    user?.roles?.some((role) => ACCESS_4.includes(role)) &&
-    activeMemberPrice !== null;
-
-  if (memberPriceEnabled && selectedEvent.isMemberFree) {
+  const buyerState = ticketBuyerState(user, { blockDiscounts });
+  if (buyerState.isMember && selectedEvent.isMemberFree) {
     return true;
   }
 
-  const appliedTier = activeMemberPriceEnabled
-    ? product.activeMember
-    : memberPriceEnabled && memberPrice !== null
-      ? product.member
-      : product.guest;
-  const appliedPrice = toTicketPrice(appliedTier?.price);
-  const originalPrice = toTicketPrice(appliedTier?.originalPrice);
+  const appliedTier = selectTicketTier(selectedEvent.product, buyerState);
+  const appliedPrice = ticketPriceValue(appliedTier?.price);
+  const originalPrice = ticketPriceValue(appliedTier?.originalPrice);
   const discountPercent = Number(appliedTier?.discount);
-  const guestPrice = toTicketPrice(product.guest?.price);
+  const guestPrice = ticketPriceValue(selectedEvent.product.guest?.price);
 
   if (appliedPrice === null) return false;
   if (Number.isFinite(discountPercent) && discountPercent > 0) return true;
   if (originalPrice !== null && originalPrice > appliedPrice) return true;
 
   return (
-    memberPriceEnabled &&
+    buyerState.isMember &&
     guestPrice !== null &&
     appliedPrice < guestPrice
   );

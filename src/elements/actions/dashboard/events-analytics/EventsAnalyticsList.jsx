@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
@@ -43,42 +43,33 @@ const EventsAnalyticsList = () => {
 
   const { sendRequest } = useHttpClient();
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (isAdmin && regionParam) params.set("region", regionParam);
-      if (fromDate) params.set("from", formatDateParam(fromDate));
-      if (toDate) params.set("to", formatDateParam(toDate));
-      const query = params.toString() ? `?${params.toString()}` : "";
-
-      const responseData = await sendRequest(
-        `dashboard/events-analytics${query}`,
-        "GET",
-        null,
-        {},
-        true,
-        false
-      );
-
-      if (responseData?.events) {
-        setEvents(responseData.events);
-        setSummary(responseData.summary);
-      }
-    } catch (err) {
-      console.error("Error loading events analytics:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const requestRef = useRef(sendRequest);
+  requestRef.current = sendRequest;
 
   useEffect(() => {
+    let active = true;
+    const fetchEvents = async () => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        if (isAdmin && regionParam) params.set("region", regionParam);
+        if (fromDate) params.set("from", formatDateParam(fromDate));
+        if (toDate) params.set("to", formatDateParam(toDate));
+        const query = params.toString() ? `?${params.toString()}` : "";
+        const response = await requestRef.current(`dashboard/events-analytics${query}`, "GET", null, {}, true, false);
+        if (active && response?.events) {
+          setEvents(response.events);
+          setSummary(response.summary);
+        }
+      } catch (error) {
+        if (active) console.error("Error loading events analytics:", error);
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
     fetchEvents();
-  }, [regionParam]);
-
-  const handleFilter = () => {
-    fetchEvents();
-  };
+    return () => { active = false; };
+  }, [regionParam, fromDate, toDate, isAdmin]);
 
   // Group events by region
   const eventsByRegion = {};
@@ -151,7 +142,7 @@ const EventsAnalyticsList = () => {
       </div>
 
       {/* Date Filter */}
-      <div className="event-dashboard-filters event-analytics-date-filter">
+      <Filter showRegion={isAdmin} onClear={() => { setFromDate(null); setToDate(null); }}>
         <div className="event-analytics-date-filter__field">
           <label htmlFor="analytics-from-date">From</label>
           <Calendar
@@ -176,16 +167,7 @@ const EventsAnalyticsList = () => {
             minDate={fromDate ?? undefined}
           />
         </div>
-        <button
-          className="rn-button-style--2 rn-btn-green event-analytics-date-filter__apply"
-          onClick={handleFilter}
-          disabled={loading}
-        >
-          <span>Apply</span>
-        </button>
-      </div>
-
-      {isAdmin && <Filter />}
+      </Filter>
 
       {loading ? (
         <div className="row mt--20">

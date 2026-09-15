@@ -19,7 +19,6 @@ import {
 } from "@/elements/ui/icons/IconlyIcons";
 import {
   useNavigate,
-  useSearchParams,
 } from "@/util/navigation";
 import PageHelmet from "../../component/common/Helmet";
 import FooterTwo from "../../component/footer/FooterTwo";
@@ -27,7 +26,9 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import Pagination from "../../elements/common/Pagination";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
-import SearchField from "../../elements/ui/functional/SearchField";
+import FilterPanel from "@/elements/ui/filters/FilterPanel";
+import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
+import { SelectInput } from "@/compat/primereact";
 import PageLoading from "../../elements/ui/loading/PageLoading";
 import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
 import { useHttpClient } from "../../hooks/common/http-hook";
@@ -35,7 +36,7 @@ import { selectUser } from "../../redux/user";
 
 const ROWS_PER_PAGE_OPTIONS = [6, 12, 24];
 const DEFAULT_ROWS = 12;
-const SEARCH_DEBOUNCE_MS = 500;
+const SEARCH_DEBOUNCE_MS = 350;
 
 const TYPE_ALL = "all";
 const TYPE_BULGARIAN = "bulgarian";
@@ -45,7 +46,7 @@ const Internships = ({ initialInternships = [] }) => {
   const { sendRequest } = useHttpClient();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterSearchParams();
 
   // `initialInternships` comes from the server render, so the list is in the
   // HTML instead of behind a <Loader />. The effect below still refetches after
@@ -65,13 +66,14 @@ const Internships = ({ initialInternships = [] }) => {
   const rowsParam = ROWS_PER_PAGE_OPTIONS.includes(rowsFromUrl) ? rowsFromUrl : DEFAULT_ROWS;
   const pageFromUrl = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
 
+  const searchParam = searchParams.get("search") || "";
   useEffect(() => {
-    setSearchInput(searchParams.get("search") || "");
-  }, [searchParams]);
+    setSearchInput(searchParam);
+  }, [searchParam]);
 
   useEffect(() => {
     const trimmed = searchInput.trim();
-    const currentUrlSearch = searchParams.get("search") || "";
+    const currentUrlSearch = searchParam;
     if (trimmed === currentUrlSearch) return;
 
     const timeoutId = window.setTimeout(() => {
@@ -88,18 +90,19 @@ const Internships = ({ initialInternships = [] }) => {
     }, SEARCH_DEBOUNCE_MS);
 
     return () => window.clearTimeout(timeoutId);
-  }, [searchInput, setSearchParams]);
+  }, [searchInput, searchParam, setSearchParams]);
 
   const updateUrl = (updates) => {
-    const next = new URLSearchParams(searchParams);
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === "" || value === TYPE_ALL || value === "1") {
-        next.delete(key);
-      } else {
-        next.set(key, String(value));
-      }
-    });
-    setSearchParams(next, { replace: true });
+    setSearchParams(next => {
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === undefined || value === "" || value === TYPE_ALL || String(value) === "1") {
+          next.delete(key);
+        } else {
+          next.set(key, String(value));
+        }
+      });
+      return next;
+    }, { replace: true });
   };
 
   const filteredList = useMemo(() => {
@@ -134,10 +137,6 @@ const Internships = ({ initialInternships = [] }) => {
 
   const onPageChange = (event) => {
     updateUrl({ page: event.page + 1, rows: event.rows });
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
   };
 
   const handleTypeChange = (type) => {
@@ -244,52 +243,17 @@ const Internships = ({ initialInternships = [] }) => {
           </div>
 
           {/* Search and filters */}
-          <div className="internships-filters mb--40 d-flex flex-wrap justify-content-between align-items-center">
-            <form
-              onSubmit={handleSearchSubmit}
-              className="internships-search-form mb--20"
-            >
-              <SearchField
-                ariaLabel="Search internships"
-                className="internships-search-field"
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-              />
-            </form>
-
-            <div className="internships-type-filter d-flex flex-wrap gap-2 align-items-center">
-              {[
-                { value: TYPE_ALL, label: "All" },
-                { value: TYPE_BULGARIAN, label: "Bulgarian" },
-                { value: TYPE_INTERNATIONAL, label: "International & Remote" },
-              ].map(({ value, label }) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => handleTypeChange(value)}
-                  className={
-                    typeParam === value
-                      ? "rn-button-style--2 rn-btn-solid-red"
-                      : "rn-button-style--2"
-                  }
-                  style={{
-                    padding: "8px 18px",
-                    borderRadius: "8px",
-                    border:
-                      typeParam === value
-                        ? "none"
-                        : "1px solid rgba(0,0,0,0.15)",
-                    backgroundColor:
-                      typeParam === value ? undefined : "transparent",
-                    color: typeParam === value ? "#fff" : "#374151",
-                    cursor: "pointer",
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
+          <FilterPanel onClear={() => {
+            setSearchInput("");
+            updateUrl({ search: undefined, type: undefined, page: undefined });
+          }}>
+            <label><span>Search internships</span><input className="bgsnl-form-control" type="search" value={searchInput} onChange={event => setSearchInput(event.target.value)} /></label>
+            <label><span>Type</span><SelectInput className="bgsnl-form-control" value={typeParam} onChange={event => handleTypeChange(event.target.value)}>
+              <option value={TYPE_ALL}>All</option>
+              <option value={TYPE_BULGARIAN}>Bulgarian</option>
+              <option value={TYPE_INTERNATIONAL}>International &amp; Remote</option>
+            </SelectInput></label>
+          </FilterPanel>
 
           {/* All Internships Grid with pagination */}
           {internships.length > 0 ? (

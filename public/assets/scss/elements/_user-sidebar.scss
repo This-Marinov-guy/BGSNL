@@ -258,23 +258,29 @@
   align-items: center;
   background: #9e0d33;
   border: 0;
-  border-radius: 50%;
+  border-radius: 999px;
   bottom: 1.25rem;
   box-shadow: 0 0.8rem 2rem rgb(85 8 29 / 22%);
   color: #fff;
   cursor: pointer;
   display: flex;
-  height: 3.5rem;
+  gap: 0.4rem;
+  min-height: 3.25rem;
   justify-content: center;
-  padding: 0;
+  padding: 0 1rem;
   position: fixed;
   right: 1.25rem;
   transition:
     background-color 180ms ease,
     box-shadow 180ms ease,
     transform 180ms ease;
-  width: 3.5rem;
   z-index: 1110;
+}
+
+.sidebar-toggle-label {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .sidebar-toggle-btn:hover {
@@ -377,13 +383,14 @@
 @media (max-width: 991px) {
   .user-page-container {
     display: block;
-    margin-top: 7rem;
-    padding-inline: clamp(0.75rem, 3vw, 1.5rem);
+    margin-top: 6.4rem;
+    padding-inline: 0;
   }
 
   .user-sidebar.mobile {
     background: #fff;
-    border-radius: 0 1rem 1rem 0;
+    border: 0;
+    border-radius: 0;
     bottom: 0;
     box-sizing: border-box;
     height: 100dvh;
@@ -392,14 +399,37 @@
     max-height: 100dvh;
     opacity: 0;
     overflow-y: auto;
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
-    padding-top: max(1rem, env(safe-area-inset-top));
+    padding: max(1rem, env(safe-area-inset-top)) 0.6rem max(0.85rem, env(safe-area-inset-bottom));
     position: fixed;
     top: 0;
     transform: translateX(-105%);
     visibility: hidden;
-    width: min(20rem, calc(100vw - 3.5rem));
+    width: min(22rem, 100vw);
     z-index: 1100;
+
+    .sidebar-user-profile {
+      border-radius: 0;
+      margin: -1rem -0.6rem 0.6rem;
+      padding: 0.75rem 0.8rem;
+    }
+
+    .sidebar-nav {
+      margin-top: 0.35rem;
+
+      li {
+        margin-bottom: 0.2rem;
+      }
+
+      a {
+        min-height: 2.65rem;
+        padding: 0.4rem 0.55rem;
+      }
+
+      .sidebar-nav-heading {
+        margin-top: 0.65rem;
+        padding-top: 0.55rem;
+      }
+    }
   }
 
   .user-sidebar.mobile.open {
@@ -413,6 +443,12 @@
     width: 100%;
   }
 
+  .user-content-area .content-container {
+    border-inline: 0;
+    border-radius: 0;
+    padding: 0.6rem;
+  }
+
   .sidebar-toggle-btn {
     left: 1.25rem;
     right: auto;
@@ -422,17 +458,20 @@
 
 @media (max-width: 575px) {
   .user-page-container {
-    padding-bottom: 3.5rem;
+    padding-bottom: 3.25rem;
   }
 
   .user-content-area .content-container {
-    border-radius: 0.8rem;
-    padding: 1rem;
+    border-inline: 0;
+    border-radius: 0;
+    padding: 0.45rem;
   }
 
   .sidebar-toggle-btn {
-    bottom: 1rem;
-    left: 1rem;
+    bottom: max(0.7rem, env(safe-area-inset-bottom));
+    left: 0.7rem;
+    min-height: 2.85rem;
+    padding-inline: 0.8rem;
   }
 
 }

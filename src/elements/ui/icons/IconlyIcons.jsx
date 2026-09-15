@@ -672,7 +672,15 @@ export const IconlyApple = (props) => (
 );
 
 export const IconlyAward = IconlyCheckCircle;
-export const IconlyEducation = IconlyUsers;
+export const IconlyEducation = (props) => (
+  <IconlySvg {...props}>
+    <g fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m2 9 10-5 10 5-10 5L2 9Z" />
+      <path d="M6 11v6c3 3 9 3 12 0v-6M22 9v7" />
+      <path d="m21 19 1-3 1 3" />
+    </g>
+  </IconlySvg>
+);
 export const IconlyExternalLink = IconlyLogout;
 export const IconlyMicrosoft = IconlyMenu;
 export const IconlyNewspaper = IconlyDocument;

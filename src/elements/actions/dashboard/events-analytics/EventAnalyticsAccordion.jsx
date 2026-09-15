@@ -1,19 +1,17 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import AnimatedDisclosure from "../../../ui/functional/AnimatedDisclosure";
 import moment from "moment";
 import {
   FiChevronDown,
-  FiChevronUp,
 } from "@/elements/ui/icons/IconlyIcons";
 import { MOMENT_DATE_TIME_YEAR } from "../../../../util/functions/date";
 
 const EventAnalyticsAccordion = ({ event }) => {
-  const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="event-analytics-accordion">
+    <AnimatedDisclosure className="event-analytics-accordion" summary={<>
       <div
         className="event-analytics-accordion__header"
-        onClick={() => setExpanded(!expanded)}
       >
         <div className="event-analytics-accordion__poster">
           <img
@@ -41,11 +39,10 @@ const EventAnalyticsAccordion = ({ event }) => {
           </div>
         </div>
         <div className="event-analytics-accordion__toggle">
-          {expanded ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
+          <FiChevronDown className="animated-disclosure__chevron" size={20} aria-hidden="true" />
         </div>
       </div>
-
-      {expanded && (
+      </>}>
         <div className="event-analytics-accordion__details">
           <div className="row mb--10">
             <div className="col-md-3 col-6">
@@ -127,9 +124,10 @@ const EventAnalyticsAccordion = ({ event }) => {
             </div>
           )}
         </div>
-      )}
-    </div>
+    </AnimatedDisclosure>
   );
 };
+
+EventAnalyticsAccordion.propTypes = { event: PropTypes.object.isRequired };
 
 export default EventAnalyticsAccordion;

@@ -144,6 +144,9 @@ const UserSidebar = ({
           ) : (
             <IconlyMenu size={24} aria-hidden />
           )}
+          <span className="sidebar-toggle-label">
+            {isSidebarOpen ? "Close" : "Menu"}
+          </span>
         </button>
       )}
 

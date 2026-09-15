@@ -111,7 +111,25 @@
   .widgetHeader { padding: .5rem 1rem; }
   .listView, .formView, .threadHeader, .composer { padding: 1rem; }
   .messages { padding: 1rem; }
-  .inboxPage { width: 96%; }
+  .inboxPage {
+    width: 100%;
+    max-width: 100vw;
+
+    > header {
+      margin-bottom: 0.85rem;
+      padding-inline: 0.15rem;
+    }
+  }
+
+  .inboxPage:global(.user-workspace-page) {
+    padding: 6.4rem 0.45rem 2rem;
+  }
+
+  .embedded {
+    border-radius: 0;
+    margin-inline: -0.45rem;
+  }
+
   .inboxPage .composer { padding-right: calc(5rem + env(safe-area-inset-right)); }
 }
 @media (prefers-reduced-motion: reduce) { .widgetPanel, .launcher, .reportItem, .iconButton, .textButton { transition: none; } .skeleton { animation: none; } }

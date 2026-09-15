@@ -33,7 +33,7 @@ export default function AdministrationHome() {
   };
   return <><HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page ${styles.page}`}>
-      <header className={styles.heading}><Link href="/user">← Your account</Link><h1>Administration</h1>
+      <header className={styles.heading}><h1>Administration</h1>
         <p>Choose an area to manage. Your existing permissions and regional access apply.</p></header>
       {available.length ? <div className={styles.grid}>{available.map((area) => <Link className={styles.card} href={`/user/dashboard/${area.id}`} key={area.id}>
         <h2>{area.title}</h2><p>{area.description}</p><span>Open {area.title.toLowerCase()} <span aria-hidden>↗</span></span>

@@ -10,6 +10,7 @@ import { useSearchParams } from "@/util/navigation";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import { FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
+import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import { showNotification } from "@/redux/notification";
 import { selectUser } from "@/redux/user";
@@ -168,7 +169,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
           <button className={styles.iconButton} type="button" onClick={onClose} aria-label="Close account editor"><IconlyClose /></button>
         </header>
 
-        <form className={styles.editorForm} onSubmit={submit}>
+        <form className={styles.editorForm} data-modal-body onSubmit={submit}>
           <fieldset>
             <legend>Contact details</legend>
             <div className={styles.fieldGrid}>
@@ -310,9 +311,9 @@ export default function BackofficeAccounts() {
           }}>Member statistics</button>
         </div>
 
-        {statistics ? <section className={styles.directory} aria-label="Member statistics"><MembersList /></section> : <section className={styles.directory} aria-label={`${type} directory`}>
+        {statistics ? <section className={styles.directory} aria-label="Member statistics"><AnalyticsAvailability title="Member analytics"><MembersList /></AnalyticsAvailability></section> : <section className={styles.directory} aria-label={`${type} directory`}>
           <FilterPanel
-            controlsClassName={styles.filters}
+            onClear={() => { setSearchInput(""); setSearch(""); setCity(""); setPage(1); }}
             summary={(
               <span aria-live="polite">
                 {loadingList ? "Loading accounts…" : `${pagination.total} ${type === "alumni" ? "alumni" : pagination.total === 1 ? "member" : "members"}`}

@@ -1,5 +1,7 @@
 "use client";
 
+import FilterPanel from "@/elements/ui/filters/FilterPanel";
+
 import { SelectInput } from "@/compat/primereact";
 
 import { useEffect, useState } from "react";
@@ -115,7 +117,7 @@ function DeskSession({ session, staff, active }) {
       </motion.div>}
       {view === "list" && <motion.div key="list" className={styles.listView} variants={viewTransition} initial="initial" animate="visible" exit="exit">
       <div className={styles.listHeading}><h3 className="type-subheading">{staff ? "Support inbox" : "Your reports"}</h3>{!staff && <button className="rn-button-style--2 rn-btn-green rn-btn-small" onClick={() => setView("new")} type="button"><IconlyPlus size="1.25rem" /> New report</button>}</div>
-      {staff && <label className={styles.statusControl}>Filter by status<SelectInput className="bgsnl-form-control" value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="all">All reports</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</SelectInput></label>}
+      {staff && <FilterPanel onClear={() => { setStatus("all"); setPage(1); }}><label>Status<SelectInput className="bgsnl-form-control" value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="all">All reports</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</SelectInput></label></FilterPanel>}
       {error && <div className={styles.error} role="alert">{error} <button className={styles.textButton} type="button" onClick={refresh}>Try again</button></div>}
       {loading && !items.length ? <div role="status" className={styles.loading}>Loading reports…<div className={styles.skeleton} /><div className={styles.skeleton} /></div> : !items.length && !error ? <div className={styles.empty}>
         <IconlyMessage size="2.5rem" /><h3 className="type-subheading">{staff ? "No reports here" : "Something not working?"}</h3><p>{staff ? "New website reports will appear here. Try a different status filter." : "Send our team a report. You can come back here to read replies and continue the conversation."}</p>

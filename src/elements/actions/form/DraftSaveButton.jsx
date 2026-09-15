@@ -2,7 +2,7 @@ import { useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { Dialog } from "@/compat/primereact";
 
-export default function DraftSaveButton({ note = "", defaultEmail = "", disabled = false, onBeforeOpen, onSave, onEmailReminder, onComplete }) {
+export default function DraftSaveButton({ note = "", defaultEmail = "", disabled = false, onOpenChange, onBeforeOpen, onSave, onEmailReminder, onComplete }) {
   const id = useId();
   const emailRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -14,6 +14,7 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
   const [savedDraft, setSavedDraft] = useState(null);
   const savingRef = useRef(false);
   const saving = stage !== null;
+  const changeOpen = (next) => { setOpen(next); onOpenChange?.(next); };
   const receiver = email.trim().toLowerCase();
   const canReuseDraft = savedDraft?.note === text.trim();
 
@@ -47,7 +48,7 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
           return;
         }
       }
-      setOpen(false);
+      changeOpen(false);
       onComplete(receiver);
     } catch {
       setError(draft ? "Your draft is saved, but the email could not be queued. Please try again." : "The draft could not be saved. Your note is still here; please try again.");
@@ -59,17 +60,17 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
 
   return (
     <>
-      <button type="button" disabled={disabled} className="event-form-button event-form-button--draft" onClick={() => { if (onBeforeOpen?.() === false) return; setText(note); setEmail(defaultEmail); setError(""); setEmailError(""); setSavedDraft(null); setOpen(true); }}>Save as draft</button>
+      <button type="button" disabled={disabled} className="event-form-button event-form-button--draft" onClick={() => { if (onBeforeOpen?.() === false) return; setText(note); setEmail(defaultEmail); setError(""); setEmailError(""); setSavedDraft(null); changeOpen(true); }}>Save as draft</button>
       <Dialog
         visible={open}
         header="Save event draft"
         className="event-draft-note-dialog"
-        onHide={() => { if (!saving) setOpen(false); }}
+        onHide={() => { if (!saving) changeOpen(false); }}
         closable={!saving}
         dismissableMask={false}
         blockScroll
         footer={<div className="event-draft-note-dialog__actions">
-          <button type="button" className="event-form-button event-form-button--ghost" disabled={saving} onClick={() => setOpen(false)}>Cancel</button>
+          <button type="button" className="event-form-button event-form-button--ghost" disabled={saving} onClick={() => changeOpen(false)}>Cancel</button>
           <button type="button" className="event-form-button event-form-button--primary" disabled={saving || disabled} onClick={save}>
             {saving ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{stage === "emailing" ? "Sending email…" : "Saving…"}</span></> : receiver ? canReuseDraft ? "Retry email" : "Save & email link" : canReuseDraft ? "Done" : "Save draft"}
           </button>
@@ -91,4 +92,4 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
     </>
   );
 }
-DraftSaveButton.propTypes = { note: PropTypes.string, defaultEmail: PropTypes.string, disabled: PropTypes.bool, onBeforeOpen: PropTypes.func, onSave: PropTypes.func.isRequired, onEmailReminder: PropTypes.func.isRequired, onComplete: PropTypes.func.isRequired };
+DraftSaveButton.propTypes = { note: PropTypes.string, defaultEmail: PropTypes.string, disabled: PropTypes.bool, onOpenChange: PropTypes.func, onBeforeOpen: PropTypes.func, onSave: PropTypes.func.isRequired, onEmailReminder: PropTypes.func.isRequired, onComplete: PropTypes.func.isRequired };

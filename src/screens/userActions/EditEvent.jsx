@@ -14,10 +14,12 @@ import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import {
   useNavigate,
   useParams,
+  useSearchParams,
 } from "@/util/navigation";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import EventForm from "../../elements/actions/form/EventForm";
 import EventEditSummary from "../../elements/actions/form/EventEditSummary";
+import { EVENT_DRAFT } from "../../util/defines/common";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import {
@@ -37,6 +39,7 @@ const EditEvent = () => {
   const event = useSelector(selectSingleEventDashboard);
 
   const { eventId } = useParams();
+  const [searchParams] = useSearchParams();
 
   const dispatch = useDispatch();
 
@@ -68,11 +71,11 @@ const EditEvent = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div className="container mt--200">
-        <h3 className="center_text">Edit Event</h3>
+      <div className="container mt--120">
+        <h3 className="center_text">{event.status === EVENT_DRAFT ? "Edit Draft" : "Edit Event"}</h3>
         <EventEditSummary key={event.id} event={event} />
       </div>
-      <EventForm key={event.id} edit initialData={event} />
+      <EventForm key={event.id} edit initialData={event} completeDraft={event.status === EVENT_DRAFT && searchParams.get("complete") === "1"} />
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}

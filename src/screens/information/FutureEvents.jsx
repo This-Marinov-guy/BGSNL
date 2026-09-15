@@ -1,6 +1,7 @@
 "use client";
 
 import { SelectInput } from "@/compat/primereact";
+import FilterPanel from "@/elements/ui/filters/FilterPanel";
 
 import React, {
   useEffect,
@@ -239,21 +240,11 @@ const FutureEventsContent = ({
                 <EventsLoading />
               ) : carousel ? (
                 <div className="col-lg-12">
-                  <div className="future-events-filter-panel">
-                    <div className="future-events-filter-heading">
-                      <label
-                        className="type-caption"
-                        htmlFor="future-events-region-select"
-                      >
-                        Filter by region
-                      </label>
-                      <strong aria-live="polite">
-                        {carouselEvents.length} {carouselEvents.length === 1 ? "event" : "events"}
-                      </strong>
-                    </div>
+                  <FilterPanel onClear={() => setSelectedRegion("all")} summary={<span aria-live="polite">{carouselEvents.length} {carouselEvents.length === 1 ? "event" : "events"}</span>}>
+                    <label htmlFor="future-events-region-select"><span>Region</span>
                     <SelectInput
                       aria-label="Filter future events by region"
-                      className="bgsnl-form-control future-events-region-select"
+                      className="bgsnl-form-control"
                       id="future-events-region-select"
                       onChange={(event) => setSelectedRegion(event.target.value)}
                       value={activeRegion}
@@ -269,8 +260,8 @@ const FutureEventsContent = ({
                           {capitalizeFirstLetter(regionName, true)} ({regionEvents.length})
                         </option>
                       ))}
-                    </SelectInput>
-                  </div>
+                    </SelectInput></label>
+                  </FilterPanel>
 
                   {carouselEvents.length ? (
                     <FutureEventsCarousel

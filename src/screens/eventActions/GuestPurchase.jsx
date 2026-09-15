@@ -48,7 +48,10 @@ import Loader from "../../elements/ui/loading/Loader";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
-import { hasAppliedTicketDiscount } from "../../util/functions/helpers";
+import {
+  estimatePriceByEvent,
+  hasAppliedTicketDiscount,
+} from "../../util/functions/helpers";
 import {
   appendExtraInputsToForm,
   buildSchemaExtraInputs,
@@ -221,9 +224,11 @@ const GuestPurchase = ({ initialEvent = null }) => {
     : "Keep your ticket as a member";
   const displayedTicketPrice = selectedEvent.isFree
     ? "Free"
-    : selectedEvent.product?.guest?.price != null
-      ? `€${selectedEvent.product.guest.price}`
-      : "Price unavailable";
+    : estimatePriceByEvent(selectedEvent, user, {
+        withIncludedText: false,
+        blockDiscounts: false,
+        withMemberBadge: false,
+      });
   const discountApplied = hasAppliedTicketDiscount(selectedEvent, user);
   const checkoutActionLabel = selectedEvent.isFree
     ? "Get ticket"

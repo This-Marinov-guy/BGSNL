@@ -72,7 +72,7 @@ TicketSwitch.propTypes = {
   offLabel: PropTypes.string.isRequired,
 };
 
-export default function EventTicketsMedia() {
+export default function EventTicketsMedia({ children }) {
   const { values, setValues, setFieldValue } = useFormikContext();
   const id = useId();
   const ticketType = values.isFree ? "free" : values.isTicketLink ? "external" : values.isMemberFree ? "members-free" : "paid";
@@ -127,7 +127,7 @@ export default function EventTicketsMedia() {
             <div className="event-ticket-price-row">
               <div><h4>Active members</h4><p>Optional special rate</p></div>
               <PriceField name="activeMemberPrice" label="Active member price (€)" placeholder="8.00" />
-              <p className="event-ticket-help">Leave empty to use the member price.</p>
+              <p className="event-ticket-help">*Leave empty to use the member price.</p>
             </div>
           )}
         </section>
@@ -159,7 +159,7 @@ export default function EventTicketsMedia() {
             <ImageInput name="poster" initialImage={values.poster} onChange={(event) => setFieldValue("poster", event.target.files[0])} />
             <ErrorMessage className="error" name="poster" component="div" />
           </div>
-          <div className="event-ticket-media-panel">
+          <div className="event-ticket-media-panel event-ticket-media-panel--ticket">
             <div data-custom-validation-field data-field-name="ticketImg">
               <div className="event-ticket-media-heading">
                 <h4 className="event-ticket-media-title">Ticket image <span className="event-ticket-required">*</span></h4>
@@ -176,6 +176,7 @@ export default function EventTicketsMedia() {
             </div>
           </div>
         </div>
+        {children}
       </section>
 
       <section aria-labelledby={`${id}-settings`}>
@@ -200,3 +201,5 @@ export default function EventTicketsMedia() {
     </div>
   );
 }
+
+EventTicketsMedia.propTypes = { children: PropTypes.node };

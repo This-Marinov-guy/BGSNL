@@ -14,8 +14,8 @@ test("ticket and media errors block the extras step", () => {
 test("jumping to a visited step still checks earlier fields", () => {
   assert.deepEqual(blockingEventStep({ region: "Required", ticketLimit: "Required" }, 2), { step: 0, paths: ["region"] });
 });
-test("complete steps advance without extras validation or errors", () => {
-  assert.equal(blockingEventStep({ extraInputsForm: [{ placeholder: "Required" }] }, 2), null);
+test("complete steps advance without upsell validation or errors", () => {
+  assert.equal(blockingEventStep({ addOns: { title: "Required" } }, 2), null);
   assert.equal(blockingEventStep({}, 2), null);
 });
 
@@ -33,4 +33,8 @@ test("legacy drafts and invalid indexes safely start at event details", () => {
 test("resuming later steps retains validation of earlier fields", () => {
   const { currentStep } = eventDraftProgress({ currentStep: 1, furthestStep: 2 }, 3);
   assert.deepEqual(blockingEventStep({ title: "Required" }, currentStep + 1), { step: 0, paths: ["title"] });
+});
+
+test("collect-data errors return to Tickets & media before Upsell", () => {
+  assert.deepEqual(blockingEventStep({ extraInputsForm: [{ placeholder: "Required" }] }, 2), { step: 1, paths: ["extraInputsForm.0.placeholder"] });
 });

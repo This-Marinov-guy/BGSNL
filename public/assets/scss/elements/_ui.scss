@@ -380,6 +380,8 @@ hr {
 }
 
 .bgsnl-modal__header {
+  position: relative;
+  z-index: 1;
   align-items: flex-start;
   background: #fff;
   border: 0;
@@ -395,7 +397,7 @@ hr {
   color: #101411 !important;
   flex: 1 1 auto;
   font-family: "LeagueSpartan", "Roboto", sans-serif !important;
-  font-size: clamp(1.25rem, 2vw, 1.55rem) !important;
+  font-size: 1rem !important;
   font-weight: 700 !important;
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -447,6 +449,9 @@ hr {
 }
 
 .bgsnl-modal__body {
+  position: relative;
+  // Keep floating labels and portalled tooltips beneath the header and footer.
+  isolation: isolate;
   color: #36403a;
   flex: 1 1 auto;
   font-weight: 400;
@@ -477,6 +482,8 @@ hr {
 }
 
 .bgsnl-modal__footer {
+  position: relative;
+  z-index: 1;
   align-items: center;
   background: #fff;
   border: 0;

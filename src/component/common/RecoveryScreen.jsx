@@ -1,6 +1,7 @@
 "use client";
 
 import PropTypes from "prop-types";
+import AnimatedDisclosure from "../../elements/ui/functional/AnimatedDisclosure";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
 
@@ -41,15 +42,10 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
           )}
         </div>
         {failed && process.env.NODE_ENV !== "production" && error?.message && (
-          <details className="recovery-details">
-            <summary>Error details (development only)</summary>
+          <AnimatedDisclosure className="recovery-details" summary="Error details (development only)">
             <pre>{error.message}</pre>
-          </details>
+          </AnimatedDisclosure>
         )}
-        <div className="recovery-contact">
-          <p>{failed ? "Still having trouble? We’re here to help." : "Looking for something specific?"}</p>
-          <a href="mailto:info@bulgariansociety.nl">Contact us</a>
-        </div>
       </main>
       <Footer />
     </div>

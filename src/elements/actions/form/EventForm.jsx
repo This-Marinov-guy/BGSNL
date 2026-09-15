@@ -1,6 +1,8 @@
+import InfoHint from "../../ui/icons/InfoHint";
+import EventPriceBadges from "./EventPriceBadges";
+import { normalizePromoCode, promoCodesSchema, promoCodesPayload } from "@/util/functions/event-promo-codes.mjs";
 import { SelectInput } from "@/compat/primereact";
 import {
-  useCallback,
   useEffect,
   useId,
   useRef,
@@ -19,12 +21,9 @@ import {
 } from "react-redux";
 import * as yup from "yup";
 import {
-  ConfirmDialog,
   Dialog,
   Steps,
-  Tooltip,
 } from "@/compat/primereact";
-import { FiInfo } from "@/elements/ui/icons/IconlyIcons";
 import {
   Link,
   useNavigate,
@@ -44,7 +43,6 @@ import {
   EVENT_DRAFT_SAVED,
   EVENT_EDITED,
 } from "../../../util/defines/common";
-import { START_TIMER } from "../../../util/defines/enum";
 import {
   ADMIN_EVENT_REGIONS,
   REGIONS,
@@ -55,21 +53,16 @@ import {
   hasOverlap,
   isPlainObject,
 } from "../../../util/functions/helpers";
-import AdditionalPrices from "../../inputs/AdditionalPrices";
-import AddOnsBuilder from "../../inputs/builders/AddOnsBuilder";
-import InputsBuilder from "../../inputs/builders/InputsBuilder";
-import PromoCodesBuilder from "../../inputs/builders/PromoCodesBuilder";
-import SubEventBuilder from "../../inputs/builders/SubEventBuilder";
 import { CalendarWithClock } from "../../inputs/common/Calendar";
 import MultiImageUpload from "../../inputs/MultiImageUpload";
-import PromotionalPrices from "../../inputs/PromotionalPrice";
 import ValidatedFormik from "../../ui/forms/ValidatedFormik";
 import Loader from "../../ui/loading/Loader";
 import StepContentTransition from "../../ui/functional/StepContentTransition";
 import { blockingEventStep, eventDraftProgress } from "../../../util/functions/event-step-validation.mjs";
-import LongLoading from "../../ui/loading/LongLoading";
-import ConfirmCenterModal from "../../ui/modals/ConfirmCenterModal";
 import EventTicketsMedia from "./EventTicketsMedia";
+import EventReviewModal from "./EventReviewModal";
+import EventUpsell from "./EventUpsell";
+import EventCollectData from "./EventCollectData";
 import RegionEventDrafts from "./RegionEventDrafts";
 import DraftSaveButton from "./DraftSaveButton";
 
@@ -81,7 +74,7 @@ const EVENT_FORM_STEPS = [
     label: "Tickets & media",
   },
   {
-    label: "Extras & publish",
+    label: "Upsell",
   },
 ];
 
@@ -424,15 +417,15 @@ UnsavedEventGuard.propTypes = {
 const EventForm = (props) => {
   const { loading, sendRequest } = useHttpClient();
 
-  const [visible, setVisible] = useState(false);
-  const [confirmResolver, setConfirmResolver] = useState(null);
+  const [reviewValues, setReviewValues] = useState(null);
+  const submissionRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
-  const [showBlockingLoader, setShowBlockingLoader] = useState(false);
   const [movingStep, setMovingStep] = useState(false);
   const [transitionDirection, setTransitionDirection] = useState("forward");
   const stepMoveRef = useRef(false);
   const formRef = useRef(null);
   const formikRef = useRef(null);
+  const completionOpenedRef = useRef(false);
   const isBusy = submitting || movingStep;
   const [draftId, setDraftId] = useState(null);
   const [draftStatus, setDraftStatus] = useState("idle");
@@ -527,27 +520,34 @@ const EventForm = (props) => {
     });
   };
 
-  const onSubmit = useCallback(() => {
-    if (confirmResolver) {
-      confirmResolver();
-      setConfirmResolver(null);
-      setVisible(false);
-    }
-  }, [confirmResolver]);
-
-  const waitForConfirmation = () => {
-    return new Promise((resolve) => {
-      setVisible(true);
-      setConfirmResolver(() => resolve);
-    });
-  };
-
   useEffect(() => {
     if (initialData?.status === EVENT_DRAFT) {
       setDraftId(initialData.id ?? eventId ?? null);
     }
     setSavedImages(initialData?.images ?? []);
   }, [eventId, initialData?.id, initialData?.images, initialData?.status]);
+
+  useEffect(() => {
+    if (!props.completeDraft || storedInitialData?.status !== EVENT_DRAFT || completionOpenedRef.current) return;
+    let active = true;
+    const openCompletion = async () => {
+      const formik = formikRef.current;
+      if (!formik) return;
+      const errors = await formik.validateForm();
+      if (!active || completionOpenedRef.current) return;
+      completionOpenedRef.current = true;
+      const blocked = blockingEventStep(errors, 2);
+      setCurrentStep(blocked?.step ?? 2);
+      setFurthestStep(2);
+      // This opens the existing review only after full form validation. Actual
+      // publication still requires pressing Submit in the review modal.
+      await formik.submitForm();
+    };
+    openCompletion().catch(() => {
+      if (active) dispatch(showNotification({ severity: "error", summary: "Check your draft", detail: "We could not prepare the review. Check the event fields and try again." }));
+    });
+    return () => { active = false; };
+  }, [props.completeDraft, storedInitialData?.status, dispatch]);
 
   const schema = yup.object().shape({
     region: yup.string().required("Region is required"),
@@ -801,50 +801,7 @@ const EventForm = (props) => {
       }),
     }),
 
-    promoCodes: yup.object().shape({
-      isEnabled: yup.boolean(),
-      codes: yup.array().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .array()
-            .of(
-              yup.object().shape({
-                id: yup.string().nullable(),
-                code: yup.string().required("Promo code is required"),
-                discountType: yup
-                  .number()
-                  .required("Discount type is required")
-                  .oneOf([1, 2], "Must be 1 (fixed) or 2 (percentage)"),
-                discount: yup
-                  .number()
-                  .required("Discount amount is required")
-                  .when("discountType", {
-                    is: 2,
-                    then: () =>
-                      yup
-                        .number()
-                        .min(1, "Percentage must be at least 1%")
-                        .max(100, "Percentage cannot exceed 100%"),
-                    otherwise: () =>
-                      yup.number().min(0.01, "Amount must be greater than 0"),
-                  }),
-                useLimit: yup
-                  .number()
-                  .nullable()
-                  .min(1, "Use limit must be at least 1"),
-                timeLimit: yup.string().nullable(),
-                minAmount: yup
-                  .number()
-                  .nullable()
-                  .min(0.01, "Minimum amount must be greater than 0"),
-                active: yup.boolean(),
-              })
-            )
-            .min(1, "At least one promo code is required when enabled"),
-        otherwise: () => yup.array().nullable(),
-      }),
-    }),
+    promoCodes: promoCodesSchema,
 
     ticketLink: yup
       .string()
@@ -1046,14 +1003,7 @@ const EventForm = (props) => {
       // Notes belong only to draftData, never to a published event payload.
       if (key === "note") return;
       if (key === "promoCodes") {
-        if (val.isEnabled && val.codes?.length > 0) {
-          const validPromoCodes = val.codes.filter(
-            (code) => code.code && code.code.trim() !== ""
-          );
-          if (validPromoCodes.length > 0) {
-            formData.append(key, JSON.stringify(validPromoCodes));
-          }
-        }
+        formData.append(key, JSON.stringify(promoCodesPayload(val)));
       } else if (
         isPlainObject(val) ||
         ["extraInputsForm", "addOns"].includes(key)
@@ -1094,14 +1044,13 @@ const EventForm = (props) => {
   const submitValues = async (
     values,
     saveAsDraft = false,
-    { stayOnPage = false, quiet = false, draftStep = currentStep } = {}
+    { stayOnPage = false, quiet = false, draftStep = currentStep, onProgress } = {}
   ) => {
-    if (saveAsDraft && !requireDraftRegion(values)) return null;
+    if (submissionRef.current || (saveAsDraft && !requireDraftRegion(values))) return null;
+    submissionRef.current = true;
     try {
-      if (!saveAsDraft) await waitForConfirmation();
-
       setSubmitting(true);
-      setShowBlockingLoader(!quiet);
+      onProgress?.(0);
       if (quiet) setDraftStatus("saving");
 
       const existingDraftId = draftId ||
@@ -1110,18 +1059,21 @@ const EventForm = (props) => {
           : null);
       const existingEventId = props.edit ? eventId : null;
       const recordId = existingDraftId || existingEventId;
+      const payload = buildFormData(canManageAllRegions ? values : { ...values, region: accountRegion }, saveAsDraft, draftStep);
+      onProgress?.(1);
       const responseData = await sendRequest(
         recordId
           ? `future-event/edit-event/${recordId}`
           : "future-event/add-event",
         recordId ? "PATCH" : "POST",
-        buildFormData(canManageAllRegions ? values : { ...values, region: accountRegion }, saveAsDraft, draftStep),
+        payload,
         {},
         true,
-        !quiet
+        !quiet && !onProgress
       );
 
       if (responseData?.status) {
+        onProgress?.(2);
         if (saveAsDraft) {
           setDraftId(responseData.event.id);
           setDraftStatus("saved");
@@ -1156,8 +1108,8 @@ const EventForm = (props) => {
       if (quiet) setDraftStatus("error");
       return null;
     } finally {
+      submissionRef.current = false;
       setSubmitting(false);
-      setShowBlockingLoader(false);
     }
   };
 
@@ -1228,18 +1180,11 @@ const EventForm = (props) => {
 
   return (
     <>
-      <ConfirmCenterModal
-        text="Are you sure you want to submit the event?"
-        onConfirm={onSubmit}
-        visible={visible}
-        setVisible={setVisible}
-      />
-      <LongLoading visible={showBlockingLoader} />
       <ValidatedFormik
         highlightTouchedErrors
         className="container"
         validationSchema={schema}
-        onSubmit={(values) => submitValues(values)}
+        onSubmit={async (values) => { if (!submissionRef.current) setReviewValues({ ...values }); }}
         initialValues={{
           note: typeof initialData?.note === "string" ? initialData.note : "",
           memberOnly: initialData?.memberOnly ?? false,
@@ -1362,42 +1307,46 @@ const EventForm = (props) => {
               initialData?.status === EVENT_DRAFT
                 ? initialData?.promoCodes?.isEnabled ?? false
                 : initialData?.product?.promoCodes?.length > 0,
-            codes:
-              initialData?.status === EVENT_DRAFT
-                ? initialData?.promoCodes?.codes ?? [
-                    {
-                      code: "",
-                      discountType: 2,
-                      discount: undefined,
-                      useLimit: undefined,
-                      timeLimit: "",
-                      minAmount: undefined,
-                      active: true,
-                    },
-                  ]
-                : initialData?.product?.promoCodes?.length > 0
-                ? initialData?.product?.promoCodes?.map((code) => ({
-                    ...code,
-                    active: code.active !== undefined ? code.active : true,
-                  }))
-                : [
-                    {
-                      code: "",
-                      discountType: 2,
-                      discount: undefined,
-                      useLimit: undefined,
-                      timeLimit: "",
-                      minAmount: undefined,
-                      active: true,
-                    },
-                  ],
+            codes: (initialData?.status === EVENT_DRAFT
+              ? initialData?.promoCodes?.codes ?? [{}]
+              : initialData?.product?.promoCodes?.length ? initialData.product.promoCodes : [{}]).map(normalizePromoCode),
           },
         }}
       >
         {(formik) => {
           const { dirty, values, setFieldValue } = formik;
           formikRef.current = formik;
+          const draftAction = canSaveDraft ? (
+            <DraftSaveButton
+                  note={values.note}
+                  onBeforeOpen={() => requireDraftRegion(values)}
+                  defaultEmail={userClaims?.email ?? ""}
+                  disabled={loading || isBusy}
+                  onSave={async (note) => {
+                    const savedDraft = await submitValues({ ...values, note }, true, { quiet: true, stayOnPage: true });
+                    if (savedDraft) {
+                      const syncedValues = { ...values, note };
+                      ["poster", "ticketImg", "bgImageExtra", "images"].forEach((field) => {
+                        if (savedDraft[field]) syncedValues[field] = savedDraft[field];
+                      });
+                      setExtraImagesTouched(false);
+                      formik.resetForm({ values: syncedValues });
+                    }
+                    return savedDraft;
+                  }}
+                  onEmailReminder={(eventDraftId, email) => sendRequest(
+                    `future-event/draft/${eventDraftId}/reminder`, "POST", { email }, {}, false, false
+                  )}
+                  onComplete={(email) => {
+                    navigate("/user/dashboard/events");
+                    dispatch(showNotification(email ? {
+                      severity: "success", summary: "Draft saved", detail: `A continue link has been queued for ${email}.`,
+                    } : EVENT_DRAFT_SAVED));
+                  }}
+                />
+          ) : null;
           return (
+          <>
           <Form
             ref={formRef}
             encType="multipart/form-data"
@@ -1459,8 +1408,7 @@ const EventForm = (props) => {
               {draftStatus === "error" && "Draft could not be saved. Try again."}
               {draftStatus === "idle" &&
                 (canSaveDraft
-                  ? "Your progress saves when you continue to the next step."
-                  : "Changes are saved when you submit the event.")}
+                  && 'Auto save enabled')}
             </div>
 
             {/* ========== REQUIRED SECTIONS ========== */}
@@ -1646,106 +1594,9 @@ const EventForm = (props) => {
                 </span>
               </header>
 
-              <EventTicketsMedia />
-            </section>
-
-            <section
-              className="event-form-step event-form-step--optional"
-              hidden={currentStep !== 2}
-              aria-labelledby="event-step-extras"
-            >
-              <header className="event-form-step__header">
-                <div>
-                  <h2 id="event-step-extras">Extras &amp; publish</h2>
-                  <p>Add optional sales tools, custom questions and related content.</p>
-                </div>
-                <span className="event-form-optional-note">Everything on this step is optional</span>
-              </header>
-
-              <h3 className="label mt--40">Manage Sales</h3>
-              <div className="row mt--20">
-                <div className="col-lg-4 col-md-6 col-12">
-                  <div className="hor_section_nospace mt--20">
-                    <Field
-                      style={{ maxWidth: "30px" }}
-                      type="checkbox"
-                      name="isSaleClosed"
-                    ></Field>
-                    <p className="information">
-                      Close Sale of Tickets (only display event)
-                    </p>
-                    <Tooltip target=".sale-closed-tooltip" />
-                    <FiInfo
-                      className="sale-closed-tooltip"
-                      style={{
-                        marginLeft: "8px",
-                        cursor: "help",
-                        color: "#6c757d",
-                      }}
-                      data-pr-tooltip="Disable ticket purchases but keep event visible for information"
-                      data-pr-position="right"
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-4 col-md-6 col-12">
-                  <div className="hor_section_nospace mt--20">
-                    <Field
-                      style={{ maxWidth: "30px" }}
-                      type="checkbox"
-                      name="memberOnly"
-                    ></Field>
-                    <p className="information">
-                      Make event only purchasable by members
-                    </p>
-                    <Tooltip target=".member-only-tooltip" />
-                    <FiInfo
-                      className="member-only-tooltip"
-                      style={{
-                        marginLeft: "8px",
-                        cursor: "help",
-                        color: "#6c757d",
-                      }}
-                      data-pr-tooltip="Only members can purchase tickets (event still visible to non-members)"
-                      data-pr-position="right"
-                    />
-                  </div>
-                  <ErrorMessage
-                    className="error"
-                    name="memberOnly"
-                    component="div"
-                  />
-                </div>
-                <div className="col-lg-4 col-md-6 col-12">
-                  <div className="hor_section_nospace mt--20">
-                    <Field
-                      style={{ maxWidth: "30px" }}
-                      type="checkbox"
-                      name="hidden"
-                    ></Field>
-                    <p className="information">Hide event from News section</p>
-                    <Tooltip target=".hidden-event-tooltip" />
-                    <FiInfo
-                      className="hidden-event-tooltip"
-                      style={{
-                        marginLeft: "8px",
-                        cursor: "help",
-                        color: "#6c757d",
-                      }}
-                      data-pr-tooltip="Event only accessible via direct URL or subevent link (not shown in listings)"
-                      data-pr-position="right"
-                    />
-                  </div>
-                  <ErrorMessage
-                    className="error"
-                    name="hidden"
-                    component="div"
-                  />
-                </div>
-              </div>
-
-              <h3 className="label mt--40">Extra Images</h3>
-              <div className="row center_text" style={{ width: "100%", margin: 0 }}>
-                <div className="col-12 mt--20" style={{ width: "100%", padding: "0 15px", boxSizing: "border-box" }}>
+              <EventTicketsMedia>
+                <div className="event-ticket-extra-images">
+                  <h3>Extra images</h3>
                   <MultiImageUpload
                     existingImages={savedImages}
                     onImagesChange={handleExtraImagesChange}
@@ -1753,230 +1604,34 @@ const EventForm = (props) => {
                     onValidationChange={(message) =>
                       setFieldValue("extraImagesValidation", message)
                     }
-                    label="Extra Description Images"
-                    tooltip="Additional images to display at the bottom of the event page (poster is already included)"
+                    label="Extra description images"
+                    tooltip="Additional images for the event gallery (the poster is already included)"
                     maxImages={5}
                   />
                   <ErrorMessage
-                    className="error center_text"
+                    className="error"
                     name="extraImagesValidation"
                     component="div"
                   />
                 </div>
-              </div>
+              </EventTicketsMedia>
+              <EventCollectData />
+            </section>
 
-              <h3 className="label mt--40">Variable Price Options</h3>
-              <small
-                style={{
-                  color: "#6c757d",
-                  display: "block",
-                  marginBottom: "15px",
-                }}
-              >
-                Change price based on demand and time
-              </small>
+            <section
+              className="event-form-step event-form-step--optional"
+              hidden={currentStep !== 2}
+              aria-labelledby="event-step-upsell"
+            >
+              <header className="event-form-step__header event-form-step__header--upsell">
+                <div className="event-option-title">
+                  <h2 id="event-step-upsell">Upsell</h2>
+                  <InfoHint label="About the upsell step" text="Everything on this step is optional. Add early/late-bird prices, promotions, promo codes and add-ons, or recommend other association events." />
+                </div>
+                <EventPriceBadges values={values} />
+              </header>
 
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="earlyBird.isEnabled"
-                ></Field>
-                <p>Add Early Bird Price</p>
-                <Tooltip target=".early-bird-tooltip" />
-                <FiInfo
-                  className="early-bird-tooltip"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "help",
-                    color: "#6c757d",
-                  }}
-                  data-pr-tooltip="Discounted pricing for early ticket purchases. Set either a ticket limit or end date."
-                  data-pr-position="right"
-                />
-              </div>
-              <AdditionalPrices
-                visible={values.earlyBird.isEnabled}
-                label="Early Bird"
-                setFieldValue={setFieldValue}
-                initialCalendarValue={values.earlyBird.ticketTimer}
-              />
-
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="lateBird.isEnabled"
-                ></Field>
-                <p>Add Late Bird Price</p>
-                <Tooltip target=".late-bird-tooltip" />
-                <FiInfo
-                  className="late-bird-tooltip"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "help",
-                    color: "#6c757d",
-                  }}
-                  data-pr-tooltip="Increased pricing that activates closer to the event date. Requires a start date."
-                  data-pr-position="right"
-                />
-              </div>
-              <AdditionalPrices
-                visible={values.lateBird.isEnabled}
-                label="Late Bird"
-                setFieldValue={setFieldValue}
-                initialCalendarValue={values.lateBird.startTimer}
-                timerType={START_TIMER}
-              />
-
-              <h3 className="label mt--40">Promotions</h3>
-              <small
-                style={{
-                  color: "#6c757d",
-                  display: "block",
-                  marginBottom: "15px",
-                }}
-              >
-                Deduct % from the price
-              </small>
-
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="guestPromotion.isEnabled"
-                ></Field>
-                <p>Add Guest Promotion</p>
-                <Tooltip target=".guest-promo-tooltip" />
-                <FiInfo
-                  className="guest-promo-tooltip"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "help",
-                    color: "#6c757d",
-                  }}
-                  data-pr-tooltip="Time-limited percentage discount for guest tickets. Set start and end dates."
-                  data-pr-position="right"
-                />
-              </div>
-              <PromotionalPrices
-                visible={values.guestPromotion.isEnabled}
-                label="Guest Promotion"
-                setFieldValue={setFieldValue}
-                initialStartValue={values.guestPromotion.startTimer}
-                initialEndValue={values.guestPromotion.endTimer}
-              />
-
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="memberPromotion.isEnabled"
-                ></Field>
-                <p>Add Member Promotion</p>
-                <Tooltip target=".member-promo-tooltip" />
-                <FiInfo
-                  className="member-promo-tooltip"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "help",
-                    color: "#6c757d",
-                  }}
-                  data-pr-tooltip="Time-limited percentage discount for member tickets. Set start and end dates."
-                  data-pr-position="right"
-                />
-              </div>
-              <PromotionalPrices
-                visible={values.memberPromotion.isEnabled}
-                label="Member Promotion"
-                setFieldValue={setFieldValue}
-                initialStartValue={values.memberPromotion.startTimer}
-                initialEndValue={values.memberPromotion.endTimer}
-              />
-
-              <h3 className="label mt--40">Add-Ons</h3>
-              <small
-                style={{
-                  color: "#6c757d",
-                  display: "block",
-                  marginBottom: "15px",
-                }}
-              >
-                Additional services or products to the ticket
-              </small>
-
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="addOns.isEnabled"
-                ></Field>
-                <p>Enable add-ons</p>
-                <Tooltip target=".addons-tooltip" />
-                <FiInfo
-                  className="addons-tooltip"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "help",
-                    color: "#6c757d",
-                  }}
-                  data-pr-tooltip="Extra items customers can purchase with their ticket (e.g., drinks, merchandise, food)."
-                  data-pr-position="right"
-                />
-              </div>
-              <AddOnsBuilder
-                onChange={(input) => setFieldValue("addOns", input)}
-                value={values.addOns}
-              />
-
-              <h3 className="label mt--40">Promo Codes</h3>
-              <small
-                style={{
-                  color: "#6c757d",
-                  display: "block",
-                  marginBottom: "15px",
-                }}
-              >
-                Discount codes customers can apply
-              </small>
-
-              <div className="hor_section_nospace mt--20 mb--20">
-                <Field
-                  style={{ maxWidth: "30px" }}
-                  type="checkbox"
-                  name="promoCodes.isEnabled"
-                ></Field>
-                <p>Enable promo codes</p>
-                <Tooltip target=".promocodes-tooltip" />
-                <FiInfo
-                  className="promocodes-tooltip"
-                  style={{
-                    marginLeft: "8px",
-                    cursor: "help",
-                    color: "#6c757d",
-                  }}
-                  data-pr-tooltip="Create custom discount codes for customers to use at checkout."
-                  data-pr-position="right"
-                />
-              </div>
-              <PromoCodesBuilder
-                onChange={(codes) => setFieldValue("promoCodes.codes", codes)}
-                value={values.promoCodes.codes}
-                isEnabled={values.promoCodes.isEnabled}
-              />
-
-              <SubEventBuilder
-                name="subEvent"
-                onChange={(input) => setFieldValue("subEvent", input)}
-                initialValues={values.subEvent}
-              />
-
-              <h3 className="label mt--40">Add extra inputs by your choice</h3>
-              <InputsBuilder
-                name="extraInputsForm"
-                onChange={(inputs) => setFieldValue("extraInputsForm", inputs)}
-                initialValues={values.extraInputsForm}
-              />
+              <EventUpsell currentEventId={eventId ?? initialData?.id ?? draftId} active={currentStep === 2} />
             </section>
 
             <footer className="event-form-actions">
@@ -1989,35 +1644,7 @@ const EventForm = (props) => {
               >
                 Dashboard
               </Link>
-              {(!props.edit || initialData?.status === EVENT_DRAFT) && (
-                <DraftSaveButton
-                  note={values.note}
-                  onBeforeOpen={() => requireDraftRegion(values)}
-                  defaultEmail={userClaims?.email ?? ""}
-                  disabled={loading || isBusy}
-                  onSave={async (note) => {
-                    const savedDraft = await submitValues({ ...values, note }, true, { quiet: true, stayOnPage: true });
-                    if (savedDraft) {
-                      const syncedValues = { ...values, note };
-                      ["poster", "ticketImg", "bgImageExtra", "images"].forEach((field) => {
-                        if (savedDraft[field]) syncedValues[field] = savedDraft[field];
-                      });
-                      setExtraImagesTouched(false);
-                      formik.resetForm({ values: syncedValues });
-                    }
-                    return savedDraft;
-                  }}
-                  onEmailReminder={(eventDraftId, email) => sendRequest(
-                    `future-event/draft/${eventDraftId}/reminder`, "POST", { email }, {}, false, false
-                  )}
-                  onComplete={(email) => {
-                    navigate("/user/dashboard/events");
-                    dispatch(showNotification(email ? {
-                      severity: "success", summary: "Draft saved", detail: `A continue link has been queued for ${email}.`,
-                    } : EVENT_DRAFT_SAVED));
-                  }}
-                />
-              )}
+              {draftAction}
               <div className="event-form-actions__primary">
                 {currentStep > 0 && (
                   <button
@@ -2031,15 +1658,17 @@ const EventForm = (props) => {
                 )}
                 {currentStep < EVENT_FORM_STEPS.length - 1 ? (
                   <button
+                    key="continue-step"
                     disabled={isBusy}
                     type="button"
                     className="event-form-button event-form-button--primary"
-                    onClick={() => moveToStep(currentStep + 1, formik)}
+                    onClick={(event) => { event.preventDefault(); moveToStep(currentStep + 1, formik); }}
                   >
                     {movingStep ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{draftStatus === "saving" ? "Saving…" : "Checking…"}</span></> : "Save & continue"}
                   </button>
                 ) : (
                   <button
+                    key="submit-event"
                     disabled={loading || isBusy}
                     type="submit"
                     className="event-form-button event-form-button--primary"
@@ -2059,9 +1688,18 @@ const EventForm = (props) => {
             </footer>
             </div>
             </StepContentTransition>
-            <ConfirmDialog />
             </fieldset>
           </Form>
+          {reviewValues && <EventReviewModal
+            values={reviewValues}
+            extraImagesCount={extraImagesTouched ? extraImagesData.all?.length ?? 0 : savedImages.length}
+            disabled={isBusy}
+            updating={props.edit && initialData?.status !== EVENT_DRAFT}
+            draftAction={draftAction}
+            onCancel={() => setReviewValues(null)}
+            onSubmit={(onProgress) => submitValues(reviewValues, false, { onProgress })}
+          />}
+          </>
           );
         }}
       </ValidatedFormik>
@@ -2071,6 +1709,7 @@ const EventForm = (props) => {
 
 EventForm.propTypes = {
   edit: PropTypes.bool,
+  completeDraft: PropTypes.bool,
   initialData: PropTypes.object,
 };
 

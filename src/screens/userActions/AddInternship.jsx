@@ -18,7 +18,7 @@ const AddInternship = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div className="container mt--200 mb--60">
+      <div className="container mt--120 mb--60">
         <div className="mb--30">
           <Link
             to="/user/dashboard/internships"

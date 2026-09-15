@@ -538,13 +538,18 @@
 }
 
 @media (max-width: 767px) {
+  main.user-workspace-page.mt--200 {
+    margin-top: 6.4rem !important;
+  }
+
   .rn-internships-area {
     padding: 40px 0;
   }
   
   .stat-card {
-    padding: 20px 15px;
-    margin-bottom: 20px;
+    border-radius: 0.55rem;
+    margin-bottom: 0.75rem;
+    padding: 0.85rem;
     
     .stat-icon {
       width: 60px;
@@ -568,7 +573,8 @@
   }
   
   .access-restricted-card {
-    padding: 40px 20px;
+    border-radius: 0.55rem;
+    padding: 1rem 0.75rem;
     
     .restriction-icon {
 
@@ -595,7 +601,8 @@
   }
   
   .preview-section {
-    padding: 30px 20px;
+    border-radius: 0.55rem;
+    padding: 1rem 0.75rem;
     
     .preview-header {
       h4 {
@@ -623,7 +630,8 @@
   }
   
   .benefits-section {
-    padding: 30px 20px;
+    border-radius: 0.55rem;
+    padding: 1rem 0.75rem;
     
     h4 {
 
@@ -655,7 +663,8 @@
   }
   
   .cta-section {
-    padding: 30px 20px;
+    border-radius: 0.55rem;
+    padding: 1rem 0.75rem;
     
     h4 {
 

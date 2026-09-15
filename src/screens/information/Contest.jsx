@@ -16,7 +16,7 @@ const Policy = React.memo(() => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <div className="container mt--200">
+      <div className="container mt--120">
         <h2 className="center_text">Terms and conditions:</h2>
         <h2 className="center_text">
           Short promo video contest organised by Bulgarian Society Groningen{" "}
