@@ -6,7 +6,7 @@ import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize'
 import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 
-const Filter = ({ regions = REGIONS, showRegion = true, children, onClear }) => {
+const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title = "Event filters" }) => {
     const [searchParams, setSearchParams] = useFilterSearchParams();
 
     const handleRegionChange = (event) => {
@@ -21,7 +21,7 @@ const Filter = ({ regions = REGIONS, showRegion = true, children, onClear }) => 
         <FilterPanel
             className="event-dashboard-filters"
             controlsClassName="event-dashboard-filters__fields"
-            title="Event filters"
+            title={title}
             onClear={() => {
             setSearchParams(current => { current.delete("region"); return current; });
             onClear?.();
@@ -45,6 +45,7 @@ Filter.propTypes = {
     showRegion: PropTypes.bool,
     children: PropTypes.node,
     onClear: PropTypes.func,
+    title: PropTypes.string,
 };
 
 export default Filter

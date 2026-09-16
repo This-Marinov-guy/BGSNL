@@ -1,6 +1,8 @@
 "use client";
 
 import React, { Suspense, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { isEventTicketPage } from "@/util/payments/event-ticket-policy.mjs";
 import PropTypes from "prop-types";
 import { Provider } from "react-redux";
 import PrimeSSRProvider from "./prime-ssr-provider";
@@ -65,8 +67,11 @@ AppShell.propTypes = {
 };
 
 export default function Providers({ children }) {
+  const pathname = usePathname();
   // Maintenance must not start sessions, API requests or modals.
   if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
+
+  if (isEventTicketPage(pathname)) return <Provider store={store}><PrimeSSRProvider><div className="global-site-shell"><GlobalBackground initiallyRevealed /><div className="global-site-content">{children}</div></div></PrimeSSRProvider></Provider>;
 
   return (
     <Provider store={store}>

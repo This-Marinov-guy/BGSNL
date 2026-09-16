@@ -27,7 +27,7 @@ const AuthLayout = ({ children, access = [] }) => {
 
   useEffect(() => {
     if (routeState === "anonymous") {
-      try { sessionStorage.setItem("prevUrl", location.pathname + location.hash + location.search); }
+      try { sessionStorage.setItem("prevUrl", location.pathname + location.search + location.hash); }
       catch { /* A blocked storage setting must not prevent the login redirect. */ }
       navigate("/login", { replace: true });
     } else if (routeState === "locked") {

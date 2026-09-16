@@ -21,7 +21,7 @@ import { Link } from "@/util/navigation";
 import { showModal } from "../../../redux/modal";
 import {
   ACCESS_2,
-  ACCESS_3,
+  MEMBER_ADMIN_ACCESS,
   ACCESS_4,
   BILLING_LOCKED_STATUSES,
   BILLING_LOCK_EXEMPT,
@@ -99,7 +99,7 @@ const UserSidebar = ({
    */
   const adminLinks = [
     { icon: <FiCalendar />, label: "Administration", to: "/user/dashboard" },
-    hasRole(ACCESS_3) && {
+    hasRole(MEMBER_ADMIN_ACCESS) && {
       icon: adminNavLocked ? restrictedIcon : <FiUsers />,
       label: "Manage Members",
       to: "/user/dashboard/members",

@@ -53,6 +53,7 @@ function SubscriptionOptionsSkeleton() {
 // verified with an in-memory catalog, without touching a real Stripe customer.
 export function SubscriptionCheckoutForm({
   loadPlans,
+  initialType = "",
   onCheckout,
   onPendingChange,
   onMembershipGuideChange = () => {},
@@ -61,7 +62,7 @@ export function SubscriptionCheckoutForm({
   const [plans, setPlans] = useState(null);
   const [loadError, setLoadError] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [type, setType] = useState("");
+  const [type, setType] = useState(["member", "alumni"].includes(initialType) ? initialType : "");
   const [priceId, setPriceId] = useState("");
   const [pending, setPending] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
@@ -202,6 +203,7 @@ export function SubscriptionCheckoutForm({
 
 SubscriptionCheckoutForm.propTypes = {
   loadPlans: PropTypes.func.isRequired,
+  initialType: PropTypes.oneOf(["", "member", "alumni"]),
   onCheckout: PropTypes.func.isRequired,
   onPendingChange: PropTypes.func.isRequired,
   onMembershipGuideChange: PropTypes.func,

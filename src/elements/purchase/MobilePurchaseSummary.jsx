@@ -52,7 +52,7 @@ const MobilePurchaseSummary = ({ event, price }) => {
 
       <div className="purchase-mobile-summary-copy">
         <div className="purchase-mobile-summary-heading">
-          <strong className="purchase-mobile-summary-title type-small">
+          <strong className="purchase-mobile-summary-title">
             {eventTitle}
           </strong>
           {eventDate.isUpdated && (
@@ -69,7 +69,7 @@ const MobilePurchaseSummary = ({ event, price }) => {
         </span>
       </div>
 
-      <strong className="purchase-mobile-summary-price type-small">{price}</strong>
+      <strong className="purchase-mobile-summary-price">{price}</strong>
     </aside>
   );
 };

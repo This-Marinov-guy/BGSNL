@@ -5,7 +5,7 @@ import { Link, useSearchParams } from "@/util/navigation";
 import { useLoadEvents } from "../../../../hooks/common/api-hooks";
 import { selectEventDrafts, selectEventsDashboard } from "../../../../redux/events";
 import { selectUser } from "../../../../redux/user";
-import { ACCESS_2, ACCESS_4 } from "../../../../util/defines/common";
+import { ALL_EVENT_REGIONS_ACCESS, ACCESS_4 } from "../../../../util/defines/common";
 import { ADMIN_EVENT_REGIONS, REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import { sessionClaims } from "../../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
@@ -22,7 +22,7 @@ const EventList = () => {
 
     const user = useSelector(selectUser);
     const { roles = [], region = "" } = sessionClaims(user.session) ?? {};
-    const isAuthorized = hasOverlap(roles, ACCESS_2);
+    const isAuthorized = hasOverlap(roles, ALL_EVENT_REGIONS_ACCESS);
     const canAddEvents = hasOverlap(roles, ACCESS_4);
     const dashboardRegions = isAuthorized ? ADMIN_EVENT_REGIONS : REGIONS;
 

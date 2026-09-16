@@ -37,7 +37,7 @@ import {
 import { showNotification } from "../../../redux/notification";
 import { selectUser } from "../../../redux/user";
 import {
-  ACCESS_2,
+  ALL_EVENT_REGIONS_ACCESS,
   EVENT_ADDED,
   EVENT_DRAFT,
   EVENT_DRAFT_SAVED,
@@ -445,7 +445,7 @@ const EventForm = (props) => {
   const { eventId } = useParams();
   const userClaims = sessionClaims(user.session);
   const roles = userClaims?.roles ?? [];
-  const canManageAllRegions = hasOverlap(roles, ACCESS_2);
+  const canManageAllRegions = hasOverlap(roles, ALL_EVENT_REGIONS_ACCESS);
   const accountRegion = REGIONS.includes(userClaims?.region) ? userClaims.region : "";
   const regionOptions = canManageAllRegions
     ? ADMIN_EVENT_REGIONS

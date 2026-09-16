@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { sessionIsActive, announceSessionChange } from "../util/auth/browser-session.mjs";
 import { endBrowserSession } from "../util/auth/browser-request.mjs";
 
-const accountFields = ["hasBenefits", "memberDiscount", "billingLocked", "billingVerificationUnavailable", "lockReason", "tier", "subscription", "roles", "region", "status", "isSubscribed", "isAlumni", "image"];
+const accountFields = ["nonExpiring", "hasBenefits", "memberDiscount", "billingLocked", "billingVerificationUnavailable", "lockReason", "tier", "subscription", "roles", "region", "status", "isSubscribed", "isAlumni", "image"];
 const empty = () => ({ authInitialized: false, session: null, roles: [], status: "", image: "", hasBenefits: false, memberDiscount: false, isSubscribed: false, isAlumni: false });
 export const userSlice = createSlice({
   name: "user", initialState: empty(),

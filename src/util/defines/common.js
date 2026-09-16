@@ -17,21 +17,32 @@ export const WARNING_THRESHOLD = 0; // Disabled - no warning threshold
 // member roles
 export const SUPER_ADMIN = 'super_admin';
 export const ADMIN = 'admin';
-export const SOCIETY_ADMIN = 'society_board_member';
+export const NATIONAL_BOARD_MEMBER = 'national_board_member';
+export const SOCIETY_ADMIN = NATIONAL_BOARD_MEMBER;
 export const SUPPORT = 'support';
-export const BOARD_MEMBER = 'board_member';
+export const REGIONAL_BOARD_MEMBER = 'regional_board_member';
+export const BOARD_MEMBER = REGIONAL_BOARD_MEMBER;
 export const ACTIVE_MEMBER = "active_member";
-export const COMMITTEE_MEMBER = 'committee_member';
+export const REGIONAL_COMMITTEE_MEMBER = 'regional_committee_member';
+export const COMMITTEE_MEMBER = REGIONAL_COMMITTEE_MEMBER;
 export const MEMBER = 'member';
 export const ALUMNI = 'alumni';
 
+// National committee permissions are scoped explicitly below.
+export const NATIONAL_COMMITTEE_MEMBER = "national_committee_member";
+
 export const ACCESS_1 = [SUPER_ADMIN];
-export const ACCESS_2 = [...ACCESS_1, ADMIN, SOCIETY_ADMIN];
+export const ACCESS_2 = [...ACCESS_1, ADMIN, SOCIETY_ADMIN, "society_board_member"];
 // Support tickets are staffed by admins and dedicated support accounts only —
 // society board members manage members/events/internships, not the inbox.
 export const SUPPORT_ACCESS = [...ACCESS_1, ADMIN, SUPPORT];
-export const ACCESS_3 = [...ACCESS_2, BOARD_MEMBER];
-export const ACCESS_4 = [...ACCESS_3, COMMITTEE_MEMBER, ACTIVE_MEMBER];
+export const ACCESS_3 = [...ACCESS_2, BOARD_MEMBER, "board_member"];
+export const ACCESS_4 = [...ACCESS_3, COMMITTEE_MEMBER, ACTIVE_MEMBER, "committee_member", NATIONAL_COMMITTEE_MEMBER];
+export const ALL_EVENT_REGIONS_ACCESS = [...ACCESS_2, NATIONAL_COMMITTEE_MEMBER];
+export const EVENT_MANAGEMENT_ACCESS = [...ACCESS_3, NATIONAL_COMMITTEE_MEMBER];
+export const ALL_MEMBER_REGIONS_ACCESS = [...ACCESS_2, NATIONAL_COMMITTEE_MEMBER];
+export const MEMBER_ADMIN_ACCESS = [...ACCESS_3, NATIONAL_COMMITTEE_MEMBER];
+
 
 // A billing hold ("locked"/"payment_awaiting") should not block admin/super
 // admin from reaching admin panels — staff running the org should not need a

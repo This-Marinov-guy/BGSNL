@@ -1,5 +1,7 @@
 "use client";
 
+import { isEventTicketPage } from "@/util/payments/event-ticket-policy.mjs";
+
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Script from "next/script";
@@ -23,7 +25,7 @@ export default function WebsiteAnalytics() {
   }, []);
 
   // Email approval capabilities must not be visible to analytics scripts.
-  if (pathname === "/account/confirm" || !analyticsAllowed) return null;
+  if (pathname === "/account/confirm" || isEventTicketPage(pathname) || !analyticsAllowed) return null;
   return <>
     <Script src="https://analytics.ahrefs.com/analytics.js" data-key="4ygyBA6xhw5zT9BfG2gpgg" strategy="afterInteractive" />
     <Script src="https://datafa.st/js/script.js" data-website-id="dfid_78wk1IMWgxBq23ebbRgUn" data-domain="bulgariansociety.nl" strategy="afterInteractive" />

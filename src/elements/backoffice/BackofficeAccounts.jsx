@@ -1,14 +1,14 @@
 "use client";
 
-import { SelectInput, Calendar } from "@/compat/primereact";
+import { SelectInput, Calendar, Skeleton } from "@/compat/primereact";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "@/util/navigation";
+import { Link, useSearchParams } from "@/util/navigation";
 import HeaderTwo from "@/component/header/HeaderTwo";
-import { FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
+import { FiArrowLeft, FiChevronDown, FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 import { useHttpClient } from "@/hooks/common/http-hook";
@@ -16,8 +16,12 @@ import { showNotification } from "@/redux/notification";
 import { selectUser } from "@/redux/user";
 import { sessionClaims } from "@/util/functions/authorization";
 import { capitalizeFirstLetter } from "@/util/functions/capitalize";
+import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGION_BADGES";
+import adminStyles from "@/screens/userActions/administration.module.scss";
 import styles from "./backoffice.module.scss";
-import { isEditableAccountRole, protectedAccountRoles } from "./role-policy.mjs";
+import AccountMembershipActions from "./AccountMembershipActions";
+import { ACCESS_3 } from "@/util/defines/common";
+import { canManageAccountType, canEditAccount, isEditableAccountRole, editableAccountRoles, protectedAccountRoles } from "./role-policy.mjs";
 
 const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
   loading: () => <p role="status">Loading member statistics…</p>,
@@ -28,9 +32,10 @@ const ROLE_LABELS = {
   member: "Member",
   alumni: "Alumni",
   active_member: "Active member",
-  committee_member: "Committee member",
-  board_member: "Board member",
-  society_board_member: "Society board member",
+  regional_committee_member: "Regional committee member",
+  regional_board_member: "Regional board member",
+  national_board_member: "National board member",
+  national_committee_member: "National committee member",
   admin: "Admin",
   support: "Support",
   vip: "VIP",
@@ -41,6 +46,84 @@ const formatDateInput = (value) => value ? String(value).slice(0, 10) : "";
 const formatCity = (value) => value ? capitalizeFirstLetter(value, true) : "Not assigned";
 const accountName = (account) => `${account.name || ""} ${account.surname || ""}`.trim() || account.email;
 const accountInitials = (account) => `${account.name?.[0] || ""}${account.surname?.[0] || ""}`.toUpperCase();
+
+
+const previewDate = value => {
+  const date = value ? new Date(value) : null;
+  return date && Number.isFinite(date.getTime())
+    ? new globalThis.Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "Europe/Amsterdam" }).format(date)
+    : "Not provided";
+};
+
+function AccountDetails({ account, editable, onEdit }) {
+  const groups = [
+    ["Account details", [
+      ["Account ID", account.id], ["Account type", account.type === "alumni" ? "Alumni" : "Member"],
+      ["Email", account.email], ["Mobile number", account.phone], ["Date of birth", previewDate(account.birth)],
+      ["Region", formatCity(account.region)], ["Status", account.status.replaceAll("_", " ")],
+      ["Roles", account.roles.map(role => ROLE_LABELS[role] || role.replaceAll("_", " ")).join(", ")],
+    ]],
+    ["Education and work", [
+      ["University", account.university], ["Other university", account.otherUniversityName],
+      ["Study programme", account.course], ["Graduation year", account.graduationDate],
+      ["Student number", account.studentNumber], ["Profession", account.profession],
+    ]],
+    ["Membership", [
+      ["Joined", previewDate(account.joinDate)], ["Purchase date", previewDate(account.purchaseDate)],
+      ["Expiry", account.nonExpiring || account.roles.includes("vip") ? "Non-expiring" : previewDate(account.expireDate)],
+      ["Subscription period", account.subscription?.period ? `${account.subscription.period} ${account.subscription.period === 1 ? "month" : "months"}` : "Not provided"],
+      ["Subscription ID", account.subscription?.id || "None"],
+      ["Customer ID", account.subscription?.customerId || "None"],
+      ...(account.type === "alumni" ? [["Alumni tier", account.tier ?? "Not provided"]] : []),
+    ]],
+  ];
+  return <div className={styles.accountPreview}>
+    <div className={styles.previewHeading}>
+      <h3>{accountName(account)}</h3>
+      {editable ? <button type="button" className={styles.editButton} onClick={() => onEdit(account)}><FiEdit2 aria-hidden /><span>Edit</span></button> : <span className={styles.restrictedEdit}>Super Admin only</span>}
+    </div>
+    <div className={styles.previewGroups}>{groups.map(([title, fields]) => <section key={title}>
+      <h4>{title}</h4>
+      <dl>{fields.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value === "" || value == null ? "Not provided" : value}</dd></div>)}</dl>
+    </section>)}</div>
+  </div>;
+}
+AccountDetails.propTypes = { account: PropTypes.object.isRequired, editable: PropTypes.bool.isRequired, onEdit: PropTypes.func.isRequired };
+
+function AccountTableSkeleton() {
+  return (
+    <>
+      {Array.from({ length: 6 }).map((_, index) => (
+        <tr key={index} className={styles.skeletonRow}>
+          <td data-label="Account">
+            <div className={styles.person}>
+              <Skeleton shape="circle" size="2.7rem" />
+              <div className={styles.skeletonStack}>
+                <Skeleton width="9rem" height="1rem" />
+                <Skeleton width="5rem" height="0.85rem" />
+              </div>
+            </div>
+          </td>
+          <td data-label="Contact">
+            <div className={styles.skeletonStack}>
+              <Skeleton width="13rem" height="1rem" />
+              <Skeleton width="7rem" height="0.85rem" />
+            </div>
+          </td>
+          <td data-label="City"><Skeleton width="6rem" height="1rem" /></td>
+          <td data-label="Status"><Skeleton width="5.5rem" height="1.6rem" borderRadius="999px" /></td>
+          <td data-label="Roles">
+            <div className={styles.roleTags}>
+              <Skeleton width="4.5rem" height="1.4rem" />
+              <Skeleton width="5.5rem" height="1.4rem" />
+            </div>
+          </td>
+          <td className={styles.actionCell}><Skeleton width="4.4rem" height="2.35rem" /></td>
+        </tr>
+      ))}
+    </>
+  );
+}
 
 function AccountAvatar({ account }) {
   const [imageFailed, setImageFailed] = useState(false);
@@ -96,14 +179,17 @@ const editorState = (account) => ({
   studentNumber: account.studentNumber || "",
   profession: account.profession || "",
   status: account.status || "",
-  roles: Array.isArray(account.roles)
-    ? account.roles.filter(isEditableAccountRole)
-    : [],
+  roles: editableAccountRoles(account.roles, account.type),
 });
 
-function AccountEditor({ account, currentAccountId, options, onClose, onSaved }) {
+function AccountEditor({ account, currentAccountId, actorRoles, options, onClose, onSaved, onMembershipChanged }) {
   const [form, setForm] = useState(() => editorState(account));
   const [saving, setSaving] = useState(false);
+  const [actionBusy, setActionBusy] = useState(false);
+  const busy = saving || actionBusy;
+  const closeEditor = useCallback(() => { if (!busy) onClose(); }, [busy, onClose]);
+  const dirty = JSON.stringify(form) !== JSON.stringify(editorState(account));
+  const canManageMembership = actorRoles.some(role => ACCESS_3.includes(role));
   const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
   const titleRef = useRef(null);
@@ -114,10 +200,10 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
 
   useEffect(() => {
     titleRef.current?.focus();
-    const onKeyDown = (event) => event.key === "Escape" && onClose();
+    const onKeyDown = (event) => event.key === "Escape" && closeEditor();
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  }, [closeEditor]);
 
   const change = (event) => {
     const { name, value } = event.target;
@@ -125,7 +211,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
   };
 
   const toggleRole = (role) => {
-    if (!isEditableAccountRole(role) || isSelf) return;
+    if (!isEditableAccountRole(role, account.type) || isSelf) return;
     setForm((current) => ({
       ...current,
       roles: current.roles.includes(role)
@@ -136,7 +222,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
 
   const submit = async (event) => {
     event.preventDefault();
-    if (saving) return;
+    if (busy) return;
     setSaving(true);
     try {
       const response = await sendRequest(
@@ -156,7 +242,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
   };
 
   return (
-    <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+    <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeEditor()}>
       <section className={styles.editor} role="dialog" aria-modal="true" aria-labelledby="account-editor-title">
         <header className={styles.editorHeader}>
           <div>
@@ -166,11 +252,11 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
               <p>{account.type === "alumni" ? "Alumni account" : "Member account"}</p>
             </div>
           </div>
-          <button className={styles.iconButton} type="button" onClick={onClose} aria-label="Close account editor"><IconlyClose /></button>
+          <button className={styles.iconButton} type="button" onClick={closeEditor} disabled={busy} aria-label="Close account editor"><IconlyClose /></button>
         </header>
 
         <form className={styles.editorForm} data-modal-body onSubmit={submit}>
-          <fieldset>
+          <fieldset disabled={busy}>
             <legend>Contact details</legend>
             <div className={styles.fieldGrid}>
               <EditorField id="account-editor-name" label="First name"><input id="account-editor-name" className="bgsnl-form-control" name="name" value={form.name} onChange={change} required /></EditorField>
@@ -182,7 +268,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
             </div>
           </fieldset>
 
-          <fieldset>
+          <fieldset disabled={busy}>
             <legend>Education and work</legend>
             <div className={styles.fieldGrid}>
               <EditorField className={styles.fullField} id="account-editor-university" label="University"><input id="account-editor-university" className="bgsnl-form-control" name="university" value={form.university} onChange={change} /></EditorField>
@@ -194,7 +280,7 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
             </div>
           </fieldset>
 
-          <fieldset>
+          <fieldset disabled={busy}>
             <legend>Access and status</legend>
             {isSelf && <p className={styles.selfNotice}>Your own roles and status are protected to prevent accidental loss of access.</p>}
             <EditorField className={styles.statusField} id="account-editor-status" label="Account status"><SelectInput id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</SelectInput></EditorField>
@@ -203,16 +289,20 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
                 Read-only roles: {protectedAccountRoles(account.roles).map((role) => ROLE_LABELS[role]).join(", ")}.
               </p>
             )}
+            {account.roles?.includes("vip") && <p className={styles.selfNotice}>VIP membership has no expiry date. Subscription payment requirements and account restrictions still apply.</p>}
+            {account.type === "alumni" && <p className={styles.selfNotice}>Alumni can be assigned national board or national committee roles.</p>}
             <div className={styles.roles} aria-label="Account roles">
-              {options.roles.filter(isEditableAccountRole).map((role) => {
+              {options.roles.filter(role => isEditableAccountRole(role, account.type)).map((role) => {
                 return <label key={role} className={styles.roleOption}><input type="checkbox" checked={form.roles.includes(role)} disabled={isSelf} onChange={() => toggleRole(role)} /><span>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span></label>;
               })}
             </div>
           </fieldset>
 
+          {canManageMembership && <AccountMembershipActions account={account} disabled={saving || dirty} onBusyChange={setActionBusy} onChanged={onMembershipChanged} />}
+
           <footer className={styles.editorFooter}>
-            <button type="button" className={styles.secondaryButton} onClick={onClose}>Cancel</button>
-            <button type="submit" className={styles.primaryButton} disabled={saving}>{saving ? "Saving…" : "Save changes"}</button>
+            <button type="button" className={styles.secondaryButton} onClick={closeEditor} disabled={busy}>Cancel</button>
+            <button type="submit" className={styles.primaryButton} disabled={busy}>{saving ? "Saving…" : "Save changes"}</button>
           </footer>
         </form>
       </section>
@@ -223,6 +313,8 @@ function AccountEditor({ account, currentAccountId, options, onClose, onSaved })
 AccountEditor.propTypes = {
   account: PropTypes.object.isRequired,
   currentAccountId: PropTypes.string,
+  actorRoles: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onMembershipChanged: PropTypes.func.isRequired,
   options: PropTypes.shape({
     cities: PropTypes.arrayOf(PropTypes.string),
     roles: PropTypes.arrayOf(PropTypes.string),
@@ -239,14 +331,18 @@ export default function BackofficeAccounts() {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage] = useState(1);
   const [accounts, setAccounts] = useState([]);
   const [options, setOptions] = useState(EMPTY_OPTIONS);
   const [pagination, setPagination] = useState({ total: 0, totalPages: 1 });
   const [selected, setSelected] = useState(null);
+  const [expandedAccountId, setExpandedAccountId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [loadingList, setLoadingList] = useState(true);
   const requestSequence = useRef(0);
   const user = useSelector(selectUser);
+  const accountRoleScope = [...(user.roles || [])].sort().join("|");
   const { sendRequest } = useHttpClient();
   const sendRequestRef = useRef(sendRequest);
   sendRequestRef.current = sendRequest;
@@ -263,13 +359,21 @@ export default function BackofficeAccounts() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (!canManageAccountType(accountRoleScope.split("|"), type)) {
+      setAccounts([]);
+      setSelected(null);
+      setType("member");
+      return undefined;
+    }
     if (statistics) return undefined;
     let active = true;
     const sequence = ++requestSequence.current;
     const params = new URLSearchParams({ type, page: String(page), pageSize: "25" });
     if (search) params.set("search", search);
     if (city) params.set("city", city);
+    if (statusFilter) params.set("status", statusFilter);
     setLoadingList(true);
+    setExpandedAccountId(null);
     sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, true, false)
       .then((response) => {
         if (!active || sequence !== requestSequence.current || !response) return;
@@ -279,41 +383,60 @@ export default function BackofficeAccounts() {
       })
       .finally(() => active && sequence === requestSequence.current && setLoadingList(false));
     return () => { active = false; };
-  }, [type, page, search, city, statistics]);
+  }, [type, page, search, city, statusFilter, statistics, refreshKey, accountRoleScope, user.region]);
 
   const chooseType = (nextType) => {
-    if (statistics) setSearchParams((current) => { current.delete("view"); return current; });
+    if (!canManageAccountType(user.roles, nextType)) return;
     setType(nextType);
     setPage(1);
     setSelected(null);
   };
 
+  const switchView = (view) => {
+    setSelected(null);
+    setSearchParams((current) => {
+      if (view === "statistics") current.set("view", "statistics");
+      else current.delete("view");
+      return current;
+    });
+  };
+
   const saved = (account) => {
     setAccounts((current) => current.map((item) => item.id === account.id ? account : item));
     setSelected(null);
+    setRefreshKey(key => key + 1);
+  };
+
+  const openAccountEditor = (account) => {
+    if (!canEditAccount(user.roles, account.roles)) return;
+    setSelected(account);
   };
 
   return (
     <>
       <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
-      <main className={styles.page}>
-        <header className={styles.pageHeader}>
-          <div className={styles.headingIcon} aria-hidden><FiUsers /></div>
-          <div><h1>Accounts back office</h1><p>Find and manage member and alumni profiles, account status and administrative roles.</p></div>
-        </header>
+      <main className={`container user-workspace-page event-admin-page ${styles.page}`}>
+        <nav className={adminStyles.views} aria-label="Account administration">
+          <Link className={adminStyles.backLink} to="/user/dashboard" aria-label="Back to administration">
+            <FiArrowLeft size={24} aria-hidden />
+            <span>Administration</span>
+          </Link>
+          <div className={adminStyles.viewTabs}>
+            <button type="button" aria-current={!statistics ? "page" : undefined} onClick={() => switchView("accounts")}>Manage accounts</button>
+            <button type="button" aria-current={statistics ? "page" : undefined} onClick={() => switchView("statistics")}>Member statistics</button>
+          </div>
+        </nav>
 
-        <div className={styles.tabs} role="tablist" aria-label="Member administration">
-          <button type="button" role="tab" aria-selected={!statistics && type === "member"} onClick={() => chooseType("member")}>Members</button>
-          <button type="button" role="tab" aria-selected={!statistics && type === "alumni"} onClick={() => chooseType("alumni")}>Alumni</button>
-          <button type="button" role="tab" aria-selected={statistics} onClick={() => {
-            setSelected(null);
-            setSearchParams((current) => { current.set("view", "statistics"); return current; });
-          }}>Member statistics</button>
-        </div>
+        <header className="event-workspace-heading event-dashboard-heading">
+          <div>
+            <h1>Accounts dashboard</h1>
+            <p>Find and manage member and alumni profiles, account status and administrative roles.</p>
+          </div>
+        </header>
 
         {statistics ? <section className={styles.directory} aria-label="Member statistics"><AnalyticsAvailability title="Member analytics"><MembersList /></AnalyticsAvailability></section> : <section className={styles.directory} aria-label={`${type} directory`}>
           <FilterPanel
-            onClear={() => { setSearchInput(""); setSearch(""); setCity(""); setPage(1); }}
+            onClear={() => { setType("member"); setSearchInput(""); setSearch(""); setCity(""); setStatusFilter(""); setPage(1); }}
             summary={(
               <span aria-live="polite">
                 {loadingList ? "Loading accounts…" : `${pagination.total} ${type === "alumni" ? "alumni" : pagination.total === 1 ? "member" : "members"}`}
@@ -321,8 +444,10 @@ export default function BackofficeAccounts() {
             )}
             title="Filter accounts"
           >
+            <label><span>Show</span><SelectInput className="bgsnl-form-control" value={type} onChange={(event) => chooseType(event.target.value)}><option value="member">Members</option>{canManageAccountType(user.roles, "alumni") && <option value="alumni">Alumni</option>}</SelectInput></label>
             <label className={styles.searchField}><span>Search name, email or number</span><div><FiSearch aria-hidden /><input className="bgsnl-form-control" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div></label>
             <label><span>City</span><SelectInput className="bgsnl-form-control" value={city} onChange={(event) => { setCity(event.target.value); setPage(1); }}><option value="">All cities</option>{options.cities.map((item) => <option key={item} value={item}>{formatCity(item)}</option>)}<option value="unassigned">Not assigned</option></SelectInput></label>
+            <label><span>Status</span><SelectInput className="bgsnl-form-control" aria-label="Account status filter" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); }}><option value="">All statuses</option>{options.statuses.map(status => <option value={status} key={status}>{capitalizeFirstLetter(status.replaceAll("_", " ").replaceAll("-", " "))}</option>)}</SelectInput></label>
           </FilterPanel>
 
           {!loadingList && accounts.length === 0 ? (
@@ -331,16 +456,60 @@ export default function BackofficeAccounts() {
             <div className={styles.tableWrap} aria-busy={loadingList}>
               <table>
                 <thead><tr><th>Account</th><th>Contact</th><th>City</th><th>Status</th><th>Roles</th><th><span className={styles.visuallyHidden}>Actions</span></th></tr></thead>
-                <tbody>{accounts.map((account) => <tr key={account.id}>
-                  <td data-label="Account"><div className={styles.person}><AccountAvatar key={account.image || "initials"} account={account} /><div><strong>{accountName(account)}</strong><small>{account.id === currentAccountId ? "Your account" : account.type === "alumni" ? "Alumni" : "Member"}</small></div></div></td>
-                  <td data-label="Contact"><a href={`mailto:${account.email}`}>{account.email}</a><small>{account.phone || "No mobile number"}</small></td>
-                  <td data-label="City">{formatCity(account.region)}</td>
-                  <td data-label="Status"><span className={styles.status} data-status={account.status}>{account.status.replaceAll("_", " ")}</span></td>
-                  <td data-label="Roles"><div className={styles.roleTags}>{account.roles.map((role) => <span key={role}>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span>)}</div></td>
-                  <td className={styles.actionCell}><button type="button" className={styles.editButton} onClick={() => setSelected(account)}><FiEdit2 aria-hidden /><span>Edit</span></button></td>
-                </tr>)}</tbody>
+                <tbody>{loadingList ? <AccountTableSkeleton /> : accounts.map((account) => {
+                  const editable = canEditAccount(user.roles, account.roles);
+                  const expanded = expandedAccountId === account.id;
+                  const panelId = `account-details-${account.type}-${account.id}`;
+                  const toggleDetails = () => setExpandedAccountId(current => current === account.id ? null : account.id);
+
+                  return (
+                    <Fragment key={account.id}>
+                    <tr className={styles.summaryRow} tabIndex={0} aria-expanded={expanded} aria-controls={panelId}
+                      onClick={(event) => { if (!event.target.closest("button, a")) toggleDetails(); }}
+                      onKeyDown={(event) => {
+                        if (event.target === event.currentTarget && ["Enter", " "].includes(event.key)) {
+                          event.preventDefault();
+                          toggleDetails();
+                        }
+                      }}>
+                      <td data-label="Account">
+                        <span className={styles.mobileStatusDot} data-status={account.status} role="img" aria-label={`Status: ${account.status.replaceAll("_", " ")}`} />
+                        <div className={styles.person}>
+                          <AccountAvatar key={account.image || "initials"} account={account} />
+                          <div className={styles.personText}>
+                            <strong>{accountName(account)}</strong>
+                            <a className={styles.mobileEmail} href={`mailto:${account.email}`}>{account.email}</a>
+                          </div>
+                        </div>
+                      </td>
+                      <td data-label="Contact" className={styles.detailCell}><a href={`mailto:${account.email}`}>{account.email}</a><small>{account.phone || "No mobile number"}</small></td>
+                      <td data-label="Region" className={styles.regionCell} style={getRegionBadgeStyle(account.region)}>{formatRegionBadgeLabel(account.region)}</td>
+                      <td data-label="Status" className={styles.detailCell}><span className={styles.status} data-status={account.status}>{account.status.replaceAll("_", " ")}</span></td>
+                      <td data-label="Roles" className={styles.rolesCell}><div className={styles.roleTags}>{account.roles.length ? account.roles.map((role) => <span key={role}>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span>) : <span>No roles</span>}</div></td>
+                      <td className={styles.actionCell}>
+                        <div className={styles.summaryActions}>
+                        {editable && <button type="button" className={styles.editButton} aria-label={`Edit ${accountName(account)}`} onClick={(event) => { event.stopPropagation(); openAccountEditor(account); }}><FiEdit2 aria-hidden /><span>Edit</span></button>}
+                        <button type="button" className={styles.expandButton} aria-expanded={expanded} aria-controls={panelId}
+                          aria-label={`${expanded ? "Collapse" : "Expand"} details for ${accountName(account)}`}
+                          onClick={(event) => { event.stopPropagation(); toggleDetails(); }}>
+                          <FiChevronDown size={22} aria-hidden />
+                        </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className={styles.previewRow} aria-hidden={!expanded || undefined}>
+                      <td colSpan={6}>
+                        <div id={panelId} className={styles.previewReveal} data-expanded={expanded} inert={!expanded || undefined}>
+                          <div className={styles.previewClip}>
+                            <AccountDetails account={account} editable={editable} onEdit={openAccountEditor} />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                    </Fragment>
+                  );
+                })}</tbody>
               </table>
-              {loadingList && <div className={styles.loadingOverlay} role="status">Loading accounts…</div>}
             </div>
           )}
 
@@ -351,7 +520,7 @@ export default function BackofficeAccounts() {
           </nav>
         </section>}
       </main>
-      {selected && <AccountEditor account={selected} currentAccountId={currentAccountId} options={options} onClose={() => setSelected(null)} onSaved={saved} />}
+      {selected && canManageAccountType(user.roles, selected.type) && canEditAccount(user.roles, selected.roles) && <AccountEditor account={selected} currentAccountId={currentAccountId} actorRoles={user.roles || []} options={options} onClose={() => setSelected(null)} onSaved={saved} onMembershipChanged={() => { setSelected(null); setRefreshKey(key => key + 1); }} />}
     </>
   );
 }

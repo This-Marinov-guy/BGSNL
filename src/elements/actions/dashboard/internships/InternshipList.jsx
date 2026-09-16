@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import {
   FaGripVertical,
   FiEdit2,
-  FiPlus,
   FiTrash2,
 } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
@@ -208,35 +207,17 @@ const InternshipList = () => {
 
   return (
     <>
-      <div
-        className="d-flex justify-content-between align-items-center mb--30 flex-wrap"
-        style={{ gap: "15px" }}
-      >
-        <div style={{ flex: isCompactLayout ? "1 1 100%" : "1 1 auto" }}>
-          <h3 style={{ margin: 0 }}>Internships Dashboard</h3>
-          <p style={{ margin: "8px 0 0", color: "#6b7280" }}>
-            Drag rows to reorder internships. Changes save automatically.
-          </p>
+      <header className="event-workspace-heading event-dashboard-heading">
+        <div>
+          <h1>Internships dashboard</h1>
+          <p>Manage internship listings and visibility. Drag rows to reorder; changes save automatically.</p>
         </div>
-        <div
-          className="workspace-heading-actions"
-          style={{
-            width: isCompactLayout ? "100%" : "auto",
-          }}
-        >
-          <Link
-            to="/user/dashboard/internships/new"
-            className="rn-button-style--2 rn-btn-green"
-            style={{
-              flex: isCompactLayout ? "1 1 12rem" : "0 0 auto",
-              textAlign: "center",
-            }}
-          >
-            <FiPlus style={{ marginRight: "6px" }} />
-            Add Internship
+        <div className="workspace-heading-actions">
+          <Link to="/user/dashboard/internships/new" className="rn-button-style--2 rn-btn-reverse-green">
+            <span>Add internship</span>
           </Link>
         </div>
-      </div>
+      </header>
 
       {loading && internships.length === 0 && <p>Loading...</p>}
 

@@ -9,7 +9,7 @@ import { FiArrowLeft, FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import EventList from "@/elements/actions/dashboard/open-events/EventList";
 import { selectUser } from "@/redux/user";
-import { ACCESS_3 } from "@/util/defines/common";
+import { EVENT_MANAGEMENT_ACCESS } from "@/util/defines/common";
 import styles from "./administration.module.scss";
 import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 
@@ -20,7 +20,7 @@ const EventsAnalyticsList = dynamic(() => import("@/elements/actions/dashboard/e
 export default function EventDashboard() {
   const user = useSelector(selectUser);
   const searchParams = useSearchParams();
-  const canViewAnalytics = ACCESS_3.some((role) => user.roles?.includes(role));
+  const canViewAnalytics = EVENT_MANAGEMENT_ACCESS.some((role) => user.roles?.includes(role));
   const analytics = canViewAnalytics && searchParams.get("view") === "analytics";
   const viewUrl = (view) => {
     const query = new URLSearchParams(searchParams);

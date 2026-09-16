@@ -4,7 +4,7 @@ import { useSearchParams } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { selectUser } from "../../../../redux/user";
 import { sessionClaims } from "../../../../util/functions/authorization";
-import { ACCESS_2 } from "../../../../util/defines/common";
+import { ALL_EVENT_REGIONS_ACCESS } from "../../../../util/defines/common";
 import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
@@ -20,6 +20,37 @@ const formatDateParam = (date) => {
   return `${year}-${month}-${day}`;
 };
 
+
+const EventAnalyticsListSkeleton = () => (
+  <div className="event-dashboard-content dashboard-list-skeleton" aria-hidden="true">
+    {[0, 1].map((section) => (
+      <section className="region-section" key={section}>
+        <header className="region-section__header">
+          <Skeleton width="10rem" height="1.75rem" />
+          <Skeleton width="2.5rem" height="1.75rem" />
+        </header>
+        <div className="events-analytics-list">
+          {[0, 1, 2].map((row) => (
+            <div className="dashboard-list-skeleton__row event-analytics-accordion" key={row}>
+              <Skeleton width="4rem" height="4rem" className="dashboard-list-skeleton__thumb" />
+              <div className="dashboard-list-skeleton__main">
+                <Skeleton width="min(18rem, 75%)" height="1.2rem" />
+                <div className="dashboard-list-skeleton__meta">
+                  <Skeleton width="5rem" height="1rem" />
+                  <Skeleton width="8rem" height="1rem" />
+                  <Skeleton width="5.5rem" height="1rem" />
+                  <Skeleton width="4rem" height="1rem" />
+                </div>
+              </div>
+              <Skeleton shape="circle" size="2rem" />
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+);
+
 const EventsAnalyticsList = () => {
   const [events, setEvents] = useState([]);
   const [summary, setSummary] = useState({
@@ -34,7 +65,7 @@ const EventsAnalyticsList = () => {
 
   const user = useSelector(selectUser);
   const { roles, region } = sessionClaims(user.session);
-  const isAdmin = hasOverlap(roles, ACCESS_2);
+  const isAdmin = hasOverlap(roles, ALL_EVENT_REGIONS_ACCESS);
 
   const [searchParams] = useSearchParams();
   const regionParam = REGIONS.includes(searchParams.get("region"))
@@ -170,14 +201,7 @@ const EventsAnalyticsList = () => {
       </Filter>
 
       {loading ? (
-        <div className="row mt--20">
-          <div className="col-12 mb--20">
-            <p>Loading events analytics, please be patient!</p>
-            <Skeleton className="mb-2" />
-            <Skeleton width="10rem" className="mb-2" />
-            <Skeleton width="5rem" className="mb-2" />
-          </div>
-        </div>
+        <EventAnalyticsListSkeleton />
       ) : (
         <div className="event-dashboard-content">
           {Object.entries(eventsByRegion).map(([regionKey, regionEvents]) => (

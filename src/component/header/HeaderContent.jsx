@@ -25,6 +25,7 @@ import NewBadge from "../../elements/ui/badges/NewBadge";
 import { selectUser } from "../../redux/user";
 import {
   ACCESS_2,
+  MEMBER_ADMIN_ACCESS,
   ACCESS_4,
   SUPPORT_ACCESS,
 } from "../../util/defines/common";
@@ -306,7 +307,7 @@ const HeaderContent = (props) => {
                   <ul className="submenu">
                     <>
                       <li><Link to="/user/dashboard">Administration</Link></li>
-                      {checkAuthorization(user.session, ACCESS_2) && (
+                      {checkAuthorization(user.session, MEMBER_ADMIN_ACCESS) && (
                         <li><Link to="/user/dashboard/members">Manage Members</Link></li>
                       )}
                       {checkAuthorization(user.session, ACCESS_4) && <>

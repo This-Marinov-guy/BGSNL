@@ -41,9 +41,9 @@
 .card p { flex: 1; }
 .views { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem; }
 .viewTabs { display: flex; flex-wrap: wrap; gap: .75rem; }
-.views a { padding: .75rem 1rem; border-radius: .65rem; color: #087462; background: #edf3ee; font-weight: 700; }
-.views a[aria-current="page"] { color: #fff; background: #087462; }
-.views a:focus-visible { outline: 3px solid #087462; outline-offset: 3px; }
+.views a, .viewTabs button { padding: .75rem 1rem; border: 0; border-radius: .65rem; color: #087462; background: #edf3ee; font: inherit; font-weight: 700; cursor: pointer; }
+.views a[aria-current="page"], .viewTabs button[aria-current="page"] { color: #fff; background: #087462; }
+.views a:focus-visible, .viewTabs button:focus-visible { outline: 3px solid #087462; outline-offset: 3px; }
 .backLink { display: inline-flex; align-items: center; gap: .45rem; }
 
 @media (max-width: 767px) {
@@ -131,7 +131,8 @@
     background: #edf3ee;
   }
 
-  .viewTabs a {
+  .viewTabs a,
+  .viewTabs button {
     display: inline-flex;
     align-items: center;
     justify-content: center;

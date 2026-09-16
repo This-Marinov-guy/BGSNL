@@ -30,7 +30,7 @@ import {
 import { showNotification } from "../../../../redux/notification";
 import { selectUser } from "../../../../redux/user";
 import {
-  ACCESS_3,
+  EVENT_MANAGEMENT_ACCESS,
   ACCESS_4,
   EVENT_DELETED,
 } from "../../../../util/defines/common";
@@ -298,7 +298,7 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                 <span>{savingSales ? "Saving…" : salesClosed ? "Sales closed" : "Sales opened"}</span>
               </button>
             )}
-            {!isDraft && checkAuthorization(user.session, ACCESS_3) ? (
+            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
               <button
                 className="rn-button-style--2 rn-btn-green"
                 onClick={() => setTicketGeneratorVisible(true)}

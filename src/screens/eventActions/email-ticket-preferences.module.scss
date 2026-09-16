@@ -1,0 +1,37 @@
+.page:global(.purchase-page) { padding-top: clamp(2rem, 5vw, 4rem); }
+.fields { display: grid; gap: 1.5rem; min-width: 0; padding: 0; margin: 0; border: 0; }
+.addOns { display: grid; gap: 0.75rem; }
+.addOn { display: flex; align-items: center; gap: 1rem; justify-content: space-between; width: 100%; padding: 1rem; border: 1px solid #cbd8d1; border-radius: 0.75rem; background: #fff; color: #232b27; text-align: left; cursor: pointer; }
+.addOn > span { display: grid; gap: 0.25rem; }
+.addOn:hover, .selected { border-color: #017363; background: #eaf5ef; }
+.addOn:focus-visible { outline: 3px solid #add8e6; outline-offset: 3px; }
+.notice, .error { padding: 1rem; border-radius: 0.75rem; background: #fff3dc; color: #714b09; }
+.error { background: #fff1f0; color: #b42318; }
+.error button { display: block; margin-top: 0.5rem; border: 0; background: transparent; color: inherit; text-decoration: underline; }
+.note { color: #58645e; margin: 0; }
+@media (max-width: 767px) { .page:global(.purchase-page) { padding-top: 8rem; } }
+
+.page:global(.purchase-page.member-purchase-container) :global(.purchase-checkout-shell > .purchase-form) {
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid #dce2de;
+  border-radius: 1rem;
+}
+
+.animatedPrice {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  animation: priceUpdate 220ms ease-out;
+}
+
+@keyframes priceUpdate {
+  from { opacity: 0; transform: translateY(0.3rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animatedPrice { animation: none; }
+}
+
+@media (max-width: 767px) {
+  .page:global(.purchase-page) :global(.purchase-event-sidebar) { display: none; }
+}

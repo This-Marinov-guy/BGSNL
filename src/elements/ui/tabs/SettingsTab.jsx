@@ -9,6 +9,7 @@ import { showModal } from "../../../redux/modal";
 import { logout } from "../../../redux/user";
 import { showNotification } from "../../../redux/notification";
 import { USER_UPDATE_MODAL } from "../../../util/defines/common";
+import MembershipTransferPrompt from "@/elements/subscriptions/MembershipTransferPrompt";
 import BillingActions from "@/elements/subscriptions/BillingActions";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
 import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
@@ -57,6 +58,7 @@ const SettingsTab = ({ user }) => {
   return (
     <div className="tab-content-wrapper">
       <UserTabHeader title="Settings" />
+      {user && <MembershipTransferPrompt user={user} />}
       <div className="tab-body">
         <div className="settings-groups">
           <section className="settings-group" aria-labelledby="settings-account">

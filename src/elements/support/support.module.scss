@@ -79,6 +79,7 @@
 .conversation > .error, .closed { margin: .5rem 1.25rem; flex-shrink: 0; }
 .helpSection { display: grid; gap: 1.5rem; }
 .quickLinks { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; a { color: var(--site-thread-primary); text-decoration: underline; text-underline-offset: .2em; } }
+.inboxPage { min-width: 0; }
 .embedded {
   background: #fff;
   border-radius: 1rem;
@@ -92,8 +93,7 @@
     max-height: min(32rem, 65dvh);
   }
 }
-.inboxPage { max-width: 64rem; padding-bottom: 3rem; > header { margin-bottom: 1.5rem; } }
-.inboxPage:global(.user-workspace-page) { padding-top: clamp(8rem, 11vw, 10.5rem); }
+
 @media (max-height: 600px) {
   .conversation { overflow-y: auto; overscroll-behavior: contain; }
   .messages { flex: 1 0 10rem; }
@@ -111,20 +111,6 @@
   .widgetHeader { padding: .5rem 1rem; }
   .listView, .formView, .threadHeader, .composer { padding: 1rem; }
   .messages { padding: 1rem; }
-  .inboxPage {
-    width: 100%;
-    max-width: 100vw;
-
-    > header {
-      margin-bottom: 0.85rem;
-      padding-inline: 0.15rem;
-    }
-  }
-
-  .inboxPage:global(.user-workspace-page) {
-    padding: 6.4rem 0.45rem 2rem;
-  }
-
   .embedded {
     border-radius: 0;
     margin-inline: -0.45rem;

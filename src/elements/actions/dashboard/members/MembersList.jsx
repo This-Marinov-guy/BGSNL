@@ -1,21 +1,120 @@
 import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "@/util/navigation";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { selectUser } from "../../../../redux/user";
 import {
   sessionClaims,
 } from "../../../../util/functions/authorization";
-import { ACCESS_2 } from "../../../../util/defines/common";
+import { ALL_MEMBER_REGIONS_ACCESS } from "../../../../util/defines/common";
 import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import {
   capitalizeFirstLetter,
 } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
-import { Skeleton } from "@/compat/primereact";
+import { SelectInput, Skeleton } from "@/compat/primereact";
 import Filter from "../Filter";
+import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 import MemberAccordion from "./MemberAccordion";
 import { exportMembersCSV } from "./exportMembers";
+
+const MEMBER_STATUS_FILTERS = new Set(["active", "expired"]);
+
+const memberStatusCounts = (list) => list.reduce((counts, member) => {
+  if (member.isPaid) counts.active += 1;
+  else counts.expired += 1;
+  return counts;
+}, { active: 0, expired: 0 });
+
+const chartNumber = (value) => Number.isFinite(value) ? value : 0;
+
+const MembersStatsChart = ({ data, mode }) => {
+  const hasData = data.some((entry) => chartNumber(entry.active) + chartNumber(entry.expired) > 0);
+
+  return (
+    <section className="members-statistics-chart" aria-labelledby="members-statistics-chart-title">
+      <div className="members-statistics-chart__header">
+        <div>
+          <h4 id="members-statistics-chart-title">
+            {mode === "regions" ? "Members by city" : "Visible members"}
+          </h4>
+          <p>
+            {mode === "regions"
+              ? "Active and expired members grouped by region."
+              : "Active and expired split for the current access and filters."}
+          </p>
+        </div>
+      </div>
+      {hasData ? (
+        <div className="members-statistics-chart__canvas">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5ece8" vertical={false} />
+              <XAxis dataKey="label" tickLine={false} axisLine={false} interval={0} tick={{ fill: "#526158", fontSize: 12 }} />
+              <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
+              <Tooltip cursor={{ fill: "rgba(1, 115, 99, 0.06)" }} />
+              <Legend />
+              <Bar dataKey="active" name="Active" stackId="members" fill="#017363" radius={[5, 5, 0, 0]} />
+              <Bar dataKey="expired" name="Expired" stackId="members" fill="#dc3545" radius={[5, 5, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      ) : (
+        <p className="members-statistics-chart__empty">No member statistics for the current filters.</p>
+      )}
+    </section>
+  );
+};
+
+MembersStatsChart.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    active: PropTypes.number.isRequired,
+    expired: PropTypes.number.isRequired,
+    label: PropTypes.string.isRequired,
+  })).isRequired,
+  mode: PropTypes.oneOf(["regions", "overall"]).isRequired,
+};
+
+
+const MemberListSkeleton = () => (
+  <div className="dashboard-list-skeleton mt--20" aria-hidden="true">
+    {[0, 1].map((section) => (
+      <section className="region-section" key={section}>
+        <div className="row">
+          <div className="col-12">
+            <Skeleton width="11rem" height="1.75rem" className="mb-3" />
+          </div>
+        </div>
+        <div className="members-accordion-list">
+          {[0, 1, 2].map((row) => (
+            <div className="dashboard-list-skeleton__row member-accordion" key={row}>
+              <div className="dashboard-list-skeleton__main">
+                <Skeleton width="min(16rem, 70%)" height="1.2rem" />
+                <div className="dashboard-list-skeleton__meta">
+                  <Skeleton width="5.5rem" height="1rem" />
+                  <Skeleton width="4.5rem" height="1rem" />
+                  <Skeleton width="4rem" height="1rem" />
+                  <Skeleton width="6rem" height="1rem" />
+                </div>
+              </div>
+              <Skeleton shape="circle" size="2rem" />
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+);
 
 const MembersList = () => {
   const [members, setMembers] = useState([]);
@@ -28,12 +127,24 @@ const MembersList = () => {
 
   const user = useSelector(selectUser);
   const { roles, region } = sessionClaims(user.session);
-  const isAdmin = hasOverlap(roles, ACCESS_2);
+  const isAdmin = hasOverlap(roles, ALL_MEMBER_REGIONS_ACCESS);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterSearchParams();
   const regionParam = REGIONS.includes(searchParams.get("region"))
     ? searchParams.get("region")
     : "";
+  const statusParam = MEMBER_STATUS_FILTERS.has(searchParams.get("memberStatus"))
+    ? searchParams.get("memberStatus")
+    : "";
+
+  const handleStatusChange = (event) => {
+    const nextStatus = event.target.value;
+    setSearchParams((current) => {
+      if (MEMBER_STATUS_FILTERS.has(nextStatus)) current.set("memberStatus", nextStatus);
+      else current.delete("memberStatus");
+      return current;
+    });
+  };
 
   const { sendRequest } = useHttpClient();
 
@@ -67,6 +178,13 @@ const MembersList = () => {
     return () => { active = false; };
   }, [regionParam, isAdmin]);
 
+  const filteredMembers = members.filter((member) => {
+    if (statusParam === "active") return Boolean(member.isPaid);
+    if (statusParam === "expired") return !member.isPaid;
+    return true;
+  });
+  const statusLabel = statusParam ? `${statusParam} ` : "";
+
   // Group members by region
   const membersByRegion = {};
   const regionList = isAdmin
@@ -76,16 +194,34 @@ const MembersList = () => {
     : REGIONS.filter((r) => r === region);
 
   for (const r of regionList) {
-    membersByRegion[r] = members.filter((m) => m.region === r);
+    membersByRegion[r] = filteredMembers.filter((m) => m.region === r);
   }
 
   // Members without a known region
-  const unknownRegion = members.filter(
+  const unknownRegion = filteredMembers.filter(
     (m) => !m.region || !REGIONS.includes(m.region)
   );
   if (unknownRegion.length > 0) {
     membersByRegion["other"] = unknownRegion;
   }
+
+  const chartMode = isAdmin && !regionParam ? "regions" : "overall";
+  const chartData = chartMode === "regions"
+    ? Object.entries(membersByRegion).map(([key, regionMembers]) => {
+      const counts = memberStatusCounts(regionMembers);
+      return {
+        label: capitalizeFirstLetter(key, true),
+        active: counts.active,
+        expired: counts.expired,
+      };
+    })
+    : (() => {
+      const counts = memberStatusCounts(filteredMembers);
+      return [
+        { label: "Active", active: counts.active, expired: 0 },
+        { label: "Expired", active: 0, expired: counts.expired },
+      ];
+    })();
 
   return (
     <>
@@ -98,8 +234,8 @@ const MembersList = () => {
         </h3>
         <button
           className="rn-button-style--2 rn-btn-green"
-          onClick={() => exportMembersCSV(members)}
-          disabled={loading || members.length === 0}
+          onClick={() => exportMembersCSV(filteredMembers)}
+          disabled={loading || filteredMembers.length === 0}
         >
           <span>Export Report</span>
         </button>
@@ -135,17 +271,33 @@ const MembersList = () => {
         </div>
       </div>
 
-      {isAdmin && <Filter />}
+      {loading ? (
+        <div className="members-statistics-chart members-statistics-chart--loading">
+          <Skeleton width="12rem" className="mb-2" />
+          <Skeleton height="14rem" />
+        </div>
+      ) : (
+        <MembersStatsChart data={chartData} mode={chartMode} />
+      )}
+
+      {isAdmin && <Filter title="Member filters" onClear={() => {
+        setSearchParams((current) => {
+          current.delete("memberStatus");
+          return current;
+        });
+      }}>
+        <label>
+          <span>Status</span>
+          <SelectInput value={statusParam} onChange={handleStatusChange}>
+            <option value="">All</option>
+            <option value="active">Active</option>
+            <option value="expired">Expired</option>
+          </SelectInput>
+        </label>
+      </Filter>}
 
       {loading ? (
-        <div className="row mt--20">
-          <div className="col-12 mb--20">
-            <p>Loading members, please be patient!</p>
-            <Skeleton className="mb-2" />
-            <Skeleton width="10rem" className="mb-2" />
-            <Skeleton width="5rem" className="mb-2" />
-          </div>
-        </div>
+        <MemberListSkeleton />
       ) : (
         <div className="mt--20">
           {Object.entries(membersByRegion).map(
@@ -168,7 +320,7 @@ const MembersList = () => {
                       </div>
                     ) : (
                       <p className="no-events-message">
-                        No members in this region
+                        No {statusLabel}members in this region
                       </p>
                     )}
                   </div>

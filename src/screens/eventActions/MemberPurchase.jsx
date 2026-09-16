@@ -309,7 +309,6 @@ const MemberPurchase = ({ initialEvent = null }) => {
                   <div className="col-12">
                     <div className="purchase-form-heading">
                       <h2>Additional information</h2>
-                      <p>Please complete the details requested by the organiser.</p>
                     </div>
                     <FormExtras inputs={selectedEvent.extraInputsForm} />
                   </div>
