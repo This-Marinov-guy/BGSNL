@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Image({ params }) {
   const { eventId, region } = await params;
-  const event = await getEventDetails(eventId);
+  const event = await getEventDetails(eventId, region);
 
   return new ImageResponse(
     (

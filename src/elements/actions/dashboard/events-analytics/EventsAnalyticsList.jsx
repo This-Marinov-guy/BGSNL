@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import moment from "moment";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
@@ -9,6 +11,17 @@ import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
 import { Calendar, Skeleton } from "@/compat/primereact";
+import {
+  Bar,
+  CartesianGrid,
+  ComposedChart,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import Filter from "../Filter";
 import EventAnalyticsAccordion from "./EventAnalyticsAccordion";
 import { exportEventsCSV } from "./exportEvents";
@@ -18,6 +31,89 @@ const formatDateParam = (date) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+const euro = new globalThis.Intl.NumberFormat("en-NL", {
+  style: "currency",
+  currency: "EUR",
+  maximumFractionDigits: 0,
+});
+
+const completedEvents = (events) => events
+  .filter((event) => new Date(event.date).getTime() <= Date.now())
+  .sort((first, second) => new Date(first.date) - new Date(second.date));
+
+const percentageChange = (current, previous) => {
+  if (!previous) return null;
+  return Math.round(((current - previous) / Math.abs(previous)) * 100);
+};
+
+const EventPerformance = ({ events }) => {
+  const completed = completedEvents(events);
+  const latest = completed.at(-1);
+  const previous = completed.at(-2);
+  const chartData = completed.slice(-8).map((event) => ({
+    label: moment(event.date).format("D MMM"),
+    title: event.title,
+    revenue: Number(event.revenue) || 0,
+    tickets: Number(event.totalTickets) || 0,
+  }));
+  const averageRevenue = completed.length
+    ? completed.reduce((total, event) => total + (Number(event.revenue) || 0), 0) / completed.length
+    : 0;
+  const averageTickets = completed.length
+    ? completed.reduce((total, event) => total + (Number(event.totalTickets) || 0), 0) / completed.length
+    : 0;
+  const attendanceRate = completed.reduce((total, event) => total + (Number(event.attended) || 0), 0) /
+    completed.reduce((total, event) => total + (Number(event.totalTickets) || 0), 0);
+  const revenueChange = latest && previous ? percentageChange(Number(latest.revenue) || 0, Number(previous.revenue) || 0) : null;
+  const ticketChange = latest && previous ? percentageChange(Number(latest.totalTickets) || 0, Number(previous.totalTickets) || 0) : null;
+
+  if (!completed.length) {
+    return <section className="analytics-trend-card analytics-trend-card--empty"><h4>Event performance</h4><p>Performance comparisons appear after the first event in the selected period has finished.</p></section>;
+  }
+
+  return (
+    <section className="event-performance" aria-labelledby="event-performance-title">
+      <header className="event-performance__header">
+        <div>
+          <h2 id="event-performance-title">Event performance</h2>
+          <p>Revenue and ticket sales for completed events in the selected period.</p>
+        </div>
+        {latest && <span className="event-performance__latest">Latest: {latest.title}</span>}
+      </header>
+      <div className="event-performance__metrics">
+        <article><span>Average revenue</span><strong>{euro.format(averageRevenue)}</strong></article>
+        <article><span>Average tickets</span><strong>{averageTickets.toFixed(1)}</strong></article>
+        <article><span>Attendance rate</span><strong>{Number.isFinite(attendanceRate) ? `${Math.round(attendanceRate * 100)}%` : "—"}</strong></article>
+        <article><span>Latest vs previous</span><strong>{previous && revenueChange !== null ? `${revenueChange > 0 ? "+" : ""}${revenueChange}% revenue` : previous ? "No revenue baseline" : "Need one more event"}</strong><small>{previous && ticketChange !== null ? `${ticketChange > 0 ? "+" : ""}${ticketChange}% tickets` : ""}</small></article>
+      </div>
+      <div className="analytics-trend-card__canvas">
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={chartData} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5ece8" vertical={false} />
+            <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
+            <YAxis yAxisId="tickets" allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
+            <YAxis yAxisId="revenue" orientation="right" tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} tickFormatter={(value) => `€${value}`} />
+            <Tooltip labelFormatter={(_, entries) => entries?.[0]?.payload?.title || ""} formatter={(value, name) => [name === "Revenue" ? euro.format(value) : value, name]} />
+            <Legend />
+            <Bar yAxisId="tickets" dataKey="tickets" name="Tickets sold" fill="#017363" radius={[5, 5, 0, 0]} />
+            <Line yAxisId="revenue" type="monotone" dataKey="revenue" name="Revenue" stroke="#bd8a21" strokeWidth={3} dot={{ r: 3 }} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+    </section>
+  );
+};
+
+EventPerformance.propTypes = {
+  events: PropTypes.arrayOf(PropTypes.shape({
+    attended: PropTypes.number,
+    date: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]).isRequired,
+    revenue: PropTypes.number,
+    title: PropTypes.string.isRequired,
+    totalTickets: PropTypes.number,
+  })).isRequired,
 };
 
 
@@ -79,6 +175,7 @@ const EventsAnalyticsList = () => {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     const fetchEvents = async () => {
       setLoading(true);
       try {
@@ -87,7 +184,7 @@ const EventsAnalyticsList = () => {
         if (fromDate) params.set("from", formatDateParam(fromDate));
         if (toDate) params.set("to", formatDateParam(toDate));
         const query = params.toString() ? `?${params.toString()}` : "";
-        const response = await requestRef.current(`dashboard/events-analytics${query}`, "GET", null, {}, true, false);
+        const response = await requestRef.current(`dashboard/events-analytics${query}`, "GET", null, {}, true, false, { signal: controller.signal });
         if (active && response?.events) {
           setEvents(response.events);
           setSummary(response.summary);
@@ -99,7 +196,7 @@ const EventsAnalyticsList = () => {
       }
     };
     fetchEvents();
-    return () => { active = false; };
+    return () => { active = false; controller.abort(); };
   }, [regionParam, fromDate, toDate, isAdmin]);
 
   // Group events by region
@@ -132,47 +229,6 @@ const EventsAnalyticsList = () => {
         </button>
       </div>
 
-      {/* Summary Panels */}
-      <div className="row mb--30">
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <div className="dashboard-stat-card__label">Total Revenue</div>
-            <div className="dashboard-stat-card__value">
-              {loading ? (
-                <Skeleton width="80px" />
-              ) : (
-                `€${summary.totalRevenue}`
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <div className="dashboard-stat-card__label">Total Presence</div>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : summary.totalPresence}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <div className="dashboard-stat-card__label">Tickets Sold</div>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : summary.totalTicketsSold}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <div className="dashboard-stat-card__label">Total Events</div>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : summary.totalEvents}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Date Filter */}
       <Filter showRegion={isAdmin} onClear={() => { setFromDate(null); setToDate(null); }}>
         <div className="event-analytics-date-filter__field">
           <label htmlFor="analytics-from-date">From</label>
@@ -199,6 +255,53 @@ const EventsAnalyticsList = () => {
           />
         </div>
       </Filter>
+
+      {/* Summary Panels */}
+      <div className="row mb--30">
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card">
+            <p className="dashboard-stat-card__label">Total Revenue</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? (
+                <Skeleton width="80px" />
+              ) : (
+                `€${summary.totalRevenue}`
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card">
+            <p className="dashboard-stat-card__label">Total Presence</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="60px" /> : summary.totalPresence}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card">
+            <p className="dashboard-stat-card__label">Tickets Sold</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="60px" /> : summary.totalTicketsSold}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card">
+            <p className="dashboard-stat-card__label">Total Events</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="60px" /> : summary.totalEvents}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="analytics-trend-card analytics-trend-card--loading">
+          <Skeleton width="14rem" className="mb-2" />
+          <Skeleton height="15rem" />
+        </div>
+      ) : <EventPerformance events={events} />}
 
       {loading ? (
         <EventAnalyticsListSkeleton />

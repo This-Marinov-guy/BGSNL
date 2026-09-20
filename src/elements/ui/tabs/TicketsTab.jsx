@@ -3,9 +3,7 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import PropTypes from "prop-types";
-import {
-  FiEye,
-} from "@/elements/ui/icons/IconlyIcons";
+import ImagePreviewTrigger from "@/elements/ui/media/ImagePreviewTrigger";
 
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import UserTabHeader from "./UserTabHeader";
@@ -57,19 +55,15 @@ const TicketsTab = ({ currentUser }) => {
           <div className="tickets-grid">
             {tickets.map((ticket, i) => (
               <div className="ticket-item" key={i}>
-                <button
+                <ImagePreviewTrigger
                   aria-label={`Preview ticket ${i + 1}`}
-                  className="media-trigger ticket-image"
+                  className="ticket-image"
+                  imageClassName="ticket-image__image"
                   onClick={() => setPreviewIndex(i)}
+                  src={ticket.image}
+                  alt={`Ticket ${i + 1}`}
                   type="button"
-                >
-                  <img alt={`Ticket ${i + 1}`} src={ticket.image} />
-                  <span aria-hidden="true" className="media-trigger__overlay">
-                    <span className="media-trigger__eye">
-                      <FiEye size="1.4rem" />
-                    </span>
-                  </span>
-                </button>
+                />
               </div>
             ))}
           </div>

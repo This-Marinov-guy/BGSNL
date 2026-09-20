@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "framer-
 import { useFormikContext } from "formik";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import { SITE_URL } from "../../../util/seo/site";
-import { relatedEventOptions, visibleRelatedEvents, isRelatedEventSelected, relatedEventLink } from "../../../util/functions/related-events.mjs";
+import { relatedEventOptions, visibleRelatedEvents, isRelatedEventSelected, relatedEventLink, relatedEventPoster } from "../../../util/functions/related-events.mjs";
 import { FiCheck, FiImage } from "../../ui/icons/IconlyIcons";
 import { OptionError, OptionField } from "./EventOptionFields";
 
@@ -42,7 +42,9 @@ export default function EventRelatedPicker({ currentEventId, active = true }) {
   const { values, setFieldValue } = useFormikContext();
   const { sendRequest } = useHttpClient();
   const requestRef = useRef(sendRequest);
+  const valuesRef = useRef(values);
   requestRef.current = sendRequest;
+  valuesRef.current = values;
   const [result, setResult] = useState({ events: [], loading: true, error: false });
   const [attempt, setAttempt] = useState(0);
   const [search, setSearch] = useState("");
@@ -58,7 +60,18 @@ export default function EventRelatedPicker({ currentEventId, active = true }) {
         requestRef.current("future-event/full-data-events-list", "GET", null, {}, false, false),
       ]);
       if (cancelled) return;
-      setResult({ events: relatedEventOptions(responses.flatMap(response => response?.events ?? []), currentEventId), loading: false, error: responses.some(response => !Array.isArray(response?.events)) });
+      const events = relatedEventOptions(responses.flatMap(response => response?.events ?? []), currentEventId);
+      const currentLinks = valuesRef.current.subEvent?.links ?? [];
+      const hydratedLinks = currentLinks.map((link) => {
+        if (link.poster) return link;
+        const match = events.find((event) => isRelatedEventSelected(event, [link]));
+        const poster = relatedEventPoster(match);
+        return poster ? { ...link, poster } : link;
+      });
+      if (hydratedLinks.some((link, index) => link !== currentLinks[index])) {
+        setFieldValue("subEvent", { ...valuesRef.current.subEvent, links: hydratedLinks }, false);
+      }
+      setResult({ events, loading: false, error: responses.some(response => !Array.isArray(response?.events)) });
     }
     load();
     return () => { cancelled = true; };

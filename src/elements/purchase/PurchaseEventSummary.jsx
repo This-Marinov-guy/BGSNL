@@ -24,6 +24,9 @@ const getNumericPrice = (value) => {
   return Number.isFinite(numericPrice) ? numericPrice : null;
 };
 
+const addOnId = (item, index) =>
+  String(item?._id ?? item?.id ?? `${item?.title}-${index}`);
+
 const PurchaseEventSummary = ({
   event,
   discountApplied = false,
@@ -32,6 +35,9 @@ const PurchaseEventSummary = ({
   priceBadge,
   showMemberPriceComparison = true,
   usesMemberPrice = false,
+  ticketQuantity = 1,
+  ticketUnitPrice = null,
+  selectedAddOns = [],
 }) => {
   const eventTitle = event.newTitle || event.title;
   const eventDate = getEventDateTimePresentation(
@@ -150,6 +156,28 @@ const PurchaseEventSummary = ({
             )}
           </div>
 
+          {ticketUnitPrice !== null && (
+            <div className="purchase-price-breakdown" aria-label="Price breakdown" aria-live="polite">
+              <span className="purchase-price-breakdown__label">Price breakdown</span>
+              <ul>
+                <li>
+                  <span>{ticketQuantity} {ticketQuantity === 1 ? "ticket" : "tickets"}</span>
+                  <strong>
+                    {ticketQuantity > 1
+                      ? `${ticketQuantity} × ${formatEuro(ticketUnitPrice)}`
+                      : ticketUnitPrice === 0 ? "Free" : formatEuro(ticketUnitPrice)}
+                  </strong>
+                </li>
+                {selectedAddOns.map((item, index) => (
+                  <li key={addOnId(item, index)}>
+                    <span>{item.title}</span>
+                    <strong>{Number(item.price) > 0 ? `+ ${formatEuro(Number(item.price))}` : "Free"}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {factsInsideOverview && eventFacts}
 
         </section>
@@ -178,6 +206,14 @@ PurchaseEventSummary.propTypes = {
   priceBadge: PropTypes.node,
   showMemberPriceComparison: PropTypes.bool,
   usesMemberPrice: PropTypes.bool,
+  ticketQuantity: PropTypes.number,
+  ticketUnitPrice: PropTypes.number,
+  selectedAddOns: PropTypes.arrayOf(PropTypes.shape({
+    _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    title: PropTypes.string.isRequired,
+  })),
 };
 
 export default PurchaseEventSummary;

@@ -164,6 +164,14 @@ export const IconlyImage = (props) => (
   </IconlySvg>
 );
 
+export const IconlyImageOff = (props) => (
+  <IconlySvg {...props}>
+    <rect x="3.5" y="4.5" width="17" height="15" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    <circle cx="9" cy="9" r="1.3" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    <path d="m5.5 17 4.2-4 2.8 2.4 2.4-2.2 2.1 2M3 3l18 18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </IconlySvg>
+);
+
 export const IconlyScreenshot = (props) => (
   <IconlySvg {...props}>
     <path d="M8 5h2l1-1.5h4L16 5h1.5A2.5 2.5 0 0 1 20 7.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 15.5v-8A2.5 2.5 0 0 1 6.5 5H8Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -209,6 +217,15 @@ export const IconlyLogout = (props) => (
             <path d="M9.49273256,0 C11.9752907,0 14,1.99 14,4.44 L14,4.44 L14,9.23 L7.89534884,9.23 C7.45784884,9.23 7.1119186,9.57 7.1119186,10 C7.1119186,10.42 7.45784884,10.77 7.89534884,10.77 L7.89534884,10.77 L14,10.77 L14,15.55 C14,18 11.9752907,20 9.47238372,20 L9.47238372,20 L4.51744186,20 C2.0247093,20 -1.42108547e-14,18.01 -1.42108547e-14,15.56 L-1.42108547e-14,15.56 L-1.42108547e-14,4.45 C-1.42108547e-14,1.99 2.03488372,0 4.52761628,0 L4.52761628,0 Z M16.5402,6.5502 C16.8402,6.2402 17.3302,6.2402 17.6302,6.5402 L17.6302,6.5402 L20.5502,9.4502 C20.7002,9.6002 20.7802,9.7902 20.7802,10.0002 C20.7802,10.2002 20.7002,10.4002 20.5502,10.5402 L20.5502,10.5402 L17.6302,13.4502 C17.4802,13.6002 17.2802,13.6802 17.0902,13.6802 C16.8902,13.6802 16.6902,13.6002 16.5402,13.4502 C16.2402,13.1502 16.2402,12.6602 16.5402,12.3602 L16.5402,12.3602 L18.1402,10.7702 L14.0002,10.7702 L14.0002,9.2302 L18.1402,9.2302 L16.5402,7.6402 C16.2402,7.3402 16.2402,6.8502 16.5402,6.5502 Z"></path>
         </g>
     </g>
+  </IconlySvg>
+);
+
+export const IconlyChat = (props) => (
+  <IconlySvg {...props}>
+    <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3h.5a8.5 8.5 0 0 1 8 8v.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="8.5" cy="11.5" r="1" fill="currentColor" />
+    <circle cx="12.5" cy="11.5" r="1" fill="currentColor" />
+    <circle cx="16.5" cy="11.5" r="1" fill="currentColor" />
   </IconlySvg>
 );
 

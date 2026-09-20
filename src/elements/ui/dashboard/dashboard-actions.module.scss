@@ -1,0 +1,11 @@
+.copyable { display: inline-flex; align-items: center; gap: .4rem; max-width: 100%; vertical-align: middle; }
+.copyable > span { min-width: 0; overflow-wrap: anywhere; }
+.copyButton { display: inline-grid; place-items: center; flex: 0 0 2rem; width: 2rem; height: 2rem; padding: .3rem; border: 0; border-radius: .45rem; background: #e5f0eb; color: #017363; cursor: pointer; }
+.phoneButton { display: inline-flex; align-items: center; gap: .3rem; max-width: 100%; padding: .2rem 0; border: 0; background: transparent; color: #017363; font: inherit; text-align: left; cursor: pointer; }
+.phoneButton > span { overflow-wrap: anywhere; min-width: 0; }
+.phoneButton svg { flex-shrink: 0; }
+.phoneMenu { z-index: 1050; min-width: 10rem; max-width: calc(100vw - 2rem); padding: .4rem; border: 1px solid #dce5df; border-radius: .7rem; background: #fff; box-shadow: 0 .5rem 1.5rem rgb(27 54 42 / 14%); }
+.phoneMenu a, .phoneMenu a:visited { display: flex; align-items: center; gap: .6rem; min-height: 2.75rem; padding: .55rem .75rem; border-radius: .4rem; color: #017363; font-size: 1rem; text-decoration: none; }
+.copyButton:hover, .phoneMenu a:hover, .phoneMenu a:focus-visible { background: #e5f0eb; }
+.copyButton:focus-visible, .phoneButton:focus-visible, .phoneMenu a:focus-visible { outline: 2px solid #017363; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .phoneMenu { transition: none !important; } }

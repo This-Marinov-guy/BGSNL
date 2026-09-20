@@ -151,3 +151,8 @@
 @import "template/scrollbar";
 @import "template/dark-version";
 @import "template/preview";
+
+/* Keep every interactive button aligned with the interface display typeface. */
+button, button > span {
+  font-family: "LeagueSpartan", "Roboto", sans-serif !important;
+}

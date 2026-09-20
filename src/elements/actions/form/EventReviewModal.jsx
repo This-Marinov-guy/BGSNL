@@ -1,27 +1,40 @@
-import { promoAudiences } from "@/util/functions/event-promo-codes.mjs";
+import { EventUpsellDetails, EventAddOnDetails, EventQuestionDetails, EventAdvertisedDetails } from "./EventConfigurationPanels";
 import { cloneElement, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import dynamic from "next/dynamic";
 import { Dialog } from "@/compat/primereact";
 import EventSubmitProgress from "./EventSubmitProgress";
+import { IconlyImageOff } from "@/elements/ui/icons/IconlyIcons";
+import ImagePreviewTrigger from "@/elements/ui/media/ImagePreviewTrigger";
+
+const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
 
 const euro = value => value === undefined || value === null || value === "" ? "Not set" : new globalThis.Intl.NumberFormat("en-NL", { style: "currency", currency: "EUR" }).format(Number(value));
 const dateTime = value => {
   const date = value ? new Date(value) : null;
   return date && Number.isFinite(date.valueOf()) ? new globalThis.Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Amsterdam" }).format(date) : "Not set";
 };
-function ReviewImage({ value, label }) {
+
+const ReviewFact = ({ label, value }) => <div className="event-details-modal__fact"><dt>{label}</dt><dd>{value}</dd></div>;
+ReviewFact.propTypes = { label: PropTypes.string.isRequired, value: PropTypes.node };
+
+const ReviewSection = ({ title, children }) => <section className="event-details-modal__section"><header className="event-details-modal__section-heading"><h3>{title}</h3></header>{children}</section>;
+ReviewSection.propTypes = { children: PropTypes.node.isRequired, title: PropTypes.string.isRequired };
+
+function ReviewImage({ value, label, className = "", imageClassName = "", showCaption = true }) {
   const [url, setUrl] = useState(typeof value === "string" ? value : "");
+  const [previewOpen, setPreviewOpen] = useState(false);
   useEffect(() => {
     if (!(value instanceof Blob)) { setUrl(typeof value === "string" ? value : ""); return; }
     const next = URL.createObjectURL(value);
     setUrl(next);
     return () => URL.revokeObjectURL(next);
   }, [value]);
-  return url ? <figure><img src={url} alt={label} /><figcaption>{label}</figcaption></figure> : null;
+  return url ? <><figure className={className}><ImagePreviewTrigger type="button" className="event-review-modal__media-trigger" imageClassName={imageClassName} onClick={() => setPreviewOpen(true)} aria-label={`Preview ${label.toLowerCase()}`} src={url} alt={label} />{showCaption && <figcaption>{label}</figcaption>}</figure>{previewOpen && <ImageGallery images={[{ src: url, alt: label, label }]} src={url} alt={label} fileName={label} open onClose={() => setPreviewOpen(false)} />}</> : null;
 }
-ReviewImage.propTypes = { value: PropTypes.any, label: PropTypes.string.isRequired };
+ReviewImage.propTypes = { className: PropTypes.string, imageClassName: PropTypes.string, label: PropTypes.string.isRequired, showCaption: PropTypes.bool, value: PropTypes.any };
 
-export default function EventReviewModal({ values, extraImagesCount = 0, onCancel, onSubmit, draftAction, disabled = false, updating = false }) {
+export default function EventReviewModal({ values, extraImages = [], onCancel, onSubmit, draftAction, allowCloseDuringSubmit = false, disabled = false, updating = false }) {
   const [busy, setBusy] = useState(false);
   const [stage, setStage] = useState(0);
   const [error, setError] = useState("");
@@ -39,10 +52,7 @@ export default function EventReviewModal({ values, extraImagesCount = 0, onCance
     } catch {
       setError("Your event could not be saved. Please try again. Your changes are still here.");
     } finally {
-      if (!saved) {
-        busyRef.current = false;
-        setBusy(false);
-      }
+      if (!saved) { busyRef.current = false; setBusy(false); }
     }
   };
   useEffect(() => {
@@ -51,53 +61,79 @@ export default function EventReviewModal({ values, extraImagesCount = 0, onCance
     window.addEventListener("beforeunload", warnBeforeLeaving);
     return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
   }, [busy]);
-  const close = () => { if (!busyRef.current && !disabled) onCancel(); };
+  const canClose = !disabled && (!busy || allowCloseDuringSubmit);
+  const close = () => { if (canClose) onCancel(); };
+  const title = values.title?.trim() || "Untitled event";
   const mode = values.isFree ? "Free for everyone" : values.isTicketLink ? "External ticket platform" : values.isMemberFree ? "Free for members" : "Paid tickets";
   const questions = values.extraInputsForm ?? [];
   const recommendations = values.subEvent?.links?.filter(link => link.name && link.href) ?? [];
-  return <Dialog visible header={busy ? "Saving your event" : updating ? "Review event changes" : "Review your event"} className={`event-review-modal${busy ? " event-review-modal--loading" : ""}`} closable={!busy && !disabled} closeOnEscape={!busy && !disabled} dismissableMask={false} blockScroll suspended={draftOpen} onHide={close}
-    footer={busy ? undefined : <div className="event-review-actions">
-      <button type="button" className="event-form-button event-form-button--ghost" disabled={disabled} onClick={close}>Cancel</button>
-      {draftAction && cloneElement(draftAction, { disabled: disabled || draftAction.props.disabled, onOpenChange: setDraftOpen })}
-      <button type="button" className="event-form-button event-form-button--primary" disabled={disabled} onClick={runSubmit}>Submit</button>
-    </div>}>
-    {busy ? <EventSubmitProgress step={stage} /> : <div className="event-review-content">
+  const reviewMedia = [
+    values.ticketImg && { id: "ticket", label: "Ticket image", value: values.ticketImg },
+    ...extraImages.map((image, index) => ({
+      id: image.id ?? `additional-${index}`,
+      label: `Additional image ${index + 1}`,
+      value: typeof image === "string" ? image : image.preview ?? image.url ?? image.file,
+    })),
+  ].filter(media => media?.value);
+
+  if (busy) return <EventSubmitProgress loading={busy} step={stage} closable={canClose} onClose={close} />;
+
+  return <Dialog visible header={<div className="event-details-modal__heading"><div className="event-details-modal__title-row"><span className="event-card__status event-card__status--draft">Preview</span><h2>{title}</h2></div></div>} className="event-details-modal event-review-modal" contentClassName="event-details-modal__body" closable={canClose} closeOnEscape={canClose} dismissableMask={false} blockScroll suspended={draftOpen} onHide={close}>
+    <div className="event-details-modal__content">
       {error && <p className="event-review-error" role="alert">{error}</p>}
-      <section className="event-review-overview" aria-label="Event overview">
-        <ReviewImage value={values.poster} label="Event poster" />
-        <div><h3>{values.title}</h3><dl className="event-review-facts">
-          <div><dt>Region</dt><dd>{values.region?.replaceAll("_", " / ")}</dd></div>
-          <div><dt>Date & time</dt><dd>{dateTime(values.date)}</dd></div>
-          <div><dt>Location</dt><dd>{values.location}</dd></div>
-          <div><dt>Ticket sales close</dt><dd>{dateTime(values.ticketTimer)}</dd></div>
-          <div><dt>Ticket limit</dt><dd>{values.ticketLimit}</dd></div>
-          <div><dt>Audience</dt><dd>{values.memberOnly ? "Members only" : "Everyone"}</dd></div>
-          <div><dt>Visibility</dt><dd>{values.hidden ? "Direct link only" : "Listed on the website"}</dd></div>
-          <div><dt>Sales</dt><dd>{values.isSaleClosed ? "Closed" : "Open until the deadline"}</dd></div>
-        </dl></div>
+      <div className="event-details-modal__actions" aria-label="Event actions" role="group">
+        <button type="button" className="event-form-button event-form-button--ghost" disabled={disabled} onClick={close}>Continue editing</button>
+        {draftAction && cloneElement(draftAction, { disabled: disabled || draftAction.props.disabled, onOpenChange: setDraftOpen })}
+        <button type="button" className="event-form-button event-form-button--primary" disabled={disabled} onClick={runSubmit}>{updating ? "Update event" : "Submit event"}</button>
+      </div>
+
+      <section className="event-details-modal__summary" aria-label="Event overview">
+        <div className={`event-details-modal__media-overview${reviewMedia.length ? "" : " event-review-modal__media-overview--poster-only"}`}>
+          <div className="event-details-modal__poster">
+            {values.poster ? <ReviewImage value={values.poster} label="Event poster" className="event-details-modal__poster-preview" imageClassName="event-details-modal__poster-image" showCaption={false} /> : <div className="event-details-modal__poster-empty" role="img" aria-label="No poster available"><IconlyImageOff aria-hidden="true" /></div>}
+          </div>
+          <div className="event-details-modal__media-section" aria-label="Event media"><div className="event-details-modal__media-grid event-review-modal__media-grid" data-items={reviewMedia.length}>
+            {reviewMedia.map(media => <ReviewImage key={media.id} value={media.value} label={media.label} className="event-details-modal__media-preview" imageClassName="event-details-modal__media-image" showCaption={false} />)}
+          </div></div>
+        </div>
+        <dl className="event-details-modal__summary-facts">
+          <ReviewFact label="Date and time" value={dateTime(values.date)} />
+          <ReviewFact label="Location" value={values.location || "Not set"} />
+          <ReviewFact label="Region" value={values.region?.replaceAll("_", " / ") || "Not set"} />
+          <ReviewFact label="Capacity" value={values.ticketLimit || "Not set"} />
+          <ReviewFact label="Audience" value={values.memberOnly ? "Members only" : "Everyone"} />
+          <ReviewFact label="Visibility" value={values.hidden ? "Direct link only" : "Listed on the website"} />
+        </dl>
       </section>
-      <section><h3>Tickets & media</h3><p>{mode}</p>
-        {!values.isFree && !values.isTicketLink && <dl className="event-review-prices">
-          <div><dt>Guest</dt><dd>{euro(values.guestPrice)}</dd></div><div><dt>Member</dt><dd>{values.isMemberFree ? "Free" : euro(values.memberPrice)}</dd></div><div><dt>Active member</dt><dd>{values.isMemberFree ? "Free" : euro(values.activeMemberPrice || values.memberPrice)}</dd></div>
-        </dl>}
-        {values.isTicketLink && <p className="event-review-link">{values.ticketLink}</p>}
-        {values.entryIncluding && <p><strong>Guest extras:</strong> {values.entryIncluding}</p>}
-        {values.memberIncluding && <p><strong>Member extras:</strong> {values.memberIncluding}</p>}
-        <ReviewImage value={values.ticketImg} label="Ticket image" />
-        <p>{extraImagesCount} extra {extraImagesCount === 1 ? "image" : "images"} · Guest name {String(values.ticketName) === "true" ? "shown" : "hidden"} · QR code {String(values.ticketQR) === "true" ? "shown" : "hidden"}</p>
-      </section>
-      <section><h3>Description</h3><p className="event-review-description">{values.text}</p></section>
-      <section><h3>Collect data</h3>{questions.length ? <ul>{questions.map((question, index) => <li key={index}><strong>{question.placeholder}</strong> · {question.type === "select" ? "Choice" : "Written answer"} · {question.required === true || question.required === "true" ? "Required" : "Optional"}{question.type === "select" && <p>{question.options?.join(" · ")}</p>}</li>)}</ul> : <p>No extra questions.</p>}</section>
-      <section><h3>Upsell</h3><ul className="event-review-upsell">
-        {["earlyBird", "lateBird"].filter(name => values[name]?.isEnabled).map(name => <li key={name}><strong>{name === "earlyBird" ? "Early bird" : "Late bird"}</strong> · Guest {euro(values[name].price)} / member {euro(values[name].memberPrice)}<p>{values[name].ticketLimit ? `Ticket count cap: ${values[name].ticketLimit}. ` : ""}{values[name].ticketTimer ? `Ends ${dateTime(values[name].ticketTimer)}.` : ""}{values[name].startTimer ? `Starts ${dateTime(values[name].startTimer)}.` : ""}</p></li>)}
-        {["guestPromotion", "memberPromotion"].filter(name => values[name]?.isEnabled).map(name => <li key={name}><strong>{name === "guestPromotion" ? "Guest" : "Member"} promotion</strong> · {values[name].discount}% off<p>{dateTime(values[name].startTimer)} – {dateTime(values[name].endTimer)}</p></li>)}
-        {values.promoCodes?.isEnabled && values.promoCodes.codes?.map((code, index) => <li key={`promo-${index}`}><strong>{code.code}</strong> · {Number(code.discountType) === 1 ? euro(code.discount) : `${code.discount}%`} off · {code.active === false ? "Inactive" : "Active"}<p>{promoAudiences.filter(audience => (code.audiences ?? promoAudiences.map(item => item.value)).includes(audience.value)).map(audience => audience.label).join(", ")} · {code.useLimit ? `${code.useLimit} redemptions` : "Unlimited redemptions"} · {code.timeLimit ? `Expires ${dateTime(code.timeLimit)}` : "No expiration"}</p></li>)}
-        {values.addOns?.isEnabled && <li><strong>{values.addOns.title || "Add-ons"}</strong><p>{values.addOns.items?.map(item => `${item.title} (${euro(item.price ?? 0)})`).join(" · ")}</p></li>}
-        {recommendations.length > 0 && <li><strong>Advertised events</strong><p>{recommendations.map(link => link.name).join(" · ")}</p></li>}
-      </ul>
-      {![values.earlyBird, values.lateBird, values.guestPromotion, values.memberPromotion, values.addOns, values.promoCodes].some(option => option?.isEnabled) && !recommendations.length && <p>No upsell options enabled.</p>}
-      </section>
-    </div>}
+
+      <div className="event-details-modal__layout">
+        <div className="event-details-modal__main-column">
+          <ReviewSection title="Event details"><dl className="event-details-modal__facts-grid">
+            <ReviewFact label="Ticket sales" value={values.isSaleClosed ? "Closed" : "Open"} />
+            <ReviewFact label="Sales close" value={dateTime(values.ticketTimer)} />
+            <ReviewFact label="Additional questions" value={questions.length ? `${questions.length} configured` : "None"} />
+            <ReviewFact label="Recommended events" value={recommendations.length ? `${recommendations.length} configured` : "None"} />
+          </dl></ReviewSection>
+          <ReviewSection title="Description"><p className="event-details-modal__description">{values.text || "No description provided."}</p></ReviewSection>
+          <EventUpsellDetails values={values} />
+          <EventAddOnDetails addOns={values.addOns} />
+        </div>
+        <aside className="event-details-modal__side-column">
+          <ReviewSection title="Ticket settings"><dl className="event-details-modal__facts-grid event-details-modal__facts-grid--single">
+            <ReviewFact label="Ticket type" value={mode} />
+            <ReviewFact label="Guest name" value={String(values.ticketName) === "true" ? "Shown on ticket" : "Hidden"} />
+            <ReviewFact label="QR code" value={String(values.ticketQR) === "true" ? "Shown on ticket" : "Hidden"} />
+          </dl></ReviewSection>
+          <ReviewSection title="Pricing">{values.isFree ? <span className="event-details-modal__free-label">Free</span> : values.isTicketLink ? <div className="event-details-modal__notice"><div><strong>External ticketing</strong><span>{values.ticketLink || "Ticket link not set"}</span></div></div> : <div className="event-details-modal__pricing-list">
+            <article className="event-details-modal__price-option"><span>Guest</span><strong>{euro(values.guestPrice)}</strong><p>{values.entryIncluding || "Standard entry"}</p></article>
+            <article className="event-details-modal__price-option"><span>Member</span><strong>{values.isMemberFree ? "Free" : euro(values.memberPrice)}</strong><p>{values.memberIncluding || "Standard entry"}</p></article>
+            <article className="event-details-modal__price-option"><span>Active member</span><strong>{values.isMemberFree ? "Free" : euro(values.activeMemberPrice || values.memberPrice)}</strong></article>
+          </div>}</ReviewSection>
+          <EventQuestionDetails questions={questions} />
+          <EventAdvertisedDetails links={recommendations} renderImage={link => <ReviewImage value={link.poster} label={`${link.name} poster`} className="event-review-modal__advertised-poster" imageClassName="event-review-modal__advertised-image" showCaption={false} />} />
+        </aside>
+      </div>
+    </div>
   </Dialog>;
 }
-EventReviewModal.propTypes = { values: PropTypes.object.isRequired, extraImagesCount: PropTypes.number, onCancel: PropTypes.func.isRequired, onSubmit: PropTypes.func.isRequired, draftAction: PropTypes.element, disabled: PropTypes.bool, updating: PropTypes.bool };
+EventReviewModal.propTypes = { values: PropTypes.object.isRequired, extraImages: PropTypes.array, onCancel: PropTypes.func.isRequired, onSubmit: PropTypes.func.isRequired, draftAction: PropTypes.element, allowCloseDuringSubmit: PropTypes.bool, disabled: PropTypes.bool, updating: PropTypes.bool };

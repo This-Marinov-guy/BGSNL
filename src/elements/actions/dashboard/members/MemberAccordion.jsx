@@ -1,3 +1,4 @@
+import { PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../../../ui/functional/AnimatedDisclosure";
 import moment from "moment";
@@ -68,7 +69,7 @@ const MemberAccordion = ({ member }) => {
               {member.phone && (
                 <div className="member-accordion__detail-row">
                   <FiPhone size={14} />
-                  <span>{member.phone}</span>
+                  <PhoneActions phone={member.phone} />
                 </div>
               )}
               {member.university && (

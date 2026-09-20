@@ -306,14 +306,13 @@ const HeaderContent = (props) => {
                   <a style={{ cursor: "pointer" }}>Dashboard</a>
                   <ul className="submenu">
                     <>
-                      <li><Link to="/user/dashboard">Administration</Link></li>
-                      {checkAuthorization(user.session, MEMBER_ADMIN_ACCESS) && (
-                        <li><Link to="/user/dashboard/members">Manage Members</Link></li>
-                      )}
                       {checkAuthorization(user.session, ACCESS_4) && <>
                         <li><Link to="/user/dashboard/events">Events</Link></li>
                         <li><Link to="/user/dashboard/events/create">Add Event</Link></li>
                       </>}
+                      {checkAuthorization(user.session, MEMBER_ADMIN_ACCESS) && (
+                        <li><Link to="/user/dashboard/members">Members</Link></li>
+                      )}
                       {checkAuthorization(user.session, ACCESS_2) && (
                         <li>
                           <Link to="/user/dashboard/internships">

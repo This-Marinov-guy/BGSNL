@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -9,7 +10,8 @@ import {
   FiEdit2,
   FiTrash2,
 } from "@/elements/ui/icons/IconlyIcons";
-import { Link } from "@/util/navigation";
+import { useSearchParams } from "next/navigation";
+import InternshipForm from "../../form/InternshipForm";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { showNotification } from "../../../../redux/notification";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
@@ -40,6 +42,19 @@ const InternshipList = () => {
   const dispatch = useDispatch();
 
   const [internships, setInternships] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [editor, setEditor] = useState({ open: false, internship: null });
+  const searchParams = useSearchParams();
+  const requestedEditor = searchParams.get("edit");
+  const handledEditor = useRef(null);
+  const closeEditor = useCallback(() => {
+    setEditor(current => ({ ...current, open: false }));
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("edit")) {
+      url.searchParams.delete("edit");
+      window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+  }, []);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toggling, setToggling] = useState(new Set());
   const [draggedId, setDraggedId] = useState(null);
@@ -60,7 +75,9 @@ const InternshipList = () => {
   const loadInternships = async () => {
     try {
       const data = await sendRequest("internship/admin-list");
+      if (!data) return;
       setLoadedInternships(data?.internships ?? []);
+      setLoaded(true);
     } catch {
       dispatch(showNotification({ severity: "error", detail: "Failed to load internships." }));
     }
@@ -69,6 +86,19 @@ const InternshipList = () => {
   useEffect(() => {
     loadInternships();
   }, []);
+
+  useEffect(() => {
+    if (!requestedEditor) { handledEditor.current = null; return; }
+    if (handledEditor.current === requestedEditor || (requestedEditor !== "new" && !loaded)) return;
+    handledEditor.current = requestedEditor;
+    const internship = requestedEditor === "new" ? null : internships.find(item => item._id === requestedEditor);
+    if (requestedEditor !== "new" && !internship) {
+      dispatch(showNotification({ severity: "error", detail: "Internship not found." }));
+      closeEditor();
+      return;
+    }
+    setEditor({ open: true, internship });
+  }, [requestedEditor, loaded, internships, dispatch, closeEditor]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -213,9 +243,9 @@ const InternshipList = () => {
           <p>Manage internship listings and visibility. Drag rows to reorder; changes save automatically.</p>
         </div>
         <div className="workspace-heading-actions">
-          <Link to="/user/dashboard/internships/new" className="rn-button-style--2 rn-btn-reverse-green">
+          <button type="button" onClick={() => setEditor({ open: true, internship: null })} className="rn-button-style--2 rn-btn-reverse-green">
             <span>Add internship</span>
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -414,8 +444,10 @@ const InternshipList = () => {
               order: isCompactLayout ? 6 : 0,
             }}
           >
-            <Link
-              to={`/user/dashboard/internships/${item._id}/edit`}
+            <button
+              type="button"
+              onClick={() => setEditor({ open: true, internship: item })}
+              aria-label={`Edit ${item.company} internship`}
               className="rn-button"
               style={{
                 padding: "6px 14px",
@@ -425,7 +457,7 @@ const InternshipList = () => {
               title="Edit"
             >
               <FiEdit2 />
-            </Link>
+            </button>
             <button
               className="rn-button-style--2 rn-btn-solid-red"
               style={{
@@ -442,6 +474,9 @@ const InternshipList = () => {
           </div>
         </div>
       ))}
+
+      <InternshipForm visible={editor.open} internship={editor.internship} onClose={closeEditor}
+        onSaved={() => { closeEditor(); loadInternships(); }} />
 
       <ConfirmCenterModal
         visible={!!deleteTarget}

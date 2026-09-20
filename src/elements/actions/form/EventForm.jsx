@@ -465,8 +465,6 @@ const EventForm = (props) => {
         ...draftData,
         poster: storedInitialData.poster ?? draftData.poster ?? null,
         ticketImg: storedInitialData.ticketImg ?? draftData.ticketImg ?? null,
-        bgImageExtra:
-          storedInitialData.bgImageExtra ?? draftData.bgImageExtra ?? null,
         images: storedInitialData.images ?? draftData.images ?? [],
         product: {
           ...storedInitialData.product,
@@ -848,6 +846,7 @@ const EventForm = (props) => {
                     return Boolean(name) && /^https?:\/\/[^\s]+$/i.test(href);
                   }
                 ),
+              poster: yup.string().transform((value, original) => original === "" ? null : value).max(2048, "Poster URL is too long").url("Poster must be a valid URL").nullable(),
             })
           ),
       })
@@ -1153,7 +1152,7 @@ const EventForm = (props) => {
 
       if (savedDraft !== true) {
         const syncedValues = { ...values };
-        ["poster", "ticketImg", "bgImageExtra"].forEach((field) => {
+        ["poster", "ticketImg"].forEach((field) => {
           if (savedDraft[field]) {
             syncedValues[field] = savedDraft[field];
           }
@@ -1227,9 +1226,6 @@ const EventForm = (props) => {
           ticketQR: `${initialData?.ticketQR ?? false}`,
           ticketName: `${initialData?.ticketName ?? true}`,
           poster: initialData?.poster ?? null,
-          bgImage: initialData?.bgImage ?? 1,
-          bgImageExtra: initialData?.bgImageExtra ?? null,
-          bgImageSelection: initialData?.bgImageSelection ?? 1,
           extraImagesValidation: "",
           earlyBird: {
             ticketLimit:
@@ -1326,7 +1322,7 @@ const EventForm = (props) => {
                     const savedDraft = await submitValues({ ...values, note }, true, { quiet: true, stayOnPage: true });
                     if (savedDraft) {
                       const syncedValues = { ...values, note };
-                      ["poster", "ticketImg", "bgImageExtra", "images"].forEach((field) => {
+                      ["poster", "ticketImg", "images"].forEach((field) => {
                         if (savedDraft[field]) syncedValues[field] = savedDraft[field];
                       });
                       setExtraImagesTouched(false);
@@ -1338,7 +1334,7 @@ const EventForm = (props) => {
                     `future-event/draft/${eventDraftId}/reminder`, "POST", { email }, {}, false, false
                   )}
                   onComplete={(email) => {
-                    navigate("/user/dashboard/events");
+                    navigate("/user/dashboard/events", { replace: true });
                     dispatch(showNotification(email ? {
                       severity: "success", summary: "Draft saved", detail: `A continue link has been queued for ${email}.`,
                     } : EVENT_DRAFT_SAVED));
@@ -1377,10 +1373,7 @@ const EventForm = (props) => {
             <fieldset className="event-form-controls" disabled={isBusy} aria-busy={isBusy}>
             <div className="event-form-steps">
               <Steps
-                model={EVENT_FORM_STEPS.map((step, index) => ({
-                  ...step,
-                  disabled: index > furthestStep,
-                }))}
+                model={EVENT_FORM_STEPS}
                 activeIndex={currentStep}
                 onSelect={({ index }) => moveToStep(index, formik)}
                 readOnly={isBusy}
@@ -1596,7 +1589,13 @@ const EventForm = (props) => {
 
               <EventTicketsMedia>
                 <div className="event-ticket-extra-images">
-                  <h3>Extra images</h3>
+                  <div className="event-ticket-media-heading">
+                    <h3>Extra images</h3>
+                    <InfoHint
+                      label="About extra images"
+                      text="Optional images for the event gallery. You can add up to five JPG or PNG images."
+                    />
+                  </div>
                   <MultiImageUpload
                     existingImages={savedImages}
                     onImagesChange={handleExtraImagesChange}
@@ -1604,8 +1603,6 @@ const EventForm = (props) => {
                     onValidationChange={(message) =>
                       setFieldValue("extraImagesValidation", message)
                     }
-                    label="Extra description images"
-                    tooltip="Additional images for the event gallery (the poster is already included)"
                     maxImages={5}
                   />
                   <ErrorMessage
@@ -1692,7 +1689,7 @@ const EventForm = (props) => {
           </Form>
           {reviewValues && <EventReviewModal
             values={reviewValues}
-            extraImagesCount={extraImagesTouched ? extraImagesData.all?.length ?? 0 : savedImages.length}
+            extraImages={extraImagesTouched ? extraImagesData.all ?? [] : savedImages}
             disabled={isBusy}
             updating={props.edit && initialData?.status !== EVENT_DRAFT}
             draftAction={draftAction}

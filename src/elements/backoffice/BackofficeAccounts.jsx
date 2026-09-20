@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectInput, Calendar, Skeleton } from "@/compat/primereact";
+import { SelectInput, Calendar, ProgressSpinner } from "@/compat/primereact";
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +20,7 @@ import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGI
 import adminStyles from "@/screens/userActions/administration.module.scss";
 import styles from "./backoffice.module.scss";
 import AccountMembershipActions from "./AccountMembershipActions";
+import { CopyableId, PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 import { ACCESS_3 } from "@/util/defines/common";
 import { canManageAccountType, canEditAccount, isEditableAccountRole, editableAccountRoles, protectedAccountRoles } from "./role-policy.mjs";
 
@@ -55,75 +56,44 @@ const previewDate = value => {
     : "Not provided";
 };
 
-function AccountDetails({ account, editable, onEdit }) {
+function AccountDetails({ account }) {
+  const university = String(account.university || "").trim();
+  const otherUniversity = String(account.otherUniversityName || "").trim();
+  const hasProfession = Boolean(String(account.profession || "").trim());
+  const universityFields = hasProfession ? [] : university && university.toLowerCase() !== "other"
+    ? [["University", university]]
+    : otherUniversity || university.toLowerCase() === "other"
+      ? [["Other university", otherUniversity]]
+      : [["University", ""]];
   const groups = [
     ["Account details", [
-      ["Account ID", account.id], ["Account type", account.type === "alumni" ? "Alumni" : "Member"],
-      ["Email", account.email], ["Mobile number", account.phone], ["Date of birth", previewDate(account.birth)],
+      ["Account ID", account.id, "id"], ["Account type", account.type === "alumni" ? "Alumni" : "Member"],
+      ["Email", account.email], ["Mobile number", account.phone, "phone"], ["Date of birth", previewDate(account.birth)],
       ["Region", formatCity(account.region)], ["Status", account.status.replaceAll("_", " ")],
       ["Roles", account.roles.map(role => ROLE_LABELS[role] || role.replaceAll("_", " ")).join(", ")],
     ]],
-    ["Education and work", [
-      ["University", account.university], ["Other university", account.otherUniversityName],
+    ["Education / Profession", hasProfession ? [["Profession", account.profession]] : [
+      ...universityFields,
       ["Study programme", account.course], ["Graduation year", account.graduationDate],
-      ["Student number", account.studentNumber], ["Profession", account.profession],
+      ["Student number", account.studentNumber],
     ]],
     ["Membership", [
       ["Joined", previewDate(account.joinDate)], ["Purchase date", previewDate(account.purchaseDate)],
       ["Expiry", account.nonExpiring || account.roles.includes("vip") ? "Non-expiring" : previewDate(account.expireDate)],
       ["Subscription period", account.subscription?.period ? `${account.subscription.period} ${account.subscription.period === 1 ? "month" : "months"}` : "Not provided"],
-      ["Subscription ID", account.subscription?.id || "None"],
-      ["Customer ID", account.subscription?.customerId || "None"],
+      ["Subscription ID", account.subscription?.id, "id"],
+      ["Customer ID", account.subscription?.customerId, "id"],
       ...(account.type === "alumni" ? [["Alumni tier", account.tier ?? "Not provided"]] : []),
     ]],
   ];
   return <div className={styles.accountPreview}>
-    <div className={styles.previewHeading}>
-      <h3>{accountName(account)}</h3>
-      {editable ? <button type="button" className={styles.editButton} onClick={() => onEdit(account)}><FiEdit2 aria-hidden /><span>Edit</span></button> : <span className={styles.restrictedEdit}>Super Admin only</span>}
-    </div>
     <div className={styles.previewGroups}>{groups.map(([title, fields]) => <section key={title}>
       <h4>{title}</h4>
-      <dl>{fields.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value === "" || value == null ? "Not provided" : value}</dd></div>)}</dl>
+      <dl>{fields.map(([label, value, kind]) => <div key={label}><dt>{label}</dt><dd>{kind === "id" ? <CopyableId value={value} label={label} /> : kind === "phone" ? <PhoneActions phone={value} /> : value === "" || value == null ? "Not provided" : value}</dd></div>)}</dl>
     </section>)}</div>
   </div>;
 }
-AccountDetails.propTypes = { account: PropTypes.object.isRequired, editable: PropTypes.bool.isRequired, onEdit: PropTypes.func.isRequired };
-
-function AccountTableSkeleton() {
-  return (
-    <>
-      {Array.from({ length: 6 }).map((_, index) => (
-        <tr key={index} className={styles.skeletonRow}>
-          <td data-label="Account">
-            <div className={styles.person}>
-              <Skeleton shape="circle" size="2.7rem" />
-              <div className={styles.skeletonStack}>
-                <Skeleton width="9rem" height="1rem" />
-                <Skeleton width="5rem" height="0.85rem" />
-              </div>
-            </div>
-          </td>
-          <td data-label="Contact">
-            <div className={styles.skeletonStack}>
-              <Skeleton width="13rem" height="1rem" />
-              <Skeleton width="7rem" height="0.85rem" />
-            </div>
-          </td>
-          <td data-label="City"><Skeleton width="6rem" height="1rem" /></td>
-          <td data-label="Status"><Skeleton width="5.5rem" height="1.6rem" borderRadius="999px" /></td>
-          <td data-label="Roles">
-            <div className={styles.roleTags}>
-              <Skeleton width="4.5rem" height="1.4rem" />
-              <Skeleton width="5.5rem" height="1.4rem" />
-            </div>
-          </td>
-          <td className={styles.actionCell}><Skeleton width="4.4rem" height="2.35rem" /></td>
-        </tr>
-      ))}
-    </>
-  );
-}
+AccountDetails.propTypes = { account: PropTypes.object.isRequired };
 
 function AccountAvatar({ account }) {
   const [imageFailed, setImageFailed] = useState(false);
@@ -179,6 +149,7 @@ const editorState = (account) => ({
   studentNumber: account.studentNumber || "",
   profession: account.profession || "",
   status: account.status || "",
+  expireDate: formatDateInput(account.expireDate),
   roles: editableAccountRoles(account.roles, account.type),
 });
 
@@ -269,7 +240,7 @@ function AccountEditor({ account, currentAccountId, actorRoles, options, onClose
           </fieldset>
 
           <fieldset disabled={busy}>
-            <legend>Education and work</legend>
+            <legend>Education / Profession</legend>
             <div className={styles.fieldGrid}>
               <EditorField className={styles.fullField} id="account-editor-university" label="University"><input id="account-editor-university" className="bgsnl-form-control" name="university" value={form.university} onChange={change} /></EditorField>
               <EditorField className={styles.fullField} id="account-editor-other-university" label="Other university name"><input id="account-editor-other-university" className="bgsnl-form-control" name="otherUniversityName" value={form.otherUniversityName} onChange={change} /></EditorField>
@@ -283,7 +254,10 @@ function AccountEditor({ account, currentAccountId, actorRoles, options, onClose
           <fieldset disabled={busy}>
             <legend>Access and status</legend>
             {isSelf && <p className={styles.selfNotice}>Your own roles and status are protected to prevent accidental loss of access.</p>}
-            <EditorField className={styles.statusField} id="account-editor-status" label="Account status"><SelectInput id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</SelectInput></EditorField>
+            <div className={styles.statusFields}>
+              <EditorField id="account-editor-status" label="Account status"><SelectInput id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</SelectInput></EditorField>
+              {!account.roles?.includes("vip") && <EditorField id="account-editor-expiry" label="Membership expiry"><input id="account-editor-expiry" className="bgsnl-form-control" name="expireDate" type="date" min="1900-01-01" max="2200-12-31" value={form.expireDate} onChange={change} disabled={isSelf} required /></EditorField>}
+            </div>
             {protectedAccountRoles(account.roles).length > 0 && (
               <p className={styles.selfNotice}>
                 Read-only roles: {protectedAccountRoles(account.roles).map((role) => ROLE_LABELS[role]).join(", ")}.
@@ -367,6 +341,7 @@ export default function BackofficeAccounts() {
     }
     if (statistics) return undefined;
     let active = true;
+    const controller = new AbortController();
     const sequence = ++requestSequence.current;
     const params = new URLSearchParams({ type, page: String(page), pageSize: "25" });
     if (search) params.set("search", search);
@@ -374,7 +349,7 @@ export default function BackofficeAccounts() {
     if (statusFilter) params.set("status", statusFilter);
     setLoadingList(true);
     setExpandedAccountId(null);
-    sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, true, false)
+    sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, true, false, { signal: controller.signal })
       .then((response) => {
         if (!active || sequence !== requestSequence.current || !response) return;
         setAccounts(response.accounts || []);
@@ -382,7 +357,7 @@ export default function BackofficeAccounts() {
         setPagination({ total: response.total || 0, totalPages: response.totalPages || 1 });
       })
       .finally(() => active && sequence === requestSequence.current && setLoadingList(false));
-    return () => { active = false; };
+    return () => { active = false; controller.abort(); };
   }, [type, page, search, city, statusFilter, statistics, refreshKey, accountRoleScope, user.region]);
 
   const chooseType = (nextType) => {
@@ -439,24 +414,29 @@ export default function BackofficeAccounts() {
             onClear={() => { setType("member"); setSearchInput(""); setSearch(""); setCity(""); setStatusFilter(""); setPage(1); }}
             summary={(
               <span aria-live="polite">
-                {loadingList ? "Loading accounts…" : `${pagination.total} ${type === "alumni" ? "alumni" : pagination.total === 1 ? "member" : "members"}`}
+                {loadingList ? null : `${pagination.total} ${type === "alumni" ? "alumni" : pagination.total === 1 ? "member" : "members"}`}
               </span>
             )}
             title="Filter accounts"
           >
             <label><span>Show</span><SelectInput className="bgsnl-form-control" value={type} onChange={(event) => chooseType(event.target.value)}><option value="member">Members</option>{canManageAccountType(user.roles, "alumni") && <option value="alumni">Alumni</option>}</SelectInput></label>
-            <label className={styles.searchField}><span>Search name, email or number</span><div><FiSearch aria-hidden /><input className="bgsnl-form-control" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div></label>
+            <label className={styles.searchField}><span>Search</span><div><FiSearch aria-hidden /><input className="bgsnl-form-control" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div></label>
             <label><span>City</span><SelectInput className="bgsnl-form-control" value={city} onChange={(event) => { setCity(event.target.value); setPage(1); }}><option value="">All cities</option>{options.cities.map((item) => <option key={item} value={item}>{formatCity(item)}</option>)}<option value="unassigned">Not assigned</option></SelectInput></label>
             <label><span>Status</span><SelectInput className="bgsnl-form-control" aria-label="Account status filter" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); }}><option value="">All statuses</option>{options.statuses.map(status => <option value={status} key={status}>{capitalizeFirstLetter(status.replaceAll("_", " ").replaceAll("-", " "))}</option>)}</SelectInput></label>
           </FilterPanel>
 
-          {!loadingList && accounts.length === 0 ? (
+          {loadingList ? (
+            <div className={styles.accountsLoading} role="status">
+              <ProgressSpinner style={{ width: "40px", height: "40px" }} aria-hidden="true" />
+              <span className={styles.visuallyHidden}>Loading accounts…</span>
+            </div>
+          ) : accounts.length === 0 ? (
             <div className={styles.empty}><FiUsers aria-hidden /><h2>No accounts found</h2><p>Try a different search or city filter.</p></div>
           ) : (
             <div className={styles.tableWrap} aria-busy={loadingList}>
               <table>
-                <thead><tr><th>Account</th><th>Contact</th><th>City</th><th>Status</th><th>Roles</th><th><span className={styles.visuallyHidden}>Actions</span></th></tr></thead>
-                <tbody>{loadingList ? <AccountTableSkeleton /> : accounts.map((account) => {
+                <thead><tr><th>Account</th><th className={styles.contactCell}>Contact</th><th>City</th><th className={styles.statusCell}>Status</th><th>Roles</th><th><span className={styles.visuallyHidden}>Actions</span></th></tr></thead>
+                <tbody>{accounts.map((account) => {
                   const editable = canEditAccount(user.roles, account.roles);
                   const expanded = expandedAccountId === account.id;
                   const panelId = `account-details-${account.type}-${account.id}`;
@@ -482,10 +462,10 @@ export default function BackofficeAccounts() {
                           </div>
                         </div>
                       </td>
-                      <td data-label="Contact" className={styles.detailCell}><a href={`mailto:${account.email}`}>{account.email}</a><small>{account.phone || "No mobile number"}</small></td>
+                      <td data-label="Contact" className={`${styles.detailCell} ${styles.contactCell}`}><a href={`mailto:${account.email}`}>{account.email}</a><small>{account.phone ? <PhoneActions phone={account.phone} /> : "No mobile number"}</small></td>
                       <td data-label="Region" className={styles.regionCell} style={getRegionBadgeStyle(account.region)}>{formatRegionBadgeLabel(account.region)}</td>
-                      <td data-label="Status" className={styles.detailCell}><span className={styles.status} data-status={account.status}>{account.status.replaceAll("_", " ")}</span></td>
-                      <td data-label="Roles" className={styles.rolesCell}><div className={styles.roleTags}>{account.roles.length ? account.roles.map((role) => <span key={role}>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span>) : <span>No roles</span>}</div></td>
+                      <td data-label="Status" className={`${styles.detailCell} ${styles.statusCell}`}><span className={styles.status} data-status={account.status}>{account.status.replaceAll("_", " ")}</span></td>
+                      <td data-label="Roles" className={styles.rolesCell}><div className={styles.roleTags}>{account.roles.length ? account.roles.map((role) => <span key={role} data-role={role}>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span>) : <span>No roles</span>}</div></td>
                       <td className={styles.actionCell}>
                         <div className={styles.summaryActions}>
                         {editable && <button type="button" className={styles.editButton} aria-label={`Edit ${accountName(account)}`} onClick={(event) => { event.stopPropagation(); openAccountEditor(account); }}><FiEdit2 aria-hidden /><span>Edit</span></button>}
@@ -501,7 +481,7 @@ export default function BackofficeAccounts() {
                       <td colSpan={6}>
                         <div id={panelId} className={styles.previewReveal} data-expanded={expanded} inert={!expanded || undefined}>
                           <div className={styles.previewClip}>
-                            <AccountDetails account={account} editable={editable} onEdit={openAccountEditor} />
+                            <AccountDetails account={account} />
                           </div>
                         </div>
                       </td>

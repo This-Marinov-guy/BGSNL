@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import Loader from '../ui/loading/Loader'
 
 const GifSearch = (props) => {
 
-    const [timer, setTimer] = useState()
     const [keyword, setKeyword] = useState('')
     const [renderedGifs, setRenderedGifs] = useState(null)
     const [selectedGifUrl, setSelectedGifsUrl] = useState('');
@@ -13,33 +13,30 @@ const GifSearch = (props) => {
     const searchEndPoint = "https://api.giphy.com/v1/gifs/search?";
     const limit = 12;
 
-    const showGif = (json) => {
-        setRenderedGifs(json.data.map(gif => gif.id)
-            .map(gifId => {
-                return `https://media.giphy.com/media/${gifId}/giphy.gif`;
-            }))
-    }
-
-    const searchGif = (kw) => {
-        setLoading(true)
-        clearTimeout(timer)
-        setTimer(setTimeout(() => {
-            fetch(`${searchEndPoint}&api_key=${apiKey}&q=${kw
-                }&limit=${limit}`)
-                .then(response => {
-                    return response.json();
-                })
-                .then(json => {
-                    showGif(json)
-                    setLoading(false)
-                })
-                .catch(err => {
-                    console.log(err);
-                    setLoading(false)
-                });
-        }, 500))
-
-    }
+    useEffect(() => {
+        if (!keyword.trim()) {
+            setRenderedGifs(null);
+            setLoading(false);
+            return undefined;
+        }
+        const controller = new AbortController();
+        setLoading(true);
+        const timer = setTimeout(async () => {
+            try {
+                const response = await fetch(`${searchEndPoint}api_key=${apiKey}&q=${encodeURIComponent(keyword.trim())}&limit=${limit}`, { signal: controller.signal });
+                if (!response.ok) throw new Error("GIF search failed");
+                const json = await response.json();
+                if (!controller.signal.aborted) {
+                    setRenderedGifs((json.data || []).map(gif => `https://media.giphy.com/media/${gif.id}/giphy.gif`));
+                }
+            } catch {
+                if (!controller.signal.aborted) setRenderedGifs([]);
+            } finally {
+                if (!controller.signal.aborted) setLoading(false);
+            }
+        }, 500);
+        return () => { clearTimeout(timer); controller.abort(); };
+    }, [apiKey, keyword]);
 
     const handleGifSelect = (gif) => {
         setSelectedGifsUrl(gif)
@@ -69,7 +66,6 @@ const GifSearch = (props) => {
                 : "Search for GIFs (e.g., christmas, happy, holiday)"
             }
             onChange={(event) => {
-              searchGif(event.target.value);
               setKeyword(event.target.value);
               if (event.target.value === "") {
                 setRenderedGifs(null);
@@ -268,5 +264,7 @@ const GifSearch = (props) => {
       </div>
     );
 }
+
+GifSearch.propTypes = { setValue: PropTypes.func.isRequired };
 
 export default GifSearch

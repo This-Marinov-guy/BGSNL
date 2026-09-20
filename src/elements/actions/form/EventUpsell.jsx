@@ -41,7 +41,7 @@ export default function EventUpsell({ currentEventId, active }) {
       <FieldArray name="addOns.items">{({ push, remove }) => <div className="event-option-items">
         <OptionError name="addOns.items" />
         {(values.addOns.items ?? []).map((item, index) => <div className="event-option-item" key={index}>
-          <header><h4>Item {index + 1}</h4><button type="button" className="event-option-remove" disabled={values.addOns.items.length === 1} onClick={() => remove(index)} aria-label={`Remove add-on ${index + 1}`}>Remove</button></header>
+          <header><h4>{item.title?.trim() || `Item ${index + 1}`}</h4><button type="button" className="event-option-remove" disabled={values.addOns.items.length === 1} onClick={() => remove(index)} aria-label={`Remove add-on ${index + 1}`}>Remove</button></header>
           <div className="event-option-grid">
             <OptionField name={`addOns.items[${index}].title`} label="Item name *" placeholder="e.g., Welcome drink" />
             <OptionField name={`addOns.items[${index}].price`} label="Price (€)" type="number" min={0} step="0.01" placeholder="0.00" />

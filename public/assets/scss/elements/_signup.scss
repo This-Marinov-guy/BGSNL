@@ -1092,50 +1092,6 @@
     background: transparent;
   }
 
-  input[type="checkbox"] {
-    display: grid;
-    flex: 0 0 auto;
-    width: 20px;
-    height: 20px;
-    margin: 0.12rem 0 0 !important;
-    padding: 0;
-    place-items: center;
-    appearance: none;
-    border: 1.5px solid #7f8d86;
-    border-radius: 4px !important;
-    background-color: #fff !important;
-    background-image: none;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 12px 10px;
-    box-shadow: none;
-    cursor: pointer;
-    transition: background-color 180ms ease, border-color 180ms ease,
-      box-shadow 180ms ease;
-
-    &::after {
-      content: none !important;
-      display: none !important;
-    }
-
-    &:hover {
-      border-color: #017363;
-    }
-
-    &:checked {
-      border-color: #017363 !important;
-      border-radius: 4px !important;
-      background-color: #017363 !important;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3 3 7-7' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    }
-
-    &:focus-visible {
-      border-color: #017363;
-      outline: 0;
-      box-shadow: 0 0 0 3px rgba(1, 115, 99, 0.18);
-    }
-  }
-
   .information {
     margin: 0;
     padding: 0;

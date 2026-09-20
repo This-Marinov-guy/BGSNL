@@ -23,7 +23,7 @@ import { getTooltipContainer, getTooltipPosition } from "../tooltip-position.mjs
  * by keyboard — the bare icon never was.
  *
  * Page hints use a fixed body portal to avoid clipping by form panels. Modal
- * hints use the modal content container so headers and footers remain above them.
+ * hints use the modal root so they can layer above its header, body, and footer.
  *
  * The bubble stays in the DOM and is hidden with opacity/visibility rather than
  * being conditionally rendered, so `aria-describedby` always resolves and

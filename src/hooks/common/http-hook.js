@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectLoading,
@@ -17,17 +18,20 @@ export const useHttpClient = (withPageLoading = false) => {
   const loading = useSelector(selectLoading);
 
 
-  const forceStartLoading = () => dispatch(startLoading());
+  const forceStartLoading = useCallback(() => dispatch(startLoading()), [dispatch]);
 
-  const sendRequest = async (
+  const sendRequest = useCallback(async (
     url,
     method = "GET",
     data = null,
     headers = {},
     withError = true,
     withLoading = true,
+    { signal } = {},
   ) => {
-    if (withLoading && !loading) forceStartLoading();
+    // Loading must not be a callback dependency: consumers fetch in effects.
+    if (signal?.aborted) return undefined;
+    if (withLoading) dispatch(startLoading());
     if (withPageLoading) dispatch(startPageLoading());
 
     try {
@@ -41,11 +45,13 @@ export const useHttpClient = (withPageLoading = false) => {
         },
         withCredentials: true,
         timeout: 60000,
+        signal,
       });
       if (response.headers["x-bgsnl-session-changed"] === "1") clearCsrf();
 
       return response.data;
     } catch (err) {
+      if (axios.isCancel(err)) return undefined;
       const errorMessage = err.response?.data?.message || err.message || "An error occurred";
       const isSessionExpired = errorMessage.toLowerCase().includes("session expired") || 
                                errorMessage.toLowerCase().includes("token expired") ||
@@ -68,7 +74,7 @@ export const useHttpClient = (withPageLoading = false) => {
       if (withLoading) dispatch(stopLoading());
       if (withPageLoading) dispatch(stopPageLoading());
     }
-  };
+  }, [dispatch, withPageLoading]);
 
   return { loading, sendRequest, forceStartLoading };
 };

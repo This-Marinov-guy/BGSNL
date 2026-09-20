@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Form, ErrorMessage } from "formik";
+import { Form } from "formik";
 import * as yup from "yup";
 import ValidatedFormik from "@/elements/ui/forms/ValidatedFormik";
-import FormExtras from "@/elements/ui/forms/FormExtras";
 import MobilePurchaseSummary from "@/elements/purchase/MobilePurchaseSummary";
 import PurchaseEventSummary from "@/elements/purchase/PurchaseEventSummary";
+import { PurchaseAddOns, PurchaseAdditionalInformation } from "@/elements/purchase/PurchaseFormOptions";
 import { IconlyArrowRight } from "@/elements/ui/icons/IconlyIcons";
 import Loader from "@/elements/ui/loading/Loader";
 import { buildSchemaExtraInputs, constructInitialExtraFormValues, extraInputFieldName } from "@/util/functions/input-helpers";
@@ -42,34 +42,31 @@ export default function EmailTicketPreferences({ checkout, details, preview = fa
           } catch (failure) { setError(failure.message || "Could not open payment. Please try again."); }
         }}>
     {({ values, setFieldValue, isSubmitting }) => {
-      const total = price + event.addOns.items
-        .filter(item => values.addOns.includes(item._id))
+      const selectedAddOns = event.addOns.items
+        .filter(item => values.addOns.includes(item._id));
+      const total = price + selectedAddOns
         .reduce((sum, item) => sum + item.price, 0);
       const overviewPrice = <span aria-live="polite" aria-atomic="true">
         <span key={total} className={styles.animatedPrice}>{total === 0 ? "Free" : euro(total)}</span>
       </span>;
 
       return <main className={`purchase-page member-purchase-container ${styles.page}`} data-private data-hj-suppress data-clarity-mask>
-    <MobilePurchaseSummary event={event} price={overviewPrice} />
+    <MobilePurchaseSummary event={event} price={overviewPrice} ticketQuantity={1} selectedAddOns={selectedAddOns} />
     <div className="container purchase-page-container">
       <header className="purchase-page-header"><h1>Complete your booking</h1></header>
       <div className="purchase-checkout-shell">
-        <aside className="purchase-event-sidebar"><PurchaseEventSummary event={event} price={overviewPrice} factsInsideOverview showMemberPriceComparison={false} usesMemberPrice={!guest} priceBadge={<span>{guest ? "Guest ticket" : "Member ticket"}</span>} /></aside>
+        <aside className="purchase-event-sidebar"><PurchaseEventSummary event={event} price={overviewPrice} factsInsideOverview showMemberPriceComparison={false} usesMemberPrice={!guest} priceBadge={<span>{guest ? "Guest ticket" : "Member ticket"}</span>} ticketQuantity={1} ticketUnitPrice={price} selectedAddOns={selectedAddOns} /></aside>
           <Form className="purchase-form">
             <fieldset disabled={isSubmitting || redirecting} className={styles.fields}>
               {/* {preview && <p className={styles.notice}>Preview only — sample event and prices. No payment will be created.</p>} */}
               {guest && <p className={styles.notice}>You already have a ticket. This additional ticket uses the guest price.</p>}
-              {fields.length > 0 && <section><div className="purchase-form-heading"></div><FormExtras inputs={fields} /></section>}
-              {event.addOns.isEnabled && event.addOns.items.length > 0 && <section className="mt--40" data-custom-validation-field data-field-name="addOns">
-                <h2>{event.addOns.title}</h2>{event.addOns.description && <p>{event.addOns.description}</p>}
-                <div className={styles.addOns}>{event.addOns.items.map(item => {
-                  const selected = values.addOns.includes(item._id);
-                  return <button key={item._id} type="button" className={`${styles.addOn} ${selected ? styles.selected : ""}`} aria-pressed={selected} onClick={() => setFieldValue("addOns", selected ? values.addOns.filter(id => id !== item._id) : event.addOns.multi ? [...values.addOns, item._id] : [item._id])}>
-                    <span><strong>{item.title}</strong>{item.description && <span>{item.description}</span>}</span><strong>{item.price ? `+ ${euro(item.price)}` : "Free"}</strong>
-                  </button>;
-                })}</div>
-                <ErrorMessage component="p" className="error" name="addOns" />
-              </section>}
+              <PurchaseAdditionalInformation inputs={fields} />
+              <PurchaseAddOns
+                addOns={event.addOns}
+                values={values.addOns}
+                valueMode="id"
+                onSelect={(value) => setFieldValue("addOns", value)}
+              />
               {previewComplete && <p role="status" className={styles.notice}>Your choices are valid. The live page would now open Stripe Checkout.</p>}
               {error && <div role="alert" className={styles.error}>{error}{needsReview && <button type="button" onClick={() => window.location.reload()}>Reload options</button>}</div>}
               <div className="purchase-actions"><a href={eventUrl} className="rn-button-style--2 rn-btn-reverse purchase-action-control">View event</a><button type="submit" disabled={isSubmitting || redirecting || needsReview} className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary">{isSubmitting || redirecting ? <><Loader /><span>Opening payment…</span></> : <><span>Continue to payment</span><IconlyArrowRight aria-hidden /></>}</button></div>

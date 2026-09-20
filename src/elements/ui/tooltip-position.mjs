@@ -1,6 +1,6 @@
-// Keep modal tooltips in the same stacking context as their input labels.
+// Put modal tooltips at the modal root so they can overlap its header and footer.
 export const getTooltipContainer = (trigger) =>
-  trigger?.closest(".bgsnl-modal__body, [data-modal-body]") ?? document.body;
+  trigger?.closest(".bgsnl-modal, [data-modal-root]") ?? document.body;
 
 export const getTooltipPosition = (container, { left, top }) => {
   if (container === document.body) return { left, top };
@@ -10,7 +10,7 @@ export const getTooltipPosition = (container, { left, top }) => {
   const scaleY = rect.height / container.offsetHeight || 1;
   return {
     position: "absolute",
-    zIndex: 2,
+    zIndex: 3,
     left: (left - rect.left) / scaleX + container.scrollLeft - container.clientLeft,
     top: (top - rect.top) / scaleY + container.scrollTop - container.clientTop,
   };

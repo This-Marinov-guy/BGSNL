@@ -1,0 +1,25 @@
+.banner { position: fixed; z-index: 1000; left: 1rem; right: 1rem; width: min(28rem, calc(100% - 2rem)); margin-inline: auto; padding: .8rem 1rem 1rem; background: #fff; color: #19251f; border-radius: 1rem; box-shadow: 0 .4rem 2rem rgb(27 54 42 / 22%); }
+.header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .6rem; }
+.header h2 { margin: 0; color: #19251f; font-family: "LeagueSpartan", sans-serif; font-size: 1.3rem; line-height: 1.15; }
+.actions { display: flex; flex-shrink: 0; gap: .25rem; }
+.close { display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border: 0; border-radius: .65rem; padding: .4rem; cursor: pointer; }
+.close { color: #d92d20; background: #fff1f0; }
+.carousel { min-width: 0; overflow: hidden; padding: .2rem; }
+.slide { width: 100%; }
+.card, .card:visited { display: flex; align-items: center; gap: .75rem; width: 100%; min-width: 0; padding: .5rem; border-radius: .65rem; background: #f2f7f4; color: #19251f; text-decoration: none; transition: background 180ms ease; }
+.card:hover { background: #e2f0e9; color: #017363; }
+.poster { display: grid; place-items: center; width: 4rem; aspect-ratio: 4 / 5; flex-shrink: 0; border-radius: .4rem; overflow: hidden; color: #65756c; background: #e5eeea; }
+.poster img { width: 100%; height: 100%; object-fit: contain; }
+.eventDetails { display: grid; min-width: 0; gap: .2rem; }
+.eventTitle { min-width: 0; font-size: 1rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.eventDate { color: #65756c; font-size: 1rem; font-weight: 600; line-height: 1.2; }
+.card:focus-visible, .close:focus-visible { outline: 3px solid #017363; outline-offset: 2px; }
+@media (max-width: 767px) {
+  .banner { padding: .6rem .7rem .7rem; }
+  .header h2 { font-size: 1.15rem; }
+  .poster { width: 3.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+
+.reopen { display: inline-flex; align-items: center; gap: .4rem; margin-top: 1rem; padding: .4rem 0; border: 0; background: transparent; color: #017363; font-size: 1rem; font-weight: 700; text-align: left; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+.reopen:focus-visible { outline: 3px solid #017363; outline-offset: 3px; }

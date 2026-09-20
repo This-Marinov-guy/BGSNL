@@ -10,7 +10,7 @@ import {
 import ImageFb from "../ui/media/ImageFb";
 import { getEventDateTimePresentation } from "../../util/functions/date";
 
-const MobilePurchaseSummary = ({ event, price }) => {
+const MobilePurchaseSummary = ({ event, price, ticketQuantity = 1, selectedAddOns = [] }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
 
@@ -69,7 +69,13 @@ const MobilePurchaseSummary = ({ event, price }) => {
         </span>
       </div>
 
-      <strong className="purchase-mobile-summary-price">{price}</strong>
+      <div className="purchase-mobile-summary-total">
+        <strong className="purchase-mobile-summary-price">{price}</strong>
+        <span title={[`${ticketQuantity} ${ticketQuantity === 1 ? "ticket" : "tickets"}`, ...selectedAddOns.map(item => item.title)].join(" · ")}>
+          {ticketQuantity} {ticketQuantity === 1 ? "ticket" : "tickets"}
+          {selectedAddOns.length > 0 && ` · ${selectedAddOns.map(item => item.title).join(", ")}`}
+        </span>
+      </div>
     </aside>
   );
 };
@@ -87,6 +93,10 @@ MobilePurchaseSummary.propTypes = {
     title: PropTypes.string,
   }).isRequired,
   price: PropTypes.node.isRequired,
+  ticketQuantity: PropTypes.number,
+  selectedAddOns: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string.isRequired,
+  })),
 };
 
 export default MobilePurchaseSummary;

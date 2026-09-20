@@ -30,10 +30,13 @@ import PageHelmet from "../../component/common/Helmet";
 import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
-import CardInputs from "../../elements/inputs/common/CardInputs";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
 import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
 import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
+import {
+  PurchaseAddOns,
+  PurchaseAdditionalInformation,
+} from "../../elements/purchase/PurchaseFormOptions";
 import BillingStatusBanner from "../../elements/subscriptions/BillingStatusBanner";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
@@ -42,15 +45,14 @@ import ExclusiveMemberEvent from "../../elements/ui/errors/Events/MemeberExclusi
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import FormExtras from "../../elements/ui/forms/FormExtras";
 import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
 import Loader from "../../elements/ui/loading/Loader";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
 import {
-  estimatePriceByEvent,
   hasAppliedTicketDiscount,
+  ticketPriceAmountByEvent,
 } from "../../util/functions/helpers";
 import {
   appendExtraInputsToForm,
@@ -125,6 +127,8 @@ const GuestPurchase = ({ initialEvent = null }) => {
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [selectedEvent, setSelectedEvent] = useState(initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [ticketQuantity, setTicketQuantity] = useState(1);
   const [{ schema, schemaFields }, setValidation] = useState(() =>
     buildGuestValidation(initialEvent)
   );
@@ -144,6 +148,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const controller = new AbortController();
     setLoadingPage(true);
 
     const fetchCurrentUser = async () => {
@@ -156,9 +161,10 @@ const GuestPurchase = ({ initialEvent = null }) => {
           null,
           {},
           false,
-          false
+          false,
+          { signal: controller.signal }
         );
-        setCurrentUser(responseData.user);
+        if (!controller.signal.aborted && responseData?.user) setCurrentUser(responseData.user);
       } catch (err) {
         // do nothing
       }
@@ -171,8 +177,11 @@ const GuestPurchase = ({ initialEvent = null }) => {
           "GET",
           null,
           {},
-          false
+          false,
+          false,
+          { signal: controller.signal }
         );
+        if (controller.signal.aborted || !responseData?.event) return;
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
@@ -180,12 +189,13 @@ const GuestPurchase = ({ initialEvent = null }) => {
       } catch (err) {
         // The shared request hook presents the error state.
       } finally {
-        setLoadingPage(false);
+        if (!controller.signal.aborted) setLoadingPage(false);
       }
     };
 
     getEventDetails();
     fetchCurrentUser();
+    return () => controller.abort();
   }, [eventRecordId, sendRequest, user?.session]);
 
   // Keep server-rendered content on screen while the mount-time refetch runs.
@@ -222,15 +232,25 @@ const GuestPurchase = ({ initialEvent = null }) => {
   const membershipOfferTitle = membershipSaving
     ? `Save ${formatEuro(membershipSaving)} and keep your ticket as a member`
     : "Keep your ticket as a member";
-  const displayedTicketPrice = selectedEvent.isFree
-    ? "Free"
-    : estimatePriceByEvent(selectedEvent, user, {
-        withIncludedText: false,
-        blockDiscounts: false,
-        withMemberBadge: false,
-      });
+  const baseTicketPrice = ticketPriceAmountByEvent(selectedEvent, user);
+  const addOnTotal = selectedAddOns.reduce(
+    (total, item) => total + (Number(item?.price) || 0),
+    0
+  );
+  const checkoutTotal = baseTicketPrice === null
+    ? null
+    : baseTicketPrice * ticketQuantity + addOnTotal;
+  const displayedTicketPrice = checkoutTotal === null
+    ? "TBA"
+    : checkoutTotal === 0
+      ? "Free"
+      : (
+        <span className="purchase-total-price" key={checkoutTotal} aria-live="polite" aria-atomic="true">
+          {formatEuro(checkoutTotal)}
+        </span>
+      );
   const discountApplied = hasAppliedTicketDiscount(selectedEvent, user);
-  const checkoutActionLabel = selectedEvent.isFree
+  const checkoutActionLabel = checkoutTotal === 0
     ? "Get ticket"
     : "Proceed to payment";
 
@@ -255,6 +275,8 @@ const GuestPurchase = ({ initialEvent = null }) => {
           key={selectedEvent.id}
           event={selectedEvent}
           price={displayedTicketPrice}
+          ticketQuantity={ticketQuantity}
+          selectedAddOns={selectedAddOns}
         />
         <div className="container purchase-page-container">
         <div
@@ -268,8 +290,11 @@ const GuestPurchase = ({ initialEvent = null }) => {
                 factsInsideOverview={!showMembershipOffer}
                 price={displayedTicketPrice}
                 priceBadge={<DynamicTicketBadge product={selectedEvent?.product} />}
-                showMemberPriceComparison={!userIsLoggedIn}
+                showMemberPriceComparison={false}
                 usesMemberPrice={false}
+                ticketQuantity={ticketQuantity}
+                ticketUnitPrice={baseTicketPrice}
+                selectedAddOns={selectedAddOns}
               />
               <div className="purchase-sponsor">
                 <SponsoredBySmall />
@@ -390,10 +415,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                     <div className="col-12">
                       <div className="purchase-form-heading">
                         <h1 className="type-heading-md">Complete your booking</h1>
-                        <p className="">
-                          Review the event and enter the details needed for your
-                          ticket.
-                        </p>
+                        
                       </div>
                     </div>
                     <div className="col-12">
@@ -433,10 +455,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                               placeholder="Email"
                               name="email"
                             />
-                            <p className="information">
-                              Use an email address you can access. We will send
-                              your ticket there.
-                            </p>
+                            
                             <ErrorMessage
                               className="error"
                               name="email"
@@ -456,10 +475,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                                 setFieldValue("phone", value)
                               }
                             />{" "}
-                            <p className="information">
-                              Use a valid number in case the organiser needs to
-                              confirm your identity at entry.
-                            </p>
+                          
                             <ErrorMessage
                               className="error"
                               name="phone"
@@ -467,50 +483,18 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-
-                        {selectedEvent.extraInputsForm?.length > 0 && (
-                          <FormExtras inputs={selectedEvent.extraInputsForm} />
-                        )}
                       </div>
                     </div>
 
-                    {selectedEvent?.addOns?.isEnabled &&
-                      selectedEvent.addOns?.items?.length > 0 && (
-                        <div className="col-lg-12" data-field-name="addOns">
-                          <h3
-                            className="text-center mb--20 type-subheading"
-                          >
-                            {selectedEvent.addOns.title}
-                            {selectedEvent.addOns?.isMandatory && (
-                              <span style={{ color: "#dc3545" }}> *</span>
-                            )}
-                          </h3>
-                          <p
-                            className="text-center mb--30 "
-                            style={{ color: "#666" }}
-                          >
-                            {selectedEvent.addOns?.isMandatory && (
-                              <span style={{ color: "#dc3545" }}>
-                                *Required - {" "}
-                              </span>
-                            )}
-                            {selectedEvent.addOns?.multi
-                              ? "You can add one or more"
-                              : "You can add only one"}
-                          </p>
-                          <CardInputs
-                            multi={selectedEvent.addOns?.multi}
-                            items={selectedEvent.addOns?.items}
-                            values={values.addOns}
-                            onSelect={(value) => setFieldValue("addOns", value)}
-                          />
-                          <ErrorMessage
-                            className="error center_text"
-                            name="addOns"
-                            component="div"
-                          />
-                        </div>
-                      )}
+                    <PurchaseAdditionalInformation inputs={selectedEvent.extraInputsForm || []} />
+                    <PurchaseAddOns
+                      addOns={selectedEvent.addOns}
+                      values={values.addOns}
+                      onSelect={(value) => {
+                        setSelectedAddOns(value);
+                        setFieldValue("addOns", value);
+                      }}
+                    />
 
                     <div
                       className="col-lg-12 col-md-12 col-12 purchase-consent-field"
@@ -573,9 +557,11 @@ const GuestPurchase = ({ initialEvent = null }) => {
                         <InputNumber
                           name="quantity"
                           value={values.quantity}
-                          onValueChange={(e) =>
-                            setFieldValue("quantity", e.value, false)
-                          }
+                          onValueChange={(e) => {
+                            const nextQuantity = e.value ?? 1;
+                            setTicketQuantity(nextQuantity);
+                            setFieldValue("quantity", nextQuantity, false);
+                          }}
                           showButtons
                           buttonLayout="horizontal"
                           className="purchase-quantity-input"

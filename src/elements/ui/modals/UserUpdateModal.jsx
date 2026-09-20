@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import {
   ErrorMessage,
@@ -17,7 +17,6 @@ import {
 import Loader from "../../../elements/ui/loading/Loader";
 import StepContentTransition from "../../../elements/ui/functional/StepContentTransition";
 import { useRefreshUser } from "../../../hooks/common/api-hooks";
-import { useHttpClient } from "../../../hooks/common/http-hook";
 import {
   removeModal,
   selectModal,
@@ -35,6 +34,7 @@ import PhoneInput from "../../inputs/common/PhoneInput";
 import ValidatedFormik from "../forms/ValidatedFormik";
 import ModalWindow from "./ModalWindow";
 import { showNotification } from "../../../redux/notification";
+import { browserFetch } from "@/util/auth/browser-request.mjs";
 
 const emptyStringToNull = (value, originalValue) =>
   originalValue === "" ? null : value;
@@ -128,7 +128,7 @@ const OTHER_UNIVERSITY_OPTION = {
 };
 
 const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
-  const { loading, sendRequest } = useHttpClient();
+  const [saving, setSaving] = useState(false);
   const { refreshUser } = useRefreshUser();
 
   const modal = useSelector(selectModal);
@@ -158,6 +158,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
         className="inner"
         validationSchema={schema}
         onSubmit={async (values) => {
+          setSaving(true);
           try {
             const isWorking =
               values.isWorking || values.university === "working";
@@ -203,20 +204,26 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
               "profession",
               isWorking ? values.profession.trim() : ""
             );
-            formData.append(
-              "notificationTypeTerms",
-              values.notificationTypeTerms
-            );
-
-            const responseEditUser = await sendRequest("user/edit-info", "PATCH", formData);
-            if (responseEditUser?.status === true) {
-              if (onUserRefresh) refreshUser(onUserRefresh);
-              closeHandler();
-              dispatch(showNotification({ severity: responseEditUser.confirmationRequired ? "info" : "success",
-                detail: responseEditUser.message || "Your profile has been updated." }));
+            if (values.notificationTypeTerms) {
+              formData.append("notificationTypeTerms", values.notificationTypeTerms);
             }
-          } catch {
-            dispatch(showNotification({ severity: "error", detail: "Could not submit your profile changes. Please try again." }));
+
+            const response = await browserFetch("/api/user/edit-info", {
+              method: "PATCH",
+              body: formData,
+            });
+            const responseEditUser = await response.json().catch(() => ({}));
+            if (!response.ok || responseEditUser?.status !== true) {
+              throw new Error(responseEditUser?.message || "Could not submit your profile changes. Please try again.");
+            }
+            if (onUserRefresh) refreshUser(onUserRefresh);
+            closeHandler();
+            dispatch(showNotification({ severity: responseEditUser.confirmationRequired ? "info" : "success",
+              detail: responseEditUser.message || "Your profile has been updated." }));
+          } catch (error) {
+            dispatch(showNotification({ severity: "error", detail: error?.message || "Could not submit your profile changes. Please try again." }));
+          } finally {
+            setSaving(false);
           }
         }}
         initialValues={{
@@ -232,6 +239,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
           course: currentUser.course ?? "",
           studentNumber: currentUser.studentNumber ?? "",
           profession: currentUser.profession ?? "",
+          notificationTypeTerms: currentUser.notificationTypeTerms ?? "",
           password: "",
           confirmPassword: "",
         }}
@@ -583,7 +591,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
             </div>
             <div className="user-update-form__actions">
               <button
-                disabled={loading}
+                disabled={saving}
                 type="button"
                 onClick={closeHandler}
                 className="rn-button-style--2 rn-btn-reverse"
@@ -591,11 +599,11 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                 {<span>Cancel</span>}
               </button>
               <button
-                disabled={loading}
+                disabled={saving}
                 type="submit"
                 className="rn-button-style--2 rn-btn-reverse-green"
               >
-                {loading ? <Loader /> : <span>Update information</span>}
+                {saving ? <Loader /> : <span>Update information</span>}
               </button>
             </div>
           </Form>
@@ -613,6 +621,7 @@ UserUpdateModal.propTypes = {
     graduationDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     image: PropTypes.string,
     name: PropTypes.string,
+    notificationTypeTerms: PropTypes.string,
     otherUniversityName: PropTypes.string,
     profession: PropTypes.string,
     phone: PropTypes.string,

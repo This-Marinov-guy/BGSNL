@@ -15,28 +15,35 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
   const requestRef = useRef(sendRequest);
   requestRef.current = sendRequest;
   const trackRef = useRef(null);
-  const [result, setResult] = useState({ loading: true, error: false, drafts: [] });
-  const [attempt, setAttempt] = useState(0);
+  const [result, setResult] = useState({ loading: false, error: false, drafts: [] });
   const [edges, setEdges] = useState({ previous: false, next: false });
   const regionName = capitalizeFirstLetter(region, true);
 
   useEffect(() => {
     let active = true;
-    setResult({ loading: true, error: false, drafts: [] });
+    setResult({ loading: false, error: false, drafts: [] });
     const loadDrafts = async () => {
-      const response = await requestRef.current(`future-event/full-data-events-list?region=${encodeURIComponent(region)}`, "GET", null, {}, false, false);
-      if (!active) return;
-      if (!Array.isArray(response?.events)) {
-        setResult({ loading: false, error: true, drafts: [] });
-        return;
+      try {
+        const availability = await requestRef.current(`future-event/draft-count?region=${encodeURIComponent(region)}`, "GET", null, {}, false, false);
+        if (!active || !Number(availability?.draftCount)) return;
+
+        setResult({ loading: true, error: false, drafts: [] });
+        const response = await requestRef.current(`future-event/full-data-events-list?region=${encodeURIComponent(region)}`, "GET", null, {}, false, false);
+        if (!active) return;
+        if (!Array.isArray(response?.events)) {
+          setResult({ loading: false, error: true, drafts: [] });
+          return;
+        }
+        const drafts = response.events.filter(event => event.status === "draft" && event.region === region && event.id !== currentDraftId);
+        drafts.sort((a, b) => (Date.parse(b.metadata?.updatedAt || b.createdAt) || 0) - (Date.parse(a.metadata?.updatedAt || a.createdAt) || 0));
+        setResult({ loading: false, error: false, drafts });
+      } catch {
+        if (active) setResult({ loading: false, error: false, drafts: [] });
       }
-      const drafts = response.events.filter(event => event.status === "draft" && event.region === region && event.id !== currentDraftId);
-      drafts.sort((a, b) => (Date.parse(b.metadata?.updatedAt || b.createdAt) || 0) - (Date.parse(a.metadata?.updatedAt || a.createdAt) || 0));
-      setResult({ loading: false, error: false, drafts });
     };
     loadDrafts();
     return () => { active = false; };
-  }, [region, currentDraftId, attempt]);
+  }, [region, currentDraftId]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -84,8 +91,7 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
     </section>
   );
   if (result.loading) return loadingSkeleton;
-  if (result.error) return <div className="event-region-drafts__message" role="status">We couldn’t load drafts for {regionName}. <button type="button" disabled={disabled} onClick={() => setAttempt(value => value + 1)}>Try again</button></div>;
-  if (!result.drafts.length) return <p className="event-region-drafts__message" role="status">No drafts in {regionName}. Continue creating your event below.</p>;
+  if (result.error || !result.drafts.length) return null;
 
   return (
     <section className="event-region-drafts event-region-drafts--loaded" aria-labelledby={`${id}-heading`} aria-roledescription="carousel">

@@ -126,10 +126,10 @@ export async function getEventsByRegion(regions) {
   return grouped;
 }
 
-export async function getEventDetails(eventId) {
+export async function getEventDetails(eventId, region) {
   if (!eventId) return null;
   // Shorter budget: this one blocks metadata generation.
-  const data = await apiGet(`event/event-details/${eventId}`, {
+  const data = await apiGet(`event/event-details/${encodeURIComponent(eventId)}${region ? `?region=${encodeURIComponent(region)}` : ""}`, {
     timeout: 3000,
     tags: ["public-events", `public-event:${eventId}`],
   });

@@ -371,6 +371,7 @@ hr {
   min-height: 0;
   min-width: 0;
   overflow: hidden;
+  position: relative;
   pointer-events: auto;
   width: min(560px, calc(100vw - 32px));
 }
@@ -450,7 +451,7 @@ hr {
 
 .bgsnl-modal__body {
   position: relative;
-  // Keep floating labels and portalled tooltips beneath the header and footer.
+  // Keeps local floating labels in a predictable rendering context.
   isolation: isolate;
   color: #36403a;
   flex: 1 1 auto;
@@ -1520,6 +1521,49 @@ label {
     &:active {
       transform: scale(0.98);
     }
+
+    &--with-images {
+      min-height: 0;
+      padding: 0.75rem;
+      cursor: default;
+      text-align: left;
+
+      .images-grid {
+        margin-top: 0;
+      }
+    }
+
+    &__add {
+      display: grid;
+      min-height: 9.375rem;
+      aspect-ratio: 1;
+      place-content: center;
+      justify-items: center;
+      gap: 0.45rem;
+      padding: 0.75rem;
+      border: 2px dashed #8db7ad;
+      border-radius: 0.5rem;
+      background: #f6fbf8;
+      color: #017363;
+      font: inherit;
+      font-weight: 700;
+      text-align: center;
+      transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+
+      &:hover,
+      &:focus-visible {
+        border-color: #017363;
+        background: #e8f3ef;
+      }
+
+      &:hover { transform: translateY(-1px); }
+      &:focus-visible { outline: 3px solid rgb(1 115 99 / 25%); outline-offset: 2px; }
+    }
+
+    &__add svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
   }
 
   .images-grid {
@@ -1576,41 +1620,54 @@ label {
         border-radius: 6px;
       }
 
+.image-drag-handle {
+  position: absolute;
+  bottom: 0.35rem;
+  left: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #017363;
+  font-size: 1.35rem;
+  pointer-events: none;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
       .remove-btn {
         position: absolute;
         top: 5px;
         right: 5px;
-        background: rgba(220, 53, 69, 0.95) !important;
-        border: 2px solid rgba(255, 255, 255, 0.9);
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
+        padding: 0;
+        border: 0;
+        background: transparent !important;
+        width: 1.75rem;
+        height: 1.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         z-index: 20;
-        color: white;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        color: #d92d20;
+        transition: color 160ms ease, transform 160ms ease;
+        box-shadow: none;
 
         @media (max-width: 768px) {
-          width: 32px;
-          height: 32px;
+          width: 2rem;
+          height: 2rem;
           top: 3px;
           right: 3px;
-          background: rgba(220, 53, 69, 1) !important;
-          border: 2px solid rgba(255, 255, 255, 1);
-          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
           z-index: 25;
         }
 
         @media (max-width: 480px) {
-          width: 30px;
-          height: 30px;
+          width: 1.875rem;
+          height: 1.875rem;
           top: 2px;
           right: 2px;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
         }
 
         svg {
@@ -1624,9 +1681,13 @@ label {
         }
 
         &:hover {
-          background: rgba(220, 53, 69, 1) !important;
-          transform: scale(1.15);
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+          color: #a91f15;
+          transform: scale(1.12);
+        }
+
+        &:focus-visible {
+          outline: 3px solid rgb(217 45 32 / 25%);
+          outline-offset: 2px;
         }
 
         &:active {

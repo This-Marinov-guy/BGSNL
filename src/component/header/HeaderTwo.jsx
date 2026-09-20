@@ -1,6 +1,7 @@
 import {
   Fragment,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import PropTypes from "prop-types";
@@ -21,49 +22,47 @@ import HeaderContent from "./HeaderContent";
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
 
-  const requestedRegion = props.forceRegion ?? useParams().region;
+  const headerRef = useRef(null);
+  const params = useParams();
+  const requestedRegion = props.forceRegion ?? params.region;
   const region = REGIONS.includes(requestedRegion) ? requestedRegion : null;
 
   const activeStrap = getActiveStrap();
 
-  // strap
   useEffect(() => {
-    const redHeader = document.querySelector(".header-red");
-    
-    if (activeStrap) {
-      const initBannerHeight = document.querySelector(".nav-strap").clientHeight;
-      redHeader.style.top = initBannerHeight + "px";
-
-      window.addEventListener("scroll", function () {
-        const scrollPosition = window.scrollY;
-        const bannerHeight = initBannerHeight; 
-
-        if (scrollPosition >= bannerHeight) {
-          redHeader.style.top = "0px";
-        } else {
-          // Banner is still partially visible, calculate position
-          // This creates a smooth transition as you scroll
-          const newPosition = bannerHeight - scrollPosition;
-          redHeader.style.top = newPosition + "px";
-        }
-      });
-    }
-
-    return () => {
-      window.removeEventListener("scroll", function () {});
+    const redHeader = headerRef.current?.querySelector(".header-red");
+    const strap = document.querySelector(".nav-strap");
+    if (!activeStrap || !redHeader || !strap) return undefined;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      redHeader.style.top = `${Math.max(0, strap.clientHeight - window.scrollY)}px`;
     };
-  }, []);
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(strap);
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      redHeader.style.top = "";
+    };
+  }, [activeStrap]);
 
-  // droupdown — was executed straight in the render body, which crashes SSR.
+  // Delegate once so account-menu changes do not require rebinding every link.
   useEffect(() => {
-    const elements = document.querySelectorAll(".has-dropdown > a");
-    elements.forEach((element) => {
-      element.onclick = function () {
-        this.parentElement.querySelector(".submenu").classList.toggle("active");
-        this.classList.toggle("open");
-      };
-    });
-  });
+    const header = headerRef.current;
+    const toggleDropdown = (event) => {
+      const trigger = event.target.closest?.(".has-dropdown > a");
+      if (!trigger || !header.contains(trigger)) return;
+      trigger.parentElement.querySelector(".submenu")?.classList.toggle("active");
+      trigger.classList.toggle("open");
+    };
+    header?.addEventListener("click", toggleDropdown);
+    return () => header?.removeEventListener("click", toggleDropdown);
+  }, []);
   let logoUrl = (
     <ImageFb
       className="logo"
@@ -88,6 +87,7 @@ const HeaderTwo = (props) => {
   return (
     <Fragment>
       <header
+        ref={headerRef}
         className={`header-area formobile-menu header--transparent default-color ${
           activeStrap ? "m--25" : ""
         }`}

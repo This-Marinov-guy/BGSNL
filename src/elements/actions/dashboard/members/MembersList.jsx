@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import moment from "moment";
 import { useSelector } from "react-redux";
 import {
   Bar,
   BarChart,
   CartesianGrid,
+  ComposedChart,
   Legend,
+  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -26,7 +29,7 @@ import { SelectInput, Skeleton } from "@/compat/primereact";
 import Filter from "../Filter";
 import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 import MemberAccordion from "./MemberAccordion";
-import { exportMembersCSV } from "./exportMembers";
+import { exportMemberDemographicsCSV, exportMembersCSV } from "./exportMembers";
 
 const MEMBER_STATUS_FILTERS = new Set(["active", "expired"]);
 
@@ -37,6 +40,36 @@ const memberStatusCounts = (list) => list.reduce((counts, member) => {
 }, { active: 0, expired: 0 });
 
 const chartNumber = (value) => Number.isFinite(value) ? value : 0;
+
+const euro = new globalThis.Intl.NumberFormat("en-NL", {
+  style: "currency",
+  currency: "EUR",
+  maximumFractionDigits: 0,
+});
+
+const membershipTrend = (list) => {
+  const months = Array.from({ length: 6 }, (_, index) => moment().startOf("month").subtract(5 - index, "months"));
+  const buckets = new Map(months.map((month) => [month.format("YYYY-MM"), {
+    key: month.format("YYYY-MM"),
+    label: month.format("MMM"),
+    starts: 0,
+    newMrr: 0,
+  }]));
+
+  list.forEach((member) => {
+    const started = moment(member.startDate);
+    if (!started.isValid()) return;
+    const bucket = buckets.get(started.format("YYYY-MM"));
+    if (!bucket) return;
+    bucket.starts += 1;
+    bucket.newMrr += Number(member.monthlyRevenue) || 0;
+  });
+
+  return [...buckets.values()].map((bucket) => ({
+    ...bucket,
+    newMrr: Math.round(bucket.newMrr * 100) / 100,
+  }));
+};
 
 const MembersStatsChart = ({ data, mode }) => {
   const hasData = data.some((entry) => chartNumber(entry.active) + chartNumber(entry.expired) > 0);
@@ -83,6 +116,45 @@ MembersStatsChart.propTypes = {
     label: PropTypes.string.isRequired,
   })).isRequired,
   mode: PropTypes.oneOf(["regions", "overall"]).isRequired,
+};
+
+const MemberRevenueTrend = ({ data }) => {
+  const hasData = data.some((entry) => entry.starts > 0 || entry.newMrr > 0);
+
+  return (
+    <section className="analytics-trend-card" aria-labelledby="member-revenue-trend-title">
+      <header className="analytics-trend-card__header">
+        <div>
+          <h4 id="member-revenue-trend-title">Membership growth and recurring value</h4>
+          <p>New membership periods and their monthly recurring value for the last six months.</p>
+        </div>
+      </header>
+      {hasData ? (
+        <div className="analytics-trend-card__canvas">
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5ece8" vertical={false} />
+              <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
+              <YAxis yAxisId="count" allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
+              <YAxis yAxisId="revenue" orientation="right" tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} tickFormatter={(value) => `€${value}`} />
+              <Tooltip formatter={(value, name) => [name === "New monthly value" ? euro.format(value) : value, name]} />
+              <Legend />
+              <Bar yAxisId="count" dataKey="starts" name="Membership starts" fill="#017363" radius={[5, 5, 0, 0]} />
+              <Line yAxisId="revenue" type="monotone" dataKey="newMrr" name="New monthly value" stroke="#bd8a21" strokeWidth={3} dot={{ r: 3 }} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+      ) : <p className="analytics-trend-card__empty">No membership starts are available for the last six months.</p>}
+    </section>
+  );
+};
+
+MemberRevenueTrend.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    starts: PropTypes.number.isRequired,
+    newMrr: PropTypes.number.isRequired,
+  })).isRequired,
 };
 
 
@@ -150,6 +222,7 @@ const MembersList = () => {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     const fetchMembers = async () => {
       try {
         setLoading(true);
@@ -160,7 +233,8 @@ const MembersList = () => {
           null,
           {},
           true,
-          false
+          false,
+          { signal: controller.signal }
         );
 
         if (active && responseData?.members) {
@@ -175,7 +249,7 @@ const MembersList = () => {
     };
 
     fetchMembers();
-    return () => { active = false; };
+    return () => { active = false; controller.abort(); };
   }, [regionParam, isAdmin]);
 
   const filteredMembers = members.filter((member) => {
@@ -222,6 +296,14 @@ const MembersList = () => {
         { label: "Expired", active: 0, expired: counts.expired },
       ];
     })();
+  const activeCount = members.filter((member) => member.isPaid).length;
+  const inactiveCount = members.length - activeCount;
+  const expiringSoon = members.filter((member) => {
+    if (!member.isPaid || !member.expireDate) return false;
+    const expiry = moment(member.expireDate);
+    return expiry.isSameOrAfter(moment(), "day") && expiry.isSameOrBefore(moment().add(30, "days"), "day");
+  }).length;
+  const trendData = membershipTrend(filteredMembers);
 
   return (
     <>
@@ -232,53 +314,11 @@ const MembersList = () => {
         <h3 className="center_text" style={{ margin: 0 }}>
           Member statistics
         </h3>
-        <button
-          className="rn-button-style--2 rn-btn-green"
-          onClick={() => exportMembersCSV(filteredMembers)}
-          disabled={loading || filteredMembers.length === 0}
-        >
-          <span>Export Report</span>
-        </button>
-      </div>
-
-      {/* Summary Panels */}
-      <div className="row mb--30">
-        <div className="col-lg-4 col-md-4 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <div className="dashboard-stat-card__label">
-              Monthly Recurring Revenue
-            </div>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="80px" /> : `€${summary.mmr}`}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-4 col-md-4 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <div className="dashboard-stat-card__label">Total Members</div>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : summary.totalCount}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-4 col-md-4 col-12 mb--15">
-          <div className="dashboard-stat-card dashboard-stat-card--warning">
-            <div className="dashboard-stat-card__label">Total Unpaid</div>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : summary.totalUnpaid}
-            </div>
-          </div>
+        <div className="analytics-export-actions">
+          <button className="rn-button-style--2 rn-btn-green" onClick={() => exportMembersCSV(filteredMembers)} disabled={loading || filteredMembers.length === 0}><span>Export members</span></button>
+          <button className="analytics-export-actions__secondary" onClick={() => exportMemberDemographicsCSV(filteredMembers)} disabled={loading || filteredMembers.length === 0}><span>Export demographics</span></button>
         </div>
       </div>
-
-      {loading ? (
-        <div className="members-statistics-chart members-statistics-chart--loading">
-          <Skeleton width="12rem" className="mb-2" />
-          <Skeleton height="14rem" />
-        </div>
-      ) : (
-        <MembersStatsChart data={chartData} mode={chartMode} />
-      )}
 
       {isAdmin && <Filter title="Member filters" onClear={() => {
         setSearchParams((current) => {
@@ -295,6 +335,62 @@ const MembersList = () => {
           </SelectInput>
         </label>
       </Filter>}
+
+      {/* Summary Panels */}
+      <div className="row mb--30">
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card">
+            <p className="dashboard-stat-card__label">
+              Monthly Recurring Revenue
+            </p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="80px" /> : `€${summary.mmr}`}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card">
+            <p className="dashboard-stat-card__label">Active members</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="60px" /> : activeCount}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card dashboard-stat-card--warning">
+            <p className="dashboard-stat-card__label">Inactive members</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="60px" /> : inactiveCount}
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-12 mb--15">
+          <div className="dashboard-stat-card dashboard-stat-card--attention">
+            <p className="dashboard-stat-card__label">Renewals in 30 days</p>
+            <div className="dashboard-stat-card__value">
+              {loading ? <Skeleton width="60px" /> : expiringSoon}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="members-statistics-chart members-statistics-chart--loading">
+          <Skeleton width="12rem" className="mb-2" />
+          <Skeleton height="14rem" />
+        </div>
+      ) : (
+        <MembersStatsChart data={chartData} mode={chartMode} />
+      )}
+
+      {loading ? (
+        <div className="analytics-trend-card analytics-trend-card--loading">
+          <Skeleton width="16rem" className="mb-2" />
+          <Skeleton height="15rem" />
+        </div>
+      ) : <MemberRevenueTrend data={trendData} />}
+
+      <p className="analytics-data-note">Demographic exports contain regional and study data only; direct identifiers are excluded.</p>
 
       {loading ? (
         <MemberListSkeleton />

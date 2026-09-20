@@ -1,6 +1,8 @@
-import { SelectInput } from "@/compat/primereact";
+import { Dialog, ProgressSpinner, SelectInput } from "@/compat/primereact";
 import {
+  useCallback,
   useEffect,
+  useId,
   useRef,
   useState,
 } from "react";
@@ -11,7 +13,6 @@ import {
   FiChevronDown,
   FiX,
 } from "@/elements/ui/icons/IconlyIcons";
-import { useNavigate } from "@/util/navigation";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import { showNotification } from "../../../redux/notification";
 import ImageInput from "../../inputs/common/ImageInput";
@@ -33,11 +34,14 @@ const EMPTY_FORM = {
   applyLink: "",
 };
 
-const InternshipForm = ({ internship }) => {
+const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
   const isEdit = !!internship;
-  const { sendRequest, loading } = useHttpClient();
+  const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const formId = useId();
+  const [saving, setSaving] = useState(false);
+  const submitting = useRef(false);
+  const close = useCallback(() => { if (!submitting.current) onClose(); }, [onClose]);
 
   const [form, setForm] = useState(EMPTY_FORM);
   const [logoFile, setLogoFile] = useState(null);
@@ -59,9 +63,11 @@ const InternshipForm = ({ internship }) => {
   }, [pickerOpen]);
 
   useEffect(() => {
+    if (!visible) return;
+    let cancelled = false;
     const fetchExistingLogos = async () => {
       try {
-        const data = await sendRequest("internship/admin-list");
+        const data = await sendRequest("internship/admin-list", "GET", null, {}, false, false);
         const seen = new Set();
         const logos = (data?.internships ?? []).reduce((acc, i) => {
           if (i.logo && !seen.has(i.logo)) {
@@ -70,15 +76,21 @@ const InternshipForm = ({ internship }) => {
           }
           return acc;
         }, []);
-        setExistingLogos(logos);
+        if (!cancelled) setExistingLogos(logos);
       } catch {
         // non-critical
       }
     };
     fetchExistingLogos();
-  }, []);
+    return () => { cancelled = true; };
+  }, [visible]);
 
   useEffect(() => {
+    if (!visible) return;
+    setLogoFile(null);
+    setSelectedLogoUrl(null);
+    setImageInputKey(key => key + 1);
+    setPickerOpen(false);
     if (internship) {
       setForm({
         company: internship.company ?? "",
@@ -94,8 +106,10 @@ const InternshipForm = ({ internship }) => {
         website: internship.website ?? "",
         applyLink: internship.applyLink ?? "",
       });
+    } else {
+      setForm(EMPTY_FORM);
     }
-  }, [internship]);
+  }, [internship, visible]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -124,6 +138,9 @@ const InternshipForm = ({ internship }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
+    setSaving(true);
 
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => formData.append(key, value));
@@ -139,10 +156,10 @@ const InternshipForm = ({ internship }) => {
         responseData = await sendRequest(
           `internship/edit/${internship._id}`,
           "PATCH",
-          formData
+          formData, {}, true, false
         );
       } else {
-        responseData = await sendRequest("internship/add", "POST", formData);
+        responseData = await sendRequest("internship/add", "POST", formData, {}, true, false);
       }
 
       if (responseData?.status !== true) return;
@@ -153,9 +170,12 @@ const InternshipForm = ({ internship }) => {
           summary: isEdit ? "Internship updated" : "Internship created",
         })
       );
-      navigate("/user/dashboard/internships");
+      onSaved();
     } catch {
       dispatch(showNotification({ severity: "error", detail: "Something went wrong. Please try again." }));
+    } finally {
+      submitting.current = false;
+      setSaving(false);
     }
   };
 
@@ -164,51 +184,61 @@ const InternshipForm = ({ internship }) => {
   const textareaStyle = { ...inputStyle, minHeight: "110px", resize: "vertical" };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Dialog visible={visible} header={isEdit ? "Edit internship" : "Add internship"} onHide={close} closable={!saving}
+      style={{ width: "min(960px, calc(100vw - 2rem))" }}
+      footer={<div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: "12px" }}>
+        <button type="button" disabled={saving} onClick={close} className="rn-button-style--2">Cancel</button>
+        <button type="submit" form={formId} disabled={saving} className="rn-button-style--2 rn-btn-green" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: ".75rem" }}>
+          {saving && <ProgressSpinner style={{ width: "20px", height: "20px" }} />}
+          <span>{saving ? "Saving…" : isEdit ? "Save changes" : "Create internship"}</span>
+        </button>
+      </div>}>
+    <form id={formId} onSubmit={handleSubmit} aria-busy={saving}>
+      <fieldset disabled={saving} inert={saving || undefined} style={{ margin: 0, padding: 0, border: 0, minWidth: 0 }}>
       <div className="row">
         {/* Left column */}
         <div className="col-md-6">
           <div>
-            <label style={labelStyle}>Company *</label>
-            <input name="company" value={form.company} onChange={handleChange} style={inputStyle} required />
+            <label htmlFor={`${formId}-company`} style={labelStyle}>Company *</label>
+            <input id={`${formId}-company`} name="company" value={form.company} onChange={handleChange} style={inputStyle} required />
           </div>
 
           <div>
-            <label style={labelStyle}>Specialty / Position *</label>
-            <input name="specialty" value={form.specialty} onChange={handleChange} style={inputStyle} required />
+            <label htmlFor={`${formId}-specialty`} style={labelStyle}>Specialty / Position *</label>
+            <input id={`${formId}-specialty`} name="specialty" value={form.specialty} onChange={handleChange} style={inputStyle} required />
           </div>
 
           <div>
-            <label style={labelStyle}>Location *</label>
-            <input name="location" value={form.location} onChange={handleChange} style={inputStyle} required />
+            <label htmlFor={`${formId}-location`} style={labelStyle}>Location *</label>
+            <input id={`${formId}-location`} name="location" value={form.location} onChange={handleChange} style={inputStyle} required />
           </div>
 
           <div>
-            <label style={labelStyle}>Label *</label>
-            <SelectInput name="label" value={form.label} onChange={handleChange} style={inputStyle} required>
+            <label htmlFor={`${formId}-label`} style={labelStyle}>Label *</label>
+            <SelectInput id={`${formId}-label`} name="label" value={form.label} onChange={handleChange} style={inputStyle} required>
               {LABELS.map((l) => <option key={l} value={l}>{l}</option>)}
             </SelectInput>
           </div>
 
           <div>
-            <label style={labelStyle}>Duration</label>
-            <input name="duration" value={form.duration} onChange={handleChange} style={inputStyle} />
+            <label htmlFor={`${formId}-duration`} style={labelStyle}>Duration</label>
+            <input id={`${formId}-duration`} name="duration" value={form.duration} onChange={handleChange} style={inputStyle} />
           </div>
 
           <div>
-            <label style={labelStyle}>Languages</label>
-            <input name="languages" value={form.languages} onChange={handleChange} style={inputStyle} />
+            <label htmlFor={`${formId}-languages`} style={labelStyle}>Languages</label>
+            <input id={`${formId}-languages`} name="languages" value={form.languages} onChange={handleChange} style={inputStyle} />
           </div>
 
           <div>
-            <label style={labelStyle}>Contact Email</label>
-            <input name="contactMail" type="email" value={form.contactMail} onChange={handleChange} style={inputStyle} />
+            <label htmlFor={`${formId}-contactMail`} style={labelStyle}>Contact Email</label>
+            <input id={`${formId}-contactMail`} name="contactMail" type="email" value={form.contactMail} onChange={handleChange} style={inputStyle} />
           </div>
 
           <div>
-            <label style={labelStyle}>Website</label>
+            <label htmlFor={`${formId}-website`} style={labelStyle}>Website</label>
             <input
-              name="website"
+              id={`${formId}-website`} name="website"
               type="url"
               maxLength={2048}
               value={form.website}
@@ -218,9 +248,9 @@ const InternshipForm = ({ internship }) => {
           </div>
 
           <div>
-            <label style={labelStyle}>Apply Link (external, optional)</label>
+            <label htmlFor={`${formId}-applyLink`} style={labelStyle}>Apply Link (external, optional)</label>
             <input
-              name="applyLink"
+              id={`${formId}-applyLink`} name="applyLink"
               type="url"
               maxLength={2048}
               value={form.applyLink}
@@ -354,46 +384,33 @@ const InternshipForm = ({ internship }) => {
           </div>
 
           <div>
-            <label style={labelStyle}>Description</label>
-            <textarea name="description" value={form.description} onChange={handleChange} style={textareaStyle} />
+            <label htmlFor={`${formId}-description`} style={labelStyle}>Description</label>
+            <textarea id={`${formId}-description`} name="description" value={form.description} onChange={handleChange} style={textareaStyle} />
           </div>
 
           <div>
-            <label style={labelStyle}>Bonuses / Benefits</label>
-            <textarea name="bonuses" value={form.bonuses} onChange={handleChange} style={textareaStyle} />
+            <label htmlFor={`${formId}-bonuses`} style={labelStyle}>Bonuses / Benefits</label>
+            <textarea id={`${formId}-bonuses`} name="bonuses" value={form.bonuses} onChange={handleChange} style={textareaStyle} />
           </div>
 
           <div>
-            <label style={labelStyle}>Requirements</label>
-            <textarea name="requirements" value={form.requirements} onChange={handleChange} style={textareaStyle} />
+            <label htmlFor={`${formId}-requirements`} style={labelStyle}>Requirements</label>
+            <textarea id={`${formId}-requirements`} name="requirements" value={form.requirements} onChange={handleChange} style={textareaStyle} />
           </div>
         </div>
       </div>
 
-      <div className="d-flex" style={{ gap: "12px", marginTop: "8px" }}>
-        <button
-          type="submit"
-          disabled={loading}
-          className="rn-button-style--2 rn-btn-green"
-          style={{ minWidth: "140px" }}
-        >
-          {loading ? "Saving..." : isEdit ? "Save Changes" : "Create Internship"}
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate("/user/dashboard/internships")}
-          className="rn-button-style--2"
-          style={{ minWidth: "100px" }}
-        >
-          Cancel
-        </button>
-      </div>
+      </fieldset>
     </form>
+    </Dialog>
   );
 };
 
 InternshipForm.propTypes = {
   internship: PropTypes.object,
+  visible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSaved: PropTypes.func.isRequired,
 };
 
 export default InternshipForm;

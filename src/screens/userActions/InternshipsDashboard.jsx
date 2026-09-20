@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import styles from "./administration.module.scss";
 import ScrollToTop from "@/component/common/ScrollToTop";
@@ -23,7 +23,7 @@ const InternshipsDashboard = () => {
             <span>Administration</span>
           </Link>
         </nav>
-        <InternshipList />
+        <Suspense fallback={<p role="status">Loading internships…</p>}><InternshipList /></Suspense>
       </main>
 
       <div className="backto-top">

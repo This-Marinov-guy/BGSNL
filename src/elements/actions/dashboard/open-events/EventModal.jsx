@@ -1,3 +1,5 @@
+import { eventModalData } from "@/util/functions/event-modal-data.mjs";
+import { EventUpsellDetails, EventAddOnDetails, EventQuestionDetails, EventAdvertisedDetails } from "@/elements/actions/form/EventConfigurationPanels";
 import { useMemo, useState } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -7,18 +9,17 @@ import {
 } from "react-redux";
 import { Dialog } from "@/compat/primereact";
 import {
-  IconlyCalendar,
   FiCheck,
   IconlyDelete,
   IconlyEdit,
   IconlyExternalLink,
-  IconlyImage,
-  IconlyLocation,
-  IconlyShow,
+  IconlyImageOff,
   IconlyTicket,
+  FiUsers,
 } from "@/elements/ui/icons/IconlyIcons";
 import dynamic from "next/dynamic";
 import ImageTooltip from "@/elements/ui/media/ImageTooltip";
+import ImagePreviewTrigger from "@/elements/ui/media/ImagePreviewTrigger";
 const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
 import { useNavigate } from "@/util/navigation";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
@@ -42,6 +43,7 @@ import {
 } from "../../../../util/functions/date";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
 import GenerateTicketsModal from "./GenerateTicketsModal";
+import GuestListModal from "./GuestListModal";
 
 import { eventSalesClosed, eventStatusLabel } from "../../../../util/functions/event-status.mjs";
 
@@ -90,25 +92,17 @@ DetailSection.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-const PreviewOverlay = () => (
-  <span aria-hidden="true" className="media-trigger__overlay">
-    <span className="media-trigger__eye">
-      <IconlyShow />
-    </span>
-  </span>
-);
-
 const EventImage = ({ label, src, alt, onPreview }) => src ? (
   <ImageTooltip label={label}>
-  <button
+  <ImagePreviewTrigger
     aria-label={`Open ${label.toLowerCase()} media preview`}
-    className="event-details-modal__media-preview media-trigger"
+    className="event-details-modal__media-preview"
+    imageClassName="event-details-modal__media-image"
     onClick={onPreview}
+    src={src}
+    alt={alt}
     type="button"
-  >
-    <img alt={alt} className="event-details-modal__media-image" src={src} />
-    <PreviewOverlay />
-  </button>
+  />
   </ImageTooltip>
 ) : null;
 
@@ -119,12 +113,11 @@ EventImage.propTypes = {
   src: PropTypes.string,
 };
 
-const PriceOption = ({ label, price, including, priceId }) => (
+const PriceOption = ({ label, price, including }) => (
   <article className="event-details-modal__price-option">
     <span>{label}</span>
     <strong>{price}</strong>
     <p>{including || "Standard entry"}</p>
-    {priceId ? <small>Price ID: {priceId}</small> : null}
   </article>
 );
 
@@ -132,12 +125,13 @@ PriceOption.propTypes = {
   including: PropTypes.string,
   label: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
-  priceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
-const EventModal = ({ event, show, setShow, loadData }) => {
+const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
+  const event = useMemo(() => eventModalData(storedEvent), [storedEvent]);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [ticketGeneratorVisible, setTicketGeneratorVisible] = useState(false);
+  const [guestListVisible, setGuestListVisible] = useState(false);
   const [previewMedia, setPreviewMedia] = useState(null);
   const [savingSales, setSavingSales] = useState(false);
   const { sendRequest, loading } = useHttpClient();
@@ -157,19 +151,16 @@ const EventModal = ({ event, show, setShow, loadData }) => {
   const statusModifier = statusLabel
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
-  const backgroundImage =
-    event.bgImageExtra && event.bgImageSelection === 2
-      ? event.bgImageExtra
-      : event.bgImage != null
-        ? `/assets/images/bg/bg-image-${event.bgImage}.webp`
-        : null;
+  const publicEventUrl = !isDraft && event.region
+    ? `/${encodeURIComponent(event.region)}/event-details/${encodeURIComponent(event.slug || event.id)}`
+    : null;
 
   const galleryImages = useMemo(() => [
     { src: event.poster, alt: `${eventTitle} poster`, label: "Poster" },
     { src: event.ticketImg, alt: `${eventTitle} ticket`, label: "Ticket" },
-    { src: backgroundImage, alt: `${eventTitle} background`, label: "Background" },
     ...(event.images || []).map((src, index) => ({ src, alt: `${eventTitle} image ${index + 1}`, label: `Additional ${index + 1}` })),
-  ], [event.poster, event.ticketImg, event.images, eventTitle, backgroundImage]);
+    ...(event.subEvent?.links || []).filter(link => link.name && link.href && link.poster).map(link => ({ src: link.poster, alt: `${link.name} poster`, label: link.name })),
+  ], [event.poster, event.ticketImg, event.images, event.subEvent, eventTitle]);
 
   const closeModal = () => setShow(false);
 
@@ -210,8 +201,31 @@ const EventModal = ({ event, show, setShow, loadData }) => {
   };
 
   const editEvent = () => {
-    dispatch(loadSingleEventDashboard(event));
+    dispatch(loadSingleEventDashboard(storedEvent));
     navigate(`/user/dashboard/events/${event.id}/edit`);
+  };
+
+  const copyPublicEventLink = async () => {
+    if (!publicEventUrl) return;
+    try {
+      const link = new URL(publicEventUrl, window.location.origin).href;
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(link);
+      } else {
+        const field = document.createElement("textarea");
+        field.value = link;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.append(field);
+        field.select();
+        const copied = document.execCommand("copy");
+        field.remove();
+        if (!copied) throw new Error("Clipboard unavailable");
+      }
+      dispatch(showNotification({ severity: "success", summary: "Event link copied" }));
+    } catch {
+      dispatch(showNotification({ severity: "error", summary: "Could not copy the event link" }));
+    }
   };
 
   const modalHeader = (
@@ -223,16 +237,6 @@ const EventModal = ({ event, show, setShow, loadData }) => {
           {statusLabel}
         </span>
         <h2>{eventTitle}</h2>
-      </div>
-      <div className="event-details-modal__heading-meta">
-        <span>
-          <IconlyLocation aria-hidden="true" />
-          {eventRegion}
-        </span>
-        <span>
-          <IconlyCalendar aria-hidden="true" />
-          {eventDate}
-        </span>
       </div>
     </div>
   );
@@ -249,10 +253,15 @@ const EventModal = ({ event, show, setShow, loadData }) => {
       <GenerateTicketsModal
         visible={ticketGeneratorVisible}
         onHide={() => setTicketGeneratorVisible(false)}
-        event={event}
+        event={storedEvent}
+      />
+      <GuestListModal
+        event={storedEvent}
+        onHide={() => setGuestListVisible(false)}
+        visible={guestListVisible}
       />
       <Dialog
-        suspended={!!previewMedia}
+        suspended={!!previewMedia || guestListVisible}
         className="event-details-modal"
         contentClassName="event-details-modal__body"
         dismissableMask
@@ -267,21 +276,48 @@ const EventModal = ({ event, show, setShow, loadData }) => {
             role="group"
           >
             <button
-              className="rn-button-style--2 rn-btn-reverse-green"
+              className="event-details-modal__action"
               onClick={editEvent}
               type="button"
+              title={isDraft ? "Edit draft" : "Edit event"}
             >
               <IconlyEdit aria-hidden="true" />
-              <span>{isDraft ? "Edit draft" : "Edit event"}</span>
+              <span>Edit</span>
             </button>
+            {publicEventUrl ? <button className="event-details-modal__action" type="button" onClick={copyPublicEventLink} title="Copy customer event link">
+              <IconlyExternalLink aria-hidden="true" />
+              <span>Link</span>
+            </button> : null}
             {isDraft && event.readyToPublish === true && checkAuthorization(user.session, ACCESS_4) && (
-              <button className="rn-button-style--2 event-details-modal__complete" type="button" onClick={() => {
-                dispatch(loadSingleEventDashboard(event));
+              <button className="event-details-modal__action event-details-modal__action--complete" type="button" onClick={() => {
+                dispatch(loadSingleEventDashboard(storedEvent));
                 navigate(`/user/dashboard/events/${event.id}/edit?complete=1`);
               }}>
                 <FiCheck aria-hidden="true" /><span>Complete</span>
               </button>
             )}
+            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
+              <button
+                className="event-details-modal__action"
+                onClick={() => setGuestListVisible(true)}
+                type="button"
+                title="Open guest list"
+              >
+                <FiUsers aria-hidden="true" />
+                <span>Guests</span>
+              </button>
+            ) : null}
+            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
+              <button
+                className="event-details-modal__action event-details-modal__action--primary"
+                onClick={() => setTicketGeneratorVisible(true)}
+                type="button"
+                title="Generate tickets"
+              >
+                <IconlyTicket aria-hidden="true" />
+                <span>Tickets</span>
+              </button>
+            ) : null}
             {canToggleSales && (
               <button
                 type="button"
@@ -289,32 +325,23 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                 aria-checked={!salesClosed}
                 aria-label="Ticket sales"
                 aria-busy={savingSales}
-                className={`event-details-modal__sales-toggle ${salesClosed ? "is-closed" : "is-open"}`}
+                className={`event-details-modal__action event-details-modal__sales-toggle ${salesClosed ? "is-closed" : "is-open"}`}
                 disabled={savingSales || statusLabel === "Past"}
                 onClick={toggleSales}
                 title={statusLabel === "Past" ? "Sales cannot be reopened for a past event" : salesClosed ? "Open ticket sales" : "Close ticket sales"}
               >
                 <span className="event-details-modal__sales-track" aria-hidden="true"><span /></span>
-                <span>{savingSales ? "Saving…" : salesClosed ? "Sales closed" : "Sales opened"}</span>
+                <span>{savingSales ? "Saving…" : `Sales ${salesClosed ? "closed" : "open"}`}</span>
               </button>
             )}
-            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
-              <button
-                className="rn-button-style--2 rn-btn-green"
-                onClick={() => setTicketGeneratorVisible(true)}
-                type="button"
-              >
-                <IconlyTicket aria-hidden="true" />
-                <span>Generate tickets</span>
-              </button>
-            ) : null}
             <button
-              className="rn-button-style--2 rn-btn-reverse event-details-modal__delete"
+              className="event-details-modal__action event-details-modal__action--danger"
               onClick={() => setConfirmDeleteVisible(true)}
               type="button"
+              title="Delete event"
             >
               <IconlyDelete aria-hidden="true" />
-              <span>Delete event</span>
+              <span>Delete</span>
             </button>
           </div>
 
@@ -323,9 +350,10 @@ const EventModal = ({ event, show, setShow, loadData }) => {
               <div className="event-details-modal__poster">
                 {event.poster ? (
                   <ImageTooltip label="Poster">
-                  <button
+                  <ImagePreviewTrigger
                     aria-label="Open poster media preview"
-                    className="event-details-modal__poster-preview media-trigger"
+                    className="event-details-modal__poster-preview"
+                    imageClassName="event-details-modal__poster-image"
                     onClick={() =>
                       setPreviewMedia({
                         alt: `${eventTitle} poster`,
@@ -333,20 +361,14 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                         src: event.poster,
                       })
                     }
+                    src={event.poster}
+                    alt={`${eventTitle} poster`}
                     type="button"
-                  >
-                    <img
-                      alt={`${eventTitle} poster`}
-                      className="event-details-modal__poster-image"
-                      src={event.poster}
-                    />
-                    <PreviewOverlay />
-                  </button>
+                  />
                   </ImageTooltip>
                 ) : (
-                  <div className="event-details-modal__poster-empty">
-                    <IconlyImage aria-hidden="true" />
-                    <span>No poster uploaded</span>
+                  <div className="event-details-modal__poster-empty" role="img" aria-label="No poster available">
+                    <IconlyImageOff aria-hidden="true" />
                   </div>
                 )}
               </div>
@@ -363,18 +385,6 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                       })
                     }
                     src={event.ticketImg}
-                  />
-                  <EventImage
-                    alt={`${eventTitle} background`}
-                    label="Background"
-                    onPreview={() =>
-                      setPreviewMedia({
-                        alt: `${eventTitle} background`,
-                        fileName: `${eventTitle}-background`,
-                        src: backgroundImage,
-                      })
-                    }
-                    src={backgroundImage}
                   />
                   {event.images?.map((image, index) => (
                     <EventImage
@@ -427,8 +437,9 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                   />
                   <EventFact
                     label="Additional form fields"
-                    value={event.extraInputsForm?.length > 0 ? "Enabled" : "None"}
+                    value={event.extraInputsForm?.length > 0 ? `${event.extraInputsForm.length} configured` : "None"}
                   />
+                  <EventFact label="Recommended events" value={event.subEvent?.links?.filter(link => link.name && link.href).length || "None"} />
                   {event.subEventDescription ? (
                     <EventFact
                       label="Sub-event"
@@ -443,6 +454,8 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                   {event.text || "No description provided."}
                 </p>
               </DetailSection>
+              <EventUpsellDetails values={event} />
+              <EventAddOnDetails addOns={event.addOns} />
             </div>
 
             <aside className="event-details-modal__side-column">
@@ -456,26 +469,21 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                     label="Sales status"
                     value={isDraft ? "Not open" : eventSalesClosed(event) ? "Closed" : "Open"}
                   />
-                  {!event.isFree ? (
-                    <EventFact
-                      label="Member ticket"
-                      value={event.isMemberFree ? "Free" : "Priced"}
-                    />
-                  ) : null}
+                  <EventFact label="Ticket type" value={event.isFree ? "Free for everyone" : event.isTicketLink ? "External ticket platform" : event.isMemberFree ? "Free for members" : "Paid tickets"} />
+                  <EventFact label="Guest name" value={String(event.ticketName) === "true" ? "Shown on ticket" : "Hidden"} />
+                  <EventFact label="QR code" value={String(event.ticketQR) === "true" ? "Shown on ticket" : "Hidden"} />
                 </dl>
               </DetailSection>
 
               <DetailSection title="Pricing">
                 {event.isFree ? (
                   <span className="event-details-modal__free-label">Free</span>
-                ) : event.ticketLink ? (
+                ) : event.isTicketLink ? (
                   <div className="event-details-modal__notice">
                     <IconlyExternalLink aria-hidden="true" />
                     <div>
                       <strong>External ticketing</strong>
-                      <a href={event.ticketLink} rel="noreferrer" target="_blank">
-                        Open ticket page
-                      </a>
+                      {event.ticketLink ? <a href={event.ticketLink} rel="noreferrer" target="_blank">Open ticket page</a> : <span>Ticket link not set</span>}
                     </div>
                   </div>
                 ) : (
@@ -485,7 +493,6 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                         including={event.entryIncluding}
                         label="Guest"
                         price={formatPrice(event.product.guest.price)}
-                        priceId={event.product.guest.priceId}
                       />
                     ) : null}
                     {event.product?.member || event.isMemberFree ? (
@@ -497,14 +504,12 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                             ? "Free"
                             : formatPrice(event.product?.member?.price)
                         }
-                        priceId={event.product?.member?.priceId}
                       />
                     ) : null}
-                    {event.product?.activeMember ? (
+                    {event.product?.activeMember || event.product?.member || event.isMemberFree ? (
                       <PriceOption
                         label="Active member"
-                        price={formatPrice(event.product.activeMember.price)}
-                        priceId={event.product.activeMember.priceId}
+                        price={event.isMemberFree ? "Free" : formatPrice(event.product?.activeMember?.price === "" ? event.product?.member?.price : event.product?.activeMember?.price ?? event.product?.member?.price)}
                       />
                     ) : null}
                     {!event.product?.guest &&
@@ -518,6 +523,19 @@ const EventModal = ({ event, show, setShow, loadData }) => {
                   </div>
                 )}
               </DetailSection>
+              <EventQuestionDetails questions={event.extraInputsForm ?? []} />
+              <EventAdvertisedDetails links={event.subEvent?.links ?? []} renderImage={link => (
+                <figure className="event-review-modal__advertised-poster">
+                  <ImagePreviewTrigger
+                    className="event-review-modal__media-trigger"
+                    imageClassName="event-review-modal__advertised-image"
+                    src={link.poster}
+                    alt={`${link.name} poster`}
+                    aria-label={`Preview ${link.name} poster`}
+                    onClick={() => setPreviewMedia({ src: link.poster, alt: `${link.name} poster`, fileName: `${link.name}-poster` })}
+                  />
+                </figure>
+              )} />
             </aside>
           </div>
 

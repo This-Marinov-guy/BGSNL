@@ -15,6 +15,11 @@
 .tableWrap td { padding: 1rem; border-top: 1px solid #e7ebe8; vertical-align: middle; color: #263b31; }
 .tableWrap td > a { display: block; color: #017363; font-weight: 700; overflow-wrap: anywhere; }
 .tableWrap td > small, .person small { display: block; margin-top: .2rem; color: #68766f; }
+.tableWrap .contactCell > a, .tableWrap .contactCell > small { font-size: 1rem; }
+@media (min-width: 768px) {
+  .tableWrap .statusCell { width: 1%; padding-inline: .5rem; white-space: nowrap; }
+  .tableWrap .contactCell { min-width: 15rem; }
+}
 .person { display: flex; align-items: center; gap: .75rem; min-width: 12rem; }
 .person strong { display: block; color: #17231d; }
 
@@ -31,15 +36,26 @@
 .status[data-status="active"], .mobileStatusDot[data-status="active"] { color: #05622d; }
 .status[data-status="locked"], .status[data-status="frozen"],
 .mobileStatusDot[data-status="locked"], .mobileStatusDot[data-status="frozen"] { color: #941c3c; }
-.roleTags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-items: center; min-width: 10rem; gap: .35rem; }
-.roleTags span { text-align: center; min-width: 0; max-width: 100%; padding: .25rem .5rem; border-radius: .35rem; background: #f1f3ec; color: #435249; font-size: 1rem; white-space: normal; overflow-wrap: anywhere; }
+.roleTags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; justify-items: center; min-width: 10rem; gap: .35rem; }
+.roleTags span { text-align: center; min-width: 0; max-width: 100%; height: fit-content; line-height: 1.25; padding: .25rem .5rem; border-radius: .35rem; background: #f1f3ec; color: #435249; font-size: 1rem; white-space: normal; overflow-wrap: anywhere; }
 .roleTags span:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.roleTags span[data-role="super_admin"] { background: #ede4ff; color: #5b2796; }
+.roleTags span[data-role="admin"] { background: #ffe4e9; color: #972540; }
+.roleTags span[data-role="national_board_member"] { background: #dceaff; color: #234e91; }
+.roleTags span[data-role="national_committee_member"] { background: #e5e7ff; color: #434696; }
+.roleTags span[data-role="regional_board_member"], .roleTags span[data-role="board_member"] { background: #d9f0e9; color: #11634f; }
+.roleTags span[data-role="regional_committee_member"], .roleTags span[data-role="committee_member"] { background: #dcf1fa; color: #17627c; }
+.roleTags span[data-role="active_member"] { background: #e5f2d8; color: #3a641f; }
+.roleTags span[data-role="support"] { background: #ffead9; color: #934718; }
+.roleTags span[data-role="vip"] { background: #fff2c7; color: #795707; }
+.roleTags span[data-role="member"] { background: #e8edf0; color: #465865; }
+.roleTags span[data-role="alumni"] { background: #f2e3ef; color: #79406e; }
+
 .actionCell { width: 1%; }
 .editButton, .iconButton, .primaryButton, .secondaryButton, .pagination button { border: 0; cursor: pointer; font-weight: 750; transition: background 160ms ease, color 160ms ease, transform 160ms ease; }
 .editButton { display: inline-flex; align-items: center; gap: .4rem; padding: .55rem .75rem; border-radius: .55rem; background: #e5f0eb; color: #017363; }
 .editButton:hover { background: #d4e8df; transform: translateY(-1px); }
-.skeletonRow { pointer-events: none; }
-.skeletonStack { display: grid; gap: .4rem; min-width: 0; }
+.accountsLoading { display: flex; justify-content: center; align-items: center; padding: 3rem 1rem; }
 .empty { display: grid; justify-items: center; gap: .5rem; min-height: 16rem; margin-top: 1rem; place-content: center; text-align: center; border: 1px dashed #cbd8d0; border-radius: .9rem; }
 .empty svg { width: 2rem; height: 2rem; color: #6a7c72; }
 .empty h2, .empty p { margin: 0; }
@@ -62,7 +78,7 @@
 .fieldGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .editorField { min-width: 0; width: 100%; }
 .fullField { grid-column: 1 / -1; }
-.statusField { max-width: 18rem; }
+.statusFields { display: grid; grid-template-columns: repeat(2, minmax(0, 18rem)); gap: 1rem; }
 .selfNotice { margin: 0; padding: .8rem 1rem; border-radius: .6rem; background: #fff7df; color: #6f5212; }
 .roles { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; }
 .roleOption { display: grid; grid-template-columns: 20px 1fr; align-items: center; gap: .6rem !important; min-height: 2.9rem; padding: .65rem .75rem; border: 1px solid #dce4df; border-radius: .65rem; background: #fafbf9; cursor: pointer; }
@@ -147,7 +163,7 @@
   }
 
   .editor { width: 100%; }
-  .fieldGrid, .roles { grid-template-columns: 1fr; }
+  .fieldGrid, .roles, .statusFields { grid-template-columns: 1fr; }
   .fullField { grid-column: auto; }
   .editorFooter { grid-template-columns: 1fr 1.5fr; }
 }
@@ -182,12 +198,10 @@
 .previewReveal[data-expanded="true"] { grid-template-rows: 1fr; opacity: 1; }
 .previewClip { min-height: 0; overflow: hidden; }
 .accountPreview { margin: .5rem 1rem 1rem; padding: 1.25rem; border: 1px solid #dce6df; border-radius: .85rem; background: #f3f7f4; }
-.previewHeading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.25rem; }
-.previewHeading h3 { margin: 0; font-size: 1.25rem; color: #17231d; overflow-wrap: anywhere; }
 .previewGroups { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
 .previewGroups h4 { margin: 0 0 .85rem; font-size: 1rem; color: #075f2c; }
 .previewGroups dl { display: grid; gap: .75rem; margin: 0; }
-.previewGroups dt { margin: 0 0 .15rem; color: #65756c; font-size: .9rem; font-weight: 600; }
+.previewGroups dt { width: fit-content; max-width: 100%; margin: 0 0 .35rem; padding: 2px 5px; border-radius: .5rem; background: var(--form-label-background, #add8e6); color: #19251f; font-size: 1rem; font-weight: 600; line-height: 1.35; }
 .previewGroups dd { margin: 0; color: #263b31; overflow-wrap: anywhere; white-space: pre-wrap; }
 @media (max-width: 767px) {
   .tableWrap tbody { gap: 0; }
@@ -210,7 +224,7 @@
 .summaryRow:focus-visible { outline: 3px solid #017363; outline-offset: -3px; }
 .summaryActions { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; }
 .summaryActions .editButton { flex-shrink: 0; white-space: nowrap; }
-.accountPreview, .previewHeading h3, .previewGroups h4, .previewGroups dt, .previewGroups dd { text-align: left; }
+.accountPreview, .previewGroups h4, .previewGroups dt, .previewGroups dd { text-align: left; }
 
 @media (max-width: 767px) {
   .summaryActions .editButton { height: 2.75rem; }

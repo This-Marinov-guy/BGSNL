@@ -1,16 +1,6 @@
-import AuthLayout from "@/layouts/authentication/AuthLayout";
-import { ACCESS_2 } from "@/util/defines/common";
-import EditInternship from "@/screens/userActions/EditInternship";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Edit Internship",
-  robots: { index: false, follow: false },
-};
-
-export default function Page() {
-  return (
-    <AuthLayout access={ACCESS_2}>
-      <EditInternship />
-    </AuthLayout>
-  );
+export default async function Page({ params }) {
+  const { internshipId } = await params;
+  redirect(`/user/dashboard/internships?edit=${encodeURIComponent(internshipId)}`);
 }

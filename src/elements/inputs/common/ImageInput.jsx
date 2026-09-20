@@ -31,6 +31,10 @@ const ImageInput = (props) => {
       setPreviewUrl(fileReader.result);
     };
     fileReader.readAsDataURL(file);
+    return () => {
+      fileReader.onload = null;
+      if (fileReader.readyState === FileReader.LOADING) fileReader.abort();
+    };
   }, [file]);
 
   const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];

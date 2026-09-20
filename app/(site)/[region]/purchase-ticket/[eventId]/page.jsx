@@ -9,7 +9,9 @@ export async function generateMetadata({ params }) {
   const { region, eventId } = await params;
   const metadata = await buildEventMetadata(
     eventId,
-    `/${region}/event-details/${eventId}`
+    `/${region}/event-details/${eventId}`,
+    null,
+    region
   );
 
   return {
@@ -25,9 +27,9 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Page({ params }) {
-  const { eventId } = await params;
+  const { region, eventId } = await params;
   // Deduped with the generateMetadata call above by Next's fetch cache.
-  const event = await getEventDetails(eventId);
+  const event = await getEventDetails(eventId, region);
 
   return <PurchaseTicket initialEvent={event} />;
 }

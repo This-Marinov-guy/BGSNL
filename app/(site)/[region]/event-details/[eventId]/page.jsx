@@ -14,8 +14,8 @@ import { permanentRedirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
-  const { eventId } = await params;
-  const event = await getEventDetails(eventId);
+  const { region, eventId } = await params;
+  const event = await getEventDetails(eventId, region);
   if (!event) return { robots: { index: false, follow: false } };
   const canonicalId = event.slug || event.id;
   return buildEventMetadata(canonicalId, `/${event.region}/event-details/${canonicalId}`, event);
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { region, eventId } = await params;
-  const event = await getEventDetails(eventId);
+  const event = await getEventDetails(eventId, region);
   // Not a bare notFound(): this deep in the tree, that call only sets the
   // response's soft-404 metadata (see [region]/layout.jsx) — it never
   // reliably replaces the streamed Suspense fallback, leaving visitors

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
+import { IconlyImageOff } from "@/elements/ui/icons/IconlyIcons";
 import { MOMENT_DATE_TIME } from "../../../../util/functions/date";
 import EventModal from "./EventModal";
 import { eventStatusLabel } from "../../../../util/functions/event-status.mjs";
@@ -57,7 +58,7 @@ const Event = ({ event, loadData }) => {
                 decoding="async"
               />
             ) : (
-              <span>No poster</span>
+              <span role="img" aria-label="No poster available"><IconlyImageOff aria-hidden="true" /></span>
             )}
           </div>
           <div className="event-card__content">

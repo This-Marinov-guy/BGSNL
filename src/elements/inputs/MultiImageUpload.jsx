@@ -4,8 +4,10 @@ import {
   useRef,
   useState,
 } from "react";
+import PropTypes from "prop-types";
 import { Tooltip } from "@/compat/primereact";
 import {
+  FaGripVertical,
   FiInfo,
   FiUpload,
   FiX,
@@ -33,8 +35,8 @@ const MultiImageUpload = ({
   maxFileSize = DEFAULT_MAX_FILE_SIZE,
   maxDimension = DEFAULT_MAX_DIMENSION,
   validFileTypes = DEFAULT_VALID_FILE_TYPES,
-  label = "Images",
-  tooltip = "Upload multiple images",
+  label,
+  tooltip,
   showInfo = true,
   enableReorder = true,
   className = ""
@@ -59,6 +61,17 @@ const MultiImageUpload = ({
   const [touchStartIndex, setTouchStartIndex] = useState(null);
   const fileInputRef = useRef(null);
   const gridRef = useRef(null);
+  const mounted = useRef(false);
+  const previewUrls = useRef(new Set());
+  useEffect(() => {
+    mounted.current = true;
+    const urls = previewUrls.current;
+    return () => {
+      mounted.current = false;
+      for (const url of urls) URL.revokeObjectURL(url);
+      urls.clear();
+    };
+  }, []);
   const tooltipId = `tooltip-${name}`;
 
   const setDeferredValidationError = useCallback((message) => {
@@ -71,6 +84,8 @@ const MultiImageUpload = ({
   // Update images when existingImages prop changes
   useEffect(() => {
     if (existingImages && existingImages.length > 0) {
+      for (const url of previewUrls.current) URL.revokeObjectURL(url);
+      previewUrls.current.clear();
       const existingImageObjects = existingImages.map((url, index) => {
         const isPdf = typeof url === 'string' && url.toLowerCase().endsWith('.pdf');
         return {
@@ -253,16 +268,10 @@ const MultiImageUpload = ({
         // Process file (resize if image, keep as-is if PDF)
         const processedFile = await resizeImage(file);
         
-        // Create preview URL
-        // For PDFs, we'll use a generic PDF icon or the file itself
-        let preview;
-        if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-          // For PDF, create a data URL or use a placeholder
-          preview = URL.createObjectURL(processedFile);
-        } else {
-          preview = URL.createObjectURL(processedFile);
-        }
-        
+        if (!mounted.current) return;
+        const preview = URL.createObjectURL(processedFile);
+        previewUrls.current.add(preview);
+
         newImages.push({
           id: `new-${Date.now()}-${Math.random()}`,
           url: null,
@@ -275,6 +284,8 @@ const MultiImageUpload = ({
         errors.push(`${file.name}: Failed to process file.`);
       }
     }
+
+    if (!mounted.current) return;
 
     if (errors.length > 0) {
       setDeferredValidationError(errors.join(" "));
@@ -315,6 +326,7 @@ const MultiImageUpload = ({
     const imageToRemove = images.find(img => img.id === id);
     if (imageToRemove && imageToRemove.preview && !imageToRemove.isExisting) {
       URL.revokeObjectURL(imageToRemove.preview);
+      previewUrls.current.delete(imageToRemove.preview);
     }
     const updatedImages = images.filter(img => img.id !== id);
     setImages(updatedImages);
@@ -474,14 +486,13 @@ const MultiImageUpload = ({
         </div>
       )}
 
-      {/* Upload Area */}
-      {images.length < maxImages && (
-        <div
-          className="upload-dropzone"
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-        >
+      <div
+        className={`upload-dropzone${images.length ? " upload-dropzone--with-images" : ""}`}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onClick={!images.length ? () => fileInputRef.current?.click() : undefined}
+      >
+        {!images.length ? <>
           <FiUpload style={{ color: "#6c757d", marginBottom: "10px" }} />
           <p style={{ margin: "5px 0", color: "#6c757d" }}>
             Click or drag and drop to upload files
@@ -489,18 +500,125 @@ const MultiImageUpload = ({
           <p style={{ margin: "5px 0", color: "#999" }}>
             Max {maxImages} files, {maxSizeMB}MB each, {fileTypesStr} only
           </p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            name={name}
-            accept={acceptString}
-            multiple
-            onChange={handleInputChange}
-            onInvalid={() => setShowError(true)}
-            style={{ display: "none" }}
-          />
-        </div>
-      )}
+        </> : (
+          <div
+            ref={gridRef}
+            className="images-grid"
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            {images.map((image, index) => (
+              <div
+                key={image.id}
+                className="image-item"
+                draggable={enableReorder}
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOverItem(e, index)}
+                onDragEnd={handleDragEnd}
+                onTouchStart={(e) => handleTouchStart(e, index)}
+                style={{
+                  position: "relative",
+                  cursor: enableReorder ? "move" : "default",
+                  opacity: draggedIndex === index ? 0.5 : 1,
+                  touchAction: enableReorder ? "none" : "auto",
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  WebkitTouchCallout: "none"
+                }}
+              >
+                <button
+                  type="button"
+                  className="remove-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleRemove(image.id);
+                  }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                  }}
+                  aria-label="Remove image"
+                >
+                  <FiX />
+                </button>
+                <div className="image-preview">
+                  {image.isPdf ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#f8f9fa",
+                        borderRadius: "8px",
+                        border: "2px dashed #dee2e6",
+                        padding: "10px"
+                      }}
+                    >
+                      <div
+                        style={{
+                          marginBottom: "8px",
+                          color: "#dc3545"
+                        }}
+                      >
+                        📄
+                      </div>
+                      <span
+                        style={{
+                          color: "#6c757d",
+                          textAlign: "center"
+                        }}
+                      >
+                        PDF
+                      </span>
+                    </div>
+                  ) : (
+                    <ImageFb
+                      src={image.preview}
+                      alt={`Image ${index + 1}`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        borderRadius: "8px"
+                      }}
+                    />
+                  )}
+                </div>
+          {enableReorder && (
+                  <span className="image-drag-handle" title="Drag to reorder">
+                    <FaGripVertical aria-hidden="true" />
+                    <span className="visually-hidden">Drag to reorder</span>
+                  </span>
+                )}
+              </div>
+            ))}
+            {images.length < maxImages && (
+              <button
+                aria-label="Add more images"
+                className="upload-dropzone__add"
+                onClick={() => fileInputRef.current?.click()}
+                type="button"
+              >
+                <FiUpload aria-hidden="true" />
+                <span>Add images</span>
+              </button>
+            )}
+          </div>
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          name={name}
+          accept={acceptString}
+          multiple
+          onChange={handleInputChange}
+          onInvalid={() => setShowError(true)}
+          style={{ display: "none" }}
+        />
+      </div>
 
       {/* Error Message */}
       {error && showError && (
@@ -516,127 +634,24 @@ const MultiImageUpload = ({
         </div>
       )}
 
-      {/* Images Grid */}
-      {images.length > 0 && (
-        <div 
-          ref={gridRef} 
-          className="images-grid" 
-          style={{ marginTop: "20px" }}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          {images.map((image, index) => (
-            <div
-              key={image.id}
-              className="image-item"
-              draggable={enableReorder}
-              onDragStart={() => handleDragStart(index)}
-              onDragOver={(e) => handleDragOverItem(e, index)}
-              onDragEnd={handleDragEnd}
-              onTouchStart={(e) => handleTouchStart(e, index)}
-              style={{
-                position: "relative",
-                cursor: enableReorder ? "move" : "default",
-                opacity: draggedIndex === index ? 0.5 : 1,
-                touchAction: enableReorder ? "none" : "auto",
-                userSelect: "none",
-                WebkitUserSelect: "none",
-                WebkitTouchCallout: "none"
-              }}
-            >
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  handleRemove(image.id);
-                }}
-                onTouchStart={(e) => {
-                  e.stopPropagation();
-                }}
-                aria-label="Remove image"
-              >
-                <FiX />
-              </button>
-              <div className="image-preview">
-                {image.isPdf ? (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      backgroundColor: "#f8f9fa",
-                      borderRadius: "8px",
-                      border: "2px dashed #dee2e6",
-                      padding: "10px"
-                    }}
-                  >
-                    <div
-                      style={{
-                        marginBottom: "8px",
-                        color: "#dc3545"
-                      }}
-                    >
-                      📄
-                    </div>
-                    <span
-                      style={{
-                        color: "#6c757d",
-                        textAlign: "center"
-                      }}
-                    >
-                      PDF
-                    </span>
-                  </div>
-                ) : (
-                  <ImageFb
-                    src={image.preview}
-                    alt={`Image ${index + 1}`}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                      borderRadius: "8px"
-                    }}
-                  />
-                )}
-              </div>
-              {enableReorder && index === 0 && images.length > 1 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "5px",
-                    left: "5px",
-                    background: "rgba(1, 115, 99, 0.9)",
-                    color: "white",
-                    padding: "2px 8px",
-                    borderRadius: "4px"
-                  }}
-                >
-                  Drag to reorder
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Info Text */}
-      {showInfo && (
-        <p style={{ marginTop: "15px", color: "#6c757d" }}>
-          <small>* Maximum {maxImages} files allowed</small>
-          <br />
-          <small>* Images will be automatically resized to max {maxDimension}px width/height</small>
-          <br />
-          <small>* Maximum file size: {maxSizeMB}MB per file</small>
-        </p>
-      )}
     </div>
   );
+};
+
+MultiImageUpload.propTypes = {
+  existingImages: PropTypes.arrayOf(PropTypes.string),
+  onImagesChange: PropTypes.func,
+  onValidationChange: PropTypes.func,
+  name: PropTypes.string,
+  maxImages: PropTypes.number,
+  maxFileSize: PropTypes.number,
+  maxDimension: PropTypes.number,
+  validFileTypes: PropTypes.arrayOf(PropTypes.string),
+  label: PropTypes.node,
+  tooltip: PropTypes.string,
+  showInfo: PropTypes.bool,
+  enableReorder: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default MultiImageUpload;

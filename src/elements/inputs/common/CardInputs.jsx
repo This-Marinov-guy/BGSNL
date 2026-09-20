@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import { Badge } from "@/compat/primereact";
-import { FiCheck } from "@/elements/ui/icons/IconlyIcons";
+
+const EMPTY_ITEMS = [];
 
 const CardItem = ({
   item,
@@ -9,54 +9,69 @@ const CardItem = ({
   selected = false,
 }) => {
   return (
-    <div
+    <button
+      type="button"
       onClick={onClick}
-      className={`card card-1 common-border-1 ${!!selected && "card-active"} ${
-        error && "error-border"
-      } card-price`}
-      style={{ margin: "10px auto" }}
+      className={`purchase-addon-card${selected ? " is-selected" : ""}${error ? " has-error" : ""}`}
+      aria-pressed={selected}
     >
-      {!!selected && (
-        <Badge value={<FiCheck />} size="medium" className="card-badge"></Badge>
-      )}
-
-      <div className="d-flex flex-column justify-content-center align-items-center">
-        <h4>{item.title}</h4>
-        {item.description && (
-          <h6>{item.description}</h6>
-        )}
-        <h4>{item?.price ? `+ €${item.price}` : "Free"}</h4>
-      </div>
-    </div>
+      <span className="purchase-addon-card__copy">
+        <strong>{item.title}</strong>
+        {item.description && <span>{item.description}</span>}
+      </span>
+      <strong className="purchase-addon-card__price">
+        {item?.price ? `+ €${item.price}` : "Free"}
+      </strong>
+    </button>
   );
 };
 
-const CardInputs = ({ items = [], onSelect, error, values = [], multi = false }) => {
-  if (items?.length == 0) {
+const addOnShape = PropTypes.shape({
+  _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  description: PropTypes.string,
+  price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  title: PropTypes.string.isRequired,
+});
+
+CardItem.propTypes = {
+  item: addOnShape.isRequired,
+  onClick: PropTypes.func,
+  error: PropTypes.bool,
+  selected: PropTypes.bool,
+};
+
+const itemId = item => String(item?._id ?? item?.id ?? item ?? "");
+
+const CardInputs = ({ items = EMPTY_ITEMS, onSelect, error, values = EMPTY_ITEMS, multi = false, valueMode = "object" }) => {
+  if (items?.length === 0) {
     return null;
   }
 
   const handleSelect = (item) => {
+    const id = itemId(item);
+    const isSelected = values.some(value => itemId(value) === id);
+    const nextItem = valueMode === "id" ? id : item;
     let newItems = [];
-    if (values.find((i) => i._id === item._id)) {
-      newItems = values.filter((i) => i._id !== item._id);
+    if (isSelected) {
+      newItems = values.filter(value => itemId(value) !== id);
     } else if (multi) {
-      newItems = [...values, item];
+      newItems = [...values, nextItem];
     } else {
-      newItems = [item];
+      newItems = [nextItem];
     }
     onSelect(newItems);
   };
 
   return (
-    <div className="row">
-      {items.map((item, index) => {
+    <div className="purchase-addon-grid">
+      {items.map((item) => {
         return (
           <CardItem
-            key={index}
+            key={itemId(item)}
             item={item}
             error={error}
-            selected={values.find((i) => i._id === item._id)}
+            selected={values.some(value => itemId(value) === itemId(item))}
             onClick={() => handleSelect(item)}
           />
         );
@@ -66,14 +81,21 @@ const CardInputs = ({ items = [], onSelect, error, values = [], multi = false })
 };
 
 CardInputs.propTypes = {
-  items: PropTypes.array,
-  onSelect: PropTypes.func,
+  items: PropTypes.arrayOf(addOnShape),
+  onSelect: PropTypes.func.isRequired,
   error: PropTypes.bool,
   values: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    })
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.shape({
+        _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      }),
+    ])
   ),
+  multi: PropTypes.bool,
+  valueMode: PropTypes.oneOf(["id", "object"]),
 };
 
 export default CardInputs;

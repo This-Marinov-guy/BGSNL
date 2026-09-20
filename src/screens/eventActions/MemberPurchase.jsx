@@ -5,10 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  ErrorMessage,
-  Form,
-} from "formik";
+import { Form } from "formik";
 import PropTypes from "prop-types";
 import {
   useDispatch,
@@ -29,16 +26,18 @@ import {
 import PageHelmet from "../../component/common/Helmet";
 import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import CardInputs from "../../elements/inputs/common/CardInputs";
 import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
 import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
+import {
+  PurchaseAddOns,
+  PurchaseAdditionalInformation,
+} from "../../elements/purchase/PurchaseFormOptions";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
-import FormExtras from "../../elements/ui/forms/FormExtras";
 import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
 import Loader from "../../elements/ui/loading/Loader";
 import ImageFb from "../../elements/ui/media/ImageFb";
@@ -46,8 +45,8 @@ import { useHttpClient } from "../../hooks/common/http-hook";
 import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
 import {
-  estimatePriceByEvent,
   hasAppliedTicketDiscount,
+  ticketPriceAmountByEvent,
 } from "../../util/functions/helpers";
 import {
   appendExtraInputsToForm,
@@ -80,6 +79,14 @@ const buildMemberValidation = (event) => {
   return { schema: validationSchema, schemaFields };
 };
 
+const formatEuro = (value) =>
+  new globalThis.Intl.NumberFormat("en-NL", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+
 // `initialEvent` is seeded from the server render. Unlike the guest flow this
 // screen still waits for `currentUser`: membership pricing depends on the
 // logged-in account, whose JWT lives in localStorage and is unavailable to the
@@ -94,6 +101,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [{ schema, schemaFields }, setValidation] = useState(() =>
     buildMemberValidation(initialEvent)
   );
@@ -108,12 +116,13 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const controller = new AbortController();
     setLoadingPage(true);
 
     const fetchCurrentUser = async () => {
       try {
-        const responseData = await sendRequest(`user/current`);
-        setCurrentUser(responseData.user);
+        const responseData = await sendRequest("user/current", "GET", null, {}, true, false, { signal: controller.signal });
+        if (!controller.signal.aborted && responseData?.user) setCurrentUser(responseData.user);
       } catch (err) {
         // do nothing
       }
@@ -126,8 +135,11 @@ const MemberPurchase = ({ initialEvent = null }) => {
           "GET",
           null,
           {},
-          false
+          false,
+          false,
+          { signal: controller.signal }
         );
+        if (controller.signal.aborted || !responseData?.event) return;
         setSelectedEvent(responseData.event);
         setEventClosed(!responseData.status);
 
@@ -135,12 +147,13 @@ const MemberPurchase = ({ initialEvent = null }) => {
       } catch (err) {
         // do nothing
       } finally {
-        setLoadingPage(false);
+        if (!controller.signal.aborted) setLoadingPage(false);
       }
     };
 
     fetchCurrentUser();
     getEventDetails();
+    return () => controller.abort();
   }, [eventRecordId, sendRequest]);
 
   if (loadingPage || !currentUser) {
@@ -157,25 +170,35 @@ const MemberPurchase = ({ initialEvent = null }) => {
     return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />;
   }
 
-  const displayedTicketPrice = estimatePriceByEvent(
+  const baseTicketPrice = ticketPriceAmountByEvent(
     selectedEvent,
     { ...currentUser, session: user.session ?? "" },
-    {
-      withIncludedText: false,
-      blockDiscounts: alreadyRegistered,
-      withMemberBadge: true,
-    }
+    { blockDiscounts: alreadyRegistered }
   );
+  const addOnTotal = selectedAddOns.reduce(
+    (total, item) => total + (Number(item?.price) || 0),
+    0
+  );
+  const checkoutTotal = baseTicketPrice === null
+    ? null
+    : baseTicketPrice + addOnTotal;
+  const displayedTicketPrice = checkoutTotal === null
+    ? "TBA"
+    : checkoutTotal === 0
+      ? "Free"
+      : (
+        <span className="purchase-total-price" key={checkoutTotal} aria-live="polite" aria-atomic="true">
+          {formatEuro(checkoutTotal)}
+        </span>
+      );
   const discountApplied = hasAppliedTicketDiscount(
     selectedEvent,
     { ...currentUser, session: user.session ?? "" },
     { blockDiscounts: alreadyRegistered }
   );
-  const checkoutActionLabel =
-    selectedEvent.isFree ||
-    (selectedEvent.isMemberFree && !alreadyRegistered)
-      ? "Get ticket"
-      : "Proceed to payment";
+  const checkoutActionLabel = checkoutTotal === 0
+    ? "Get ticket"
+    : "Proceed to payment";
 
   return (
     <Fragment>
@@ -197,6 +220,8 @@ const MemberPurchase = ({ initialEvent = null }) => {
           key={selectedEvent.id}
           event={selectedEvent}
           price={displayedTicketPrice}
+          ticketQuantity={1}
+          selectedAddOns={selectedAddOns}
         />
         <div className="container purchase-page-container">
           <header className="purchase-page-header">
@@ -221,6 +246,9 @@ const MemberPurchase = ({ initialEvent = null }) => {
               }
               showMemberPriceComparison={false}
               usesMemberPrice={!alreadyRegistered}
+              ticketQuantity={1}
+              ticketUnitPrice={baseTicketPrice}
+              selectedAddOns={selectedAddOns}
             />
             <div className="purchase-sponsor">
               <SponsoredBySmall />
@@ -305,51 +333,15 @@ const MemberPurchase = ({ initialEvent = null }) => {
           >
             {({ values, setFieldValue }) => (
               <Form id="form" encType="multipart/form-data" className="purchase-form">
-                {selectedEvent.extraInputsForm?.length > 0 && (
-                  <div className="col-12">
-                    <div className="purchase-form-heading">
-                      <h2>Additional information</h2>
-                    </div>
-                    <FormExtras inputs={selectedEvent.extraInputsForm} />
-                  </div>
-                )}
-                {selectedEvent?.addOns?.isEnabled &&
-                  selectedEvent.addOns?.items?.length > 0 && (
-                    <div className="col-12" data-field-name="addOns">
-                      <h3
-                        className="text-center mb--20 type-subheading"
-                      >
-                        {selectedEvent.addOns.title}
-                        {selectedEvent.addOns?.isMandatory && (
-                          <span style={{ color: "#dc3545" }}> *</span>
-                        )}
-                      </h3>
-                      <p
-                        className="text-center mb--30 "
-                        style={{ color: "#666" }}
-                      >
-                        {selectedEvent.addOns?.isMandatory && (
-                          <span style={{ color: "#dc3545" }}>
-                            *Required - {" "}
-                          </span>
-                        )}
-                        {selectedEvent.addOns?.multi
-                          ? "You can add one or more"
-                          : "You can add only one"}
-                      </p>
-                      <CardInputs
-                        multi={selectedEvent.addOns?.multi}
-                        items={selectedEvent.addOns?.items}
-                        values={values.addOns}
-                        onSelect={(value) => setFieldValue("addOns", value)}
-                      />
-                      <ErrorMessage
-                        className="error center_text"
-                        name="addOns"
-                        component="div"
-                      />
-                    </div>
-                  )}
+                <PurchaseAdditionalInformation inputs={selectedEvent.extraInputsForm || []} />
+                <PurchaseAddOns
+                  addOns={selectedEvent.addOns}
+                  values={values.addOns}
+                  onSelect={(value) => {
+                    setSelectedAddOns(value);
+                    setFieldValue("addOns", value);
+                  }}
+                />
 
                 <div className="col-12">
                   {alreadyRegistered && (

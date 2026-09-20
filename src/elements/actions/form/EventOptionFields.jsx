@@ -23,22 +23,22 @@ export function OptionDate({ name, label, required = false }) {
   const { setFieldValue } = useFormikContext();
   return <div className="rn-form-group" data-custom-validation-field data-field-name={name}>
     <label>{label}{required ? " *" : ""}</label>
-    <CalendarWithClock name={name} mode="single" locale="en-nl" placeholder={label} captionLayout="dropdown" initialValue={field.value} onSelect={value => setFieldValue(name, value)} />
+    <CalendarWithClock name={name} mode="single" locale="en-nl" captionLayout="dropdown" initialValue={field.value} onSelect={value => setFieldValue(name, value)} />
     <OptionError name={name} />
   </div>;
 }
 OptionDate.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, required: PropTypes.bool };
 
-export function OptionSwitch({ name, label }) {
+export function OptionSwitch({ name, label, className = "" }) {
   const id = useId();
   const [field, , helpers] = useField(name);
   const checked = field.value === true || field.value === "true";
-  return <div className="event-ticket-switch-row">
+  return <div className={`event-ticket-switch-row${className ? ` ${className}` : ""}`}>
     <label htmlFor={id}>{label}</label>
     <button id={id} name={name} type="button" role="switch" aria-checked={checked} className="event-ticket-switch" onClick={() => helpers.setValue(!checked, false)}><span aria-hidden="true" /></button>
   </div>;
 }
-OptionSwitch.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired };
+OptionSwitch.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, className: PropTypes.string };
 
 function Reveal({ children, id }) {
   const present = useIsPresent();

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { relatedEventOptions, relatedEventLink, isRelatedEventSelected, visibleRelatedEvents } from '../src/util/functions/related-events.mjs';
+import { eventLinkRegion, relatedEventOptions, relatedEventLink, isRelatedEventSelected, visibleRelatedEvents } from '../src/util/functions/related-events.mjs';
 
 test('recommendations exclude the current event, drafts and archived events across merged lists', () => {
   const event = { id: 'dinner', region: 'amsterdam', title: 'Dinner' };
@@ -9,7 +9,7 @@ test('recommendations exclude the current event, drafts and archived events acro
 test('selecting an event creates the existing public-link payload and detects saved ID or slug links', () => {
   const event = { id: '123', slug: 'spring-dinner', title: 'Spring dinner', region: 'amsterdam' };
   const link = relatedEventLink(event, 'https://www.bulgariansociety.nl');
-  assert.deepEqual(link, { name: 'Spring dinner', href: 'https://www.bulgariansociety.nl/amsterdam/event-details/123' });
+  assert.deepEqual(link, { name: 'Spring dinner', href: 'https://www.bulgariansociety.nl/amsterdam/event-details/123', poster: '' });
   assert.equal(isRelatedEventSelected(event, [link]), true);
   assert.equal(isRelatedEventSelected(event, [{ href: 'https://kanatitsa.bulgariansociety.nl/amsterdam/event-details/spring-dinner' }]), true);
   assert.equal(isRelatedEventSelected(event, [{ href: 'invalid' }]), false);
@@ -31,4 +31,13 @@ test('search can find events outside the first three recommendations', () => {
   const events = Array.from({ length: 5 }, (_, index) => ({ id: String(index), title: `Event ${index}`, region: 'groningen' }));
   assert.deepEqual(visibleRelatedEvents(events, 'groningen', 'event 4').map(event => event.id), ['4']);
   assert.deepEqual(visibleRelatedEvents(events, 'groningen', 'not found'), []);
+});
+
+test('identical recommendation slugs in different regions remain distinct', () => {
+  const href = 'https://www.bulgariansociety.nl/groningen/event-details/spring-dinner';
+  const event = { id: '123', slug: 'spring-dinner', region: 'amsterdam' };
+  assert.equal(eventLinkRegion(href), 'groningen');
+  assert.equal(eventLinkRegion('invalid'), '');
+  assert.equal(isRelatedEventSelected(event, [{ href }]), false);
+  assert.equal(isRelatedEventSelected({ ...event, region: 'groningen' }, [{ href }]), true);
 });

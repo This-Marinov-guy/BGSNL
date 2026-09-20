@@ -46,6 +46,11 @@ const AppModal = ({
   const titleId = useId();
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -69,7 +74,7 @@ const AppModal = ({
 
     const previouslyFocused = document.activeElement;
     const handleKeyDown = (event) => {
-      if (event.key === "Escape" && closable) onClose?.();
+      if (event.key === "Escape" && closable) onCloseRef.current?.();
 
       if (event.key === "Tab") {
         const focusable = Array.from(
@@ -105,7 +110,7 @@ const AppModal = ({
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocused?.focus?.({ preventScroll: true });
     };
-  }, [closable, onClose, open, suspended]);
+  }, [closable, open, suspended]);
 
   useEffect(() => {
     if (!open || !modal || !blockScroll) return undefined;

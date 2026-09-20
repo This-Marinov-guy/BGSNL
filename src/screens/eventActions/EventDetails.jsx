@@ -22,6 +22,7 @@ import {
 } from "@/util/navigation";
 import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
+import EventRecommendationsBanner from "../../elements/banners/EventRecommendationsBanner";
 import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
 import BillingStatusBanner, {
   BillingStatusBannerSkeleton,
@@ -74,24 +75,26 @@ const EventDetails = ({ initialEvent = null }) => {
   const { loading, sendRequest } = useHttpClient();
 
   useEffect(() => {
-    const getEventDetails = async () => {
-      try {
-        const responseData = await sendRequest(
-          `event/event-details/${eventRecordId}`,
-          "GET",
-          null,
-          {},
-          false
-        );
-        setSelectedEvent(responseData.event);
-        setEventClosed(!responseData.status);
-      } catch (err) {
-        // The server-rendered event remains available if the live refresh fails.
-      }
+    const controller = new AbortController();
+    const refreshEvent = async () => {
+      const responseData = await sendRequest(
+        `event/event-details/${encodeURIComponent(eventRecordId)}?region=${encodeURIComponent(region)}`,
+        "GET",
+        null,
+        {},
+        false,
+        false,
+        { signal: controller.signal }
+      );
+      // Keep server-rendered content on failure, and ignore an obsolete request.
+      if (controller.signal.aborted || !responseData?.event) return;
+      setSelectedEvent(responseData.event);
+      setEventClosed(!responseData.status);
     };
 
-    getEventDetails();
-  }, [eventRecordId, sendRequest]);
+    refreshEvent();
+    return () => controller.abort();
+  }, [eventRecordId, region, sendRequest]);
 
   // Only fall back to the loader when there is nothing to show yet — otherwise
   // the mount-time refetch would replace server-rendered content with a spinner.
@@ -395,23 +398,9 @@ const EventDetails = ({ initialEvent = null }) => {
                     {selectedEvent.text}
                   </p>
 
-                  {selectedEvent?.subEvent?.description &&
-                    selectedEvent?.subEvent?.links?.length > 0 && (
-                      <div className="event-related-links">
-                        <h4>{selectedEvent.subEvent.description}</h4>
-                        <div>
-                          {selectedEvent.subEvent.links.map((link, idx) => (
-                            <a
-                              key={idx}
-                              href={link.href}
-                              className="rn-button-style--2 rn-btn-green rn-btn-small "
-                            >
-                              {link.name}
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+      <EventRecommendationsBanner key={eventRecordId} eventId={String(eventRecordId)} heading={selectedEvent.subEvent?.description} links={selectedEvent.subEvent?.links || []} />
+
+
                 </div>
               </section>
             </div>

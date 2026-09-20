@@ -135,10 +135,26 @@
   border: 0;
   border-radius: 10px;
   cursor: zoom-in;
-  display: block;
+  display: grid;
+  place-items: center;
   padding: 0;
   position: relative;
   width: 100%;
+}
+
+/* The frame is measured from the loaded image, so the hover backdrop never
+ * becomes a differently shaped box around portrait or landscape media. */
+.media-trigger__frame {
+  display: block;
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.media-trigger__frame > img {
+  display: block;
 }
 
 .media-trigger__overlay {

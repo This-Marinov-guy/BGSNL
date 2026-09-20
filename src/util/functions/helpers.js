@@ -160,6 +160,21 @@ const selectTicketTier = (product, buyerState) => {
   return guestPrice !== null ? product.guest : null;
 };
 
+export const ticketPriceAmountByEvent = (
+  selectedEvent,
+  user = {},
+  { blockDiscounts = false } = {}
+) => {
+  const buyerState = ticketBuyerState(user, { blockDiscounts });
+  if (selectedEvent?.isFree || (buyerState.isMember && selectedEvent?.isMemberFree)) {
+    return 0;
+  }
+
+  return ticketPriceValue(
+    selectTicketTier(selectedEvent?.product, buyerState)?.price
+  );
+};
+
 export const estimatePriceByEvent = (
   selectedEvent,
   user = {},

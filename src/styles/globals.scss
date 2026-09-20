@@ -1579,6 +1579,30 @@ form[data-validation-submitted="true"]
   line-height: 1.4;
 }
 
+/* Keep every reported validation error visible, including native controls in
+ * administrative forms that do not use Formik's submit marker. */
+form :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea)[aria-invalid="true"],
+form :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea):invalid,
+form .has-validation-error :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea),
+form .has-validation-error:is(.p-select, .p-datepicker, .phone_code) {
+  border-color: #9e0d33 !important;
+  border-width: 2px !important;
+}
+
+form .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label,
+form .rn-form-group:has(:is(input, select, textarea):invalid) > label,
+form .has-validation-error > label,
+form .has-validation-error label {
+  background-color: #9e0d33 !important;
+  color: #fff !important;
+}
+
+form .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label *,
+form .rn-form-group:has(:is(input, select, textarea):invalid) > label *,
+form .has-validation-error label * {
+  color: inherit !important;
+}
+
 /*
  * Global notifications rendered by react-hot-toast. Colours and icon come from
  * the library options in src/layouts/MainLayout.jsx; only what the options

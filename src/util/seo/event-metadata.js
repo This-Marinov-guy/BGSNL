@@ -18,8 +18,8 @@ import {
 
 export { SITE_URL, absoluteUrl, stripHtml, toMetadata, truncateText };
 
-export async function buildEventMetadata(eventId, path, initialEvent = null) {
-  const event = initialEvent || await getEventDetails(eventId);
+export async function buildEventMetadata(eventId, path, initialEvent = null, region) {
+  const event = initialEvent || await getEventDetails(eventId, region);
 
   if (!event) {
     return toMetadata({ path, type: "event" });
