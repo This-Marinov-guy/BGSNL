@@ -5,6 +5,7 @@ export const validPaymentToken = (value) => typeof value === "string" && /^[a-f0
 export const paymentCookieName = (checkout) => validCheckout(checkout) ? `${PAYMENT_COOKIE_PREFIX}${checkout}` : null;
 export const paymentPage = (status) => status === "success" ? "/success" : status === "processing" ? "/payment/pending" : "/fail";
 export const paymentPageUrl = (result) => `${paymentPage(result.status)}?checkout=${result.checkout}`;
+export const awaitingAccount = (result) => result?.kind === "subscription" && result.status === "success" && result.accountReady !== true;
 export function isStripeDocumentUrl(value) {
   try {
     const url = new URL(value);
@@ -14,6 +15,7 @@ export function isStripeDocumentUrl(value) {
 }
 export function publicPaymentResult(result) {
   return { status: result.status, kind: result.kind, amount: result.amount, currency: result.currency,
+    accountReady: result.accountReady === true, isSignup: result.isSignup === true,
     date: result.date, items: result.items, reference: result.reference, returnPath: result.returnPath, refunded: result.refunded,
     transactionId: result.transactionId, paymentIntentId: result.paymentIntentId,
     hasInvoice: Boolean(result.invoiceUrl), hasReceipt: Boolean(result.receiptUrl), canResume: Boolean(result.retryUrl) };

@@ -3,6 +3,7 @@ import TicketComponent from "@/screens/private/TicketComponent";
 import TicketPlayground from "@/screens/private/TicketPlayground";
 import WhatsNewPreview from "@/screens/private/WhatsNewPreview";
 import PaymentResultPreview from "@/screens/private/PaymentResultPreview";
+import WalletCardPreview from "@/screens/private/WalletCardPreview";
 
 /**
  * The old SPA registered /test and /playground only when !isProd().
@@ -15,6 +16,7 @@ import PaymentResultPreview from "@/screens/private/PaymentResultPreview";
  * a dynamic segment at the root would collide with (site)/[region].
  */
 const SCREENS = {
+  "wallet-card": WalletCardPreview,
   test: TicketComponent,
   playground: TicketPlayground,
   "whats-new": WhatsNewPreview,

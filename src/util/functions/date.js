@@ -1,4 +1,7 @@
-import moment from "moment";
+import moment from "moment-timezone";
+
+const EVENT_TIME_ZONE = "Europe/Amsterdam";
+const eventMoment = (value) => moment.tz(value, EVENT_TIME_ZONE).locale("en");
 
 export const MOMENT_DATE_TIME_YEAR = "Do MMM YYYY h:mm a";
 export const MOMENT_DATE_TIME = "Do MMM h:mm a";
@@ -7,8 +10,10 @@ export const MOMENT_DATE = "Do MMM";
 export const EVENT_DATE_TIME = "Do MMM HH:mm";
 
 export const getEventDateTimePresentation = (date, correctedDate) => {
-  const original = moment(date);
-  const correction = moment(correctedDate);
+  // Public event labels must match during SSR and hydration, regardless of the
+  // server or visitor's timezone and Moment's global locale.
+  const original = eventMoment(date);
+  const correction = eventMoment(correctedDate);
   const hasOriginal = Boolean(date) && original.isValid();
   const hasCorrection = Boolean(correctedDate) && correction.isValid();
   const isUpdated =
@@ -29,23 +34,15 @@ export const getEventDateTimePresentation = (date, correctedDate) => {
 };
 
 // Format used for "updated" / corrected event date+time. Renders in the
-// reader's local timezone so each user sees the moment in their own time.
+// event's Amsterdam timezone, consistently on the server and in the browser.
 export const CORRECTED_DATE_TIME = "DD - MM hh:mm a";
 
-// Stringly-typed ISO/Date input → "DD - MM hh:mm a" in the viewer's local TZ.
+// Stringly-typed ISO/Date input → "DD - MM hh:mm a" in the event's timezone.
 // Returns "" when the input is missing or unparseable.
 export const formatCorrectedDateTime = (value) => {
   if (!value) return "";
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return "";
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  let h = d.getHours();
-  const ampm = h >= 12 ? "pm" : "am";
-  h = h % 12 || 12;
-  const hh = String(h).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
-  return `${dd} - ${mm} ${hh}:${min} ${ampm}`;
+  const date = eventMoment(value);
+  return date.isValid() ? date.format(CORRECTED_DATE_TIME) : "";
 };
 
 export const dateConvertor = (date, time, getAsValue = false) => {

@@ -14,6 +14,7 @@ import BillingActions from "@/elements/subscriptions/BillingActions";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
 import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
 import UserTabHeader from "./UserTabHeader";
+import WalletSettings from "@/elements/wallet/WalletSettings";
 
 const SETTINGS_PRIMARY_ACTION =
   "settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small";
@@ -97,6 +98,7 @@ const SettingsTab = ({ user }) => {
                 icon={<FaCog />}
                 title="Billing"
               />
+              <WalletSettings user={user} />
             </ul>
           </section>
 

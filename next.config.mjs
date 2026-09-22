@@ -13,6 +13,7 @@ const privateIndexingHeaders = [
 ];
 
 const privateRouteSources = [
+  "/c/:path*",
   "/user/:path*",
   "/login",
   "/signup",
@@ -83,7 +84,7 @@ const nextConfig = {
           ...(source === "/login" || source.startsWith("/user")
             ? [{ key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" }]
             : []),
-          ...(source.startsWith("/user") || ["/success", "/fail", "/donation/success", "/payment/:path*"].includes(source)
+          ...(source.startsWith("/user") || ["/c/:path*", "/success", "/fail", "/donation/success", "/payment/:path*"].includes(source)
             ? [{ key: "Cache-Control", value: "private, no-store" }]
             : []),
         ],

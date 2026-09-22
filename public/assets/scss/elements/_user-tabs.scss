@@ -667,6 +667,19 @@
     }
   }
 
+  .internships-tab-view {
+    .p-tablist {
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .p-tablist-end {
+      flex: 0 1 22rem;
+      padding-right: 0.25rem;
+      width: min(36%, 22rem);
+    }
+  }
+
   .tab-body {
     padding: 0;
   }
@@ -1015,6 +1028,24 @@
 
       .tab-title {
         font-size: clamp(1.65rem, 12vw, 2.25rem);
+      }
+    }
+
+    .internships-tab-view {
+      .p-tablist {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0.7rem;
+        padding-bottom: 0.7rem;
+      }
+
+      .p-tablist-content,
+      .p-tablist-end {
+        width: 100%;
+      }
+
+      .p-tablist-end {
+        padding: 0 0.15rem;
       }
     }
 

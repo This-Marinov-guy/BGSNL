@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import styles from "./image-gallery.module.scss";
 import { getTooltipContainer, getTooltipPosition } from "../tooltip-position.mjs";
 
-export default function ImageTooltip({ label, children }) {
+export default function ImageTooltip({ label, children, openOnClick = false }) {
   const id = useId();
   const [position, setPosition] = useState(null);
   const hide = () => setPosition(null);
@@ -39,10 +39,10 @@ export default function ImageTooltip({ label, children }) {
       onFocus: show,
       onBlur: hide,
       onKeyDown: (event) => { if (event.key === "Escape") hide(); children.props.onKeyDown?.(event); },
-      onClick: (event) => { hide(); children.props.onClick?.(event); },
+      onClick: (event) => { if (openOnClick) show(event); else hide(); children.props.onClick?.(event); },
     })}
     {position && createPortal(<span id={id} role="tooltip" className={styles.tooltip} style={position.style}>{label}</span>, position.container)}
   </>;
 }
 
-ImageTooltip.propTypes = { label: PropTypes.string.isRequired, children: PropTypes.element.isRequired };
+ImageTooltip.propTypes = { label: PropTypes.string.isRequired, children: PropTypes.element.isRequired, openOnClick: PropTypes.bool };

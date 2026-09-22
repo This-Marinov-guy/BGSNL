@@ -64,81 +64,136 @@ const InternshipCard = (props) => {
   };
 
   return (
-    <div className="intern-card border-1 mt--10 mr--10" style={{ padding: "20px", borderRadius: "12px" }}>
+    <div
+      className="intern-card border-1 mt--10 mr--10"
+      style={{ padding: "20px", borderRadius: "12px" }}
+    >
       {/* Header Section with Logo and Company Info */}
-      <div className="d-flex justify-content-between align-items-start mb--20" style={{ gap: "15px" }}>
-        <div style={{ flex: "0 0 auto", maxWidth: "120px" }}>
+      {label && (
+        <span
+          style={{
+            backgroundColor: "#e0f2fe",
+            color: "#0c4a6e",
+            borderRadius: "9999px",
+            padding: "4px 12px",
+            textTransform: "uppercase",
+            textAlign: 'center',
+            marginBottom: '10px',
+            letterSpacing: "0.5px",
+          }}
+        >
+          {label}
+        </span>
+      )}
+      <div
+        className="d-flex justify-content-between align-items-start mb--20"
+        style={{ gap: "15px" }}
+      >
+        <div style={{ flex: "0 0 auto", maxWidth: "120px", margin: 'auto' }}>
           <img
-            src={
-              logo ||
-              FALLBACK_INTERNSHIP_IMAGE
-            }
+            src={logo || FALLBACK_INTERNSHIP_IMAGE}
             className={"responsive_img " + (logoClass || "")}
             alt="Company Logo"
-            style={{ width: "100%", height: "auto", objectFit: "contain", maxHeight: "80px" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              objectFit: "contain",
+              maxHeight: "80px",
+            }}
           />
         </div>
-        <div className="d-flex flex-column align-items-end justify-content-center" style={{ flex: "1 1 auto" }}>
+
+        <div
+          className="d-flex flex-column align-items-end justify-content-center"
+          style={{ flex: "1 1 auto" }}
+        >
           <h3 className="mb--5">{company}</h3>
-          <div className="d-flex align-items-center justify-content-end" style={{ gap: "8px", marginBottom: "8px" }}>
-            <div style={{ backgroundColor: "#10b981", width: "8px", height: "8px", borderRadius: "50%" }} />
-            <h5 className="text-break mb--0" style={{ maxWidth: "12em" }}>
+          <div
+            className="d-flex align-items-center justify-content-end"
+            style={{ gap: "8px", marginBottom: "8px" }}
+          >
+            <h5
+              className="text-break mb--0"
+              style={{ maxWidth: "12em", textAlign: "right" }}
+            >
               {specialty}
             </h5>
           </div>
-          {label && (
-            <span
-              style={{
-                backgroundColor: "#e0f2fe",
-                color: "#0c4a6e",
-                borderRadius: "9999px",
-                padding: "4px 12px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px"
-              }}
-            >
-              {label}
-            </span>
-          )}
         </div>
       </div>
 
       {/* Quick Info Pills */}
       <div className="d-flex flex-wrap mb--15" style={{ gap: "10px" }}>
-        <div className="bg-1" style={{ padding: "10px 15px", borderRadius: "8px", flex: "1 1 auto", minWidth: "140px" }}>
+        <div
+          className="bg-1"
+          style={{
+            padding: "10px 15px",
+            borderRadius: "8px",
+            flex: "1 1 auto",
+            minWidth: "140px",
+          }}
+        >
           <h6 style={titleStyle}>Location</h6>
           <p style={textStyle}>{location}</p>
         </div>
 
-        <div className="bg-1" style={{ padding: "10px 15px", borderRadius: "8px", flex: "1 1 auto", minWidth: "140px" }}>
+        <div
+          className="bg-1"
+          style={{
+            padding: "10px 15px",
+            borderRadius: "8px",
+            flex: "1 1 auto",
+            minWidth: "140px",
+          }}
+        >
           <h6 style={titleStyle}>Duration</h6>
           <p style={textStyle}>{duration}</p>
         </div>
 
-        <div className="bg-1" style={{ padding: "10px 15px", borderRadius: "8px", flex: "1 1 auto", minWidth: "140px" }}>
+        <div
+          className="bg-1"
+          style={{
+            padding: "10px 15px",
+            borderRadius: "8px",
+            flex: "1 1 auto",
+            minWidth: "140px",
+          }}
+        >
           <h6 style={titleStyle}>Benefits</h6>
           <p style={textStyle}>{bonuses}</p>
         </div>
       </div>
 
       {/* Detailed Information Sections */}
-      <div className="bg-1 mb--10" style={{ padding: "15px", borderRadius: "8px" }}>
+      <div
+        className="bg-1 mb--10"
+        style={{ padding: "15px", borderRadius: "8px" }}
+      >
         <h6 style={titleStyle}>Description</h6>
         <p style={textStyle}>{description}</p>
       </div>
 
-      <div className="bg-1 mb--10" style={{ padding: "15px", borderRadius: "8px" }}>
+      <div
+        className="bg-1 mb--10"
+        style={{ padding: "15px", borderRadius: "8px" }}
+      >
         <h6 style={titleStyle}>Requirements</h6>
         <p style={textStyle}>{requirements}</p>
       </div>
 
-      <div className="bg-1 mb--15" style={{ padding: "15px", borderRadius: "8px" }}>
+      <div
+        className="bg-1 mb--15"
+        style={{ padding: "15px", borderRadius: "8px" }}
+      >
         <h6 style={titleStyle}>Languages</h6>
         <p style={textStyle}>{languages}</p>
       </div>
 
       {/* Action Buttons */}
-      <div className="d-flex flex-column" style={{ gap: "10px", marginTop: "auto" }}>
+      <div
+        className="d-flex flex-column"
+        style={{ gap: "10px", marginTop: "auto" }}
+      >
         <a
           href={website}
           target="_blank"
@@ -154,16 +209,28 @@ const InternshipCard = (props) => {
             <button
               onClick={handleApplyClick}
               className="rn-button-style--2 rn-btn-solid-red"
-              style={{ width: "100%", textAlign: "center", padding: "12px 24px", border: "none", cursor: "pointer" }}
+              style={{
+                width: "100%",
+                textAlign: "center",
+                padding: "12px 24px",
+                border: "none",
+                cursor: "pointer",
+              }}
             >
-              {hasExternalApplyLink ? "Apply Externally" : "Apply for Internship"}
+              {hasExternalApplyLink
+                ? "Apply Externally"
+                : "Apply for Internship"}
             </button>
           </>
         )}
 
         {isPreview && (
           <div className="preview-notice">
-            <p style={{ margin: 0 }}><strong>Join our community to apply for this and other opportunities</strong></p>
+            <p style={{ margin: 0 }}>
+              <strong>
+                Join our community to apply for this and other opportunities
+              </strong>
+            </p>
           </div>
         )}
       </div>

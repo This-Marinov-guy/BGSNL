@@ -40,6 +40,7 @@
 .listHeading, .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .6rem; }
 .listHeading { h3 { flex: 1; } }
 .empty { display: grid; justify-items: start; gap: 1rem; padding: 2rem .25rem; color: #50665b; svg { color: var(--site-thread-primary); } }
+.emptyHeading { display: flex; align-items: center; gap: .75rem; min-width: 0; svg { flex-shrink: 0; } span { min-width: 0; } }
 .reportList { display: grid; gap: .75rem; list-style: none; padding: 0; margin: 0; li { margin: 0; } }
 .reportItem { width: 100%; display: grid; gap: .6rem; padding: 1rem; text-align: left; background: #f5f6f1; border-radius: .75rem; color: #253c33; overflow-wrap: anywhere; &:hover { background: #eaf1ec; transform: translateY(-1px); } &:active { transform: translateY(0); } }
 .status { display: inline-flex; align-items: center; gap: .4rem; color: #476250; &::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; } &[data-status="waiting_for_you"] { color: #9e0d33; } &[data-status="closed"] { color: #69716b; } }
@@ -119,3 +120,6 @@
   .inboxPage .composer { padding-right: calc(5rem + env(safe-area-inset-right)); }
 }
 @media (prefers-reduced-motion: reduce) { .widgetPanel, .launcher, .reportItem, .iconButton, .textButton { transition: none; } .skeleton { animation: none; } }
+
+.newActions { display: flex; flex-wrap: wrap; gap: .5rem; min-width: 0; button { max-width: 100%; white-space: normal; } }
+.requestType { color: var(--site-thread-primary); font-weight: 600; }

@@ -140,6 +140,16 @@ a {
       }
     }
 
+    &.rn-btn-red {
+      border: 2px solid $theme-color-3;
+      background: transparent;
+      color: $theme-color-3;
+      &:hover:not(:disabled) {
+        background: $theme-color-3;
+        color: #fff;
+      }
+    }
+
     &.rn-btn-gold {
       border: 2px solid #e5b80b;
       color: #e5b80b;

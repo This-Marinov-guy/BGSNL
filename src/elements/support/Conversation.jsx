@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import AnimatedDisclosure from "../ui/functional/AnimatedDisclosure";
 import { IconlyArrowLeft, IconlyClose, IconlyImage, IconlyScreenshot, IconlySend } from "@/elements/ui/icons/IconlyIcons";
 import { supportRequest } from "./support-api";
-import { mergeConversation, STATUS_LABELS } from "./support-state.mjs";
+import { mergeConversation, STATUS_LABELS, SUPPORT_TYPE_LABELS } from "./support-state.mjs";
 import styles from "./support.module.scss";
 
 const formatTime = (value) => new Date(value).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -180,8 +180,8 @@ export default function Conversation({ id, session, secret, staff, active, onBac
 
   return <section className={styles.conversation} aria-label="Report conversation">
     <div className={styles.threadHeader}>
-      <button className={styles.textButton} type="button" onClick={onBack}><IconlyArrowLeft size="1.25rem" /> {staff ? "Inbox" : "Your reports"}</button>
-      {record && <><h3 className="type-subheading">{record.subject}</h3><div className={styles.row}><span className={styles.status} data-status={record.status}>{STATUS_LABELS[record.status]}</span><small>#{record.reference}</small></div>
+      <button className={styles.textButton} type="button" onClick={onBack}><IconlyArrowLeft size="1.25rem" /> {staff ? "Inbox" : "Your conversations"}</button>
+      {record && <><h3 className="type-subheading">{record.subject}</h3><small className={styles.requestType}>{SUPPORT_TYPE_LABELS[record.type || "problem"]}</small><div className={styles.row}><span className={styles.status} data-status={record.status}>{STATUS_LABELS[record.status]}</span><small>#{record.reference}</small></div>
         {staff && <div className={styles.contact}><strong>{record.contact.name}</strong><span>{record.contact.email || <PhoneActions phone={record.contact.phone} />}</span>{record.contact.email && record.contact.phone && <span><PhoneActions phone={record.contact.phone} /></span>}<small>{record.contact.source === "guest" ? "Guest · contact details not verified" : "Signed-in account"}</small><small>Reported page: {record.pagePath}</small>
           {record.environment && <AnimatedDisclosure className={styles.diagnostics} summary="Device details"><span>{[record.environment.deviceType, record.environment.browser, record.environment.platform].filter(Boolean).join(" · ")}</span>{record.environment.viewport?.width && <span>Viewport: {record.environment.viewport.width} × {record.environment.viewport.height}{record.environment.devicePixelRatio ? ` at ${record.environment.devicePixelRatio}×` : ""}</span>}{record.environment.screen?.width && <span>Screen: {record.environment.screen.width} × {record.environment.screen.height}</span>}{record.environment.timezone && <span>{record.environment.timezone}{record.environment.language ? ` · ${record.environment.language}` : ""}</span>}{record.environment.userAgent && <span className={styles.userAgent}>{record.environment.userAgent}</span>}</AnimatedDisclosure>}
         </div>}

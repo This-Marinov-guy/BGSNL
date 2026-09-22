@@ -1,0 +1,31 @@
+# Build context is Projects/. Only these three checkouts may enter the image.
+**
+!BGSNL website/
+!BGSNL website/BGSNL/
+!BGSNL website/BGSNL/**
+!BGSNL website/BGSNL-API/
+!BGSNL website/BGSNL-API/**
+!Domakin/
+!Domakin/Domakin-Mailer/
+!Domakin/Domakin-Mailer/**
+**/node_modules
+**/.git
+**/.env
+**/.env.*
+**/.npmrc
+**/.next
+**/dist
+**/build
+**/coverage
+**/logs
+**/*.log
+**/.DS_Store
+**/.vercel
+**/.netlify
+**/.tools
+**/reports
+**/*.pem
+**/*.key
+**/*.p12
+**/*service-account*.json
+**/*credentials*.json

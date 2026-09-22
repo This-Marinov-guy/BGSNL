@@ -13,6 +13,7 @@ import {
   IconlyDelete,
   IconlyEdit,
   IconlyExternalLink,
+  IconlyLink,
   IconlyImageOff,
   IconlyTicket,
   FiUsers,
@@ -285,7 +286,7 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
               <span>Edit</span>
             </button>
             {publicEventUrl ? <button className="event-details-modal__action" type="button" onClick={copyPublicEventLink} title="Copy customer event link">
-              <IconlyExternalLink aria-hidden="true" />
+              <IconlyLink aria-hidden="true" />
               <span>Link</span>
             </button> : null}
             {isDraft && event.readyToPublish === true && checkAuthorization(user.session, ACCESS_4) && (

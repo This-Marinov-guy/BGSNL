@@ -12,6 +12,8 @@ import Footer from "@/component/footer/Footer";
 import { FiArrowRight, FiClock, FiDownload, IconlyCopy } from "@/elements/ui/icons/IconlyIcons";
 import { showNotification } from "@/redux/notification";
 import styles from "./payment-result.module.scss";
+import { awaitingAccount } from "@/util/payments/return-policy.mjs";
+import { startPaymentSync } from "@/util/payments/background-sync.mjs";
 
 const money = (amount, currency = "eur") => amount == null ? "—" : new Intl.NumberFormat("en-NL", { style: "currency", currency }).format(amount / 100);
 const messages = {
@@ -20,21 +22,26 @@ const messages = {
   failed: { title: "Let’s try that again", text: "Your payment could not be completed. Return to checkout to review your details or choose another payment method." },
   expired: { title: "This checkout has expired", text: "Your checkout session is no longer available. Start again to review the current availability and price." },
   processing: { title: "Confirming your payment", text: "Your payment is still being confirmed. Please don’t start another checkout. We’ll check for an update automatically." },
-  unavailable: { title: "We’re having trouble checking your payment", text: "This doesn’t mean your payment failed. Please check again before making another payment, or contact us for help." },
+  unavailable: { title: "We’re having trouble checking your payment", text: "This doesn’t mean your payment failed. We’ll keep checking automatically. Please don’t pay again; contact us if you need help." },
 };
 
-export default function PaymentResult({ result, checkout, unavailable = false, documentUnavailable = false }) {
+export default function PaymentResult({ result, checkout, unavailable = false, documentUnavailable = false, autoSync = true }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const [retrying, setRetrying] = useState(false);
+  const [waitExpired, setWaitExpired] = useState(false);
   const retryInFlight = useRef(false);
   const [refreshing, refresh] = useTransition();
+  const refreshInFlight = useRef(false);
+  useEffect(() => { refreshInFlight.current = refreshing; }, [refreshing]);
   const state = unavailable ? "unavailable" : result.status;
   const successful = state === "success";
   const pending = state === "processing";
+  const preparing = !unavailable && awaitingAccount(result);
   const free = successful && result.amount === 0;
   const content = messages[state];
-  const title = free ? "You’re all set" : successful && result.kind === "donation" ? "Thank you for your support" : content.title;
+  const title = preparing ? (free ? "Preparing your account" : "Payment received — preparing your account")
+    : free ? "You’re all set" : successful && result.kind === "donation" ? "Thank you for your support" : content.title;
   const identifier = successful && !free ? result.transactionId
     : !successful && !pending && !unavailable ? result.paymentIntentId : null;
   const identifierLabel = successful ? "Transaction ID" : "Payment Intent ID";
@@ -54,15 +61,19 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
   }, [documentUnavailable, dispatch]);
 
   useEffect(() => {
-    if (!pending) return;
-    let checks = 0;
-    const interval = window.setInterval(() => {
-      if (document.visibilityState !== "visible") return;
-      router.refresh();
-      if (++checks >= 12) window.clearInterval(interval);
-    }, 10000);
-    return () => window.clearInterval(interval);
-  }, [pending, router]);
+    setWaitExpired(false);
+    if (!autoSync || (!pending && !preparing && !unavailable)) return;
+    return startPaymentSync({
+      check: () => refresh(() => router.refresh()),
+      visible: () => document.visibilityState === "visible",
+      busy: () => refreshInFlight.current,
+      onSlow: () => setWaitExpired(true),
+      listen: (handler) => {
+        document.addEventListener("visibilitychange", handler);
+        return () => document.removeEventListener("visibilitychange", handler);
+      },
+    });
+  }, [pending, preparing, unavailable, autoSync, checkout, router]);
 
   const retry = async () => {
     if (retryInFlight.current) return;
@@ -83,7 +94,7 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
 
   const eventDestination = ["ticket", "free"].includes(result?.kind) && result?.returnPath
     ? result.returnPath.replace("/purchase-ticket/", "/event-details/") : null;
-  const destination = successful && result?.kind === "subscription" ? "/user?billing=return#settings"
+  const destination = preparing ? null : successful && result?.kind === "subscription" ? "/user?billing=return#settings"
     : eventDestination || result?.returnPath;
 
   return <>
@@ -91,27 +102,31 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
     <main className={styles.page}>
       <section className={styles.panel} aria-labelledby="payment-result-title" data-state={state}>
         <div className={styles.message}>
-          <div className={styles.heading}>
+          <div key={`${state}-${preparing}`} className={`${styles.heading} ${styles.stateTransition}`}>
             <div className={styles.icon} aria-hidden="true">
-              {unavailable || pending ? <FiClock size={56} /> : <img src={`/assets/icons/svgs/${successful ? "success" : "fail"}.svg`} width="56" height="56" alt="" />}
+              {unavailable || pending || preparing ? <FiClock size={56} /> : <img src={`/assets/icons/svgs/${successful ? "success" : "fail"}.svg`} width="56" height="56" alt="" />}
             </div>
             <h1 id="payment-result-title">{title}</h1>
           </div>
           <p className={styles.description}>{free ? result.kind === "subscription" ? "Your membership checkout is confirmed. No payment was due today." : "Your booking is confirmed. No payment was required." : content.text}</p>
           {successful && ["ticket", "free"].includes(result.kind) && <p>Your ticket confirmation will arrive by email. Check your spam folder too.</p>}
-          {successful && result.kind === "subscription" && <p>Your account will update once payment processing is complete. You can review your membership in account settings.</p>}
+          {successful && result.kind === "subscription" && <div role="status" aria-live="polite" aria-atomic="true">
+            <p key={preparing ? "preparing" : "ready"} className={styles.stateTransition}>{preparing ? waitExpired
+              ? "Account setup is taking longer than expected. We’re still checking automatically—please don’t pay again. You can contact our team with your reference."
+              : "We’re finishing your account and membership card. You don’t need to do anything—this page will update when everything is ready."
+              : "Your account and membership card are ready."}</p>
+          </div>}
 
           <div className={styles.actions}>
             {successful ? <>
               {(result.hasInvoice || result.hasReceipt) && <a href={`/payment/document?checkout=${checkout}`} rel="noreferrer" className="rn-button-style--2 rn-btn-reverse-green rn-btn-small">
                 <FiDownload size={24} /> {result.hasInvoice ? "Download invoice" : "View receipt"}
               </a>}
-              {destination && <Link href={destination} className="rn-button-style--2 rn-btn-green rn-btn-small">
-                {result.kind === "subscription" ? "Go to my account" : ["ticket", "free"].includes(result.kind) ? "View event" : "Get in touch"} <FiArrowRight size={24} />
+              {destination && <Link href={destination} className={`rn-button-style--2 rn-btn-green rn-btn-small ${styles.stateTransition}`}>
+                {result.kind === "subscription" ? result.isSignup ? "Continue to login" : "Go to my account" : ["ticket", "free"].includes(result.kind) ? "View event" : "Get in touch"} <FiArrowRight size={24} />
               </Link>}
-            </> : pending || unavailable ? <button type="button" disabled={refreshing} onClick={() => refresh(() => router.refresh())} className="rn-button-style--2 rn-btn-reverse-green rn-btn-small">
-              {refreshing ? "Checking…" : "Check again"}
-            </button> : <button type="button" disabled={retrying} onClick={retry} className="rn-button-style--2 rn-btn-reverse-red rn-btn-small">
+            </> : pending || unavailable ? <p role="status" className={styles.syncStatus}>Checking automatically…</p>
+              : <button type="button" disabled={retrying} onClick={retry} className="rn-button-style--2 rn-btn-reverse-red rn-btn-small">
               {retrying ? "Checking checkout…" : result.canResume ? "Retry checkout" : result.kind === "donation" ? "Contact us to retry" : "Start checkout again"} <FiArrowRight size={24} />
             </button>}
             {!successful && !pending && !unavailable && eventDestination && <Link href={eventDestination} className="rn-button-style--2 rn-btn-green rn-btn-small">
@@ -169,6 +184,6 @@ PaymentResult.propTypes = {
   result: PropTypes.shape({ status: PropTypes.string, kind: PropTypes.string, amount: PropTypes.number, currency: PropTypes.string,
     date: PropTypes.string, items: PropTypes.arrayOf(PropTypes.shape({ description: PropTypes.string, quantity: PropTypes.number, amount: PropTypes.number })),
     reference: PropTypes.string, transactionId: PropTypes.string, paymentIntentId: PropTypes.string, returnPath: PropTypes.string, refunded: PropTypes.number,
-    hasInvoice: PropTypes.bool, hasReceipt: PropTypes.bool, canResume: PropTypes.bool }),
-  checkout: PropTypes.string, unavailable: PropTypes.bool, documentUnavailable: PropTypes.bool,
+    hasInvoice: PropTypes.bool, hasReceipt: PropTypes.bool, canResume: PropTypes.bool, accountReady: PropTypes.bool, isSignup: PropTypes.bool }),
+  checkout: PropTypes.string, unavailable: PropTypes.bool, documentUnavailable: PropTypes.bool, autoSync: PropTypes.bool,
 };

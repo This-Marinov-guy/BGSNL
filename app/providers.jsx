@@ -71,7 +71,7 @@ export default function Providers({ children }) {
   // Maintenance must not start sessions, API requests or modals.
   if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
 
-  if (isEventTicketPage(pathname)) return <Provider store={store}><PrimeSSRProvider><div className="global-site-shell"><GlobalBackground initiallyRevealed /><div className="global-site-content">{children}</div></div></PrimeSSRProvider></Provider>;
+  if (pathname?.startsWith("/c/") || isEventTicketPage(pathname)) return <Provider store={store}><PrimeSSRProvider><div className="global-site-shell"><GlobalBackground initiallyRevealed /><div className="global-site-content">{children}</div></div></PrimeSSRProvider></Provider>;
 
   return (
     <Provider store={store}>

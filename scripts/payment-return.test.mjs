@@ -193,3 +193,13 @@ test("client props never contain receipt capabilities, document URLs or metadata
   assert.equal(result.transactionId, "ch_verified"); assert.equal(result.paymentIntentId, "pi_verified");
   for (const field of ["token", "metadata", "client_secret", "invoiceUrl", "receiptUrl", "retryUrl"]) assert.equal(result[field], undefined);
 });
+
+test("paid membership UI waits for an explicit readiness signal, including older API responses", () => {
+  for (const accountReady of [undefined, false, "true", 1]) {
+    const result = policy.publicPaymentResult({ status: "success", kind: "subscription", accountReady });
+    assert.equal(policy.awaitingAccount(result), true);
+  }
+  assert.equal(policy.awaitingAccount(policy.publicPaymentResult({ status: "success", kind: "subscription", accountReady: true })), false);
+  assert.equal(policy.awaitingAccount({ status: "success", kind: "ticket" }), false);
+  assert.equal(policy.awaitingAccount({ status: "processing", kind: "subscription" }), false);
+});

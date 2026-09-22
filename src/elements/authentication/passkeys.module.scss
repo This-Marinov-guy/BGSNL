@@ -40,9 +40,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  min-width: 2.75rem;
-  height: 2.75rem;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
   padding: 0;
   margin: 0;
 
@@ -51,3 +51,16 @@
     outline-offset: 3px;
   }
 }
+
+.settings .registrationForm {
+  max-width: none;
+  padding-top: 0;
+
+  > :global(.rn-form-group) { min-width: 0; }
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+.formActions { grid-column: 1 / -1; }

@@ -4,6 +4,7 @@ import { TabView, TabPanel } from "@/compat/primereact";
 import { FaBriefcase } from "@/elements/ui/icons/IconlyIcons";
 import Pagination from "../../common/Pagination";
 import InternshipCard from "../cards/InternshipCard";
+import SearchField from "../functional/SearchField";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import UserTabHeader from "./UserTabHeader";
 
@@ -15,6 +16,7 @@ const InternshipsTab = ({
   const { sendRequest } = useHttpClient();
   const [activeIndex, setActiveIndex] = useState(0);
   const [internships, setInternships] = useState([]);
+  const [search, setSearch] = useState("");
 
   // Separate pagination state for each tab
   const [bulgarianFirst, setBulgarianFirst] = useState(0);
@@ -32,9 +34,33 @@ const InternshipsTab = ({
     fetchInternships();
   }, []);
 
-  const bulgarianList = internships.filter((i) => i.label === "Bulgarian");
-  const internationalList = internships.filter(
+  const normalizedSearch = search.trim().toLocaleLowerCase();
+  const filteredInternships = normalizedSearch
+    ? internships.filter((internship) => [
+      internship.company,
+      internship.specialty,
+      internship.location,
+      internship.label,
+      internship.duration,
+      internship.languages,
+      internship.description,
+      internship.bonuses,
+      internship.requirements,
+    ].some((value) => String(value || "").toLocaleLowerCase().includes(normalizedSearch)))
+    : internships;
+  const bulgarianList = filteredInternships.filter((i) => i.label === "Bulgarian");
+  const internationalList = filteredInternships.filter(
     (i) => i.label === "International & Remote"
+  );
+
+  const emptyState = (category) => (
+    <div className="empty-state">
+      <div className="empty-icon" aria-hidden="true">
+        <FaBriefcase size={44} />
+      </div>
+      <h3>{normalizedSearch ? "No matching internships" : `No ${category} internships`}</h3>
+      <p>{normalizedSearch ? "Try another company, position, location or keyword." : "Check back soon for new opportunities."}</p>
+    </div>
   );
 
   const renderList = (list, first, rows, onPageChange) => {
@@ -75,16 +101,35 @@ const InternshipsTab = ({
     setInternationalRows(event.rows);
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setBulgarianFirst(0);
+    setInternationalFirst(0);
+  };
+
   return (
     <div className="tab-content-wrapper">
       <UserTabHeader title="Internships" />
       <div>
         <TabView
           activeIndex={activeIndex}
+          className="internships-tab-view"
+          navigationContent={(
+            <SearchField
+              ariaLabel="Search internships"
+              className="internships-tab-search"
+              name="internship-search"
+              placeholder="Search internships"
+              value={search}
+              onChange={handleSearchChange}
+            />
+          )}
           onTabChange={(e) => setActiveIndex(e.index)}
         >
-          <TabPanel header={`All (${internships.length})`}>
-            {renderList(internships, 0, internships.length, () => {})}
+          <TabPanel header={`All (${filteredInternships.length})`}>
+            {filteredInternships.length > 0
+              ? renderList(filteredInternships, 0, filteredInternships.length, () => {})
+              : emptyState("available")}
           </TabPanel>
           <TabPanel header={`Bulgarian (${bulgarianList.length})`}>
             {bulgarianList.length > 0 ? (
@@ -95,13 +140,7 @@ const InternshipsTab = ({
                 handleBulgarianPageChange
               )
             ) : (
-              <div className="empty-state">
-                <div className="empty-icon" aria-hidden="true">
-                  <FaBriefcase size={44} />
-                </div>
-                <h3>No Bulgarian Internships</h3>
-                <p>Check back soon for new opportunities.</p>
-              </div>
+              emptyState("Bulgarian")
             )}
           </TabPanel>
           <TabPanel
@@ -115,13 +154,7 @@ const InternshipsTab = ({
                 handleInternationalPageChange
               )
             ) : (
-              <div className="empty-state">
-                <div className="empty-icon" aria-hidden="true">
-                  <FaBriefcase size={44} />
-                </div>
-                <h3>No International/Remote Internships</h3>
-                <p>Check back soon for new opportunities.</p>
-              </div>
+              emptyState("international or remote")
             )}
           </TabPanel>
         </TabView>

@@ -9,6 +9,7 @@ import * as cookiesPolicy from "../src/util/auth/cookie-policy.mjs";
 import * as proxyPolicy from "../src/util/auth/proxy-policy.mjs";
 import * as sessionPolicy from "../src/util/auth/browser-session.mjs";
 import * as browserTransport from "../src/util/auth/browser-request.mjs";
+import { walletPacketFromProxy, walletResponseHeaders } from "../src/util/wallet/issuance.mjs";
 
 const origin = "https://www.bulgariansociety.nl", key = "isolated-website-server-key-32-characters-minimum";
 const names = cookiesPolicy.cookieNames(true);
@@ -48,6 +49,49 @@ async function harness({ credential, refresh, upstream = async () => Response.js
   const mutate = async (path, options = {}) => request(path, { method: "POST", ...options, headers: { origin, "sec-fetch-site": "same-origin", "X-CSRF-Token": await csrf(), ...options.headers } });
   return { request, mutate, csrf, calls, jar };
 }
+
+test("both wallet issuers recover the public card identifier after the real proxy strips token", async () => {
+  const packet = { token: "abcdefghijklmnopqrstuv", publicUrl: "https://bulgariansociety.nl/c/abcdefghijklmnopqrstuv",
+    card: { firstName: "Test", surname: "Member", membershipLabel: "Member of Groningen", status: "active" } };
+  for (const provider of ["apple", "google"]) {
+    const h = await harness({ credential: token(), upstream: async () => Response.json(packet) });
+    const proxied = provider === "apple" ? await h.request("user/wallet/apple") : await h.mutate("user/wallet/google");
+    assert.equal((await proxied.clone().json()).token, undefined, "Auth credential filtering stays intact");
+    let signed;
+    const route = await loadModule("src/util/wallet/issue-route.js", {
+      "server-only": {}, "@/util/auth/website-api": { websiteApi: async () => proxied },
+      "./issuance.mjs": { walletPacketFromProxy, walletResponseHeaders,
+        walletReadiness: async () => ({ [provider]: { available: true } }),
+        createApplePass: async (value) => { signed = value; return Buffer.from("PK-fixture"); },
+        createGoogleSaveUrl: async (value) => { signed = value; return "https://pay.google.com/gp/v/save/a.b.c"; } },
+    });
+    const response = await route.issueWallet(new Request(`${origin}/api/user/wallet/${provider}`), provider);
+    assert.equal(response.status, 200);
+    assert.equal(signed.token, packet.token);
+    assert.equal(response.headers.get("content-type"), provider === "apple" ? "application/vnd.apple.pkpass" : "application/json");
+  }
+});
+
+test("Apple navigation failures return to Settings while fetch errors remain JSON", async () => {
+  for (const stage of ["auth", "readiness", "signing", "exception"]) {
+    const route = await loadModule("src/util/wallet/issue-route.js", {
+      "server-only": {}, "@/util/auth/website-api": { websiteApi: async () => {
+        if (stage === "exception") throw new Error("private configuration details");
+        return Response.json({}, { status: stage === "auth" ? 401 : 200, headers: { "Set-Cookie": "fixture=renewed; HttpOnly" } });
+      } },
+      "./issuance.mjs": { walletPacketFromProxy: () => ({}), walletResponseHeaders,
+        walletReadiness: async () => ({ apple: { available: stage !== "readiness" } }),
+        createApplePass: async () => { throw new Error("private signing details"); }, createGoogleSaveUrl: async () => "" },
+    });
+    const response = await route.issueWallet(new Request(`${origin}/api/user/wallet/apple`, { headers: { "sec-fetch-mode": "navigate" } }), "apple");
+    assert.equal(response.status, 303);
+    assert.equal(response.headers.get("location"), `${origin}/user?walletError=${stage === "auth" ? "session" : "prepare"}#settings`);
+    if (stage !== "exception") assert.equal(response.headers.get("set-cookie"), "fixture=renewed; HttpOnly");
+    const fetched = await route.issueWallet(new Request(`${origin}/api/user/wallet/apple`), "apple");
+    assert.equal(fetched.status, stage === "auth" ? 401 : 503);
+    assert.doesNotMatch(await fetched.text(), /private/);
+  }
+});
 
 for (const path of ["security/login", "security/google/login", "security/passkeys/login"]) test(`${path} sets an HttpOnly cookie and never returns a browser bearer token`, async () => {
   const jwt = token();

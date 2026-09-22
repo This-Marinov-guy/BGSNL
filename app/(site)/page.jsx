@@ -9,5 +9,5 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const initialEvents = await getEventsByRegion(REGIONS);
 
-  return <Home initialEvents={initialEvents} />;
+  return <Home initialEvents={initialEvents} initialNow={Date.now()} />;
 }

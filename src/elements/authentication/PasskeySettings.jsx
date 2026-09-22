@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Password } from "@/compat/primereact";
+import { Password, ProgressSpinner } from "@/compat/primereact";
 import { FiLock, IconlyDelete } from "@/elements/ui/icons/IconlyIcons";
 import { refreshSession, selectUser } from "@/redux/user";
 import { announceSessionChange } from "@/util/auth/browser-session.mjs";
@@ -14,6 +14,7 @@ import styles from "./passkeys.module.scss";
 
 const primary = "rn-button-style--2 rn-btn-reverse-green rn-btn-small";
 const danger = "rn-button-style--2 rn-btn-reverse-red rn-btn-small";
+const cancelButton = "rn-button-style--2 rn-btn-red rn-btn-small";
 const date = (value) => value && Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleDateString() : null;
 
 export default function PasskeySettings() {
@@ -67,7 +68,7 @@ export default function PasskeySettings() {
           <span aria-hidden="true" className="settings-list__icon"><FiLock /></span>
           <div className="settings-list__text">
             <h3 className="settings-list__title">Passkeys</h3>
-            <p className="settings-list__description">Sign in with your fingerprint, face, device PIN or security key. Your BGSNL password will still work.</p>
+            <p className="settings-list__description">Sign in with your fingerprint, face, device PIN or security key.</p>
             {supported === false && <p className="settings-list__description">Use an up-to-date browser on a secure connection to add a passkey.</p>}
           </div>
           <div className="settings-list__action">
@@ -83,22 +84,21 @@ export default function PasskeySettings() {
             {passkeys?.length > 0 && <ul className={styles.list} aria-label="Registered passkeys">
               {passkeys.map((passkey) => <li key={passkey.id} className={styles.item}>
                 <div>
-                  <h4>{passkey.name}</h4>
-                  <p>{passkey.rpId === "localhost" ? "Local development · " : ""}{date(passkey.lastUsedAt) ? `Last used ${date(passkey.lastUsedAt)}` : `Added ${date(passkey.createdAt) || "recently"}`}</p>
+                  <p>{passkey.name}</p>
+                  <p style={{fontSize: '1rem'}}>{passkey.rpId === "localhost" ? "Local development · " : ""}{date(passkey.lastUsedAt) ? `Last used ${date(passkey.lastUsedAt)}` : `Added ${date(passkey.createdAt) || "recently"}`}</p>
                 </div>
                 <button type="button" className={`${danger} ${styles.remove}`} disabled={busy || Boolean(editing)}
                   aria-label={`Remove ${passkey.name}`} title={`Remove ${passkey.name}`}
                   onClick={() => { setEditing({ purpose: "remove", credentialId: passkey.id, label: passkey.name }); setPassword(""); }}>
-                  <IconlyDelete size={24} aria-hidden="true" focusable="false" />
+                  <IconlyDelete size={18} aria-hidden="true" focusable="false" />
                 </button>
               </li>)}
             </ul>}
             <div className={formStyles.connectionReveal} data-open={Boolean(editing)} aria-hidden={!editing} inert={!editing ? true : undefined}>
               <div className={formStyles.connectionRevealInner}>
                 <div className={formStyles.connectionForm}>
-                  <p>{removing ? `Confirm your password to remove “${editing.label}”. This signs out other sessions. Your password and any other passkeys will still work. Removing it here does not delete it from your device’s password manager.`
-                    : "Name this passkey and confirm your current BGSNL password. Your device will then ask you to verify. Your fingerprint, face and device PIN are never sent to BGSNL."}</p>
-                  <form className={formStyles.passwordForm} onSubmit={submit}>
+                  {removing && <p>Confirm your password to remove “{editing.label}”. This signs out other sessions.</p>}
+                  <form className={`${formStyles.passwordForm} ${!removing ? styles.registrationForm : ""}`} onSubmit={submit} aria-busy={busy}>
                     {!removing && <div className="rn-form-group">
                       <label htmlFor={`${id}-name`}>Passkey name</label>
                       <input id={`${id}-name`} className="bgsnl-form-control" value={name} onChange={(event) => setName(event.target.value)}
@@ -109,13 +109,15 @@ export default function PasskeySettings() {
                       <Password id={`${id}-password`} inputClassName="bgsnl-form-control" value={password} onChange={(event) => setPassword(event.target.value)}
                         autoComplete="current-password" required toggleMask feedback={false} unstyled disabled={!editing || busy} />
                     </div>
-                    {busy && <p role="status">{phase === "device" ? "Follow the passkey prompt on your device…" : "Please wait…"}</p>}
-                    <div className={formStyles.connectionActions}>
+                    <div className={`${formStyles.connectionActions} ${styles.formActions}`}>
+                      {busy ? <ProgressSpinner className={formStyles.connectionSpinner}
+                        aria-label={phase === "device" ? "Follow the passkey prompt on your device" : "Updating passkey"} /> : <>
                       <button type="submit" className={removing ? danger : primary} disabled={!editing || busy || !password || (!removing && !name.trim())}>
                         {removing ? "Remove passkey" : "Continue"}
                       </button>
-                      <button type="button" className={danger} disabled={!editing || phase === "verifying"}
+                      <button type="button" className={cancelButton} disabled={!editing || phase === "verifying"}
                         onClick={() => { cancel(); close(); }}>Cancel</button>
+                      </>}
                     </div>
                   </form>
                 </div>

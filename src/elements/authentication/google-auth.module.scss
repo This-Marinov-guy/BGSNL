@@ -180,3 +180,19 @@
 
   @media (prefers-reduced-motion: reduce) { transition: none; }
 }
+
+.connectionActionButtons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-width: 0;
+  width: 100%;
+
+  &[hidden] { display: none; }
+}
+.connectionSpinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--color-primary, #017363);
+}

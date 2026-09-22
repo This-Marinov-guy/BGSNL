@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "status": "approved_design_implementation_pending_production_verification",
+  "description": "BGSNL membership card design and behavior specification. The approved digital card is connected to account data. Native Apple and Google passes use platform-managed layouts and link to the digital card through a unique QR code. Production deployment and device installation verification are pending.",
+  "testSetup": {
+    "previewPath": "/dev/wallet-card",
+    "mockApiPath": "/api/dev/wallet-card",
+    "developmentOnly": true,
+    "realAccountDataConnected": true,
+    "installablePassesImplemented": true,
+    "deviceInstallationVerified": false,
+    "productionDeployed": false,
+    "appleTestPassTypeId": "pass.nl.bulgariansociety.membership.test",
+    "googleIssuerId": "3388000000023197450",
+    "googleMode": "demo",
+    "note": "Signing credentials belong in ignored local storage, never in this public specification. Native JSON drafts are not native visual previews."
+  },
+  "editingNotes": [
+    "All example member data is mocked. Never use the example QR as a real member link.",
+    "Coordinates are approximate measurements from the example, in pixels on the reference canvas. Name and membership label font families and sizes are owner-confirmed.",
+    "Null values indicate decisions or assets still to be confirmed.",
+    "This file is in public assets. Do not add private member data, credentials, signing keys or live access tokens."
+  ],
+  "assets": {
+    "pathBase": "relative_to_this_file",
+    "example": "card-example.png",
+    "background": "card-background.png",
+    "backgroundIncludes": ["pale green gradient", "dark green corner flourishes", "BGSNL logo at top right"],
+    "separateLogo": null,
+    "profileImage": "dynamic_member_profile_image",
+    "fonts": {
+      "Archive": { "file": "../../fonts/Archive-Regular.ttf", "style": "regular" },
+      "League Spartan": { "file": "../../fonts/LeagueSpartan.ttf", "note": "Use the valid TrueType font. The existing .woff2 file is misnamed PostScript data, not a web font." }
+    }
+  },
+  "referenceCanvas": {
+    "width": 1080,
+    "height": 1350,
+    "units": "px",
+    "note": "Design reference dimensions, not the required dimensions of a native Apple or Google Wallet pass."
+  },
+  "design": {
+    "backgroundMode": "use_supplied_background_image",
+    "colors": {
+      "status": "approximate_pending_review",
+      "primaryText": "#406345",
+      "secondaryText": "#262626",
+      "walletBackground": "#D5E2D7",
+      "qrForeground": "#000000",
+      "qrBackground": "#FFFFFF00"
+    },
+    "typography": {
+      "fontFamilyNote": "Use the existing local fonts. Name increased from 46px to 60px and membership label from 34px to 44px for the larger-type preview. League Spartan weight remains to be confirmed.",
+      "fallbackFamily": "sans-serif",
+      "name": { "fontFamily": "Archive", "fontSize": 60, "fontWeight": 400, "textTransform": "uppercase", "align": "center" },
+      "membershipLabel": { "fontFamily": "League Spartan", "fontSize": 44, "fontWeight": null, "align": "center" }
+    },
+    "layout": {
+      "profileImage": { "x": 308, "y": 340, "width": 464, "height": 477, "borderRadius": 42, "objectFit": "cover" },
+      "name": { "x": 80, "y": 847, "width": 920, "height": 70 },
+      "membershipLabel": { "x": 80, "y": 919, "width": 920, "height": 66 },
+      "qrCode": { "centerX": 540, "centerY": 1185, "preferredSize": 192, "quietZoneModules": 4, "note": "Reserve additional space for the quiet zone; validate scan reliability rather than copying the example barcode pixels." }
+    },
+    "responsiveBehavior": {
+      "scaleReferenceLayoutProportionally": true,
+      "longNames": "Allow wrapping and adjust spacing to prevent overlap; do not silently truncate the full name.",
+      "missingProfileImage": "Show a neutral avatar or initials.",
+      "note": "These are proposed web-preview behaviors. Native Wallet layouts require separate adaptations."
+    }
+  },
+  "memberFields": {
+    "profileImage": { "dynamic": true, "showOnAccountPage": true },
+    "firstName": { "dynamic": true, "showOnAccountPage": true },
+    "surname": { "dynamic": true, "showOnAccountPage": true },
+    "city": { "dynamic": true, "showAsSeparateField": false, "usedBy": "membershipLabel" },
+    "alumniTier": { "dynamic": true, "showAsSeparateField": false, "usedBy": "membershipLabel", "displayFormat": "roman_numeral" },
+    "membershipLabel": {
+      "dynamic": true,
+      "showOnAccountPage": true,
+      "position": "single_line_below_name",
+      "memberTemplate": "Member of {city}",
+      "alumniTemplate": "Alumni Tier {alumniTier}",
+      "examples": ["Member of Groningen", "Alumni Tier II"],
+      "showSeparateMembershipTypeLine": false
+    },
+    "status": { "dynamic": true, "showOnAccountPage": true, "allowedValues": ["active", "locked"], "displayAs": "badge" },
+    "note": "Logical fields only; actual database field mappings remain to be implemented."
+  },
+  "previewData": {
+    "mocked": true,
+    "firstName": "Vladislav",
+    "surname": "Marinov",
+    "city": "Groningen",
+    "membershipLabel": "Member of Groningen",
+    "status": "active",
+    "additionalPreviewCases": [
+      { "membershipLabel": "Member of Groningen", "status": "locked" },
+      { "alumniTier": "II", "membershipLabel": "Alumni Tier II", "status": "active" },
+      { "alumniTier": "II", "membershipLabel": "Alumni Tier II", "status": "locked" }
+    ],
+    "profileImageSource": "Use a mock image for previews; the example illustration is not a real member profile.",
+    "qrDestination": "https://example.com/member/preview"
+  },
+  "qrCode": {
+    "format": "QR",
+    "action": "open_member_account_info_page",
+    "uniquePerMember": true,
+    "embedPersonalDataDirectly": false,
+    "publicBaseUrl": "https://bulgariansociety.nl",
+    "proposedRoute": "/c/{publicToken}",
+    "tokenDesign": "Proposed: opaque, random, unguessable and revocable token; never use an authentication token or sequential account ID.",
+    "reuseMockQr": false
+  },
+  "accountInfoPage": {
+    "access": "anyone_with_the_qr_link",
+    "loginRequired": false,
+    "content": "Fetch and display the member's current digital card and status from the backend.",
+    "visibleFields": ["profileImage", "firstName", "surname", "membershipLabel", "status"],
+    "statusBadge": {
+      "values": { "active": "Active", "locked": "Locked" },
+      "source": "current_backend_card_status",
+      "placement": "to_be_confirmed_in_preview",
+      "lockedBehavior": "Display the digital card with a Locked badge; locked is not the same as a revoked or invalid public link.",
+      "fetchFailureBehavior": "Show status unavailable; never assume active when fetching fails.",
+      "backendStatusMapping": null
+    },
+    "excludedFields": ["email", "phone", "address", "dateOfBirth", "paymentDetails", "internalAccountId"],
+    "designReference": "card-example.png",
+    "proposedSafeguards": {
+      "excludeFromSearchEngines": true,
+      "revokedOrInvalidToken": "Show a generic unavailable message without member information.",
+      "privacyNote": "Anyone receiving or sharing the link can see the listed fields. Confirm member consent and the public-field policy before launch."
+    }
+  },
+  "walletPlatforms": {
+    "apple": {
+      "enabled": true,
+      "passStyle": "to_be_confirmed",
+      "designApproach": "Adapt the reference branding and member fields to a supported native pass layout.",
+      "exactFullCardImageLayoutGuaranteed": false,
+      "assetDimensions": "Confirm after choosing the pass style.",
+      "previewApprovalRequired": true
+    },
+    "google": {
+      "enabled": true,
+      "passStyle": "generic",
+      "designApproach": "Adapt the reference branding and member fields to the native pass template.",
+      "exactFullCardImageLayoutGuaranteed": false,
+      "assetDimensions": "Confirm against current platform specifications when preparing the native preview.",
+      "previewApprovalRequired": true
+    }
+  },
+  "approval": {
+    "digitalCardDesignApproved": true,
+    "productionImplementationRequested": true,
+    "requiredPreviews": ["account_info_page", "apple_wallet_pass", "google_wallet_pass"],
+    "useMockDataUntilApproved": true,
+    "designApproved": false,
+    "publishApproved": false,
+    "issueLiveCardsApproved": false,
+    "note": "Show previews to the owner before uploading final card assets, publishing or issuing live cards. Editing this document does not itself authorize publication."
+  },
+  "openDecisions": [
+    "League Spartan font weight.",
+    "Status badge placement and styling in the public digital-card preview.",
+    "Backend rules that determine active versus locked status.",
+    "Native Apple pass style and platform-specific layouts.",
+    "Production QR destination and public profile route.",
+    "Consent, revocation and public-profile visibility policy."
+  ]
+}

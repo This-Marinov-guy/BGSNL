@@ -33,3 +33,6 @@ yarn-error.log*
 .netlify
 
 .vercel
+
+# Wallet signing material and locally generated test passes
+/.wallet-local/

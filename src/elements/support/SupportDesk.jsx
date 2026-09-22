@@ -9,9 +9,9 @@ import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { selectUser } from "@/redux/user";
-import { IconlyArrowRight, IconlyMessage, IconlyPlus } from "@/elements/ui/icons/IconlyIcons";
+import { IconlyArrowRight, IconlyDocument, IconlyImprove, IconlyMessage } from "@/elements/ui/icons/IconlyIcons";
 import { supportRequest } from "./support-api";
-import { forgetGuestReports, guestReports, STATUS_LABELS, supportScope } from "./support-state.mjs";
+import { forgetGuestReports, guestReports, STATUS_LABELS, SUPPORT_TYPE_LABELS, supportScope } from "./support-state.mjs";
 import Conversation from "./Conversation";
 import ReportForm from "./ReportForm";
 import styles from "./support.module.scss";
@@ -39,6 +39,8 @@ const REDUCED_VIEW_TRANSITION = {
 function DeskSession({ session, staff, active }) {
   const reduceMotion = useReducedMotion();
   const [view, setView] = useState("list");
+  const [newType, setNewType] = useState("problem");
+  const startNew = (type) => { setNewType(type); setView("new"); };
   const [selected, setSelected] = useState(null);
   const [items, setItems] = useState([]);
   const [profile, setProfile] = useState(null);
@@ -110,29 +112,26 @@ function DeskSession({ session, staff, active }) {
   return <div className={styles.desk} data-support-desk data-html2canvas-ignore="true" data-private data-hj-suppress data-clarity-mask data-dd-privacy="mask">
     <AnimatePresence initial={false} mode="wait">
       {view === "new" && <motion.div key="new" className={styles.view} variants={viewTransition} initial="initial" animate="visible" exit="exit">
-        {!staff && <ReportForm session={session} profile={profile} onCreated={open} onBack={back} active={active} />}
+        {!staff && <ReportForm initialType={newType} session={session} profile={profile} onCreated={open} onBack={back} active={active} />}
       </motion.div>}
       {view === "thread" && <motion.div key={`thread-${selected}`} className={styles.view} variants={viewTransition} initial="initial" animate="visible" exit="exit">
         <Conversation id={selected} session={session} secret={session ? undefined : guestReports().find(({ id }) => id === selected)?.secret} staff={staff} active={active} onBack={back} />
       </motion.div>}
       {view === "list" && <motion.div key="list" className={styles.listView} variants={viewTransition} initial="initial" animate="visible" exit="exit">
-      {!staff && <div className={styles.listHeading}><h3 className="type-subheading">Your reports</h3><button className="rn-button-style--2 rn-btn-green rn-btn-small" onClick={() => setView("new")} type="button"><IconlyPlus size="1.25rem" /> New report</button></div>}
+      {!staff && <div className={styles.listHeading}><h3 className="type-subheading">Your conversations</h3><div className={styles.newActions}><button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => startNew("problem")} type="button"><IconlyDocument size="1.25rem" /> New report</button><button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => startNew("recommendation")} type="button"><IconlyImprove size="1.25rem" /> New recommendation</button></div></div>}
       {staff && <FilterPanel onClear={() => { setStatus("all"); setPage(1); }}><label>Status<SelectInput className="bgsnl-form-control" value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="all">All reports</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</SelectInput></label></FilterPanel>}
       {error && <div className={styles.error} role="alert">{error} <button className={styles.textButton} type="button" onClick={refresh}>Try again</button></div>}
-      {loading && !items.length ? <div role="status" className={styles.loading}>Loading reports…<div className={styles.skeleton} /><div className={styles.skeleton} /></div> : !items.length && !error ? <div className={styles.empty}>
-        <IconlyMessage size="2.5rem" /><h3 className="type-subheading">{staff ? "No reports here" : "Something not working?"}</h3><p>{staff ? "New website reports will appear here. Try a different status filter." : "Send our team a report. You can come back here to read replies and continue the conversation."}</p>
-        {!staff && <button className={styles.textButton} type="button" onClick={() => setView("new")}>Report a website problem <IconlyArrowRight size="1.25rem" /></button>}
+      {loading && !items.length ? <div role="status" className={styles.loading}><div className={styles.skeleton} /><div className={styles.skeleton} /></div> : !items.length && !error ? <div className={styles.empty}>
+        <h3 className={`type-subheading ${styles.emptyHeading}`}><IconlyMessage size="2.5rem" /><span>{staff ? "No reports here" : "Need help or have an idea?"}</span></h3><p>{staff ? "New reports and recommendations will appear here. Try a different status filter." : "Send a problem report or recommendation. Come back here to read replies and continue the conversation."}</p>
+        {!staff && <button className={styles.textButton} type="button" onClick={() => startNew("problem")}>Report a website problem <IconlyArrowRight size="1.25rem" /></button>}
       </div> : <ul className={styles.reportList}>{items.map((record) => <li key={record.id}><button className={styles.reportItem} type="button" onClick={() => open(record)}>
         <div className={styles.row}><span className={styles.status} data-status={record.status}>{STATUS_LABELS[record.status]}</span><small>#{record.reference}</small></div>
-        <strong>{record.subject}</strong>{staff && <span>{record.contact?.name} <small>· {record.contact?.source === "guest" ? "Guest" : "Account"}</small></span>}
+        <small className={styles.requestType}>{SUPPORT_TYPE_LABELS[record.type || "problem"]}</small><strong>{record.subject}</strong>{staff && <span>{record.contact?.name} <small>· {record.contact?.source === "guest" ? "Guest" : "Account"}</small></span>}
         <div className={styles.row}><small>{record.messageCount} {record.messageCount === 1 ? "entry" : "entries"} · {new Date(record.lastMessageAt).toLocaleDateString()}</small><IconlyArrowRight size="1.25rem" /></div>
       </button></li>)}</ul>}
       {(page > 1 || hasMore) && <nav className={styles.row} aria-label="Report pages"><button className={styles.textButton} type="button" disabled={page === 1 || loading} onClick={() => setPage((value) => value - 1)}>Previous</button><span>Page {page}</span><button className={styles.textButton} type="button" disabled={!hasMore || loading} onClick={() => setPage((value) => value + 1)}>Next</button></nav>}
       {notice && <p role="status" className={styles.notice}>{notice}</p>}
-      {!staff && <div className={styles.listFooter}>{session ? <a href="/user#help">Account help</a> : <>
-        <small>Guest conversations are private to this browser. On a shared device, forget access when you’re done.</small>
-        {guestReports().length > 0 && (confirmForget ? <div className={styles.notice}><p>Forget guest access on this device? Reports stay with our team, but you won’t be able to reopen them here.</p><div className={styles.row}><button className={styles.textButton} type="button" onClick={() => setConfirmForget(false)}>Keep access</button><button className="rn-button-style--2 rn-btn-small" type="button" onClick={forget}>Forget access</button></div></div> : <button className={styles.textButton} type="button" onClick={() => setConfirmForget(true)}>Forget guest access</button>)}
-      </>}</div>}
+      
       </motion.div>}
     </AnimatePresence>
   </div>;

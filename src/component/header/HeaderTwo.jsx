@@ -21,6 +21,11 @@ import HeaderContent from "./HeaderContent";
 
 const HeaderTwo = (props) => {
   const [isMenuOpened, setIsMenuOpened] = useState();
+  const [isWinter, setIsWinter] = useState(false);
+
+  useEffect(() => {
+    setIsWinter(HOLIDAYS.isWinter);
+  }, []);
 
   const headerRef = useRef(null);
   const params = useParams();
@@ -69,14 +74,14 @@ const HeaderTwo = (props) => {
       src={`/assets/images/logo/${
         region && REGIONS.includes(region)
           ? region
-          : HOLIDAYS.isWinter
+          : isWinter
           ? "logo-xmas"
           : "logo"
       }.webp`}
       fallback={`/assets/images/logo/${
         region && REGIONS.includes(region)
           ? region
-          : HOLIDAYS.isWinter
+          : isWinter
           ? "logo-xmas"
           : "logo"
       }.jpg`}

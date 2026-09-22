@@ -1,0 +1,48 @@
+name: bgsnl-dev
+services:
+  dev:
+    image: bgsnl-dev:local
+    build:
+      context: ../..
+      dockerfile: BGSNL website/BGSNL/docker/dev/Dockerfile
+    ports:
+      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:6000:6000"
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace/BGSNL
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ../BGSNL-API
+        target: /workspace/BGSNL-API
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ../../Domakin/Domakin-Mailer
+        target: /workspace/Domakin-Mailer
+        bind:
+          create_host_path: false
+      - website-dependencies:/workspace/BGSNL/node_modules
+      - api-dependencies:/workspace/BGSNL-API/node_modules
+      - mailer-dependencies:/workspace/Domakin-Mailer/node_modules
+      - next-cache:/workspace/BGSNL/.next
+      - redis-data:/data/redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    stop_grace_period: 45s
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "node", "docker/dev/health.mjs"]
+      interval: 30s
+      timeout: 10s
+      retries: 4
+      start_period: 240s
+volumes:
+  website-dependencies:
+  api-dependencies:
+  mailer-dependencies:
+  next-cache:
+  redis-data:

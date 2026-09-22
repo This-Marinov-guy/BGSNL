@@ -27,7 +27,6 @@ import {
   DONATION_MODAL,
   WEB_DEV_MODAL,
 } from "../../../util/defines/common";
-import { REGION_INSTAGRAM } from "../../../util/defines/REGIONS_DESIGN";
 import "./NewsList.css";
 
 const NewsList = ({ withTitle = true }) => {
@@ -283,18 +282,6 @@ const NewsList = ({ withTitle = true }) => {
             </div>
           </div>
 
-          <div className="newspaper-page__cover-footer">
-            <span>{newsItems.length} stories inside</span>
-            {withTitle && (
-              <a
-                href={REGION_INSTAGRAM.netherlands ?? ""}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Follow the newsroom
-              </a>
-            )}
-          </div>
         </article>
 
         {newsItems.map((item, index) => (

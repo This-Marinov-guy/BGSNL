@@ -1,5 +1,6 @@
 const STORAGE_KEY = "bgsnl_support_guest_v1";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+export const SUPPORT_TYPE_LABELS = { problem: "Problem report", recommendation: "Recommendation" };
 export const STATUS_LABELS = { open: "Open", in_progress: "In progress", waiting_for_you: "Waiting for you", resolved: "Resolved", closed: "Closed" };
 
 export function guestReports(storage, now = Date.now()) {

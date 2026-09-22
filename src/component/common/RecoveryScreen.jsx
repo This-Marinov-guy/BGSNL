@@ -13,12 +13,12 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
       <Header />
       <main className="recovery-content" aria-labelledby="recovery-title">
         <div className="recovery-title-row">
-            <img
+            {!failed && <img
               className="recovery-title-icon"
               src="/assets/images/avatars/no-event-found.png"
               alt=""
               aria-hidden="true"
-            />
+            />}
           <h1 id="recovery-title" className="page-breadcrumb__title archive">{failed ? "Something went wrong." : "This page isn’t here."}</h1>
         </div>
         {failed && (

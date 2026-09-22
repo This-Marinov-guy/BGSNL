@@ -1579,27 +1579,27 @@ form[data-validation-submitted="true"]
   line-height: 1.4;
 }
 
-/* Keep every reported validation error visible, including native controls in
- * administrative forms that do not use Formik's submit marker. */
-form :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea)[aria-invalid="true"],
-form :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea):invalid,
-form .has-validation-error :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea),
-form .has-validation-error:is(.p-select, .p-datepicker, .phone_code) {
+/* Native controls are invalid while untouched required fields are empty. Show
+ * validation styling only after a submit attempt has marked the form. */
+form[data-validation-submitted="true"] :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea)[aria-invalid="true"],
+form[data-validation-submitted="true"] :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea):invalid,
+form[data-validation-submitted="true"] .has-validation-error :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea),
+form[data-validation-submitted="true"] .has-validation-error:is(.p-select, .p-datepicker, .phone_code) {
   border-color: #9e0d33 !important;
   border-width: 2px !important;
 }
 
-form .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label,
-form .rn-form-group:has(:is(input, select, textarea):invalid) > label,
-form .has-validation-error > label,
-form .has-validation-error label {
+form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label,
+form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea):invalid) > label,
+form[data-validation-submitted="true"] .has-validation-error > label,
+form[data-validation-submitted="true"] .has-validation-error label {
   background-color: #9e0d33 !important;
   color: #fff !important;
 }
 
-form .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label *,
-form .rn-form-group:has(:is(input, select, textarea):invalid) > label *,
-form .has-validation-error label * {
+form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label *,
+form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea):invalid) > label *,
+form[data-validation-submitted="true"] .has-validation-error label * {
   color: inherit !important;
 }
 

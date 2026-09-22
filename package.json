@@ -19,11 +19,13 @@
     "emailjs-com": "^3.2.0",
     "formik": "^2.2.9",
     "framer-motion": "^12.23.12",
+    "google-auth-library": "^11.1.0",
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "next": "16.3.4",
+    "passkit-generator": "^3.6.1",
     "postcss": "^8.5.26",
     "primereact": "^11.1.0",
     "prop-types": "^15.8.1",
@@ -50,15 +52,19 @@
     "react-youtube": "^10.1.0",
     "recharts": "^3.10.1",
     "sass": "^1.71.1",
+    "sharp": "^0.35.4",
     "slick-carousel": "^1.8.1",
     "yet-another-react-lightbox": "^3.32.2",
     "yup": "^1.3.3"
   },
   "scripts": {
+    "wallet:check": "node scripts/wallet-check.mjs",
+    "wallet:csr": "node scripts/wallet-csr.mjs",
+    "test:wallet": "node --test scripts/wallet.test.mjs scripts/wallet-issuance.test.mjs",
     "test:passkeys": "node --test scripts/passkeys.test.mjs",
     "dev": "next dev --webpack",
-    "dev:all": "node ../start-local.mjs",
-    "dev:check": "node ../start-local.mjs --check",
+    "dev:all": "node scripts/dev-docker.mjs",
+    "dev:check": "node scripts/dev-docker.mjs --check",
     "test:dev-services": "node --test scripts/dev-services.test.mjs",
     "test:support": "node --test scripts/support-state.test.mjs",
     "test:account-routing": "node --test scripts/account-route-state.test.mjs",
@@ -67,13 +73,20 @@
     "start": "next start",
     "build": "npm run check:font-sizes && next build --webpack",
     "check:font-sizes": "node scripts/check-scss-font-sizes.mjs",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "dev:stop": "node scripts/dev-docker.mjs stop",
+    "dev:logs": "node scripts/dev-docker.mjs logs",
+    "dev:status": "node scripts/dev-docker.mjs status",
+    "dev:build": "node scripts/dev-docker.mjs build",
+    "dev:restart": "node scripts/dev-docker.mjs restart",
+    "dev:host": "node scripts/dev-services.mjs",
+    "dev:host:check": "node scripts/dev-services.mjs --check",
+    "test:dev-docker": "node --test scripts/dev-docker.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.0",
-    "globals": "^15.9.0",
-    "sharp": "^0.35.4"
+    "globals": "^15.9.0"
   }
 }

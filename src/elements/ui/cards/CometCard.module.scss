@@ -1,0 +1,30 @@
+.perspective {
+  width: 100%;
+  max-width: var(--wallet-card-width, 540px);
+  margin: 0 auto;
+  perspective: 1200px;
+}
+
+.surface {
+  position: relative;
+  border-radius: 16px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.glare {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  mix-blend-mode: overlay;
+  opacity: 0.58;
+  pointer-events: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .surface {
+    will-change: auto;
+  }
+}

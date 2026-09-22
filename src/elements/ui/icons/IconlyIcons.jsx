@@ -117,6 +117,12 @@ export const IconlyHide = (props) => (
   </IconlySvg>
 );
 
+export const IconlyImprove = (props) => (
+  <IconlySvg {...props}>
+    <path d="M3 17 9 11l4 4L21 7m-6 0h6v6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </IconlySvg>
+);
+
 export const IconlyDocument = (props) => (
   <IconlySvg {...props}>
 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -583,8 +589,11 @@ export const IconlyChessKing3D = (props) => (
 
 export const IconlyLink = (props) => (
   <IconlySvg {...props}>
-<path fillRule="evenodd" clipRule="evenodd" d="M9.631 18.2091H8.21C4.786 18.2091 2 15.4231 2 11.9991C2 8.57506 4.786 5.78906 8.21 5.78906H9.631C10.183 5.78906 10.631 6.23606 10.631 6.78906C10.631 7.34206 10.183 7.78906 9.631 7.78906H8.21C5.889 7.78906 4 9.67806 4 11.9991C4 14.3201 5.889 16.2091 8.21 16.2091H9.631C10.183 16.2091 10.631 16.6561 10.631 17.2091C10.631 17.7621 10.183 18.2091 9.631 18.2091Z" fill="currentColor"/>
-<path fillRule="evenodd" clipRule="evenodd" d="M15.7902 18.2091H14.3692C13.8162 18.2091 13.3692 17.7621 13.3692 17.2091C13.3692 16.6561 13.8162 16.2091 14.3692 16.2091H15.7902C18.1112 16.2091 20.0002 14.3201 20.0002 11.9991C20.0002 9.67806 18.1112 7.78906 15.7902 7.78906H14.3692C13.8162 7.78906 13.3692 7.34206 13.3692 6.78906C13.3692 6.23606 13.8162 5.78906 14.3692 5.78906H15.7902C19.2142 5.78906 22.0002 8.57506 22.0002 11.9991C22.0002 15.4231 19.2142 18.2091 15.7902 18.2091Z" fill="currentColor"/>
+    <g fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 8 3-3a5 5 0 0 1 7 7l-3 3" />
+      <path d="m15 16-3 3a5 5 0 0 1-7-7l3-3" />
+      <path d="m9 15 6-6" />
+    </g>
   </IconlySvg>
 );
 
@@ -698,7 +707,14 @@ export const IconlyEducation = (props) => (
     </g>
   </IconlySvg>
 );
-export const IconlyExternalLink = IconlyLogout;
+export const IconlyExternalLink = (props) => (
+  <IconlySvg {...props}>
+    <g fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H8a5 5 0 0 0-5 5v7a5 5 0 0 0 5 5h7a5 5 0 0 0 5-5v-3" />
+      <path d="M15 3h6v6M21 3l-9 9" />
+    </g>
+  </IconlySvg>
+);
 export const IconlyMicrosoft = IconlyMenu;
 export const IconlyNewspaper = IconlyDocument;
 

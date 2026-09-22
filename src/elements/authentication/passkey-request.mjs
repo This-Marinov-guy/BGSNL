@@ -29,7 +29,7 @@ export async function requestPasskey(url, data, _session, signal) {
   } catch (error) {
     if (controller.signal.aborted) throw new PasskeyRequestError("The passkey request timed out. Check your connection and try again.");
     if (error instanceof PasskeyRequestError) throw error;
-    throw new PasskeyRequestError("Could not reach the sign-in service. Check your connection and try again. Your BGSNL password is still available.");
+    throw new PasskeyRequestError("Could not reach the sign-in service. Check your connection and try again.");
   } finally {
     clearTimeout(timer);
     signal?.removeEventListener("abort", abort);

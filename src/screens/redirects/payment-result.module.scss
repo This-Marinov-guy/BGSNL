@@ -26,6 +26,8 @@
 }
 
 .message { min-width: 0; align-self: center; }
+.stateTransition { animation: reveal 300ms ease-out both; }
+.syncStatus { margin: 0; color: #4c6258; }
 .heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
 .icon { display: flex; align-items: center; flex: 0 0 4.5rem; color: #017363; }
 .icon :is(img, svg) { width: 4.5rem; height: 4.5rem; object-fit: contain; }
@@ -108,4 +110,4 @@
   .facts div { flex-wrap: wrap; gap: 4px 12px; }
   .facts dd { margin-left: auto; }
 }
-@media (prefers-reduced-motion: reduce) { .panel { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .panel, .stateTransition { animation: none; } }

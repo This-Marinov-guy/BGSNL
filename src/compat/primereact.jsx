@@ -831,7 +831,13 @@ export function TabPanel() {
 
 TabPanel.displayName = "PrimeReactLegacyTabPanel";
 
-export function TabView({ activeIndex = 0, onTabChange, children, ...props }) {
+export function TabView({
+  activeIndex = 0,
+  navigationContent,
+  onTabChange,
+  children,
+  ...props
+}) {
   const panels = Children.toArray(children).filter(isValidElement);
   const activeValue = String(activeIndex);
 
@@ -856,6 +862,9 @@ export function TabView({ activeIndex = 0, onTabChange, children, ...props }) {
           ))}
           <PrimeTabs.Indicator />
         </PrimeTabs.Content>
+        {navigationContent ? (
+          <div className="p-tablist-end">{navigationContent}</div>
+        ) : null}
       </PrimeTabs.List>
       <PrimeTabs.Panels>
         {panels.map((panel, index) => (

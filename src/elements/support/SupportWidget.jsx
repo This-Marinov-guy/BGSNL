@@ -2,16 +2,19 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 import { IconlyClose, IconlyHeadset } from "@/elements/ui/icons/IconlyIcons";
 import styles from "./support.module.scss";
 
 const SupportDesk = dynamic(() => import("./SupportDesk"), { ssr: false, loading: () => <p role="status">Opening support…</p> });
 
 export default function SupportWidget() {
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [openedOnce, setOpenedOnce] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [heroVisible, setHeroVisible] = useState(false);
   const root = useRef(null);
   const panel = useRef(null);
   const launcher = useRef(null);
@@ -27,6 +30,23 @@ export default function SupportWidget() {
     update(); query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
   }, []);
+
+  useEffect(() => {
+    const hero = document.querySelector(".slider-activation");
+
+    if (!hero) {
+      setHeroVisible(false);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0.02 },
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -54,12 +74,14 @@ export default function SupportWidget() {
   }, [open, mobile, close]);
 
   if (!mounted) return null;
+  const launcherHidden = (mobile && open) || heroVisible;
+
   return createPortal(<div ref={root} className={styles.widgetRoot} data-html2canvas-ignore="true" data-support-widget-root>
     {openedOnce && <section className={`${styles.widgetPanel} ${open ? styles.isOpen : ""}`} role="dialog" aria-labelledby={titleId} aria-modal={open && mobile ? true : undefined} aria-hidden={!open} inert={!open ? true : undefined} id={panelId} ref={panel} data-private data-hj-suppress data-clarity-mask data-support-widget-dialog>
       <header className={styles.widgetHeader}><h2 className="type-subheading" id={titleId}>Website support</h2><button type="button" className={`${styles.iconButton} ${styles.closeButton}`} ref={closeButton} aria-label="Close support" onClick={close}><IconlyClose size="1.5rem" /></button></header>
       <SupportDesk active={open} />
     </section>}
-    <button className={`rn-button-style--2 rn-btn-small ${styles.launcher} ${mobile && open ? styles.isLauncherHidden : ""}`} type="button" ref={launcher} onClick={() => { setOpenedOnce(true); setOpen((value) => !value); }} aria-label={open ? "Minimize website support" : "Report a website problem"} aria-controls={openedOnce ? panelId : undefined} aria-expanded={open} aria-hidden={mobile && open} tabIndex={mobile && open ? -1 : undefined}>
+    <button className={`rn-button-style--2 rn-btn-small ${styles.launcher} ${launcherHidden ? styles.isLauncherHidden : ""}`} type="button" ref={launcher} onClick={() => { setOpenedOnce(true); setOpen((value) => !value); }} aria-label={open ? "Minimize website support" : "Report a website problem"} aria-controls={openedOnce ? panelId : undefined} aria-expanded={open} aria-hidden={launcherHidden} tabIndex={launcherHidden ? -1 : undefined}>
       <IconlyHeadset size="1.5rem" /> <span className={styles.launcherLabel}>Help</span>
     </button>
   </div>, document.body);

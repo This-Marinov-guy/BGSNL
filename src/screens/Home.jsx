@@ -17,7 +17,6 @@ import Helmet from "../component/common/Helmet";
 import FooterTwo from "../component/footer/FooterTwo";
 import HeaderTwo from "../component/header/HeaderTwo";
 import Hero1 from "../component/hero/Hero1";
-import Hero2 from "../component/hero/Hero2";
 import AboutUs from "../component/HomeLayout/homeOne/AboutUs";
 import BrandTwo from "../elements/BrandTwo";
 import NewsList from "../elements/ui/lists/NewsList";
@@ -28,7 +27,7 @@ import {
   FutureOtherEventsContent,
 } from "./information/FutureEvents";
 
-const Home = ({ initialEvents }) => {
+const Home = ({ initialEvents, initialNow }) => {
   const navigate = useNavigate();
   const { region } = useParams();
 
@@ -57,7 +56,7 @@ const Home = ({ initialEvents }) => {
 
       {/* Start Slider Area   */}
       {/* <Hero2 /> */}
-      <Hero1 initialEvents={initialEvents} />
+      <Hero1 initialEvents={initialEvents} initialNow={initialNow} />
       {/* End Slider Area   */}
 
       {/* Start About Area  */}
@@ -123,6 +122,7 @@ const Home = ({ initialEvents }) => {
 };
 
 Home.propTypes = {
+  initialNow: PropTypes.number.isRequired,
   initialEvents: PropTypes.objectOf(
     PropTypes.arrayOf(PropTypes.object),
   ),

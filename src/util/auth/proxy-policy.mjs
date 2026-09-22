@@ -3,6 +3,7 @@
 // on their existing direct API/server-to-server paths.
 const routes = {
   GET: [
+    "user/wallet/availability", "user/wallet/apple", "user/wallet/card",
     "security/passkeys", "security/google/config", "security/connected-accounts",
     "user/current", "user/get-subscription-status", "user/refresh-token", "user/roles", "user/promotions",
     "user/campaigns/:id", "user/active-alumni", "user/tree-layout",
@@ -15,6 +16,7 @@ const routes = {
     "wordpress/posts", "wordpress/posts/:id",
   ],
   POST: [
+    "user/wallet/google", "user/wallet/card",
     "backoffice/access-requests", "backoffice/accounts/:type/:id/cancel-subscription", "backoffice/accounts/:type/:id/transfer",
     "security/login", "security/profile-change/confirm", "security/check-email", "security/signup", "security/alumni-signup",
     "security/send-password-token", "security/verify-token", "security/encrypt-data",
@@ -31,7 +33,7 @@ const routes = {
   ],
   PATCH: ["security/change-password", "user/edit-info", "user/alumni-quote", "user/edit-document/:id", "event/check-guest-list", "event/guest-presence",
     "future-event/edit-event/:id", "future-event/sales/:id", "internship/edit/:id", "internship/reorder", "backoffice/accounts/:type/:id"],
-  DELETE: ["user/cancel-membership", "user/delete-document/:id", "future-event/delete-event/:id", "internship/delete/:id"],
+  DELETE: ["user/wallet/card", "user/cancel-membership", "user/delete-document/:id", "future-event/delete-event/:id", "internship/delete/:id"],
 };
 const allowed = Object.fromEntries(Object.entries(routes).map(([method, paths]) => [method,
   paths.map((path) => new RegExp(`^${path.replace(/:[a-zA-Z]+/g, "[a-zA-Z0-9_-]+")}$`))]));

@@ -9,7 +9,7 @@ import { WEB_DEV_MODAL } from "../../../util/defines/common";
 
 const teamMembers = [
   {
-    id: 1,
+    id: "vladislav-marinov",
     name: "Vladislav Marinov",
     title: "Web Developer",
     imgSrc: "/assets/images/developers/vladislav.jpg",
@@ -21,7 +21,7 @@ const teamMembers = [
     ],
   },
   {
-    id: 1,
+    id: "konstantin-sonev",
     name: "Konstantin Sonev",
     title: "AI Engineer",
     imgSrc: "/assets/images/developers/koko.jpeg",

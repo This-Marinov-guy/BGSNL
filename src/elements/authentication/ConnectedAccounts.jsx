@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Password } from "@/compat/primereact";
+import { Password, ProgressSpinner } from "@/compat/primereact";
 import { FaGoogle } from "@/elements/ui/icons/IconlyIcons";
 import { selectUser, refreshSession } from "@/redux/user";
 import { announceSessionChange } from "@/util/auth/browser-session.mjs";
@@ -15,6 +15,7 @@ import styles from "./google-auth.module.scss";
 
 const primary = "rn-button-style--2 rn-btn-reverse-green rn-btn-small";
 const danger = "rn-button-style--2 rn-btn-reverse-red rn-btn-small";
+const cancelButton = "rn-button-style--2 rn-btn-red rn-btn-small";
 
 export default function ConnectedAccounts() {
   const { session } = useSelector(selectUser);
@@ -121,9 +122,9 @@ export default function ConnectedAccounts() {
       <div className={styles.connectionReveal} data-open={editing} aria-hidden={!editing} inert={!editing ? true : undefined}>
         <div className={styles.connectionRevealInner}>
           <div className={styles.connectionForm}>
-            <p>{google?.connected ? "Confirm your password to disconnect Google. You will also be signed out on other devices; password sign-in remains available."
+            <p>{google?.connected ? "Confirm your password to disconnect Google. You will also be signed out on other devices"
               : challenge ? `Continue in Google with ${challenge.loginHint}. If the prompt does not open, use the Google button below.`
-                : `Confirm your current BGSNL password to continue automatically to Google with ${google?.accountEmail || "your account email"}. A different Google account cannot be connected.`}</p>
+                : `Confirm your current BGSNL password to continue automatically to Google with ${google?.accountEmail || "your account email"}.`}</p>
             <div className={styles.connectionReveal} data-open={editing && !challenge} aria-hidden={!editing || Boolean(challenge)} inert={!editing || challenge ? true : undefined}>
               <div className={styles.connectionRevealInner}>
                 <form id={`${id}-password-form`} className={styles.passwordForm} onSubmit={prepare}>
@@ -134,13 +135,16 @@ export default function ConnectedAccounts() {
                 </form>
               </div>
             </div>
-            <div className={styles.connectionActions}>
+            <div className={styles.connectionActions} aria-busy={busy}>
+              {busy && <ProgressSpinner className={styles.connectionSpinner} aria-label="Updating Google connection" />}
+              <div className={styles.connectionActionButtons} hidden={busy}>
               {!challenge ? <button type="submit" form={`${id}-password-form`} className={google?.connected ? danger : primary} disabled={busy || !editing || !password}>
-                {busy ? "Please wait…" : google?.connected ? "Confirm disconnect" : "Continue"}
+                {google?.connected ? "Confirm disconnect" : "Continue"}
               </button> : editing && <GoogleCredentialButton challenge={challenge} busy={busy} autoPrompt onCredential={complete}
                 onNotice={(message) => dispatch(showNotification({ severity: "warn", detail: message }))}
                 onError={(message) => { setChallenge(null); notifyError(message); }} />}
-              <button type="button" className={danger} disabled={busy || !editing} onClick={() => { setEditing(false); setChallenge(null); setPassword(""); }}>Cancel</button>
+              <button type="button" className={cancelButton} disabled={busy || !editing} onClick={() => { setEditing(false); setChallenge(null); setPassword(""); }}>Cancel</button>
+              </div>
             </div>
           </div>
         </div>

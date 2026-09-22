@@ -24,24 +24,34 @@ import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 const EVENT_ROTATION_INTERVAL_MS = 5000;
 
 const eventDateValue = (event) =>
-  new Date(event?.correctedDate || event?.date || "").getTime();
+  moment.tz(event?.correctedDate || event?.date || "", "Europe/Amsterdam").valueOf();
 
 const formatEventDate = (event) =>
-  moment(event?.correctedDate || event?.date)
-    .tz("Europe/Amsterdam")
+  moment.tz(event?.correctedDate || event?.date, "Europe/Amsterdam")
+    .locale("en")
     .format("D MMM, HH:mm");
 
-const Hero1 = ({ initialEvents = {} }) => {
+const Hero1 = ({ initialEvents = {}, initialNow }) => {
   const user = useSelector(selectUser);
   const { region } = useParams();
   const shouldReduceMotion = useReducedMotion();
   const [activeEventIndex, setActiveEventIndex] = useState(0);
+  const [now, setNow] = useState(initialNow);
+  const [isWinter, setIsWinter] = useState(false);
+
+  useEffect(() => {
+    // Reuse the server's clock for the first client render, then keep the
+    // upcoming-event list current while the page stays open.
+    setNow(Date.now());
+    setIsWinter(HOLIDAYS.isWinter);
+    const timer = window.setInterval(() => setNow(Date.now()), 60000);
+    return () => window.clearInterval(timer);
+  }, [initialNow]);
 
   const upcomingEvents = useMemo(() => {
     const source = region
       ? initialEvents?.[region] || []
       : Object.values(initialEvents || {}).flat();
-    const now = Date.now();
 
     return source
       .filter((event) => {
@@ -55,7 +65,7 @@ const Hero1 = ({ initialEvents = {} }) => {
         );
       })
       .sort((first, second) => eventDateValue(first) - eventDateValue(second));
-  }, [initialEvents, region, user.session]);
+  }, [initialEvents, now, region, user.session]);
 
   const eventRotationKey = upcomingEvents.map((event) => event.id).join("|");
   const activeEvent = upcomingEvents.length
@@ -91,7 +101,7 @@ const Hero1 = ({ initialEvents = {} }) => {
       style={{ height: "100vh" }}
       className="slider-activation slider-creative-agency"
     >
-      {HOLIDAYS.isWinter && <SnowBackground />}
+      {isWinter && <SnowBackground />}
       <ImageFb
         src={`/assets/images/bg/paralax/${region || "netherlands"}.webp`}
         fallback={`/assets/images/bg/paralax/${region || "netherlands"}.jpg`}
@@ -186,6 +196,7 @@ const Hero1 = ({ initialEvents = {} }) => {
 };
 
 Hero1.propTypes = {
+  initialNow: PropTypes.number.isRequired,
   initialEvents: PropTypes.objectOf(
     PropTypes.arrayOf(PropTypes.object),
   ),

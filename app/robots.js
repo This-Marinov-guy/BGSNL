@@ -2,7 +2,10 @@ import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 
 const BASE_URL = "https://www.bulgariansociety.nl";
 
+const CARD_PATHS = ["/c$", "/c/"];
+
 const PRIVATE_PATHS = [
+  ...CARD_PATHS,
   "/user",
   "/user/",
   "/login",
@@ -45,10 +48,10 @@ const USER_FETCH_AGENTS = ["ChatGPT-User", "Claude-User", "Perplexity-User"];
 export default function robots() {
   return {
     rules: [
-      // General search crawlers may request these routes so they can read the
-      // stronger page/header-level noindex instruction. robots.txt alone can
-      // still leave a URL-only result in an index.
-      { userAgent: "*", allow: "/" },
+      // Token card pages must not be crawled. Other private routes remain
+      // crawlable so search engines can read their noindex headers.
+      // Crawl blocking alone cannot remove an already indexed URL.
+      { userAgent: "*", allow: "/", disallow: CARD_PATHS },
       {
         userAgent: DISCOVERY_AGENTS,
         allow: "/",

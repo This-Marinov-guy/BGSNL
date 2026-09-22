@@ -3,9 +3,75 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import net from "node:net";
+import { EventEmitter } from "node:events";
+import { PassThrough } from "node:stream";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
-import { clearPorts, listeners, localEnvironments, waitForReady } from "../../start-local.mjs";
+import { clearPorts, listeners, localEnvironments, waitForReady } from "./dev-services.mjs";
+import { applySigningSecret, checkStripeCli, configureTestStripe, stripeService, waitForStripeReady, STRIPE_FORWARD_URL } from "./local-stripe.mjs";
+
+const testStripe = { STRIPE_NL_SECRET_KEY: "sk_test_fixture", STRIPE_NL_PUBLISHABLE_KEY: "pk_test_fixture" };
+
+test("local Stripe uses one test account for every region and preserves the source env", () => {
+  const original = { ...testStripe, STRIPE_RTM_SECRET_KEY: "sk_live_existing", STRIPE_NL_WEBHOOK_CH_KEY: "whsec_old" };
+  const env = configureTestStripe(original);
+  for (const region of ["NL", "GRO", "AMS", "EIN", "RTM", "LWD", "LDHG"]) {
+    assert.equal(env[`STRIPE_${region}_SECRET_KEY`], testStripe.STRIPE_NL_SECRET_KEY);
+    assert.equal(env[`STRIPE_${region}_PUBLISHABLE_KEY`], testStripe.STRIPE_NL_PUBLISHABLE_KEY);
+    assert.equal(env[`STRIPE_${region}_WEBHOOK_CH_KEY`], "");
+  }
+  applySigningSecret(env, "whsec_fixture");
+  assert.equal(env.STRIPE_NL_WEBHOOK_CH_KEY, "whsec_fixture");
+  assert.equal(env.STRIPE_RTM_WEBHOOK_CH_KEY, "whsec_fixture");
+  assert.equal(env.STRIPE_WEBHOOK_CH_KEY, "whsec_fixture");
+  assert.equal(original.STRIPE_NL_WEBHOOK_CH_KEY, "whsec_old");
+  assert.equal(original.STRIPE_RTM_SECRET_KEY, "sk_live_existing");
+  assert.throws(() => configureTestStripe({ ...testStripe, STRIPE_NL_SECRET_KEY: "sk_live_bad" }), /test keys/);
+  assert.throws(() => configureTestStripe({ ...testStripe, STRIPE_NL_PUBLISHABLE_KEY: "pk_live_bad" }), /test keys/);
+  assert.throws(() => configureTestStripe({}), /test keys/);
+});
+
+test("explicit test credentials override regional credentials; CLI never exposes the key in args", () => {
+  const api = { cwd: "/fixture", env: configureTestStripe({ ...testStripe, STRIPE_SECRET_KEY_TEST: "sk_test_override", STRIPE_PUBLISHABLE_KEY_TEST: "pk_test_override" }) };
+  const listener = stripeService(api, { STRIPE_API_KEY: "sk_live_wrong" });
+  assert.equal(listener.env.STRIPE_API_KEY, "sk_test_override");
+  assert.ok(listener.args.includes(STRIPE_FORWARD_URL));
+  assert.ok(!listener.args.some((arg) => arg.includes("sk_test_") || arg === "--live"));
+});
+
+const fakeStripe = () => Object.assign(new EventEmitter(), { stdout: new PassThrough(), stderr: new PassThrough() });
+
+test("listener readiness injects split signing secrets without logging credentials", async () => {
+  const child = fakeStripe();
+  const api = { env: configureTestStripe(testStripe) };
+  const service = stripeService(api, {});
+  const output = [];
+  const ready = waitForStripeReady(service, { child, log: (line) => output.push(line) });
+  child.stderr.write('> Ready! Your webhook signing secret is whsec_');
+  assert.equal(api.env.STRIPE_NL_WEBHOOK_CH_KEY, "");
+  child.stderr.write('fixture (^C to quit)\n');
+  await ready;
+  assert.equal(api.env.STRIPE_NL_WEBHOOK_CH_KEY, "whsec_fixture");
+  child.stdout.write('200 checkout.session.completed\n');
+  assert.match(output.join("\n"), /200 checkout.session.completed/);
+  assert.doesNotMatch(output.join("\n"), /whsec_/);
+});
+
+test("listener fails promptly on exit, spawn error, timeout or cancellation", async () => {
+  for (const failure of ["exit", "error", "timeout", "abort"]) {
+    const child = fakeStripe();
+    const abort = new AbortController();
+    const ready = waitForStripeReady({ name: "stripe", onSecret() {} }, { child, signal: abort.signal, timeoutMs: 10, log() {} });
+    const rejected = assert.rejects(ready, /Stripe/);
+    if (failure === "abort") abort.abort();
+    else if (failure !== "timeout") child.emit(failure);
+    await rejected;
+  }
+});
+
+test("Stripe preflight reports missing CLI without leaking command output", async () => {
+  await assert.rejects(checkStripeCli("missing", async () => { throw new Error("sk_test_hidden"); }), /Stripe CLI is required/);
+});
 
 const api = { DB: "example.test", DB_USER: "test", DB_PASS: "test-password", SSR_SERVER_KEY: "private-ssr-key", APP_ENV: "prod" };
 const mailer = { MAILER_ADMIN_SECRET: "admin-secret", BULGARIANSOCIETY_EMAIL_DATABASE_URL: "postgres://localhost/test", APP_ENV: "prod" };
@@ -103,9 +169,17 @@ test("integration: an occupied fixture port is freed without touching another li
 for (const fail of [false, true]) {
   test(`integration: launcher ${fail ? "cleans up after readiness failure" : "starts all services and Ctrl+C cleans up"}`, { timeout: 15000 }, async (t) => {
     const ports = await Promise.all([freePort(), freePort(), freePort()]);
-    const services = ports.map((port, index) => ({ name: `fixture-${index}`, port, health: "/", command: process.execPath, args: [fixture, String(port)], env: { NODE_ENV: "test", FIXTURE_STATUS: fail && index === 1 ? "503" : "200" } }));
-    const moduleUrl = new URL("../../start-local.mjs", import.meta.url).href;
-    const code = `import { runServices, waitForReady } from ${JSON.stringify(moduleUrl)}; process.exitCode = await runServices(${JSON.stringify(services)}, { shutdownMs: 1500, ready: (s, options) => waitForReady(s, { ...options, timeoutMs: 1000 }) });`;
+    const services = ports.map((port, index) => ({ name: `fixture-${index}`, port, health: "/", command: process.execPath, args: [fixture, String(port)], env: { NODE_ENV: "test", FIXTURE_REQUIRE_STRIPE: "true", FIXTURE_STATUS: fail && index === 1 ? "503" : "200" } }));
+    const moduleUrl = new URL("./dev-services.mjs", import.meta.url).href;
+    const stripeModule = new URL("./local-stripe.mjs", import.meta.url).href;
+    const stripeFixture = fileURLToPath(new URL("./fixtures/stripe-listener.mjs", import.meta.url));
+    const code = `import { runServices, waitForReady } from ${JSON.stringify(moduleUrl)};
+      import { waitForStripeReady, applySigningSecret } from ${JSON.stringify(stripeModule)};
+      const services = ${JSON.stringify(services)};
+      const stripe = { name: "stripe-webhooks", command: process.execPath, args: [${JSON.stringify(stripeFixture)}],
+        env: { NODE_ENV: "test" }, ready: waitForStripeReady,
+        onSecret: (secret) => services.forEach(service => applySigningSecret(service.env, secret)) };
+      process.exitCode = await runServices([stripe, ...services], { shutdownMs: 1500, ready: (s, options) => waitForReady(s, { ...options, timeoutMs: 1000 }) });`;
     const child = spawn(process.execPath, ["--input-type=module", "-e", code], { stdio: ["ignore", "pipe", "pipe"] });
     const exited = once(child, "exit");
     t.after(() => { try { child.kill("SIGTERM"); } catch { /* Launcher already exited. */ } });
@@ -121,6 +195,7 @@ for (const fail of [false, true]) {
     }
     const [exitCode] = await exited;
     assert.equal(exitCode, fail ? 1 : 0, output);
+    assert.doesNotMatch(output, /whsec_/);
     for (const port of ports) assert.deepEqual(await listeners(port), [], output);
   });
 }

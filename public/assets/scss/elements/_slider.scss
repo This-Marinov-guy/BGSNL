@@ -706,13 +706,42 @@ Slider Default Button And Dot STyle
     bottom: 0;
     left: 0;
     z-index: 5;
+    isolation: isolate;
+    overflow: hidden;
     min-height: 46px;
     padding: 10px 24px;
     background: rgba($body-color, 0.92);
     color: #fff;
     text-align: center;
+
+    &::before,
+    &::after {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: -1;
+      width: clamp(76px, 9vw, 128px);
+      background-image: url("/assets/images/border-red.webp");
+      background-repeat: no-repeat;
+      background-size: 430px 430px;
+      content: "";
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
+    &::before {
+      left: 0;
+      background-position: left top;
+    }
+
+    &::after {
+      right: 0;
+      background-position: right top;
+    }
   }
   .hero-event-line__viewport {
+    position: relative;
+    z-index: 1;
     min-height: 26px;
     perspective: 560px;
   }
@@ -747,7 +776,14 @@ Slider Default Button And Dot STyle
   @media #{$sm-layout} {
     .hero-event-line {
       min-height: 58px;
-      padding: 8px 18px;
+      padding: 8px 58px;
+
+      &::before,
+      &::after {
+        width: 68px;
+        background-size: 380px 380px;
+        opacity: 0.68;
+      }
     }
     .hero-event-line__viewport {
       min-height: 42px;
