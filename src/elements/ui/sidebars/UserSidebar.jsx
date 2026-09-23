@@ -114,6 +114,12 @@ const UserSidebar = ({
       label: "Manage Events",
       to: "/user/dashboard/events",
     },
+    hasRole(ACCESS_4) && {
+      icon: adminNavLocked ? restrictedIcon : <FaTicketAlt />,
+      label: "Ticket Scanner",
+      to: "/user/dashboard/ticket-scanner",
+      newTab: true,
+    },
     hasRole(ACCESS_2) && {
       icon: adminNavLocked ? restrictedIcon : <FaBriefcase />,
       label: "Manage Internships",
@@ -150,10 +156,12 @@ const UserSidebar = ({
         </button>
       )}
 
-      {isMobile && isSidebarOpen ? (
+      {isMobile ? (
         <button
           aria-hidden="true"
-          className="user-sidebar-backdrop"
+          className={`user-sidebar-backdrop ${
+            isSidebarOpen ? "is-visible" : ""
+          }`}
           onClick={toggleSidebar}
           tabIndex={-1}
           type="button"
@@ -260,6 +268,8 @@ const UserSidebar = ({
                 {adminLinks.map((link) => (
                   <li key={link.to}>
                     <Link
+                      rel={link.newTab ? "noopener noreferrer" : undefined}
+                      target={link.newTab ? "_blank" : undefined}
                       to={link.to}
                       onClick={() => {
                         if (isMobile) toggleSidebar();

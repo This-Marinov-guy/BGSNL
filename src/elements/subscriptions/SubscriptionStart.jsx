@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import AppModal from "@/elements/ui/modals/AppModal";
 import { IconlyQuestion } from "@/elements/ui/icons/IconlyIcons";
+import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "@/util/analytics/events.mjs";
+import { clarityEvent } from "@/util/functions/helpers";
 import MembershipTypeCard from "./MembershipTypeCard";
 import { paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
@@ -102,7 +104,10 @@ export function SubscriptionCheckoutForm({
   };
 
   const chooseMembershipType = (nextType) => {
-    if (pending || !plans?.some((plan) => plan.type === nextType)) return;
+    if (pending || (nextType && !plans?.some((plan) => plan.type === nextType))) return;
+    if (nextType) clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_TYPE_SELECTED, {
+      [ANALYTICS_PROPERTIES.MEMBERSHIP_TYPE]: nextType,
+    });
     setType(nextType);
     setPriceId("");
     setCheckoutError("");
@@ -116,6 +121,10 @@ export function SubscriptionCheckoutForm({
     setPending(true);
     setCheckoutError("");
     onPendingChange(true);
+    clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_CHECKOUT_STARTED, {
+      [ANALYTICS_PROPERTIES.MEMBERSHIP_TYPE]: selected.type,
+      [ANALYTICS_PROPERTIES.MEMBERSHIP_PLAN]: subscriptionPlanLabel(selected),
+    });
     try {
       await onCheckout(selected.priceId);
       // Stay disabled after success while the browser leaves for Stripe.
@@ -124,6 +133,9 @@ export function SubscriptionCheckoutForm({
       submitting.current = false;
       setPending(false);
       onPendingChange(false);
+      clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_PAYMENT_FAILED, {
+        [ANALYTICS_PROPERTIES.PAYMENT_STATUS]: "checkout_launch_failed",
+      });
       setCheckoutError("We could not open the payment page. Please try again or contact support if the problem continues.");
     }
   };
@@ -154,7 +166,7 @@ export function SubscriptionCheckoutForm({
               </button>
             </div>
             <SelectInput autoFocus className="bgsnl-form-control" id={`${id}-type`} value={type} disabled={pending} required
-              onChange={(event) => { setType(event.target.value); setPriceId(""); setCheckoutError(""); }}>
+              onChange={(event) => chooseMembershipType(event.target.value)}>
               <option value="">Choose Member or Alumni</option>
               <option value="member" disabled={!plans.some((plan) => plan.type === "member")}>Member</option>
               <option value="alumni" disabled={!plans.some((plan) => plan.type === "alumni")}>Alumni</option>
@@ -163,7 +175,15 @@ export function SubscriptionCheckoutForm({
           <div className={`rn-form-group ${styles.checkoutField}`}>
             <label htmlFor={`${id}-plan`}>{type === "alumni" ? "Alumni tier" : "Membership period"}</label>
             <SelectInput className="bgsnl-form-control" id={`${id}-plan`} value={priceId} disabled={!type || pending} required
-              aria-describedby={`${id}-help`} onChange={(event) => { setPriceId(event.target.value); setCheckoutError(""); }}>
+              aria-describedby={`${id}-help`} onChange={(event) => {
+                const nextPlan = options.find((plan) => plan.priceId === event.target.value);
+                setPriceId(event.target.value);
+                setCheckoutError("");
+                if (nextPlan) clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_PLAN_SELECTED, {
+                  [ANALYTICS_PROPERTIES.MEMBERSHIP_TYPE]: type,
+                  [ANALYTICS_PROPERTIES.MEMBERSHIP_PLAN]: subscriptionPlanLabel(nextPlan),
+                });
+              }}>
               <option value="">{type === "alumni" ? "Select a tier" : "Select a period"}</option>
               {options.map((plan) => <option key={plan.priceId} value={plan.priceId}>{subscriptionPlanLabel(plan)}</option>)}
             </SelectInput>
@@ -235,7 +255,10 @@ export default function SubscriptionStart({ linkStyle = false }) {
 
   return (
     <>
-      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" onClick={() => setOpen(true)}>Start subscription</button>
+      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" onClick={() => {
+        clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_CTA_CLICKED, { [ANALYTICS_PROPERTIES.SOURCE]: "subscription_start" });
+        setOpen(true);
+      }}>Start subscription</button>
       <AppModal open={open} onClose={close} title="Choose your subscription" closable={!pending && !membershipGuideOpen} dismissableMask={!pending && !membershipGuideOpen} suspended={membershipGuideOpen}>
         {open && <SubscriptionCheckoutForm loadPlans={loadPlans} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
       </AppModal>

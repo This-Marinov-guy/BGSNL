@@ -8,11 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "@/redux/notification";
 import { selectUser } from "@/redux/user";
 import { browserFetch } from "@/util/auth/browser-request.mjs";
+import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "@/util/analytics/events.mjs";
+import { clarityEvent } from "@/util/functions/helpers";
 import { readWalletDevice, walletDeviceMessage, availableWalletProvider, validGoogleWalletSaveUrl } from "@/util/wallet/device-support.mjs";
 import { IconlyExternalLink, IconlyPlus, IconlyRotate, IconlyShare, IconlyWallet } from "@/elements/ui/icons/IconlyIcons";
 import ImageTooltip from "@/elements/ui/media/ImageTooltip";
 import WalletBadge from "./WalletBadge";
 import styles from "./wallet.module.scss";
+
+const WALLET_LOADING_TOAST = "wallet-card-preparation";
 
 export default function WalletSettings({ user }) {
   const dispatch = useDispatch();
@@ -29,7 +33,19 @@ export default function WalletSettings({ user }) {
   const action = useRef(null);
   const reportError = useCallback((message) => {
     setActionError(message);
-    dispatch(showNotification({ severity: "error", summary: "Wallet card", detail: message, life: 6000 }));
+    dispatch(showNotification({ severity: "error", summary: "Wallet card", detail: message, life: 6000, dismissToast: WALLET_LOADING_TOAST }));
+  }, [dispatch]);
+  const showLoadingToast = useCallback(() => {
+    dispatch(showNotification({
+      severity: "info",
+      loading: true,
+      detail: "Preparing your card…",
+      toastId: WALLET_LOADING_TOAST,
+      life: Infinity,
+    }));
+  }, [dispatch]);
+  const dismissLoadingToast = useCallback(() => {
+    dispatch(showNotification({ dismissToast: WALLET_LOADING_TOAST }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -86,15 +102,21 @@ export default function WalletSettings({ user }) {
     action.current = controller;
     const timeout = setTimeout(() => controller.abort(), 30000);
     setBusy(true); setActionError("");
+    showLoadingToast();
+    let completed = false;
     try {
       const response = await browserFetch("/api/user/wallet/card", { method: "POST", signal: controller.signal });
       if (!response.ok) throw new Error("Your card could not be created. Please try again.");
-      if (!controller.signal.aborted) setAttempt((value) => value + 1);
+      if (!controller.signal.aborted) { setAttempt((value) => value + 1); completed = true; }
     } catch (error) {
       if (action.current === controller) reportError(controller.signal.aborted ? "The request timed out. Please try again." : error.message);
     } finally {
       clearTimeout(timeout);
-      if (action.current === controller) { action.current = null; setBusy(false); }
+      if (action.current === controller) {
+        action.current = null;
+        setBusy(false);
+        if (completed) dismissLoadingToast();
+      }
     }
   };
   const share = async () => {
@@ -113,10 +135,13 @@ export default function WalletSettings({ user }) {
   const add = async () => {
     if (membershipLocked || !provider || !hasCard || busy) return;
     if (action.current) return;
+    clarityEvent(ANALYTICS_EVENTS.WALLET_ADD_CLICKED, { [ANALYTICS_PROPERTIES.WALLET_PROVIDER]: provider });
     const controller = new AbortController();
     action.current = controller;
     const timeout = setTimeout(() => controller.abort(), 35000);
     setBusy(true); setActionError("");
+    showLoadingToast();
+    let completed = false;
     try {
       // Recheck immediately before navigating, not just when Settings mounted.
       const fresh = await browserFetch("/api/user/wallet/availability", { signal: controller.signal });
@@ -126,9 +151,16 @@ export default function WalletSettings({ user }) {
       setCheck({ identity, data: availability });
       if (!availability.hasCard || availableWalletProvider(readWalletDevice(), availability) !== provider) throw new Error("This card is not currently available for this device.");
       if (provider === "apple") {
-        // Top-level navigation lets Safari handle application/vnd.apple.pkpass.
-        // Do not turn the pass into a blob download or a new popup window.
-        window.location.assign("/api/user/wallet/apple");
+        // Preserve the account page while Safari handles the pass MIME type.
+        // A normal download link retains the native Wallet install sheet without
+        // replacing this page with the .pkpass response.
+        const link = document.createElement("a");
+        link.href = "/api/user/wallet/apple";
+        link.download = "bgsnl-membership.pkpass";
+        link.hidden = true;
+        document.body.append(link);
+        link.click();
+        link.remove();
       } else {
         const response = await browserFetch("/api/user/wallet/google", { method: "POST", signal: controller.signal });
         const result = await response.json();
@@ -136,11 +168,16 @@ export default function WalletSettings({ user }) {
         if (!response.ok || !validGoogleWalletSaveUrl(result?.saveUrl)) throw new Error("Google Wallet could not prepare your card. Please try again.");
         window.location.assign(result.saveUrl);
       }
+      completed = true;
     } catch (error) {
       if (action.current === controller) reportError(controller.signal.aborted ? "The request timed out. Please try again." : error.message);
     } finally {
       clearTimeout(timeout);
-      if (action.current === controller) { action.current = null; setBusy(false); }
+      if (action.current === controller) {
+        action.current = null;
+        setBusy(false);
+        if (completed) dismissLoadingToast();
+      }
     }
   };
 
@@ -163,7 +200,6 @@ export default function WalletSettings({ user }) {
       <h3 className="settings-list__title">{roles?.includes("alumni") ? "Alumni card" : "Membership card"}</h3>
       {!membershipLocked && hasCard && <p className="settings-list__description">Your card is ready. Open or share it, or scan its QR code for current membership status.</p>}
       {!membershipLocked && shareMessage && <p className="settings-list__description" role="status">{shareMessage}</p>}
-      {!membershipLocked && busy && <p className="settings-list__description" role="status">Preparing your card…</p>}
       {!membershipLocked && actionError && <p className="settings-list__description" role="alert">{actionError}</p>}
     </div>
     <div className={`settings-list__action ${styles.actions}`}>

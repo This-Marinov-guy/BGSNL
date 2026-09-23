@@ -320,11 +320,8 @@ const MembersList = () => {
         </div>
       </div>
 
-      {isAdmin && <Filter title="Member filters" onClear={() => {
-        setSearchParams((current) => {
-          current.delete("memberStatus");
-          return current;
-        });
+      {isAdmin && <Filter title="Member filters" onClear={(current) => {
+        current.delete("memberStatus");
       }}>
         <label>
           <span>Status</span>

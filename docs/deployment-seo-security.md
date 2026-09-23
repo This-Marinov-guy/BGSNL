@@ -9,6 +9,7 @@ Set the following server-only values in the production deployment manager. Do no
 | Google Scripts export | API `GOOGLE_SCRIPTS_PASS` | Separate random service key, at least 32 characters. The integration is intentionally unavailable until configured. |
 | Koko mobile integration | API `KOKO_APP_PASS` | Separate random service key, at least 32 characters. |
 | Website revalidation | Website `SITEMAP_REVALIDATE_TOKEN` | Random secret used only by the GitHub workflow. |
+| Event archive schedule | Website `CRON_SECRET` | Separate random secret, at least 32 bytes. Vercel uses it to invoke the daily event-archive job. |
 | Event sitemap dispatch | API `GITHUB_SITEMAP_REPOSITORY`, `GITHUB_SITEMAP_DISPATCH_TOKEN` | Repository `owner/name` and a fine-grained token scoped to this repository with **Contents: write** only (required for GitHub repository dispatch). Optional; timed sitemap revalidation remains the fallback. |
 | GitHub Actions | `SITEMAP_REVALIDATE_URL`, `SITEMAP_REVALIDATE_TOKEN` | URL is `https://www.bulgariansociety.nl/api/revalidate`; token must equal the website value. |
 

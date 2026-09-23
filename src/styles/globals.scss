@@ -79,6 +79,11 @@ body {
   top: -72px;
 }
 
+/* User routes use the same warm canvas without the stitched pattern. */
+.global-site-shell--user {
+  background-color: var(--site-background);
+}
+
 .global-site-content {
   background: transparent;
   display: flow-root;
@@ -949,6 +954,23 @@ textarea.bgsnl-form-control {
   height: clamp(7rem, 11vw, 9rem);
   object-fit: contain;
   width: clamp(7rem, 11vw, 9rem);
+}
+
+.account-state__error-icon {
+  align-items: center;
+  background: rgb(158 13 51 / 8%);
+  border: 1px solid rgb(158 13 51 / 16%);
+  border-radius: 50%;
+  color: #9e0d33;
+  display: inline-flex;
+  height: clamp(5.25rem, 9vw, 6.5rem);
+  justify-content: center;
+  width: clamp(5.25rem, 9vw, 6.5rem);
+}
+
+.account-state__error-icon svg {
+  height: clamp(2.75rem, 5vw, 3.5rem);
+  width: clamp(2.75rem, 5vw, 3.5rem);
 }
 
 .account-state__content h3,

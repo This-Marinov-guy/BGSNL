@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { FiX } from "@/elements/ui/icons/IconlyIcons";
+import { FiX, FiMaximize2, FiMinimize2 } from "@/elements/ui/icons/IconlyIcons";
 
 const CLOSE_ANIMATION_MS = 180;
 
@@ -40,12 +41,19 @@ const AppModal = ({
   headerStyle,
   ariaLabel,
   suspended = false,
+  maximizable = true,
+  maximized,
+  onMaximize,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPresent, setIsPresent] = useState(open);
+  const [fullscreen, setFullscreen] = useState(false);
+  const isFullscreen = maximizable && (maximized ?? fullscreen);
   const titleId = useId();
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
+  const fullscreenAnimationRef = useRef(null);
+  const fullscreenOriginRef = useRef(null);
   const onCloseRef = useRef(onClose);
 
   useEffect(() => {
@@ -61,6 +69,8 @@ const AppModal = ({
       setIsPresent(true);
       return undefined;
     }
+
+    setFullscreen(false);
 
     const timeout = window.setTimeout(
       () => setIsPresent(false),
@@ -123,11 +133,89 @@ const AppModal = ({
     };
   }, [blockScroll, modal, open]);
 
+  useLayoutEffect(() => {
+    const dialog = dialogRef.current;
+    const origin = fullscreenOriginRef.current;
+    fullscreenOriginRef.current = null;
+
+    if (!dialog || !origin) return undefined;
+
+    fullscreenAnimationRef.current?.cancel();
+
+    if (
+      typeof dialog.animate !== "function" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return undefined;
+    }
+
+    const targetRect = dialog.getBoundingClientRect();
+    if (targetRect.width === 0 || targetRect.height === 0) return undefined;
+
+    const targetStyle = window.getComputedStyle(dialog);
+    const translateX = origin.rect.left - targetRect.left;
+    const translateY = origin.rect.top - targetRect.top;
+    const scaleX = origin.rect.width / targetRect.width;
+    const scaleY = origin.rect.height / targetRect.height;
+
+    dialog.style.willChange = "transform, border-radius, box-shadow";
+    const animation = dialog.animate(
+      [
+        {
+          borderRadius: origin.borderRadius,
+          boxShadow: origin.boxShadow,
+          transform: `translate(${translateX}px, ${translateY}px) scale(${scaleX}, ${scaleY})`,
+          transformOrigin: "top left",
+        },
+        {
+          borderRadius: targetStyle.borderRadius,
+          boxShadow: targetStyle.boxShadow,
+          transform: "translate(0, 0) scale(1, 1)",
+          transformOrigin: "top left",
+        },
+      ],
+      {
+        duration: isFullscreen ? 340 : 260,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+      }
+    );
+
+    fullscreenAnimationRef.current = animation;
+    const clearAnimationState = () => {
+      if (fullscreenAnimationRef.current === animation) {
+        fullscreenAnimationRef.current = null;
+        dialog.style.willChange = "";
+      }
+    };
+
+    animation.addEventListener("finish", clearAnimationState, { once: true });
+    animation.addEventListener("cancel", clearAnimationState, { once: true });
+
+    return () => animation.cancel();
+  }, [isFullscreen]);
+
   if (!isMounted || !isPresent) return null;
 
   const handleMaskClick = (event) => {
     if (dismissableMask && event.target === event.currentTarget) onClose?.();
   };
+
+  const handleFullscreenToggle = (event) => {
+    const dialog = dialogRef.current;
+    if (dialog) {
+      const currentStyle = window.getComputedStyle(dialog);
+      fullscreenOriginRef.current = {
+        borderRadius: currentStyle.borderRadius,
+        boxShadow: currentStyle.boxShadow,
+        rect: dialog.getBoundingClientRect(),
+      };
+    }
+
+    const next = !isFullscreen;
+    if (maximized === undefined) setFullscreen(next);
+    onMaximize?.({ originalEvent: event, maximized: next });
+  };
+
   const TitleElement = typeof title === "string" ? "h2" : "div";
 
   return createPortal(
@@ -138,6 +226,7 @@ const AppModal = ({
         maskClassName,
         !modal && "bgsnl-modal-mask--modeless",
         suspended && "bgsnl-modal-mask--suspended",
+        isFullscreen && "bgsnl-modal-mask--fullscreen",
         open ? "is-open" : "is-closing"
       )}
       onMouseDown={handleMaskClick}
@@ -147,15 +236,33 @@ const AppModal = ({
         aria-labelledby={title != null ? titleId : undefined}
         aria-hidden={suspended ? "true" : undefined}
         aria-modal={modal && !suspended ? "true" : undefined}
-        className={joinClasses("bgsnl-modal", "p-dialog", className)}
+        className={joinClasses(
+          "bgsnl-modal",
+          "p-dialog",
+          className,
+          isFullscreen && "bgsnl-modal--fullscreen"
+        )}
         inert={suspended ? true : undefined}
         ref={dialogRef}
         role="dialog"
-        style={style}
+        style={
+          isFullscreen
+            ? {
+                ...style,
+                borderRadius: 0,
+                height: "100dvh",
+                margin: 0,
+                maxHeight: "100dvh",
+                maxWidth: "none",
+                minHeight: 0,
+                width: "100%",
+              }
+            : style
+        }
         tabIndex={-1}
         onMouseDown={(event) => event.stopPropagation()}
       >
-        {(title != null || closable) && (
+        {(title != null || closable || maximizable) && (
           <header
             className={joinClasses(
               "bgsnl-modal__header",
@@ -172,17 +279,39 @@ const AppModal = ({
                 {title}
               </TitleElement>
             )}
-            {closable && (
-              <button
-                aria-label="Close dialog"
-                className="bgsnl-modal__close p-dialog-header-close"
-                onClick={onClose}
-                ref={closeButtonRef}
-                type="button"
-              >
-                <FiX aria-hidden size={16} />
-              </button>
-            )}
+            <div className="bgsnl-modal__controls">
+              {maximizable && (
+                <button
+                  aria-label={
+                    isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
+                  }
+                  aria-pressed={isFullscreen}
+                  className="bgsnl-modal__maximize"
+                  onClick={handleFullscreenToggle}
+                  title={
+                    isFullscreen ? "Exit fullscreen" : "Enter fullscreen"
+                  }
+                  type="button"
+                >
+                  {isFullscreen ? (
+                    <FiMinimize2 aria-hidden size={16} />
+                  ) : (
+                    <FiMaximize2 aria-hidden size={16} />
+                  )}
+                </button>
+              )}
+              {closable && (
+                <button
+                  aria-label="Close dialog"
+                  className="bgsnl-modal__close p-dialog-header-close"
+                  onClick={onClose}
+                  ref={closeButtonRef}
+                  type="button"
+                >
+                  <FiX aria-hidden size={16} />
+                </button>
+              )}
+            </div>
           </header>
         )}
 
@@ -234,6 +363,9 @@ AppModal.propTypes = {
   headerStyle: PropTypes.object,
   ariaLabel: PropTypes.string,
   suspended: PropTypes.bool,
+  maximizable: PropTypes.bool,
+  maximized: PropTypes.bool,
+  onMaximize: PropTypes.func,
 };
 
 export default AppModal;

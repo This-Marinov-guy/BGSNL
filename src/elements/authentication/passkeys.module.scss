@@ -22,6 +22,26 @@
 .settings { min-width: 0; margin-top: 1.5rem; }
 .panelBody { grid-column: 1 / -1; min-width: 0; }
 .status { margin: 0.75rem 0; p { margin: 0 0 0.75rem; } }
+.skeleton { margin: 1rem 0; }
+.skeletonItem {
+  align-items: center;
+  background: var(--color-white, #fff);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 1rem;
+}
+.skeletonText { display: grid; gap: 0.55rem; min-width: 0; }
+.skeletonBlock {
+  animation: passkey-skeleton-pulse 1.3s ease-in-out infinite;
+  background: #d6e1dc;
+  border-radius: 0.4rem;
+  display: block;
+}
+.skeletonTitle { height: 1.15rem; width: min(55%, 14rem); }
+.skeletonMeta { height: 0.9rem; width: min(38%, 10rem); }
+.skeletonAction { border-radius: 0.5rem; height: 2rem; width: 2rem; }
 .list { display: grid; gap: 0.75rem; list-style: none; padding: 0; margin: 1rem 0; }
 .item {
   display: grid;
@@ -64,3 +84,12 @@
   }
 }
 .formActions { grid-column: 1 / -1; }
+
+@keyframes passkey-skeleton-pulse {
+  0%, 100% { opacity: 0.48; }
+  50% { opacity: 0.9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonBlock { animation: none; }
+}

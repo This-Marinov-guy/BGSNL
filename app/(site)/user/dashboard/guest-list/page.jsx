@@ -1,16 +1,13 @@
-import AuthLayout from "@/layouts/authentication/AuthLayout";
-import { ACCESS_4 } from "@/util/defines/common";
-import CheckTicket from "@/screens/redirects/CheckTicket";
+import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Check Guest List",
+  title: "Ticket Scanner",
   robots: { index: false, follow: false },
 };
 
-export default function Page() {
-  return (
-    <AuthLayout access={ACCESS_4}>
-      <CheckTicket />
-    </AuthLayout>
-  );
+// Keep shared and previously printed QR links working after moving the scanner
+// into its dedicated tool page.
+export default async function Page({ searchParams }) {
+  const query = new URLSearchParams(await searchParams);
+  redirect(`/user/dashboard/ticket-scanner${query.size ? `?${query}` : ""}`);
 }

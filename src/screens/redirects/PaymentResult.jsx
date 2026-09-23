@@ -14,6 +14,8 @@ import { showNotification } from "@/redux/notification";
 import styles from "./payment-result.module.scss";
 import { awaitingAccount } from "@/util/payments/return-policy.mjs";
 import { startPaymentSync } from "@/util/payments/background-sync.mjs";
+import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "@/util/analytics/events.mjs";
+import { clarityEvent } from "@/util/functions/helpers";
 
 const money = (amount, currency = "eur") => amount == null ? "—" : new Intl.NumberFormat("en-NL", { style: "currency", currency }).format(amount / 100);
 const messages = {
@@ -45,6 +47,19 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
   const identifier = successful && !free ? result.transactionId
     : !successful && !pending && !unavailable ? result.paymentIntentId : null;
   const identifierLabel = successful ? "Transaction ID" : "Payment Intent ID";
+
+  useEffect(() => {
+    if (unavailable || !result?.kind) return;
+    const eventFlow = result.kind === "subscription" ? "membership" : ["ticket", "free"].includes(result.kind) ? "event" : null;
+    if (!eventFlow) return;
+    if (state === "success") {
+      clarityEvent(eventFlow === "membership" ? ANALYTICS_EVENTS.MEMBERSHIP_PAYMENT_COMPLETED : ANALYTICS_EVENTS.EVENT_REGISTRATION_COMPLETED);
+    } else if (["cancelled", "failed", "expired"].includes(state)) {
+      clarityEvent(eventFlow === "membership" ? ANALYTICS_EVENTS.MEMBERSHIP_PAYMENT_FAILED : ANALYTICS_EVENTS.EVENT_REGISTRATION_FAILED, {
+        [ANALYTICS_PROPERTIES.PAYMENT_STATUS]: state,
+      });
+    }
+  }, [checkout, result?.kind, state, unavailable]);
 
   const copyIdentifier = async () => {
     try {

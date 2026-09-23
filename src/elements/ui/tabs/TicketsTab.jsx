@@ -27,7 +27,7 @@ const TicketsTab = ({ currentUser }) => {
   return (
     <div className="tab-content-wrapper">
       <UserTabHeader title="Tickets" />
-      <div className="tab-body">
+      <div className="tab-body tickets-tab-body">
         {isTier0Alumni ? (
           <div className="tier-restriction-card">
             <div className="restriction-icon">

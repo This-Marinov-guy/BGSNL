@@ -22,6 +22,8 @@ import {
 } from "../../../util/defines/common";
 import { DOCUMENT_TYPES } from "../../../util/defines/enum";
 import { REGION_WHATSAPP } from "../../../util/defines/REGIONS_DESIGN";
+import { ANALYTICS_EVENTS } from "../../../util/analytics/events.mjs";
+import { clarityEvent } from "../../../util/functions/helpers";
 import CVUploadModal from "../modals/CVUploadModal";
 
 const UserCard = ({ user, onUserRefresh }) => {
@@ -139,6 +141,7 @@ const UserCard = ({ user, onUserRefresh }) => {
       }
 
       if (response?.status === true) {
+        if (!shouldRemove) clarityEvent(ANALYTICS_EVENTS.CV_UPLOADED);
         dispatch(
           showNotification({
             severity: "success",
@@ -191,17 +194,17 @@ const UserCard = ({ user, onUserRefresh }) => {
                 onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}
                 type="button"
               >
-                <FiEdit2 aria-hidden size="0.95rem" />
+                <FiEdit2 aria-hidden size="1.25rem" />
               </button>
             </div>
             <ul className="list-style--1">
               <li>
-                <span className="bold">Full Name: </span>
+                <span className="bold">Name: </span>
                 {user.name + " " + user.surname}
               </li>
               {user?.birth && (
                 <li>
-                  <span className="bold">Date of Birth: </span>
+                  <span className="bold">Birth: </span>
                   {moment(user.birth).format("D MMM YYYY")}
                 </li>
               )}

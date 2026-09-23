@@ -16,7 +16,7 @@ DisclosureBody.propTypes = { children: PropTypes.node.isRequired, id: PropTypes.
 
 // Keep native details open until the closing animation completes. The separate
 // ref also handles rapid reopen clicks without a stale exit hiding the content.
-export default function AnimatedDisclosure({ summary, children, className = "", defaultOpen = false }) {
+export default function AnimatedDisclosure({ summary, children, className = "", defaultOpen = false, onExpandedChange }) {
   const id = useId();
   const [expanded, setExpanded] = useState(defaultOpen);
   const [visible, setVisible] = useState(defaultOpen);
@@ -26,6 +26,7 @@ export default function AnimatedDisclosure({ summary, children, className = "", 
     const next = !expandedRef.current;
     expandedRef.current = next;
     setExpanded(next);
+    onExpandedChange?.(next);
     if (next) setVisible(true);
   };
   return <details className={`animated-disclosure ${className}`.trim()} open={visible} data-expanded={expanded}>
@@ -35,4 +36,4 @@ export default function AnimatedDisclosure({ summary, children, className = "", 
     </AnimatePresence>
   </details>;
 }
-AnimatedDisclosure.propTypes = { summary: PropTypes.node.isRequired, children: PropTypes.node.isRequired, className: PropTypes.string, defaultOpen: PropTypes.bool };
+AnimatedDisclosure.propTypes = { summary: PropTypes.node.isRequired, children: PropTypes.node.isRequired, className: PropTypes.string, defaultOpen: PropTypes.bool, onExpandedChange: PropTypes.func };

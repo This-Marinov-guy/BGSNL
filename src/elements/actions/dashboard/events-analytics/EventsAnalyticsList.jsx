@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "@/util/navigation";
+import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { selectUser } from "../../../../redux/user";
 import { sessionClaims } from "../../../../util/functions/authorization";
@@ -31,6 +31,11 @@ const formatDateParam = (date) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+const parseDateParam = (value) => {
+  const parsed = moment(value, "YYYY-MM-DD", true);
+  return parsed.isValid() ? parsed.toDate() : null;
 };
 
 const euro = new globalThis.Intl.NumberFormat("en-NL", {
@@ -156,17 +161,30 @@ const EventsAnalyticsList = () => {
     totalEvents: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
-
   const user = useSelector(selectUser);
   const { roles, region } = sessionClaims(user.session);
   const isAdmin = hasOverlap(roles, ALL_EVENT_REGIONS_ACCESS);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useFilterSearchParams();
   const regionParam = REGIONS.includes(searchParams.get("region"))
     ? searchParams.get("region")
     : "";
+  const fromParam = searchParams.get("from") || "";
+  const toParam = searchParams.get("to") || "";
+  const fromDate = useMemo(() => parseDateParam(fromParam), [fromParam]);
+  const toDate = useMemo(() => parseDateParam(toParam), [toParam]);
+
+  const setDateFilter = (key, value) => {
+    setSearchParams((current) => {
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        current.set(key, formatDateParam(value));
+      } else {
+        current.delete(key);
+      }
+      current.delete("page");
+      return current;
+    });
+  };
 
   const { sendRequest } = useHttpClient();
 
@@ -229,13 +247,16 @@ const EventsAnalyticsList = () => {
         </button>
       </div>
 
-      <Filter showRegion={isAdmin} onClear={() => { setFromDate(null); setToDate(null); }}>
+      <Filter showRegion={isAdmin} onClear={(current) => {
+        current.delete("from");
+        current.delete("to");
+      }}>
         <div className="event-analytics-date-filter__field">
           <label htmlFor="analytics-from-date">From</label>
           <Calendar
             inputId="analytics-from-date"
             value={fromDate}
-            onChange={(event) => setFromDate(event.value)}
+            onChange={(event) => setDateFilter("from", event.value)}
             className="dashboard-date-input"
             placeholder="Select start date"
             dateFormat="dd/mm/yy"
@@ -247,7 +268,7 @@ const EventsAnalyticsList = () => {
           <Calendar
             inputId="analytics-to-date"
             value={toDate}
-            onChange={(event) => setToDate(event.value)}
+            onChange={(event) => setDateFilter("to", event.value)}
             className="dashboard-date-input"
             placeholder="Select end date"
             dateFormat="dd/mm/yy"

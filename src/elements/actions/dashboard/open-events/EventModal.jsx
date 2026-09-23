@@ -11,6 +11,7 @@ import { Dialog } from "@/compat/primereact";
 import {
   FiCheck,
   IconlyDelete,
+  IconlyCopy,
   IconlyEdit,
   IconlyExternalLink,
   IconlyLink,
@@ -128,17 +129,30 @@ PriceOption.propTypes = {
   price: PropTypes.string.isRequired,
 };
 
-const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
+const EventModal = ({
+  event: storedEvent,
+  extended,
+  fullscreen,
+  guestSearch,
+  loadData,
+  modalView,
+  onExtendedChange,
+  onFullscreenChange,
+  onGuestSearchChange,
+  onModalViewChange,
+  setShow,
+  show,
+}) => {
   const event = useMemo(() => eventModalData(storedEvent), [storedEvent]);
   const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
   const [ticketGeneratorVisible, setTicketGeneratorVisible] = useState(false);
-  const [guestListVisible, setGuestListVisible] = useState(false);
   const [previewMedia, setPreviewMedia] = useState(null);
   const [savingSales, setSavingSales] = useState(false);
   const { sendRequest, loading } = useHttpClient();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const guestListVisible = modalView === "guest-list";
 
   const isDraft = event.status === "draft";
   const eventTitle = event.title || "Untitled draft";
@@ -206,15 +220,14 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
     navigate(`/user/dashboard/events/${event.id}/edit`);
   };
 
-  const copyPublicEventLink = async () => {
-    if (!publicEventUrl) return;
+  const copyEventText = async (text, label) => {
+    if (!text) return;
     try {
-      const link = new URL(publicEventUrl, window.location.origin).href;
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(link);
+        await navigator.clipboard.writeText(text);
       } else {
         const field = document.createElement("textarea");
-        field.value = link;
+        field.value = text;
         field.style.position = "fixed";
         field.style.opacity = "0";
         document.body.append(field);
@@ -223,11 +236,12 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
         field.remove();
         if (!copied) throw new Error("Clipboard unavailable");
       }
-      dispatch(showNotification({ severity: "success", summary: "Event link copied" }));
+      dispatch(showNotification({ severity: "success", summary: `${label} copied` }));
     } catch {
-      dispatch(showNotification({ severity: "error", summary: "Could not copy the event link" }));
+      dispatch(showNotification({ severity: "error", summary: `Could not copy ${label.toLowerCase()}` }));
     }
   };
+  const copyPublicEventLink = () => publicEventUrl && copyEventText(new URL(publicEventUrl, window.location.origin).href, "Event link");
 
   const modalHeader = (
     <div className="event-details-modal__heading">
@@ -237,7 +251,19 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
         >
           {statusLabel}
         </span>
-        <h2>{eventTitle}</h2>
+        <div className="event-details-modal__title-with-copy">
+          <h2>{eventTitle}</h2>
+          <button
+            type="button"
+            className="event-details-modal__copy-id"
+            aria-label="Copy event ID"
+            title="Copy event ID"
+            disabled={!(event.id || event._id)}
+            onClick={() => copyEventText(String(event.id || event._id || ""), "Event ID")}
+          >
+            <IconlyCopy aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -257,8 +283,14 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
         event={storedEvent}
       />
       <GuestListModal
+        extended={extended}
         event={storedEvent}
-        onHide={() => setGuestListVisible(false)}
+        maximized={guestListVisible && fullscreen}
+        onExtendedChange={onExtendedChange}
+        onHide={() => onModalViewChange("event")}
+        onMaximizeChange={onFullscreenChange}
+        onSearchChange={onGuestSearchChange}
+        search={guestSearch}
         visible={guestListVisible}
       />
       <Dialog
@@ -267,6 +299,8 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
         contentClassName="event-details-modal__body"
         dismissableMask
         header={modalHeader}
+        maximized={modalView === "event" && fullscreen}
+        onMaximize={({ maximized }) => onFullscreenChange(maximized)}
         onHide={closeModal}
         visible={show}
       >
@@ -300,7 +334,7 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
             {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
               <button
                 className="event-details-modal__action"
-                onClick={() => setGuestListVisible(true)}
+                onClick={() => onModalViewChange("guest-list")}
                 type="button"
                 title="Open guest list"
               >
@@ -457,6 +491,18 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
               </DetailSection>
               <EventUpsellDetails values={event} />
               <EventAddOnDetails addOns={event.addOns} />
+              <EventAdvertisedDetails links={event.subEvent?.links ?? []} renderImage={link => (
+                <figure className="event-review-modal__advertised-poster">
+                  <ImagePreviewTrigger
+                    className="event-review-modal__media-trigger"
+                    imageClassName="event-review-modal__advertised-image"
+                    src={link.poster}
+                    alt={`${link.name} poster`}
+                    aria-label={`Preview ${link.name} poster`}
+                    onClick={() => setPreviewMedia({ src: link.poster, alt: `${link.name} poster`, fileName: `${link.name}-poster` })}
+                  />
+                </figure>
+              )} />
             </div>
 
             <aside className="event-details-modal__side-column">
@@ -525,18 +571,6 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
                 )}
               </DetailSection>
               <EventQuestionDetails questions={event.extraInputsForm ?? []} />
-              <EventAdvertisedDetails links={event.subEvent?.links ?? []} renderImage={link => (
-                <figure className="event-review-modal__advertised-poster">
-                  <ImagePreviewTrigger
-                    className="event-review-modal__media-trigger"
-                    imageClassName="event-review-modal__advertised-image"
-                    src={link.poster}
-                    alt={`${link.name} poster`}
-                    aria-label={`Preview ${link.name} poster`}
-                    onClick={() => setPreviewMedia({ src: link.poster, alt: `${link.name} poster`, fileName: `${link.name}-poster` })}
-                  />
-                </figure>
-              )} />
             </aside>
           </div>
 
@@ -559,7 +593,15 @@ const EventModal = ({ event: storedEvent, show, setShow, loadData }) => {
 
 EventModal.propTypes = {
   event: PropTypes.object.isRequired,
+  extended: PropTypes.bool.isRequired,
+  fullscreen: PropTypes.bool.isRequired,
+  guestSearch: PropTypes.string.isRequired,
   loadData: PropTypes.func.isRequired,
+  modalView: PropTypes.oneOf(["event", "guest-list"]).isRequired,
+  onExtendedChange: PropTypes.func.isRequired,
+  onFullscreenChange: PropTypes.func.isRequired,
+  onGuestSearchChange: PropTypes.func.isRequired,
+  onModalViewChange: PropTypes.func.isRequired,
   setShow: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
 };

@@ -4,12 +4,17 @@ import PropTypes from "prop-types";
 import DigitalMembershipCard from "./DigitalMembershipCard";
 import MembershipCardSkeleton from "./MembershipCardSkeleton";
 import { FiRotateCw } from "@/elements/ui/icons/IconlyIcons";
+import { ANALYTICS_EVENTS } from "@/util/analytics/events.mjs";
+import { clarityEvent } from "@/util/functions/helpers";
 import styles from "@/screens/private/WalletCardPreview.module.scss";
 
 export default function PublicCard({ token }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    clarityEvent(ANALYTICS_EVENTS.USER_CARD_OPENED);
+  }, [token]);
   useEffect(() => {
     let active = true, controller;
     const load = async () => {

@@ -26,7 +26,8 @@ import {
 
 /*
  * react-hot-toast ships its own animated icons for success and error only, so
- * info and warning go through the plain toast() with one of the site's icons.
+ * info and warning go through the plain toast() with one of the site's icons;
+ * an info toast marked as loading uses its built-in spinner.
  * Every severity then arrives with an icon and the library's enter/exit
  * animation, which the previous toast.custom() implementation had to forgo:
  * custom toasts get no icon, no default styling and no animation at all.
@@ -92,6 +93,7 @@ const MainLayout = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    if (notification.dismissToast) toast.dismiss(notification.dismissToast);
     if (!notification.severity) return;
 
     const severity =
@@ -110,7 +112,9 @@ const MainLayout = ({ children }) => {
       style: { background: theme.background, color: theme.color },
     };
 
-    if (severity === "success" || severity === "error") {
+    if (notification.loading) {
+      toast.loading(message, { ...options, id: notification.toastId });
+    } else if (severity === "success" || severity === "error") {
       /*
        * The built-in indicator is a `primary` disc with the tick/cross punched
        * out of it in `secondary`. Inverting them against the filled background

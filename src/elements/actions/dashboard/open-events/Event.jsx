@@ -3,7 +3,6 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import { IconlyImageOff } from "@/elements/ui/icons/IconlyIcons";
 import { MOMENT_DATE_TIME } from "../../../../util/functions/date";
-import EventModal from "./EventModal";
 import { eventStatusLabel } from "../../../../util/functions/event-status.mjs";
 
 const formatPrice = (value) => {
@@ -13,9 +12,10 @@ const formatPrice = (value) => {
     : "—";
 };
 
-const Event = ({ event, loadData }) => {
-  const [show, setShow] = useState(false);
+const Event = ({ event, onOpen }) => {
+  const [posterFailed, setPosterFailed] = useState(false);
   const isDraft = event.status === "draft";
+  const hasPoster = Boolean(event.poster) && !posterFailed;
   const note = isDraft && typeof event.draftData?.note === "string" ? event.draftData.note.trim() : "";
 
   let price = "TBA";
@@ -35,30 +35,28 @@ const Event = ({ event, loadData }) => {
   const status = eventStatusLabel(event);
 
   return (
-    <>
-      <EventModal
-        show={show}
-        setShow={setShow}
-        event={event}
-        loadData={loadData}
-      />
       <article className={`event-card${isDraft ? " event-card--draft" : ""}`}>
         <button
           type="button"
           className="event-card__trigger"
-          onClick={() => setShow(true)}
+          onClick={onOpen}
           aria-label={`Open ${event.title || "untitled draft"}`}
         >
-          <div className="event-card__poster">
-            {event.poster ? (
+          <div
+            aria-label={hasPoster ? undefined : "No poster available"}
+            className={`event-card__poster${hasPoster ? "" : " event-card__poster--empty"}`}
+            role={hasPoster ? undefined : "img"}
+          >
+            {hasPoster ? (
               <img
                 src={event.poster}
                 alt={`${event.title || "Draft event"} poster`}
                 loading="lazy"
                 decoding="async"
+                onError={() => setPosterFailed(true)}
               />
             ) : (
-              <span role="img" aria-label="No poster available"><IconlyImageOff aria-hidden="true" /></span>
+              <IconlyImageOff className="event-card__poster-empty-icon" aria-hidden="true" />
             )}
           </div>
           <div className="event-card__content">
@@ -92,13 +90,12 @@ const Event = ({ event, loadData }) => {
           </div>
         </button>
       </article>
-    </>
   );
 };
 
 Event.propTypes = {
   event: PropTypes.object.isRequired,
-  loadData: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
 };
 
 export default Event;

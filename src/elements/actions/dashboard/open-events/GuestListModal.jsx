@@ -1,66 +1,60 @@
 import { Dialog, Skeleton } from "@/compat/primereact";
 import GuestListTable from "../GuestListTable";
-import { useHttpClient } from "@/hooks/common/http-hook";
+import GuestListSearch from "../GuestListSearch";
+import { useLiveGuestList } from "@/hooks/common/use-live-guest-list";
 import PropTypes from "prop-types";
-import { useEffect, useRef, useState } from "react";
+import { IconlyQrCode, IconlyDocument } from "@/elements/ui/icons/IconlyIcons";
 
-const GuestListModal = ({ event, onHide, visible }) => {
-  const [guests, setGuests] = useState([]);
-  const [columns, setColumns] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [pendingGuestIds, setPendingGuestIds] = useState([]);
-  const { sendRequest } = useHttpClient();
-  const requestRef = useRef(sendRequest);
-  requestRef.current = sendRequest;
+const GuestListModal = ({
+  event,
+  extended,
+  maximized,
+  onExtendedChange,
+  onHide,
+  onMaximizeChange,
+  onSearchChange,
+  search,
+  visible,
+}) => {
   const eventId = event.id || event._id;
+  const { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence } = useLiveGuestList(eventId, visible);
+  const openScanner = () => {
+    const url = new URL("/user/dashboard/ticket-scanner", window.location.origin);
+    url.searchParams.set("forEvent", eventId);
+    window.open(url.toString(), "_blank", "noopener,noreferrer");
+  };
 
-  useEffect(() => {
-    if (!visible || !eventId) return undefined;
-    let active = true;
-    setLoading(true);
-    requestRef.current(`event/guest-list/${eventId}`, "GET", null, {}, true, false)
-      .then((response) => {
-        if (active) {
-          setGuests(response?.guestList || []);
-          setColumns(response?.columns || {});
-        }
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => { active = false; };
-  }, [eventId, visible]);
-
-  const updatePresence = async (guest) => {
-    const guestId = String(guest.id || guest._id || "");
-    if (!guestId || pendingGuestIds.includes(guestId)) return;
-    const present = Number(guest.status) !== 1;
-    const before = guests;
-    setGuests((current) => current.map((item) => String(item.id || item._id || "") === guestId ? { ...item, status: present ? 1 : 0 } : item));
-    setPendingGuestIds((current) => [...current, guestId]);
-    try {
-      const response = await requestRef.current("event/guest-presence", "PATCH", { eventId, guestId, present }, {}, true, false);
-      if (!response?.status) setGuests(before);
-    } finally {
-      setPendingGuestIds((current) => current.filter((id) => id !== guestId));
-    }
+  const closeGuestList = () => {
+    onHide();
   };
 
   return (
-    <Dialog
-      aria-label={`Guest list for ${event.title || "event"}`}
-      className="guest-list-modal"
-      contentClassName="guest-list-modal__body"
-      dismissableMask
-      header={<div><h2>Guest list</h2><p>{event.title || "Event"}</p></div>}
-      onHide={onHide}
-      visible={visible}
-    >
-      {loading ? <div className="guest-list__skeleton" aria-hidden="true"><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /></div> : (
-        <GuestListTable columns={columns} editable guests={guests} onPresenceChange={updatePresence} pendingGuestIds={pendingGuestIds} />
-      )}
-      <p className="guest-list__sync-note">Changes appear immediately. The guest list is saved now and synchronized with the regional spreadsheet in the background.</p>
-    </Dialog>
+    <>
+      <Dialog
+        aria-label={`Guest list for ${event.title || "event"}`}
+        className={`guest-list-modal${extended ? " guest-list-modal--extended" : ""}`}
+        contentClassName="guest-list-modal__body"
+        dismissableMask
+        header={<div><h2>Guest list</h2><p>{event.title || "Event"}</p></div>}
+        maximized={maximized}
+        onMaximize={({ maximized: nextMaximized }) => onMaximizeChange(nextMaximized)}
+        onHide={closeGuestList}
+        visible={visible}
+      >
+        <div className="event-details-modal__actions guest-list__actions" role="group" aria-label="Guest list actions">
+          <button className="event-details-modal__action" type="button" onClick={openScanner}><IconlyQrCode aria-hidden="true" /><span>Scan tickets</span></button>
+          <button className="event-details-modal__action" type="button" aria-pressed={extended} onClick={() => onExtendedChange(!extended)}>
+            <IconlyDocument aria-hidden="true" /><span className="guest-list__toggle-label" key={String(extended)}>{extended ? "Compact" : "Extend"}</span>
+          </button>
+          <GuestListSearch value={search} onChange={onSearchChange} />
+        </div>
+        {loading ? <div className="guest-list__skeleton" aria-hidden="true"><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /></div> : (
+          <GuestListTable columns={columns} search={search} extended={extended} editable guests={guests} onPresenceChange={updatePresence} pendingGuestIds={pendingGuestIds} />
+        )}
+        <p className="guest-list__sync-note" role="status">{syncError ? "Connection interrupted. The list may be out of date; reconnecting automatically." : live ? "Live attendance updates. Changes sync quietly in the background." : "Syncing in the background. Reconnecting to live updates."}</p>
+      </Dialog>
+
+    </>
   );
 };
 
@@ -70,7 +64,13 @@ GuestListModal.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
   }).isRequired,
+  extended: PropTypes.bool.isRequired,
+  maximized: PropTypes.bool.isRequired,
+  onExtendedChange: PropTypes.func.isRequired,
   onHide: PropTypes.func.isRequired,
+  onMaximizeChange: PropTypes.func.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
 };
 

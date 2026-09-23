@@ -16,8 +16,10 @@ export default function WalletBadge({ provider, busy = false, disabled = false, 
       : "/assets/commercial/enUS_add_to_google_wallet_wallet-button.svg"}
       alt={`Add to ${apple ? "Apple" : "Google"} Wallet`} width={apple ? 110.739 : 283} height={apple ? 35.016 : 50} unoptimized />
   </button>;
-  if (!unavailable) return button;
-  return <ImageTooltip label={busy ? "Preparing your card…" : unavailableReason} openOnClick>
+  // While a request is in flight, preserve the button in its disabled state.
+  // The progress feedback is announced through the loading toast instead.
+  if (!disabled || busy) return button;
+  return <ImageTooltip label={unavailableReason} openOnClick>
     <span className={styles.disabledBadge} tabIndex={0} role="group" aria-label={`${label} unavailable`}>
       {button}
     </span>

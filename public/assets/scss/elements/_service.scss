@@ -1274,9 +1274,10 @@
   white-space: nowrap;
 }
 
-.guest-list__type--guest { background: #e8f3ef; border-color: #b9d9ce; color: #017363; }
+.guest-list__type--guest { background: #f1f3f2; border-color: #cbd2ce; color: #526158; }
 .guest-list__type--member { background: #e8f0ff; border-color: #b8ccff; color: #004ab0; }
 .guest-list__type--active_member { background: #fff5d6; border-color: #ffd970; color: #7b5200; }
+.guest-list__type--alumni { background: #fff5d6; border-color: #ffd970; color: #7b5200; }
 
 .guest-list__presence--present { background: #e8f3ef; border-color: #b9d9ce; color: #017363; }
 .guest-list__presence--missing { background: #fbe7e7; border-color: #efb4b4; color: #9e0d33; }
@@ -1306,3 +1307,27 @@ button.guest-list__presence {
 
 .guest-list__sync-note { margin-top: 1rem; }
 .guest-list__skeleton { display: grid; gap: .6rem; }
+
+.ticket-scanner-link {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  text-align: center;
+
+  > img, > .p-skeleton { width: min(18rem, 100%); max-width: 100%; border-radius: .75rem; }
+  > p { margin: 0; color: #526158; }
+}
+
+.ticket-scanner-link__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .75rem;
+
+  > * { display: inline-flex; align-items: center; gap: .45rem; }
+}
+
+@media (max-width: 575px) {
+  .ticket-scanner-link__actions { display: grid; width: 100%; }
+  .ticket-scanner-link__actions > * { justify-content: center; width: 100%; }
+}

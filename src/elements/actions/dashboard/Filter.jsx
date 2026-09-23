@@ -13,6 +13,7 @@ const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title
         setSearchParams((current) => {
             if (event.target.value) current.set("region", event.target.value);
             else current.delete("region");
+            current.delete("page");
             return current;
         });
     };
@@ -23,8 +24,12 @@ const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title
             controlsClassName="event-dashboard-filters__fields"
             title={title}
             onClear={() => {
-            setSearchParams(current => { current.delete("region"); return current; });
-            onClear?.();
+            setSearchParams(current => {
+                current.delete("region");
+                current.delete("page");
+                onClear?.(current);
+                return current;
+            });
         }}>
                 {showRegion && <label>
                     <span>Region</span>

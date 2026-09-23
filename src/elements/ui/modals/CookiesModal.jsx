@@ -2,21 +2,21 @@ import {
   useEffect,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 import { Link } from "@/util/navigation";
 import { LOCAL_STORAGE_COOKIE_CONSENT } from "../../../util/defines/common";
 
 const CookiesModal = () => {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     // Check if consent is already stored
     const consent = localStorage.getItem(LOCAL_STORAGE_COOKIE_CONSENT);
-    const isLegalPage = window.location.pathname.includes("terms-and-legals");
-    
-    if (!consent && !isLegalPage) {
-      setVisible(true);
-    }
-  }, []);
+    const suppressBanner = pathname?.startsWith("/c/") || pathname?.includes("terms-and-legals");
+
+    setVisible(!consent && !suppressBanner);
+  }, [pathname]);
 
   const handleAcceptAll = () => {
     localStorage.setItem(LOCAL_STORAGE_COOKIE_CONSENT, "1");

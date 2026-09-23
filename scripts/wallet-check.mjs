@@ -1,49 +1,46 @@
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { X509Certificate, createPrivateKey } from "node:crypto";
+import { X509Certificate } from "node:crypto";
 import nextEnv from "@next/env";
+import { appleCredentials, googleCredentials, walletReadiness } from "../src/util/wallet/issuance.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-nextEnv.loadEnvConfig(root, true, { info() {}, error() {} });
+const production = process.argv.includes("--production");
+if (process.argv.slice(2).some(arg => arg !== "--production")) throw new Error("Usage: node scripts/wallet-check.mjs [--production]");
+process.chdir(root);
+process.env.NODE_ENV = production ? "production" : "development";
+nextEnv.loadEnvConfig(root, !production, { info() {}, error() {} });
 const env = process.env;
 let blocked = false;
 function check(label, ok) {
   console.log(`${ok ? "OK" : "MISSING/INVALID"} ${label}`);
   if (!ok) blocked = true;
 }
-function privateFile(key) {
-  if (!env[key]) return null;
-  const file = resolve(root, env[key]);
-  // Refuse credentials inside public assets.
-  if (file === resolve(root, "public") || file.startsWith(`${resolve(root, "public")}/`)) return null;
-  try { return readFileSync(file); } catch { return null; }
-}
-
-console.log("Wallet local configuration (no secrets displayed; no remote writes)");
+console.log(`Wallet ${production ? "production" : "development"} configuration (no secrets displayed; no remote writes)`);
 check("v1 specification", existsSync(resolve(root, "public/assets/wallet-cards/v1/specifications.json")));
 check("Archive font", existsSync(resolve(root, "public/assets/fonts/Archive-Regular.ttf")));
 check("League Spartan font", existsSync(resolve(root, "public/assets/fonts/LeagueSpartan.ttf")));
-check("Apple team ID", /^[A-Z0-9]{10}$/.test(env.APPLE_WALLET_TEAM_ID || ""));
-check("Apple pass type ID", /^pass\.[a-zA-Z0-9.-]+$/.test(env.APPLE_WALLET_PASS_TYPE_ID || ""));
-let certificate, privateKey;
-try { certificate = new X509Certificate(privateFile("APPLE_WALLET_CERT_PATH")); } catch { /* Report below. */ }
-try { privateKey = createPrivateKey(privateFile("APPLE_WALLET_KEY_PATH")); } catch { /* Report below. */ }
-check("Apple signing certificate, current validity", Boolean(certificate && Date.parse(certificate.validFrom) <= Date.now() && Date.parse(certificate.validTo) > Date.now()));
-check("Apple private key matches certificate", Boolean(certificate && privateKey && certificate.checkPrivateKey(privateKey)));
-let wwdr;
-try { wwdr = new X509Certificate(privateFile("APPLE_WALLET_WWDR_PATH")); } catch { /* Report below. */ }
-check("Apple WWDR certificate", Boolean(wwdr));
-check("Google Wallet issuer ID", /^\d+$/.test(env.GOOGLE_WALLET_ISSUER_ID || ""));
-let serviceAccount;
-try {
-  const data = JSON.parse(privateFile("GOOGLE_WALLET_SERVICE_ACCOUNT_PATH"));
-  const key = createPrivateKey(data.private_key);
-  serviceAccount = data.type === "service_account" && /@.+\.iam\.gserviceaccount\.com$/.test(data.client_email) && key.asymmetricKeyType === "rsa";
-} catch { /* Report below. */ }
-check("Google service-account JSON and RSA key", Boolean(serviceAccount));
-console.log("Manual checks still required: Apple certificate identity/chain; Google API enabled, issuer access and demo tester accounts.");
-console.log("Preview: http://localhost:3000/dev/wallet-card");
-console.log("Phone QR scans require a reachable test base URL; localhost means the phone itself.");
-console.log("This check does not generate, sign or issue passes.");
+check("Native wallet logo", existsSync(resolve(root, "public/assets/images/logo/logo-nl-circle.png")));
+let apple;
+try { apple = await appleCredentials(env); } catch { /* Never print credential-bearing errors. */ }
+check("Apple certificate validity, identity, WWDR signature and matching key", Boolean(apple));
+if (apple) {
+  const expires = new X509Certificate(apple.signerCert).validTo;
+  console.log(`Apple signing certificate expires: ${expires}`);
+  if (Date.parse(expires) - Date.now() < 30 * 86400000) console.log("WARNING: Renew Apple signing certificate within 30 days.");
+}
+let google;
+try { google = await googleCredentials(env); } catch { /* Never print credential-bearing errors. */ }
+check("Google issuer ID, service account and RSA key", Boolean(google));
+if (production) {
+  check("Production Apple identifier", env.APPLE_WALLET_PASS_TYPE_ID === "pass.nl.bulgariansociety.membership");
+  check("Google publishing approval flag", env.GOOGLE_WALLET_PUBLISHING_APPROVED === "1");
+  const ready = await walletReadiness(env);
+  check("Apple issuance enabled", ready.apple.available);
+  check("Google issuance enabled and issuer access verified", ready.google.available);
+}
+console.log("Supports private files or BASE64 secret-store values, including encrypted Apple keys.");
+console.log("Still required: live issuer access, deployed QR page/logo, and Apple/Android device installation.");
+console.log("No passes issued or updated. Automatic updates remain excluded.");
 process.exitCode = blocked ? 1 : 0;

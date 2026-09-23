@@ -213,6 +213,22 @@ test("multipart upload bytes are preserved; upstream redirects and HTML do not b
   const response = await html.request("common/get-about-data");
   assert.equal(response.headers.get("content-disposition"), "attachment"); assert.match(response.headers.get("content-security-policy"), /sandbox/);
 });
+test("guest-list SSE forwards frames before the upstream closes without exposing credentials", async () => {
+  let controller;
+  const stream = new ReadableStream({ start(value) { controller = value; } });
+  const h = await harness({ credential: token(), upstream: async () => new Response(stream, { headers: { "content-type": "text/event-stream" } }) });
+  const response = await h.request(`event/guest-list/${"a".repeat(24)}/stream`);
+  assert.equal(response.headers.get("content-type"), "text/event-stream");
+  assert.equal(response.headers.get("content-disposition"), null);
+  assert.equal(h.calls[0].options.headers.get("Accept"), "text/event-stream");
+  assert.match(h.calls[0].options.headers.get("Authorization"), /^Bearer /);
+  assert.equal(response.headers.get("Authorization"), null);
+  const reader = response.body.getReader();
+  controller.enqueue(new TextEncoder().encode("event: ready\ndata: {}\n\n"));
+  assert.match(new TextDecoder().decode((await reader.read()).value), /event: ready/);
+  await reader.cancel();
+});
+
 test("bounded bodies, missing configuration, rate limits and network failures fail safely", async () => {
   await assert.rejects(proxyPolicy.boundedBody(new Response("12345").body, 4), /too large/);
   const missing = await harness({ env: { BGSNL_SERVER_KEY: "" } });
@@ -279,12 +295,13 @@ test("the website manifest covers existing API browser routes but not integratio
   const routeFiles = { security: "security-routes.js", user: "users-routes.js", common: "common-routes.js", event: "Events/events-routes.js",
     "future-event": "Events/future-events-routes.js", payment: "payments-routes.js", internship: "internship-routes.js", dashboard: "dashboard-routes.js",
     backoffice: "backoffice-routes.js", support: "support-routes.js", wordpress: "Integration/wordpress-routes.js", contest: "contest-routes.js", special: "special-routes.js" };
-  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "event/sync-calendar-events", "security/session/refresh", "security/session/activity", "security/session/logout"];
+  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "user/wallet/public/fixture", "event/sync-calendar-events", "future-event/archive-expired", "security/session/refresh", "security/session/activity", "security/session/logout"];
   for (const [group, file] of Object.entries(routeFiles)) {
     const source = await readFile(new URL(`../../BGSNL-API/routes/${file}`, import.meta.url), "utf8");
     for (const [, method, route] of source.matchAll(/\b(?:\w*Router|router)\.(get|post|patch|delete)\(\s*["']([^"']+)["']/g)) {
       const path = group + route.replace(/:[A-Za-z]+/g, "fixture");
-      assert.equal(proxyPolicy.browserApiPath(path.split("/"), method.toUpperCase()), privatePaths.includes(path) ? null : path, `${method} ${path}`);
+      const serverOnly = privatePaths.includes(path) || path.startsWith("payment/event-ticket/");
+      assert.equal(proxyPolicy.browserApiPath(path.split("/"), method.toUpperCase()), serverOnly ? null : path, `${method} ${path}`);
     }
   }
   assert.equal(proxyPolicy.browserApiPath(["security", "login"], "GET"), null);
@@ -292,7 +309,7 @@ test("the website manifest covers existing API browser routes but not integratio
 });
 test("confirmation has no global analytics scripts", async () => {
   const analytics = await readFile(new URL("../src/component/common/WebsiteAnalytics.jsx", import.meta.url), "utf8");
-  assert.match(analytics, /if \(pathname === "\/account\/confirm"(?: \|\| !analyticsAllowed)?\) return null/);
+  assert.match(analytics, /if \([^;\n]*pathname === "\/account\/confirm"[^;\n]*\) return null/);
   const helpers = await readFile(new URL("../src/util/functions/helpers.js", import.meta.url), "utf8");
   for (const name of ["gaTrack", "clarityTrack"]) assert.match(helpers, new RegExp(`${name} = \\(\\) => \\{\\s+if \\(window.location.pathname === "/account/confirm"\\) return`));
 });

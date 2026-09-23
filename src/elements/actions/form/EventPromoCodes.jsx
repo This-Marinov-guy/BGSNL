@@ -3,6 +3,7 @@ import { FieldArray, useFormikContext } from "formik";
 import { SelectInput } from "@/compat/primereact";
 import { OptionDate, OptionError, OptionField, OptionPanel, OptionSwitch } from "./EventOptionFields";
 import { defaultPromoAudiences, normalizePromoCode, normalizePromoCodeName, promoAudiences } from "@/util/functions/event-promo-codes.mjs";
+import { IconlyPlus } from "@/elements/ui/icons/IconlyIcons";
 
 export default function EventPromoCodes() {
   const { values, setFieldValue } = useFormikContext();
@@ -42,7 +43,7 @@ export default function EventPromoCodes() {
           </div>
         </div>;
       })}
-      <button type="button" className="event-form-button event-form-button--ghost" disabled={codes.length >= 100} onClick={() => push(normalizePromoCode())}>+ Add promo code</button>
+      <button type="button" className="event-form-button event-form-button--ghost" disabled={codes.length >= 100} onClick={() => push(normalizePromoCode())}><IconlyPlus aria-hidden className="event-form-button__icon" size={18} />Add promo code</button>
     </div>}</FieldArray>
   </OptionPanel>;
 }

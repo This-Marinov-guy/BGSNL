@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import nextEnv from "@next/env";
-import { createApplePass, googleObject, signGoogleSaveUrl, validatePacket, walletPacketFromProxy, walletReadiness } from "../src/util/wallet/issuance.mjs";
+import { createApplePass, googleClass, googleObject, prepareGooglePass, signGoogleSaveUrl, validatePacket, walletPacketFromProxy, walletReadiness } from "../src/util/wallet/issuance.mjs";
 
 const packet = { token: "abcdefghijklmnopqrstuv", publicUrl: "https://bulgariansociety.nl/c/abcdefghijklmnopqrstuv",
   card: { firstName: "Test", surname: "Member", membershipLabel: "Member of Groningen", status: "active" } };
@@ -29,11 +29,25 @@ test("issuance only accepts the canonical member URL and valid card fields", () 
 
 test("Google payload shares the short QR and does not advertise a stale Active status", () => {
   const object = googleObject(packet, { GOOGLE_WALLET_ISSUER_ID: "123456" });
-  assert.equal(object.id, "123456.bgsnl_abcdefghijklmnopqrstuv");
+  assert.equal(object.id, "123456.bgsnl_v2_abcdefghijklmnopqrstuv");
   assert.equal(object.barcode.value, packet.publicUrl);
   assert.equal(object.header.defaultValue.value, "Test Member");
-  assert.match(object.textModulesData[0].body, /Scan to verify/);
-  assert.equal(object.subheader.defaultValue.value, "Member of Groningen");
+  assert.equal(object.textModulesData.some(item => item.id === "verification"), false);
+  assert.equal(object.cardTitle.defaultValue.value, "Bulgarian society Netherlands");
+  assert.equal(object.linksModuleData.uris[0].description, "BGSNL membership card");
+  assert.equal(object.textModulesData.find(item => item.id === "membership").body, "Member of Groningen");
+  assert.equal(object.subheader, undefined);
+  assert.equal(object.hexBackgroundColor, "#D5E2D7");
+  assert.match(object.logo.sourceUri.uri, /logo-nl-circle\.png$/);
+});
+
+test("Google template shows membership without a status row on the front", () => {
+  const template = googleClass({ GOOGLE_WALLET_ISSUER_ID: "123456" });
+  assert.equal(template.id, "123456.bgsnl_membership_v2");
+  assert.deepEqual(template.classTemplateInfo.cardTemplateOverride.cardRowTemplateInfos.map(row => row.oneItem.item.firstValue.fields[0].fieldPath),
+    ["object.textModulesData['membership']"]);
+  assert.equal(template.classTemplateInfo.detailsTemplateOverride.detailsItemInfos[0].item.firstValue.fields[0].fieldPath,
+    "object.textModulesData['notice']");
 });
 
 test("Google save link has a verifiable RS256 signature and only references its object", () => {
@@ -54,6 +68,31 @@ test("rollout gates fail closed even when the UI requests downloads", async () =
   assert.deepEqual(await walletReadiness({ WALLET_ISSUANCE_ENABLED: "1" }), { apple: { available: false }, google: { available: false } });
 });
 
+test("Google issuance never patches the shared class", async () => {
+  for (const missing of [false, true]) {
+    const calls = [];
+    const client = { async request(options) {
+      calls.push(options);
+      if (missing && !options.method) throw { response: { status: 404 } };
+      return { data: {} };
+    } };
+    assert.equal(await prepareGooglePass(client, packet, { GOOGLE_WALLET_ISSUER_ID: "123456" }), "123456.bgsnl_v2_abcdefghijklmnopqrstuv");
+    assert.equal(calls.filter(call => call.method === "PATCH").length, 1);
+    assert.ok(calls.filter(call => call.method === "PATCH").every(call => call.url.includes("/genericObject/")));
+    assert.ok(calls.every(call => call.timeout === 8000 && call.retry === false));
+  }
+});
+
+test("Google permission failures do not create or update passes", async () => {
+  const calls = [];
+  await assert.rejects(prepareGooglePass({ async request(options) {
+    calls.push(options);
+    throw { response: { status: 403 } };
+  } }, packet, { GOOGLE_WALLET_ISSUER_ID: "123456" }));
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].method, undefined);
+});
+
 // Opt in locally: uses ignored signing credentials, writes only a private temp directory.
 test("real Apple archive has a valid detached signature and matching manifest", { skip: process.env.BGSNL_TEST_WALLET_SIGNING !== "1" }, async () => {
   nextEnv.loadEnvConfig(process.cwd(), true);
@@ -72,7 +111,10 @@ test("real Apple archive has a valid detached signature and matching manifest", 
   const pass = JSON.parse(files.get("pass.json"));
   assert.equal(pass.barcodes[0].message, packet.publicUrl);
   assert.equal(pass.serialNumber, `bgsnl-${packet.token}`);
-  assert.match(pass.generic.auxiliaryFields[0].value, /Scan to verify/);
+  assert.equal(pass.description, "BGSNL membership card");
+  assert.equal(pass.webServiceURL, undefined);
+  assert.equal(pass.authenticationToken, undefined);
+  assert.equal(pass.generic.auxiliaryFields?.length || 0, 0);
   const directory = await mkdtemp(path.join(tmpdir(), "bgsnl-wallet-signature-"));
   try {
     await writeFile(path.join(directory, "manifest.json"), files.get("manifest.json"), { mode: 0o600 });

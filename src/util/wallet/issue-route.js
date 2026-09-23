@@ -26,6 +26,9 @@ export async function issueWallet(request, provider) {
     if (!(await walletReadiness())[provider]?.available) return failure(request, provider,
       Response.json({ message: "Wallet issuance is not enabled yet." }, { status: 503, headers }));
     const packet = walletPacketFromProxy(await response.json());
+    // UI locks are only hints: enforce the reconciled membership state here.
+    if (packet.card.status !== "active") return failure(request, provider,
+      Response.json({ message: "An active membership is required to download a wallet card." }, { status: 403, headers }));
     if (provider === "google") return Response.json({ saveUrl: await createGoogleSaveUrl(packet) }, { headers });
     const pass = await createApplePass(packet);
     headers.set("Content-Type", "application/vnd.apple.pkpass");

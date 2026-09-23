@@ -47,7 +47,8 @@ import {
   reorderUniversitiesByCode,
   UNIVERSITIES_BY_CITY,
 } from "../../util/defines/UNIVERSITIES";
-import { encryptData } from "../../util/functions/helpers";
+import { ANALYTICS_EVENTS, USER_REGISTRATION_STEP_EVENTS } from "../../util/analytics/events.mjs";
+import { clarityEvent, encryptData } from "../../util/functions/helpers";
 
 const isSupportedImage = (value) =>
   !value ||
@@ -180,6 +181,15 @@ const SignUp = () => {
 
   const [activeStep, setActiveStep] = useState(routeRegion ? 1 : 0);
   const [transitionDirection, setTransitionDirection] = useState("forward");
+
+  useEffect(() => {
+    clarityEvent(ANALYTICS_EVENTS.USER_REGISTRATION_OPENED);
+  }, []);
+
+  useEffect(() => {
+    const event = USER_REGISTRATION_STEP_EVENTS[activeStep];
+    if (event) clarityEvent(event);
+  }, [activeStep]);
 
   const goToStep = (nextStep) => {
     if (nextStep === activeStep) return;

@@ -14,6 +14,8 @@ import Tree from "../../component/userTree/Tree";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
 import { useHttpClient } from "../../hooks/common/http-hook";
+import { ANALYTICS_EVENTS } from "../../util/analytics/events.mjs";
+import { clarityEvent } from "../../util/functions/helpers";
 
 // Approximate skeleton of the tree shape — circles for nodes, lines for branches
 function TreeSkeleton() {
@@ -79,6 +81,10 @@ const HallOfFame = ({ initialNodes = [] }) => {
   const [loading, setLoading] = useState(!initialNodes.length);
   const [nodes, setNodes] = useState(initialNodes);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    clarityEvent(ANALYTICS_EVENTS.ALUMNI_TREE_OPENED);
+  }, []);
 
   useEffect(() => {
     const fetchNodes = async () => {

@@ -47,7 +47,33 @@ Use `bulgariansocietynetherlands@gmail.com` as the owner, not the unrelated Doma
 2. Keep the issuer in demo mode. Add intended tester Google accounts.
 3. Cloud project created by the owner: **User Engagement**, ID `user-engagement-509313`. Google Wallet API was enabled on 2026-09-21. Dedicated service account created without project-wide roles: `bgsnl-wallet-issuer@user-engagement-509313.iam.gserviceaccount.com` (ID `106042594026046012600`). Its JSON key is installed locally and issuer Developer access was verified with a successful generic-class list request after the owner granted access. Do not create a duplicate account.
 4. Store the service-account JSON key locally and set its path and the numeric issuer ID. Never send the private key in chat.
-5. Native issuance creates/reuses `3388000000023197450.bgsnl_membership_v1` and a stable generic object per token; it does not alter the two old loyalty drafts. Object data is written through the API, and the short signed JWT references only the object ID. Verify saving with an allowed tester; request/confirm publishing access before enabling general production issuance. The development payload-draft preview is still unsigned and separate from this implementation.
+5. Native issuance creates/reuses `3388000000023197450.bgsnl_membership_v2` and a stable `bgsnl_v2_{token}` generic object per token; it does not alter the old drafts or v1 objects. The shared class is never patched during issuance. A member's explicit Add to Wallet request writes only their object, and the short signed JWT references only that object ID. Existing v1 holders must add the new card to receive this layout. The development payload-draft preview remains unsigned and separate.
+
+### Production setup status (2026-09-22)
+
+- Owner confirmed Google publishing approval. Set `GOOGLE_WALLET_PUBLISHING_APPROVED=1` in the production environment when deploying; approval alone does not deploy or enable issuance.
+- Registered Apple production identifier `pass.nl.bulgariansociety.membership` under team `826Q79398Y`, description `BGSNL Membership Card`. Created certificate `3CKC37Y9R5`, named `BGSNL Membership Production 2026`, expiring 2027-10-22. Its private key, CSR, downloaded `pass.cer`, and converted `pass-cert.pem` are in the ignored `.wallet-local/apple-production/` directory. The production certificate passed identity, WWDR signature, matching-key, and signed-pass archive verification; all 9 issuance tests passed using this production signing pair. The `.test` identifier and credentials are unchanged.
+- With explicit owner approval, saved all 12 wallet variables as Production-only secrets in Vercel project `thismarinovguys-projects/bgsnl`, including the production Apple signing pair and Google service-account key. Vercel confirmed success and the Production scope of each variable. `WALLET_ISSUANCE_ENABLED=0` keeps downloads disabled pending deployment testing. Development and Preview were not changed. No redeployment occurred; Vercel requires a new deployment for these values to take effect.
+- Automatic pass updates are intentionally excluded: no Apple update service or push registration, and no background Google object/class updates. Current membership status must be checked through the QR-linked page. Locked memberships cannot request new downloads.
+- Production deployment and installation on physical Apple/Android devices remain required before declaring the rollout complete.
+
+#### Production credential setup
+
+`npm run wallet:csr -- --production` creates a separate production key/CSR and refuses to overwrite existing signing material. Upload only `pass.csr` to Apple, never `pass-key.pem`. The first production CSR has already been submitted; do not regenerate its key.
+
+After downloading its matching certificate, convert the DER `.cer` to PEM with OpenSSL and store it as `.wallet-local/apple-production/pass-cert.pem`. Keep a secure backup of the matching private key. Validate the certificate against the existing Apple WWDR intermediate before configuring the deployment.
+
+Configure server-only Production secrets (not Preview, not `NEXT_PUBLIC_*`):
+
+- `APPLE_WALLET_TEAM_ID=826Q79398Y`
+- `APPLE_WALLET_PASS_TYPE_ID=pass.nl.bulgariansociety.membership`
+- `APPLE_WALLET_CERT_BASE64`, `APPLE_WALLET_KEY_BASE64`, `APPLE_WALLET_WWDR_BASE64`: base64-encoded file contents, not paths; use the production signing pair.
+- `GOOGLE_WALLET_ISSUER_ID=3388000000023197450`
+- `GOOGLE_WALLET_SERVICE_ACCOUNT_BASE64`: existing issuer-authorized service account JSON, base64-encoded.
+- `GOOGLE_WALLET_ISSUER_ACCESS_VERIFIED=1`, `GOOGLE_WALLET_PUBLISHING_APPROVED=1` after checking the intended issuer.
+- `APPLE_WALLET_ENABLED=1`, `GOOGLE_WALLET_ENABLED=1`; set `WALLET_ISSUANCE_ENABLED=1` only for the verified rollout. Each provider can be paused independently with its enabled flag set to `0`.
+
+Run `npm run wallet:check -- --production` with the intended production environment loaded. It supports both file and BASE64 credentials, checks the certificate identity, chain signature, key match, validity, local assets, and rollout flags. It never prints secrets or issues/updates passes. A successful check is not proof that the live assets, API, or device installation work. Redeploy after configuring the environment, then verify authenticated downloads and scan the QR on real devices. No automatic updates are configured.
 
 Official guides:
 - https://developers.google.com/wallet/generic/getting-started/issuer-onboarding

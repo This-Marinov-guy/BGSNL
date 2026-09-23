@@ -2,6 +2,7 @@ import { useId, useRef } from "react";
 import { FieldArray, useFormikContext } from "formik";
 import { SelectInput } from "@/compat/primereact";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { IconlyPlus } from "@/elements/ui/icons/IconlyIcons";
 import { OptionError, OptionField, OptionSwitch } from "./EventOptionFields";
 
 export default function EventCollectData() {
@@ -54,13 +55,13 @@ export default function EventCollectData() {
                 <OptionField name={`${prefix}.options[${optionIndex}]`} label={`Option ${optionIndex + 1} *`} />
                 <button className="event-option-remove" type="button" onClick={() => removeOption(optionIndex)} aria-label={`Remove option ${optionIndex + 1} from question ${index + 1}`}>Remove</button>
               </div>)}
-              <button type="button" className="event-form-button event-form-button--ghost" disabled={(question.options?.length ?? 0) >= 100} onClick={() => addOption("")}>+ Add option</button>
+              <button type="button" className="event-form-button event-form-button--ghost" disabled={(question.options?.length ?? 0) >= 100} onClick={() => addOption("")}><IconlyPlus aria-hidden className="event-form-button__icon" size={18} />Add option</button>
             </>}</FieldArray>
           </div>}
         </motion.div>;
       })}
       </AnimatePresence>
-      <button type="button" className="event-form-button event-form-button--outline-green event-collect-data__add-question" disabled={questions.length >= 50} onClick={() => { nextQuestionKey.current += 1; questionKeys.current.push(`${id}-${nextQuestionKey.current}`); push({ type: "text", placeholder: "", required: false, multiselect: false, options: [] }); }}>+ Add question</button>
+      <button type="button" className="event-form-button event-form-button--outline-green event-collect-data__add-question" disabled={questions.length >= 50} onClick={() => { nextQuestionKey.current += 1; questionKeys.current.push(`${id}-${nextQuestionKey.current}`); push({ type: "text", placeholder: "", required: false, multiselect: false, options: [] }); }}><IconlyPlus aria-hidden className="event-form-button__icon" size={18} />Add question</button>
     </div>}</FieldArray>
   </section>;
 }

@@ -350,6 +350,65 @@ hr {
   pointer-events: none;
 }
 
+.bgsnl-modal-mask.bgsnl-modal-mask--fullscreen {
+  padding: 0;
+}
+
+.bgsnl-modal.bgsnl-modal--fullscreen {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  // Override the legacy .p-dialog 95% maximum, including narrow viewports.
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.bgsnl-modal.bgsnl-modal--fullscreen .bgsnl-modal__body {
+  align-items: center;
+  align-items: safe center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-content: safe center;
+}
+
+.bgsnl-modal.bgsnl-modal--fullscreen .bgsnl-modal__body > * {
+  max-width: 100%;
+}
+
+.bgsnl-modal__controls {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.bgsnl-modal__maximize {
+  align-items: center;
+  background: #edf2ee;
+  border: 0;
+  border-radius: 50%;
+  color: #406345;
+  cursor: pointer;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  padding: 0;
+  width: 28px;
+
+  &:hover {
+    background: #d5e2d7;
+  }
+
+  &:focus-visible {
+    outline: 3px solid #406345;
+    outline-offset: 2px;
+  }
+}
+
 .bgsnl-modal-mask--suspended {
   pointer-events: none;
 }

@@ -381,12 +381,10 @@ export function Dialog({
   contentStyle,
   headerStyle,
   modal = true,
-  maximizable,
+  maximizable = true,
   maximized,
   ...props
 }) {
-  void maximizable;
-  void maximized;
 
   return (
     <AppModal
@@ -395,6 +393,8 @@ export function Dialog({
       title={header}
       actions={footer}
       modal={modal}
+      maximizable={maximizable}
+      maximized={maximized}
       dismissableMask={dismissableMask}
       closable={closable}
       className={className}

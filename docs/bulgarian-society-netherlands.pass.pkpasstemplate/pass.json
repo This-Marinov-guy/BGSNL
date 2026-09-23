@@ -1,0 +1,57 @@
+{
+  "authenticationToken" : "",
+  "backgroundColor" : "rgb(172,142,247)",
+  "barcodes" : [
+    {
+      "_id" : "B53BAAC8-B830-46ED-A822-EF1060534A20",
+      "format" : "PKBarcodeFormatQR",
+      "message" : "https:\/\/bulgariansociety.nl\/c\/test-pass-designer",
+      "messageEncoding" : "iso-8859-1"
+    }
+  ],
+  "description" : "Bulgarian Society Netherlands membership card",
+  "featuredActions" : [
+
+  ],
+  "foregroundColor" : "rgb(255,255,255)",
+  "formatVersion" : 1,
+  "generic" : {
+    "auxiliaryFields" : [
+      {
+        "_id" : "3D4C56D5-9A6E-467C-8192-B00B17241736",
+        "key" : "guest_pass",
+        "label" : "CURRENT STATUS",
+        "textAlignment" : "PKTextAlignmentRight",
+        "value" : "Scan to verify"
+      }
+    ],
+    "backFields" : [
+
+    ],
+    "headerFields" : [
+
+    ],
+    "primaryFields" : [
+      {
+        "_id" : "E47345B1-F960-435A-98E1-3035856B2C8A",
+        "key" : "member",
+        "textAlignment" : "PKTextAlignmentCenter",
+        "value" : "Juan Chavez"
+      }
+    ],
+    "secondaryFields" : [
+      {
+        "_id" : "00B092FF-CE9D-4C07-BE3C-1F51D4CDAD0B",
+        "key" : "membership",
+        "label" : "Membership",
+        "textAlignment" : "PKTextAlignmentCenter",
+        "value" : "Premier"
+      }
+    ]
+  },
+  "labelColor" : "rgb(35,47,151)",
+  "organizationName" : "Bulgarian Society Netherlands",
+  "passTypeIdentifier" : "pass.nl.bulgariansociety.membership.test",
+  "serialNumber" : "",
+  "teamIdentifier" : "826Q79398Y"
+}

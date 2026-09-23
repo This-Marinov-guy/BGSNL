@@ -68,6 +68,7 @@ AppShell.propTypes = {
 
 export default function Providers({ children }) {
   const pathname = usePathname();
+  const isUserRoute = pathname?.startsWith("/user");
   // Maintenance must not start sessions, API requests or modals.
   if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
 
@@ -76,8 +77,8 @@ export default function Providers({ children }) {
   return (
     <Provider store={store}>
       <PrimeSSRProvider>
-        <div className="global-site-shell">
-          <GlobalBackground initiallyRevealed />
+        <div className={`global-site-shell${isUserRoute ? " global-site-shell--user" : ""}`}>
+          {!isUserRoute && <GlobalBackground initiallyRevealed />}
           <div className="global-site-content">
             <MainLayout>
               <AppShell>{children}</AppShell>

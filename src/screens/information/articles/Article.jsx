@@ -23,6 +23,8 @@ import PageLoading from "../../../elements/ui/loading/PageLoading";
 import { useArticlesLoad } from "../../../hooks/common/api-hooks";
 import { selectSingleArticle } from "../../../redux/articles";
 import { selectPageLoading } from "../../../redux/loading";
+import { ANALYTICS_EVENTS } from "../../../util/analytics/events.mjs";
+import { clarityEvent } from "../../../util/functions/helpers";
 
 const FIRST_PARAGRAPH_PATTERN = /^\s*<p\b[^>]*>([\s\S]*?)<\/p>/i;
 const META_ICONS = [IconlyProfile, IconlyCalendar, IconlyTimeCircle];
@@ -87,6 +89,10 @@ const Article = ({ initialArticle = null }) => {
     () => separateArticleMetadata(selectedArticle?.content),
     [selectedArticle?.content]
   );
+
+  useEffect(() => {
+    if (selectedArticle?.id) clarityEvent(ANALYTICS_EVENTS.ARTICLE_OPENED);
+  }, [selectedArticle?.id]);
 
   useEffect(() => {
     if (initialArticle) {

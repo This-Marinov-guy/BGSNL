@@ -2,6 +2,11 @@
   color: #19251f;
 }
 
+.exportButton { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 2.75rem; flex: 0 0 auto; padding: .65rem .9rem; border: 0; border-radius: .65rem; background: #017363; color: #fff; cursor: pointer; font: inherit; font-weight: 750; transition: background-color 160ms ease, transform 160ms ease; }
+.exportButton:hover:not(:disabled) { background: #025d51; transform: translateY(-1px); }
+.exportButton:focus-visible { outline: 3px solid #017363; outline-offset: 3px; }
+.exportButton:disabled { cursor: wait; opacity: .55; }
+
 .directory { min-width: 0; padding: clamp(1rem, 2.5vw, 1.75rem); border: 1px solid #dce5df; border-radius: 1.25rem; background: #fff; box-shadow: 0 .75rem 2.5rem rgb(27 54 42 / 6%); }
 .filters { display: grid; grid-template-columns: minmax(16rem, 2fr) minmax(12rem, 1fr); gap: 1rem; align-items: end; }
 .filters label { display: grid; gap: .4rem; color: #33483d; font-weight: 700; }
@@ -119,6 +124,7 @@
 @keyframes editorIn { from { transform: translateY(.75rem) scale(.985); opacity: .6; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
 @media (max-width: 767px) {
+  .exportButton { width: 100%; }
   .directory {
     border-inline: 0;
     border-radius: 0;

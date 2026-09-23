@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ErrorMessage,
   Field,
@@ -35,7 +35,8 @@ import Loader from "../../elements/ui/loading/Loader";
 import StepContentTransition from "../../elements/ui/functional/StepContentTransition";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { ALUMNI_MEMBERSHIP_SPECIFICS } from "../../util/defines/ALUMNI";
-import { encryptData } from "../../util/functions/helpers";
+import { ALUMNI_REGISTRATION_STEP_EVENTS, ANALYTICS_EVENTS } from "../../util/analytics/events.mjs";
+import { clarityEvent, encryptData } from "../../util/functions/helpers";
 
 const isSupportedImage = (value) =>
   !value ||
@@ -96,6 +97,15 @@ const AlumniSignUp = () => {
 
   const [activeStep, setActiveStep] = useState(region ? 1 : 0);
   const [transitionDirection, setTransitionDirection] = useState("forward");
+
+  useEffect(() => {
+    clarityEvent(ANALYTICS_EVENTS.ALUMNI_REGISTRATION_OPENED);
+  }, []);
+
+  useEffect(() => {
+    const event = ALUMNI_REGISTRATION_STEP_EVENTS[activeStep];
+    if (event) clarityEvent(event);
+  }, [activeStep]);
 
   const goToStep = (nextStep) => {
     if (nextStep === activeStep) return;

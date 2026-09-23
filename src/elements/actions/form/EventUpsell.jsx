@@ -3,6 +3,7 @@ import { FieldArray, useFormikContext } from "formik";
 import { OptionDate, OptionError, OptionField, OptionPanel, OptionSwitch } from "./EventOptionFields";
 import EventPromoCodes from "./EventPromoCodes";
 import EventRelatedPicker from "./EventRelatedPicker";
+import { IconlyPlus } from "@/elements/ui/icons/IconlyIcons";
 
 export default function EventUpsell({ currentEventId, active }) {
   const { values } = useFormikContext();
@@ -48,7 +49,7 @@ export default function EventUpsell({ currentEventId, active }) {
             <div className="event-option-wide"><OptionField name={`addOns.items[${index}].description`} label="Description (optional)" placeholder="What is included?" /></div>
           </div>
         </div>)}
-        <button type="button" className="event-form-button event-form-button--ghost" onClick={() => push({ title: "", description: "", price: "" })}>+ Add item</button>
+        <button type="button" className="event-form-button event-form-button--ghost" onClick={() => push({ title: "", description: "", price: "" })}><IconlyPlus aria-hidden className="event-form-button__icon" size={18} />Add item</button>
       </div>}</FieldArray>
     </OptionPanel>
     <EventRelatedPicker currentEventId={currentEventId} active={active} />

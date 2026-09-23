@@ -9,10 +9,13 @@
   padding: 1.5rem 1.75rem 0;
   background: linear-gradient(180deg, #f5f2e9 0%, #faf8f2 75%, #fff 100%);
 
-  :global(.bgsnl-modal__close) {
+  :global(.bgsnl-modal__controls) {
     position: absolute;
     top: 1.25rem;
     right: 1.25rem;
+  }
+
+  :global(.bgsnl-modal__close) {
     background: transparent;
     color: #d92d20;
     border: 0;

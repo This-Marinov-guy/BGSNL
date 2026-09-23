@@ -37,8 +37,10 @@ import TicketClosingCountdown from "../../elements/ui/functional/TicketClosingCo
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
+import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "../../util/analytics/events.mjs";
 import { getEventDateTimePresentation } from "../../util/functions/date";
 import {
+  clarityEvent,
   estimatePriceByEvent,
   hasAppliedTicketDiscount,
   isMember,
@@ -95,6 +97,10 @@ const EventDetails = ({ initialEvent = null }) => {
     refreshEvent();
     return () => controller.abort();
   }, [eventRecordId, region, sendRequest]);
+
+  useEffect(() => {
+    if (eventRecordId) clarityEvent(ANALYTICS_EVENTS.EVENT_OPENED);
+  }, [eventRecordId]);
 
   // Only fall back to the loader when there is nothing to show yet — otherwise
   // the mount-time refetch would replace server-rendered content with a spinner.
@@ -163,6 +169,16 @@ const EventDetails = ({ initialEvent = null }) => {
     );
   };
 
+  const trackTicketInterest = () => {
+    const ticketType = ticketIsFree ? "free" : userIsMember ? "member" : "guest";
+    clarityEvent(ANALYTICS_EVENTS.EVENT_REGISTRATION_CTA_CLICKED, {
+      [ANALYTICS_PROPERTIES.TICKET_TYPE]: ticketType,
+    });
+    clarityEvent(ANALYTICS_EVENTS.EVENT_TICKET_TYPE_SELECTED, {
+      [ANALYTICS_PROPERTIES.TICKET_TYPE]: ticketType,
+    });
+  };
+
   const purchaseActions = (
     <div className="event-purchase-actions">
       {selectedEvent.ticketLink && !eventClosed ? (
@@ -171,6 +187,7 @@ const EventDetails = ({ initialEvent = null }) => {
           target="_blank"
           rel="noopener noreferrer"
           className="rn-button-style--2 rn-btn-reverse-green event-action-control "
+          onClick={trackTicketInterest}
         >
           {ticketActionLabel}
         </a>
@@ -178,6 +195,7 @@ const EventDetails = ({ initialEvent = null }) => {
         <Link
           to={purchasePath}
           className="rn-button-style--2 rn-btn-reverse-green event-action-control "
+          onClick={trackTicketInterest}
         >
           {ticketActionLabel}
         </Link>
@@ -247,7 +265,10 @@ const EventDetails = ({ initialEvent = null }) => {
     showMembershipOffer && memberSaving !== null ? (
       <Link
         className="event-sticky-membership-saving type-caption"
-        onClick={rememberEventPage}
+        onClick={() => {
+          clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_CTA_CLICKED, { [ANALYTICS_PROPERTIES.SOURCE]: "event_membership_saving" });
+          rememberEventPage();
+        }}
         to="/signup"
       >
         Save {formatEuro(memberSaving)} by becoming a member

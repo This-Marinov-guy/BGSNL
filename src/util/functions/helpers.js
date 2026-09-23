@@ -54,6 +54,22 @@ export const clarityTrack = () => {
   }
 };
 
+// Clarity accepts a string event name. Properties are sent as its documented
+// custom tags, and are deliberately limited to non-identifying UI metadata.
+export const clarityEvent = (eventName, properties = {}) => {
+  if (typeof window === "undefined" || typeof eventName !== "string" || !eventName) return;
+  const consent = localStorage.getItem(LOCAL_STORAGE_COOKIE_CONSENT);
+  if (!isProd() || consent !== "1") return;
+
+  if (!clarity.hasStarted()) clarityTrack();
+  if (!clarity.hasStarted()) return;
+
+  Object.entries(properties).forEach(([key, value]) => {
+    if (typeof key === "string" && key && typeof value === "string" && value) clarity.setTag(key, value);
+  });
+  window.clarity("event", eventName);
+};
+
 export const askBeforeRedirect = (basedOnEnv = true) => {
   const handleBeforeUnload = (event) => {
     event.preventDefault();

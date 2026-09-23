@@ -44,7 +44,9 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
+import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "../../util/analytics/events.mjs";
 import {
+  clarityEvent,
   hasAppliedTicketDiscount,
   ticketPriceAmountByEvent,
 } from "../../util/functions/helpers";
@@ -288,6 +290,9 @@ const MemberPurchase = ({ initialEvent = null }) => {
                   formData.append("addOns", JSON.stringify(values.addOns));
                 }
 
+                clarityEvent(ANALYTICS_EVENTS.EVENT_CHECKOUT_STARTED, {
+                  [ANALYTICS_PROPERTIES.TICKET_TYPE]: alreadyRegistered ? "guest" : "member",
+                });
                 const responseData = await sendRequest(
                   "payment/checkout/member-ticket",
                   "POST",

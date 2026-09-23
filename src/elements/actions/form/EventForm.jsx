@@ -13,6 +13,7 @@ import {
   Field,
   Form,
   setIn,
+  setNestedObjectValues,
 } from "formik";
 import PropTypes from "prop-types";
 import {
@@ -421,12 +422,14 @@ const EventForm = (props) => {
   const submissionRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
   const [movingStep, setMovingStep] = useState(false);
+  const [savingAndExiting, setSavingAndExiting] = useState(false);
+  const saveAndExitRef = useRef(false);
   const [transitionDirection, setTransitionDirection] = useState("forward");
   const stepMoveRef = useRef(false);
   const formRef = useRef(null);
   const formikRef = useRef(null);
   const completionOpenedRef = useRef(false);
-  const isBusy = submitting || movingStep;
+  const isBusy = submitting || movingStep || savingAndExiting;
   const [draftId, setDraftId] = useState(null);
   const [draftStatus, setDraftStatus] = useState("idle");
   const [lastSavedAt, setLastSavedAt] = useState(null);
@@ -1112,6 +1115,37 @@ const EventForm = (props) => {
     }
   };
 
+  const saveAndExit = async (formik) => {
+    if (isBusy || submissionRef.current || saveAndExitRef.current) return;
+    saveAndExitRef.current = true;
+    setSavingAndExiting(true);
+    try {
+      // Drafts stay drafts. Published events must pass full validation before saving.
+      if (!canSaveDraft) {
+        const errors = await formik.validateForm();
+        if (Object.keys(errors).length) {
+          await formik.setTouched(setNestedObjectValues(errors, true), false);
+          const blocked = blockingEventStep(errors, EVENT_FORM_STEPS.length);
+          const invalidStep = blocked?.step ?? EVENT_FORM_STEPS.length - 1;
+          setTransitionDirection(invalidStep > currentStep ? "forward" : "backward");
+          setCurrentStep(invalidStep);
+          setFurthestStep(step => Math.max(step, invalidStep));
+          dispatch(showNotification({ severity: "error", summary: "Check the highlighted fields", detail: "Fix the event details before saving and exiting." }));
+          requestAnimationFrame(() => {
+            const field = formRef.current?.querySelector('[aria-invalid="true"], .error');
+            field?.scrollIntoView({ block: "center", behavior: "smooth" });
+            field?.focus?.({ preventScroll: true });
+          });
+          return;
+        }
+      }
+      await submitValues(formik.values, canSaveDraft);
+    } finally {
+      saveAndExitRef.current = false;
+      setSavingAndExiting(false);
+    }
+  };
+
   const moveToStep = async (targetStep, formik) => {
     if (targetStep === currentStep || submitting || stepMoveRef.current) return;
     stepMoveRef.current = true;
@@ -1140,7 +1174,7 @@ const EventForm = (props) => {
       const nextStep = Math.max(0, Math.min(targetStep, EVENT_FORM_STEPS.length - 1));
       let savedDraft = true;
 
-      if (canSaveDraft) {
+      if (canSaveDraft && !props.edit) {
         savedDraft = await submitValues(values, true, {
           stayOnPage: true,
           quiet: true,
@@ -1400,7 +1434,7 @@ const EventForm = (props) => {
                 }`}
               {draftStatus === "error" && "Draft could not be saved. Try again."}
               {draftStatus === "idle" &&
-                (canSaveDraft
+                (canSaveDraft && !props.edit
                   && 'Auto save enabled')}
             </div>
 
@@ -1642,6 +1676,16 @@ const EventForm = (props) => {
                 Dashboard
               </Link>
               {draftAction}
+              {props.edit && (
+                <button
+                  type="button"
+                  className="event-form-button event-form-button--ghost"
+                  disabled={loading || isBusy}
+                  onClick={() => saveAndExit(formik)}
+                >
+                  {savingAndExiting ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">Saving…</span></> : "Save and exit"}
+                </button>
+              )}
               <div className="event-form-actions__primary">
                 {currentStep > 0 && (
                   <button
@@ -1661,7 +1705,7 @@ const EventForm = (props) => {
                     className="event-form-button event-form-button--primary"
                     onClick={(event) => { event.preventDefault(); moveToStep(currentStep + 1, formik); }}
                   >
-                    {movingStep ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{draftStatus === "saving" ? "Saving…" : "Checking…"}</span></> : "Save & continue"}
+                    {movingStep ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{draftStatus === "saving" ? "Saving…" : "Checking…"}</span></> : props.edit ? "Continue" : "Save & continue"}
                   </button>
                 ) : (
                   <button

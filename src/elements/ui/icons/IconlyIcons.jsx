@@ -123,6 +123,13 @@ export const IconlyImprove = (props) => (
   </IconlySvg>
 );
 
+export const IconlyQrCode = (props) => (
+  <IconlySvg {...props}>
+    <path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    <path d="M5 5h2v2H5zM17 5h2v2h-2zM5 17h2v2H5zM11 3h2v4h-2zM11 9h2v4H9v-2h2zM3 11h4v2H3zM15 11h6v2h-6zM11 15h2v6h-2zM15 15h2v2h-2zM19 15h2v6h-6v-2h4z" fill="currentColor" />
+  </IconlySvg>
+);
+
 export const IconlyDocument = (props) => (
   <IconlySvg {...props}>
 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -322,11 +329,14 @@ export const IconlyMusic = (props) => (
 
 export const IconlyPlus = (props) => (
   <IconlySvg {...props}>
-<g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-        <g transform="translate(2.000000, 2.000000)" fill="currentColor" fillRule="nonzero">
-            <path d="M14.6602,0.0001 C18.0602,0.0001 20.0002,1.9201 20.0002,5.3301 L20.0002,5.3301 L20.0002,14.6701 C20.0002,18.0601 18.0702,20.0001 14.6702,20.0001 L14.6702,20.0001 L5.3302,20.0001 C1.9202,20.0001 0.0002,18.0601 0.0002,14.6701 L0.0002,14.6701 L0.0002,5.3301 C0.0002,1.9201 1.9202,0.0001 5.3302,0.0001 L5.3302,0.0001 Z M9.9902,5.5101 C9.5302,5.5101 9.1602,5.8801 9.1602,6.3401 L9.1602,6.3401 L9.1602,9.1601 L6.3302,9.1601 C6.1102,9.1601 5.9002,9.2501 5.7402,9.4001 C5.5902,9.5601 5.5002,9.7691 5.5002,9.9901 C5.5002,10.4501 5.8702,10.8201 6.3302,10.8301 L6.3302,10.8301 L9.1602,10.8301 L9.1602,13.6601 C9.1602,14.1201 9.5302,14.4901 9.9902,14.4901 C10.4502,14.4901 10.8202,14.1201 10.8202,13.6601 L10.8202,13.6601 L10.8202,10.8301 L13.6602,10.8301 C14.1202,10.8201 14.4902,10.4501 14.4902,9.9901 C14.4902,9.5301 14.1202,9.1601 13.6602,9.1601 L13.6602,9.1601 L10.8202,9.1601 L10.8202,6.3401 C10.8202,5.8801 10.4502,5.5101 9.9902,5.5101 Z"></path>
-        </g>
-    </g>
+    <path
+      d="M12 5V19M5 12H19"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="3"
+    />
   </IconlySvg>
 );
 
@@ -593,6 +603,22 @@ export const IconlyLink = (props) => (
       <path d="m9 8 3-3a5 5 0 0 1 7 7l-3 3" />
       <path d="m15 16-3 3a5 5 0 0 1-7-7l3-3" />
       <path d="m9 15 6-6" />
+    </g>
+  </IconlySvg>
+);
+
+export const IconlyUnlink = (props) => (
+  <IconlySvg {...props}>
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="m18.84 12.25 1.72-1.71a5.004 5.004 0 0 0-7.08-7.07l-1.71 1.71" />
+      <path d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 7.08 7.07l1.71-1.71" />
+      <path d="M8 2v3M2 8h3M16 19v3M19 16h3" />
     </g>
   </IconlySvg>
 );

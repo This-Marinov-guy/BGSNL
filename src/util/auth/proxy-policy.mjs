@@ -3,6 +3,7 @@
 // on their existing direct API/server-to-server paths.
 const routes = {
   GET: [
+    "event/guest-list/:id/stream",
     "user/wallet/availability", "user/wallet/apple", "user/wallet/card",
     "security/passkeys", "security/google/config", "security/connected-accounts",
     "user/current", "user/get-subscription-status", "user/refresh-token", "user/roles", "user/promotions",

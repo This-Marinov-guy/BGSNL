@@ -163,7 +163,7 @@ test("saved passkeys and confirmation stay inside the panel with accessible icon
   assert.match(panel, /Current BGSNL password/);
   assert.match(settings, /aria-label=\{`Remove \$\{passkey.name\}`\}/);
   assert.match(settings, /title=\{`Remove \$\{passkey.name\}`\}/);
-  assert.match(settings, /<IconlyDelete size=\{24\} aria-hidden="true" focusable="false" \/>/);
+  assert.match(settings, /<IconlyDelete size=\{18\} aria-hidden="true" focusable="false" \/>/);
   assert.doesNotMatch(settings, />Remove<\/button>/);
   assert.match(settings, /setEditing\(\{ purpose: "remove", credentialId: passkey.id/);
 });

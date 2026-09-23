@@ -479,7 +479,7 @@
 
   /*
    * Bare icon button: the pen alone, no circle or fill. Keeps a small padding
-   * so the hit area stays comfortably larger than the ~0.95rem glyph, and a
+   * so the hit area stays comfortably larger than the 1.25rem glyph, and a
    * negative margin so that padding does not visually push the pen off the
    * heading's right edge.
    */
@@ -1012,11 +1012,40 @@
     margin-bottom: 0;
   }
 
-  .user-details-card .user-quote-section,
-  .user-details-card .user-cv-section {
+  .user-details-card .user-quote-section {
     border-top: 1px solid rgb(1 115 99 / 15%);
     margin-top: 1.25rem !important;
     padding-top: 1.25rem;
+  }
+
+  .user-details-card .user-cv-section {
+    background: rgb(232 244 241 / 48%);
+    border-radius: 0.7rem;
+    margin-top: 1rem !important;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .user-page-container {
+    .tab-header {
+      border-bottom: 0;
+      margin: 0 0 0.85rem;
+      padding: 0;
+
+      .tab-title {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+        line-height: 0.92;
+        max-width: 12ch;
+      }
+    }
+
+    .tab-body {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+    }
   }
 }
 
@@ -1024,10 +1053,10 @@
   .user-page-container {
     .tab-header {
       margin-bottom: 0.75rem;
-      padding: 0 0.15rem 0.65rem;
+      padding: 0;
 
       .tab-title {
-        font-size: clamp(1.65rem, 12vw, 2.25rem);
+        font-size: clamp(2.5rem, 12vw, 3.5rem);
       }
     }
 
@@ -1045,8 +1074,19 @@
       }
 
       .p-tablist-end {
+        flex: 0 0 auto;
         padding: 0 0.15rem;
       }
+    }
+
+    .tickets-tab-body {
+      align-items: center;
+      display: flex;
+      min-height: clamp(24rem, 58dvh, 34rem);
+    }
+
+    .tickets-tab-body > * {
+      width: 100%;
     }
 
     .settings-card,

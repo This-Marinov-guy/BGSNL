@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const directory = resolve(root, ".wallet-local/apple");
+const production = process.argv.includes("--production");
+if (process.argv.slice(2).some(arg => arg !== "--production")) throw new Error("Usage: node scripts/wallet-csr.mjs [--production]");
+const relativeDirectory = production ? ".wallet-local/apple-production" : ".wallet-local/apple";
+const directory = resolve(root, relativeDirectory);
 const keyPath = resolve(directory, "pass-key.pem");
 const csrPath = resolve(directory, "pass.csr");
 if (existsSync(keyPath) || existsSync(csrPath)) {
@@ -25,10 +28,10 @@ if (existsSync(keyPath) || existsSync(csrPath)) {
   writeFileSync(keyPath, privateKey, { flag: "wx", mode: 0o600 });
   const result = spawnSync(openssl, [
     "req", "-new", "-sha256", "-key", keyPath, "-out", csrPath,
-    "-subj", "/CN=BGSNL Membership Test/O=Bulgarian Society Netherlands/C=NL",
+    "-subj", `/CN=BGSNL Membership ${production ? "Production" : "Test"}/O=Bulgarian Society Netherlands/C=NL`,
   ], { stdio: "ignore" });
   if (result.status !== 0) throw new Error("CSR generation failed. The new private key is preserved; do not overwrite it.");
   chmodSync(csrPath, 0o600);
-  console.log("Created .wallet-local/apple/pass.csr for upload to Apple.");
-  console.log("Private key retained in .wallet-local/apple/pass-key.pem (owner-only permissions). Do not upload or share it.");
+  console.log(`Created ${relativeDirectory}/pass.csr for upload to Apple.`);
+  console.log(`Private key retained in ${relativeDirectory}/pass-key.pem (owner-only permissions). Do not upload or share it.`);
 }

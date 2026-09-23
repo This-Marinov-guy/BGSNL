@@ -76,9 +76,21 @@ export default function PasskeySettings() {
               onClick={() => { setEditing({ purpose: "register" }); setName(""); setPassword(""); }}>Add passkey</button>
           </div>
           <div className={styles.panelBody}>
-            {!passkeys && <div className={styles.status} role="status">
-              <p>{loadFailed ? "Passkeys could not be loaded. Your password is still available." : "Loading your passkeys…"}</p>
-              {loadFailed && <button type="button" className={primary} onClick={() => setAttempt((value) => value + 1)}>Try again</button>}
+            {!passkeys && !loadFailed && (
+              <div className={styles.skeleton} role="status">
+                <span className={styles.screenReaderStatus}>Loading your passkeys</span>
+                <div className={styles.skeletonItem} aria-hidden="true">
+                  <div className={styles.skeletonText}>
+                    <span className={`${styles.skeletonBlock} ${styles.skeletonTitle}`} />
+                    <span className={`${styles.skeletonBlock} ${styles.skeletonMeta}`} />
+                  </div>
+                  <span className={`${styles.skeletonBlock} ${styles.skeletonAction}`} />
+                </div>
+              </div>
+            )}
+            {!passkeys && loadFailed && <div className={styles.status} role="status">
+              <p>Passkeys could not be loaded. Your password is still available.</p>
+              <button type="button" className={primary} onClick={() => setAttempt((value) => value + 1)}>Try again</button>
             </div>}
             {passkeys?.length === 0 && <p className={styles.status}>No passkeys yet. Add one on a device you trust.</p>}
             {passkeys?.length > 0 && <ul className={styles.list} aria-label="Registered passkeys">

@@ -1,51 +1,33 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../../../ui/functional/AnimatedDisclosure";
 import moment from "moment";
 import {
   FiChevronDown,
+  IconlyDocument,
 } from "@/elements/ui/icons/IconlyIcons";
 import { MOMENT_DATE_TIME_YEAR } from "../../../../util/functions/date";
 import GuestListTable from "../GuestListTable";
-import { useHttpClient } from "@/hooks/common/http-hook";
+import GuestListSearch from "../GuestListSearch";
+import { useLiveGuestList } from "@/hooks/common/use-live-guest-list";
 import { selectUser } from "@/redux/user";
 import { useSelector } from "react-redux";
 import { EVENT_MANAGEMENT_ACCESS } from "@/util/defines/common";
 import { checkAuthorization } from "@/util/functions/authorization";
 
 const EventAnalyticsAccordion = ({ event }) => {
-  const [guests, setGuests] = useState(event.guestList || []);
-  const [pendingGuestIds, setPendingGuestIds] = useState([]);
+  const [expanded, setExpanded] = useState(false);
+  const [extended, setExtended] = useState(false);
+  const [search, setSearch] = useState("");
   const user = useSelector(selectUser);
-  const { sendRequest } = useHttpClient();
-  const requestRef = useRef(sendRequest);
-  requestRef.current = sendRequest;
   const canUpdatePresence = checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS);
+  const { guests, columns, syncError, live, pendingGuestIds, updatePresence } = useLiveGuestList(event._id || event.id, expanded, event.guestList || [], event.columns || {});
   const attended = guests.filter((guest) => Number(guest.status) === 1).length;
   const totalTickets = guests.length;
   const presence = totalTickets ? Math.round((attended / totalTickets) * 100) : 0;
 
-  useEffect(() => {
-    setGuests(event.guestList || []);
-  }, [event.guestList]);
-
-  const updatePresence = async (guest) => {
-    const guestId = String(guest.id || guest._id || "");
-    if (!guestId || pendingGuestIds.includes(guestId)) return;
-    const present = Number(guest.status) !== 1;
-    const before = guests;
-    setGuests((current) => current.map((item) => String(item.id || item._id || "") === guestId ? { ...item, status: present ? 1 : 0 } : item));
-    setPendingGuestIds((current) => [...current, guestId]);
-    try {
-      const response = await requestRef.current("event/guest-presence", "PATCH", { eventId: event._id, guestId, present }, {}, true, false);
-      if (!response?.status) setGuests(before);
-    } finally {
-      setPendingGuestIds((current) => current.filter((id) => id !== guestId));
-    }
-  };
-
   return (
-    <AnimatedDisclosure className="event-analytics-accordion" summary={<>
+    <AnimatedDisclosure className="event-analytics-accordion" onExpandedChange={setExpanded} summary={<>
       <div
         className="event-analytics-accordion__header"
       >
@@ -112,9 +94,16 @@ const EventAnalyticsAccordion = ({ event }) => {
           {guests.length > 0 && (
             <div className="event-analytics-accordion__guests">
               <h5>Guest list ({guests.length})</h5>
-              <GuestListTable columns={event.columns} editable={canUpdatePresence} guests={guests} onPresenceChange={updatePresence} pendingGuestIds={pendingGuestIds} />
+              <div className="event-details-modal__actions guest-list__actions" role="group" aria-label="Guest list actions">
+                <button className="event-details-modal__action" type="button" aria-pressed={extended} onClick={() => setExtended(value => !value)}>
+                  <IconlyDocument aria-hidden="true" /><span className="guest-list__toggle-label" key={String(extended)}>{extended ? "Compact" : "Extend"}</span>
+                </button>
+                <GuestListSearch value={search} onChange={setSearch} />
+              </div>
+              <GuestListTable columns={columns} search={search} extended={extended} editable={canUpdatePresence} guests={guests} onPresenceChange={updatePresence} pendingGuestIds={pendingGuestIds} />
             </div>
           )}
+          <p role="status">{syncError ? "Connection interrupted. Attendance may be out of date; reconnecting." : live ? "Live attendance updates. Changes sync quietly in the background." : "Syncing in the background. Reconnecting to live updates."}</p>
         </div>
     </AnimatedDisclosure>
   );

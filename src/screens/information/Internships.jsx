@@ -33,6 +33,8 @@ import PageLoading from "../../elements/ui/loading/PageLoading";
 import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
+import { ANALYTICS_EVENTS } from "../../util/analytics/events.mjs";
+import { clarityEvent } from "../../util/functions/helpers";
 
 const ROWS_PER_PAGE_OPTIONS = [6, 12, 24];
 const DEFAULT_ROWS = 12;
@@ -56,6 +58,10 @@ const Internships = ({ initialInternships = [] }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
   const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");
+
+  useEffect(() => {
+    clarityEvent(ANALYTICS_EVENTS.INTERNSHIPS_OPENED);
+  }, []);
 
   const rawType = searchParams.get("type");
   const typeParam =

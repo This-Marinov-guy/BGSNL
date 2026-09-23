@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
 import { Link, useSearchParams } from "@/util/navigation";
 import HeaderTwo from "@/component/header/HeaderTwo";
-import { FiArrowLeft, FiChevronDown, FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
+import { FiArrowLeft, FiChevronDown, FiDownload, FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 import { useHttpClient } from "@/hooks/common/http-hook";
@@ -23,6 +23,7 @@ import AccountMembershipActions from "./AccountMembershipActions";
 import { CopyableId, PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 import { ACCESS_3 } from "@/util/defines/common";
 import { canManageAccountType, canEditAccount, isEditableAccountRole, editableAccountRoles, protectedAccountRoles } from "./role-policy.mjs";
+import { exportAccountsCsv } from "./export-accounts.mjs";
 
 const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
   loading: () => <p role="status">Loading member statistics…</p>,
@@ -47,6 +48,13 @@ const formatDateInput = (value) => value ? String(value).slice(0, 10) : "";
 const formatCity = (value) => value ? capitalizeFirstLetter(value, true) : "Not assigned";
 const accountName = (account) => `${account.name || ""} ${account.surname || ""}`.trim() || account.email;
 const accountInitials = (account) => `${account.name?.[0] || ""}${account.surname?.[0] || ""}`.toUpperCase();
+const accountQuery = ({ type, page, pageSize, search, city, status }) => {
+  const params = new URLSearchParams({ type, page: String(page), pageSize: String(pageSize) });
+  if (search) params.set("search", search);
+  if (city) params.set("city", city);
+  if (status) params.set("status", status);
+  return params;
+};
 
 
 const previewDate = value => {
@@ -314,8 +322,10 @@ export default function BackofficeAccounts() {
   const [expandedAccountId, setExpandedAccountId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [loadingList, setLoadingList] = useState(true);
+  const [exporting, setExporting] = useState(false);
   const requestSequence = useRef(0);
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
   const accountRoleScope = [...(user.roles || [])].sort().join("|");
   const { sendRequest } = useHttpClient();
   const sendRequestRef = useRef(sendRequest);
@@ -343,10 +353,7 @@ export default function BackofficeAccounts() {
     let active = true;
     const controller = new AbortController();
     const sequence = ++requestSequence.current;
-    const params = new URLSearchParams({ type, page: String(page), pageSize: "25" });
-    if (search) params.set("search", search);
-    if (city) params.set("city", city);
-    if (statusFilter) params.set("status", statusFilter);
+    const params = accountQuery({ type, page, pageSize: 25, search, city, status: statusFilter });
     setLoadingList(true);
     setExpandedAccountId(null);
     sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, true, false, { signal: controller.signal })
@@ -387,6 +394,35 @@ export default function BackofficeAccounts() {
     setSelected(account);
   };
 
+  const exportDirectory = async () => {
+    if (exporting || loadingList || pagination.total === 0) return;
+    setExporting(true);
+    try {
+      const requestPage = async (requestedPage) => {
+        const params = accountQuery({ type, page: requestedPage, pageSize: 100, search, city, status: statusFilter });
+        return sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, false, false);
+      };
+      const first = await requestPage(1);
+      if (!first?.accounts?.length) {
+        dispatch(showNotification({ severity: "info", detail: "There are no accounts to export." }));
+        return;
+      }
+      const pages = Math.max(1, Number(first.totalPages) || 1);
+      const remainingPages = Array.from({ length: pages - 1 }, (_, index) => index + 2);
+      const remaining = await Promise.all(remainingPages.map(requestPage));
+      const exportAccounts = [
+        ...first.accounts,
+        ...remaining.flatMap((response) => response?.accounts || []),
+      ];
+      exportAccountsCsv(exportAccounts, type);
+      dispatch(showNotification({ severity: "success", detail: `${exportAccounts.length} ${type === "alumni" ? "alumni" : "member"} profiles exported.` }));
+    } catch {
+      dispatch(showNotification({ severity: "error", detail: "The account export could not be prepared. Please try again." }));
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <>
       <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
@@ -407,6 +443,17 @@ export default function BackofficeAccounts() {
             <h1>Accounts dashboard</h1>
             <p>Find and manage member and alumni profiles, account status and administrative roles.</p>
           </div>
+          {!statistics && <div className="workspace-heading-actions">
+            <button
+              className={styles.exportButton}
+              disabled={loadingList || exporting || pagination.total === 0}
+              onClick={exportDirectory}
+              type="button"
+            >
+              <FiDownload aria-hidden />
+              <span>{exporting ? "Preparing sheet…" : "Export sheet"}</span>
+            </button>
+          </div>}
         </header>
 
         {statistics ? <section className={styles.directory} aria-label="Member statistics"><AnalyticsAvailability title="Member analytics"><MembersList /></AnalyticsAvailability></section> : <section className={styles.directory} aria-label={`${type} directory`}>

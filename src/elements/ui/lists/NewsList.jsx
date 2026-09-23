@@ -14,8 +14,8 @@ import {
   IconlyArrowLeft,
   IconlyArrowRight,
   IconlyMaximize,
-  IconlyMinimize,
 } from "@/elements/ui/icons/IconlyIcons";
+import AppModal from "@/elements/ui/modals/AppModal";
 import {
   Link,
   useLocation,
@@ -37,7 +37,7 @@ const NewsList = ({ withTitle = true }) => {
   const pendingPageRef = useRef(null);
   const scrollFrameRef = useRef(0);
   const [activePage, setActivePage] = useState(0);
-  const [isFullView, setIsFullView] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const activeCampaignNews = CAMPAIGNS.filter((campaign) =>
     Boolean(campaign?.modal.active)
@@ -103,45 +103,6 @@ const NewsList = ({ withTitle = true }) => {
   useEffect(() => {
     return () => window.cancelAnimationFrame(scrollFrameRef.current);
   }, []);
-
-  useEffect(() => {
-    if (!isFullView) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    const closeFullView = (event) => {
-      if (event.key === "Escape") {
-        setIsFullView(false);
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", closeFullView);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeFullView);
-    };
-  }, [isFullView]);
-
-  const toggleFullscreen = () => {
-    const pageToKeep = pendingPageRef.current ?? activePage;
-    pendingPageRef.current = pageToKeep;
-    setIsFullView((currentValue) => !currentValue);
-
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        const target = pagesRef.current?.children[pageToKeep];
-        if (!target) return;
-
-        target.scrollIntoView({
-          behavior: "auto",
-          block: "nearest",
-          inline: "center",
-        });
-        setActivePage(pageToKeep);
-      });
-    });
-  };
 
   const goToPage = (pageIndex) => {
     const track = pagesRef.current;
@@ -245,12 +206,76 @@ const NewsList = ({ withTitle = true }) => {
     );
   };
 
+  const renderNewsletterPages = (preview = false) => (
+    <>
+      <article
+        className="newspaper-page newspaper-page--cover"
+        aria-label="Page 1: Bulgarian Bulletin cover"
+      >
+        <div className="newspaper-page__masthead">
+          <span>The</span>
+          <h2 id={preview ? undefined : "news-newspaper-title"}>
+            Bulgarian Bulletin
+          </h2>
+          <p>Netherlands</p>
+        </div>
+
+        <div className="newspaper-page__cover-grid">
+          <div>
+            <h3>News from across our community.</h3>
+          </div>
+          <div className="newspaper-page__introduction">
+            <p>
+              A living record of opportunities, stories and ways to take part
+              in Bulgarian life across the Netherlands.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      {newsItems.map((item, index) => (
+        <article
+          className="newspaper-page newspaper-page--story"
+          key={`${preview ? "preview" : "carousel"}-${item.title}-${index}`}
+          aria-label={`Page ${index + 2}: ${item.title}`}
+        >
+          <header className="newspaper-page__story-header">
+            <span>{index + 2}</span>
+          </header>
+
+          <div className="newspaper-page__story-grid">
+            <figure className="newspaper-page__image">
+              <img
+                src={item.image}
+                alt={`${item.title} — BGSNL news`}
+                onError={(event) => {
+                  if (item.fallbackImage) {
+                    event.currentTarget.src = item.fallbackImage;
+                  } else {
+                    event.currentTarget.hidden = true;
+                  }
+                }}
+              />
+            </figure>
+
+            <div className="newspaper-page__story-copy">
+              <h3>{item.title}</h3>
+              <p className="newspaper-page__description">
+                {item.description}
+              </p>
+              {renderStoryAction(item)}
+            </div>
+          </div>
+        </article>
+      ))}
+    </>
+  );
+
   return (
+    <>
     <section
-      className={`news-newspaper${withTitle ? "" : " news-newspaper--embedded"}${isFullView ? " is-full-view" : ""}`}
+      className={`news-newspaper${withTitle ? "" : " news-newspaper--embedded"}`}
       aria-labelledby="news-newspaper-title"
-      aria-modal={isFullView ? "true" : undefined}
-      role={isFullView ? "dialog" : undefined}
     >
       <div
         ref={pagesRef}
@@ -260,66 +285,7 @@ const NewsList = ({ withTitle = true }) => {
         tabIndex="0"
         aria-label="BGSNL news pages"
       >
-        <article className="newspaper-page newspaper-page--cover">
-          <div className="newspaper-page__masthead">
-            <span>The</span>
-            <h2 id="news-newspaper-title">Bulgarian Bulletin</h2>
-            <p>Netherlands</p>
-          </div>
-
-          <div className="newspaper-page__cover-grid">
-            <div>
-              <h3>News from across our community.</h3>
-            </div>
-            <div className="newspaper-page__introduction">
-              <p>
-                A living record of opportunities, stories and ways to take
-                part in Bulgarian life across the Netherlands.
-              </p>
-              {/* <p className="newspaper-page__direction">
-                Scroll, swipe or use the arrows to read the edition.
-              </p> */}
-            </div>
-          </div>
-
-        </article>
-
-        {newsItems.map((item, index) => (
-          <article
-            className="newspaper-page newspaper-page--story"
-            key={`${item.title}-${index}`}
-            aria-label={`Page ${index + 2}: ${item.title}`}
-          >
-            <header className="newspaper-page__story-header">
-              <span>{index + 2}</span>
-            </header>
-
-            <div className="newspaper-page__story-grid">
-              <figure className="newspaper-page__image">
-                <img
-                  src={item.image}
-                  alt={`${item.title} — BGSNL news`}
-                  onError={(event) => {
-                    if (item.fallbackImage) {
-                      event.currentTarget.src = item.fallbackImage;
-                    } else {
-                      event.currentTarget.hidden = true;
-                    }
-                  }}
-                />
-              </figure>
-
-              <div className="newspaper-page__story-copy">
-                <h3>{item.title}</h3>
-                <p className="newspaper-page__description">
-                  {item.description}
-                </p>
-                {renderStoryAction(item)}
-              </div>
-            </div>
-
-          </article>
-        ))}
+        {renderNewsletterPages()}
       </div>
 
       <div className="news-newspaper__navigation">
@@ -353,20 +319,11 @@ const NewsList = ({ withTitle = true }) => {
           <button
             className="news-newspaper__fullscreen"
             type="button"
-            onClick={toggleFullscreen}
-            aria-label={
-              isFullView
-                ? "Exit full screen newspaper view"
-                : "Open full screen newspaper view"
-            }
-            aria-pressed={isFullView}
-            title={isFullView ? "Exit full view" : "Open full view"}
+            onClick={() => setIsPreviewOpen(true)}
+            aria-label="Open full newsletter preview"
+            title="Open full newsletter preview"
           >
-            {isFullView ? (
-              <IconlyMinimize size="1em" aria-hidden="true" />
-            ) : (
-              <IconlyMaximize size="1em" aria-hidden="true" />
-            )}
+            <IconlyMaximize size="1em" aria-hidden="true" />
           </button>
 
           <button
@@ -384,6 +341,26 @@ const NewsList = ({ withTitle = true }) => {
         </div>
       </div>
     </section>
+    <AppModal
+      className="news-newspaper-preview"
+      contentClassName="news-newspaper-preview__content"
+      headerClassName="news-newspaper-preview__header"
+      maximized
+      onClose={() => setIsPreviewOpen(false)}
+      onMaximize={({ maximized }) => {
+        if (!maximized) setIsPreviewOpen(false);
+      }}
+      open={isPreviewOpen}
+      title="Bulgarian Bulletin preview"
+    >
+      <div
+        className="news-newspaper-preview__pages"
+        aria-label={`All ${pageCount} newsletter pages`}
+      >
+        {renderNewsletterPages(true)}
+      </div>
+    </AppModal>
+    </>
   );
 };
 

@@ -50,7 +50,9 @@ import Loader from "../../elements/ui/loading/Loader";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
+import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "../../util/analytics/events.mjs";
 import {
+  clarityEvent,
   hasAppliedTicketDiscount,
   ticketPriceAmountByEvent,
 } from "../../util/functions/helpers";
@@ -368,6 +370,9 @@ const GuestPurchase = ({ initialEvent = null }) => {
                       formData.append("addOns", JSON.stringify(values.addOns));
                     }
 
+                    clarityEvent(ANALYTICS_EVENTS.EVENT_CHECKOUT_STARTED, {
+                      [ANALYTICS_PROPERTIES.TICKET_TYPE]: "guest",
+                    });
                     const responseData = await sendRequest(
                       "payment/checkout/guest-ticket",
                       "POST",

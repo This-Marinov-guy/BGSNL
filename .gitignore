@@ -21,6 +21,7 @@ next-env.d.ts
 # misc
 .DS_Store
 .env.local
+.env.development
 .env.development.local
 .env.test.local
 .env.production.local
@@ -36,3 +37,7 @@ yarn-error.log*
 
 # Wallet signing material and locally generated test passes
 /.wallet-local/
+*.pkpass
+
+# Local development-only mock ticket previews
+/public/test-tickets/

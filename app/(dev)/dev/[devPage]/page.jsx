@@ -4,6 +4,14 @@ import TicketPlayground from "@/screens/private/TicketPlayground";
 import WhatsNewPreview from "@/screens/private/WhatsNewPreview";
 import PaymentResultPreview from "@/screens/private/PaymentResultPreview";
 import WalletCardPreview from "@/screens/private/WalletCardPreview";
+import HeaderLoadingError from "@/elements/ui/errors/HeaderLoadingError";
+
+const AccountUnavailablePreview = () => (
+  <HeaderLoadingError
+    isError
+    message="We could not load your account. Check your connection and try again."
+  />
+);
 
 /**
  * The old SPA registered /test and /playground only when !isProd().
@@ -21,6 +29,7 @@ const SCREENS = {
   playground: TicketPlayground,
   "whats-new": WhatsNewPreview,
   "payment-result": PaymentResultPreview,
+  "account-unavailable": AccountUnavailablePreview,
 };
 
 export const dynamicParams = false;
