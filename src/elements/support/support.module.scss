@@ -102,7 +102,7 @@
     background: var(--ticket-status-bg); color: var(--ticket-status-color); border-color: transparent;
   }
   :global(.bgsnl-select-input.p-select) { width: 100%; height: auto; min-height: 0 !important; padding: 0; border: 0 !important; border-radius: .65rem; color: var(--ticket-status-color) !important; }
-  :global(.bgsnl-select-input) > button { gap: .5rem; min-height: 2.25rem; padding: .2rem .65rem; border-radius: inherit; font-size: .95rem; font-weight: 600; cursor: pointer; transition: filter 160ms ease; &:hover:not(:disabled) { filter: brightness(.96); } &:disabled { cursor: wait; } &::before { content: ""; width: .45rem; height: .45rem; flex-shrink: 0; border-radius: 50%; background: currentColor; } }
+  :global(.bgsnl-select-input) > button { gap: .5rem; min-height: 2.25rem; padding: .2rem .65rem; border-radius: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; transition: filter 160ms ease; &:hover:not(:disabled) { filter: brightness(.96); } &:disabled { cursor: wait; } &::before { content: ""; width: .45rem; height: .45rem; flex-shrink: 0; border-radius: 50%; background: currentColor; } }
   :global(.bgsnl-select-input) :global(.p-select-value) { min-height: 0; padding: 0 !important; font: inherit; }
   :global(.p-select-indicator) { display: flex; width: auto; padding: 0; svg { width: 1rem; height: 1rem; } }
 }
@@ -126,7 +126,7 @@
 .photoError { color: #861330; }
 .conversation > .error, .closed { margin: .5rem 1.25rem; flex-shrink: 0; }
 .closed { display: flex; align-items: flex-start; gap: .65rem; padding: .85rem 1rem; border-radius: .65rem; background: #fbefd4; color: #765615; svg { flex-shrink: 0; margin-top: .15rem; } p { margin: 0; color: inherit; } }
-.composer > .closed { margin: 0 0 .5rem; padding: .65rem .75rem; gap: .5rem; align-items: center; p { font-size: .8125rem; line-height: 1.4; } svg { width: 1rem; height: 1rem; margin-top: 0; } }
+.composer > .closed { margin: 0 0 .5rem; padding: .65rem .75rem; gap: .5rem; align-items: center; p { font-size: 1rem; line-height: 1.4; } svg { width: 1rem; height: 1rem; margin-top: 0; } }
 .helpSection { display: grid; gap: 1.5rem; }
 .reportIntro {
   display: flex;

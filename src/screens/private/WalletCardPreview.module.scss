@@ -20,7 +20,7 @@
 
   .status {
     padding: clamp(4px, 0.8dvh, 6px) clamp(12px, 2.2dvh, 18px);
-    font-size: clamp(0.8rem, 2.2dvh, 1rem);
+    font-size: 1rem;
     line-height: 1.15;
   }
 
@@ -34,7 +34,7 @@
     width: 100%;
     max-width: none;
     margin-top: clamp(10px, 2.2dvh, 24px);
-    font-size: clamp(0.82rem, 2.2dvh, 1rem);
+    font-size: 1rem;
     line-height: 1.2;
   }
 }

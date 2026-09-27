@@ -152,14 +152,14 @@
   }
 
   .tableWrap td { display: block; min-width: 0; padding: 0; border: 0; }
-  .tableWrap td::before { content: attr(data-label); display: block; margin-bottom: .2rem; color: #6b7871; font-size: .78rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
+  .tableWrap td::before { content: attr(data-label); display: block; margin-bottom: .2rem; color: #6b7871; font-size: 1rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
   .tableWrap td:first-child { grid-column: 1 / -1; grid-row: 1; }
   .tableWrap td:first-child::before, .tableWrap .regionCell::before, .tableWrap .actionCell::before { display: none; }
   .tableWrap .actionCell { grid-column: 2; grid-row: 2; justify-self: end; width: auto; }
   .person { min-width: 0; align-items: center; gap: .7rem; }
   .person strong { line-height: 1.1; overflow-wrap: anywhere; }
-  .mobileEmail { display: block; max-width: 100%; margin-top: .2rem; color: #596961; font-size: .95rem; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .regionCell { grid-column: 1; grid-row: 2; display: inline-flex !important; align-items: center; width: fit-content; max-width: 100%; padding: .35rem .6rem !important; border: 1px solid var(--region-badge-border, #b9d9ce) !important; border-radius: 999px !important; background: var(--region-badge-background, #e8f3ef); color: var(--region-badge-color, #017363); font-size: .92rem; font-weight: 800; text-transform: capitalize; }
+  .mobileEmail { display: block; max-width: 100%; margin-top: .2rem; color: #596961; font-size: 1rem; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .regionCell { grid-column: 1; grid-row: 2; display: inline-flex !important; align-items: center; width: fit-content; max-width: 100%; padding: .35rem .6rem !important; border: 1px solid var(--region-badge-border, #b9d9ce) !important; border-radius: 999px !important; background: var(--region-badge-background, #e8f3ef); color: var(--region-badge-color, #017363); font-size: 1rem; font-weight: 800; text-transform: capitalize; }
   .rolesCell, .detailCell { display: none !important; }
   .editButton { min-width: 5.4rem; height: 2.45rem; justify-content: center; padding: .55rem .75rem; }
   .editButton span { display: inline; }
