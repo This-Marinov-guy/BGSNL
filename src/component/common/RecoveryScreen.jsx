@@ -20,13 +20,13 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
               alt=""
               aria-hidden="true"
             />}
-          <h1 id="recovery-title" className="page-breadcrumb__title archive">{failed ? "Something went wrong." : "This page isn’t here."}</h1>
+          <h1 id="recovery-title" className="page-breadcrumb__title archive">{failed ? "We cannot load the page." : "This page isn’t here."}</h1>
         </div>
-        {failed && (
+        {/* {failed && (
           <p className="recovery-description">
             We couldn’t load this page. Try again, or head back to the homepage.
           </p>
-        )}
+        )} */}
         <div className="recovery-actions">
           {failed ? (
             <>

@@ -6,8 +6,8 @@ import { ACTIVE_ACCOUNT_CAMPAIGNS, WHATS_NEW_CAMPAIGN, scheduleAccountCampaign, 
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 20));
 
-test("What's new is paused and disabled campaigns never check, mark seen or display", async () => {
-  assert.equal(ACTIVE_ACCOUNT_CAMPAIGNS.includes(WHATS_NEW_CAMPAIGN), false);
+test("Version 4 is enabled, while disabled campaigns never check, mark seen or display", async () => {
+  assert.equal(ACTIVE_ACCOUNT_CAMPAIGNS.includes(WHATS_NEW_CAMPAIGN), true);
   const unexpected = () => assert.fail("Disabled campaign performed background work");
   const stop = scheduleAccountCampaign({ enabled: false, delay: 0,
     check: unexpected, claim: unexpected, canPresent: unexpected, onShow: unexpected });
@@ -15,7 +15,7 @@ test("What's new is paused and disabled campaigns never check, mark seen or disp
   stop();
 });
 
-test("local override bypasses seen history without requests; production always uses the API", async (t) => {
+test("all environments use saved history even with the obsolete local override", async (t) => {
   const previousMode = process.env.NODE_ENV;
   const previousFlag = process.env.NEXT_PUBLIC_WHATS_NEW_IGNORE_SEEN;
   t.after(() => {
@@ -31,19 +31,13 @@ test("local override bypasses seen history without requests; production always u
     return { headers: new Headers(), ok: true, json: async () => ({ campaign, seen: true, shouldShow: false }) };
   });
   const options = { endpoint: "/api", token: "test-token", campaign };
-  process.env.NODE_ENV = "development";
-  process.env.NEXT_PUBLIC_WHATS_NEW_IGNORE_SEEN = "true";
-  assert.deepEqual(await requestAccountCampaign(options), { campaign, seen: false });
-  assert.deepEqual(await requestAccountCampaign({ ...options, markSeen: true }), { campaign, shouldShow: true });
-  assert.equal(requests, 0);
-
-  for (const [environment, flag] of [["production", "true"], ["development", "false"], ["development", ""], ["test", "true"]]) {
+  for (const [environment, flag] of [["development", "true"], ["production", "true"], ["development", "false"], ["development", ""], ["test", "true"]]) {
     process.env.NODE_ENV = environment;
     process.env.NEXT_PUBLIC_WHATS_NEW_IGNORE_SEEN = flag;
     assert.equal((await requestAccountCampaign(options)).seen, true);
     assert.equal((await requestAccountCampaign({ ...options, markSeen: true })).shouldShow, false);
   }
-  assert.equal(requests, 8);
+  assert.equal(requests, 10);
 });
 
 test("a seen campaign never claims or displays", async () => {
@@ -85,6 +79,7 @@ test("campaign requests use cookies without a bearer token, no-store and reject 
   t.mock.method(globalThis, "fetch", async (url, options) => {
     assert.equal(url, "/api/user/campaigns/whats-new-2026-09/seen");
     assert.equal(options.method, "POST");
+    assert.equal(options.keepalive, true);
     assert.equal(options.headers.get("Authorization"), null);
     assert.equal(options.cache, "no-store");
     return { headers: new Headers(), ok: false };

@@ -68,7 +68,7 @@ export async function containerServices() {
   const api = services.find(({ name }) => name === "bgsnl-api");
   const website = services.find(({ name }) => name === "bgsnl");
   const mailer = services.find(({ name }) => name === "domakin-mailer");
-  mailer.args.splice(2, 0, "--include", "templates/**/*", "--include", "openapi/**/*");
+  if (process.env.BGSNL_E2E_MOCK_EMAILS !== "1") mailer.args.splice(2, 0, "--include", "templates/**/*", "--include", "openapi/**/*");
   // Do not pass --hostname: Next builds each request's absolute URL from the
   // bound hostname, so "0.0.0.0" would make every /api/* call fail the website
   // origin check. Omitting it still listens on every interface for the

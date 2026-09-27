@@ -37,8 +37,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     ],
     icon: <IconlyChessKnight3D className="alumni-tier-chess-icon" />,
     price: 3,
-    itemId: "price_1Rx1XKAShinXgMFZqWsg4V0D",
-    renewItemId: "price_1Rx1XKAShinXgMFZqWsg4V0D",
+    itemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_1_PRICE_ID || "price_1Rx1XKAShinXgMFZqWsg4V0D"),
+    renewItemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_1_PRICE_ID || "price_1Rx1XKAShinXgMFZqWsg4V0D"),
     period: 1,
   },
   {
@@ -72,8 +72,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     ],
     icon: <IconlyChessRook3D className="alumni-tier-chess-icon" />,
     price: 5,
-    itemId: "price_1SGEBBAShinXgMFZuC6fiOqf",
-    renewItemId: "price_1SGEBBAShinXgMFZuC6fiOqf",
+    itemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_2_PRICE_ID || "price_1SGEBBAShinXgMFZuC6fiOqf"),
+    renewItemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_2_PRICE_ID || "price_1SGEBBAShinXgMFZuC6fiOqf"),
     period: 1,
   },
   {
@@ -112,8 +112,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     // borderColor: "#00acee",
     icon: <IconlyChessQueen3D className="alumni-tier-chess-icon" />,
     price: 7,
-    itemId: "price_1SGEFLAShinXgMFZcWsbLjeE",
-    renewItemId: "price_1SGEFLAShinXgMFZcWsbLjeE",
+    itemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_3_PRICE_ID || "price_1SGEFLAShinXgMFZcWsbLjeE"),
+    renewItemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_3_PRICE_ID || "price_1SGEFLAShinXgMFZcWsbLjeE"),
     period: 1,
   },
   {
@@ -152,8 +152,8 @@ export const ALUMNI_MEMBERSHIP_SPECIFICS = [
     borderColor: "#e5b80b",
     icon: <IconlyChessKing3D className="alumni-tier-chess-icon" />,
     price: "10",
-    itemId: "price_1SGEFoAShinXgMFZZzo95PeT",
-    renewItemId: "price_1SGEFoAShinXgMFZZzo95PeT",
+    itemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_4_PRICE_ID || "price_1SGEFoAShinXgMFZZzo95PeT"),
+    renewItemId: (process.env.NEXT_PUBLIC_STRIPE_ALUMNI_TIER_4_PRICE_ID || "price_1SGEFoAShinXgMFZZzo95PeT"),
     period: 1,
   },
 ];

@@ -56,7 +56,7 @@ test("API base is v1 exactly once for old and new environment values", () => {
   assert.equal(versionedApiBase("https://api.example.test/api/v1/"), "https://api.example.test/api/v1");
 });
 
-test("unversioned proxy requests redirect to v1 without dropping the POST or query", async () => {
+test("unversioned fetches remain available while navigation redirects to v1", async () => {
   let forwarded;
   const route = await loadModule("app/api/[...path]/route.js", {
     "@/util/auth/website-api": { websiteApi: async (_request, parts) => {
@@ -65,10 +65,20 @@ test("unversioned proxy requests redirect to v1 without dropping the POST or que
     } },
     "next/server": { NextResponse },
   });
-  const request = new Request(`${origin}/api/security/login?next=dashboard`, { method: "POST", body: "{}" });
-  const redirect = await route.POST(request, { params: Promise.resolve({ path: ["security", "login"] }) });
+  const legacy = await route.POST(new Request(`${origin}/api/security/login`, { method: "POST", body: "{}" }),
+    { params: Promise.resolve({ path: ["security", "login"] }) });
+  assert.equal(legacy.status, 200);
+  assert.deepEqual(forwarded, ["security", "login"]);
+  forwarded = undefined;
+  const csrf = await route.GET(new Request(`${origin}/api/session/csrf`),
+    { params: Promise.resolve({ path: ["session", "csrf"] }) });
+  assert.equal(csrf.status, 200);
+  assert.deepEqual(forwarded, ["session", "csrf"]);
+  forwarded = undefined;
+  const redirect = await route.GET(new Request(`${origin}/api/security/google/config?next=dashboard`,
+    { headers: { "sec-fetch-mode": "navigate" } }), { params: Promise.resolve({ path: ["security", "google", "config"] }) });
   assert.equal(redirect.status, 307);
-  assert.equal(redirect.headers.get("location"), `${origin}/api/v1/security/login?next=dashboard`);
+  assert.equal(redirect.headers.get("location"), `${origin}/api/v1/security/google/config?next=dashboard`);
   assert.equal(forwarded, undefined);
   const direct = await route.POST(new Request(`${origin}/api/v1/security/login`, { method: "POST", body: "{}" }),
     { params: Promise.resolve({ path: ["v1", "security", "login"] }) });
@@ -331,11 +341,12 @@ test("confirmation uses a fragment, explicit approval and a one-time profile toa
   assert.match(ui, /sessionStorage\.removeItem\(SESSION_NOTICE_KEY\)/); assert.match(ui, /showNotification\(\{ severity: notice.severity/);
 });
 
-test("the website manifest covers existing API browser routes but not integration/admin-only jobs", async () => {
+test("the website manifest covers browser routes but keeps integration and server-only jobs private", async () => {
   const routeFiles = { security: "security-routes.js", user: "users-routes.js", common: "common-routes.js", event: "Events/events-routes.js",
     "future-event": "Events/future-events-routes.js", payment: "payments-routes.js", internship: "internship-routes.js", dashboard: "dashboard-routes.js",
-    backoffice: "backoffice-routes.js", support: "support-routes.js", wordpress: "Integration/wordpress-routes.js", contest: "contest-routes.js", special: "special-routes.js" };
-  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "user/wallet/public/fixture", "event/sync-calendar-events", "future-event/archive-expired", "security/session/refresh", "security/session/activity", "security/session/logout"];
+    backoffice: "backoffice-routes.js", support: "support-routes.js", monitoring: "monitoring-routes.js",
+    wordpress: "Integration/wordpress-routes.js", contest: "contest-routes.js", special: "special-routes.js" };
+  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "user/wallet/public/fixture", "event/sync-calendar-events", "future-event/archive-expired", "security/session/refresh", "security/session/activity", "security/session/logout", "monitoring/web-events"];
   for (const [group, file] of Object.entries(routeFiles)) {
     const source = await readFile(new URL(`../../BGSNL-API/routes/${file}`, import.meta.url), "utf8");
     for (const [, method, route] of source.matchAll(/\b(?:\w*Router|router)\.(get|post|patch|delete)\(\s*["']([^"']+)["']/g)) {

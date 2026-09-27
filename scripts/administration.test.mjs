@@ -13,11 +13,12 @@ test('administration overview follows the existing role scopes', () => {
   assert.deepEqual(available(['committee_member']), ['events']);
   assert.deepEqual(available(['active_member']), ['events']);
   assert.deepEqual(available(['board_member']), ['events', 'members']);
-  assert.deepEqual(available(['society_board_member']), ['events', 'internships', 'members']);
-  assert.deepEqual(available(['national_board_member']), ['events', 'internships', 'members']);
+  assert.deepEqual(available(['society_board_member']), ['events', 'members', 'internships']);
+  assert.deepEqual(available(['national_board_member']), ['events', 'members', 'internships']);
   assert.deepEqual(available(['regional_board_member']), ['events', 'members']);
   assert.deepEqual(available(['regional_committee_member']), ['events']);
   assert.deepEqual(available(['national_committee_member']), ['events', 'members']);
+  assert.deepEqual(available(['developer']), ['monitoring']);
 });
 test('ordinary members reach access requests but cannot open admin panels', () => {
   const user = { authInitialized: true, session: 'test', status: 'active', roles: ['member'] };
@@ -30,6 +31,10 @@ test('access requests use only the explicit POST proxy route', () => {
   assert.equal(browserApiPath(['backoffice', 'access-requests'], 'POST'), 'backoffice/access-requests');
   assert.equal(browserApiPath(['backoffice', 'access-requests'], 'GET'), null);
   assert.equal(browserApiPath(['backoffice', 'access-requests', 'member-id'], 'POST'), null);
+});
+test('system manager jobs use the explicit read-only proxy route', () => {
+  assert.equal(browserApiPath(['monitoring', 'jobs'], 'GET'), 'monitoring/jobs');
+  assert.equal(browserApiPath(['monitoring', 'jobs'], 'POST'), null);
 });
 
 

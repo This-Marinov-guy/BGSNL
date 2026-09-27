@@ -25,12 +25,13 @@ export async function readEnvironment(directory, parse, files = [".env", ".env.d
 export function localEnvironments(api, mailer, inherited = process.env) {
   const apiEnv = { ...api, ...inherited };
   const mailerEnv = { ...mailer, ...inherited };
+  const mockEmails = inherited.BGSNL_E2E_MOCK_EMAILS === "1";
   // Share only the channel-scoped credential, never the Mailer admin key.
   const secret = randomBytes(32).toString("hex");
   for (const key of ["DB_USER", "DB_PASS", "DB", "SSR_SERVER_KEY"]) {
     if (!apiEnv[key]?.trim()) throw new Error(`Configure ${key} in BGSNL-API/.env or .env.local.`);
   }
-  if (!mailerEnv.BULGARIANSOCIETY_EMAIL_DATABASE_URL?.trim()) {
+  if (!mockEmails && !mailerEnv.BULGARIANSOCIETY_EMAIL_DATABASE_URL?.trim()) {
     throw new Error("Configure BULGARIANSOCIETY_EMAIL_DATABASE_URL in Domakin-Mailer/.env.dev; delivery acceptance requires its email store.");
   }
   const development = { APP_ENV: "dev", NODE_ENV: "development" };
@@ -39,6 +40,7 @@ export function localEnvironments(api, mailer, inherited = process.env) {
       ...inherited, ...development, PORT: "3000",
       NEXT_PUBLIC_TEST_SERVER_URL: "http://localhost:8080/api/",
       BGSNL_SERVER_KEY: apiEnv.SSR_SERVER_KEY,
+      ...(mockEmails ? { BGSNL_TRUSTED_CLIENT_IP_HEADER: "x-bgsnl-e2e-client-ip" } : {}),
     },
     api: {
       ...apiEnv, ...development, PORT: "8080", BILLING_WORKER_ENABLED: "false",
@@ -46,6 +48,7 @@ export function localEnvironments(api, mailer, inherited = process.env) {
       BGSNL_REDIS_PREFIX: apiEnv.BGSNL_REDIS_PREFIX || "bgsnl:development:v1:",
       BGSNL_EMAIL_PROVIDER: "domakin", MAILER_API_URL: "http://127.0.0.1:6000/api",
       MAILER_BULGARIANSOCIETY_SECRET: secret,
+      BGSNL_E2E_MOCK_EMAILS: mockEmails ? "1" : "0",
     },
     mailer: {
       ...mailerEnv, ...development, PORT: "6000", APP_URL: "http://localhost:6000",
@@ -65,15 +68,22 @@ export async function createServices({ directory = websiteDirectory, inherited =
   let parse;
   try { ({ parse } = require("dotenv")); }
   catch { throw new Error(`Install API dependencies first: npm --prefix "${apiDirectory}" install`); }
+  const e2eInherited = inherited.BGSNL_E2E_MOCK_EMAILS === "1"
+    ? { ...inherited, ...await readEnvironment(directory, parse, [".env.e2e.local"]) }
+    : inherited;
   const environments = localEnvironments(
     await readEnvironment(apiDirectory, parse),
     await readEnvironment(mailerDirectory, parse),
-    inherited,
+    e2eInherited,
   );
   environments.api = configureTestStripe(environments.api);
+  const mockEmails = inherited.BGSNL_E2E_MOCK_EMAILS === "1";
   const services = [
-    { name: "domakin-mailer", cwd: mailerDirectory, port: 6000, env: environments.mailer,
-      entry: "node_modules/tsx/dist/cli.mjs", args: ["watch", "app.ts"], health: "/health" },
+    mockEmails
+      ? { name: "domakin-mailer", cwd: directory, port: 6000, env: environments.mailer,
+          entry: "scripts/e2e/mock-mailer.mjs", args: [], health: "/health" }
+      : { name: "domakin-mailer", cwd: mailerDirectory, port: 6000, env: environments.mailer,
+          entry: "node_modules/tsx/dist/cli.mjs", args: ["watch", "app.ts"], health: "/health" },
     { name: "bgsnl-api", cwd: apiDirectory, port: 8080, env: environments.api,
       entry: "node_modules/nodemon/bin/nodemon.js", args: ["--exitcrash", "app.js"], health: "/api/v1" },
     { name: "bgsnl", cwd: directory, port: 3000, env: environments.website,
@@ -90,20 +100,22 @@ export async function createServices({ directory = websiteDirectory, inherited =
     service.command = process.execPath;
     service.args = [path.join(service.cwd, service.entry), ...service.args];
   }
-  const catalog = JSON.parse(await readFile(path.join(mailerDirectory, "templates/bulgariansociety/manifest.json"), "utf8"));
-  const registered = await readFile(path.join(mailerDirectory, "utils/templates.ts"), "utf8");
-  const ids = new Set(catalog.templates.map(({ uuid }) => uuid));
-  const notificationId = "ccbe1725-0b2c-47a7-b34e-a4f11336c56b";
-  if (!ids.has(notificationId) || !registered.includes(notificationId)) {
-    throw new Error("Update the Domakin-Mailer checkout with the BGSNL template registration and notification snapshot before starting this stack.");
-  }
-  const apiDefinitions = await readFile(path.join(apiDirectory, "util/config/defines.js"), "utf8");
-  services[0].warnings = [];
-  for (const [, name, id] of apiDefinitions.matchAll(/export const (\w*TEMPLATE)\s*=\s*"([^"]+)"/g)) {
-    if (/^[0-9a-f-]{36}$/i.test(id)) {
-      if (!ids.has(id) || !registered.includes(id)) services[0].warnings.push(`${name} is not available in Domakin Mailer; import/register its snapshot before testing that email flow.`);
-    } else if (!environments.api.DOMAKIN_RESEND_TEMPLATE_MAP) {
-      services[0].warnings.push(`${name} uses a Resend ID; configure DOMAKIN_RESEND_TEMPLATE_MAP before testing that campaign.`);
+  if (!mockEmails) {
+    const catalog = JSON.parse(await readFile(path.join(mailerDirectory, "templates/bulgariansociety/manifest.json"), "utf8"));
+    const registered = await readFile(path.join(mailerDirectory, "utils/templates.ts"), "utf8");
+    const ids = new Set(catalog.templates.map(({ uuid }) => uuid));
+    const notificationId = "ccbe1725-0b2c-47a7-b34e-a4f11336c56b";
+    if (!ids.has(notificationId) || !registered.includes(notificationId)) {
+      throw new Error("Update the Domakin-Mailer checkout with the BGSNL template registration and notification snapshot before starting this stack.");
+    }
+    const apiDefinitions = await readFile(path.join(apiDirectory, "util/config/defines.js"), "utf8");
+    services[0].warnings = [];
+    for (const [, name, id] of apiDefinitions.matchAll(/export const (\w*TEMPLATE)\s*=\s*"([^"]+)"/g)) {
+      if (/^[0-9a-f-]{36}$/i.test(id)) {
+        if (!ids.has(id) || !registered.includes(id)) services[0].warnings.push(`${name} is not available in Domakin Mailer; import/register its snapshot before testing that email flow.`);
+      } else if (!environments.api.DOMAKIN_RESEND_TEMPLATE_MAP) {
+        services[0].warnings.push(`${name} uses a Resend ID; configure DOMAKIN_RESEND_TEMPLATE_MAP before testing that campaign.`);
+      }
     }
   }
   const stripe = stripeService(services[1], inherited);

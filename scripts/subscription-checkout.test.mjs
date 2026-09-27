@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import {
-  canManageSubscription, canStartSubscription, hasBillingReference, hasSubscriptionId, paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel,
+  billingAction, canManageSubscription, canStartSubscription, canSwitchSubscription, hasBillingReference, hasCustomerId, hasSubscriptionId, paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel,
 } from "../src/elements/subscriptions/subscription-checkout.mjs";
 
 test("billing management requires a subscription or customer identifier", () => {
@@ -29,8 +29,28 @@ test("cancel opens the shared confirmation modal and only confirmation requests 
   assert.match(component, /Keep subscription/);
   assert.match(component, /onClick=\{\(\) => openPortal\("cancel"\)\}/);
   assert.match(component, /inFlight\.current/);
-  assert.match(actions, /<SubscriptionManage subscription=\{user\.subscription\} \/>/);
+  assert.match(actions, /<SubscriptionManage subscription=\{user\.subscription\} user=\{user\} \/>/);
   assert.doesNotMatch(actions, /primaryOnly|isSubscribed/);
+});
+
+test("only healthy active subscriptions can launch a switch", () => {
+  const user = { status: "active", subscription: { id: "sub_current", status: "active" } };
+  assert.equal(canSwitchSubscription(user), true);
+  assert.equal(canSwitchSubscription({ ...user, subscription: { ...user.subscription, status: "trialing" } }), true);
+  for (const status of ["locked", "frozen", "suspended", "payment_awaiting"]) assert.equal(canSwitchSubscription({ ...user, status }), false);
+  for (const key of ["billingLocked", "billingVerificationUnavailable"]) assert.equal(canSwitchSubscription({ ...user, [key]: true }), false);
+  for (const key of ["pendingUpdate", "cancelAtPeriodEnd"]) assert.equal(canSwitchSubscription({ ...user, subscription: { ...user.subscription, [key]: true } }), false);
+  for (const status of ["past_due", "canceled", "incomplete", "unpaid", "paused"]) assert.equal(canSwitchSubscription({ ...user, subscription: { ...user.subscription, status } }), false);
+  assert.equal(canSwitchSubscription(undefined), false);
+});
+
+test("Stripe-ended subscriptions offer restart while scheduled cancellations still count as running", () => {
+  const user = { status: "locked", subscription: { id: "sub_old", customerId: "cus_existing", status: "canceled" } };
+  assert.equal(billingAction(user, "subscription_ended"), "start");
+  assert.equal(hasCustomerId(user.subscription), true);
+  assert.equal(canStartSubscription({ ...user, billingVerificationUnavailable: true }), false);
+  assert.notEqual(billingAction({ ...user, billingVerificationUnavailable: true }, "unavailable"), "start");
+  assert.equal(billingAction({ ...user, status: "active", subscription: { ...user.subscription, status: "active", cancelAtPeriodEnd: true } }), "manage");
 });
 
 test("missing, empty and customer-only subscriptions offer checkout", () => {
@@ -106,6 +126,12 @@ test("checkout sends only the selected price and return origin, never account de
 test("server reconciliation can safely redirect an existing subscription to its Stripe portal", async () => {
   assert.equal(await requestSubscriptionCheckout(async () => ({ url: "https://billing.stripe.com/p/session/test" }), alumni.priceId, "https://bulgariansociety.nl"),
     "https://billing.stripe.com/p/session/test");
+});
+
+test("an applied same-programme change refreshes account state without following an API redirect", async () => {
+  assert.equal(await requestSubscriptionCheckout(async () => ({ updated: true }), alumni.priceId, "https://bulgariansociety.nl"), null);
+  assert.equal(await requestSubscriptionCheckout(async () => ({ updated: true, url: "https://untrusted.example" }), alumni.priceId, "https://bulgariansociety.nl"), null);
+  await assert.rejects(requestSubscriptionCheckout(async () => ({ updated: "true" }), alumni.priceId, "https://bulgariansociety.nl"));
 });
 
 test("failed requests and invalid redirect URLs remain recoverable in the modal", async () => {

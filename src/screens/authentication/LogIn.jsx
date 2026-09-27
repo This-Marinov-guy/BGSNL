@@ -119,10 +119,6 @@ const Login = () => {
             />
             <div className="login_card_story">
               <h2>Closer to home, together.</h2>
-              <p>
-                Access your events, memberships and community profile in one
-                place.
-              </p>
             </div>
           </article>
 

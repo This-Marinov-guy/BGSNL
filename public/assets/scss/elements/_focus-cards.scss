@@ -434,16 +434,19 @@
   }
 
   .slick-dots {
-    bottom: -1.25rem;
+    position: static;
     display: flex !important;
+    flex-wrap: wrap;
     gap: 0.65rem;
     align-items: center;
     justify-content: center;
+    margin-top: 0.75rem;
 
     li {
       position: relative;
       width: 0.75rem;
       height: 0.75rem;
+      flex-shrink: 0;
       margin: 0;
       opacity: 1;
 

@@ -18,12 +18,15 @@ export const commands = Object.freeze({
 export async function main(args = process.argv.slice(2)) {
   const command = args[0] || "up";
   if (command === "--help") {
-    console.log("node start-local.mjs [up|stop|down|logs|status|build|restart|--check]\nOne container: website :3000, API :8080, Mailer :6000, Redis, spreadsheet worker and Stripe test webhooks.\nSource edits hot reload. stop/down preserve Redis and dependency volumes. --check validates Compose without starting anything.");
+    console.log("node start-local.mjs [up|e2e|stop|down|logs|status|build|restart|--check]\nOne container: website :3000, API :8080, Mailer :6000, Redis, spreadsheet worker and Stripe test webhooks.\ne2e replaces email delivery with an in-memory mock. Source edits hot reload. stop/down preserve Redis and dependency volumes. --check validates Compose without starting anything.");
     return 0;
   }
-  if (args.length > 1 || !commands[command]) throw new Error("Unknown option. Use --help.");
+  if (args.length > 1 || (command !== "e2e" && !commands[command])) throw new Error("Unknown option. Use --help.");
+  const composeArgs = ["compose", "--project-directory", directory, "-f", path.join(directory, "compose.dev.yml")];
+  if (command === "e2e") composeArgs.push("-f", path.join(directory, "compose.e2e.yml"));
+  composeArgs.push(...(command === "e2e" ? ["up", "--detach", "--wait", "--wait-timeout", "300", "--force-recreate"] : commands[command]));
   return new Promise((resolve, reject) => {
-    const child = spawn("docker", ["compose", "--project-directory", directory, "-f", path.join(directory, "compose.dev.yml"), ...commands[command]], { cwd: directory, stdio: "inherit" });
+    const child = spawn("docker", composeArgs, { cwd: directory, stdio: "inherit" });
     child.once("error", () => reject(new Error("Docker is required. Start Docker Desktop and try again.")));
     child.once("exit", (code) => resolve(code ?? 1));
   });

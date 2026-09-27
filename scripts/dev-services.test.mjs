@@ -105,6 +105,14 @@ test("missing prerequisites fail before any process changes", () => {
   assert.throws(() => localEnvironments(api, {}, {}), /BULGARIANSOCIETY_EMAIL_DATABASE_URL/);
 });
 
+test("E2E email mode selects the local mock and needs no Mailer database", () => {
+  const result = localEnvironments(api, {}, { BGSNL_E2E_MOCK_EMAILS: "1" });
+  assert.equal(result.api.BGSNL_EMAIL_PROVIDER, "domakin");
+  assert.equal(result.api.MAILER_API_URL, "http://127.0.0.1:6000/api");
+  assert.equal(result.api.BGSNL_E2E_MOCK_EMAILS, "1");
+  assert.equal(result.mailer.MAILER_BULGARIANSOCIETY_SECRET, result.api.MAILER_BULGARIANSOCIETY_SECRET);
+});
+
 test("all ports are inspected before sending signals", async () => {
   const signals = [];
   await assert.rejects(clearPorts([{ port: 8080 }, { port: 6000 }], {

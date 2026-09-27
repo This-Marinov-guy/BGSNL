@@ -1,15 +1,32 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, verify } from "node:crypto";
-import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import nextEnv from "@next/env";
-import { createApplePass, googleClass, googleObject, prepareGooglePass, signGoogleSaveUrl, validatePacket, walletPacketFromProxy, walletReadiness } from "../src/util/wallet/issuance.mjs";
+import sharp from "sharp";
+import { appleWordmark, createApplePass, googleClass, googleObject, prepareGooglePass, signGoogleSaveUrl, validatePacket, walletPacketFromProxy, walletReadiness } from "../src/util/wallet/issuance.mjs";
 
 const packet = { token: "abcdefghijklmnopqrstuv", publicUrl: "https://bulgariansociety.nl/c/abcdefghijklmnopqrstuv",
   card: { firstName: "Test", surname: "Member", membershipLabel: "Member of Groningen", status: "active" } };
+
+test("Apple Wallet wordmark leaves room for the complete society name", async () => {
+  const logo = await readFile(path.join(process.cwd(), "public/assets/images/logo/logo-nl-circle.png"));
+  for (const scale of [1, 2, 3]) {
+    const { data, info } = await sharp(await appleWordmark(logo, scale)).raw().toBuffer({ resolveWithObject: true });
+    assert.equal(info.width, 160 * scale);
+    assert.equal(info.height, 50 * scale);
+    let rightmost = -1;
+    for (let y = 0; y < 28 * scale; y++) {
+      for (let x = 50 * scale; x < info.width; x++) {
+        if (data[(y * info.width + x) * info.channels + 3] > 0) rightmost = Math.max(rightmost, x);
+      }
+    }
+    assert.ok(rightmost >= 130 * scale && rightmost < 150 * scale, `Wordmark text reaches x=${rightmost} at ${scale}x`);
+  }
+});
 
 test("proxy packet recovery only accepts canonical public card URLs", () => {
   const { token, ...filtered } = packet;

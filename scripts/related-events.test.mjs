@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { eventLinkRegion, relatedEventOptions, relatedEventLink, isRelatedEventSelected, visibleRelatedEvents } from '../src/util/functions/related-events.mjs';
+import { eventLinkRegion, findRelatedEvent, relatedEventOptions, relatedEventLink, relatedEventPoster, isRelatedEventSelected, visibleRelatedEvents } from '../src/util/functions/related-events.mjs';
 
 test('recommendations exclude the current event, drafts and archived events across merged lists', () => {
   const event = { id: 'dinner', region: 'amsterdam', title: 'Dinner' };
@@ -40,4 +40,14 @@ test('identical recommendation slugs in different regions remain distinct', () =
   assert.equal(eventLinkRegion('invalid'), '');
   assert.equal(isRelatedEventSelected(event, [{ href }]), false);
   assert.equal(isRelatedEventSelected({ ...event, region: 'groningen' }, [{ href }]), true);
+});
+
+test('recommended posters resolve by event ID or slug within the linked region', () => {
+  const events = [
+    { id: '1', slug: 'dinner', region: 'amsterdam', poster: 'amsterdam.jpg' },
+    { id: '2', slug: 'dinner', region: 'eindhoven', poster: 'eindhoven.jpg' },
+  ];
+  assert.equal(relatedEventPoster(findRelatedEvent(events, 'https://www.bulgariansociety.nl/eindhoven/event-details/dinner')), 'eindhoven.jpg');
+  assert.equal(findRelatedEvent(events, 'https://www.bulgariansociety.nl/amsterdam/event-details/1'), events[0]);
+  assert.equal(findRelatedEvent(events, 'https://www.bulgariansociety.nl/rotterdam/event-details/dinner'), null);
 });

@@ -5,8 +5,10 @@ import React, {
   useEffect,
 } from "react";
 import calendarMotion from "@assets/images/svg/motion/calendar-motion.json";
+import { useReducedMotion } from "framer-motion";
 import Lottie from "react-lottie-player";
 import PropTypes from "prop-types";
+import Slider from "react-slick";
 import {
   useDispatch,
   useSelector,
@@ -15,6 +17,8 @@ import { Tooltip } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import {
   FiChevronUp,
+  IconlyArrowLeft,
+  IconlyArrowRight,
 } from "@/elements/ui/icons/IconlyIcons";
 import { useParams } from "@/util/navigation";
 import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
@@ -22,7 +26,7 @@ import PageHelmet from "../../component/common/Helmet";
 import Footer from "../../component/footer/Footer";
 import Header from "../../component/header/Header";
 import Breadcrumb from "../../elements/common/Breadcrumb";
-import FocusCards from "../../elements/ui/FocusCards";
+import FocusCards, { FocusCard } from "../../elements/ui/FocusCards";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
 import UpcomingEventsEmpty from "../../elements/ui/UpcomingEventsEmpty";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
@@ -42,6 +46,66 @@ const eventsByRegionPropType = PropTypes.objectOf(
   PropTypes.arrayOf(PropTypes.object)
 );
 
+const FutureEventsArrow = ({ className, direction, onClick }) => {
+  const isPrevious = direction === "previous";
+  const Icon = isPrevious ? IconlyArrowLeft : IconlyArrowRight;
+
+  return (
+    <button
+      aria-label={`${isPrevious ? "Previous" : "Next"} future event`}
+      className={`${className || ""} future-events-carousel-arrow future-events-carousel-arrow--${direction}`}
+      disabled={!onClick}
+      onClick={onClick}
+      type="button"
+    >
+      <Icon aria-hidden />
+    </button>
+  );
+};
+
+FutureEventsArrow.propTypes = {
+  className: PropTypes.string,
+  direction: PropTypes.oneOf(["previous", "next"]).isRequired,
+  onClick: PropTypes.func,
+};
+
+const FutureEventsCarousel = ({ events }) => {
+  const shouldReduceMotion = useReducedMotion();
+  const settings = {
+    accessibility: true,
+    adaptiveHeight: true,
+    arrows: events.length > 2,
+    dots: events.length > 2,
+    infinite: false,
+    nextArrow: <FutureEventsArrow direction="next" />,
+    prevArrow: <FutureEventsArrow direction="previous" />,
+    slidesToScroll: 1,
+    slidesToShow: Math.min(2, events.length),
+    speed: shouldReduceMotion ? 0 : 380,
+    swipeToSlide: true,
+    responsive: [{
+      breakpoint: 768,
+      settings: { slidesToShow: 1, arrows: events.length > 1, dots: events.length > 1 },
+    }],
+  };
+
+  return (
+    <section aria-label="Future events carousel" aria-roledescription="carousel" className="future-events-carousel-shell">
+      <Slider className="future-events-carousel" key={events.map(event => event.id || event.slug).join("-")} {...settings}>
+        {events.map(event => (
+          <div className="future-events-carousel-slide" key={event.id || event.slug}>
+            <FocusCard card={event} region={event.region} />
+          </div>
+        ))}
+      </Slider>
+    </section>
+  );
+};
+
+FutureEventsCarousel.propTypes = {
+  events: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 /**
  * `initialEvents` is the region-keyed map fetched on the server by the route,
  * so upcoming events are in the HTML rather than appearing after reloadEvents()
@@ -49,6 +113,7 @@ const eventsByRegionPropType = PropTypes.objectOf(
  * render, so both produce identical markup; the store wins once it is filled.
  */
 const FutureEventsContent = ({
+  carousel = false,
   displayAll,
   nullable = true,
   initialEvents,
@@ -114,7 +179,8 @@ const FutureEventsContent = ({
               ) : (
                 <div className="col-lg-12 future-events-flow">
                   {sortedEvents.length ? (
-                    <FocusCards cards={sortedEvents} centerItems={false} />
+                    carousel ? <FutureEventsCarousel events={sortedEvents} /> :
+                      <FocusCards cards={sortedEvents} centerItems={false} />
                   ) : (
                     <UpcomingEventsEmpty />
                   )}
@@ -125,7 +191,7 @@ const FutureEventsContent = ({
                 {eventsLoading ? (
                   <EventsLoading />
                 ) : sortedEvents.length > 0 ? (
-                  <FocusCards
+                  carousel ? <FutureEventsCarousel events={sortedEvents} /> : <FocusCards
                     cards={sortedEvents}
                     region={region}
                     centerItems={false}
@@ -143,6 +209,7 @@ const FutureEventsContent = ({
 };
 
 FutureEventsContent.propTypes = {
+  carousel: PropTypes.bool,
   displayAll: PropTypes.bool,
   initialEvents: eventsByRegionPropType,
   nullable: PropTypes.bool,
@@ -215,6 +282,7 @@ const FutureEvents = ({ initialEvents }) => {
             <>
               {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
               <FutureEventsContent
+                carousel
                 nullable={false}
                 initialEvents={initialEvents}
               />
@@ -223,6 +291,7 @@ const FutureEvents = ({ initialEvents }) => {
             <>
               {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
               <FutureEventsContent
+                carousel
                 displayAll
                 nullable={false}
                 initialEvents={initialEvents}

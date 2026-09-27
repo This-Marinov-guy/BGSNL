@@ -86,10 +86,12 @@
     "dev:restart": "node scripts/dev-docker.mjs restart",
     "dev:host": "node scripts/dev-services.mjs",
     "dev:host:check": "node scripts/dev-services.mjs --check",
-    "test:dev-docker": "node --test scripts/dev-docker.test.mjs"
+    "test:dev-docker": "node --test scripts/dev-docker.test.mjs",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@playwright/test": "^1.63.0",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.0",
     "globals": "^15.9.0"

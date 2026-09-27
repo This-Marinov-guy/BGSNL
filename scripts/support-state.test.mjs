@@ -1,11 +1,33 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createGuestAccess, guestReports, rememberGuestReport, forgetGuestReport, forgetGuestReports, supportScope, mergeConversation } from "../src/elements/support/support-state.mjs";
+import { createGuestAccess, guestReports, rememberGuestReport, forgetGuestReport, forgetGuestReports, supportScope, mergeConversation, supportReplyRestriction, supportStatusChange } from "../src/elements/support/support-state.mjs";
+
+test("status history badges use each message's new status, never ordinary reply text", () => {
+  for (const status of ["open", "resolved", "rejected", "paused"]) {
+    assert.equal(supportStatusChange({ kind: "status", text: `Status changed to ${status}.` }), status);
+  }
+  assert.equal(supportStatusChange({ kind: "reply", text: "Status changed to rejected." }), null);
+  assert.equal(supportStatusChange({ kind: "status", text: "Unexpected update" }), null);
+  assert.equal(supportStatusChange(null), null);
+});
 
 function memoryStorage() {
   const values = new Map();
   return { values, getItem: (key) => values.get(key), setItem: (key, value) => values.set(key, value), removeItem: (key) => values.delete(key) };
 }
+
+test("client composers are locked for rejected/paused/frozen tickets and enabled again when reopened", () => {
+  for (const status of ["rejected", "paused", "frozen"]) {
+    assert.ok(supportReplyRestriction({ status, messageCount: 2 }));
+  }
+  for (const status of ["open", "resolved"]) assert.equal(supportReplyRestriction({ status, messageCount: 2 }), "");
+  assert.equal(supportReplyRestriction({ status: "paused", messageCount: 2 }, true), "");
+  assert.ok(supportReplyRestriction({ status: "open", messageCount: 200 }, true));
+  const current = { id: "ticket", revision: 1, status: "open", messages: [] };
+  const paused = mergeConversation(current, { ...current, revision: 2, status: "paused" });
+  assert.ok(supportReplyRestriction(paused));
+  assert.equal(supportReplyRestriction(mergeConversation(paused, { ...current, revision: 3 })), "");
+});
 
 test("guest access uses random credentials, survives reload and expires", () => {
   const storage = memoryStorage(); const access = createGuestAccess();
@@ -45,4 +67,14 @@ test("polling preserves paged history, deduplicates messages and never regresses
   assert.equal(mergeConversation(previous, newer).status, "open");
   assert.deepEqual(mergeConversation(previous, newer).messages.map(({ id }) => id), ["a", "b", "c"]);
   assert.deepEqual(mergeConversation(previous, { ...incoming, id: "other" }), { ...incoming, id: "other" });
+});
+
+test("loading older pages preserves the oldest cursor across live snapshots", () => {
+  const latest = { id: "ticket", revision: 80, before: 60, messages: [{ id: "m60", order: 60 }, { id: "m79", order: 79 }] };
+  const older = { ...latest, before: 40, messages: [{ id: "m40", order: 40 }, { id: "m59", order: 59 }] };
+  const merged = mergeConversation(latest, older);
+  assert.equal(merged.before, 40);
+  assert.equal(mergeConversation(merged, latest).before, 40);
+  const complete = mergeConversation(merged, { ...older, before: null, messages: [{ id: "m0", order: 0 }] });
+  assert.equal(mergeConversation(complete, latest).before, null);
 });

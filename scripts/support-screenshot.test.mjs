@@ -67,6 +67,7 @@ test("background screenshot upload retries the same ID and file with the report 
   assert.equal(calls[0].options.secret, "guest-secret");
   assert.equal(calls[0].options.data, calls[1].options.data);
   assert.equal(calls[1].options.data.get("id"), "message-id");
+  assert.equal(calls[1].options.data.get("diagnostic"), "true");
   assert.equal(calls[1].options.data.get("images").name, "snapshot.jpg");
 });
 
@@ -83,6 +84,6 @@ test("report submission starts capture automatically and attaches only after con
   assert.ok(source.indexOf("startReportScreenshot();") < source.indexOf('await supportRequest("conversations"'));
   assert.ok(source.indexOf('await supportRequest("conversations"') < source.indexOf("void attachReportScreenshot("));
   assert.match(source, /conversationId: result\.conversation\.id/);
-  assert.match(source, /if \(!pending\.current\.screenshot\)/);
+  assert.match(source, /if \(payload\.type === "problem" && !pending\.current\.screenshot\)/);
   assert.doesNotMatch(source, /getDisplayMedia|window\.confirm/);
 });
