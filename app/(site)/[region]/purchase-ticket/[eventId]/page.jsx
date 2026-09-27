@@ -34,7 +34,7 @@ export default async function Page({ params }) {
   const { region, eventId } = await params;
   // Request-scoped caching shares this slug-or-ID lookup with metadata.
   const event = await getEventDetails(eventId, region);
-  if (!event) return <RecoveryScreen kind="not-found" />;
+  if (!event) return <RecoveryScreen kind={event === undefined ? "unavailable" : "not-found"} />;
 
   // Legacy ID links remain valid and lead to the preferred slug URL.
   const canonicalId = event.slug || event.id;

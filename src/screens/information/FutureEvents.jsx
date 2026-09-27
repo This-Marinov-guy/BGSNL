@@ -15,6 +15,7 @@ import {
 } from "react-redux";
 import { Tooltip } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
+import PublicContentUnavailable from "@/component/common/PublicContentUnavailable";
 import {
   FiChevronUp,
   IconlyArrowLeft,
@@ -122,7 +123,8 @@ const FutureEventsContent = ({
 
   const dispatch = useDispatch();
 
-  const { reloadEvents, eventsLoading } = useLoadEvents();
+  const { reloadEvents, eventsLoading, eventsError } = useLoadEvents();
+  const unavailable = eventsError ?? initialEvents === null;
 
   const isAuth = useSelector(selectIsAuth);
   // Called unconditionally — the previous version had it inside both branches
@@ -137,7 +139,7 @@ const FutureEventsContent = ({
   const visibleEvents = visibleFutureEvents(source, displayAll ? REGIONS : [region], isAuth);
   useEffect(() => {
     reloadEvents();
-  }, []);
+  }, [initialEvents]);
 
   if (nullable && displayAll && checkObjectOfArraysEmpty(source)) {
     return null;
@@ -182,7 +184,7 @@ const FutureEventsContent = ({
                     carousel ? <FutureEventsCarousel events={sortedEvents} /> :
                       <FocusCards cards={sortedEvents} centerItems={false} />
                   ) : (
-                    <UpcomingEventsEmpty />
+                    unavailable ? <PublicContentUnavailable content="Event information" /> : <UpcomingEventsEmpty />
                   )}
                 </div>
               )
@@ -197,7 +199,7 @@ const FutureEventsContent = ({
                     centerItems={false}
                   />
                 ) : (
-                  <UpcomingEventsEmpty />
+                  unavailable ? <PublicContentUnavailable content="Event information" /> : <UpcomingEventsEmpty />
                 )}
               </div>
             )}

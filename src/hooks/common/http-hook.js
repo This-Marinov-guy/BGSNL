@@ -27,7 +27,7 @@ export const useHttpClient = (withPageLoading = false) => {
     headers = {},
     withError = true,
     withLoading = true,
-    { signal } = {},
+    { signal, timeout = 60000 } = {},
   ) => {
     // Loading must not be a callback dependency: consumers fetch in effects.
     if (signal?.aborted) return undefined;
@@ -44,7 +44,7 @@ export const useHttpClient = (withPageLoading = false) => {
           ...await csrfHeaders(method),
         },
         withCredentials: true,
-        timeout: 60000,
+        timeout,
         signal,
       });
       if (response.headers["x-bgsnl-session-changed"] === "1") clearCsrf();

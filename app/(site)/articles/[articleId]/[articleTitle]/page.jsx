@@ -51,7 +51,7 @@ export default async function Page({ params }) {
   // Not a bare notFound(): this deep in the tree, that call never reliably
   // replaces the streamed Suspense fallback (see the [region] layout's
   // notFound() comment) — visitors would be stuck on the loading skeleton.
-  if (!article) return <RecoveryScreen kind="not-found" />;
+  if (!article) return <RecoveryScreen kind={article === undefined ? "unavailable" : "not-found"} />;
 
   const canonicalSlug = articleSlug(article.title);
   if (articleTitle !== canonicalSlug) {

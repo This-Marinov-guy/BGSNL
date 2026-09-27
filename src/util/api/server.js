@@ -2,6 +2,7 @@ import { cache } from "react";
 import { LEGACY_ARTICLES } from "../defines/ARTICLES";
 import { SITE_URL } from "../seo/site";
 import { versionedApiBase } from "./versioned-base.mjs";
+import { createPublicReader } from "./public-reader.mjs";
 
 /**
  * Server-side API client.
@@ -52,60 +53,27 @@ if (typeof window !== "undefined") {
  */
 const SERVER_KEY = process.env.BGSNL_SERVER_KEY || "";
 
-const assertServerKey = () => {
-  if (process.env.NODE_ENV === "production" && SERVER_KEY.length < 32) {
-    throw new Error("BGSNL_SERVER_KEY must be configured for production SSR API requests.");
-  }
-};
-
 export const API_HEADERS = {
   ...(SERVER_KEY ? { "x-bgsnl-server-key": SERVER_KEY } : {}),
   Origin: SITE_URL,
   Referer: `${SITE_URL}/`,
 };
 
-/**
- * Public content must not silently become an empty, indexable page on an API
- * outage. A 404 is content absence; every other failed upstream request throws
- * so Next can retain/revalidate its last cached response or serve an error.
- */
-async function apiGet(
-  endpoint,
-  { revalidate = 300, timeout = 8000, fallbackToProduction = false, tags = [] } = {}
-) {
-  assertServerKey();
-  const baseUrls = [API_URL];
-
-  if (fallbackToProduction && PRODUCTION_API_URL !== API_URL) {
-    baseUrls.push(PRODUCTION_API_URL);
-  }
-
-  let failure;
-  for (const baseUrl of baseUrls) {
-    try {
-      const res = await fetch(`${baseUrl}/${endpoint}`, {
-        headers: API_HEADERS,
-        signal: AbortSignal.timeout(timeout),
-        next: { revalidate, tags },
-      });
-
-      if (res.ok) return await res.json();
-      if (res.status === 404) return null;
-      failure = new Error(`Public API returned ${res.status} for ${endpoint}`);
-    } catch (error) {
-      // Try the next configured public API when one is available.
-      failure = error;
-    }
-  }
-
-  throw failure || new Error(`Public API could not be reached for ${endpoint}`);
-}
+// Keep Next's successful fetch cache, but let uncached public pages render
+// their static content during an outage. Never send an unauthenticated request
+// when the production server key is missing. Private/payment reads are separate.
+const apiGet = createPublicReader({
+  baseUrls: [API_URL],
+  headers: API_HEADERS,
+  enabled: process.env.NODE_ENV !== "production" || SERVER_KEY.length >= 32,
+  report: ({ endpoint, reason }) => console.warn(`[public-content] ${endpoint}: ${reason}`),
+});
 
 /* ---------------------------------------------------------------- events -- */
 
 export async function getEvents() {
   const data = await apiGet("event/events-list", { tags: ["public-events"] });
-  return data?.events ?? [];
+  return Array.isArray(data?.events) ? data.events : [];
 }
 
 /**
@@ -113,7 +81,9 @@ export async function getEvents() {
  * screen can swap between the server value and the store without branching.
  */
 export async function getEventsByRegion(regions) {
-  const events = await getEvents();
+  const data = await apiGet("event/events-list", { tags: ["public-events"] });
+  if (!Array.isArray(data?.events)) return null;
+  const events = data.events;
 
   const grouped = regions.reduce((acc, region) => {
     acc[region] = [];
@@ -135,7 +105,7 @@ export const getEventDetails = cache(async (eventId, region) => {
     timeout: 3000,
     tags: ["public-events", `public-event:${eventId}`],
   });
-  return data?.event ?? null;
+  return data === undefined ? undefined : data?.event ?? null;
 });
 
 /* -------------------------------------------------------------- articles -- */
@@ -145,29 +115,24 @@ export const getEventDetails = cache(async (eventId, region) => {
  * server render and the post-hydration Redux render produce the same list.
  */
 export async function getArticles() {
-  const data = await apiGet("wordpress/posts", {
-    fallbackToProduction: true,
-    timeout: 15000,
-  });
-  const posts = data?.posts ?? [];
+  const data = await apiGet("wordpress/posts");
+  const posts = Array.isArray(data?.posts) ? data.posts : [];
   return [...posts, ...LEGACY_ARTICLES];
 }
 
-export async function getArticle(articleId) {
+export const getArticle = cache(async (articleId) => {
   if (!articleId) return null;
-  const data = await apiGet(`wordpress/posts/${articleId}`, {
-    fallbackToProduction: true,
-    timeout: 15000,
-  });
+  const data = await apiGet(`wordpress/posts/${encodeURIComponent(articleId)}`);
 
+  if (data === undefined) return undefined;
   return data?.data ? { ...data.data, id: String(articleId) } : null;
-}
+});
 
 /* ----------------------------------------------------------- internships -- */
 
 export async function getInternships() {
   const data = await apiGet("internship/list");
-  return data?.internships ?? [];
+  return Array.isArray(data?.internships) ? data.internships : null;
 }
 
 /* ---------------------------------------------------------------- common -- */
@@ -188,5 +153,5 @@ export async function getActiveMemberCount() {
 
 export async function getAlumniTree() {
   const data = await apiGet("user/tree-layout");
-  return data?.nodes ?? [];
+  return Array.isArray(data?.nodes) ? data.nodes : [];
 }

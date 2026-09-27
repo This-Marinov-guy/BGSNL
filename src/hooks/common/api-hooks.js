@@ -9,6 +9,7 @@ import { startPageLoading, stopPageLoading } from "../../redux/loading";
 
 export const useLoadEvents = () => {
   const [eventsLoading, setEventsLoading] = useState(false);
+  const [eventsError, setEventsError] = useState(null);
   const dispatch = useDispatch();
   const { sendRequest } = useHttpClient();
 
@@ -25,17 +26,18 @@ export const useLoadEvents = () => {
         ? "future-event/full-data-events-list"
         : `event/events-list`;
 
-      const responseData = await sendRequest(url, "GET", null, {}, false);
-      
+      const responseData = await sendRequest(url, "GET", null, {}, false, false, { timeout: 5000 });
+      if (!Array.isArray(responseData?.events)) throw new Error("Events unavailable");
+      setEventsError(false);
       dispatch(withFullData ? loadEventsDashboard(responseData.events) : loadEvents(responseData.events));
     } catch {
-      // The shared request helper already reports failures when requested.
+      setEventsError(true);
     } finally {
       setEventsLoading(false);
     }
   };
 
-  return { reloadEvents, eventsLoading };
+  return { reloadEvents, eventsLoading, eventsError };
 };
 
 export const useJWTRefresh = () => {

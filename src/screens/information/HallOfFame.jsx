@@ -13,6 +13,7 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import Tree from "../../component/userTree/Tree";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import AlumniRegistrationButton from "../../elements/ui/buttons/AlumniRegistrationButton";
+import PublicContentUnavailable from "@/component/common/PublicContentUnavailable";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { ANALYTICS_EVENTS } from "../../util/analytics/events.mjs";
 import { clarityEvent } from "../../util/functions/helpers";
@@ -90,15 +91,17 @@ const HallOfFame = ({ initialNodes = [] }) => {
     const fetchNodes = async () => {
       try {
         setError(null);
-        const response = await sendRequest("user/tree-layout", "GET");
+        const response = await sendRequest("user/tree-layout", "GET", null, {}, false, false, { timeout: 5000 });
+        if (!Array.isArray(response?.nodes)) throw new Error("Unavailable");
         setNodes(response.nodes);
-        setLoading(false);
       } catch (err) {
-        setError("Failed to load alumni data. Using sample data.");
+        setError("Alumni information is temporarily unavailable. Please try again shortly.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchNodes();
-  }, []);
+  }, [initialNodes]);
 
   return (
     <React.Fragment>
@@ -140,24 +143,10 @@ const HallOfFame = ({ initialNodes = [] }) => {
             <TreeSkeleton />
           ) : (
             <>
-              {error && (
-                <div
-                  className="alert alert-warning mb--20"
-                  style={{
-                    backgroundColor: "#fff3cd",
-                    border: "1px solid #ffeaa7",
-                    borderRadius: "4px",
-                    padding: "12px 16px",
-                    color: "#856404",
-                    textAlign: "center",
-                  }}
-                >
-                  {error}
-                </div>
-              )}
-              <div className="user-tree-section">
+              {error && <PublicContentUnavailable content="Alumni information" />}
+              {nodes.length > 0 && <div className="user-tree-section">
                 <Tree nodes={nodes} />
-              </div>
+              </div>}
             </>
           )}
         </div>

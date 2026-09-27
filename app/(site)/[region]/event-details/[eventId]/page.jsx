@@ -28,7 +28,7 @@ export default async function Page({ params }) {
   // response's soft-404 metadata (see [region]/layout.jsx) — it never
   // reliably replaces the streamed Suspense fallback, leaving visitors
   // staring at the loading skeleton. Render the empty state directly instead.
-  if (!event) return <RecoveryScreen kind="not-found" />;
+  if (!event) return <RecoveryScreen kind={event === undefined ? "unavailable" : "not-found"} />;
 
   const canonicalId = event.slug || event.id;
   const path = `/${event.region}/event-details/${canonicalId}`;

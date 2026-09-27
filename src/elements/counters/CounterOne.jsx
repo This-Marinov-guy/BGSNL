@@ -11,59 +11,45 @@ const CounterOne = ({ initialData = {} }) => {
   const [data, setData] = useState(initialData);
   const counterRef = useRef(null);
 
-  const { loading, sendRequest } = useHttpClient();
+  const { sendRequest } = useHttpClient();
+  const [pending, setPending] = useState(false);
   const hasStat = (key) => Object.prototype.hasOwnProperty.call(data, key);
 
   useEffect(() => {
     const fetchCounts = async () => {
+      setPending(true);
       try {
-        const response = await sendRequest("common/get-about-data");
+        const response = await sendRequest("common/get-about-data", "GET", null, {}, false, false, { timeout: 5000 });
 
         if (response) setData(response);
       } catch {
         // Keep the server-rendered figures when a background refresh fails.
+      } finally {
+        setPending(false);
       }
     };
 
     fetchCounts();
   }, []);
 
+  const stat = key => hasStat(key) ? data[key] : pending ? <CustomSpinner /> : <span aria-label="Temporarily unavailable">—</span>;
+
   const STATISTICS = [
     {
-      countNum:
-        (loading && !Object.keys(data).length) || !hasStat("cities") ? (
-          <CustomSpinner />
-        ) : (
-          data?.cities
-        ),
+      countNum: stat("cities"),
       countTitle: "Cities in our network",
     },
     {
-      countNum:
-        (loading && !Object.keys(data).length) || !hasStat("events") ? (
-          <CustomSpinner />
-        ) : (
-          data?.events
-        ),
+      countNum: stat("events"),
       icon: "+",
       countTitle: "Events hosted so far",
     },
     {
-      countNum:
-        (loading && !Object.keys(data).length) || !hasStat("members") ? (
-          <CustomSpinner />
-        ) : (
-          data?.members
-        ),
+      countNum: stat("members"),
       countTitle: "Members in our society",
     },
     {
-      countNum:
-        (loading && !Object.keys(data).length) || !hasStat("alumnis") ? (
-          <CustomSpinner />
-        ) : (
-          data?.alumnis
-        ),
+      countNum: stat("alumnis"),
       countTitle: "Alumni supporting our community",
     },
     // {
@@ -78,12 +64,7 @@ const CounterOne = ({ initialData = {} }) => {
     //   countTitle: "Active contributors to the society",
     // },
     {
-      countNum:
-        (loading && !Object.keys(data).length) || !hasStat("tickets") ? (
-          <CustomSpinner />
-        ) : (
-          data?.tickets
-        ),
+      countNum: stat("tickets"),
       icon: "+",
       countTitle: "Tickets sold",
     },
@@ -140,7 +121,7 @@ const CounterOne = ({ initialData = {} }) => {
             <article className="counterup_style--1" key={value.countTitle}>
               <p className="description">{value.countTitle}</p>
               <h5 className="counter">
-                {value.icon}
+                {isNumericCount && value.icon}
                 {mounted && isNumericCount ? (
                   <CountUp
                     end={didViewCountUp ? Number(value.countNum) : 0}

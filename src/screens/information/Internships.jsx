@@ -12,6 +12,7 @@ import {
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import ScrollToTop from "@/component/common/ScrollToTop";
+import PublicContentUnavailable from "@/component/common/PublicContentUnavailable";
 import {
   FiBriefcase,
   FiChevronUp,
@@ -29,7 +30,6 @@ import InternshipCard from "../../elements/ui/cards/InternshipCard";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 import { SelectInput } from "@/compat/primereact";
-import PageLoading from "../../elements/ui/loading/PageLoading";
 import MembersOnlyApplyModal from "../../elements/ui/modals/MembersOnlyApplyModal";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
@@ -53,8 +53,12 @@ const Internships = ({ initialInternships = [] }) => {
   // `initialInternships` comes from the server render, so the list is in the
   // HTML instead of behind a <Loader />. The effect below still refetches after
   // hydration (it also needs the current user to gate member-only listings).
-  const [loading, setLoading] = useState(!initialInternships.length);
-  const [internships, setInternships] = useState(initialInternships);
+  const [internships, setInternships] = useState(initialInternships || []);
+  const [unavailable, setUnavailable] = useState(initialInternships === null);
+  useEffect(() => {
+    if (initialInternships !== null) setInternships(initialInternships);
+    setUnavailable(initialInternships === null);
+  }, [initialInternships]);
   const [currentUser, setCurrentUser] = useState(null);
   const [showMembersOnlyModal, setShowMembersOnlyModal] = useState(false);
   const [searchInput, setSearchInput] = useState(() => searchParams.get("search") || "");
@@ -152,28 +156,23 @@ const Internships = ({ initialInternships = [] }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const internshipsData = await sendRequest("internship/list", "GET", null, {}, false, false);
-        setInternships(internshipsData?.internships ?? []);
+        const internshipsData = await sendRequest("internship/list", "GET", null, {}, false, false, { timeout: 5000 });
+        setUnavailable(!Array.isArray(internshipsData?.internships));
+        if (Array.isArray(internshipsData?.internships)) setInternships(internshipsData.internships);
 
         if (user?.session) {
           const responseData = await sendRequest(`user/current?withTickets=false&withChristmas=false`);
-          setCurrentUser(responseData.user);
+          setCurrentUser(responseData?.user || null);
         } else {
           setCurrentUser(null);
         }
       } catch (err) {
         setCurrentUser(null);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchData();
   }, [user?.session]);
-
-  if (loading) {
-    return <PageLoading />;
-  }
 
   return (
     <React.Fragment>
@@ -340,8 +339,10 @@ const Internships = ({ initialInternships = [] }) => {
               <div className="empty-icon">
                 <FiBriefcase />
               </div>
-              <h3>No Internships Available</h3>
-              <p>Check back soon for new opportunities.</p>
+              {unavailable ? <PublicContentUnavailable content="Internship information" /> : <>
+                <h3>No Internships Available</h3>
+                <p>Check back soon for new opportunities.</p>
+              </>}
             </div>
           )}
 

@@ -1,13 +1,16 @@
 "use client";
 
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../../elements/ui/functional/AnimatedDisclosure";
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
 
 export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
-  const failed = kind === "error";
+  const router = useRouter();
+  const unavailable = kind === "unavailable";
+  const failed = kind === "error" || unavailable;
 
   return (
     <div className="recovery-screen">
@@ -20,8 +23,9 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
               alt=""
               aria-hidden="true"
             />}
-          <h1 id="recovery-title" className="page-breadcrumb__title archive">{failed ? "We cannot load the page." : "This page isn’t here."}</h1>
+          <h1 id="recovery-title" className="page-breadcrumb__title archive">{unavailable ? "Please try again shortly." : failed ? "We cannot load the page." : "This page isn’t here."}</h1>
         </div>
+        {unavailable && <p className="recovery-description">We couldn’t load this content right now. Please try again shortly, or keep exploring the website.</p>}
         {/* {failed && (
           <p className="recovery-description">
             We couldn’t load this page. Try again, or head back to the homepage.
@@ -30,7 +34,7 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
         <div className="recovery-actions">
           {failed ? (
             <>
-              <button type="button" className="recovery-btn-primary" onClick={onRetry}>
+              <button type="button" className="recovery-btn-primary" onClick={onRetry || (() => router.refresh())}>
                 <RetryIcon />Try again
               </button>
               <a className="recovery-btn-secondary" href="/">Back to home</a>
@@ -54,7 +58,7 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
 }
 
 RecoveryScreen.propTypes = {
-  kind: PropTypes.oneOf(["not-found", "error"]),
+  kind: PropTypes.oneOf(["not-found", "error", "unavailable"]),
   error: PropTypes.shape({ message: PropTypes.string }),
   onRetry: PropTypes.func,
 };

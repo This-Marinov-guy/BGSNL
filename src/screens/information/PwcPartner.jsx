@@ -17,7 +17,6 @@ import FooterTwo from "../../component/footer/FooterTwo";
 import Header from "../../component/header/Header";
 import Breadcrumb from "../../elements/common/Breadcrumb";
 import InternshipCard from "../../elements/ui/cards/InternshipCard";
-import PageLoading from "../../elements/ui/loading/PageLoading";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { PREMIUM_PARTNER } from "../../util/defines/PARTNERS";
 
@@ -29,16 +28,15 @@ const PWC_METADATA_IMAGE = "/assets/images/events/pwc.jpeg";
 // the HTML instead of behind a loading state.
 const PwcPartner = ({ initialInternships = [] }) => {
   const { sendRequest } = useHttpClient();
-  const [loading, setLoading] = useState(!initialInternships.length);
-  const [internships, setInternships] = useState(initialInternships);
+  const [internships, setInternships] = useState(initialInternships || []);
 
   useEffect(() => {
     const loadInternships = async () => {
       try {
-        const response = await sendRequest("internship/list", "GET", null, {}, false, false);
-        setInternships(response?.internships ?? []);
-      } finally {
-        setLoading(false);
+        const response = await sendRequest("internship/list", "GET", null, {}, false, false, { timeout: 5000 });
+        if (Array.isArray(response?.internships)) setInternships(response.internships);
+      } catch {
+        // Partner content remains available; retain previously loaded roles.
       }
     };
 
@@ -52,10 +50,6 @@ const PwcPartner = ({ initialInternships = [] }) => {
       ),
     [internships]
   );
-
-  if (loading) {
-    return <PageLoading />;
-  }
 
   return (
     <React.Fragment>
