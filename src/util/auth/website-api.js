@@ -8,7 +8,7 @@ import { browserApiPath, changesSession, startsSession, boundedBody } from "./pr
 
 const headers = { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer" };
 const json = (data, status = 200) => NextResponse.json(data, { status, headers });
-const apiUrl = (path) => new URL(`${API_URL.replace(/\/$/, "")}/v1/${path}`.replace(/\/v1\/v1\//, "/v1/"));
+const apiUrl = (path) => new URL(`${API_URL}/${path}`);
 // In-flight only, never a session cache. Mongo's atomic rotation/grace also
 // coordinates different workers, server instances and browser tabs.
 const renewals = new Map();
@@ -21,7 +21,7 @@ export async function websiteApi(request, parts) {
   let session = publicSession(credential), renewed = false;
   const original = publicSession(credential, Date.now(), { allowExpired: true });
   const secret = process.env.BGSNL_SERVER_KEY;
-  const origin = new URL(request.url).origin, path = parts.join("/");
+  const origin = new URL(request.url).origin, path = (parts[0] === "v1" ? parts.slice(1) : parts).join("/");
   const clear = (response, { keepCsrf = false } = {}) => {
     for (const [key, name] of Object.entries(names)) {
       if (keepCsrf && key === "csrf") continue;
@@ -134,6 +134,10 @@ export async function websiteApi(request, parts) {
         "Content-Type": "text/event-stream", "Cache-Control": "private, no-store, no-transform", "X-Accel-Buffering": "no" } });
     } else if (upstream.headers.get("content-type")?.includes("application/json")) {
       const data = JSON.parse((await boundedBody(upstream.body, 20 * 1024 * 1024)).toString("utf8"));
+      if (upstream.status === 404 && data?.message === "No action found - please try different path!") {
+        console.error("Website API upstream route missing", { method: request.method, path: apiPath, upstreamPath: target.pathname });
+        data.message = "Something went wrong - please try again!";
+      }
       const packet = { token: data.token, refreshToken: data.refreshToken };
       delete data.token;
       delete data.refreshToken;
@@ -157,6 +161,7 @@ export async function websiteApi(request, parts) {
     if (upstream.headers.has("retry-after")) response.headers.set("Retry-After", upstream.headers.get("retry-after"));
     return withCredentials(response);
   } catch (error) {
+    console.error("Website API request failed", { method: request.method, path: apiPath, name: error?.name, status: error?.status });
     if (error.status === 401) return clear(json({ message: "Your session has ended. Please sign in again." }, 401));
     // Outages retain credentials and form state so a retry is possible.
     return withCredentials(json({ message: "The service is temporarily unavailable. Please try again." }, 503));

@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { LEGACY_ARTICLES } from "../defines/ARTICLES";
 import { SITE_URL } from "../seo/site";
+import { versionedApiBase } from "./versioned-base.mjs";
 
 /**
  * Server-side API client.
@@ -17,13 +18,12 @@ import { SITE_URL } from "../seo/site";
 export { SITE_URL };
 
 const PRODUCTION_API_URL = (
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  "https://api.bulgariansociety.nl/api/"
-).replace(/\/+$/, "");
+  versionedApiBase(process.env.NEXT_PUBLIC_SERVER_URL || "https://api.bulgariansociety.nl/api/")
+);
 
 const TEST_API_URL = (
-  process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://127.0.0.1:8080/api/"
-).replace(/\/+$/, "");
+  versionedApiBase(process.env.NEXT_PUBLIC_TEST_SERVER_URL || "http://127.0.0.1:8080/api/")
+);
 
 export const API_URL =
   process.env.NODE_ENV === "production" ? PRODUCTION_API_URL : TEST_API_URL;

@@ -7,7 +7,7 @@ export async function csrfHeaders(method = "GET") {
   if (["GET", "HEAD", "OPTIONS"].includes(method.toUpperCase())) return {};
   if (csrfExpires && csrfExpires <= Date.now() + 30000) clearCsrf();
   if (!csrfPromise) {
-    csrfPromise = fetch("/api/session/csrf", { credentials: "same-origin", cache: "no-store", redirect: "error", signal: AbortSignal.timeout(15000) })
+    csrfPromise = fetch("/api/v1/session/csrf", { credentials: "same-origin", cache: "no-store", redirect: "error", signal: AbortSignal.timeout(15000) })
       .then(async (response) => {
         const data = await response.json();
         if (!response.ok || typeof data.csrfToken !== "string") throw new Error("Could not protect your request. Refresh the page and try again.");
@@ -26,7 +26,11 @@ export async function browserFetch(url, options = {}) {
   options.signal?.throwIfAborted();
   for (const [key, value] of Object.entries(await csrfHeaders(options.method))) headers.set(key, value);
   options.signal?.throwIfAborted();
-  const response = await fetch(url, { ...options, headers, credentials: "same-origin", cache: "no-store", redirect: "error" });
+  // Dedicated website routes keep their own handlers; all proxied API calls
+  // use the canonical versioned route without a redirect during mutations.
+  const dedicated = /^\/api\/(?:support\/live|user\/wallet\/(?:availability|apple|google)|event\/guest-list\/[^/?]+\/stream)(?:\?|$)/.test(url);
+  const target = /^\/api\/v[1-9]\d*(?:\/|\?|$)/.test(url) || dedicated ? url : `/api/v1/${url.slice("/api/".length)}`;
+  const response = await fetch(target, { ...options, headers, credentials: "same-origin", cache: "no-store", redirect: "error" });
   // Do not replay mutations: the caller can retry after receiving an explicit error.
   if (response.status === 403 || response.headers.get("X-BGSNL-Session-Changed") === "1") clearCsrf();
   return response;

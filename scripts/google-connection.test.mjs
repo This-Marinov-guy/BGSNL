@@ -206,7 +206,7 @@ test("a malformed callback cannot cause duplicate errors or account linking", (t
 const endpoint = "/api/security/google/link";
 test("Google requests keep credentials in POST bodies, never URLs, and are not retried", async (t) => {
   const fetchMock = t.mock.method(globalThis, "fetch", async (url, options) => {
-    assert.equal(url, endpoint); assert.equal(options.method, "POST"); assert.equal(options.cache, "no-store");
+    assert.equal(url, "/api/v1/security/google/link"); assert.equal(options.method, "POST"); assert.equal(options.cache, "no-store");
     assert.equal(options.credentials, "same-origin"); assert.equal(options.redirect, "error");
     assert.equal(options.headers.get("Authorization"), null);
     assert.equal(JSON.parse(options.body).credential, "test-google-token");

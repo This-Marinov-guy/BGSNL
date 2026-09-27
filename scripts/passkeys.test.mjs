@@ -104,7 +104,7 @@ test("SimpleWebAuthn wrapped cancellations and duplicate keys retain helpful war
 test("requests keep credentials out of URLs, use same-origin cookies, reject redirects and never retry", async (t) => {
   const url = "/api/security/passkeys/login";
   const mocked = t.mock.method(globalThis, "fetch", async (target, options) => {
-    assert.equal(target, url); assert.equal(options.method, "POST"); assert.equal(options.cache, "no-store");
+    assert.equal(target, "/api/v1/security/passkeys/login"); assert.equal(options.method, "POST"); assert.equal(options.cache, "no-store");
     assert.equal(options.credentials, "same-origin"); assert.equal(options.redirect, "error");
     assert.equal(options.headers.get("Authorization"), null); assert.equal(JSON.parse(options.body).credential.id, "test-key");
     return { headers: new Headers(), ok: true, json: async () => ({ token: "verified" }) };

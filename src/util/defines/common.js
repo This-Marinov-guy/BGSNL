@@ -2,7 +2,7 @@ import { capitalizeAfterSpace } from "../functions/capitalize";
 import { REGION_EMAIL } from "./REGIONS_DESIGN";
 
 // Browser traffic is same-origin; only the website server holds API credentials.
-export const serverEndpoint = "/api/";
+export const serverEndpoint = "/api/v1/";
 
 // Local Storage
 export const LOCAL_STORAGE_USER_DATA = 'BGSNL_user_data';

@@ -9,6 +9,7 @@ import * as cookiesPolicy from "../src/util/auth/cookie-policy.mjs";
 import * as proxyPolicy from "../src/util/auth/proxy-policy.mjs";
 import * as sessionPolicy from "../src/util/auth/browser-session.mjs";
 import * as browserTransport from "../src/util/auth/browser-request.mjs";
+import { versionedApiBase } from "../src/util/api/versioned-base.mjs";
 import { walletPacketFromProxy, walletResponseHeaders } from "../src/util/wallet/issuance.mjs";
 
 const origin = "https://www.bulgariansociety.nl", key = "isolated-website-server-key-32-characters-minimum";
@@ -37,7 +38,7 @@ async function harness({ credential, refresh, upstream = async () => Response.js
   if (refresh) jar.set(names.refresh, refresh);
   const mod = await loadModule("src/util/auth/website-api.js", {
     "server-only": {}, "next/headers": { cookies: async () => ({ get: (name) => jar.has(name) ? { value: jar.get(name) } : undefined }) },
-    "next/server": { NextResponse }, "node:net": { isIP }, "../api/server": { API_URL: "https://api.example.test/api" },
+    "next/server": { NextResponse }, "node:net": { isIP }, "../api/server": { API_URL: "https://api.example.test/api/v1" },
     "./cookie-policy.mjs": cookiesPolicy, "./proxy-policy.mjs": proxyPolicy,
   }, { process: { env: { NODE_ENV: "production", BGSNL_SERVER_KEY: key, VERCEL: "1", ...env } }, fetch: async (url, options) => { calls.push({ url, options }); return upstream(url, options); } });
   const request = async (path, { method = "GET", headers = {}, body, apply = true } = {}) => {
@@ -49,6 +50,31 @@ async function harness({ credential, refresh, upstream = async () => Response.js
   const mutate = async (path, options = {}) => request(path, { method: "POST", ...options, headers: { origin, "sec-fetch-site": "same-origin", "X-CSRF-Token": await csrf(), ...options.headers } });
   return { request, mutate, csrf, calls, jar };
 }
+
+test("API base is v1 exactly once for old and new environment values", () => {
+  assert.equal(versionedApiBase("https://api.example.test/api/"), "https://api.example.test/api/v1");
+  assert.equal(versionedApiBase("https://api.example.test/api/v1/"), "https://api.example.test/api/v1");
+});
+
+test("unversioned proxy requests redirect to v1 without dropping the POST or query", async () => {
+  let forwarded;
+  const route = await loadModule("app/api/[...path]/route.js", {
+    "@/util/auth/website-api": { websiteApi: async (_request, parts) => {
+      forwarded = parts;
+      return Response.json({ status: true });
+    } },
+    "next/server": { NextResponse },
+  });
+  const request = new Request(`${origin}/api/security/login?next=dashboard`, { method: "POST", body: "{}" });
+  const redirect = await route.POST(request, { params: Promise.resolve({ path: ["security", "login"] }) });
+  assert.equal(redirect.status, 307);
+  assert.equal(redirect.headers.get("location"), `${origin}/api/v1/security/login?next=dashboard`);
+  assert.equal(forwarded, undefined);
+  const direct = await route.POST(new Request(`${origin}/api/v1/security/login`, { method: "POST", body: "{}" }),
+    { params: Promise.resolve({ path: ["v1", "security", "login"] }) });
+  assert.equal(direct.status, 200);
+  assert.deepEqual(forwarded, ["v1", "security", "login"]);
+});
 
 test("both wallet issuers recover the public card identifier after the real proxy strips token", async () => {
   const packet = { token: "abcdefghijklmnopqrstuv", publicUrl: "https://bulgariansociety.nl/c/abcdefghijklmnopqrstuv",
@@ -106,6 +132,19 @@ for (const path of ["security/login", "security/google/login", "security/passkey
   assert.equal(cookie.path, "/"); assert.equal(cookie.domain, undefined); assert.equal(cookie.expires.getTime(), data.session.exp * 1000);
   assert.match(response.headers.get("cache-control"), /no-store/); assert.equal(response.headers.get("x-bgsnl-session-changed"), "1");
   assert.equal(h.calls[0].options.headers.get("authorization"), null);
+  assert.equal(h.calls[0].url.pathname, `/api/v1/${path}`);
+});
+test("v1 session paths keep CSRF and restoration behavior", async () => {
+  const h = await harness();
+  assert.equal(typeof (await (await h.request("v1/session/csrf")).json()).csrfToken, "string");
+  assert.equal((await (await h.request("v1/session/current")).json()).session, null);
+  assert.equal(h.calls.length, 0);
+});
+test("an upstream endpoint 404 uses a general message", async () => {
+  const h = await harness({ upstream: async () => Response.json({ message: "No action found - please try different path!" }, { status: 404 }) });
+  const response = await h.mutate("v1/security/login", { body: "{}" });
+  assert.equal(response.status, 404);
+  assert.equal((await response.json()).message, "Something went wrong - please try again!");
 });
 test("requests without correct CSRF and same-origin proof never reach the API", async () => {
   const h = await harness({ credential: token() }); const csrf = await h.csrf();
@@ -242,10 +281,11 @@ test("client transport bootstraps CSRF once, strips bearer headers, and never re
   browserTransport.clearCsrf(); const calls = [];
   t.mock.method(globalThis, "fetch", async (url, options) => {
     calls.push({ url, options });
-    return url === "/api/session/csrf" ? Response.json({ csrfToken: `${Math.floor(Date.now() / 1000) + 3600}.fixture.csrf` }) : Response.json({}, { status: 403 });
+    return url === "/api/v1/session/csrf" ? Response.json({ csrfToken: `${Math.floor(Date.now() / 1000) + 3600}.fixture.csrf` }) : Response.json({}, { status: 403 });
   });
   await browserTransport.browserFetch("/api/user/edit-info", { method: "PATCH", headers: { Authorization: "Bearer do-not-forward" } });
   assert.equal(calls.length, 2); assert.equal(calls[1].options.credentials, "same-origin");
+  assert.equal(calls[1].url, "/api/v1/user/edit-info");
   assert.equal(calls[1].options.headers.get("authorization"), null); assert.ok(calls[1].options.headers.get("x-csrf-token"));
   await browserTransport.browserFetch("/api/user/edit-info", { method: "PATCH" }); assert.equal(calls.length, 4);
   await assert.rejects(browserTransport.browserFetch("https://evil.test/api/user")); assert.equal(calls.length, 4);

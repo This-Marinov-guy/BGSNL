@@ -8,7 +8,7 @@ export async function reportWebEvent(event, address) {
   const headers = { "Content-Type": "application/json", "x-bgsnl-server-key": secret, "x-bgsnl-browser-proxy": "1" };
   if (address && isIP(address)) headers["x-bgsnl-client-ip"] = address;
   try {
-    const response = await fetch(`${API_URL.replace(/\/$/, "")}/v1/monitoring/web-events`, {
+    const response = await fetch(`${API_URL}/monitoring/web-events`, {
       method: "POST", headers, body: JSON.stringify(event), cache: "no-store", signal: AbortSignal.timeout(3000),
     });
     return response.ok;

@@ -13,7 +13,7 @@ export async function loadPublicCard(token, requestHeaders) {
     const ipHeader = process.env.VERCEL ? "x-forwarded-for" : process.env.BGSNL_TRUSTED_CLIENT_IP_HEADER;
     const ip = ipHeader && requestHeaders.get(ipHeader)?.trim();
     if (ip && isIP(ip)) forwarded["x-bgsnl-client-ip"] = ip;
-    const response = await fetch(`${API_URL}/v1/user/wallet/public/${token}`.replace(/\/v1\/v1\//, "/v1/"), {
+    const response = await fetch(`${API_URL}/user/wallet/public/${token}`, {
       headers: forwarded, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(15000),
     });
     if (!response.ok) return { status: response.status === 404 ? 404 : 503 };
