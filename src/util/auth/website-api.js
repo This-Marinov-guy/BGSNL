@@ -22,8 +22,11 @@ export async function websiteApi(request, parts) {
   const original = publicSession(credential, Date.now(), { allowExpired: true });
   const secret = process.env.BGSNL_SERVER_KEY;
   const origin = new URL(request.url).origin, path = parts.join("/");
-  const clear = (response) => {
-    for (const name of Object.values(names)) response.cookies.set(name, "", { ...options, maxAge: 0 });
+  const clear = (response, { keepCsrf = false } = {}) => {
+    for (const [key, name] of Object.entries(names)) {
+      if (keepCsrf && key === "csrf") continue;
+      response.cookies.set(name, "", { ...options, maxAge: 0 });
+    }
     response.headers.set("X-BGSNL-Session-Changed", "1");
     return response;
   };
@@ -100,7 +103,7 @@ export async function websiteApi(request, parts) {
       await renew();
       return withCredentials(json({ session }));
     }
-    if (restore && !original) return clear(json({ session: null }));
+    if (restore && !original) return clear(json({ session: null }), { keepCsrf: true });
     const login = startsSession(apiPath);
     if (!login && original && (!session || session.accessExp * 1000 <= Date.now() + 60000)) await renew();
     if (!login && session) forwarded.set("Authorization", `Bearer ${credential}`);
@@ -109,10 +112,10 @@ export async function websiteApi(request, parts) {
     target.search = new URL(request.url).search;
     if (target.search.length > 4000) return withCredentials(json({ message: "Request is too large" }, 413));
     const body = ["GET", "HEAD"].includes(request.method) ? undefined : await boundedBody(request.body, 40 * 1024 * 1024);
-    const liveGuestList = request.method === "GET" && /^event\/guest-list\/[^/]+\/stream$/.test(apiPath);
-    if (liveGuestList) forwarded.set("Accept", "text/event-stream");
+    const liveStream = (request.method === "GET" && /^event\/guest-list\/[^/]+\/stream$/.test(apiPath)) || (request.method === "POST" && apiPath === "support/live");
+    if (liveStream) forwarded.set("Accept", "text/event-stream");
     const send = () => fetch(target, { method: request.method, headers: forwarded, body,
-      cache: "no-store", redirect: "manual", signal: liveGuestList ? AbortSignal.any([request.signal, AbortSignal.timeout(60000)]) : AbortSignal.timeout(60000) });
+      cache: "no-store", redirect: "manual", signal: liveStream ? AbortSignal.any([request.signal, AbortSignal.timeout(60000)]) : AbortSignal.timeout(60000) });
     let upstream = await send();
     // Retry only an explicit AUTH MIDDLEWARE expiry: no business handler ran.
     // Never retry arbitrary 401/403/422, network failures or completed writes.
@@ -126,7 +129,7 @@ export async function websiteApi(request, parts) {
     }
     if (upstream.status >= 300 && upstream.status < 400) return withCredentials(json({ message: "Unexpected API redirect" }, 502));
     let response;
-    if (liveGuestList && upstream.ok && upstream.headers.get("content-type")?.includes("text/event-stream")) {
+    if (liveStream && upstream.ok && upstream.headers.get("content-type")?.includes("text/event-stream")) {
       response = new NextResponse(upstream.body, { status: 200, headers: { ...headers,
         "Content-Type": "text/event-stream", "Cache-Control": "private, no-store, no-transform", "X-Accel-Buffering": "no" } });
     } else if (upstream.headers.get("content-type")?.includes("application/json")) {

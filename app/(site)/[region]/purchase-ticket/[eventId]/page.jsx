@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import PurchaseTicket from "@/screens/eventActions/PurchaseTicket";
+import RecoveryScreen from "@/component/common/RecoveryScreen";
+import { permanentRedirect } from "next/navigation";
 import { getEventDetails } from "@/util/api/server";
 import { buildEventMetadata } from "@/util/seo/event-metadata";
 
@@ -7,10 +9,12 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { region, eventId } = await params;
+  const event = await getEventDetails(eventId, region);
+  const canonicalId = event?.slug || event?.id || eventId;
   const metadata = await buildEventMetadata(
-    eventId,
-    `/${region}/event-details/${eventId}`,
-    null,
+    canonicalId,
+    `/${event?.region || region}/event-details/${encodeURIComponent(canonicalId)}`,
+    event,
     region
   );
 
@@ -28,8 +32,15 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { region, eventId } = await params;
-  // Deduped with the generateMetadata call above by Next's fetch cache.
+  // Request-scoped caching shares this slug-or-ID lookup with metadata.
   const event = await getEventDetails(eventId, region);
+  if (!event) return <RecoveryScreen kind="not-found" />;
+
+  // Legacy ID links remain valid and lead to the preferred slug URL.
+  const canonicalId = event.slug || event.id;
+  if (region !== event.region || eventId !== canonicalId) {
+    permanentRedirect(`/${event.region}/purchase-ticket/${encodeURIComponent(canonicalId)}`);
+  }
 
   return <PurchaseTicket initialEvent={event} />;
 }

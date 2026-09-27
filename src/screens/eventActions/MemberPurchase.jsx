@@ -26,6 +26,7 @@ import {
 import PageHelmet from "../../component/common/Helmet";
 import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
+import PurchaseCheckoutLayout from "../../elements/purchase/PurchaseCheckoutLayout";
 import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
 import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
 import {
@@ -40,7 +41,6 @@ import TicketSaleClosed from "../../elements/ui/errors/Events/TicketSaleClosed";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import ValidatedFormik from "../../elements/ui/forms/ValidatedFormik";
 import Loader from "../../elements/ui/loading/Loader";
-import ImageFb from "../../elements/ui/media/ImageFb";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { showNotification } from "../../redux/notification";
 import { selectUser } from "../../redux/user";
@@ -89,11 +89,7 @@ const formatEuro = (value) =>
     maximumFractionDigits: 2,
   }).format(value);
 
-// `initialEvent` is seeded from the server render. Unlike the guest flow this
-// screen still waits for `currentUser`: membership pricing depends on the
-// logged-in account, whose JWT lives in localStorage and is unavailable to the
-// server. PurchaseTicket therefore renders GuestPurchase server-side and swaps
-// to this screen after the user is restored on the client.
+// The parent waits for session restoration before choosing member checkout.
 const MemberPurchase = ({ initialEvent = null }) => {
   const { sendRequest } = useHttpClient();
 
@@ -226,15 +222,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
           selectedAddOns={selectedAddOns}
         />
         <div className="container purchase-page-container">
-          <header className="purchase-page-header">
-            <h1>Complete your booking</h1>
-            <p>Your member details and price will be applied automatically.</p>
-          </header>
-
-        <div
-          className="row team_member_border_1 team_border_long_add_on purchase_panel purchase-checkout-shell"
-        >
-          <div className="purchase-event-sidebar">
+        <PurchaseCheckoutLayout sidebar={<>
             <PurchaseEventSummary
               discountApplied={discountApplied}
               event={selectedEvent}
@@ -255,8 +243,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
             <div className="purchase-sponsor">
               <SponsoredBySmall />
             </div>
-          </div>
-
+        </>}>
           <ValidatedFormik
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -337,7 +324,13 @@ const MemberPurchase = ({ initialEvent = null }) => {
             }}
           >
             {({ values, setFieldValue }) => (
-              <Form id="form" encType="multipart/form-data" className="purchase-form">
+              <Form id="form" encType="multipart/form-data" className="row g-4 purchase-form">
+                <div className="col-12">
+                  <div className="purchase-form-heading">
+                    <h1 className="type-heading-md">Complete your booking</h1>
+                    <p>Your account details and member price are applied automatically.</p>
+                  </div>
+                </div>
                 <PurchaseAdditionalInformation inputs={selectedEvent.extraInputsForm || []} />
                 <PurchaseAddOns
                   addOns={selectedEvent.addOns}
@@ -384,45 +377,10 @@ const MemberPurchase = ({ initialEvent = null }) => {
                   </div>
                 </div>
 
-                <div className="col-12 mt--40">
-                  <div
-                    className="information-notices"
-                    style={{
-                      background: "#f9f9f9",
-                      padding: "clamp(12px, 3vw, 20px)",
-                      borderRadius: "8px",
-                      borderLeft: "4px solid #017363",
-                    }}
-                  >
-                    <p
-                      className="mb--20 "
-                    >
-                      <ImageFb
-                        className="calendar-subscription__header-icon"
-                        style={{ width: 42, height: 42 }}
-                        src={"/assets/images/svg/3d/information-3d.png"}
-                        fallback={
-                          "/assets/images/svg/information/calendar-3d.png"
-                        }
-                        alt="Calendar"
-                      />{" "}
-                      The information for purchasing this ticket will be taken
-                      from your account. Be sure it is accurate as it can be
-                      used as a proof of your identity on the entry!
-                    </p>
-                    <p
-                      className="mb--0 "
-                      style={{ color: "#666" }}
-                    >
-                      *Special discounted price for board and committee members
-                      may apply
-                    </p>
-                  </div>
-                </div>
               </Form>
             )}
           </ValidatedFormik>
-        </div>
+        </PurchaseCheckoutLayout>
       </div>
       </main>
       {/* Start Back To Top */}

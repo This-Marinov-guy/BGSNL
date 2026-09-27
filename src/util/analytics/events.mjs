@@ -15,6 +15,8 @@ export const ANALYTICS_EVENTS = Object.freeze({
   USER_CARD_OPENED: "user_card_opened",
   CV_UPLOADED: "cv_uploaded",
   INTERNSHIPS_OPENED: "internships_opened",
+  HELP_PANEL_OPENED: "help_panel_opened",
+  EXPLORE_V4_CLICKED: "explore_v4_clicked",
   MEMBERSHIP_CTA_CLICKED: "membership_cta_clicked",
   MEMBERSHIP_TYPE_SELECTED: "membership_type_selected",
   MEMBERSHIP_PLAN_SELECTED: "membership_plan_selected",

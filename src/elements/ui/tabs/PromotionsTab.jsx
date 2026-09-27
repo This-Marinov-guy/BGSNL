@@ -1,3 +1,4 @@
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useEffect, useRef, useState } from "react";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import PropTypes from "prop-types";
@@ -135,7 +136,7 @@ const PromotionsTab = () => {
     <div className="tab-content-wrapper">
       <UserTabHeader title="Promotions" />
       <div className="tab-body">
-        {failed ? <div role="status"><p>Promotions could not be loaded. An active subscription is required.</p><button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => setAttempt((value) => value + 1)} type="button">Try again</button></div> : !codes ? <p role="status">Loading your promotions…</p> : byCity.length > 0 ? (
+        {failed ? <div role="status"><p>Promotions could not be loaded. An active subscription is required.</p><button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => setAttempt((value) => value + 1)} type="button"><RetryIcon />Try again</button></div> : !codes ? <p role="status">Loading your promotions…</p> : byCity.length > 0 ? (
           <div className="promotions-by-city">
             {byCity.map(({ city, promos }) => (
               <section key={city} className="promotions-city-section">

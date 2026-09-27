@@ -1,5 +1,6 @@
 "use client";
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -105,14 +106,14 @@ export default function CheckTicket() {
       setEventsLoading(true);
       setEventsError("");
       try {
-        const response = await browserFetch("/api/future-event/full-data-events-list", { signal: controller.signal });
+        const response = await browserFetch("/api/future-event/scanner-events", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
         const data = await response.json();
         if (!response.ok) throw new Error(data.message || "Events could not be loaded.");
         setEvents((data.events || [])
           .filter((event) => !["draft", "archived"].includes(String(event.status || "").trim().toLowerCase()))
           .sort((first, second) => new Date(second.correctedDate || second.date || 0) - new Date(first.correctedDate || first.date || 0)));
       } catch (error) {
-        if (error.name !== "AbortError") setEventsError(error.message || "Events could not be loaded.");
+        if (!controller.signal.aborted) setEventsError(error.name === "TimeoutError" ? "Loading events timed out. Refresh to try again." : error.message || "Events could not be loaded.");
       } finally {
         if (!controller.signal.aborted) setEventsLoading(false);
       }
@@ -384,11 +385,11 @@ export default function CheckTicket() {
             </div>
           </form>}
           {result.outcome === "confirm_required" && <button type="button" onClick={() => check(currentTicket.current, 1)}>Confirm check-in</button>}
-          {result.outcome === "error" && currentTicket.current && <button type="button" onClick={() => check(currentTicket.current)}>Check ticket again</button>}
+          {result.outcome === "error" && currentTicket.current && <button type="button" onClick={() => check(currentTicket.current)}><RetryIcon />Check ticket again</button>}
           {result.outcome !== "error" && <>
             <button className={styles.extendButton} type="button" aria-expanded={extended} aria-controls="scanner-ticket-details" onClick={() => { setTicketDetails(null); setDetailsError(""); setExtended(value => !value); }}><IconlyDocument aria-hidden="true" />{extended ? "Compact" : "Extend"}</button>
             {extended && <div id="scanner-ticket-details" className={styles.ticketDetails} aria-busy={!ticketDetails && !detailsError}>
-              {detailsError ? <div role="alert"><p>{detailsError}</p><button type="button" onClick={() => { setDetailsError(""); setTicketDetails(null); setDetailsAttempt(value => value + 1); }}>Try again</button></div> : !ticketDetails ? <DetailsSkeleton /> : ticketDetails.length === 0 ? <p>No additional details available.</p> : ticketDetails.map((guest, index) => <section key={guest.id} className={styles.ticketDetail}>
+              {detailsError ? <div role="alert"><p>{detailsError}</p><button type="button" onClick={() => { setDetailsError(""); setTicketDetails(null); setDetailsAttempt(value => value + 1); }}><RetryIcon />Try again</button></div> : !ticketDetails ? <DetailsSkeleton /> : ticketDetails.length === 0 ? <p>No additional details available.</p> : ticketDetails.map((guest, index) => <section key={guest.id} className={styles.ticketDetail}>
                 <h3>Ticket {index + 1} · {guest.refunded ? "Refunded" : Number(guest.status) === 1 ? "Checked in" : "Not checked in"}</h3>
                 <dl>
                   <dt>Name</dt><dd>{guest.name || "Not provided"}</dd>

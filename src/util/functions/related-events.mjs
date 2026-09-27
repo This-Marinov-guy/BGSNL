@@ -10,6 +10,14 @@ export function eventLinkIdentifier(href) {
   } catch { return ""; }
 }
 
+export function findRelatedEvent(events, href) {
+  const identifier = eventLinkIdentifier(href);
+  const region = eventLinkRegion(href);
+  if (!identifier || !region) return null;
+  return events.find(event => event.region === region &&
+    (String(event.id ?? event._id) === identifier || event.slug === identifier)) ?? null;
+}
+
 export function relatedEventOptions(events, currentEventId) {
   const unique = new Map();
   for (const event of events) {

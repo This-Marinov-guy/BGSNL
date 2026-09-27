@@ -1,3 +1,4 @@
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "framer-motion";
@@ -94,7 +95,7 @@ export default function EventRelatedPicker({ currentEventId, active = true }) {
     <OptionError name="subEvent" /><OptionError name="subEvent.links" />
     <div className="rn-form-group event-related-search"><label htmlFor={`${id}-search`}>Find an event</label><input id={`${id}-search`} type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search by name or region" /></div>
     {result.loading ? <div className="event-related-skeleton" role="status" aria-label="Loading events" aria-busy="true">{[0, 1, 2].map(index => <div key={index} aria-hidden="true"><span /><span /></div>)}</div> : <>
-      {result.error && <p className="event-option-help" role="status">Some events couldn’t be loaded. <button type="button" className="event-option-remove" onClick={() => setAttempt(value => value + 1)}>Try again</button></p>}
+      {result.error && <p className="event-option-help" role="status">Some events couldn’t be loaded. <button type="button" className="event-option-remove" onClick={() => setAttempt(value => value + 1)}><RetryIcon />Try again</button></p>}
       {!matching.length && <p className="event-option-help" role="status">{search ? "No events match your search." : "No other events are available to advertise."}</p>}
       <div className="event-related-results">{matching.map(event => {
         const selected = isRelatedEventSelected(event, links);

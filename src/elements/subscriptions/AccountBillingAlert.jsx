@@ -1,6 +1,7 @@
 "use client";
 /* global Intl */
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useId } from "react";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -35,7 +36,7 @@ export default function AccountBillingAlert({ user, showAction = true, flushBott
           {notice.paymentNote && <p>{notice.paymentNote}</p>}
           {(showAction && action !== "start" || notice.reason === "unavailable") && <div className={styles.billingAlertActions}>
             {showAction && action !== "start" && <BillingActions user={user} />}
-            {notice.reason === "unavailable" && <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" onClick={billing.retry}>Try again</button>}
+            {notice.reason === "unavailable" && <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" onClick={billing.retry}><RetryIcon />Try again</button>}
           </div>}
         </div>
       </section>}

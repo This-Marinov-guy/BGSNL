@@ -1,3 +1,4 @@
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { Dialog } from "@/compat/primereact";
@@ -72,7 +73,7 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
         footer={<div className="event-draft-note-dialog__actions">
           <button type="button" className="event-form-button event-form-button--ghost" disabled={saving} onClick={() => changeOpen(false)}>Cancel</button>
           <button type="button" className="event-form-button event-form-button--primary" disabled={saving || disabled} onClick={save}>
-            {saving ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{stage === "emailing" ? "Sending email…" : "Saving…"}</span></> : receiver ? canReuseDraft ? "Retry email" : "Save & email link" : canReuseDraft ? "Done" : "Save draft"}
+            {saving ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{stage === "emailing" ? "Sending email…" : "Saving…"}</span></> : receiver ? canReuseDraft ? <><RetryIcon />Retry email</> : "Save & email link" : canReuseDraft ? "Done" : "Save draft"}
           </button>
         </div>}
       >

@@ -60,9 +60,8 @@ const formatEuro = (value) =>
   }).format(value);
 
 /**
- * `initialEvent` is fetched on the server by the route, so the event is in the
- * HTML rather than appearing after the effect below runs. The effect still
- * refetches on mount to pick up live ticket availability.
+ * The route supplies event data while the site's shared session check resolves
+ * membership. Availability refreshes in parallel without another account check.
  */
 const EventDetails = ({ initialEvent = null }) => {
   const [eventClosed, setEventClosed] = useState(false);
@@ -102,9 +101,9 @@ const EventDetails = ({ initialEvent = null }) => {
     if (eventRecordId) clarityEvent(ANALYTICS_EVENTS.EVENT_OPENED);
   }, [eventRecordId]);
 
-  // Only fall back to the loader when there is nothing to show yet — otherwise
-  // the mount-time refetch would replace server-rendered content with a spinner.
-  if (loading && !selectedEvent) {
+  // Do not briefly show guest pricing or the guest layout to a returning member.
+  // Once initialized, navigation reuses the session already held in Redux.
+  if (!user.authInitialized || (loading && !selectedEvent)) {
     return <HeaderLoadingError />;
   } else if (!selectedEvent) {
     return <NoEventFound />;
@@ -144,7 +143,7 @@ const EventDetails = ({ initialEvent = null }) => {
     : memberSaving !== null
       ? `Save ${formatEuro(memberSaving)} and keep your ticket as a member`
       : "Keep your ticket as a member";
-  const purchasePath = `/${region}/purchase-ticket/${eventRecordId}`;
+  const purchasePath = `/${region}/purchase-ticket/${encodeURIComponent(eventUrlId)}`;
   const accountBannerLoading =
     !selectedEvent.ticketLink && !user.authInitialized;
   const showMembershipOffer =
@@ -262,7 +261,7 @@ const EventDetails = ({ initialEvent = null }) => {
     </section>
   );
   const stickyMembershipSaving =
-    showMembershipOffer && memberSaving !== null ? (
+    showMembershipOffer ? (
       <Link
         className="event-sticky-membership-saving type-caption"
         onClick={() => {
@@ -271,7 +270,9 @@ const EventDetails = ({ initialEvent = null }) => {
         }}
         to="/signup"
       >
-        Save {formatEuro(memberSaving)} by becoming a member
+        {memberSaving !== null
+          ? `Save ${formatEuro(memberSaving)} by becoming a member`
+          : "Apply member benefits today"}
       </Link>
     ) : null;
   const stickyAccountSaving =

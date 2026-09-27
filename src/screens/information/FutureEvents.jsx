@@ -1,17 +1,12 @@
 "use client";
 
-import { SelectInput } from "@/compat/primereact";
-import FilterPanel from "@/elements/ui/filters/FilterPanel";
 
 import React, {
   useEffect,
-  useState,
 } from "react";
 import calendarMotion from "@assets/images/svg/motion/calendar-motion.json";
-import { useReducedMotion } from "framer-motion";
 import Lottie from "react-lottie-player";
 import PropTypes from "prop-types";
-import Slider from "react-slick";
 import {
   useDispatch,
   useSelector,
@@ -20,8 +15,6 @@ import { Tooltip } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import {
   FiChevronUp,
-  IconlyArrowLeft,
-  IconlyArrowRight,
 } from "@/elements/ui/icons/IconlyIcons";
 import { useParams } from "@/util/navigation";
 import CalendarSubscriptionComponent from "../../component/common/CalendarSubscriptionComponent";
@@ -29,8 +22,9 @@ import PageHelmet from "../../component/common/Helmet";
 import Footer from "../../component/footer/Footer";
 import Header from "../../component/header/Header";
 import Breadcrumb from "../../elements/common/Breadcrumb";
-import FocusCards, { FocusCard } from "../../elements/ui/FocusCards";
+import FocusCards from "../../elements/ui/FocusCards";
 import EventsLoading from "../../elements/ui/loading/EventsLoading";
+import UpcomingEventsEmpty from "../../elements/ui/UpcomingEventsEmpty";
 import { useLoadEvents } from "../../hooks/common/api-hooks";
 import { selectEvents } from "../../redux/events";
 import { showModal } from "../../redux/modal";
@@ -38,7 +32,8 @@ import { selectIsAuth } from "../../redux/user";
 import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
 import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
-import { capitalizeFirstLetter } from "../../util/functions/capitalize";
+import { sortFutureEvents } from "../../util/functions/future-events-sort.mjs";
+import { visibleFutureEvents } from "../../util/functions/visible-future-events.mjs";
 import {
   checkObjectOfArraysEmpty,
 } from "../../util/functions/helpers";
@@ -47,79 +42,6 @@ const eventsByRegionPropType = PropTypes.objectOf(
   PropTypes.arrayOf(PropTypes.object)
 );
 
-const FutureEventsArrow = ({ className, direction, onClick }) => {
-  const isPrevious = direction === "previous";
-  const Icon = isPrevious ? IconlyArrowLeft : IconlyArrowRight;
-
-  return (
-    <button
-      aria-label={`${isPrevious ? "Previous" : "Next"} future event`}
-      className={`${className || ""} future-events-carousel-arrow future-events-carousel-arrow--${direction}`}
-      onClick={onClick}
-      type="button"
-    >
-      <Icon aria-hidden />
-    </button>
-  );
-};
-
-FutureEventsArrow.propTypes = {
-  className: PropTypes.string,
-  direction: PropTypes.oneOf(["previous", "next"]).isRequired,
-  onClick: PropTypes.func,
-};
-
-const FutureEventsCarousel = ({ events, filterKey }) => {
-  const shouldReduceMotion = useReducedMotion();
-  const slidesToShow = Math.min(2, events.length);
-  const hasMultipleEvents = events.length > 1;
-
-  const settings = {
-    accessibility: true,
-    arrows: hasMultipleEvents,
-    dots: hasMultipleEvents,
-    infinite: events.length > 2,
-    nextArrow: <FutureEventsArrow direction="next" />,
-    prevArrow: <FutureEventsArrow direction="previous" />,
-    slidesToScroll: 1,
-    slidesToShow,
-    speed: shouldReduceMotion ? 0 : 380,
-    swipeToSlide: true,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
-  return (
-    <section
-      aria-label="Future events carousel"
-      className="future-events-carousel-shell"
-    >
-      <Slider
-        className="future-events-carousel"
-        key={`${filterKey}-${events.length}`}
-        {...settings}
-      >
-        {events.map((event) => (
-          <div className="future-events-carousel-slide" key={event.id}>
-            <FocusCard card={event} region={event.region} />
-          </div>
-        ))}
-      </Slider>
-    </section>
-  );
-};
-
-FutureEventsCarousel.propTypes = {
-  events: PropTypes.arrayOf(PropTypes.object).isRequired,
-  filterKey: PropTypes.string.isRequired,
-};
-
 /**
  * `initialEvents` is the region-keyed map fetched on the server by the route,
  * so upcoming events are in the HTML rather than appearing after reloadEvents()
@@ -127,13 +49,11 @@ FutureEventsCarousel.propTypes = {
  * render, so both produce identical markup; the store wins once it is filled.
  */
 const FutureEventsContent = ({
-  carousel = false,
   displayAll,
   nullable = true,
   initialEvents,
 }) => {
   const { region } = useParams();
-  const [selectedRegion, setSelectedRegion] = useState("all");
 
   const dispatch = useDispatch();
 
@@ -149,63 +69,16 @@ const FutureEventsContent = ({
       ? initialEvents
       : storedEvents;
 
-  let events;
-
-  if (displayAll) {
-    events = source;
-  } else {
-    events = source[region];
-
-    if (events && events.length) {
-      events = events.filter(
-        (event) => event.hidden === false && (isAuth || !event.memberOnly)
-      );
-    }
-  }
+  const visibleEvents = visibleFutureEvents(source, displayAll ? REGIONS : [region], isAuth);
   useEffect(() => {
     reloadEvents();
   }, []);
 
-  if (nullable && displayAll && checkObjectOfArraysEmpty(events)) {
+  if (nullable && displayAll && checkObjectOfArraysEmpty(source)) {
     return null;
   }
 
-  const visibleRegionGroups = displayAll
-    ? REGIONS.map((regionName) => ({
-        regionName,
-        events: (events?.[regionName] || []).filter(
-          (event) => event.hidden !== true && (isAuth || !event.memberOnly)
-        ),
-      })).filter((group) => group.events.length > 0)
-    : [];
-
-  const visibleEvents = visibleRegionGroups.flatMap(({ regionName, events: regionEvents }) =>
-    regionEvents.map((event) => ({
-      ...event,
-      region: event.region ?? regionName,
-    }))
-  );
-  const showThreeEventRow = displayAll && visibleEvents.length === 3;
-  const activeRegion =
-    selectedRegion === "all" ||
-    visibleRegionGroups.some(({ regionName }) => regionName === selectedRegion)
-      ? selectedRegion
-      : "all";
-  const carouselEvents = activeRegion === "all"
-    ? visibleEvents
-    : visibleRegionGroups.find(({ regionName }) => regionName === activeRegion)
-      ?.events.map((event) => ({
-        ...event,
-        region: event.region ?? activeRegion,
-      })) || [];
-
-  // A single region, or a long list of regions, gets the full page width so
-  // its event cards can run horizontally. Two or three active regions remain
-  // compact columns for an easy cross-city overview.
-  const regionListLayout =
-    visibleRegionGroups.length === 1 || visibleRegionGroups.length > 3
-      ? "future-events-region-list--rows"
-      : `future-events-region-list--columns-${visibleRegionGroups.length}`;
+  const sortedEvents = sortFutureEvents(visibleEvents);
 
   return (
     <div className="portfolio-area pt--40 pb--10 bg_color--5">
@@ -238,106 +111,27 @@ const FutureEventsContent = ({
             {displayAll ? (
               eventsLoading ? (
                 <EventsLoading />
-              ) : carousel ? (
-                <div className="col-lg-12">
-                  <FilterPanel onClear={() => setSelectedRegion("all")} summary={<span aria-live="polite">{carouselEvents.length} {carouselEvents.length === 1 ? "event" : "events"}</span>}>
-                    <label htmlFor="future-events-region-select"><span>Region</span>
-                    <SelectInput
-                      aria-label="Filter future events by region"
-                      className="bgsnl-form-control"
-                      id="future-events-region-select"
-                      onChange={(event) => setSelectedRegion(event.target.value)}
-                      value={activeRegion}
-                    >
-                      <option value="all">
-                        All regions ({visibleEvents.length})
-                      </option>
-                      {visibleRegionGroups.map(({ regionName, events: regionEvents }) => (
-                        <option
-                          key={regionName}
-                          value={regionName}
-                        >
-                          {capitalizeFirstLetter(regionName, true)} ({regionEvents.length})
-                        </option>
-                      ))}
-                    </SelectInput></label>
-                  </FilterPanel>
-
-                  {carouselEvents.length ? (
-                    <FutureEventsCarousel
-                      events={carouselEvents}
-                      filterKey={activeRegion}
-                    />
-                  ) : (
-                    <p className="future-events-filter-empty">
-                      No upcoming events in this region.
-                    </p>
-                  )}
-                </div>
               ) : (
-                <div className="col-lg-12">
-                  <div
-                    className={`future-events-region-list ${regionListLayout}${
-                      showThreeEventRow ? " future-events-three-events" : ""
-                    }`}
-                    data-active-regions={visibleRegionGroups.length}
-                  >
-                    {showThreeEventRow ? (
-                      <section className="future-events-region-section">
-                        <FocusCards
-                          cards={visibleEvents}
-                          centerItems={false}
-                        />
-                      </section>
-                    ) : visibleRegionGroups.map(({ regionName, events: regionEvents }) => (
-                      <section
-                        className="future-events-region-section"
-                        key={regionName}
-                      >
-                        <div className="future-events-region-header">
-                          {/* <h4 className="archive future-events-region-title">
-                            {capitalizeFirstLetter(
-                              regionName,
-                              true,
-                            ).toUpperCase()}
-                          </h4> */}
-                          <span className="future-events-region-count m-auto">
-                            <h4 className="archive future-events-region-title">
-                              {capitalizeFirstLetter(
-                                regionName,
-                                true,
-                              ).toUpperCase()}
-                            </h4>{" "}
-                          </span>
-                        </div>
-                        <FocusCards
-                          cards={regionEvents}
-                          region={regionName}
-                        />
-                      </section>
-                    ))}
-                  </div>
+                <div className="col-lg-12 future-events-flow">
+                  {sortedEvents.length ? (
+                    <FocusCards cards={sortedEvents} centerItems={false} />
+                  ) : (
+                    <UpcomingEventsEmpty />
+                  )}
                 </div>
               )
             ) : (
-              <div
-                className={`col-lg-12${
-                  events?.length === 3 ? " future-events-three-events" : ""
-                }`}
-              >
+              <div className="col-lg-12 future-events-flow">
                 {eventsLoading ? (
                   <EventsLoading />
-                ) : events && events.length > 0 ? (
+                ) : sortedEvents.length > 0 ? (
                   <FocusCards
-                    cards={events}
+                    cards={sortedEvents}
                     region={region}
                     centerItems={false}
                   />
                 ) : (
-                  <p className="col-lg-6 mt--20 mb--20">
-                    Currently there are no upcoming other events. Follow us
-                    for updates!
-                  </p>
+                  <UpcomingEventsEmpty />
                 )}
               </div>
             )}
@@ -349,7 +143,6 @@ const FutureEventsContent = ({
 };
 
 FutureEventsContent.propTypes = {
-  carousel: PropTypes.bool,
   displayAll: PropTypes.bool,
   initialEvents: eventsByRegionPropType,
   nullable: PropTypes.bool,
@@ -430,7 +223,6 @@ const FutureEvents = ({ initialEvents }) => {
             <>
               {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
               <FutureEventsContent
-                carousel
                 displayAll
                 nullable={false}
                 initialEvents={initialEvents}

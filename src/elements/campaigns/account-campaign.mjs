@@ -1,20 +1,14 @@
 import { browserFetch } from "../../util/auth/browser-request.mjs";
-export const WHATS_NEW_CAMPAIGN = "whats-new-2026-09";
+export const WHATS_NEW_CAMPAIGN = "whats-new-version4";
 
-// Uncomment a campaign when it is ready to appear on account visits.
-// The local ignore-seen flag does not enable inactive campaigns.
+// Active campaigns use the same saved account history in every environment.
 export const ACTIVE_ACCOUNT_CAMPAIGNS = Object.freeze([
-  // WHATS_NEW_CAMPAIGN,
+  WHATS_NEW_CAMPAIGN,
 ]);
 
 // This request deliberately bypasses page loaders, auth redirects and toasts.
 // An unavailable announcement must never prevent someone using their account.
 export async function requestAccountCampaign({ endpoint, campaign, markSeen = false, signal }) {
-  // Local previews must neither read nor write the real account's history.
-  // The development guard keeps this disabled even if the flag reaches a build.
-  if (process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_WHATS_NEW_IGNORE_SEEN === "true") {
-    return { campaign, ...(markSeen ? { shouldShow: true } : { seen: false }) };
-  }
   const controller = new AbortController();
   const abort = () => controller.abort();
   if (signal?.aborted) controller.abort();
@@ -27,6 +21,7 @@ export async function requestAccountCampaign({ endpoint, campaign, markSeen = fa
         method: markSeen ? "POST" : "GET",
         headers: {},
         cache: "no-store",
+        keepalive: markSeen,
         signal: controller.signal,
       }
     );

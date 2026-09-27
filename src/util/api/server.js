@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { LEGACY_ARTICLES } from "../defines/ARTICLES";
 import { SITE_URL } from "../seo/site";
 
@@ -126,7 +127,8 @@ export async function getEventsByRegion(regions) {
   return grouped;
 }
 
-export async function getEventDetails(eventId, region) {
+// Share the lookup between metadata and page rendering within each request.
+export const getEventDetails = cache(async (eventId, region) => {
   if (!eventId) return null;
   // Shorter budget: this one blocks metadata generation.
   const data = await apiGet(`event/event-details/${encodeURIComponent(eventId)}${region ? `?region=${encodeURIComponent(region)}` : ""}`, {
@@ -134,7 +136,7 @@ export async function getEventDetails(eventId, region) {
     tags: ["public-events", `public-event:${eventId}`],
   });
   return data?.event ?? null;
-}
+});
 
 /* -------------------------------------------------------------- articles -- */
 

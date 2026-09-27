@@ -12,22 +12,23 @@ OptionError.propTypes = { name: PropTypes.string.isRequired };
 
 export function OptionField({ name, label, type = "text", ...props }) {
   const id = useId();
+  const required = /\*\s*$/.test(label);
   return <div className="rn-form-group" data-custom-validation-field data-field-name={name}>
-    <label htmlFor={id}>{label}</label><Field id={id} name={name} type={type} {...props} /><OptionError name={name} />
+    <label htmlFor={id}>{required ? label.replace(/\s*\*\s*$/, "") : label}{required && <> <span className="required-mark">*</span></>}</label><Field id={id} name={name} type={type} {...props} /><OptionError name={name} />
   </div>;
 }
 OptionField.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, type: PropTypes.string };
 
-export function OptionDate({ name, label, required = false }) {
+export function OptionDate({ name, label, required = false, clearable = false }) {
   const [field] = useField(name);
   const { setFieldValue } = useFormikContext();
   return <div className="rn-form-group" data-custom-validation-field data-field-name={name}>
-    <label>{label}{required ? " *" : ""}</label>
-    <CalendarWithClock name={name} mode="single" locale="en-nl" captionLayout="dropdown" initialValue={field.value} onSelect={value => setFieldValue(name, value)} />
+    <label>{label}{required && <> <span className="required-mark">*</span></>}</label>
+    <CalendarWithClock name={name} mode="single" locale="en-nl" captionLayout="dropdown" showButtonBar={clearable} initialValue={field.value} onSelect={value => setFieldValue(name, value)} />
     <OptionError name={name} />
   </div>;
 }
-OptionDate.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, required: PropTypes.bool };
+OptionDate.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, required: PropTypes.bool, clearable: PropTypes.bool };
 
 export function OptionSwitch({ name, label, className = "" }) {
   const id = useId();
@@ -53,7 +54,7 @@ export function OptionPanel({ name, title, description, children }) {
   const id = useId();
   const [field, , helpers] = useField(`${name}.isEnabled`);
   const enabled = field.value === true;
-  return <section className={`event-option-panel${enabled ? " is-enabled" : ""}`} aria-labelledby={`${id}-title`}>
+  return <section className={`event-option-panel${enabled ? " is-enabled" : ""}`} data-event-option={name} aria-labelledby={`${id}-title`}>
     <header className="event-option-header"><div className="event-option-title"><h3 id={`${id}-title`}>{title}</h3>{description && <InfoHint label={`About ${title.toLowerCase()}`} text={description} />}</div>
       <button type="button" role="switch" className="event-ticket-switch" aria-label={`Enable ${title.toLowerCase()}`} aria-checked={enabled} aria-expanded={enabled} aria-controls={`${id}-body`} onClick={() => helpers.setValue(!enabled, false)}><span aria-hidden="true" /></button>
     </header>

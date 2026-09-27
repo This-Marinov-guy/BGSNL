@@ -34,6 +34,11 @@ const PhoneInput = ({
       : EUROPEAN_COUNTRIES.find((c) => c.iso2 === getGeoLocation()) ??
           EUROPEAN_COUNTRIES.find((c) => c.iso2 === "NL")
   );
+  const [number, setNumber] = useState(initialNumber);
+
+  useEffect(() => {
+    setNumber(initialNumber);
+  }, [initialNumber]);
 
   useEffect(() => {
     if (!initialPrefix || selectedCode?.phoneCode === initialPrefix) return;
@@ -45,11 +50,13 @@ const PhoneInput = ({
   }, [initialPrefix, selectedCode?.phoneCode]);
 
   const updatePhoneNumber = (nextNumber, country = selectedCode) => {
+    const digits = String(nextNumber ?? "").replace(/\D/g, "");
+    setNumber(digits);
     if (!onChange) return;
 
     onChange(
-      country && nextNumber !== null && nextNumber !== undefined && nextNumber !== ""
-        ? `${country.phoneCode} ${nextNumber}`
+      country && digits
+        ? `${country.phoneCode} ${digits}`
         : ""
     );
   };
@@ -78,7 +85,7 @@ const PhoneInput = ({
           );
 
           setSelectedCode(inputValue);
-          updatePhoneNumber(initialNumber, inputValue);
+          updatePhoneNumber(number, inputValue);
         }}
         options={EUROPEAN_COUNTRIES}
         optionKey="iso2"
@@ -90,9 +97,9 @@ const PhoneInput = ({
       />
       <InputNumber
         name={name}
-        value={initialNumber === "" ? null : Number(initialNumber)}
+        value={number === "" ? null : Number(number)}
         useGrouping={false}
-        onValueChange={(e) => updatePhoneNumber(e.target.value)}
+        onValueChange={(e) => updatePhoneNumber(e.value ?? e.target?.value)}
         className="phone_code_content"
         inputClassName="bgsnl-form-control"
         placeholder={placeholder ?? "Phone Number"}

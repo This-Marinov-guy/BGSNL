@@ -1,16 +1,18 @@
 "use client";
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { SelectInput } from "@/compat/primereact";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import AppModal from "@/elements/ui/modals/AppModal";
-import { IconlyQuestion } from "@/elements/ui/icons/IconlyIcons";
+import { IconlyDanger, IconlyQuestion } from "@/elements/ui/icons/IconlyIcons";
 import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "@/util/analytics/events.mjs";
 import { clarityEvent } from "@/util/functions/helpers";
 import MembershipTypeCard from "./MembershipTypeCard";
-import { paidSubscriptionPlans, requestSubscriptionCheckout, subscriptionPlanLabel } from "./subscription-checkout.mjs";
+import { chargeAmountLabel, paidSubscriptionPlans, planChangeChargesImmediately, requestSubscriptionCheckout, subscriptionPlanLabel, validChargeQuote } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
 
 const ACTION_CLASS = "rn-button-style--2 rn-btn-reverse-green rn-btn-small";
@@ -55,12 +57,16 @@ function SubscriptionOptionsSkeleton() {
 // verified with an in-memory catalog, without touching a real Stripe customer.
 export function SubscriptionCheckoutForm({
   loadPlans,
+  loadQuote,
   initialType = "",
+  currentPriceId = "",
+  currentTier,
   onCheckout,
   onPendingChange,
   onMembershipGuideChange = () => {},
 }) {
   const id = useId();
+  const reduceMotion = useReducedMotion();
   const [plans, setPlans] = useState(null);
   const [loadError, setLoadError] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -69,6 +75,8 @@ export function SubscriptionCheckoutForm({
   const [pending, setPending] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [membershipGuideOpen, setMembershipGuideOpen] = useState(false);
+  const [quoteState, setQuoteState] = useState(null);
+  const [quoteAttempt, setQuoteAttempt] = useState(0);
   const submitting = useRef(false);
   const mounted = useRef(false);
   const form = useRef(null);
@@ -96,7 +104,31 @@ export function SubscriptionCheckoutForm({
   }, [attempt, loadPlans]);
 
   const options = plans?.filter((plan) => plan.type === type) ?? [];
-  const selected = options.find((plan) => plan.priceId === priceId);
+  const selected = options.find((plan) => plan.priceId === priceId && plan.priceId !== currentPriceId);
+  const currentPlan = currentPriceId ? plans?.find(plan => plan.priceId === currentPriceId) || { type: initialType, tier: currentTier } : null;
+  const chargeNow = planChangeChargesImmediately(currentPlan, selected);
+  const billsAtRenewal = !!currentPriceId && !!selected && !chargeNow;
+  const scheduledDowngrade = billsAtRenewal && selected.type === "alumni";
+  const quote = validChargeQuote(quoteState?.quote, selected?.priceId) ? quoteState.quote : null;
+  const quoteError = quoteState?.priceId === selected?.priceId && quoteState?.error;
+  const selectedPriceId = selected?.priceId;
+
+  useEffect(() => {
+    let current = true;
+    setQuoteState(null);
+    if (!chargeNow || !selectedPriceId) return () => { current = false; };
+    async function preview() {
+      try {
+        const nextQuote = await loadQuote(selectedPriceId);
+        if (!validChargeQuote(nextQuote, selectedPriceId)) throw new Error("Invalid payment estimate");
+        if (current) setQuoteState({ priceId: selectedPriceId, quote: nextQuote });
+      } catch {
+        if (current) setQuoteState({ priceId: selectedPriceId, error: true });
+      }
+    }
+    preview();
+    return () => { current = false; };
+  }, [chargeNow, selectedPriceId, loadQuote, quoteAttempt]);
 
   const setMembershipGuideVisible = (visible) => {
     setMembershipGuideOpen(visible);
@@ -116,7 +148,7 @@ export function SubscriptionCheckoutForm({
 
   const submit = async (event) => {
     event.preventDefault();
-    if (!selected || submitting.current) return;
+    if (!selected || submitting.current || (chargeNow && !quote)) return;
     submitting.current = true;
     setPending(true);
     setCheckoutError("");
@@ -127,7 +159,7 @@ export function SubscriptionCheckoutForm({
     });
     try {
       await onCheckout(selected.priceId);
-      // Stay disabled after success while the browser leaves for Stripe.
+      // Stay disabled while redirecting to Stripe or refreshing the saved plan.
     } catch {
       if (!mounted.current) return;
       submitting.current = false;
@@ -136,17 +168,17 @@ export function SubscriptionCheckoutForm({
       clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_PAYMENT_FAILED, {
         [ANALYTICS_PROPERTIES.PAYMENT_STATUS]: "checkout_launch_failed",
       });
-      setCheckoutError("We could not open the payment page. Please try again or contact support if the problem continues.");
+      setCheckoutError(currentPriceId ? "We could not confirm the plan change. Refresh your account to check its status before trying again." : "We could not open the payment page. Please try again or contact support if the problem continues.");
     }
   };
 
   return (
     <form ref={form} tabIndex={-1} className={styles.checkoutForm} onSubmit={submit} aria-busy={pending || (!plans && !loadError)}>
-      <p>Choose Member or Alumni, then select your subscription. You will review the price and payment details securely before confirming.</p>
+      <p>{currentPriceId ? "Choose your new plan. Alumni upgrades and changes between Member and Alumni require payment now. Other changes are billed at your next renewal." : "Choose Member or Alumni, then select your subscription. You will review the price and payment details securely before confirming."}</p>
       {loadError || plans?.length === 0 ? (
         <div role="status" className={styles.checkoutMessage}>
           <p>{loadError ? "We could not load the available subscriptions." : "No paid subscriptions are available right now."}</p>
-          <button className={ACTION_CLASS} type="button" onClick={() => setAttempt((value) => value + 1)}>Try again</button>
+          <button className={ACTION_CLASS} type="button" onClick={() => setAttempt((value) => value + 1)}><RetryIcon />Try again</button>
         </div>
       ) : !plans ? <SubscriptionOptionsSkeleton /> : (
         <>
@@ -185,14 +217,33 @@ export function SubscriptionCheckoutForm({
                 });
               }}>
               <option value="">{type === "alumni" ? "Select a tier" : "Select a period"}</option>
-              {options.map((plan) => <option key={plan.priceId} value={plan.priceId}>{subscriptionPlanLabel(plan)}</option>)}
+              {options.map((plan) => <option key={plan.priceId} value={plan.priceId} disabled={plan.priceId === currentPriceId}>
+                {subscriptionPlanLabel(plan)}{plan.priceId === currentPriceId ? " (current)" : ""}
+              </option>)}
             </SelectInput>
           </div>
-          <p id={`${id}-help`}>Subscriptions renew automatically. Paid benefits become available after your payment is confirmed. You can manage or cancel your subscription in Billing.</p>
+          <p id={`${id}-help`} aria-live="polite">{scheduledDowngrade ? "No charge today. You keep your current tier and benefits until your next billing date, when the lower tier and price take effect." : billsAtRenewal ? "Your profile will update immediately. No charge today: your new price and payment period apply from your existing next billing date." : currentPriceId ? "You will review any charges and credits in Stripe before confirming. Your membership updates once payment is confirmed." : "Subscriptions renew automatically. Paid benefits become available after your payment is confirmed. You can manage or cancel your subscription in Billing."}</p>
           {checkoutError && <p role="alert">{checkoutError}</p>}
-          <button aria-describedby={`${id}-help`} className={ACTION_CLASS} type="submit" disabled={!selected || pending}>
-            {pending ? "Opening payment…" : "Continue to payment"}
+          <div className={styles.checkoutActions}>
+          <AnimatePresence initial={false}>
+            {chargeNow && <motion.div key="charge-warning" className={styles.chargeWarning} role="status" id={`${id}-charge-warning`}
+              initial={{ opacity: 0, y: reduceMotion ? 0 : 6 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: reduceMotion ? 0 : -4, transition: { duration: reduceMotion ? 0 : 0.12 } }}
+              transition={{ duration: reduceMotion ? 0 : 0.2 }}>
+              <IconlyDanger aria-hidden />
+              {!quote ? quoteError ? <div className={styles.checkoutMessage}>
+                <p>We couldn’t check the amount due. Please retry before continuing.</p>
+                <button className={ACTION_CLASS} type="button" onClick={() => setQuoteAttempt(value => value + 1)}><RetryIcon />Retry amount</button>
+              </div> : <div className={styles.chargeQuoteSkeleton} role="status" aria-label="Calculating payment amount">
+                <span className={`${styles.skeletonBlock} ${styles.skeletonLine}`} aria-hidden />
+                <span className={`${styles.skeletonBlock} ${styles.skeletonLineShort} ${styles.skeletonLine}`} aria-hidden />
+              </div> : <p>{quote.amountDue > 0 ? <><strong>{chargeAmountLabel(quote)} will be taken from your payment method</strong> when you confirm in Stripe. This is the current estimate, including applicable credits. Stripe confirms the final amount.</> : <><strong>{chargeAmountLabel(quote)} due now.</strong> No payment is currently due. Review and confirm the change in Stripe.</>}</p>}
+            </motion.div>}
+          </AnimatePresence>
+          <button aria-describedby={`${id}-help${chargeNow ? ` ${id}-charge-warning` : ""}`} className={ACTION_CLASS} type="submit" disabled={!selected || pending || (chargeNow && !quote)}>
+            {pending ? billsAtRenewal ? "Updating subscription…" : "Opening payment…" : scheduledDowngrade ? "Schedule downgrade" : billsAtRenewal ? "Confirm switch" : "Continue to payment"}
           </button>
+          </div>
         </>
       )}
 
@@ -223,7 +274,10 @@ export function SubscriptionCheckoutForm({
 
 SubscriptionCheckoutForm.propTypes = {
   loadPlans: PropTypes.func.isRequired,
+  loadQuote: PropTypes.func.isRequired,
   initialType: PropTypes.oneOf(["", "member", "alumni"]),
+  currentPriceId: PropTypes.string,
+  currentTier: PropTypes.number,
   onCheckout: PropTypes.func.isRequired,
   onPendingChange: PropTypes.func.isRequired,
   onMembershipGuideChange: PropTypes.func,
@@ -248,9 +302,14 @@ export default function SubscriptionStart({ linkStyle = false }) {
     const response = await request.current("payment/subscription/plans", "GET", null, {}, false, false);
     return response?.plans;
   }, []);
+  const loadQuote = useCallback(async priceId => {
+    const response = await request.current("payment/subscription/preview", "POST", { itemId: priceId, origin_url: window.location.origin }, {}, false, false);
+    return response?.quote;
+  }, []);
   const checkout = useCallback(async (priceId) => {
     const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin);
-    window.location.assign(url);
+    if (url) window.location.assign(url);
+    else window.location.reload();
   }, []);
 
   return (
@@ -260,7 +319,7 @@ export default function SubscriptionStart({ linkStyle = false }) {
         setOpen(true);
       }}>Start subscription</button>
       <AppModal open={open} onClose={close} title="Choose your subscription" closable={!pending && !membershipGuideOpen} dismissableMask={!pending && !membershipGuideOpen} suspended={membershipGuideOpen}>
-        {open && <SubscriptionCheckoutForm loadPlans={loadPlans} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
+        {open && <SubscriptionCheckoutForm loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
       </AppModal>
     </>
   );

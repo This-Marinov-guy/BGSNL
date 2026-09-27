@@ -1,3 +1,4 @@
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useNavigate } from "@/util/navigation";
 import HeaderTwo from "../../../component/header/HeaderTwo";
 import ImageFb from "../media/ImageFb";
@@ -23,7 +24,7 @@ const NoArticleFound = () => {
               }}
               className="rn-button-style--2 rn-btn-reverse-green"
             >
-              Try again
+              <RetryIcon />Try again
             </button>
             <button
               onClick={() => navigate(-1)}

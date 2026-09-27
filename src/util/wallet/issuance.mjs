@@ -72,13 +72,13 @@ export async function walletReadiness(env = process.env) {
   return result;
 }
 
-async function appleWordmark(logo, scale) {
+export async function appleWordmark(logo, scale) {
   const width = 160 * scale;
   const height = 50 * scale;
   const mark = await sharp(logo).resize(46 * scale, 46 * scale, { fit: "contain", background: "#00000000" }).png().toBuffer();
   const title = Buffer.from(`<svg width="${width}" height="${height}" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg">
-    <text x="51" y="22" fill="#000000" font-family="Arial, sans-serif" font-size="13" font-weight="700">Bulgarian Society</text>
-    <text x="51" y="39" fill="#000000" font-family="Arial, sans-serif" font-size="13" font-weight="700">Netherlands</text>
+    <text x="51" y="21" fill="#000000" font-family="Arial, sans-serif" font-size="11" font-weight="700">Bulgarian Society</text>
+    <text x="51" y="37" fill="#000000" font-family="Arial, sans-serif" font-size="11" font-weight="700">Netherlands</text>
   </svg>`);
   return sharp({ create: { width, height, channels: 4, background: "#00000000" } })
     .composite([{ input: mark, left: 0, top: 2 * scale }, { input: title, left: 0, top: 0 }]).png().toBuffer();

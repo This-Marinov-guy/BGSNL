@@ -660,10 +660,10 @@
       font-size: clamp(2rem, 3.2vw, 3rem);
       line-height: 0.95;
       margin: 0;
-      max-width: 14ch;
+      max-width: 100%;
       overflow-wrap: anywhere;
       text-transform: uppercase;
-      text-wrap: balance;
+      text-wrap: wrap;
     }
   }
 
@@ -1036,7 +1036,7 @@
       .tab-title {
         font-size: clamp(2.5rem, 8vw, 4rem);
         line-height: 0.92;
-        max-width: 12ch;
+        max-width: 100%;
       }
     }
 

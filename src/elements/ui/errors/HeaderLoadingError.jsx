@@ -1,12 +1,16 @@
 "use client";
 
 import PropTypes from "prop-types";
+import { usePathname } from "next/navigation";
 import { IconlyUnlink } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "../../../component/header/HeaderTwo";
 import ImageFb from "../media/ImageFb";
 import LoadingRecovery, { LoadingRecoveryActions } from "../loading/LoadingRecovery";
 
 const HeaderLoadingError = ({ isError = false, message = "" }) => {
+  const pathname = usePathname();
+  const isUserRoute = pathname === "/user" || pathname?.startsWith("/user/");
+
   return (
     <>
       <HeaderTwo />
@@ -36,7 +40,7 @@ const HeaderLoadingError = ({ isError = false, message = "" }) => {
               <IconlyUnlink />
             </span>
           ) : null}
-          <h3 role={isError ? undefined : "status"}>{isError ? "Account unavailable" : "Loading your account"}</h3>
+          <h3 role={isError ? undefined : "status"}>{isError ? "Account unavailable" : isUserRoute ? "Loading your account" : "Loading"}</h3>
           {isError && message ? <p>{message}</p> : null}
           {isError ? <LoadingRecoveryActions /> : <LoadingRecovery />}
         </div>

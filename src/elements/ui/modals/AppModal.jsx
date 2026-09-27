@@ -80,7 +80,7 @@ const AppModal = ({
   }, [open]);
 
   useEffect(() => {
-    if (!open || suspended) return undefined;
+    if (!open || !isPresent || suspended) return undefined;
 
     const previouslyFocused = document.activeElement;
     const handleKeyDown = (event) => {
@@ -89,7 +89,7 @@ const AppModal = ({
       if (event.key === "Tab") {
         const focusable = Array.from(
           dialogRef.current?.querySelectorAll(
-            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            'a[href], button:not([disabled]), summary, input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
           ) ?? []
         );
 
@@ -120,7 +120,7 @@ const AppModal = ({
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocused?.focus?.({ preventScroll: true });
     };
-  }, [closable, open, suspended]);
+  }, [closable, open, isPresent, suspended]);
 
   useEffect(() => {
     if (!open || !modal || !blockScroll) return undefined;

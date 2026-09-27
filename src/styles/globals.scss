@@ -20,6 +20,8 @@ ul, ol {
   --site-thread-secondary: #9e0d33;
   // Above floating page controls and logo headers, below shared modals (11000).
   --layer-support: 10500;
+  // Keep critical mobile actions above the support launcher, below modals.
+  --layer-sticky-action: 10600;
   // Portalled notifications stay above every app modal, drawer, and backdrop.
   --layer-toast: 12000;
   --support-launcher-width: 6.75rem;
@@ -958,9 +960,6 @@ textarea.bgsnl-form-control {
 
 .account-state__error-icon {
   align-items: center;
-  background: rgb(158 13 51 / 8%);
-  border: 1px solid rgb(158 13 51 / 16%);
-  border-radius: 50%;
   color: #9e0d33;
   display: inline-flex;
   height: clamp(5.25rem, 9vw, 6.5rem);
@@ -1325,8 +1324,9 @@ textarea.bgsnl-form-control {
   width: 100%;
 }
 
-.user-update-form .required-mark {
-  color: #9e0d33;
+/* Required asterisks keep their own colour, independent of the label state. */
+.required-mark {
+  color: #dc3545 !important;
 }
 
 .user-update-form [data-field-name="university"] > .p-select {
@@ -1537,20 +1537,6 @@ form[data-validation-submitted="true"]
   border-width: 2px !important;
 }
 
-form[data-validation-submitted="true"]
-  .has-validation-error
-  label {
-  background-color: #9e0d33 !important;
-  color: #fff !important;
-}
-
-form[data-validation-submitted="true"]
-  .has-validation-error
-  label
-  * {
-  color: inherit !important;
-}
-
 form.event-form-workspace[data-validation-submitted="true"]
   .event-form-step .rn-form-group.has-validation-error
   :is(input:not([type="hidden"]), select, textarea):focus,
@@ -1601,28 +1587,36 @@ form[data-validation-submitted="true"]
   line-height: 1.4;
 }
 
-/* Native controls are invalid while untouched required fields are empty. Show
- * validation styling only after a submit attempt has marked the form. */
+/* Only marked fields keep validation styling after submit; editing clears an
+ * individual field even if its new value is not yet valid. */
 form[data-validation-submitted="true"] :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea)[aria-invalid="true"],
-form[data-validation-submitted="true"] :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea):invalid,
 form[data-validation-submitted="true"] .has-validation-error :is(input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]), select, textarea),
 form[data-validation-submitted="true"] .has-validation-error:is(.p-select, .p-datepicker, .phone_code) {
   border-color: #9e0d33 !important;
   border-width: 2px !important;
 }
 
-form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label,
-form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea):invalid) > label,
-form[data-validation-submitted="true"] .has-validation-error > label,
-form[data-validation-submitted="true"] .has-validation-error label {
+/* Colour the field heading, never the labels of individual checkbox options. */
+form[data-validation-submitted="true"] .rn-form-group:not(:has(input[type="checkbox"], input[type="radio"])):has(:is(input, select, textarea)[aria-invalid="true"], .has-validation-error) > label,
+form[data-validation-submitted="true"] .has-validation-error:not(:has(> input[type="checkbox"], > input[type="radio"])) > label,
+form[data-validation-submitted="true"] .has-validation-error > legend:not(.purchase-multiselect-legend),
+form[data-validation-submitted="true"] .has-validation-error > .purchase-multiselect-legend > .purchase-field-label {
   background-color: #9e0d33 !important;
   color: #fff !important;
 }
 
-form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea)[aria-invalid="true"]) > label *,
-form[data-validation-submitted="true"] .rn-form-group:has(:is(input, select, textarea):invalid) > label *,
-form[data-validation-submitted="true"] .has-validation-error label * {
+form[data-validation-submitted="true"] .rn-form-group:not(:has(input[type="checkbox"], input[type="radio"])):has(:is(input, select, textarea)[aria-invalid="true"], .has-validation-error) > label :not(.required-mark),
+form[data-validation-submitted="true"] .has-validation-error:not(:has(> input[type="checkbox"], > input[type="radio"])) > label :not(.required-mark),
+form[data-validation-submitted="true"] .has-validation-error > .purchase-multiselect-legend > .purchase-field-label :not(.required-mark) {
   color: inherit !important;
+}
+
+form[data-validation-submitted="true"] .rn-form-group:not(:has(input[type="checkbox"], input[type="radio"])):has(:is(input, select, textarea)[aria-invalid="true"], .has-validation-error) > label .required-mark,
+form[data-validation-submitted="true"] .has-validation-error:not(:has(> input[type="checkbox"], > input[type="radio"])) > label .required-mark,
+form[data-validation-submitted="true"] .has-validation-error > .purchase-multiselect-legend > .purchase-field-label .required-mark,
+form[data-validation-submitted="true"] .has-validation-error .event-ticket-media-title .required-mark {
+  color: #fff !important;
+  background: transparent !important;
 }
 
 /*

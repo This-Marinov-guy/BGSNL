@@ -1,5 +1,6 @@
 import { browserFetch } from "../../util/auth/browser-request.mjs";
 import { serverEndpoint } from "@/util/defines/common";
+import { SUPPORT_CHANGED } from "./support-live.mjs";
 
 export async function supportRequest(path, { secret, data, signal } = {}) {
   const controller = new AbortController();
@@ -23,6 +24,7 @@ export async function supportRequest(path, { secret, data, signal } = {}) {
       throw error;
     }
     if (!result || typeof result !== "object") throw new Error("Support returned an unexpected response. Please try again; your submission will not be duplicated.");
+    if (data !== undefined && result.conversation && typeof window !== "undefined") window.dispatchEvent(new Event(SUPPORT_CHANGED));
     return result;
   } catch (error) {
     if (error.name === "AbortError" && !signal?.aborted) throw new Error("The request timed out. Your message is not confirmed yet; retrying is safe.");

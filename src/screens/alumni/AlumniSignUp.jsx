@@ -312,7 +312,7 @@ const AlumniSignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Name <span style={{ color: "#dc3545" }}>*</span>
+                            Name <span className="required-mark">*</span>
                           </label>
                           <Field
                             className="bgsnl-form-control"
@@ -334,7 +334,7 @@ const AlumniSignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Surname <span style={{ color: "#dc3545" }}>*</span>
+                            Surname <span className="required-mark">*</span>
                           </label>
                           <Field
                             className="bgsnl-form-control"
@@ -355,7 +355,7 @@ const AlumniSignUp = () => {
                           data-field-name="phone"
                         >
                           <label style={{ marginBottom: "5px" }}>
-                            Mobile number <span style={{ color: "#dc3545" }}>*</span>
+                            Mobile number <span className="required-mark">*</span>
                           </label>
                           <PhoneInput
                             name="phone"
@@ -381,7 +381,7 @@ const AlumniSignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Email <span style={{ color: "#dc3545" }}>*</span>
+                            Email <span className="required-mark">*</span>
                           </label>
                           <Field
                             className="bgsnl-form-control"
@@ -409,7 +409,7 @@ const AlumniSignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Password <span style={{ color: "#dc3545" }}>*</span>
+                            Password <span className="required-mark">*</span>
                           </label>
                           <Password
                             autoComplete="off"
@@ -438,7 +438,7 @@ const AlumniSignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Confirm Password <span style={{ color: "#dc3545" }}>*</span>
+                            Confirm Password <span className="required-mark">*</span>
                           </label>
                           <Password
                             autoComplete="off"
@@ -479,7 +479,7 @@ const AlumniSignUp = () => {
                             >
                               society&apos;s rules and regulations
                             </a>
-                            <span style={{ color: "#dc3545" }}> *</span>
+                            <span className="required-mark"> *</span>
                           </p>
                         </div>
                         <ErrorMessage

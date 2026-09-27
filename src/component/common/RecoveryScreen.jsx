@@ -1,5 +1,6 @@
 "use client";
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../../elements/ui/functional/AnimatedDisclosure";
 import Header from "../header/Header";
@@ -30,7 +31,7 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
           {failed ? (
             <>
               <button type="button" className="recovery-btn-primary" onClick={onRetry}>
-                Try again
+                <RetryIcon />Try again
               </button>
               <a className="recovery-btn-secondary" href="/">Back to home</a>
             </>

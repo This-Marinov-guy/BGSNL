@@ -7,39 +7,48 @@ import styles from "./whats-new.module.scss";
 
 const steps = [
   {
-    label: "Wallet card",
-    title: "Your membership, ready to go",
-    description: "A digital membership card for your phone’s wallet is coming soon. Keep your BGSNL membership close wherever the community takes you.",
-    detail: "We’ll share how to add it when it’s ready.",
-    image: "/assets/images/svg/3d/card.png",
+    label: "Update",
+    title: "Welcome to the new BGSNL v4",
+    description: "More to offer our members and the teams behind the scenes. Discover new analytics, a new way to publish events, and easier guest-list tracking, ticket scanning and more (Some features are restricted to active members only).",
+    detail: "Explore on your own, or look out for the guided introduction we’re preparing for you.",
+    image: "/assets/images/campaigns/version4/update.png",
   },
   {
-    label: "New design",
-    title: "A fresh look. A familiar community.",
-    description: "Your account has a new look, with a clearer profile, easier navigation and your tickets, opportunities and membership settings together in one place.",
-    detail: "Explore your account at your own pace.",
-    image: "/assets/images/svg/3d/achievement-3d.png",
+    label: "Security",
+    title: "Security, updated",
+    description: "Keeping your account safe should also make it easier to use. You can now connect your Google account or create a passkey for quick, secure access. Hop in from the Settings tab!",
+    detail: "Less password juggling. More time for the community.",
+    image: "/assets/images/campaigns/version4/security.png",
   },
   {
-    label: "Campaigns",
-    title: "More ways to stay connected",
-    description: "New community campaigns are on the way. Look out for local events, member opportunities and updates from BGSNL.",
-    detail: "You’ll hear more as each campaign launches.",
-    image: "/assets/images/svg/3d/calendar-3d.png",
+    label: "Wallet",
+    title: "Meet your new membership card",
+    description: "Sharing your BGSNL membership is easier than ever. Our new digital cards keep your membership close, wherever the community takes you. Hop in from the Settings or Profile tabs",
+    detail: "Add yours to Apple Wallet or Google Wallet for easy access.",
+    image: "/assets/images/campaigns/version4/wallet.png",
+  },
+  {
+    label: "Help",
+    title: "Help is on the way",
+    description: "Meet the IT guy who’s been here for ages… just not visually. His avatar is now part of the website, ready to help with your requests. You can access it from the the Help button on the bottom left at all times!",
+    detail: "Give him a little time to find his way around. He’s still new here.",
+    image: "/assets/images/campaigns/version4/help.png",
   },
 ];
 
-export default function WhatsNewModal({ open, onClose }) {
+export default function WhatsNewModal({ open, onClose, saving = false }) {
   const [step, setStep] = useState(0);
   const current = steps[step];
   return (
     <AppModal
       open={open}
       onClose={onClose}
+      closable={!saving}
+      maximizable={false}
       title={
         <div className={styles.hero}>
-          <h2>What’s new</h2>
-          <img key={current.image} className={styles.art} src={current.image} alt="" width="240" height="200" />
+          <span className="visually-hidden">What’s new at BGSNL</span>
+          <img key={current.image} className={styles.art} src={current.image} alt="" />
         </div>
       }
       className={styles.modal}
@@ -48,18 +57,18 @@ export default function WhatsNewModal({ open, onClose }) {
       footerClassName={styles.footer}
       actions={
         <>
-          <button type="button" className={styles.back} onClick={() => step === 0 ? onClose() : setStep(step - 1)}>
-            {step === 0 ? "Skip tour" : "Back"}
+          <button type="button" className={`${styles.back} ${step === 0 ? styles.close : ""}`} disabled={saving} onClick={() => step === 0 ? onClose() : setStep(step - 1)}>
+            {step === 0 ? "Close" : "Back"}
           </button>
-          <button type="button" className="rn-button-style--2 rn-btn-reverse-green" onClick={() => step === steps.length - 1 ? onClose() : setStep(step + 1)}>
-            {step === steps.length - 1 ? "Explore my account" : "Next"}
+          <button type="button" disabled={saving} className={`rn-button-style--2 ${step === steps.length - 1 ? "rn-btn-solid-gold" : "rn-btn-reverse-green"}`} onClick={() => step === steps.length - 1 ? onClose() : setStep(step + 1)}>
+            {saving ? "Saving…" : step === steps.length - 1 ? "Let’s roll" : "Next"}
           </button>
         </>
       }
     >
       <nav aria-label="What’s new steps" className={styles.steps}>
         {steps.map((item, index) => (
-          <button key={item.label} type="button" aria-current={index === step ? "step" : undefined}
+          <button key={item.label} type="button" disabled={saving} aria-current={index === step ? "step" : undefined}
             onClick={() => setStep(index)}>
             <span aria-hidden="true">{index + 1}</span>
             {item.label}
@@ -80,4 +89,5 @@ export default function WhatsNewModal({ open, onClose }) {
 WhatsNewModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  saving: PropTypes.bool,
 };

@@ -1,7 +1,7 @@
 // Kept in sync with BILLING_LOCK_EXEMPT / BILLING_LOCKED_STATUSES in
 // util/defines/common.js. Inlined (not imported) so this stays a dependency-
 // free module that node --test can run directly, like the rest of this file.
-const BILLING_LOCK_EXEMPT = ["super_admin", "admin"];
+const BILLING_LOCK_EXEMPT = ["super_admin", "admin", "developer"];
 const BILLING_LOCKED_STATUSES = ["locked", "payment_awaiting"];
 
 // Client-side navigation/visibility only. The API authenticates and authorizes

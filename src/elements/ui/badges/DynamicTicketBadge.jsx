@@ -9,27 +9,17 @@ const birdBadgeStyle = {
 };
 
 const DynamicTicketBadge = ({ product, isMember }) => {
-  if (isMember && product?.member?.discount) {
-    return (
-      <SolidBadge color="#017363" text={`- ${product.member.discount}% OFF`} />
-    );
-  } else if (!isMember && product?.guest?.discount) {
-    return (
-      <SolidBadge color="#017363" text={`- ${product.guest.discount}% OFF`} />
-    );
-  } else if (product?.earlyBird === true) {
-    return (
-      <SolidBadge
-        color="#add8e6"
-        text="Early Bird"
-        style={{ ...birdBadgeStyle, color: "#19251f" }}
-      />
-    );
-  } else if (product?.lateBird === true) {
-    return <SolidBadge color="#ab1c02" text="Late Bird" style={birdBadgeStyle} />;
-  } else {
-    return null;
-  }
+  const discount = isMember ? product?.member?.discount : product?.guest?.discount;
+  const hasDiscount = Number(discount) > 0;
+  const lateBird = product?.lateBird === true;
+  const earlyBird = !lateBird && product?.earlyBird === true;
+  if (!hasDiscount && !earlyBird && !lateBird) return null;
+
+  return <div style={{ display: "inline-flex", alignItems: "center", flexWrap: "wrap", gap: ".5rem" }}>
+    {earlyBird && <SolidBadge color="#add8e6" text="Early Bird" style={{ ...birdBadgeStyle, color: "#19251f" }} />}
+    {lateBird && <SolidBadge color="#ab1c02" text="Late Bird" style={birdBadgeStyle} />}
+    {hasDiscount && <SolidBadge color="#017363" text={`- ${discount}% OFF`} />}
+  </div>;
 };
 
 const discountPropType = PropTypes.oneOfType([PropTypes.number, PropTypes.string]);

@@ -23,13 +23,14 @@ export default function EventUpsell({ currentEventId, active }) {
         </OptionPanel>)}
     </div>
     <div className="event-upsell-group"><div className="event-option-title"><h3>Guest / member promotions</h3></div>
-      {[{ name: "guestPromotion", title: "Guest promotion", description: "A timed discount for guest tickets." }, { name: "memberPromotion", title: "Member promotion", description: "A timed discount for member tickets." }].map(option =>
+      {[{ name: "guestPromotion", title: "Guest promotion", description: "A discount for guest tickets." }, { name: "memberPromotion", title: "Member promotion", description: "A discount for member tickets." }].map(option =>
         <OptionPanel key={option.name} {...option} description={`${option.description} Deduct 5–95% from the applicable ticket price.`}>
           <div className="event-option-grid">
             <OptionField name={`${option.name}.discount`} label="Discount (%) *" type="number" min={5} max={95} step={1} placeholder="e.g., 15" />
-            <OptionDate name={`${option.name}.startTimer`} label="Starts at" required />
-            <OptionDate name={`${option.name}.endTimer`} label="Ends at" required />
+            <OptionDate name={`${option.name}.startTimer`} label="Starts at (optional)" clearable />
+            <OptionDate name={`${option.name}.endTimer`} label="Ends at (optional)" clearable />
           </div>
+          <p className="event-option-help">Leave the start empty to begin immediately. Leave the end empty for no expiration.</p>
         </OptionPanel>)}
     </div>
     <EventPromoCodes />

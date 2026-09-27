@@ -545,6 +545,23 @@ Mainmenu Area
   }
 }
 
+@media (max-width: 991px) {
+  .header-area .header-wrapper.header-wrapper--center-content {
+    flex-wrap: nowrap;
+    align-items: center;
+
+    .header-right.header-red { position: static; flex: 0 0 auto; padding: 0; background: transparent; }
+    .humberger-menu { padding-left: 0 !important; }
+    .humberger-menu .menutrigger {
+      position: static;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+    }
+  }
+}
+
 /* Compact desktop header without reducing mobile navigation touch targets. */
 @media only screen and (min-width: 1200px) {
   .header-area .header-right.header-red {

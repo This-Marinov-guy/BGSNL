@@ -2,11 +2,17 @@
 import dynamic from "next/dynamic";
 import UserTabHeader from "@/elements/ui/tabs/UserTabHeader";
 import styles from "./support.module.scss";
-const SupportDesk = dynamic(() => import("./SupportDesk"), { ssr: false, loading: () => <p role="status">Loading your reports…</p> });
+import SupportLoading from "./SupportLoading";
+import AccountFaq from "./AccountFaq";
+const SupportDesk = dynamic(() => import("./SupportDesk"), { ssr: false, loading: () => <SupportLoading inset /> });
 
 export default function HelpSection() {
-  return <div className="tab-content-wrapper"><UserTabHeader title="Help & recommendations" /><div className={`tab-body ${styles.helpSection}`}>
-    <header><p>Report a problem or share an idea to improve the society. Follow up with our team here.</p></header>
-    <div className={styles.embedded}><SupportDesk /></div>
+  return <div className="tab-content-wrapper">
+    <UserTabHeader title="Help & recommendations" />
+    <div className={`tab-body ${styles.helpSection}`}>
+    <AccountFaq />
+    <div className={styles.embedded}><SupportDesk welcomeImage={
+      <img className={styles.helpPortrait} src="/assets/images/vladi/welcome2.png" alt="Vladi, your BGSNL support guide" width="373" height="669" />
+    } /></div>
   </div></div>;
 }

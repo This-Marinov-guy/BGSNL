@@ -1594,7 +1594,9 @@ label {
 
     &__add {
       display: grid;
-      min-height: 9.375rem;
+      width: 100%;
+      min-height: 0;
+      box-sizing: border-box;
       aspect-ratio: 1;
       place-content: center;
       justify-items: center;

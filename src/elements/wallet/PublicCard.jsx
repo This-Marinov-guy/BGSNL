@@ -1,19 +1,21 @@
 "use client";
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import DigitalMembershipCard from "./DigitalMembershipCard";
 import MembershipCardSkeleton from "./MembershipCardSkeleton";
 import { FiRotateCw } from "@/elements/ui/icons/IconlyIcons";
 import { ANALYTICS_EVENTS } from "@/util/analytics/events.mjs";
-import { clarityEvent } from "@/util/functions/helpers";
 import styles from "@/screens/private/WalletCardPreview.module.scss";
 
-export default function PublicCard({ token }) {
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState("");
+export default function PublicCard({ token, initialResult = null, initialError = "" }) {
+  const [result, setResult] = useState(initialResult);
+  const [error, setError] = useState(initialError);
+  const [checking, setChecking] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
-    clarityEvent(ANALYTICS_EVENTS.USER_CARD_OPENED);
+    // Analytics must not sit on the initial card rendering path.
+    if (process.env.NODE_ENV === "production") void import("@/util/functions/helpers").then(({ clarityEvent }) => clarityEvent(ANALYTICS_EVENTS.USER_CARD_OPENED)).catch(() => {});
   }, [token]);
   useEffect(() => {
     let active = true, controller;
@@ -21,28 +23,31 @@ export default function PublicCard({ token }) {
       controller?.abort();
       controller = new AbortController();
       const current = controller;
-      setResult(null); setError("");
+      setChecking(true); setError("");
       const timeout = setTimeout(() => current.abort(), 20000);
       try {
         const response = await fetch(`/api/cards/${encodeURIComponent(token)}`, { cache: "no-store", credentials: "omit", signal: current.signal });
+        if (response.status === 404 && active && controller === current) setResult(null);
         if (!response.ok) throw new Error(response.status === 404 ? "This card is unavailable or its link has been revoked." : "Current membership status could not be verified.");
         const data = await response.json();
         if (!["active", "locked"].includes(data.card?.status)) throw new Error("Current membership status could not be verified.");
         if (active && controller === current) setResult(data);
       } catch (failure) {
         if (active && controller === current) setError(failure.name === "AbortError" ? "The status check timed out. Please try again." : failure.message);
-      } finally { clearTimeout(timeout); }
+      } finally { clearTimeout(timeout); if (active && controller === current) setChecking(false); }
     };
-    load();
+    // Fresh server data already contains the first lookup; do not duplicate it.
+    if (attempt > 0 || (!initialResult && !initialError) || (initialResult && Date.now() - initialResult.verifiedAt >= 60000)) load();
     const interval = setInterval(() => { if (document.visibilityState === "visible") load(); }, 60000);
-    const visibility = () => { if (document.visibilityState === "visible") load(); else { controller?.abort(); setResult(null); } };
+    const visibility = () => { if (document.visibilityState === "visible") load(); else { controller?.abort(); controller = null; setChecking(true); } };
     document.addEventListener("visibilitychange", visibility);
     return () => { active = false; controller?.abort(); clearInterval(interval); document.removeEventListener("visibilitychange", visibility); };
-  }, [token, attempt]);
+  }, [token, attempt, initialResult, initialError]);
   return <main className={`${styles.page} ${styles.publicPage}`}>
-      {result ? <><DigitalMembershipCard card={result.card} qrImage={result.qrImage} tickets={result.ticketImages || []} />
+      {result ? <><DigitalMembershipCard card={result.card} qrImage={result.qrImage} tickets={result.ticketImages || []} verification={checking ? "checking" : error ? "error" : null} />
+        {error && <p role="alert">{error} <button type="button" onClick={() => setAttempt(value => value + 1)}><RetryIcon />Retry</button></p>}
         <p className={styles.attribution}>By the might of <a href="https://bulgariansociety.nl">Bulgarian Society Netherlands</a></p></> : error
-      ? <div className={styles.cardError}>
+      && !checking ? <div className={styles.cardError}>
         <p role="alert">{error}</p>
         <button
           aria-label="Try loading the membership card again"
@@ -55,4 +60,4 @@ export default function PublicCard({ token }) {
       : <MembershipCardSkeleton />}
   </main>;
 }
-PublicCard.propTypes = { token: PropTypes.string.isRequired };
+PublicCard.propTypes = { token: PropTypes.string.isRequired, initialResult: PropTypes.object, initialError: PropTypes.string };

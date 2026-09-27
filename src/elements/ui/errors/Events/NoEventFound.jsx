@@ -1,3 +1,4 @@
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import React from 'react'
 import { useNavigate } from "@/util/navigation"
 import HeaderTwo from '../../../../component/header/HeaderTwo'
@@ -24,7 +25,7 @@ const NoEventFound = () => {
                             }}
                             className="rn-button-style--2 rn-btn-reverse-green"
                         >
-                            Try again
+                            <RetryIcon />Try again
                         </button>
                         <button
                             onClick={() => navigate(-1)}

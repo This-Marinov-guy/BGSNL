@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import EventPanelEditButton from "./EventPanelEditButton";
 import { defaultPromoAudiences, promoAudiences } from "@/util/functions/event-promo-codes.mjs";
 import { IconlyImageOff } from "@/elements/ui/icons/IconlyIcons";
 
@@ -12,19 +13,19 @@ const dateTime = value => {
     : "Not set";
 };
 
-function Section({ title, children }) {
+function Section({ title, children, onEdit }) {
   return <section className="event-details-modal__section">
-    <header className="event-details-modal__section-heading"><h3>{title}</h3></header>
+    <header className="event-details-modal__section-heading"><h3>{title}</h3><EventPanelEditButton title={title} onEdit={onEdit} /></header>
     {children}
   </section>;
 }
-Section.propTypes = { title: PropTypes.string.isRequired, children: PropTypes.node.isRequired };
+Section.propTypes = { title: PropTypes.string.isRequired, children: PropTypes.node.isRequired, onEdit: PropTypes.func };
 
-export function EventUpsellDetails({ values }) {
+export function EventUpsellDetails({ values, onEdit }) {
   const birds = ["earlyBird", "lateBird"].filter(key => values[key]?.isEnabled);
   const promotions = ["guestPromotion", "memberPromotion"].filter(key => values[key]?.isEnabled);
   const codes = values.promoCodes?.isEnabled && Array.isArray(values.promoCodes.codes) ? values.promoCodes.codes : [];
-  return <Section title="Upsell"><ul className="event-review-modal__list">
+  return <Section title="Upsell" onEdit={onEdit}><ul className="event-review-modal__list">
     {birds.map(key => {
       const bird = values[key];
       return <li key={key}>
@@ -36,7 +37,7 @@ export function EventUpsellDetails({ values }) {
     {promotions.map(key => <li key={key}>
       <strong>{key === "guestPromotion" ? "Guest" : "Member"} promotion</strong>
       <span>{values[key].discount}% off</span>
-      <small>{dateTime(values[key].startTimer)} – {dateTime(values[key].endTimer)}</small>
+      <small>{values[key].startTimer ? `Starts ${dateTime(values[key].startTimer)}` : "Starts immediately"} · {values[key].endTimer ? `Ends ${dateTime(values[key].endTimer)}` : "No expiration"}</small>
     </li>)}
     {codes.map((code, index) => <li key={code.id ?? `promo-${index}`}>
       <strong>Promo code {code.code || `Code ${index + 1}`}</strong>
@@ -46,11 +47,11 @@ export function EventUpsellDetails({ values }) {
     {!birds.length && !promotions.length && !codes.length && <li className="event-details-modal__empty-copy">No upsell options enabled.</li>}
   </ul></Section>;
 }
-EventUpsellDetails.propTypes = { values: PropTypes.object.isRequired };
+EventUpsellDetails.propTypes = { values: PropTypes.object.isRequired, onEdit: PropTypes.func };
 
-export function EventAddOnDetails({ addOns }) {
+export function EventAddOnDetails({ addOns, onEdit }) {
   if (!addOns?.isEnabled) return null;
-  return <Section title="Add-ons">
+  return <Section title="Add-ons" onEdit={onEdit}>
     <dl className="event-details-modal__facts-grid">
       <div className="event-details-modal__fact"><dt>Checkout heading</dt><dd>{addOns.title || "Not set"}</dd></div>
       <div className="event-details-modal__fact"><dt>Selection</dt><dd>{addOns.multi ? "Multiple items" : "One item"} · {addOns.isMandatory ? "Required" : "Optional"}</dd></div>
@@ -61,10 +62,10 @@ export function EventAddOnDetails({ addOns }) {
     </li>)}</ul>
   </Section>;
 }
-EventAddOnDetails.propTypes = { addOns: PropTypes.object };
+EventAddOnDetails.propTypes = { addOns: PropTypes.object, onEdit: PropTypes.func };
 
-export function EventQuestionDetails({ questions = [] }) {
-  return <Section title="Collect data">{questions.length ? <ul className="event-review-modal__list">
+export function EventQuestionDetails({ questions = [], onEdit }) {
+  return <Section title="Collect data" onEdit={onEdit}>{questions.length ? <ul className="event-review-modal__list">
     {questions.map((question, index) => <li key={question.id ?? index}>
       <strong>{question.placeholder || `Question ${index + 1}`}</strong>
       <span>{question.type === "select" ? "Choice" : "Written answer"} · {question.required === true || question.required === "true" ? "Required" : "Optional"}{question.multiselect ? " · Multiple selections" : ""}</span>
@@ -72,16 +73,16 @@ export function EventQuestionDetails({ questions = [] }) {
     </li>)}
   </ul> : <p className="event-details-modal__empty-copy">No extra questions.</p>}</Section>;
 }
-EventQuestionDetails.propTypes = { questions: PropTypes.array };
+EventQuestionDetails.propTypes = { questions: PropTypes.array, onEdit: PropTypes.func };
 
-export function EventAdvertisedDetails({ links = [], renderImage }) {
+export function EventAdvertisedDetails({ links = [], renderImage, onEdit }) {
   const recommendations = links.filter(link => link.name && link.href);
   if (!recommendations.length) return null;
-  return <Section title="Advertised events"><div className="event-review-modal__advertised-events">
+  return <Section title="Advertised events" onEdit={onEdit}><div className="event-review-modal__advertised-events">
     {recommendations.map((link, index) => <article className="event-review-modal__advertised-event" key={`${link.href}-${index}`}>
       {link.poster ? renderImage(link) : <div className="event-review-modal__advertised-poster event-review-modal__advertised-poster--empty" role="img" aria-label={`${link.name} has no poster`}><IconlyImageOff aria-hidden="true" /></div>}
       <strong>{link.name}</strong>
     </article>)}
   </div></Section>;
 }
-EventAdvertisedDetails.propTypes = { links: PropTypes.array, renderImage: PropTypes.func.isRequired };
+EventAdvertisedDetails.propTypes = { links: PropTypes.array, renderImage: PropTypes.func.isRequired, onEdit: PropTypes.func };

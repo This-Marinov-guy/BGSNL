@@ -112,10 +112,8 @@ export const encryptData = async (data) => {
     return "";
   }
 
-  const stringifiedData = JSON.stringify(data);
-
   const result = await browserFetch(`${serverEndpoint}security/encrypt-data`, {
-    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data: stringifiedData }),
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ data }),
   });
   const response = { data: result.ok ? await result.json() : null };
 

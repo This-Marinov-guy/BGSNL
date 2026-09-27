@@ -1063,7 +1063,39 @@
 }
 
 .event-details-modal__section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
   margin-bottom: 1rem;
+}
+
+.event-details-modal__panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.event-details-modal__panel-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0.65rem;
+  background: transparent;
+  color: #017363;
+  cursor: pointer;
+
+  &:hover { background: #dfeae5; }
+  &:focus-visible { outline: 2px solid #017363; outline-offset: 2px; }
+}
+
+.event-form-workspace :is(.event-form-step, [name="text"], [data-field-name="poster"], .event-ticket-settings, .event-ticket-types, .event-collect-data, .event-upsell, [data-event-option], .event-related-picker) {
+  scroll-margin-top: 120px;
 }
 
 .event-details-modal__section-heading h3,

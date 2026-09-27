@@ -1,7 +1,21 @@
 const STORAGE_KEY = "bgsnl_support_guest_v1";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const SUPPORT_TYPE_LABELS = { problem: "Problem report", recommendation: "Recommendation" };
-export const STATUS_LABELS = { open: "Open", in_progress: "In progress", waiting_for_you: "Waiting for you", resolved: "Resolved", closed: "Closed" };
+export const STATUS_LABELS = { open: "Open", resolved: "Resolved", rejected: "Rejected", paused: "Paused" };
+
+export function supportStatusChange(message) {
+  if (message?.kind !== "status") return null;
+  const status = /^Status changed to (open|resolved|rejected|paused)\.$/i.exec(message.text || "")?.[1];
+  return status?.toLowerCase() || null;
+}
+
+export function supportReplyRestriction(record, staff = false) {
+  if (!record) return "";
+  if (record.status === "rejected") return "This ticket is rejected. You can still read it or start a new ticket.";
+  if (!staff && ["paused", "frozen"].includes(record.status)) return "This ticket is paused. Support must reopen it before you can reply.";
+  if (record.messageCount >= 200) return "This conversation has reached its message limit. You can still read it or start a new ticket.";
+  return "";
+}
 
 export function guestReports(storage, now = Date.now()) {
   try {
@@ -38,5 +52,15 @@ export function mergeConversation(previous, incoming) {
   if (!previous || previous.id !== incoming.id) return incoming;
   const messages = new Map(previous.messages.map((message) => [message.id, message]));
   for (const message of incoming.messages) messages.set(message.id, message);
-  return { ...(incoming.revision >= previous.revision ? incoming : previous), messages: [...messages.values()].sort((a, b) => a.order - b.order) };
+  const before = (incoming.messages[0]?.order ?? Infinity) < (previous.messages[0]?.order ?? Infinity) ? incoming.before : previous.before;
+  return { ...(incoming.revision >= previous.revision ? incoming : previous), ...(before !== undefined ? { before } : {}), messages: [...messages.values()].sort((a, b) => a.order - b.order) };
+}
+
+export function mergeSupportTickets(previous, incoming) {
+  const existing = new Map(previous.map(ticket => [ticket.id, ticket]));
+  const merged = incoming.map(ticket => {
+    const old = existing.get(ticket.id);
+    return old && JSON.stringify(old) === JSON.stringify(ticket) ? old : ticket;
+  });
+  return merged.length === previous.length && merged.every((ticket, index) => ticket === previous[index]) ? previous : merged;
 }

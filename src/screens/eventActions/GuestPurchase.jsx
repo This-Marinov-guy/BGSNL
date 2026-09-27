@@ -31,6 +31,7 @@ import Footer from "../../component/footer/Footer";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner";
 import PhoneInput from "../../elements/inputs/common/PhoneInput";
+import PurchaseCheckoutLayout from "../../elements/purchase/PurchaseCheckoutLayout";
 import MobilePurchaseSummary from "../../elements/purchase/MobilePurchaseSummary";
 import PurchaseEventSummary from "../../elements/purchase/PurchaseEventSummary";
 import {
@@ -281,11 +282,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
           selectedAddOns={selectedAddOns}
         />
         <div className="container purchase-page-container">
-        <div
-          className="row team_member_border_1 team_border_long_add_on purchase-checkout-shell"
-        >
-          <div className="col-12 purchase-checkout-content">
-            <div className="purchase-event-sidebar">
+        <PurchaseCheckoutLayout sidebar={<>
               <PurchaseEventSummary
                 discountApplied={discountApplied}
                 event={selectedEvent}
@@ -301,9 +298,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
               <div className="purchase-sponsor">
                 <SponsoredBySmall />
               </div>
-            </div>
-
-            <div className="col-12">
+        </>}>
               {userIsLoggedIn && user.memberDiscount !== true && (
                 <BillingStatusBanner
                   user={user}
@@ -616,9 +611,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                   </Form>
                 )}
               </ValidatedFormik>
-            </div>
-          </div>
-        </div>
+        </PurchaseCheckoutLayout>
         {/* Start Back To Top */}
         <div className="backto-top">
           <ScrollToTop showUnder={160}>

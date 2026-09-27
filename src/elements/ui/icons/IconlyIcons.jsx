@@ -123,6 +123,22 @@ export const IconlyImprove = (props) => (
   </IconlySvg>
 );
 
+export const IconlyBug = (props) => (
+  <IconlySvg {...props}>
+    <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 8V7a4 4 0 0 1 8 0v1M9 4 7 2m8 2 2-2M6 10 3 8m3 6H2m4 4-3 2m15-10 3-2m-3 6h4m-4 4 3 2" />
+      <rect x="6" y="8" width="12" height="13" rx="6" />
+      <path d="M12 9v11" />
+    </g>
+  </IconlySvg>
+);
+
+export const IconlyAttach = (props) => (
+  <IconlySvg {...props}>
+    <path d="m21 11-9 9a6 6 0 0 1-8.5-8.5L13 2a4 4 0 0 1 5.7 5.7L9.2 17.2a2 2 0 0 1-2.8-2.8L15 5.8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </IconlySvg>
+);
+
 export const IconlyQrCode = (props) => (
   <IconlySvg {...props}>
     <path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />

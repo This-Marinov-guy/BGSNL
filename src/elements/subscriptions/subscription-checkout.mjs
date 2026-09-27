@@ -2,20 +2,28 @@
 const ENDED_STATUSES = new Set(["canceled", "incomplete_expired"]);
 
 export const hasSubscriptionId = (subscription) => typeof subscription?.id === "string" && /^sub_[A-Za-z0-9]+$/.test(subscription.id.trim());
+export const hasCustomerId = (subscription) => typeof subscription?.customerId === "string" && /^cus_[A-Za-z0-9]+$/.test(subscription.customerId.trim());
+export const hasEndedSubscription = (subscription) => ENDED_STATUSES.has(subscription?.status);
 
 export function hasBillingReference(subscription) {
-  return hasSubscriptionId(subscription) ||
-    (typeof subscription?.customerId === "string" && /^cus_[A-Za-z0-9]+$/.test(subscription.customerId.trim()));
+  return hasSubscriptionId(subscription) || hasCustomerId(subscription);
 }
 
 // This only controls the UI. The API re-checks the account and Stripe state.
 export function canStartSubscription(user) {
   return !!user && ["active", "locked", "payment_awaiting"].includes(user.status) &&
-    (!user.subscription?.id || ENDED_STATUSES.has(user.subscription.status));
+    !user.billingVerificationUnavailable && (!user.subscription?.id || hasEndedSubscription(user.subscription));
 }
 
 export function canManageSubscription(user) {
   return !canStartSubscription(user) && hasBillingReference(user?.subscription);
+}
+
+export function canSwitchSubscription(user) {
+  return user?.status === "active" && hasSubscriptionId(user.subscription) &&
+    ["active", "trialing"].includes(user.subscription.status) &&
+    !user.billingLocked && !user.billingVerificationUnavailable &&
+    !user.subscription.pendingUpdate && !user.subscription.cancelAtPeriodEnd;
 }
 
 export function billingAction(user, reason) {
@@ -40,11 +48,29 @@ export function subscriptionPlanLabel(plan) {
   return `${plan.label} — ${price} / ${interval}`;
 }
 
+export function planChangeChargesImmediately(current, selected) {
+  return !!selected && (!current || current.type !== selected.type ||
+    (current.type === "alumni" && (current.tier == null || selected.tier > current.tier)));
+}
+
+export function validChargeQuote(quote, priceId) {
+  return !!quote && typeof priceId === "string" && quote.priceId === priceId &&
+    Number.isSafeInteger(quote.amountDue) && quote.amountDue >= 0 && quote.currency === "eur";
+}
+
+export function chargeAmountLabel(quote) {
+  return new Intl.NumberFormat("en-NL", { style: "currency", currency: "eur" }).format(quote.amountDue / 100);
+}
+
 export async function requestSubscriptionCheckout(request, priceId, origin) {
   const response = await request("payment/subscription/change", "POST", {
     itemId: priceId,
     origin_url: origin,
   }, {}, true, false);
+
+  // Same-programme changes are saved without a payment redirect. Callers
+  // refresh account state; never navigate to an arbitrary API-provided URL.
+  if (response?.updated === true) return null;
 
   // Reconciliation may discover an existing subscription and return the portal.
   let url;

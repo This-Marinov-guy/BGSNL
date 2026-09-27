@@ -7,28 +7,17 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { FiX, IconlyImage } from "@/elements/ui/icons/IconlyIcons";
 import { DISMISSAL_KEY, dismissRecommendations, isRecommendationDismissed, restoreRecommendations } from "@/util/functions/event-recommendation-dismissal.mjs";
 import { useHttpClient } from "@/hooks/common/http-hook";
-import { eventLinkIdentifier, eventLinkRegion, relatedEventPoster } from "@/util/functions/related-events.mjs";
+import { eventLinkIdentifier, eventLinkRegion, findRelatedEvent, relatedEventPoster } from "@/util/functions/related-events.mjs";
 import styles from "./event-recommendations.module.scss";
 
 const recommendationEventCache = new Map();
-const recommendationPosterCache = new Map();
 
-function preloadPoster(src) {
-  if (!src) return Promise.resolve(null);
-  if (!recommendationPosterCache.has(src)) {
-    recommendationPosterCache.set(src, new Promise(resolve => {
-      const image = new window.Image();
-      image.onload = () => resolve(src);
-      image.onerror = () => resolve(null);
-      image.src = src;
-    }));
-  }
-  return recommendationPosterCache.get(src);
-}
-
-async function prepareRecommendation(link, sendRequest) {
+async function prepareRecommendation(link, sendRequest, listedEvents) {
+  const listedEvent = findRelatedEvent(listedEvents, link.href);
+  const listedPoster = relatedEventPoster(listedEvent);
+  const listedDate = listedEvent?.correctedDate || listedEvent?.date;
   let loadedEvent = null;
-  if (!link.poster || (!link.correctedDate && !link.date)) {
+  if ((!link.poster && !listedPoster) || (!link.correctedDate && !link.date && !listedDate)) {
     const identifier = eventLinkIdentifier(link.href);
     const region = eventLinkRegion(link.href);
     if (identifier) {
@@ -46,12 +35,10 @@ async function prepareRecommendation(link, sendRequest) {
     }
   }
 
-  const poster = link.poster || relatedEventPoster(loadedEvent);
-  const readyPoster = await preloadPoster(poster);
   return {
     ...link,
-    poster: readyPoster,
-    correctedDate: link.correctedDate || link.date || loadedEvent?.correctedDate || loadedEvent?.date,
+    poster: link.poster || listedPoster || relatedEventPoster(loadedEvent),
+    correctedDate: link.correctedDate || link.date || listedDate || loadedEvent?.correctedDate || loadedEvent?.date,
   };
 }
 
@@ -71,7 +58,7 @@ function RecommendationCard({ link }) {
 
   return <a className={styles.card} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${link.name} (opens in a new tab)`}>
     <span className={styles.poster}>
-      {poster && !failed ? <img src={poster} alt="" loading="lazy" onError={() => setFailed(true)} /> : <IconlyImage size={30} />}
+      {poster && !failed ? <img src={poster} alt="" loading="eager" onError={() => setFailed(true)} /> : <IconlyImage size={30} />}
     </span>
     <span className={styles.eventDetails}>
       <span className={styles.eventTitle}>{link.name}</span>
@@ -101,8 +88,14 @@ export default function EventRecommendationsBanner({ eventId, heading, links }) 
 
   useEffect(() => {
     let active = true;
-    Promise.all(items.map(link => prepareRecommendation(link, request.current)))
-      .then(nextItems => { if (active) setPreparedItems(nextItems); });
+    const load = async () => {
+      const response = items.some(link => !link.poster)
+        ? await request.current("event/events-list", "GET", null, {}, false, false)
+        : null;
+      const nextItems = await Promise.all(items.map(link => prepareRecommendation(link, request.current, response?.events ?? [])));
+      if (active) setPreparedItems(nextItems);
+    };
+    load();
     return () => { active = false; };
   }, [items]);
 
@@ -122,7 +115,14 @@ export default function EventRecommendationsBanner({ eventId, heading, links }) 
   useEffect(() => {
     if (!visible || !preparedItems.length) return;
     let footer;
-    const measure = () => setBottom(Math.max(0, footer?.getBoundingClientRect().height || 0) + 12);
+    const measure = () => {
+      if (!footer) {
+        setBottom(12);
+        return;
+      }
+      const footerTop = footer.getBoundingClientRect().top;
+      setBottom(Math.max(0, window.innerHeight - footerTop) + 12);
+    };
     const resize = new ResizeObserver(measure);
     const sync = () => {
       const next = document.querySelector(".sticky-button-footer");
@@ -135,8 +135,13 @@ export default function EventRecommendationsBanner({ eventId, heading, links }) 
     };
     const mutations = new MutationObserver(sync);
     mutations.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("resize", measure);
     sync();
-    return () => { mutations.disconnect(); resize.disconnect(); };
+    return () => {
+      mutations.disconnect();
+      resize.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [visible, preparedItems.length]);
 
   useEffect(() => {

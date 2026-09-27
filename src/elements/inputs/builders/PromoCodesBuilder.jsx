@@ -103,7 +103,7 @@ const PromoCodesBuilder = (props) => {
                       marginBottom: "5px",
                     }}
                   >
-                    Code <span style={{ color: "#dc3545" }}>*</span>
+                    Code <span className="required-mark">*</span>
                   </label>
                   <input
                     name={`promoCodes.codes[${index}].code`}
@@ -134,7 +134,7 @@ const PromoCodesBuilder = (props) => {
                       width: "8em",
                     }}
                   >
-                    Discount Type <span style={{ color: "#dc3545" }}>*</span>
+                    Discount Type <span className="required-mark">*</span>
                   </label>
                   <div className="d-flex" style={{ gap: "20px" }}>
                     <span
@@ -185,7 +185,7 @@ const PromoCodesBuilder = (props) => {
                     {promoCode.discountType === 2
                       ? "Discount %"
                       : "Discount Amount"}{" "}
-                    <span style={{ color: "#dc3545" }}>*</span>
+                    <span className="required-mark">*</span>
                   </label>
                   <input
                     name={`promoCodes.codes[${index}].discount`}

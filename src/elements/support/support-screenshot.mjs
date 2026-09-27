@@ -59,6 +59,7 @@ export async function attachReportScreenshot({ screenshot, conversationId, messa
   const data = new FormData();
   data.append("id", messageId);
   data.append("text", "Automatic page screenshot");
+  data.append("diagnostic", "true");
   data.append("images", file);
   for (let attempt = 0; attempt < 2; attempt++) {
     try {

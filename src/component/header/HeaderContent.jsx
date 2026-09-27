@@ -303,7 +303,7 @@ const HeaderContent = (props) => {
             <>
               {checkAuthorization(user.session, [...new Set([...ACCESS_4, ...SUPPORT_ACCESS])]) && (
                 <li className="has-dropdown">
-                  <a style={{ cursor: "pointer" }}>Dashboard</a>
+                  <Link to="/user/dashboard">Dashboard</Link>
                   <ul className="submenu">
                     <>
                       {checkAuthorization(user.session, ACCESS_4) && <>

@@ -1,0 +1,52 @@
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: 1rem;
+  background: #e8f1ec;
+  color: #254b40;
+}
+
+.copy {
+  max-width: 36rem;
+  h4 { margin: 0 0 0.75rem; color: inherit; }
+  p { margin: 0; color: inherit; }
+}
+
+.actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 1.5rem;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 10rem;
+    padding: 0.5rem;
+    border: 0;
+    border-radius: 0.75rem;
+    background: transparent;
+    color: #254b40;
+    font: inherit;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover { background: rgb(1 115 99 / 9%); }
+    &:focus-visible { outline: 2px solid #017363; outline-offset: 3px; }
+  }
+}
+
+.icon { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; }
+
+@media (max-width: 767px) {
+  .panel { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  .actions { width: 100%; justify-content: center; gap: 0.75rem; }
+  .actions button { flex: 1; }
+}

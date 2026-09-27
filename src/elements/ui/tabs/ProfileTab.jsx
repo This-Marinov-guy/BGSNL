@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import UserProfileHeader from "../headers/UserProfileHeader";
 import UserTabHeader from "./UserTabHeader";
+import WalletSettings from "@/elements/wallet/WalletSettings";
 
 const ProfileTab = ({ currentUser, onUserRefresh }) => {
   return (
@@ -12,6 +13,7 @@ const ProfileTab = ({ currentUser, onUserRefresh }) => {
           currentUser={currentUser}
           onUserRefresh={onUserRefresh}
         />
+        <WalletSettings user={currentUser} preview />
       </div>
     </div>
   );

@@ -487,7 +487,7 @@ const SignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Name <span style={{ color: "#dc3545" }}>*</span>
+                            Name <span className="required-mark">*</span>
                           </label>
                           <Field
                             className="bgsnl-form-control"
@@ -509,7 +509,7 @@ const SignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Surname <span style={{ color: "#dc3545" }}>*</span>
+                            Surname <span className="required-mark">*</span>
                           </label>
                           <Field
                             className="bgsnl-form-control"
@@ -535,7 +535,7 @@ const SignUp = () => {
                             }}
                           >
                             Date of Birth{" "}
-                            <span style={{ color: "#dc3545" }}>*</span>
+                            <span className="required-mark">*</span>
                           </label>
                           <div data-field-name="birth">
                             <Calendar
@@ -565,7 +565,7 @@ const SignUp = () => {
                             }}
                           >
                             Phone Number{" "}
-                            <span style={{ color: "#dc3545" }}>*</span>
+                            <span className="required-mark">*</span>
                           </label>
                           <PhoneInput
                             name="phone"
@@ -627,7 +627,7 @@ const SignUp = () => {
                                     }}
                                   >
                                     University{" "}
-                                    <span style={{ color: "#dc3545" }}>*</span>
+                                    <span className="required-mark">*</span>
                                   </label>
                                   <div data-field-name="university">
                                     <Dropdown
@@ -671,7 +671,7 @@ const SignUp = () => {
                                 <div className="rn-form-group">
                                   <label>
                                     Profession{" "}
-                                    <span style={{ color: "#dc3545" }}>*</span>
+                                    <span className="required-mark">*</span>
                                   </label>
                                   <Field
                                     className="bgsnl-form-control"
@@ -697,7 +697,7 @@ const SignUp = () => {
                                       }}
                                     >
                                       University Name{" "}
-                                      <span style={{ color: "#dc3545" }}>*</span>
+                                      <span className="required-mark">*</span>
                                     </label>
                                     <Field
                                       className="bgsnl-form-control"
@@ -723,7 +723,7 @@ const SignUp = () => {
                                       }}
                                     >
                                       Graduation Year{" "}
-                                      <span style={{ color: "#dc3545" }}>*</span>
+                                      <span className="required-mark">*</span>
                                     </label>
                                     <Field
                                       className="bgsnl-form-control"
@@ -748,7 +748,7 @@ const SignUp = () => {
                                       }}
                                     >
                                       Study Program{" "}
-                                      <span style={{ color: "#dc3545" }}>*</span>
+                                      <span className="required-mark">*</span>
                                     </label>
                                     <Field
                                       className="bgsnl-form-control"
@@ -771,7 +771,7 @@ const SignUp = () => {
                                       }}
                                     >
                                       Student Number{" "}
-                                      <span style={{ color: "#dc3545" }}>*</span>
+                                      <span className="required-mark">*</span>
                                     </label>
                                     <Field
                                       className="bgsnl-form-control"
@@ -801,7 +801,7 @@ const SignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Email <span style={{ color: "#dc3545" }}>*</span>
+                            Email <span className="required-mark">*</span>
                           </label>
                           <Field
                             className="bgsnl-form-control"
@@ -829,7 +829,7 @@ const SignUp = () => {
                               marginBottom: "5px",
                             }}
                           >
-                            Password <span style={{ color: "#dc3545" }}>*</span>
+                            Password <span className="required-mark">*</span>
                           </label>
                           <Password
                             autoComplete="off"
@@ -859,7 +859,7 @@ const SignUp = () => {
                             }}
                           >
                             Confirm Password{" "}
-                            <span style={{ color: "#dc3545" }}>*</span>
+                            <span className="required-mark">*</span>
                           </label>
                           <Password
                             autoComplete="off"
@@ -901,7 +901,7 @@ const SignUp = () => {
                               >
                                 society&apos;s rules and regulations
                               </a>
-                              <span style={{ color: "#dc3545" }}> *</span>
+                              <span className="required-mark"> *</span>
                             </p>
                           </div>
                           <ErrorMessage
@@ -922,7 +922,7 @@ const SignUp = () => {
                             <p className="information">
                               I consent to my data being processed confidentially
                               for the purposes of the organization
-                              <span style={{ color: "#dc3545" }}> *</span>
+                              <span className="required-mark"> *</span>
                             </p>
                           </div>
                           <ErrorMessage
@@ -946,7 +946,7 @@ const SignUp = () => {
                               agreed period in order to keep my benefits as a
                               member and I keep my rights to cancel or update my
                               payment methods.
-                              <span style={{ color: "#dc3545" }}> *</span>
+                              <span className="required-mark"> *</span>
                             </p>
                           </div>
                           <ErrorMessage

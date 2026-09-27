@@ -6,8 +6,11 @@
 
 .header:global(.bgsnl-modal__header) {
   position: relative;
-  padding: 1.5rem 1.75rem 0;
-  background: linear-gradient(180deg, #f5f2e9 0%, #faf8f2 75%, #fff 100%);
+  padding: 0;
+  background: #e5ede5;
+  overflow: hidden;
+  border-radius: 1.25rem 1.25rem 0 0;
+  :global(.bgsnl-modal__title) { width: 100%; }
 
   :global(.bgsnl-modal__controls) {
     position: absolute;
@@ -16,30 +19,45 @@
   }
 
   :global(.bgsnl-modal__close) {
-    background: transparent;
+    background: #fff;
     color: #d92d20;
     border: 0;
   }
 }
 
-.hero { text-align: center; }
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(10rem, 30vh, 17rem);
+  text-align: center;
+}
 
 .header .hero .art {
   display: block;
-  width: min(15rem, 60vw);
-  height: 11rem;
-  max-width: none;
-  max-height: none;
-  margin: 0.5rem auto 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
   object-fit: contain;
+  // Fade the artwork's own bounds, including portrait images, into the header.
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 7%, #000 90%, transparent);
+  mask-image:
+    linear-gradient(to right, transparent, #000 7%, #000 93%, transparent),
+    linear-gradient(to bottom, transparent, #000 7%, #000 90%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
   animation: reveal 260ms ease both;
 }
 
-.body:global(.bgsnl-modal__body) { padding: 0.5rem 1.75rem 0; }
+.body:global(.bgsnl-modal__body) { padding: 1rem 1.75rem 0; }
 
 .steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 
@@ -81,7 +99,6 @@
 }
 
 .copy {
-  min-height: 11rem;
   text-align: center;
   animation: reveal 260ms ease both;
 
@@ -109,6 +126,13 @@
   cursor: pointer;
   &:hover { color: #006b5d; text-decoration: underline; }
   &:focus-visible { outline: 2px solid #006b5d; outline-offset: 3px; }
+  &:disabled { opacity: 0.45; cursor: default; text-decoration: none; }
+}
+
+.back.close {
+  color: #b42318;
+  &:hover { color: #912018; }
+  &:focus-visible { outline-color: #b42318; }
 }
 
 @keyframes reveal {
@@ -117,11 +141,11 @@
 }
 
 @media (max-width: 575px) {
-  .header:global(.bgsnl-modal__header) { padding: 1.25rem 1rem 0; }
-  .header .hero .art { height: 8rem; }
+  .header:global(.bgsnl-modal__header) { padding: 0; }
+  .hero { height: clamp(9rem, 25vh, 13rem); }
   .body:global(.bgsnl-modal__body) { padding-inline: 1rem; }
   .footer:global(.bgsnl-modal__footer) { padding: 1rem; }
-  .copy { min-height: 12rem; h3 { font-size: 1.5rem; } }
+  .copy { h3 { font-size: 1.5rem; } }
 }
 
 @media (prefers-reduced-motion: reduce) {

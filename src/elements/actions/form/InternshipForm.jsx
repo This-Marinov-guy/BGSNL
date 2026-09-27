@@ -199,22 +199,22 @@ const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
         {/* Left column */}
         <div className="col-md-6">
           <div>
-            <label htmlFor={`${formId}-company`} style={labelStyle}>Company *</label>
+            <label htmlFor={`${formId}-company`} style={labelStyle}>Company <span className="required-mark">*</span></label>
             <input id={`${formId}-company`} name="company" value={form.company} onChange={handleChange} style={inputStyle} required />
           </div>
 
           <div>
-            <label htmlFor={`${formId}-specialty`} style={labelStyle}>Specialty / Position *</label>
+            <label htmlFor={`${formId}-specialty`} style={labelStyle}>Specialty / Position <span className="required-mark">*</span></label>
             <input id={`${formId}-specialty`} name="specialty" value={form.specialty} onChange={handleChange} style={inputStyle} required />
           </div>
 
           <div>
-            <label htmlFor={`${formId}-location`} style={labelStyle}>Location *</label>
+            <label htmlFor={`${formId}-location`} style={labelStyle}>Location <span className="required-mark">*</span></label>
             <input id={`${formId}-location`} name="location" value={form.location} onChange={handleChange} style={inputStyle} required />
           </div>
 
           <div>
-            <label htmlFor={`${formId}-label`} style={labelStyle}>Label *</label>
+            <label htmlFor={`${formId}-label`} style={labelStyle}>Label <span className="required-mark">*</span></label>
             <SelectInput id={`${formId}-label`} name="label" value={form.label} onChange={handleChange} style={inputStyle} required>
               {LABELS.map((l) => <option key={l} value={l}>{l}</option>)}
             </SelectInput>

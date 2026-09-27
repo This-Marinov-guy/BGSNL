@@ -2,23 +2,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
+import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
-import { clarityTrack, gaTrack } from "../util/functions/helpers";
 import { Toaster, toast } from "react-hot-toast";
 import {
   selectNotification,
   selectNotificationIndex,
 } from "../redux/notification";
-import BirthdayModal from "../elements/ui/modals/BirthdayModal";
-import RecruitModal from "../elements/ui/modals/RecruitModal";
-import DonationModal from "../elements/ui/modals/DonationModal";
-import { useArticlesLoad } from "../hooks/common/api-hooks";
-import CookiesModal from "../elements/ui/modals/CookiesModal";
-import GoogleCalendarModal from "../elements/ui/modals/GoogleCalendarModal";
-import { getActiveStrap } from "../util/defines/CAMPAIGNS";
-import Strap from "../elements/banners/Strap";
-import { InternshipApplyModalProvider } from "../hooks/common/use-internship-apply-modal";
-import GlobalFormValidation from "../elements/ui/forms/GlobalFormValidation";
 import {
   FiAlertTriangle,
   IconlyInfo,
@@ -51,12 +42,15 @@ const TOAST_ICONS = {
   warn: <FiAlertTriangle className="bgsnl-toast__icon" size={25} />,
 };
 
+const SiteExtras = dynamic(() => import("./SiteExtras"));
+
 const MainLayout = ({ children }) => {
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
   const [toastPortalTarget, setToastPortalTarget] = useState(null);
 
-  const activeStrap = getActiveStrap();
+  const pathname = usePathname();
+  const isScanner = pathname === "/user/dashboard/ticket-scanner";
 
   /*
    * Ids of error toasts still on screen, so a later success can clear them —
@@ -69,8 +63,6 @@ const MainLayout = ({ children }) => {
    */
   const errorToastIds = useRef([]);
 
-  const { reloadArticles } = useArticlesLoad();
-
   useEffect(() => {
     setToastPortalTarget(document.body);
   }, []);
@@ -78,19 +70,6 @@ const MainLayout = ({ children }) => {
   // Scroll reset on navigation now lives in <ScrollToTop /> (app/providers.jsx).
   // The old `[window.location.pathname]` dependency evaluated during render,
   // which crashes server rendering.
-
-  useEffect(() => {
-    const startOptionalAnalytics = () => {
-      if (process.env.NEXT_PUBLIC_CLARITY_ENABLE == "1") clarityTrack();
-      if (process.env.NEXT_PUBLIC_GTM_ENABLE == "1") gaTrack();
-    };
-
-    startOptionalAnalytics();
-    window.addEventListener("bgsnl-cookie-consent-change", startOptionalAnalytics);
-
-    reloadArticles();
-    return () => window.removeEventListener("bgsnl-cookie-consent-change", startOptionalAnalytics);
-  }, []);
 
   useEffect(() => {
     if (notification.dismissToast) toast.dismiss(notification.dismissToast);
@@ -141,12 +120,7 @@ const MainLayout = ({ children }) => {
   }, [notificationIndex, notification]);
 
   return (
-    <InternshipApplyModalProvider>
-      <DonationModal />
-      <RecruitModal />
-      <BirthdayModal />
-      <CookiesModal />
-      <GoogleCalendarModal />
+    <>
       {toastPortalTarget
         ? createPortal(
             <Toaster
@@ -158,10 +132,8 @@ const MainLayout = ({ children }) => {
             toastPortalTarget,
           )
         : null}
-      <GlobalFormValidation />
-      <Strap strap={activeStrap} />
-      {children}
-    </InternshipApplyModalProvider>
+      {isScanner ? children : <SiteExtras>{children}</SiteExtras>}
+    </>
   );
 };
 

@@ -98,7 +98,7 @@ const HeaderTwo = (props) => {
         }`}
       >
         <div
-          className={`${isMenuOpened ? "menu-open " : ""}header-wrapper`}
+          className={`${isMenuOpened ? "menu-open " : ""}header-wrapper${props.centerContent ? " header-wrapper--center-content" : ""}`}
           id="header-wrapper"
         >
           <div className="header-left">
@@ -106,6 +106,8 @@ const HeaderTwo = (props) => {
               {logoUrl}
             </Link>
           </div>
+
+          {props.centerContent}
 
           <div className="header-right header-red">
             <HeaderContent forceRegion={region} />
@@ -142,6 +144,7 @@ const HeaderTwo = (props) => {
 
 HeaderTwo.propTypes = {
   forceRegion: PropTypes.string,
+  centerContent: PropTypes.node,
 };
 
 export default HeaderTwo;

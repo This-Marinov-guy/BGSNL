@@ -3,6 +3,7 @@
 // on their existing direct API/server-to-server paths.
 const routes = {
   GET: [
+    "support/conversations/activity",
     "event/guest-list/:id/stream",
     "user/wallet/availability", "user/wallet/apple", "user/wallet/card",
     "security/passkeys", "security/google/config", "security/connected-accounts",
@@ -10,13 +11,15 @@ const routes = {
     "user/campaigns/:id", "user/active-alumni", "user/tree-layout",
     "common/get-total-member-count", "common/get-member-count", "common/get-active-member-count", "common/get-about-data",
     "event/get-purchase-status/:id", "event/event-details/:id", "event/events-list", "event/sold-ticket-count/:id", "event/check-member/:id/:eventId", "event/guest-list/:id",
-    "future-event/full-event-details/:id", "future-event/full-data-events-list", "future-event/draft-count",
+    "future-event/full-event-details/:id", "future-event/full-data-events-list", "future-event/scanner-events", "future-event/draft-count",
     "payment/donation/config", "payment/subscription/plans", "payment/subscription/billing-details",
     "internship/list", "internship/admin-list", "dashboard/members", "dashboard/events-analytics", "backoffice/accounts", "backoffice/accounts/:type/:id/membership",
     "support/profile", "support/conversations", "support/conversations/:id", "support/inbox", "support/inbox/:id",
+    "monitoring/overview", "monitoring/jobs",
     "wordpress/posts", "wordpress/posts/:id",
   ],
   POST: [
+    "support/live",
     "user/wallet/google", "user/wallet/card",
     "backoffice/access-requests", "backoffice/accounts/:type/:id/cancel-subscription", "backoffice/accounts/:type/:id/transfer",
     "security/login", "security/profile-change/confirm", "security/check-email", "security/signup", "security/alumni-signup",
@@ -28,7 +31,7 @@ const routes = {
     "event/register/non-society-event", "event/non-society-event/resend-email", "event/non-society-event/final-reminder-email",
     "future-event/add-event", "future-event/draft/:id/reminder",
     "payment/donation/create-payment-intent", "payment/playground/ticket", "payment/checkout/general", "payment/checkout/member-ticket", "payment/checkout/guest-ticket", "payment/checkout/signup",
-    "payment/subscription/general", "payment/subscription/customer-portal", "payment/subscription/change",
+    "payment/subscription/general", "payment/subscription/customer-portal", "payment/subscription/change", "payment/subscription/preview",
     "internship/add", "internship/member-apply", "support/conversations", "support/conversations/:id/messages", "support/conversations/:id/status",
     "support/inbox/:id/messages", "support/inbox/:id/status", "contest/register", "special/add-card",
   ],

@@ -3,7 +3,7 @@
 import PropTypes from "prop-types";
 import SubscriptionManage from "@/elements/ui/buttons/SubscriptionManage";
 import SubscriptionStart from "./SubscriptionStart";
-import { billingAction } from "./subscription-checkout.mjs";
+import { billingAction, hasCustomerId } from "./subscription-checkout.mjs";
 import { useBillingAttention } from "./BillingAttentionProvider";
 import styles from "./subscriptions.module.scss";
 
@@ -13,9 +13,9 @@ export default function BillingActions({ user }) {
   const action = billingAction(user, billing?.notice?.reason);
   return <div className="subscription-actions">
     {action === "start"
-      ? <SubscriptionStart />
+      ? <><SubscriptionStart />{hasCustomerId(user.subscription) && <SubscriptionManage canCancel={false} subscription={user.subscription} user={user} />}</>
       : action === "manage"
-        ? <SubscriptionManage subscription={user.subscription} />
+        ? <SubscriptionManage subscription={user.subscription} user={user} />
         : <a className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" href="/user#help">Contact support</a>}
   </div>;
 }

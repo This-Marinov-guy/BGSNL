@@ -13,7 +13,7 @@ const FormExtras = ({ inputs }) => {
         const required = input.required === true || input.required === "true";
         const multiple = input.multiselect === true || input.multiselect === "true";
         const fieldMeta = required
-          ? <span className="purchase-field-meta is-required" aria-label="Required">*</span>
+          ? <span className="purchase-field-meta is-required required-mark" aria-label="Required">*</span>
           : <span className="purchase-field-meta">Optional</span>;
 
         if (input.type === "select" && multiple) {

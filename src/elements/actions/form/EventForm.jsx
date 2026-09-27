@@ -1,4 +1,6 @@
 import InfoHint from "../../ui/icons/InfoHint";
+import { optionalPromotionDateSchema } from "@/util/functions/event-promotion-dates.mjs";
+import { eventEditSection, focusEventEditSection } from "@/util/functions/event-edit-sections.mjs";
 import EventPriceBadges from "./EventPriceBadges";
 import { normalizePromoCode, promoCodesSchema, promoCodesPayload } from "@/util/functions/event-promo-codes.mjs";
 import { SelectInput } from "@/compat/primereact";
@@ -80,6 +82,37 @@ const EVENT_FORM_STEPS = [
 ];
 
 const EVENT_FORM_GUARD_STATE = "__bgsnlEventFormGuard";
+
+const scheduleFirstInvalidEventField = (form, attempt = 0) => {
+  if (!form || typeof window === "undefined") return;
+
+  window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+    const activeStep = form.querySelector(".event-form-step:not([hidden])") || form;
+    const invalid = activeStep.querySelector([
+      '[data-form-validation-invalid="true"]',
+      '[aria-invalid="true"]',
+      ".has-validation-error",
+      ".error:not([hidden])",
+    ].join(", "));
+
+    if (!invalid) {
+      if (attempt < 4) {
+        window.setTimeout(() => scheduleFirstInvalidEventField(form, attempt + 1), 50);
+      }
+      return;
+    }
+
+    const container = invalid.closest(
+      "[data-custom-validation-field], [data-field-name], .rn-form-group, .form-group"
+    ) || invalid;
+    const control = invalid.matches("input:not([type=hidden]), select, textarea, button")
+      ? invalid
+      : container.querySelector("input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])");
+    const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    container.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+    control?.focus({ preventScroll: true });
+  }));
+};
 
 const UnsavedEventGuard = ({
   active,
@@ -460,8 +493,15 @@ const EventForm = (props) => {
     storedInitialData?.status === EVENT_DRAFT
       ? storedInitialData.draftData ?? {}
       : null;
-  const [currentStep, setCurrentStep] = useState(() => eventDraftProgress(draftData?.formProgress, EVENT_FORM_STEPS.length).currentStep);
-  const [furthestStep, setFurthestStep] = useState(() => eventDraftProgress(draftData?.formProgress, EVENT_FORM_STEPS.length).furthestStep);
+  const initialSection = edit && !props.completeDraft ? eventEditSection(props.initialSection) : null;
+  const [currentStep, setCurrentStep] = useState(() => initialSection?.step ?? eventDraftProgress(draftData?.formProgress, EVENT_FORM_STEPS.length).currentStep);
+  const [furthestStep, setFurthestStep] = useState(() => Math.max(initialSection?.step ?? 0, eventDraftProgress(draftData?.formProgress, EVENT_FORM_STEPS.length).furthestStep));
+  useEffect(() => {
+    if (!initialSection) return;
+    // Wait for the form controls to mount; cleanup prevents focus after leaving.
+    const frame = requestAnimationFrame(() => focusEventEditSection(formRef.current, initialSection));
+    return () => cancelAnimationFrame(frame);
+  }, [initialSection]);
   const initialData = draftData
     ? {
         ...storedInitialData,
@@ -727,22 +767,8 @@ const EventForm = (props) => {
             .max(95, "Cannot exceed 95%"),
         otherwise: () => yup.number().nullable(),
       }),
-      startTimer: yup.string().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .string()
-            .required("Please enter a start point of the guest promotion"),
-        otherwise: () => yup.string().nullable(),
-      }),
-      endTimer: yup.string().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .string()
-            .required("Please enter an end point of the guest promotion"),
-        otherwise: () => yup.string().nullable(),
-      }),
+      startTimer: optionalPromotionDateSchema,
+      endTimer: optionalPromotionDateSchema,
     }),
 
     memberPromotion: yup.object().shape({
@@ -757,22 +783,8 @@ const EventForm = (props) => {
             .max(95, "Cannot exceed 95%"),
         otherwise: () => yup.number().nullable(),
       }),
-      startTimer: yup.string().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .string()
-            .required("Please enter a start point of the member promotion"),
-        otherwise: () => yup.string().nullable(),
-      }),
-      endTimer: yup.string().when("isEnabled", {
-        is: true,
-        then: () =>
-          yup
-            .string()
-            .required("Please enter an end point of the member promotion"),
-        otherwise: () => yup.string().nullable(),
-      }),
+      startTimer: optionalPromotionDateSchema,
+      endTimer: optionalPromotionDateSchema,
     }),
 
     addOns: yup.object().shape({
@@ -1130,12 +1142,8 @@ const EventForm = (props) => {
           setTransitionDirection(invalidStep > currentStep ? "forward" : "backward");
           setCurrentStep(invalidStep);
           setFurthestStep(step => Math.max(step, invalidStep));
-          dispatch(showNotification({ severity: "error", summary: "Check the highlighted fields", detail: "Fix the event details before saving and exiting." }));
-          requestAnimationFrame(() => {
-            const field = formRef.current?.querySelector('[aria-invalid="true"], .error');
-            field?.scrollIntoView({ block: "center", behavior: "smooth" });
-            field?.focus?.({ preventScroll: true });
-          });
+          dispatch(showNotification({ severity: "error", summary: "Invalid inputs", detail: "You have missing/invalid fields" }));
+          scheduleFirstInvalidEventField(formRef.current);
           return;
         }
       }
@@ -1215,6 +1223,7 @@ const EventForm = (props) => {
     <>
       <ValidatedFormik
         highlightTouchedErrors
+        validationViewKey={currentStep}
         className="container"
         validationSchema={schema}
         onSubmit={async (values) => { if (!submissionRef.current) setReviewValues({ ...values }); }}
@@ -1450,7 +1459,7 @@ const EventForm = (props) => {
                   <p>Start with the information guests need to identify the event.</p>
                 </div>
                 <span className="event-form-required-note">
-                  <strong>* Required</strong> · all other fields are optional
+                  <strong><span className="required-mark">*</span> Required</strong> · all other fields are optional
                 </span>
               </header>
 
@@ -1470,7 +1479,7 @@ const EventForm = (props) => {
                         marginBottom: "5px",
                       }}
                     >
-                      Region <span style={{ color: "#dc3545" }}>*</span>
+                      Region <span className="required-mark">*</span>
                     </label>
                     <Field
                       disabled={!canManageAllRegions || (props.edit && initialData?.status !== EVENT_DRAFT)}
@@ -1511,7 +1520,7 @@ const EventForm = (props) => {
                         marginBottom: "5px",
                       }}
                     >
-                      Location <span style={{ color: "#dc3545" }}>*</span>
+                      Location <span className="required-mark">*</span>
                     </label>
                     <Field
                       type="text"
@@ -1535,7 +1544,7 @@ const EventForm = (props) => {
                         marginBottom: "5px",
                       }}
                     >
-                      Event Name <span style={{ color: "#dc3545" }}>*</span>
+                      Event Name <span className="required-mark">*</span>
                     </label>
                     <Field
                       type="text"
@@ -1556,7 +1565,7 @@ const EventForm = (props) => {
                         marginBottom: "5px",
                       }}
                     >
-                      Date and Time <span style={{ color: "#dc3545" }}>*</span>
+                      Date and Time <span className="required-mark">*</span>
                     </label>
                     <div data-field-name="date">
                       <CalendarWithClock
@@ -1589,7 +1598,7 @@ const EventForm = (props) => {
                       }}
                     >
                       Full Description{" "}
-                      <span style={{ color: "#dc3545" }}>*</span>
+                      <span className="required-mark">*</span>
                     </label>
                     <Field
                       as="textarea"
@@ -1617,7 +1626,7 @@ const EventForm = (props) => {
                   <h2 id="event-step-tickets">Tickets &amp; media</h2>
                 </div>
                 <span className="event-form-required-note">
-                  <strong>* Required</strong> · all other fields are optional
+                  <strong><span className="required-mark">*</span> Required</strong> · all other fields are optional
                 </span>
               </header>
 
@@ -1679,7 +1688,7 @@ const EventForm = (props) => {
               {props.edit && (
                 <button
                   type="button"
-                  className="event-form-button event-form-button--ghost"
+                  className="event-form-button event-form-button--draft"
                   disabled={loading || isBusy}
                   onClick={() => saveAndExit(formik)}
                 >
@@ -1749,6 +1758,7 @@ const EventForm = (props) => {
 };
 
 EventForm.propTypes = {
+  initialSection: PropTypes.string,
   edit: PropTypes.bool,
   completeDraft: PropTypes.bool,
   initialData: PropTypes.object,

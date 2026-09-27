@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import PropTypes from "prop-types";
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { showNotification } from "@/redux/notification";
 import { selectUser } from "@/redux/user";
@@ -14,11 +16,12 @@ import { readWalletDevice, walletDeviceMessage, availableWalletProvider, validGo
 import { IconlyExternalLink, IconlyPlus, IconlyRotate, IconlyShare, IconlyWallet } from "@/elements/ui/icons/IconlyIcons";
 import ImageTooltip from "@/elements/ui/media/ImageTooltip";
 import WalletBadge from "./WalletBadge";
+import MembershipCardThumbnail from "./MembershipCardThumbnail";
 import styles from "./wallet.module.scss";
 
 const WALLET_LOADING_TOAST = "wallet-card-preparation";
 
-export default function WalletSettings({ user }) {
+export default function WalletSettings({ user, preview = false }) {
   const dispatch = useDispatch();
   const { session, roles } = useSelector(selectUser);
   const membershipLocked = user.status !== "active" || user.billingLocked === true || user.billingVerificationUnavailable === true ||
@@ -159,6 +162,7 @@ export default function WalletSettings({ user }) {
         link.download = "bgsnl-membership.pkpass";
         link.hidden = true;
         document.body.append(link);
+        flushSync(() => toast.remove(WALLET_LOADING_TOAST));
         link.click();
         link.remove();
       } else {
@@ -194,10 +198,13 @@ export default function WalletSettings({ user }) {
     : ["use_safari", "ipad"].includes(device?.reason) ? ["apple"]
     : device?.reason === "old_android" ? ["google"] : ["apple", "google"];
 
-  return <li className="settings-list__item">
-    <span aria-hidden="true" className="settings-list__icon"><IconlyWallet /></span>
+  const Container = preview ? "section" : "li";
+  return <Container className={preview ? styles.profilePanel : "settings-list__item"} aria-label={preview ? "Profile card" : undefined}>
+    {preview ? <MembershipCardThumbnail key={`${identity}:${cardPath || "none"}:${membershipLocked}`} cardPath={cardPath} locked={membershipLocked} loading={controlsLoading} />
+      : <span aria-hidden="true" className="settings-list__icon"><IconlyWallet /></span>}
     <div className="settings-list__text">
       <h3 className="settings-list__title">{roles?.includes("alumni") ? "Alumni card" : "Membership card"}</h3>
+      {preview && (membershipLocked || !hasCard) && <p className="settings-list__description">{membershipLocked ? "Resolve your membership status in Settings to access your card." : description}</p>}
       {!membershipLocked && hasCard && <p className="settings-list__description">Your card is ready. Open or share it, or scan its QR code for current membership status.</p>}
       {!membershipLocked && shareMessage && <p className="settings-list__description" role="status">{shareMessage}</p>}
       {!membershipLocked && actionError && <p className="settings-list__description" role="alert">{actionError}</p>}
@@ -233,7 +240,7 @@ export default function WalletSettings({ user }) {
       </ImageTooltip>}
       </>}
     </div>
-  </li>;
+  </Container>;
 }
 
-WalletSettings.propTypes = { user: PropTypes.object.isRequired };
+WalletSettings.propTypes = { user: PropTypes.object.isRequired, preview: PropTypes.bool };

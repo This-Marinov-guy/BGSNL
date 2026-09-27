@@ -1,183 +1,39 @@
+"use client";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundary } from "react-error-boundary";
 import { usePathname } from "@/util/navigation";
-import axios from 'axios';
 import RecoveryScreen from "./RecoveryScreen";
-import { AXIOM_DATASET, getAxiomEndpoint, isAxiomLoggingEnabled } from '../../util/configs/axiom';
-import { store } from "../../redux/store";
 
-const ErrorFallback = ({ error, resetErrorBoundary }) => (
-    <RecoveryScreen kind="error" error={error} onRetry={resetErrorBoundary} />
-);
+const send = (event) => {
+  const body = JSON.stringify({ ...event, path: window.location.pathname });
+  fetch("/api/monitoring/web-event", { method: "POST", headers: { "Content-Type": "application/json" },
+    body, keepalive: true, credentials: "omit" }).catch(() => {});
+};
+
+const ErrorFallback = ({ error, resetErrorBoundary }) =>
+  <RecoveryScreen kind="error" error={error} onRetry={resetErrorBoundary} />;
 
 ErrorFallback.propTypes = {
-    error: PropTypes.shape({ message: PropTypes.string }),
-    resetErrorBoundary: PropTypes.func.isRequired,
+  error: PropTypes.shape({ message: PropTypes.string }),
+  resetErrorBoundary: PropTypes.func.isRequired,
 };
 
-// Error reports never read or serialize authentication credentials.
-const getUserData = () => store.getState().user;
+export default function GlobalError({ children }) {
+  const pathname = usePathname();
 
-// Function to log errors to Axiom
-const logErrorToAxiom = (error, componentStack, errorInfo) => {
-    // Don't log if Axiom logging is disabled
-    if (!isAxiomLoggingEnabled()) {
-        console.log('Axiom logging disabled. Error not sent to Axiom.');
-        return;
-    }
-    
-    // Get user data
-    const userData = getUserData();
-    const userToken = userData?.session;
-    
-    // Create the payload for Axiom
-    const errorPayload = {
-        dataset: AXIOM_DATASET,
-        timestamp: new Date().toISOString(),
-        type: 'error_boundary',
-        data: {
-            message: error.message,
-            name: error.name,
-            stack: error.stack,
-            componentStack: componentStack,
-            url: window.location.pathname,
-            path: window.location.pathname,
-            userAgent: navigator.userAgent,
-            logged_in: !!userToken,
-            screenSize: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-            },
-            ...errorInfo
-        }
-    };
+  useEffect(() => { send({ type: "page_view" }); }, [pathname]);
+  useEffect(() => {
+    const onError = (event) => send({ type: "client_error", name: event.error?.name || "Error", component: "window" });
+    const onRejection = (event) => send({ type: "client_error", name: event.reason?.name || "Error", component: "promise" });
+    window.addEventListener("error", onError);
+    window.addEventListener("unhandledrejection", onRejection);
+    return () => { window.removeEventListener("error", onError); window.removeEventListener("unhandledrejection", onRejection); };
+  }, []);
 
-    // Send to Axiom via API
-    try {
-        const AXIOM_API_TOKEN = process.env.NEXT_PUBLIC_AXIOM_API_TOKEN;
-        const AXIOM_ENDPOINT = getAxiomEndpoint();
-        
-        if (AXIOM_API_TOKEN) {
-            axios.post(AXIOM_ENDPOINT, [errorPayload], {
-                headers: {
-                    'Authorization': `Bearer ${AXIOM_API_TOKEN}`,
-                    'Content-Type': 'application/json'
-                }
-            }).then(() => {
-                console.log('Error logged to Axiom successfully');
-            }).catch(err => {
-                console.error('Failed to log error to Axiom:', err);
-            });
-        } else {
-            console.warn('Axiom API token not configured. Error logging disabled.');
-        }
-    } catch (loggingError) {
-        // Don't let logging failures cause additional issues
-        console.error('Error during Axiom logging:', loggingError);
-    }
-};
-
-// Error handler function for ErrorBoundary
-const handleError = (error, info) => {
-    // Log error to console in development
-    console.error('Error caught by error boundary:', error);
-    
-    // Extract component name from stack trace
-    const componentMatch = info.componentStack.match(/\s+in\s+([A-Za-z0-9]+)/);
-    const componentName = componentMatch ? componentMatch[1] : 'Unknown';
-    
-    // Log to Axiom
-    logErrorToAxiom(error, info.componentStack, { 
-        componentName,
-        errorTime: new Date().toISOString()
-    });
-};
-
-const GlobalError = ({ children }) => {
-    const pathname = usePathname();
-
-    useEffect(() => {
-        // Capture console errors
-        const originalConsoleError = console.error;
-        
-        console.error = (...args) => {
-            // Call original console.error
-            originalConsoleError(...args);
-            
-            // Only log to Axiom if logging is enabled
-            if (isAxiomLoggingEnabled()) {
-                try {
-                    // Extract meaningful error message
-                    const errorMessage = args.map(arg => {
-                        if (arg instanceof Error) {
-                            return `${arg.name}: ${arg.message}\nStack: ${arg.stack}`;
-                        } else if (typeof arg === 'object') {
-                            return JSON.stringify(arg, null, 2);
-                        } else {
-                            return String(arg);
-                        }
-                    }).join(' ');
-
-                    // Get user data
-                    const userData = getUserData();
-                    const userToken = userData?.session;
-
-                    // Create payload for console errors
-                    const errorPayload = {
-                        dataset: AXIOM_DATASET,
-                        timestamp: new Date().toISOString(),
-                        type: 'console_error',
-                        data: {
-                            message: errorMessage,
-                            url: window.location.pathname,
-                            path: window.location.pathname,
-                            userAgent: navigator.userAgent,
-                            logged_in: !!userToken,
-                            screenSize: {
-                                width: window.innerWidth,
-                                height: window.innerHeight,
-                            }
-                        }
-                    };
-
-                    // Send to Axiom
-                    const AXIOM_API_TOKEN = process.env.NEXT_PUBLIC_AXIOM_API_TOKEN;
-                    const AXIOM_ENDPOINT = getAxiomEndpoint();
-                    
-                    if (AXIOM_API_TOKEN) {
-                        axios.post(AXIOM_ENDPOINT, [errorPayload], {
-                            headers: {
-                                'Authorization': `Bearer ${AXIOM_API_TOKEN}`,
-                                'Content-Type': 'application/json'
-                            }
-                        }).catch(err => {
-                            originalConsoleError('Failed to log console error to Axiom:', err);
-                        });
-                    }
-                } catch (loggingError) {
-                    originalConsoleError('Error during console error Axiom logging:', loggingError);
-                }
-            }
-        };
-
-        // Cleanup on unmount
-        return () => {
-            console.error = originalConsoleError;
-        };
-    }, []);
-
-    return (
-        <ErrorBoundary
-            FallbackComponent={ErrorFallback}
-            key={pathname} // Force remount on location change
-            onError={handleError}
-        >
-            {children}
-        </ErrorBoundary>
-    );
-};
+  return <ErrorBoundary FallbackComponent={ErrorFallback} resetKeys={[pathname]}
+    onError={(error, info) => send({ type: "client_error", name: error.name || "Error",
+      component: info.componentStack?.match(/\s+in\s+([A-Za-z0-9]+)/)?.[1] || "React" })}>{children}</ErrorBoundary>;
+}
 
 GlobalError.propTypes = { children: PropTypes.node };
-
-export default GlobalError;

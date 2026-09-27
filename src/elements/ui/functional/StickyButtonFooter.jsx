@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 
 const StickyButtonFooter = ({
@@ -44,14 +45,15 @@ const StickyButtonFooter = ({
       </div>
 
       {/* Sticky footer (only visible on mobile when appropriate) */}
-      {isSticky && (
+      {isSticky && createPortal(
         <div className="sticky-button-footer">
           <div className="sticky-button-footer-content">
-            {stickyContent}
             {children}
+            {stickyContent}
             {stickyContentAfter}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

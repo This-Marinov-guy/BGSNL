@@ -18,7 +18,7 @@ const PriceField = ({ name, label, required = false, placeholder }) => {
   const [field] = useField(name);
   return (
     <div className="rn-form-group event-ticket-price-field">
-      <label htmlFor={id}>{label}{required && <span className="event-ticket-required"> *</span>}</label>
+      <label htmlFor={id}>{label}{required && <span className="event-ticket-required required-mark"> *</span>}</label>
       <input {...field} value={field.value ?? ""} id={id} type="number" min={1} step="0.01" placeholder={placeholder} />
       <ErrorMessage className="error" name={name} component="div" />
     </div>
@@ -136,7 +136,7 @@ export default function EventTicketsMedia({ children }) {
       {ticketType === "external" && (
         <div className="event-ticket-external">
           <div className="rn-form-group">
-            <label htmlFor={`${id}-link`}>Ticket website <span className="event-ticket-required">*</span></label>
+            <label htmlFor={`${id}-link`}>Ticket website <span className="event-ticket-required required-mark">*</span></label>
             <Field id={`${id}-link`} type="url" name="ticketLink" placeholder="https://tickets.example.com/your-event" aria-describedby={`${id}-link-help`} />
             <ErrorMessage className="error" name="ticketLink" component="div" />
           </div>
@@ -152,7 +152,7 @@ export default function EventTicketsMedia({ children }) {
         <div className="event-ticket-media-grid">
           <div className="event-ticket-media-panel event-ticket-media-panel--poster" data-custom-validation-field data-field-name="poster">
             <div className="event-ticket-media-heading">
-              <h4 className="event-ticket-media-title">Event poster <span className="event-ticket-required">*</span></h4>
+              <h4 className="event-ticket-media-title">Event poster <span className="event-ticket-required required-mark">*</span></h4>
               <InfoHint label="About the event poster" text="The main promotional image shown on your event page and in event listings. Upload a JPG or PNG." />
             </div>
             <p className="event-ticket-help">The main image guests see for your event.</p>
@@ -162,7 +162,7 @@ export default function EventTicketsMedia({ children }) {
           <div className="event-ticket-media-panel event-ticket-media-panel--ticket">
             <div data-custom-validation-field data-field-name="ticketImg">
               <div className="event-ticket-media-heading">
-                <h4 className="event-ticket-media-title">Ticket image <span className="event-ticket-required">*</span></h4>
+                <h4 className="event-ticket-media-title">Ticket image <span className="event-ticket-required required-mark">*</span></h4>
                 <InfoHint label="About the ticket image" text="The artwork used on digital tickets. Upload a JPG or PNG with a 300:97 aspect ratio, for example 1500 × 485 pixels." />
               </div>
               <p className="event-ticket-help">JPG or PNG · 300:97 ratio (e.g., 1500 × 485 px).</p>
@@ -183,16 +183,16 @@ export default function EventTicketsMedia({ children }) {
         <h3 id={`${id}-settings`}>Ticket settings</h3>
         <div className="event-ticket-settings">
           <div className="rn-form-group">
-            <label htmlFor={`${id}-limit`}>Ticket limit <span className="event-ticket-required">*</span></label>
+            <label htmlFor={`${id}-limit`}>Ticket limit <span className="event-ticket-required required-mark">*</span></label>
             <span className="event-ticket-field-hint"><InfoHint label="About the ticket limit" text="The maximum number of tickets available for this event." /></span>
             <Field id={`${id}-limit`} type="number" placeholder="e.g., 100" name="ticketLimit" min={1} step={1} />
             <ErrorMessage className="error" name="ticketLimit" component="div" />
           </div>
           <div className="rn-form-group">
-            <label>Sales deadline <span className="event-ticket-required">*</span></label>
+            <label>Sales deadline <span className="event-ticket-required required-mark">*</span></label>
             <span className="event-ticket-field-hint"><InfoHint label="About the sales deadline" text="Ticket sales close automatically at this date and time." /></span>
             <div data-field-name="ticketTimer">
-              <CalendarWithClock name="ticketTimer" mode="single" locale="en-nl" placeholder="Select ticket sales deadline" captionLayout="dropdown" min={values.date ? new Date(values.date) : new Date()} initialValue={values.ticketTimer} onSelect={(value) => setFieldValue("ticketTimer", value)} />
+              <CalendarWithClock name="ticketTimer" mode="single" locale="en-nl" placeholder="Select ticket sales deadline" captionLayout="dropdown" min={new Date()} max={values.date ? new Date(values.date) : undefined} initialValue={values.ticketTimer} onSelect={(value) => setFieldValue("ticketTimer", value)} />
             </div>
             <ErrorMessage className="error" name="ticketTimer" component="div" />
           </div>

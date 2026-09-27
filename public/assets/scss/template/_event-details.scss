@@ -428,7 +428,7 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  font-family: $heading-font !important;
+  font-family: $title-font !important;
 
   * {
     font-family: inherit !important;
@@ -595,20 +595,28 @@
 
 .sticky-button-footer-content {
   .event-sticky-membership-saving {
-    display: block;
-    color: #8a6500;
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 28px;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: #f4c851;
+    color: #2d2718;
     font-family: "LeagueSpartan", "Roboto", sans-serif;
     font-weight: 700;
     line-height: 1.3;
     text-align: center;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-    transition: color 0.2s ease;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
 
     &:hover,
     &:focus-visible {
-      color: #624800;
+      background: #e5b80b;
+      color: #211c10;
     }
   }
 

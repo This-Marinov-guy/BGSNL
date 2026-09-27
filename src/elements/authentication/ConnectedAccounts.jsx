@@ -1,5 +1,6 @@
 "use client";
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Password, ProgressSpinner } from "@/compat/primereact";
@@ -150,7 +151,7 @@ export default function ConnectedAccounts() {
         </div>
       </div>
       {loadFailed && <div className={styles.connectionActions}>
-        <button type="button" className={primary} onClick={() => { statusRetryRequested.current = true; setAttempt((value) => value + 1); }}>Try again</button>
+        <button type="button" className={primary} onClick={() => { statusRetryRequested.current = true; setAttempt((value) => value + 1); }}><RetryIcon />Try again</button>
       </div>}
       <PasskeySettings />
     </section>

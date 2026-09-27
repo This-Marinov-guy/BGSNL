@@ -1,14 +1,26 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import emailjs from "emailjs-com";
 import { useParams } from "@/util/navigation";
 import PropTypes from "prop-types";
 import Loader from "../ui/loading/Loader";
 import { REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
 import { useHttpClient } from "../../hooks/common/http-hook";
+import {
+  contactPayloadFingerprint,
+  contactPayloadIdentity,
+  rememberContactSubmission,
+  wasContactSubmissionSentRecently,
+} from "../../util/contact-submission.mjs";
 
 const Result = () => (
   <p className="contact-form__status contact-form__status--success" role="status">
     Your message has been sent. We will get back to you as soon as we can.
+  </p>
+);
+
+const DuplicateResult = () => (
+  <p className="contact-form__status contact-form__status--success" role="status">
+    This message was already sent recently. Change the message if you need to send an update.
   </p>
 );
 
@@ -28,24 +40,52 @@ function ContactForm(props) {
   const { region = "netherlands" } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const inFlightRef = useRef(false);
+  const lastSuccessfulIdentityRef = useRef("");
   const { sendRequest } = useHttpClient();
   const formId = useId();
   const regionEmail = REGION_EMAIL[region] || REGION_EMAIL.netherlands;
 
   const sendEmail = async (e) => {
     e.preventDefault();
+    if (inFlightRef.current) return;
+
     const form = e.currentTarget;
     const serviceID = process.env.NEXT_PUBLIC_SERVICE || "default_service";
     const templateID = process.env.NEXT_PUBLIC_TEMPLATE || "default_template";
     const userID = process.env.NEXT_PUBLIC_PUBLIC_KEY || "default_key";
     const contactPayload = Object.fromEntries(new FormData(form).entries());
+    const payloadIdentity = contactPayloadIdentity(contactPayload);
 
+    inFlightRef.current = true;
     setIsLoading(true);
     showresult(null);
 
-    let validationResponse;
     try {
-      validationResponse = await sendRequest(
+      let fingerprint = "";
+      try {
+        fingerprint = await contactPayloadFingerprint(payloadIdentity);
+      } catch {
+        // The synchronous in-memory lock still prevents rapid duplicate sends.
+      }
+
+      let storage = null;
+      try {
+        storage = globalThis.sessionStorage;
+      } catch {
+        // Session storage can be unavailable in privacy modes.
+      }
+
+      if (
+        lastSuccessfulIdentityRef.current === payloadIdentity ||
+        wasContactSubmissionSentRecently(storage, fingerprint)
+      ) {
+        setIsSubmitted(true);
+        showresult("duplicate");
+        return;
+      }
+
+      const validationResponse = await sendRequest(
         "common/contact/validate",
         "POST",
         contactPayload,
@@ -53,25 +93,21 @@ function ContactForm(props) {
         false,
         false
       );
-    } catch {
-      validationResponse = null;
-    }
 
-    if (!validationResponse?.valid) {
-      setIsLoading(false);
-      showresult("fail");
-      return;
-    }
+      if (!validationResponse?.valid) {
+        showresult("fail");
+        return;
+      }
 
-    try {
-      const emailResult = await emailjs.send(
+      await emailjs.send(
         serviceID,
         templateID,
         contactPayload,
         userID
       );
-      console.log(emailResult.text);
 
+      lastSuccessfulIdentityRef.current = payloadIdentity;
+      rememberContactSubmission(storage, fingerprint);
       setIsSubmitted(true);
       form.reset();
       showresult("success");
@@ -79,6 +115,7 @@ function ContactForm(props) {
       console.log(error?.text || error);
       showresult("fail");
     } finally {
+      inFlightRef.current = false;
       setIsLoading(false);
     }
   };
@@ -196,6 +233,8 @@ function ContactForm(props) {
         <div className="rn-form-group">
           {result === "success" ? (
             <Result />
+          ) : result === "duplicate" ? (
+            <DuplicateResult />
           ) : (
             <FailResult contactEmail={regionEmail} />
           )}

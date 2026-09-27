@@ -1,4 +1,5 @@
 import { eventModalData } from "@/util/functions/event-modal-data.mjs";
+import EventPanelEditButton from "@/elements/actions/form/EventPanelEditButton";
 import { EventUpsellDetails, EventAddOnDetails, EventQuestionDetails, EventAdvertisedDetails } from "@/elements/actions/form/EventConfigurationPanels";
 import { useMemo, useState } from "react";
 import moment from "moment";
@@ -77,17 +78,18 @@ EventFact.propTypes = {
   value: PropTypes.node,
 };
 
-const DetailSection = ({ title, description, children, className = "" }) => (
+const DetailSection = ({ title, description, children, className = "", onEdit }) => (
   <section className={`event-details-modal__section ${className}`.trim()}>
     <header className="event-details-modal__section-heading">
-      <h3>{title}</h3>
-      {description ? <p>{description}</p> : null}
+      <div><h3>{title}</h3>{description ? <p>{description}</p> : null}</div>
+      <EventPanelEditButton title={title} onEdit={onEdit} />
     </header>
     {children}
   </section>
 );
 
 DetailSection.propTypes = {
+  onEdit: PropTypes.func,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
   description: PropTypes.string,
@@ -215,9 +217,9 @@ const EventModal = ({
     }
   };
 
-  const editEvent = () => {
+  const editEvent = (section) => {
     dispatch(loadSingleEventDashboard(storedEvent));
-    navigate(`/user/dashboard/events/${event.id}/edit`);
+    navigate(`/user/dashboard/events/${event.id}/edit${section ? `?section=${encodeURIComponent(section)}` : ""}`);
   };
 
   const copyEventText = async (text, label) => {
@@ -312,7 +314,7 @@ const EventModal = ({
           >
             <button
               className="event-details-modal__action"
-              onClick={editEvent}
+              onClick={() => editEvent()}
               type="button"
               title={isDraft ? "Edit draft" : "Edit event"}
             >
@@ -381,6 +383,8 @@ const EventModal = ({
           </div>
 
           <section className="event-details-modal__summary">
+            <div className="event-details-modal__summary-media">
+              <div className="event-details-modal__panel-actions"><EventPanelEditButton title="Event images" onEdit={() => editEvent("media")} /></div>
             <div className="event-details-modal__media-overview">
               <div className="event-details-modal__poster">
                 {event.poster ? (
@@ -439,6 +443,9 @@ const EventModal = ({
                 </div>
               </div>
             </div>
+            </div>
+            <div>
+            <div className="event-details-modal__panel-actions"><EventPanelEditButton title="Event summary" onEdit={() => editEvent("details")} /></div>
             <dl className="event-details-modal__summary-facts">
               <EventFact
                 label="Status"
@@ -456,11 +463,12 @@ const EventModal = ({
                 value={event.hidden ? "Hidden" : "Visible"}
               />
             </dl>
+            </div>
           </section>
 
           <div className="event-details-modal__layout">
             <div className="event-details-modal__main-column">
-              <DetailSection title="Event details">
+              <DetailSection title="Event details" onEdit={() => editEvent("details")}>
                 <dl className="event-details-modal__facts-grid">
                   <EventFact
                     label="Subtitle"
@@ -484,14 +492,14 @@ const EventModal = ({
                 </dl>
               </DetailSection>
 
-              <DetailSection title="Description">
+              <DetailSection title="Description" onEdit={() => editEvent("description")}>
                 <p className="event-details-modal__description">
                   {event.text || "No description provided."}
                 </p>
               </DetailSection>
-              <EventUpsellDetails values={event} />
-              <EventAddOnDetails addOns={event.addOns} />
-              <EventAdvertisedDetails links={event.subEvent?.links ?? []} renderImage={link => (
+              <EventUpsellDetails values={event} onEdit={() => editEvent("upsell")} />
+              <EventAddOnDetails addOns={event.addOns} onEdit={() => editEvent("addons")} />
+              <EventAdvertisedDetails links={event.subEvent?.links ?? []} onEdit={() => editEvent("advertised")} renderImage={link => (
                 <figure className="event-review-modal__advertised-poster">
                   <ImagePreviewTrigger
                     className="event-review-modal__media-trigger"
@@ -506,7 +514,7 @@ const EventModal = ({
             </div>
 
             <aside className="event-details-modal__side-column">
-              <DetailSection title="Ticket settings">
+              <DetailSection title="Ticket settings" onEdit={() => editEvent("tickets")}>
                 <dl className="event-details-modal__facts-grid event-details-modal__facts-grid--single">
                   <EventFact
                     label="Sales close"
@@ -522,7 +530,7 @@ const EventModal = ({
                 </dl>
               </DetailSection>
 
-              <DetailSection title="Pricing">
+              <DetailSection title="Pricing" onEdit={() => editEvent("pricing")}>
                 {event.isFree ? (
                   <span className="event-details-modal__free-label">Free</span>
                 ) : event.isTicketLink ? (
@@ -570,7 +578,7 @@ const EventModal = ({
                   </div>
                 )}
               </DetailSection>
-              <EventQuestionDetails questions={event.extraInputsForm ?? []} />
+              <EventQuestionDetails questions={event.extraInputsForm ?? []} onEdit={() => editEvent("questions")} />
             </aside>
           </div>
 

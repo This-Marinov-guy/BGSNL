@@ -5,5 +5,6 @@ export const administrationAreas = [
   { id: "members", title: "Members", description: "Manage member and alumni accounts in your permitted regions.", roles: board },
   { id: "internships", title: "Internships", description: "Publish opportunities and manage internship listings.", roles: admins },
   { id: "support", title: "Support tickets", description: "Review reports and help members resolve their questions.", roles: ["super_admin", "admin", "support"] },
+  { id: "monitoring", title: "System manager", description: "Review jobs, errors, traffic and service health.", roles: ["developer", "admin", "super_admin"] },
 ];
 export const canAdminister = (area, roles = []) => area.roles.some((role) => roles.includes(role));

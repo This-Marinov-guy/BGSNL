@@ -32,6 +32,9 @@ import { ACCOUNT_TABS } from "../../util/defines/enum";
 import AccountCampaignAnnouncement from "@/elements/campaigns/AccountCampaignAnnouncement";
 import { SESSION_NOTICE_KEY } from "@/util/auth/browser-session.mjs";
 import { showNotification } from "../../redux/notification";
+import campaignStyles from "@/elements/campaigns/explore-version.module.scss";
+import { ANALYTICS_EVENTS } from "@/util/analytics/events.mjs";
+import { clarityEvent } from "@/util/functions/helpers";
 
 const User = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,6 +44,7 @@ const User = () => {
   const [currentUser, setCurrentUser] = useState();
   const [hasBirthday, setHasBirthday] = useState();
   const [tab, setTab] = useState(ACCOUNT_TABS[0]);
+  const [campaignOpenRequest, setCampaignOpenRequest] = useState(0);
 
   const INIT_ITEMS_PER_PAGE = 6;
 
@@ -212,6 +216,21 @@ const User = () => {
     );
   }
 
+  const exploreBanner = (
+    <button
+      type="button"
+      className={campaignStyles.banner}
+      aria-haspopup="dialog"
+      onClick={() => {
+        setIsSidebarOpen(false);
+        setCampaignOpenRequest((count) => count + 1);
+        clarityEvent(ANALYTICS_EVENTS.EXPLORE_V4_CLICKED);
+      }}
+    >
+      <span>Explore version 4</span>
+    </button>
+  );
+
   return (
     <React.Fragment>
       <PageHelmet pageTitle="Profile" />
@@ -220,6 +239,7 @@ const User = () => {
         colorblack="color--black"
         logoname="logo.png"
         forceRegion={currentUser.region ?? null}
+        centerContent={<div className={campaignStyles.mobileHeader}>{exploreBanner}</div>}
       />
       <UserUpdateModal
         currentUser={currentUser}
@@ -233,12 +253,15 @@ const User = () => {
         key={currentUser._id || currentUser.id}
         accountId={currentUser._id || currentUser.id}
         session={user.session}
-        blocked={isSidebarOpen}
+        blocked={isSidebarOpen || tab !== ACCOUNT_TABS[0]}
+        openRequest={campaignOpenRequest}
       />
 
       {/* Start User Page Container with Sidebar */}
       <main className="user-page-container" id="user-account-content">
         {/* Sidebar */}
+        <div className={campaignStyles.navigation}>
+        <div className={campaignStyles.desktopBanner}>{exploreBanner}</div>
         <UserSidebar
           currentUser={currentUser}
           hasBirthday={hasBirthday}
@@ -248,6 +271,7 @@ const User = () => {
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
         />
+        </div>
 
         {/* Main Content Area */}
         <div className="user-content-area">
@@ -262,9 +286,7 @@ const User = () => {
           <div className="content-container">
             {/* Campaign Section */}
             {currentUser.hasBenefits && campaignUserActions &&
-              React.cloneElement(campaignUserActions.userAction.component, {
-                calendarImage: currentUser.mmmCampaign2025?.calendarImage,
-              })}
+              campaignUserActions.userAction.component}
 
             {/* Tab Content */}
             <section

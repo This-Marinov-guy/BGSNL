@@ -115,8 +115,15 @@
   min-width: 0;
 
   .membership-banner-heading {
+    flex-wrap: nowrap;
     gap: 12px;
+    width: 100%;
     margin-bottom: 0;
+  }
+
+  .membership-banner-title {
+    flex: 1 1 auto;
+    white-space: nowrap;
   }
 
   p {

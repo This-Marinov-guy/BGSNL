@@ -187,6 +187,39 @@ const clearValidationState = (form) => {
     });
 };
 
+const clearFieldValidationState = (form, path) => {
+  if (!form || !path) return;
+  const fields = Array.from(form.querySelectorAll("[name], [data-field-name], [data-field-path]"))
+    .filter((field) => normalizePath(fieldPathFor(field)) === normalizePath(path));
+  const containers = new Set();
+
+  fields.forEach((field) => {
+    if (field.dataset.formValidationInvalid === "true") {
+      field.removeAttribute("data-form-validation-invalid");
+      field.removeAttribute("aria-invalid");
+    }
+    if (field.dataset.formValidationErrorMessage === "true") {
+      field.removeAttribute("data-form-validation-error-message");
+      field.removeAttribute("aria-errormessage");
+    }
+    containers.add(findFieldContainer(field));
+    containers.add(field.closest(".rn-form-group, .form-group"));
+  });
+
+  containers.forEach((container) => {
+    if (!container?.querySelector('[data-form-validation-invalid="true"]')) {
+      container?.classList.remove("has-validation-error");
+    }
+  });
+
+  const message = findInlineMessage(form, path, fields, findFieldContainer(fields[0]));
+  if (message?.dataset.formValidationMessageHidden === "true") {
+    message.hidden = false;
+    message.removeAttribute("data-form-validation-message-hidden");
+  }
+  message?.removeAttribute("role");
+};
+
 const resolveValidationErrorTypes = async (validationSchema, values, path) => {
   let schema;
 
@@ -353,17 +386,50 @@ const focusValidationTarget = (target) => {
   focusTarget.focus({ preventScroll: true });
 };
 
-const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedErrors }) => {
-  const { errors, isValidating, submitCount, touched, values } = useFormikContext();
+const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedErrors, validationViewKey }) => {
+  const { errors, isValidating, setFieldError, submitCount, touched, values } = useFormikContext();
   const dispatch = useDispatch();
   const markerRef = useRef(null);
   const handledSubmitRef = useRef(0);
+  const errorsRef = useRef(errors);
+  const previousValuesRef = useRef(values);
   const scrollFrameRef = useRef(null);
+  errorsRef.current = errors;
 
   useEffect(() => {
     const form = findOwnedForm(markerRef.current, ownerId);
     if (form) form.noValidate = true;
   }, [ownerId]);
+
+  useEffect(() => {
+    const form = findOwnedForm(markerRef.current, ownerId);
+    if (!form) return undefined;
+    const handleEdit = (event) => {
+      const field = event.target;
+      const path = fieldPathFor(field) || fieldPathFor(field.closest?.("[data-field-path], [data-field-name]"));
+      if (!path) return;
+      clearFieldValidationState(form, path);
+      if (getIn(errorsRef.current, path) != null) setFieldError(path, undefined);
+    };
+    form.addEventListener("input", handleEdit);
+    form.addEventListener("change", handleEdit);
+    return () => {
+      form.removeEventListener("input", handleEdit);
+      form.removeEventListener("change", handleEdit);
+    };
+  }, [ownerId, setFieldError]);
+
+  useEffect(() => {
+    const previousValues = previousValuesRef.current;
+    previousValuesRef.current = values;
+    if (previousValues === values) return;
+    const form = findOwnedForm(markerRef.current, ownerId);
+    for (const { path } of flattenErrorEntries(errors)) {
+      if (valueAtPath(previousValues, path) === valueAtPath(values, path)) continue;
+      clearFieldValidationState(form, path);
+      setFieldError(path, undefined);
+    }
+  }, [errors, ownerId, setFieldError, values]);
 
   useEffect(() => {
     // Step navigation validates without submitting the entire form. Present
@@ -384,7 +450,7 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
         field.closest(".rn-form-group, .form-group")?.classList.add("has-validation-error");
       }
     }
-  }, [errors, highlightTouchedErrors, isValidating, ownerId, submitCount, touched]);
+  }, [errors, highlightTouchedErrors, isValidating, ownerId, submitCount, touched, validationViewKey]);
 
   useEffect(() => {
     if (submitCount === 0) {
@@ -523,9 +589,8 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
         scrollFrameRef.current = null;
       }
     };
-    // A submitted snapshot must finish presenting even if the user starts
-    // typing immediately. The next submit/isValidating transition replaces it.
-  }, [dispatch, isValidating, ownerId, submitCount]);
+    // Editing cancels a pending submit snapshot so an old error cannot return.
+  }, [dispatch, isValidating, ownerId, submitCount, values]);
 
   return <span ref={markerRef} hidden aria-hidden="true" />;
 };
@@ -533,13 +598,14 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
 FormikValidationEffects.propTypes = {
   highlightTouchedErrors: PropTypes.bool,
   ownerId: PropTypes.string.isRequired,
+  validationViewKey: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   validationSchema: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
 };
 
-const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = false, ...props }) => {
+const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = false, validationViewKey, ...props }) => {
   const ownerId = useId();
 
   return (
@@ -560,6 +626,7 @@ const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = 
               ownerId={ownerId}
               validationSchema={validationSchema}
               highlightTouchedErrors={highlightTouchedErrors}
+              validationViewKey={validationViewKey}
             />
             {addOwnerToFirstForm(renderedChildren, ownerId)}
           </>
@@ -571,6 +638,7 @@ const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = 
 
 ValidatedFormik.propTypes = {
   highlightTouchedErrors: PropTypes.bool,
+  validationViewKey: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
   validationSchema: PropTypes.oneOfType([
     PropTypes.func,

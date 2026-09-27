@@ -193,7 +193,7 @@ const Christmas = (props) => {
                         }}
                       >
                         Your Holiday Wish{" "}
-                        <span style={{ color: "#dc3545" }}>*</span>
+                        <span className="required-mark">*</span>
                       </label>
                       <Field
                         as="textarea"
@@ -224,7 +224,7 @@ const Christmas = (props) => {
                           display: "block",
                         }}
                       >
-                        Your Name <span style={{ color: "#dc3545" }}>*</span>
+                        Your Name <span className="required-mark">*</span>
                       </label>
                       <Field
                         type="text"
@@ -272,7 +272,7 @@ const Christmas = (props) => {
                         }}
                       >
                         Receiver Full Name{" "}
-                        <span style={{ color: "#dc3545" }}>*</span>
+                        <span className="required-mark">*</span>
                       </label>
                       <Field
                         type="text"

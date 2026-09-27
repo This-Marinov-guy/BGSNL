@@ -21,7 +21,7 @@
 .eventPicker p { margin: 0 0 16px; }
 .eventPicker [role="alert"] { color: #9b2920; }
 .search { display: grid !important; gap: .5rem; margin: 1.35rem 0 1rem; color: #314339; font-size: .88rem; font-weight: 700; }
-.eventCards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: .85rem; max-height: min(50vh, 34rem); overflow: auto; padding: .2rem; }
+.eventCards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: .85rem; padding: .2rem; }
 .eventCard { display: grid; grid-template-rows: 9rem auto; gap: 0; width: 100%; min-height: 0 !important; padding: 0 !important; overflow: hidden; border: 1px solid #d3ded5 !important; border-radius: .8rem !important; background: rgb(255 255 255 / 78%) !important; color: #18271c !important; text-align: left; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease; }
 .eventCard:hover { border-color: #087462 !important; background: #fff !important; transform: translateY(-2px); }
 .eventCard:active { transform: translateY(0) scale(.99); }

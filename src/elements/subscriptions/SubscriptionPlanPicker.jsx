@@ -1,5 +1,6 @@
 "use client";
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { SelectInput } from "@/compat/primereact";
 
 import { useEffect, useId, useRef, useState } from "react";
@@ -52,7 +53,7 @@ export default function SubscriptionPlanPicker({ user, alumniOnly = false }) {
       {error ? (
         <div role="status">
           <p>We could not load the available plans.</p>
-          <button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" onClick={() => setAttempt((value) => value + 1)}>Try again</button>
+          <button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" onClick={() => setAttempt((value) => value + 1)}><RetryIcon />Try again</button>
         </div>
       ) : !plans ? <p role="status">Loading subscription options…</p> : (
         <>

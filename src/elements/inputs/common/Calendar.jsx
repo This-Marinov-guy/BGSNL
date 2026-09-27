@@ -18,11 +18,12 @@ export const Calendar = ({ initialValue, value, onSelect, ...props }) => (
   />
 );
 
-export const CalendarWithClock = ({ initialValue, value, min, onSelect, ...props }) => (
+export const CalendarWithClock = ({ initialValue, value, min, max, onSelect, ...props }) => (
   <PrimeCalendar
     {...props}
     value={toValidDate(value ?? initialValue)}
     minDate={toValidDate(min)}
+    maxDate={toValidDate(max)}
     dateFormat="dd/mm/yy"
     hourFormat="24"
     stepMinute={5}
@@ -44,6 +45,11 @@ const calendarPropTypes = {
     PropTypes.number,
   ]),
   min: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  max: PropTypes.oneOfType([
     PropTypes.instanceOf(Date),
     PropTypes.string,
     PropTypes.number,

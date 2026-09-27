@@ -1,14 +1,15 @@
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   FaCog,
   FaSignOutAlt,
   FaUser,
 } from "@/elements/ui/icons/IconlyIcons";
 import { showModal } from "../../../redux/modal";
-import { logout } from "../../../redux/user";
+import { logout, selectUser } from "../../../redux/user";
 import { showNotification } from "../../../redux/notification";
-import { USER_UPDATE_MODAL } from "../../../util/defines/common";
+import { ACTIVE_MEMBER, USER_UPDATE_MODAL } from "../../../util/defines/common";
+import AccessRequestBanner from "@/elements/backoffice/AccessRequestBanner";
 import MembershipTransferPrompt from "@/elements/subscriptions/MembershipTransferPrompt";
 import BillingActions from "@/elements/subscriptions/BillingActions";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
@@ -51,6 +52,7 @@ SettingsRow.propTypes = {
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
+  const showAccessRequest = useSelector((state) => selectUser(state).roles?.includes(ACTIVE_MEMBER));
   const handleLogout = async () => {
     try { await dispatch(logout()); window.location.href = "/"; }
     catch { dispatch(showNotification({ severity: "error", detail: "Could not sign out. Please retry." })); }
@@ -100,6 +102,7 @@ const SettingsTab = ({ user }) => {
               />
               <WalletSettings user={user} />
             </ul>
+            {showAccessRequest && <AccessRequestBanner />}
           </section>
 
           <section className="settings-group" aria-labelledby="settings-session">

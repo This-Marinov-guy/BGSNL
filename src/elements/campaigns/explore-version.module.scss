@@ -1,0 +1,87 @@
+.mobileHeader { display: none; }
+
+.navigation {
+  position: sticky;
+  top: 6.5rem;
+  min-width: 0;
+  display: grid;
+  gap: 1rem;
+
+  :global(.user-sidebar) { position: static; }
+}
+
+.banner {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  padding: 0.85rem 0.75rem;
+  border: 0;
+  border-radius: 1rem;
+  color: #fff;
+  background: #29103f;
+  font-size: 1.2rem;
+  font-family: "Archive", sans-serif;
+  font-weight: 400;
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgb(41 16 63 / 16%);
+
+  // Poster generation button's purple / violet / pink gradient palette.
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -50%;
+    background:
+      radial-gradient(ellipse at 25% 35%, rgb(88 28 135 / 85%), transparent 55%),
+      radial-gradient(ellipse at 60% 65%, rgb(147 51 234 / 45%), transparent 50%),
+      radial-gradient(ellipse at 85% 25%, rgb(236 72 153 / 30%), transparent 45%);
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: url("/assets/images/campaigns/version4/noise.webp") center / cover;
+    mix-blend-mode: overlay;
+    opacity: 0.2;
+  }
+
+  &:hover { background-color: #381650; }
+  &:focus-visible { outline: 3px solid #9333ea; outline-offset: 4px; }
+}
+
+@keyframes drift {
+  from { transform: translate(-6%, -4%); }
+  to { transform: translate(6%, 4%); }
+}
+
+@media (max-width: 991px) {
+  .desktopBanner { display: none; }
+  .mobileHeader {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    max-width: 15rem;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    .banner { font-size: 0.85rem; padding: 0.75rem 0.5rem; border-radius: 0.75rem; }
+    .banner span { font-family: "Archive", sans-serif !important; }
+  }
+  .navigation {
+    position: static;
+    display: block;
+    margin: 0;
+    :global(.user-sidebar.mobile) { position: fixed; }
+  }
+  .banner { padding: 0.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner::before { animation: none; }
+}

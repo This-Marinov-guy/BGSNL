@@ -79,7 +79,7 @@ const AddOnsBuilder = (props) => {
                   marginBottom: "5px",
                 }}
               >
-                Main Title <span style={{ color: "#dc3545" }}>*</span>
+                Main Title <span className="required-mark">*</span>
               </label>
               <input
                 name="addOns.title"
@@ -177,7 +177,7 @@ const AddOnsBuilder = (props) => {
                     marginBottom: "5px",
                   }}
                 >
-                  Title <span style={{ color: "#dc3545" }}>*</span>
+                  Title <span className="required-mark">*</span>
                 </label>
                 <input
                   name={`addOns.items[${itemIndex}].title`}

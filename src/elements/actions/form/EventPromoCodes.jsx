@@ -20,7 +20,7 @@ export default function EventPromoCodes() {
           <div className="event-option-grid">
             <OptionField name={`${prefix}.code`} label="Promo code *" placeholder="e.g., WELCOME20" maxLength={100} autoCapitalize="characters" autoComplete="off" onChange={event => setFieldValue(`${prefix}.code`, normalizePromoCodeName(event.target.value))} />
             <div className="rn-form-group" data-custom-validation-field data-field-name={`${prefix}.discountType`}>
-              <label htmlFor={`${id}-${index}-type`}>Discount type *</label>
+              <label htmlFor={`${id}-${index}-type`}>Discount type <span className="required-mark">*</span></label>
               <SelectInput id={`${id}-${index}-type`} name={`${prefix}.discountType`} value={code.discountType} disabled={locked} onChange={event => setFieldValue(`${prefix}.discountType`, Number(event.target.value))}>
                 <option value={2}>Percentage off (%)</option><option value={1}>Fixed amount off (€)</option>
               </SelectInput><OptionError name={`${prefix}.discountType`} />

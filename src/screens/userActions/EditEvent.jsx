@@ -75,7 +75,7 @@ const EditEvent = () => {
         <h3 className="center_text">{event.status === EVENT_DRAFT ? "Edit Draft" : "Edit Event"}</h3>
         <EventEditSummary key={event.id} event={event} />
       </div>
-      <EventForm key={event.id} edit initialData={event} completeDraft={event.status === EVENT_DRAFT && searchParams.get("complete") === "1"} />
+      <EventForm key={`${event.id}:${searchParams.get("section") ?? ""}`} edit initialData={event} initialSection={searchParams.get("section")} completeDraft={event.status === EVENT_DRAFT && searchParams.get("complete") === "1"} />
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}

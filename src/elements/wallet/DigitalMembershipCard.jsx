@@ -16,7 +16,24 @@ const spartan = localFont({ src: "../../../public/assets/fonts/LeagueSpartan.ttf
 const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
 const TICKETS_PER_PAGE = 4;
 
-export default function DigitalMembershipCard({ card, qrImage, tickets = [] }) {
+export function MembershipCardFront({ card, qrImage }) {
+  return (
+          <article className={`${styles.card} ${styles.membershipCard}`} aria-label="Digital membership card">
+            <Image className={styles.background} src="/assets/wallet-cards/v1/card-background.png" alt="" fill sizes="(max-width: 600px) 100vw, 540px" priority />
+            <div className={styles.portrait}>
+              <Image src={card.profileImage} alt={`${card.firstName} ${card.surname}`} fill sizes="232px" priority referrerPolicy="no-referrer"
+                onError={(event) => { event.currentTarget.src = "/assets/images/avatars/bg_other_avatar_1.jpeg"; }} />
+            </div>
+            <div className={styles.memberText}>
+              <h2 className={archive.className} style={{ fontSize: `${spec.design.typography.name.fontSize / 10.8}cqw` }}>{card.firstName} {card.surname}</h2>
+              <p className={spartan.className} style={{ fontSize: `${spec.design.typography.membershipLabel.fontSize / 10.8}cqw` }}>{card.membershipLabel}</p>
+            </div>
+            <div className={styles.qr}><Image src={qrImage} alt="Membership card QR code" width={384} height={384} unoptimized /></div>
+          </article>
+  );
+}
+
+export default function DigitalMembershipCard({ card, qrImage, tickets = [], verification = null }) {
   const [showTickets, setShowTickets] = useState(false);
   const [ticketPage, setTicketPage] = useState(0);
   const [pageDirection, setPageDirection] = useState(1);
@@ -46,7 +63,7 @@ export default function DigitalMembershipCard({ card, qrImage, tickets = [] }) {
 
   return <>
     <div className={styles.cardToolbar}>
-      <div className={styles.status} role="status" data-status={card.status}>{card.status === "active" ? "Active" : "Locked"}</div>
+      <div className={styles.status} role="status" data-status={verification ? "locked" : card.status}>{verification === "checking" ? "Checking status…" : verification === "error" ? "Unverified" : card.status === "active" ? "Active" : "Locked"}</div>
       <button
         aria-controls="membership-card-tickets"
         aria-expanded={showTickets}
@@ -61,18 +78,7 @@ export default function DigitalMembershipCard({ card, qrImage, tickets = [] }) {
     <div className={styles.flipShell} data-flipped={showTickets}>
       <div className={`${styles.cardFace} ${styles.membershipFace}`} aria-hidden={showTickets}>
         <CometCard>
-          <article className={`${styles.card} ${styles.membershipCard}`} aria-label="Digital membership card">
-            <Image className={styles.background} src="/assets/wallet-cards/v1/card-background.png" alt="" fill sizes="(max-width: 600px) 100vw, 540px" priority />
-            <div className={styles.portrait}>
-              <Image src={card.profileImage} alt={`${card.firstName} ${card.surname}`} fill sizes="232px" referrerPolicy="no-referrer"
-                onError={(event) => { event.currentTarget.src = "/assets/images/avatars/bg_other_avatar_1.jpeg"; }} />
-            </div>
-            <div className={styles.memberText}>
-              <h2 className={archive.className} style={{ fontSize: `${spec.design.typography.name.fontSize / 10.8}cqw` }}>{card.firstName} {card.surname}</h2>
-              <p className={spartan.className} style={{ fontSize: `${spec.design.typography.membershipLabel.fontSize / 10.8}cqw` }}>{card.membershipLabel}</p>
-            </div>
-            <div className={styles.qr}><Image src={qrImage} alt="Membership card QR code" width={384} height={384} unoptimized /></div>
-          </article>
+          <MembershipCardFront card={card} qrImage={qrImage} />
         </CometCard>
       </div>
       <section
@@ -84,7 +90,7 @@ export default function DigitalMembershipCard({ card, qrImage, tickets = [] }) {
         <header className={styles.ticketHeader}>
           <h2 className={archive.className}>{card.firstName}&apos;s tickets</h2>
         </header>
-        {orderedTickets.length ? (
+        {showTickets ? orderedTickets.length ? (
           <div className={styles.ticketPages} aria-live="polite">
             <AnimatePresence initial={false} mode="wait">
               <motion.div
@@ -133,7 +139,7 @@ export default function DigitalMembershipCard({ card, qrImage, tickets = [] }) {
             <h3 className={spartan.className}>No tickets yet</h3>
             <p>Your event tickets will appear here.</p>
           </div>
-        )}
+        ) : null}
       </section>
     </div>
     {previewTicket ? <ImageGallery
@@ -149,4 +155,6 @@ export default function DigitalMembershipCard({ card, qrImage, tickets = [] }) {
 DigitalMembershipCard.propTypes = { card: PropTypes.shape({ firstName: PropTypes.string.isRequired, surname: PropTypes.string.isRequired,
   profileImage: PropTypes.string.isRequired, membershipLabel: PropTypes.string.isRequired, status: PropTypes.oneOf(["active", "locked"]).isRequired }).isRequired,
 qrImage: PropTypes.string.isRequired,
-tickets: PropTypes.arrayOf(PropTypes.string) };
+tickets: PropTypes.arrayOf(PropTypes.string), verification: PropTypes.oneOf(["checking", "error"]) };
+
+MembershipCardFront.propTypes = { card: DigitalMembershipCard.propTypes.card, qrImage: PropTypes.string.isRequired };

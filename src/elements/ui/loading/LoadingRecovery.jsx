@@ -1,5 +1,6 @@
 "use client";
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useEffect, useState } from "react";
 import { scheduleLoadingRecovery } from "./loading-recovery.mjs";
 import styles from "./loading-recovery.module.scss";
@@ -7,7 +8,7 @@ import styles from "./loading-recovery.module.scss";
 export function LoadingRecoveryActions() {
   return (
     <div className={styles.actions}>
-      <button type="button" className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => window.location.reload()}>Retry</button>
+      <button type="button" className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => window.location.reload()}><RetryIcon />Retry</button>
       {/* Recovery deliberately bypasses the router/client cache, including a
           stuck navigation or account initialization that refresh() preserves. */}
       <a className="rn-button-style--2 rn-btn-reverse-red rn-btn-small" href="/">Home</a>

@@ -40,7 +40,7 @@ export default function EventCollectData() {
           <div className="event-option-grid">
             <OptionField name={`${prefix}.placeholder`} label="Question *" placeholder="e.g., Do you have any dietary requirements?" maxLength={200} />
             <div className="rn-form-group" data-custom-validation-field data-field-name={`${prefix}.type`}>
-              <label htmlFor={typeId}>Answer type *</label>
+              <label htmlFor={typeId}>Answer type <span className="required-mark">*</span></label>
               <SelectInput id={typeId} name={`${prefix}.type`} value={question.type} onChange={event => setFieldValue(`${prefix}.type`, event.target.value)}>
                 <option value="" disabled>Choose an answer type</option><option value="text">Written answer</option><option value="select">Choose from options</option>
               </SelectInput><OptionError name={`${prefix}.type`} />

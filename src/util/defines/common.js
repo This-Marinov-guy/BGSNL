@@ -17,6 +17,8 @@ export const WARNING_THRESHOLD = 0; // Disabled - no warning threshold
 // member roles
 export const SUPER_ADMIN = 'super_admin';
 export const ADMIN = 'admin';
+export const DEVELOPER = 'developer';
+export const MONITORING_ACCESS = [SUPER_ADMIN, ADMIN, DEVELOPER];
 export const NATIONAL_BOARD_MEMBER = 'national_board_member';
 export const SOCIETY_ADMIN = NATIONAL_BOARD_MEMBER;
 export const SUPPORT = 'support';

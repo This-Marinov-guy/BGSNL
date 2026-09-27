@@ -1,5 +1,68 @@
 .actions { gap: 12px; flex-wrap: wrap; align-items: center; }
 
+.profilePanel {
+  display: grid;
+  grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 0.7rem;
+  background: rgb(232 244 241 / 48%);
+
+  .thumbnail { grid-row: 1 / 3; }
+  > :global(.settings-list__text) { align-self: end; }
+  :global(.settings-list__title) { font-size: 1.25rem; }
+  > .actions { grid-column: 2; justify-content: flex-start; align-self: start; }
+
+  @media (max-width: 575px) {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+    padding: 1.25rem;
+    .thumbnail { grid-row: auto; justify-self: center; }
+    > .actions { grid-column: 1; justify-content: center; }
+  }
+}
+
+.thumbnail {
+  position: relative;
+  display: block;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 10rem;
+  aspect-ratio: 1080 / 1350;
+  border-radius: 0.75rem;
+
+  &:focus-visible { outline: 2px solid #017363; outline-offset: 4px; }
+}
+
+.thumbnailPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #e8f1ec;
+  color: #406345;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.3;
+
+  button { padding: 0; border: 0; background: none; color: inherit; text-decoration: underline; }
+}
+
+.thumbnailSkeleton {
+  overflow: hidden;
+  background: #e8f1ec;
+
+  > span[aria-hidden] { position: absolute; border-radius: 0.25rem; }
+  .skeletonPortrait { left: 28.52%; top: 25.19%; width: 42.96%; height: 35.33%; border-radius: 9%; }
+  .skeletonName { left: 15%; top: 63%; width: 70%; height: 4%; }
+  .skeletonMembership { left: 25%; top: 71%; width: 50%; height: 3%; }
+  .skeletonQr { left: 40%; top: 79.78%; width: 20%; aspect-ratio: 1; }
+}
+
 .actionsSkeleton {
   display: flex;
   align-items: center;
@@ -9,7 +72,8 @@
 }
 
 .iconActionSkeleton,
-.badgeSkeleton {
+.badgeSkeleton,
+.thumbnailSkeleton > span[aria-hidden] {
   display: block;
   flex: 0 0 auto;
   background: linear-gradient(90deg, #e8eeeb 25%, #f5f8f6 38%, #e8eeeb 63%);
@@ -85,5 +149,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .iconActionSkeleton,
-  .badgeSkeleton { animation: none; }
+  .badgeSkeleton,
+  .thumbnailSkeleton > span[aria-hidden] { animation: none; }
 }

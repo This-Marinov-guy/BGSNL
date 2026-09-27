@@ -2,6 +2,7 @@
 
 /* global Intl */
 
+import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -142,7 +143,7 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
               </Link>}
             </> : pending || unavailable ? <p role="status" className={styles.syncStatus}>Checking automatically…</p>
               : <button type="button" disabled={retrying} onClick={retry} className="rn-button-style--2 rn-btn-reverse-red rn-btn-small">
-              {retrying ? "Checking checkout…" : result.canResume ? "Retry checkout" : result.kind === "donation" ? "Contact us to retry" : "Start checkout again"} <FiArrowRight size={24} />
+              <RetryIcon />{retrying ? "Checking checkout…" : result.canResume ? "Retry checkout" : result.kind === "donation" ? "Contact us to retry" : "Start checkout again"}
             </button>}
             {!successful && !pending && !unavailable && eventDestination && <Link href={eventDestination} className="rn-button-style--2 rn-btn-green rn-btn-small">
               View event <FiArrowRight size={24} />
