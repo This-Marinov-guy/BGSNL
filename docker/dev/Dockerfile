@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM stripe/stripe-cli:v1.51.0 AS stripe
-FROM node:22-bookworm-slim
+FROM node:24-bookworm-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates curl fontconfig redis-server tini python3 make g++ lsof \
     && rm -rf /var/lib/apt/lists/*

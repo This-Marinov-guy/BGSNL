@@ -61,7 +61,9 @@ layout, update Compose source/context paths and Dockerfile COPY paths together.
 
 ## Host development (optional)
 
-Use Node.js 20.9+ and install dependencies in each of the three checkouts:
+Use Node.js 24 LTS (`nvm install && nvm use` in this checkout) and install
+dependencies in each of the three checkouts. The website and API require Node.js
+24.x; npm rejects unsupported versions through `engine-strict`:
 
 ```bash
 npm install
