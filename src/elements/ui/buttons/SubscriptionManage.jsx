@@ -36,8 +36,8 @@ export default function SubscriptionManage({ canCancel = true, subscription, use
     const response = await request.current("payment/subscription/preview", "POST", { itemId: priceId, origin_url: window.location.origin }, {}, false, false);
     return response?.quote;
   }, []);
-  const switchPlan = useCallback(async priceId => {
-    const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin);
+  const switchPlan = useCallback(async (priceId, region) => {
+    const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin, region);
     if (url) window.location.assign(url);
     else window.location.reload();
   }, []);
@@ -79,7 +79,7 @@ export default function SubscriptionManage({ canCancel = true, subscription, use
     <AppModal open={switchOpen && showSwitch} onClose={closeSwitch} title="Switch subscription"
       closable={!pending && !guideOpen} dismissableMask={!pending && !guideOpen} suspended={guideOpen}>
       {switchOpen && (canSwitch ? <SubscriptionCheckoutForm initialType={user?.isAlumni || user?.roles?.includes("alumni") ? "alumni" : "member"}
-        currentPriceId={subscription.priceId} currentTier={user?.tier} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={switchPlan}
+        initialRegion={user?.region} currentPriceId={subscription.priceId} currentTier={user?.tier} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={switchPlan}
         onPendingChange={updateSwitchPending} onMembershipGuideChange={setGuideOpen} /> :
         <p>{subscription.scheduledChange ? "Your Alumni downgrade is already scheduled for your next billing date. Contact support if you need to change this request." : "Resolve any payment issue, pending change or scheduled cancellation in Payments before switching. If billing cannot be verified, try again shortly or contact support."}</p>)}
     </AppModal>

@@ -37,8 +37,8 @@ export default function MembershipTransferPrompt({ user }) {
     const response = await request.current("payment/subscription/preview", "POST", { itemId: priceId, origin_url: window.location.origin }, {}, false, false);
     return response?.quote;
   }, []);
-  const checkout = useCallback(async priceId => {
-    const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin);
+  const checkout = useCallback(async (priceId, region) => {
+    const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin, region);
     if (url) window.location.assign(url);
     else window.location.reload();
   }, []);
@@ -50,7 +50,7 @@ export default function MembershipTransferPrompt({ user }) {
     <p>You are signed in as <strong>{user.email}</strong>. Review your new plan before confirming a transfer.</p>
     {!allowed ? <p>This account is restricted. Contact support before changing membership.</p> : currentType === targetType ?
       <p>Your account is already on the requested membership type.</p> :
-      <SubscriptionCheckoutForm initialType={targetType} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setGuideOpen} />}
+      <SubscriptionCheckoutForm initialRegion={user?.region} initialType={targetType} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setGuideOpen} />}
   </AppModal>;
 }
 MembershipTransferPrompt.propTypes = { user: PropTypes.object.isRequired };

@@ -31,7 +31,7 @@ export default function AccountBillingAlert({ user, showAction = true, flushBott
         <IconlyDanger className={styles.dangerIcon} aria-hidden />
         <h2 id={titleId}>{notice.title}</h2>
         <div className={styles.dangerContent}>
-          <p>{notice.description}{action === "start" && <> <SubscriptionStart linkStyle /></>}</p>
+          <p>{notice.description}{action === "start" && <> <SubscriptionStart user={user} linkStyle /></>}</p>
           {notice.amountDue > 0 && <p>Outstanding amount: <strong>{new Intl.NumberFormat("en-NL", { style: "currency", currency: notice.currency }).format(notice.amountDue / 100)}</strong></p>}
           {notice.paymentNote && <p>{notice.paymentNote}</p>}
           {(showAction && action !== "start" || notice.reason === "unavailable") && <div className={styles.billingAlertActions}>

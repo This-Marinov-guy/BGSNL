@@ -62,10 +62,11 @@ export function chargeAmountLabel(quote) {
   return new Intl.NumberFormat("en-NL", { style: "currency", currency: "eur" }).format(quote.amountDue / 100);
 }
 
-export async function requestSubscriptionCheckout(request, priceId, origin) {
+export async function requestSubscriptionCheckout(request, priceId, origin, region) {
   const response = await request("payment/subscription/change", "POST", {
     itemId: priceId,
     origin_url: origin,
+    ...(region ? { region } : {}),
   }, {}, true, false);
 
   // Same-programme changes are saved without a payment redirect. Callers

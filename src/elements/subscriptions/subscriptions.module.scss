@@ -72,6 +72,14 @@
   align-items: center;
   display: flex;
   gap: 0.5rem;
+
+  label { color: inherit; font: inherit; }
+
+  .membershipHelpButton {
+    flex-basis: 18px;
+    height: 18px;
+    width: 18px;
+  }
 }
 
 .membershipHelpButton {

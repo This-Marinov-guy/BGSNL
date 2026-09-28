@@ -14,6 +14,7 @@ import { clarityEvent } from "@/util/functions/helpers";
 import MembershipTypeCard from "./MembershipTypeCard";
 import { chargeAmountLabel, paidSubscriptionPlans, planChangeChargesImmediately, requestSubscriptionCheckout, subscriptionPlanLabel, validChargeQuote } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
+import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 
 const ACTION_CLASS = "rn-button-style--2 rn-btn-reverse-green rn-btn-small";
 
@@ -59,6 +60,7 @@ export function SubscriptionCheckoutForm({
   loadPlans,
   loadQuote,
   initialType = "",
+  initialRegion = "",
   currentPriceId = "",
   currentTier,
   onCheckout,
@@ -72,6 +74,7 @@ export function SubscriptionCheckoutForm({
   const [attempt, setAttempt] = useState(0);
   const [type, setType] = useState(["member", "alumni"].includes(initialType) ? initialType : "");
   const [priceId, setPriceId] = useState("");
+  const [region, setRegion] = useState(REGIONS.includes(initialRegion) ? initialRegion : "");
   const [pending, setPending] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
   const [membershipGuideOpen, setMembershipGuideOpen] = useState(false);
@@ -148,7 +151,7 @@ export function SubscriptionCheckoutForm({
 
   const submit = async (event) => {
     event.preventDefault();
-    if (!selected || submitting.current || (chargeNow && !quote)) return;
+    if (!selected || submitting.current || (type === "member" && !REGIONS.includes(region)) || (chargeNow && !quote)) return;
     submitting.current = true;
     setPending(true);
     setCheckoutError("");
@@ -158,7 +161,7 @@ export function SubscriptionCheckoutForm({
       [ANALYTICS_PROPERTIES.MEMBERSHIP_PLAN]: subscriptionPlanLabel(selected),
     });
     try {
-      await onCheckout(selected.priceId);
+      await onCheckout(selected.priceId, type === "member" ? region : undefined);
       // Stay disabled while redirecting to Stripe or refreshing the saved plan.
     } catch {
       if (!mounted.current) return;
@@ -183,7 +186,7 @@ export function SubscriptionCheckoutForm({
       ) : !plans ? <SubscriptionOptionsSkeleton /> : (
         <>
           <div className={`rn-form-group ${styles.checkoutField}`}>
-            <div className={styles.checkoutLabelRow}>
+            <div className={`rn-form-label-row ${styles.checkoutLabelRow}`}>
               <label htmlFor={`${id}-type`}>Membership type</label>
               <button
                 aria-expanded={membershipGuideOpen}
@@ -204,6 +207,14 @@ export function SubscriptionCheckoutForm({
               <option value="alumni" disabled={!plans.some((plan) => plan.type === "alumni")}>Alumni</option>
             </SelectInput>
           </div>
+          {type === "member" && <div className={`rn-form-group ${styles.checkoutField}`}>
+            <label htmlFor={`${id}-region`}>Region</label>
+            <SelectInput className="bgsnl-form-control" id={`${id}-region`} value={region} disabled={pending} required
+              onChange={event => setRegion(event.target.value)}>
+              <option value="">Select your region</option>
+              {REGIONS.map(value => <option key={value} value={value}>{value === "breda_tilburg" ? "Breda–Tilburg" : value === "leiden_hague" ? "Leiden–The Hague" : value.charAt(0).toUpperCase() + value.slice(1)}</option>)}
+            </SelectInput>
+          </div>}
           <div className={`rn-form-group ${styles.checkoutField}`}>
             <label htmlFor={`${id}-plan`}>{type === "alumni" ? "Alumni tier" : "Membership period"}</label>
             <SelectInput className="bgsnl-form-control" id={`${id}-plan`} value={priceId} disabled={!type || pending} required
@@ -222,7 +233,7 @@ export function SubscriptionCheckoutForm({
               </option>)}
             </SelectInput>
           </div>
-          <p id={`${id}-help`} aria-live="polite">{scheduledDowngrade ? "No charge today. You keep your current tier and benefits until your next billing date, when the lower tier and price take effect." : billsAtRenewal ? "Your profile will update immediately. No charge today: your new price and payment period apply from your existing next billing date." : currentPriceId ? "You will review any charges and credits in Stripe before confirming. Your membership updates once payment is confirmed." : "Subscriptions renew automatically. Paid benefits become available after your payment is confirmed. You can manage or cancel your subscription in Billing."}</p>
+          {/* <p id={`${id}-help`} aria-live="polite">{scheduledDowngrade ? "No charge today. You keep your current tier and benefits until your next billing date, when the lower tier and price take effect." : billsAtRenewal ? "Your profile will update immediately. No charge today: your new price and payment period apply from your existing next billing date." : currentPriceId ? "You will review any charges and credits in Stripe before confirming. Your membership updates once payment is confirmed." : "Subscriptions renew automatically. Paid benefits become available after your payment is confirmed. You can manage or cancel your subscription in Billing."}</p> */}
           {checkoutError && <p role="alert">{checkoutError}</p>}
           <div className={styles.checkoutActions}>
           <AnimatePresence initial={false}>
@@ -240,7 +251,7 @@ export function SubscriptionCheckoutForm({
               </div> : <p>{quote.amountDue > 0 ? <><strong>{chargeAmountLabel(quote)} will be taken from your payment method</strong> when you confirm in Stripe. This is the current estimate, including applicable credits. Stripe confirms the final amount.</> : <><strong>{chargeAmountLabel(quote)} due now.</strong> No payment is currently due. Review and confirm the change in Stripe.</>}</p>}
             </motion.div>}
           </AnimatePresence>
-          <button aria-describedby={`${id}-help${chargeNow ? ` ${id}-charge-warning` : ""}`} className={ACTION_CLASS} type="submit" disabled={!selected || pending || (chargeNow && !quote)}>
+          <button aria-describedby={`${id}-help${chargeNow ? ` ${id}-charge-warning` : ""}`} className={ACTION_CLASS} type="submit" disabled={!selected || pending || (type === "member" && !region) || (chargeNow && !quote)}>
             {pending ? billsAtRenewal ? "Updating subscription…" : "Opening payment…" : scheduledDowngrade ? "Schedule downgrade" : billsAtRenewal ? "Confirm switch" : "Continue to payment"}
           </button>
           </div>
@@ -276,6 +287,7 @@ SubscriptionCheckoutForm.propTypes = {
   loadPlans: PropTypes.func.isRequired,
   loadQuote: PropTypes.func.isRequired,
   initialType: PropTypes.oneOf(["", "member", "alumni"]),
+  initialRegion: PropTypes.string,
   currentPriceId: PropTypes.string,
   currentTier: PropTypes.number,
   onCheckout: PropTypes.func.isRequired,
@@ -283,7 +295,7 @@ SubscriptionCheckoutForm.propTypes = {
   onMembershipGuideChange: PropTypes.func,
 };
 
-export default function SubscriptionStart({ linkStyle = false }) {
+export default function SubscriptionStart({ linkStyle = false, user }) {
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
   request.current = sendRequest;
@@ -306,8 +318,8 @@ export default function SubscriptionStart({ linkStyle = false }) {
     const response = await request.current("payment/subscription/preview", "POST", { itemId: priceId, origin_url: window.location.origin }, {}, false, false);
     return response?.quote;
   }, []);
-  const checkout = useCallback(async (priceId) => {
-    const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin);
+  const checkout = useCallback(async (priceId, region) => {
+    const url = await requestSubscriptionCheckout(request.current, priceId, window.location.origin, region);
     if (url) window.location.assign(url);
     else window.location.reload();
   }, []);
@@ -319,10 +331,10 @@ export default function SubscriptionStart({ linkStyle = false }) {
         setOpen(true);
       }}>Start subscription</button>
       <AppModal open={open} onClose={close} title="Choose your subscription" closable={!pending && !membershipGuideOpen} dismissableMask={!pending && !membershipGuideOpen} suspended={membershipGuideOpen}>
-        {open && <SubscriptionCheckoutForm loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
+        {open && <SubscriptionCheckoutForm initialRegion={user?.region} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
       </AppModal>
     </>
   );
 }
 
-SubscriptionStart.propTypes = { linkStyle: PropTypes.bool };
+SubscriptionStart.propTypes = { linkStyle: PropTypes.bool, user: PropTypes.object };

@@ -1166,7 +1166,8 @@ label {
  */
 .login_form label,
 .contact-form label,
-.rn-form-group > label {
+.rn-form-group > label,
+.rn-form-group > .rn-form-label-row {
   background: $label-color;
   border-radius: 6px;
   color: #232b27;
