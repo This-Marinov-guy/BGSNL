@@ -1,18 +1,18 @@
 "use client";
 
-import Image from "next/image";
+import VladiImage from "@/elements/ui/media/VladiImage";
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { IconlyRotate } from "@/elements/ui/icons/IconlyIcons";
 import { PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 
 import { SelectInput } from "@/compat/primereact";
 
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../ui/functional/AnimatedDisclosure";
 import { IconlyArrowLeft, IconlyAttach, IconlyBug, IconlyClose, IconlyDanger, IconlyImprove, IconlyProfile, IconlyScreenshot, IconlySend } from "@/elements/ui/icons/IconlyIcons";
 import { supportRequest } from "./support-api";
-import { mergeConversation, STATUS_LABELS, SUPPORT_TYPE_LABELS, supportReplyRestriction, supportStatusChange } from "./support-state.mjs";
+import { mergeConversation, STATUS_LABELS, SUPPORT_TYPE_LABELS, supportReplyRestriction, supportStatusChange, supportReviewNoticeAfter } from "./support-state.mjs";
 import styles from "./support.module.scss";
 import SupportLoading from "./SupportLoading";
 import { watchSupportLive } from "./support-live.mjs";
@@ -63,6 +63,7 @@ export default function Conversation({ id, session, secret, staff, active, onBac
   const statusInputId = `${inputId}-status`;
   const endpoint = `${staff ? "inbox" : "conversations"}/${id}`;
   const replyRestriction = supportReplyRestriction(record, staff);
+  const reviewNoticeAfter = supportReviewNoticeAfter(record, staff);
   const accept = useCallback((incoming) => setRecord((previous) => mergeConversation(previous, incoming)), []);
 
   useEffect(() => {
@@ -256,14 +257,16 @@ export default function Conversation({ id, session, secret, staff, active, onBac
         {record.before != null && <button className={styles.textButton} type="button" onClick={older} disabled={olderLoading}>{olderLoading ? "Loading earlier messages…" : "Load earlier messages"}</button>}
         {record.messages.map((message) => {
           const changedStatus = supportStatusChange(message);
-          return <article key={message.id} className={message.kind === "status" ? styles.statusMessage : styles.message} data-own={message.author === (staff ? "staff" : "requester")}>
+          return <Fragment key={message.id}><article className={message.kind === "status" ? styles.statusMessage : styles.message} data-own={message.author === (staff ? "staff" : "requester")}>
           {message.kind !== "status" && (message.author === "staff"
-            ? <small className={`${styles.supportAuthor} weight-semibold`}><Image className={styles.supportAvatar} src="/assets/images/vladi/head.png" alt="" width={24} height={33} /><span>Support</span></small>
+            ? <small className={`${styles.supportAuthor} weight-semibold`}><VladiImage className={styles.supportAvatar} src="/assets/images/vladi/head.png" alt="" width={24} height={33} /><span>Support</span></small>
             : <small className="weight-semibold">{staff ? record.contact.name : "You"}</small>)}
           {message.text && <p>{changedStatus ? <>Status changed to <span className={`${styles.status} ${styles.ticketStatusBadge}`} data-status={changedStatus}>{STATUS_LABELS[changedStatus]}</span></> : message.text}</p>}
           {!!message.attachments?.length && <div className={styles.messageAttachments}>{message.attachments.map((attachment, index) => <a href={attachment.url} target="_blank" rel="noreferrer" key={attachment.url} aria-label={attachment.type === "file" ? `Download ${attachment.name}` : `Open attached photo ${index + 1}`}>{attachment.type === "file" ? <span className={styles.attachedFile}>{attachment.name || "Download file"}</span> : <img src={attachment.url} alt={`Support attachment ${index + 1}`} loading="lazy" />}</a>)}</div>}
           <time className="type-small" dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
-        </article>; })}
+        </article>
+        {message.id === reviewNoticeAfter && <p className={styles.reviewNotice}>Give us some time to review the issue and respond</p>}
+        </Fragment>; })}
         </div>
       </div>
       <button className={`${styles.textButton} ${styles.backToBottom}`} data-visible={newBelow} inert={!newBelow} aria-hidden={!newBelow} tabIndex={newBelow ? 0 : -1} type="button" onClick={() => { stick.current = true; list.current.scrollTop = list.current.scrollHeight; list.current.focus({ preventScroll: true }); setNewBelow(false); }}>Back to bottom</button>

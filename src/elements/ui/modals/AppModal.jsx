@@ -44,6 +44,7 @@ const AppModal = ({
   maximizable = true,
   maximized,
   onMaximize,
+  initialFocusRef,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPresent, setIsPresent] = useState(open);
@@ -101,10 +102,12 @@ const AppModal = ({
 
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
+        const atDialog = document.activeElement === dialogRef.current;
+        const outsideDialog = !dialogRef.current?.contains(document.activeElement);
+        if (event.shiftKey && (document.activeElement === first || atDialog || outsideDialog)) {
           event.preventDefault();
           last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
+        } else if (!event.shiftKey && (document.activeElement === last || outsideDialog)) {
           event.preventDefault();
           first.focus();
         }
@@ -112,7 +115,8 @@ const AppModal = ({
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    (closeButtonRef.current ?? dialogRef.current)?.focus({
+    // Buttons receive initial focus only when a caller explicitly supplies a ref.
+    (initialFocusRef?.current ?? dialogRef.current)?.focus({
       preventScroll: true,
     });
 
@@ -120,7 +124,7 @@ const AppModal = ({
       document.removeEventListener("keydown", handleKeyDown);
       previouslyFocused?.focus?.({ preventScroll: true });
     };
-  }, [closable, open, isPresent, suspended]);
+  }, [closable, open, isPresent, suspended, initialFocusRef]);
 
   useEffect(() => {
     if (!open || !modal || !blockScroll) return undefined;
@@ -366,6 +370,7 @@ AppModal.propTypes = {
   maximizable: PropTypes.bool,
   maximized: PropTypes.bool,
   onMaximize: PropTypes.func,
+  initialFocusRef: PropTypes.shape({ current: PropTypes.object }),
 };
 
 export default AppModal;

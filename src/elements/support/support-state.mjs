@@ -3,6 +3,14 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{1
 export const SUPPORT_TYPE_LABELS = { problem: "Problem report", recommendation: "Recommendation" };
 export const STATUS_LABELS = { open: "Open", resolved: "Resolved", rejected: "Rejected", paused: "Paused" };
 
+export function supportReviewNoticeAfter(record, staff = false) {
+  if (staff || !record?.messages?.length || record.hasSupportReply === true) return null;
+  if (record.messages.some((message) => message.author === "staff" && message.kind !== "status")) return null;
+  // Older APIs may omit the flag. Only infer it from a complete history.
+  if (record.hasSupportReply !== false && record.before != null) return null;
+  return record.messages.findLast((message) => message.author === "requester" && message.kind !== "status")?.id ?? null;
+}
+
 export function supportStatusChange(message) {
   if (message?.kind !== "status") return null;
   const status = /^Status changed to (open|resolved|rejected|paused)\.$/i.exec(message.text || "")?.[1];

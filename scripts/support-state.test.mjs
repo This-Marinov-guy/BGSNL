@@ -1,6 +1,30 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createGuestAccess, guestReports, rememberGuestReport, forgetGuestReport, forgetGuestReports, supportScope, mergeConversation, supportReplyRestriction, supportStatusChange } from "../src/elements/support/support-state.mjs";
+import { createGuestAccess, guestReports, rememberGuestReport, forgetGuestReport, forgetGuestReports, supportScope, mergeConversation, supportReplyRestriction, supportStatusChange, supportReviewNoticeAfter } from "../src/elements/support/support-state.mjs";
+
+test("review notice follows the last customer message until the first support answer", () => {
+  const initial = { messages: [{ id: "first", author: "requester", kind: "message" }], hasSupportReply: false };
+  assert.equal(supportReviewNoticeAfter(initial), "first");
+  const followup = { ...initial, messages: [...initial.messages, { id: "photo", author: "requester", kind: "message", attachments: [{}] }] };
+  assert.equal(supportReviewNoticeAfter(followup), "photo");
+  assert.equal(supportReviewNoticeAfter(followup, true), null);
+  const statusOnly = { ...followup, messages: [...followup.messages, { id: "status", author: "staff", kind: "status" }] };
+  assert.equal(supportReviewNoticeAfter(statusOnly), "photo");
+  const answered = { ...followup, hasSupportReply: true, messages: [...followup.messages, { id: "answer", author: "staff", kind: "message" }] };
+  assert.equal(supportReviewNoticeAfter(answered), null);
+  assert.equal(supportReviewNoticeAfter({ ...answered, messages: [...answered.messages, { id: "thanks", author: "requester" }] }), null);
+  assert.equal(supportReviewNoticeAfter(null), null);
+  assert.equal(supportReviewNoticeAfter({ messages: [] }), null);
+});
+
+test("review notice respects earlier support replies outside the message page and legacy responses", () => {
+  const page = { before: 30, messages: [{ id: "latest", author: "requester" }] };
+  assert.equal(supportReviewNoticeAfter({ ...page, hasSupportReply: true }), null);
+  assert.equal(supportReviewNoticeAfter({ ...page, hasSupportReply: false }), "latest");
+  assert.equal(supportReviewNoticeAfter(page), null);
+  assert.equal(supportReviewNoticeAfter({ ...page, before: null }), "latest");
+  assert.equal(supportReviewNoticeAfter({ messages: [...page.messages, { id: "reply", author: "staff" }] }), null);
+});
 
 test("status history badges use each message's new status, never ordinary reply text", () => {
   for (const status of ["open", "resolved", "rejected", "paused"]) {

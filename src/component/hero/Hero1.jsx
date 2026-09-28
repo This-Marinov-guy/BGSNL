@@ -15,6 +15,7 @@ import {
   Link,
   useParams,
 } from "@/util/navigation";
+import HeroAccountLink from "./HeroAccountLink";
 import SnowBackground from "../../elements/ui/backgrounds/SnowBackground";
 import ImageFb from "../../elements/ui/media/ImageFb";
 import { selectUser } from "../../redux/user";
@@ -90,9 +91,6 @@ const Hero1 = ({ initialEvents = {}, initialNow }) => {
       category: "",
       title: `Bulgarian Society ${capitalizeFirstLetter(region, true) || "Netherlands"}`,
       description: "",
-      buttonText: user.session ? "Go To Profile" : "Become a Member",
-      style: " rn-btn-reverse-green",
-      buttonLink: user.session ? `/user` : "/signup",
     },
   ];
 
@@ -129,27 +127,9 @@ const Hero1 = ({ initialEvents = {}, initialNow }) => {
                   ) : (
                     ""
                   )}
-                  {user.session ? (
-                    <div className="slide-btn">
-                      <Link
-                        className={"rn-button-style--2 rn-btn-reverse-green"}
-                        to={`/user`}
-                      >
-                        Go to Profile
-                      </Link>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="slide-btn">
-                        <Link
-                          className={"rn-button-style--2 rn-btn-reverse-green"}
-                          to={"/join-the-society"}
-                        >
-                          Join the society
-                        </Link>
-                      </div>
-                    </div>
-                  )}
+                  <div className="slide-btn">
+                    <HeroAccountLink />
+                  </div>
                 </div>
               </div>
             </div>

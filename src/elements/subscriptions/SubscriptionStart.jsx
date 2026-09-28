@@ -200,7 +200,7 @@ export function SubscriptionCheckoutForm({
                 <IconlyQuestion aria-hidden />
               </button>
             </div>
-            <SelectInput autoFocus className="bgsnl-form-control" id={`${id}-type`} value={type} disabled={pending} required
+            <SelectInput className="bgsnl-form-control" id={`${id}-type`} value={type} disabled={pending} required
               onChange={(event) => chooseMembershipType(event.target.value)}>
               <option value="">Choose Member or Alumni</option>
               <option value="member" disabled={!plans.some((plan) => plan.type === "member")}>Member</option>

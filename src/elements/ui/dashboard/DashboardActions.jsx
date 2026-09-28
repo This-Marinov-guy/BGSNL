@@ -35,6 +35,7 @@ export function PhoneActions({ phone }) {
   const [open, setOpen] = useState(false);
   const trigger = useRef(null);
   const firstLink = useRef(null);
+  const keyboardOpen = useRef(false);
   const menuId = useId();
   const formatted = String(phone || "").trim();
   const number = formatted.replace(/[^+\d]/g, "").replace(/^00/, "+");
@@ -61,12 +62,12 @@ export function PhoneActions({ phone }) {
   return <>
     <button type="button" ref={trigger} className={styles.phoneButton}
       aria-label={`Contact ${formatted}`} aria-haspopup="menu" aria-expanded={open} aria-controls={open ? menuId : undefined}
-      onClick={(event) => { event.stopPropagation(); setOpen(current => !current); }}
-      onKeyDown={(event) => { if (event.key === "ArrowDown") { event.preventDefault(); event.stopPropagation(); setOpen(true); } }}>
+      onClick={(event) => { event.stopPropagation(); keyboardOpen.current = event.detail === 0; setOpen(current => !current); }}
+      onKeyDown={(event) => { if (event.key === "ArrowDown") { event.preventDefault(); event.stopPropagation(); keyboardOpen.current = true; setOpen(true); } }}>
       <span>{formatted}</span><IconlyChat size={18} />
     </button>
     <Overlay target={trigger.current} show={open} placement="bottom-start" flip rootClose onHide={close} offset={[0, 8]}
-      onEntered={() => firstLink.current?.focus()}>
+      onEntered={() => { if (keyboardOpen.current) firstLink.current?.focus(); }}>
       {({ ref, style, className }) => <div ref={ref} style={style} className={`${styles.phoneMenu} ${className || ""}`}
         id={menuId} role="menu" aria-label={`Contact ${formatted}`} onClick={event => event.stopPropagation()} onKeyDown={menuKeyDown}
         onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget) && event.relatedTarget !== trigger.current) setOpen(false); }}>

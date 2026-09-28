@@ -11,6 +11,7 @@ import { attachReportScreenshot, startReportScreenshot } from "./support-screens
 import { createGuestAccess, forgetGuestReport, rememberGuestReport, SUPPORT_TYPE_LABELS } from "./support-state.mjs";
 import styles from "./support.module.scss";
 import AttachmentDropzone from "./AttachmentDropzone";
+import VladiImage from "@/elements/ui/media/VladiImage";
 
 function browserName(userAgent) {
   if (/Edg\//.test(userAgent)) return "Microsoft Edge";
@@ -141,7 +142,7 @@ export default function ReportForm({ session, profile, onCreated, onBack, active
         <p>{recommendation ? "Share an idea for events, membership or the website." : "Tell us what happened."} Don’t include passwords, payment details or sensitive documents.</p>
         <div className={`${styles.requestTypeInput} rn-form-group`}><label htmlFor={`${id}-type`}>Request type</label><SelectInput id={`${id}-type`} className="bgsnl-form-control" value={type} disabled={busy || !!pending.current} onChange={(event) => changeType(event.target.value)}>{Object.entries(SUPPORT_TYPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</SelectInput></div>
       </div>
-      <img className={styles.reportPortrait} src={`/assets/images/vladi/${recommendation ? "nice" : "explain2"}.png`} alt="" aria-hidden="true" />
+      <VladiImage className={styles.reportPortrait} src={`/assets/images/vladi/${recommendation ? "nice" : "explain2"}.png`} alt="" aria-hidden="true" sizes="128px" />
     </div>
     <form className={styles.form} onSubmit={submit} onInput={updateFormReady} onChange={updateFormReady} ref={formRef}>
       <fieldset disabled={busy || (!!error && !!pending.current)}>

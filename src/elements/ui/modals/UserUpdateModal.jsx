@@ -151,9 +151,10 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
       className="user-update-modal"
       contentClassName="user-update-modal__body"
       show={modal.includes(USER_UPDATE_MODAL)}
-      title="Update your details"
+      title={currentUser.status === "info_requested" ? "Complete your profile" : "Update your details"}
       onHide={closeHandler}
     >
+      {currentUser.status === "info_requested" && <p>Please review your profile and fill in the missing information below.</p>}
       <ValidatedFormik
         className="inner"
         validationSchema={schema}
@@ -629,6 +630,7 @@ UserUpdateModal.propTypes = {
     roles: PropTypes.arrayOf(PropTypes.string).isRequired,
     studentNumber: PropTypes.string,
     surname: PropTypes.string,
+    status: PropTypes.string,
     university: PropTypes.string,
   }).isRequired,
   onUserRefresh: PropTypes.func,

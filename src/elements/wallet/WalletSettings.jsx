@@ -199,7 +199,7 @@ export default function WalletSettings({ user, preview = false }) {
     : device?.reason === "old_android" ? ["google"] : ["apple", "google"];
 
   const Container = preview ? "section" : "li";
-  return <Container className={preview ? styles.profilePanel : "settings-list__item"} aria-label={preview ? "Profile card" : undefined}>
+  return <Container className={preview ? styles.profilePanel : `settings-list__item ${membershipLocked ? styles.lockedSettings : ""}`} aria-label={preview ? "Profile card" : undefined}>
     {preview ? <MembershipCardThumbnail key={`${identity}:${cardPath || "none"}:${membershipLocked}`} cardPath={cardPath} locked={membershipLocked} loading={controlsLoading} />
       : <span aria-hidden="true" className="settings-list__icon"><IconlyWallet /></span>}
     <div className="settings-list__text">

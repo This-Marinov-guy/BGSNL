@@ -152,3 +152,17 @@
   .badgeSkeleton,
   .thumbnailSkeleton > span[aria-hidden] { animation: none; }
 }
+
+@media (max-width: 767px) {
+  .lockedSettings:global(.settings-list__item) {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+
+    > :global(.settings-list__text) { min-width: 0; }
+    > .actions {
+      grid-column: 3;
+      grid-row: 1;
+      padding-left: 0;
+      justify-content: flex-end;
+    }
+  }
+}

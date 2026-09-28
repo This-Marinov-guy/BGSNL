@@ -1048,9 +1048,24 @@ textarea.bgsnl-form-control {
 
 .startup-overlay {
   background: var(--site-background);
+  transition: opacity 260ms ease-out, visibility 0s linear 260ms;
   // Release the server-rendered page even if hydration fails completely.
   animation: bgsnl-startup-failsafe 0s 12s forwards;
   > .page-loading { animation: none; }
+  .page-loading__content { animation: bgsnl-startup-content-enter 220ms ease-out both; }
+  &.fade-out { pointer-events: none; }
+}
+
+@keyframes bgsnl-startup-content-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .startup-overlay {
+    transition: none;
+    .page-loading__content { animation: none; }
+  }
 }
 
 @keyframes bgsnl-startup-failsafe {

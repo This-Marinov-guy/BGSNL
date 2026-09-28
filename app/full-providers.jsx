@@ -42,7 +42,7 @@ const AppShell = ({ children }) => {
     <>
       <ScrollToTop />
       <Suspense fallback={null}><RouteProgress /></Suspense>
-      {!isScanner && <SupportWidget />}
+      {!isScanner && <Suspense fallback={null}><SupportWidget /></Suspense>}
       {!isScanner && <GlobalModals />}
       <GlobalError>
         {/*

@@ -8,6 +8,13 @@ test("healthy accounts and missing account data do not show a warning", () => {
   }
 });
 
+test("requested profile information has its own notice instead of a billing warning", () => {
+  const notice = getAccountStatusNotice({ status: "info_requested", billingLocked: true, billingVerificationUnavailable: true });
+  assert.equal(notice.reason, "info_requested");
+  assert.equal(notice.title, "Please complete your profile");
+  assert.equal(notice.actionLabel, "Complete profile");
+});
+
 test("billing locks use the requested copy and always link to Settings, even without a Stripe customer", () => {
   for (const user of [{ status: "locked" }, { status: "payment_awaiting" }, { status: "active", billingLocked: true }]) {
     const notice = getAccountStatusNotice(user);

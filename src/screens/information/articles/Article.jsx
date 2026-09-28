@@ -80,6 +80,7 @@ const Article = ({ initialArticle = null }) => {
   const pageLoading = useSelector(selectPageLoading);
   const contentRef = useRef(null);
   const closeButtonRef = useRef(null);
+  const imageDialogRef = useRef(null);
   const imageTriggerRef = useRef(null);
   const [expandedImage, setExpandedImage] = useState(null);
   const [articleLookupComplete, setArticleLookupComplete] = useState(
@@ -141,7 +142,7 @@ const Article = ({ initialArticle = null }) => {
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
+    imageDialogRef.current?.focus({ preventScroll: true });
 
     const handleDialogKeyDown = (event) => {
       if (event.key === "Escape") {
@@ -262,6 +263,8 @@ const Article = ({ initialArticle = null }) => {
       {expandedImage && (
         <div
           aria-label="Expanded article image"
+          ref={imageDialogRef}
+          tabIndex={-1}
           aria-modal="true"
           className="article-image-lightbox"
           onMouseDown={(event) => {

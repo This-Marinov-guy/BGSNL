@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import PropTypes from "prop-types";
 import { Dialog } from "@/compat/primereact";
 import {
@@ -11,11 +10,6 @@ import { getInternshipApplyAccess } from "./internship-access.mjs";
 const MembersOnlyApplyModal = ({ visible, onHide, user = null }) => {
   const navigate = useNavigate();
   const { notice } = getInternshipApplyAccess(user);
-  // The shared dialog mounts its portal after opening; focus the recovery link
-  // when it actually enters the DOM, including for keyboard-only applicants.
-  const focusRecoveryAction = useCallback((node) => {
-    node?.focus({ preventScroll: true });
-  }, []);
 
   const handleJoin = () => {
     onHide();
@@ -32,7 +26,6 @@ const MembersOnlyApplyModal = ({ visible, onHide, user = null }) => {
       className="rn-button-style--2 rn-btn-reverse-green rn-btn-small"
       href={notice.href}
       onClick={onHide}
-      ref={focusRecoveryAction}
     >
       {notice.actionLabel}
     </a>

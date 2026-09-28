@@ -9,6 +9,13 @@ import { startupContentReady } from "./startup-readiness.mjs";
 export default function StartupOverlay({ children }) {
   const content = useRef(null);
   const [ready, setReady] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    if (!ready) return;
+    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 280;
+    const timer = setTimeout(() => setDismissed(true), delay);
+    return () => clearTimeout(timer);
+  }, [ready]);
   useEffect(() => {
     let frame;
     let settled = false;
@@ -32,7 +39,8 @@ export default function StartupOverlay({ children }) {
     return () => { settled = true; clearInterval(interval); clearTimeout(deadline); cancelAnimationFrame(frame); };
   }, []);
   return <>
-    {!ready && <div className="initial-loading-screen startup-overlay fade-in" data-nosnippet><PageLoading /></div>}
+    {!dismissed && <div className={`initial-loading-screen startup-overlay ${ready ? "fade-out" : "fade-in"}`}
+      aria-hidden={ready || undefined} inert={ready ? true : undefined} data-nosnippet><PageLoading /></div>}
     <div ref={content} className="initial-page-content">{children}</div>
     <noscript><style>{".startup-overlay{display:none!important}"}</style></noscript>
   </>;

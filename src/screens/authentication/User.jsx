@@ -26,6 +26,8 @@ import TabContent from "../../elements/ui/tabs/TabContent";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser, updateAccount } from "../../redux/user";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
+import { showModal } from "@/redux/modal";
+import { USER_UPDATE_MODAL } from "@/util/defines/common";
 import BillingAttentionProvider from "@/elements/subscriptions/BillingAttentionProvider";
 import { CAMPAIGNS } from "../../util/defines/CAMPAIGNS";
 import { ACCOUNT_TABS } from "../../util/defines/enum";
@@ -78,6 +80,15 @@ const User = () => {
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
+  const infoRequestOpened = useRef(null);
+  const infoRequestAccount = currentUser?._id || currentUser?.id;
+  useEffect(() => {
+    if (currentUser?.status !== "info_requested") { infoRequestOpened.current = null; return; }
+    if (infoRequestAccount && infoRequestOpened.current !== infoRequestAccount) {
+      infoRequestOpened.current = infoRequestAccount;
+      dispatch(showModal(USER_UPDATE_MODAL));
+    }
+  }, [currentUser?.status, infoRequestAccount, dispatch]);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -253,7 +264,7 @@ const User = () => {
         key={currentUser._id || currentUser.id}
         accountId={currentUser._id || currentUser.id}
         session={user.session}
-        blocked={isSidebarOpen || tab !== ACCOUNT_TABS[0]}
+        blocked={currentUser.status === "info_requested" || isSidebarOpen || tab !== ACCOUNT_TABS[0]}
         openRequest={campaignOpenRequest}
       />
 

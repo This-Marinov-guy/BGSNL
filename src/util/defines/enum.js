@@ -15,8 +15,10 @@ export const LOCKED = "locked";
 export const FROZEN = "frozen";
 export const SUSPENDED = "suspended";
 export const PAYMENT_AWAITING = "payment_awaiting";
+export const INFO_REQUESTED = "info_requested";
 
 export const USER_STATUSES = {
+  [INFO_REQUESTED]: INFO_REQUESTED,
   [ACTIVE]: ACTIVE,
   [LOCKED]: LOCKED,
   [FROZEN]: FROZEN,

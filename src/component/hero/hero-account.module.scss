@@ -1,0 +1,48 @@
+.profile {
+  display: inline-flex;
+  align-items: center;
+  gap: .85rem;
+  max-width: 100%;
+  padding: .75rem 1.25rem;
+  border-radius: .75rem;
+  background: var(--site-thread-primary);
+  color: #fff;
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  text-align: left;
+  text-transform: none;
+  text-decoration: none;
+  transition: background-color 180ms ease, box-shadow 180ms ease;
+
+  &:is(a):hover { background: #01594d; color: #fff; }
+  &:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+}
+
+.avatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 3rem;
+  width: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 18%);
+
+  img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+}
+.imagePending { opacity: 0; }
+.imageLoaded { opacity: 1; }
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  min-width: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  strong { font-size: 1.25rem; font-weight: 700; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile { transition: none; }
+}

@@ -3,6 +3,9 @@
 
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useId } from "react";
+import { useDispatch } from "react-redux";
+import { showModal } from "@/redux/modal";
+import { USER_UPDATE_MODAL } from "@/util/defines/common";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { IconlyDanger } from "@/elements/ui/icons/IconlyIcons";
@@ -15,6 +18,7 @@ import { billingAction } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
 
 export default function AccountBillingAlert({ user, showAction = true, flushBottom = false }) {
+  const dispatch = useDispatch();
   const titleId = useId();
   const reduceMotion = useReducedMotion();
   const billing = useBillingAttention();
@@ -35,7 +39,8 @@ export default function AccountBillingAlert({ user, showAction = true, flushBott
           {notice.amountDue > 0 && <p>Outstanding amount: <strong>{new Intl.NumberFormat("en-NL", { style: "currency", currency: notice.currency }).format(notice.amountDue / 100)}</strong></p>}
           {notice.paymentNote && <p>{notice.paymentNote}</p>}
           {(showAction && action !== "start" || notice.reason === "unavailable") && <div className={styles.billingAlertActions}>
-            {showAction && action !== "start" && <BillingActions user={user} />}
+            {showAction && notice.reason === "info_requested" ? <button type="button" className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
+              onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}>Complete profile</button> : showAction && action !== "start" && <BillingActions user={user} />}
             {notice.reason === "unavailable" && <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" onClick={billing.retry}><RetryIcon />Try again</button>}
           </div>}
         </div>

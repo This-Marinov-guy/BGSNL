@@ -26,6 +26,7 @@ import ForgottenPassword from "./ForgottenPassword";
 import GoogleLogin from "@/elements/authentication/GoogleLogin";
 import PasskeyLogin from "@/elements/authentication/PasskeyLogin";
 import authStyles from "@/elements/authentication/google-auth.module.scss";
+import { supportTicketFromSearch, supportTicketPath } from "@/elements/support/support-link.mjs";
 
 const Login = () => {
   const isAuthenticated = useSelector(selectIsAuth);
@@ -55,7 +56,8 @@ const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(loginDestination.current || "/user#profile", { replace: true });
+      const ticket = supportTicketFromSearch(window.location.search);
+      navigate(loginDestination.current || (ticket ? supportTicketPath(ticket) : "/user#profile"), { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -74,6 +76,8 @@ const Login = () => {
     let destination = "/user#profile";
     if (previous?.startsWith("/") && !previous.startsWith("//") && !previous.includes("\\")) destination = previous;
     if (responseData.billingLocked || responseData.status === "locked" || responseData.billingVerificationUnavailable) destination = "/user#settings";
+    const ticket = supportTicketFromSearch(window.location.search);
+    if (ticket) destination = supportTicketPath(ticket, destination === "/user#settings" ? destination : "/");
     loginDestination.current = destination;
     sessionStorage.removeItem("prevUrl");
     dispatch(removeNotification());

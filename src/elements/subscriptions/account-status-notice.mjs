@@ -6,6 +6,12 @@ export function needsBillingAttention(user) {
 
 export function getAccountStatusNotice(user) {
   if (!user) return null;
+  if (user.status === "info_requested") return {
+    reason: "info_requested",
+    title: "Please complete your profile",
+    description: "We need some more information on your profile. Review your details and fill in the missing information.",
+    actionLabel: "Complete profile",
+  };
 
   // Administrative restrictions take priority over payment/verification issues.
   if (user.status === "frozen") {

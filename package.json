@@ -71,7 +71,7 @@
     "dev:all": "node scripts/dev-docker.mjs",
     "dev:check": "node scripts/dev-docker.mjs --check",
     "test:dev-services": "node --test scripts/dev-services.test.mjs",
-    "test:support": "node --test scripts/support-state.test.mjs",
+    "test:support": "node --test scripts/support-state.test.mjs scripts/support-link.test.mjs",
     "test:account-routing": "node --test scripts/account-route-state.test.mjs",
     "test:account-status": "node --test scripts/account-status-notice.test.mjs",
     "test:subscription-checkout": "node --test scripts/subscription-checkout.test.mjs",

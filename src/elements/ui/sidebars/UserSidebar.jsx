@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import GridInterfaceIcon from "../icons/GridInterfaceIcon";
 import { useDispatch } from "react-redux";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -13,7 +14,6 @@ import {
   FiEdit2,
   FiUsers,
   IconlyClose,
-  IconlyMenu,
   IconlyQuestion,
   IconlyMessage,
 } from "@/elements/ui/icons/IconlyIcons";
@@ -148,11 +148,8 @@ const UserSidebar = ({
           {isSidebarOpen ? (
             <IconlyClose size={24} aria-hidden />
           ) : (
-            <IconlyMenu size={24} aria-hidden />
+            <GridInterfaceIcon />
           )}
-          <span className="sidebar-toggle-label">
-            {isSidebarOpen ? "Close" : "Menu"}
-          </span>
         </button>
       )}
 
