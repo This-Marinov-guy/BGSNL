@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Providers from "./providers";
+import StartupOverlay from "@/elements/ui/loading/StartupOverlay";
 import WebsiteAnalytics from "@/component/common/WebsiteAnalytics";
 import PropTypes from "prop-types";
 import {
@@ -103,7 +104,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
-        <Providers>{children}</Providers>
+        <StartupOverlay><Providers>{children}</Providers></StartupOverlay>
 
         <script
           type="application/ld+json"

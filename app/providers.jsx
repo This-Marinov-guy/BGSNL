@@ -7,9 +7,10 @@ import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import PrimeSSRProvider from "./prime-ssr-provider";
 import GlobalBackground from "@/component/common/GlobalBackground";
+import PageLoading from "@/elements/ui/loading/PageLoading";
 
 // Public QR cards should not download the authenticated application shell.
-const FullProviders = dynamic(() => import("./full-providers"));
+const FullProviders = dynamic(() => import("./full-providers"), { loading: () => <PageLoading /> });
 const Maintenance = dynamic(() => import("@/screens/Maintenance"));
 
 export default function Providers({ children }) {

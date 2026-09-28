@@ -1046,6 +1046,17 @@ textarea.bgsnl-form-control {
   }
 }
 
+.startup-overlay {
+  background: var(--site-background);
+  // Release the server-rendered page even if hydration fails completely.
+  animation: bgsnl-startup-failsafe 0s 12s forwards;
+  > .page-loading { animation: none; }
+}
+
+@keyframes bgsnl-startup-failsafe {
+  to { visibility: hidden; pointer-events: none; }
+}
+
 .initial-loading-screen.fade-in {
   opacity: 1;
   visibility: visible;

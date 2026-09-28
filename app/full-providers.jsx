@@ -31,9 +31,7 @@ const CampaignLayout = dynamic(() => import("@/layouts/CampaignLayout"));
 const AppShell = ({ children }) => {
   const pathname = usePathname();
   const isScanner = pathname === "/user/dashboard/ticket-scanner";
-  // DO not change order! Still called for its side effects; the splash screen
-  // that consumed its `isLoading` flag is gone.
-  useAppInitialization();
+  const { isLoading } = useAppInitialization();
   useAuthSession();
 
   useEffect(() => {
@@ -53,14 +51,16 @@ const AppShell = ({ children }) => {
          * SSR (it runs in an effect), so keeping it would mean every crawler
          * received a "Loading..." document — the exact problem this migration
          * exists to fix. The page now always renders, with no splash screen
-         * covering it.
+         * replacing it. StartupOverlay only visually covers the mounted tree.
          *
          * The Suspense boundary is also what client components calling
          * useSearchParams() need during prerender.
          */}
+        <div data-startup-pending={isLoading ? "true" : "false"}>
         <Suspense fallback={<PageLoading />}>
           {isScanner ? children : <CampaignLayout>{children}</CampaignLayout>}
         </Suspense>
+        </div>
       </GlobalError>
     </>
   );
