@@ -3,12 +3,13 @@
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useEffect, useId, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Password, ProgressSpinner } from "@/compat/primereact";
+import { Password } from "@/compat/primereact";
 import { FiLock, IconlyDelete } from "@/elements/ui/icons/IconlyIcons";
 import { refreshSession, selectUser } from "@/redux/user";
 import { announceSessionChange } from "@/util/auth/browser-session.mjs";
 import { showNotification } from "@/redux/notification";
 import usePasskeyAction, { passkeyRequest } from "./usePasskeyAction";
+import useSecurityActionNotice from "./useSecurityActionNotice";
 import { passkeyErrorNotice } from "./passkey-request.mjs";
 import formStyles from "./google-auth.module.scss";
 import styles from "./passkeys.module.scss";
@@ -55,6 +56,7 @@ export default function PasskeySettings() {
   }, [session?.userId, session?.sessionVersion, attempt, dispatch]);
 
   const removing = editing?.purpose === "remove";
+  useSecurityActionNotice(busy, phase === "device" ? "Follow the passkey prompt on your device…" : removing ? "Verifying your password and removing passkey…" : "Verifying and adding your passkey…");
   const submit = (event) => {
     event.preventDefault();
     if (!editing || busy || !password || (!removing && (!supported || !name.trim()))) return;
@@ -123,14 +125,11 @@ export default function PasskeySettings() {
                         autoComplete="current-password" required toggleMask feedback={false} unstyled disabled={!editing || busy} />
                     </div>
                     <div className={`${formStyles.connectionActions} ${styles.formActions}`}>
-                      {busy ? <ProgressSpinner className={formStyles.connectionSpinner}
-                        aria-label={phase === "device" ? "Follow the passkey prompt on your device" : "Updating passkey"} /> : <>
                       <button type="submit" className={removing ? danger : primary} disabled={!editing || busy || !password || (!removing && !name.trim())}>
                         {removing ? "Remove passkey" : "Continue"}
                       </button>
-                      <button type="button" className={cancelButton} disabled={!editing || phase === "verifying"}
+                      <button type="button" className={cancelButton} disabled={!editing || (busy && phase !== "device")}
                         onClick={() => { cancel(); close(); }}>Cancel</button>
-                      </>}
                     </div>
                   </form>
                 </div>

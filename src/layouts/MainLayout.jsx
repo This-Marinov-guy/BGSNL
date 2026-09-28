@@ -92,7 +92,9 @@ const MainLayout = ({ children }) => {
     };
 
     if (notification.loading) {
-      toast.loading(message, { ...options, id: notification.toastId });
+      toast.loading(message, { ...options, id: notification.toastId,
+        iconTheme: { primary: theme.color, secondary: "transparent" },
+      });
     } else if (severity === "success" || severity === "error") {
       /*
        * The built-in indicator is a `primary` disc with the tick/cross punched

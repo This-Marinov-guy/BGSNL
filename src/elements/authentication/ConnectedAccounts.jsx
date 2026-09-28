@@ -3,7 +3,7 @@
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Password, ProgressSpinner } from "@/compat/primereact";
+import { Password } from "@/compat/primereact";
 import { FaGoogle } from "@/elements/ui/icons/IconlyIcons";
 import { selectUser, refreshSession } from "@/redux/user";
 import { announceSessionChange } from "@/util/auth/browser-session.mjs";
@@ -11,6 +11,7 @@ import { showNotification } from "@/redux/notification";
 import GoogleCredentialButton from "./GoogleCredentialButton";
 import GoogleButton from "./GoogleButton";
 import PasskeySettings from "./PasskeySettings";
+import useSecurityActionNotice from "./useSecurityActionNotice";
 import { createBrowserProof, googleAuthRequest } from "./google-api";
 import styles from "./google-auth.module.scss";
 
@@ -32,6 +33,7 @@ export default function ConnectedAccounts() {
   const submitting = useRef(false);
   const mounted = useRef(false);
   const statusRetryRequested = useRef(false);
+  useSecurityActionNotice(busy, google?.connected ? "Verifying your password and disconnecting Google…" : challenge ? "Connecting your Google account…" : "Verifying your password…");
 
   const notifyError = useCallback((message) => {
     dispatch(showNotification({
@@ -137,8 +139,7 @@ export default function ConnectedAccounts() {
               </div>
             </div>
             <div className={styles.connectionActions} aria-busy={busy}>
-              {busy && <ProgressSpinner className={styles.connectionSpinner} aria-label="Updating Google connection" />}
-              <div className={styles.connectionActionButtons} hidden={busy}>
+              <div className={styles.connectionActionButtons}>
               {!challenge ? <button type="submit" form={`${id}-password-form`} className={google?.connected ? danger : primary} disabled={busy || !editing || !password}>
                 {google?.connected ? "Confirm disconnect" : "Continue"}
               </button> : editing && <GoogleCredentialButton challenge={challenge} busy={busy} autoPrompt onCredential={complete}
