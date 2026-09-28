@@ -41,10 +41,10 @@ export function passkeyErrorNotice(error) {
   // SimpleWebAuthn wraps DOMExceptions and retains the original as cause.
   const name = error?.cause?.name || error?.name;
   if (["NotAllowedError", "AbortError"].includes(name) || error?.code === "ERROR_CEREMONY_ABORTED") {
-    return { severity: "warn", detail: "Passkey verification was cancelled or timed out. Try again, choose another device, or use your BGSNL password. To create your first passkey, sign in and open Settings." };
+    return { severity: "warn", detail: "Passkey verification was cancelled or timed out." };
   }
-  if (name === "InvalidStateError" || error?.code === "ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED") return { severity: "warn", detail: "This device already has a passkey for your account. Try signing in with it or choose another device." };
-  if (name === "ConstraintError") return { severity: "warn", detail: "This authenticator does not support the required passkey verification. Choose a device with a screen lock or a compatible security key." };
-  if (["SecurityError", "NotSupportedError"].includes(name)) return { severity: "error", detail: "Passkeys are not available in this browser or website context. Open the website directly in an up-to-date browser, or use your BGSNL password." };
-  return { severity: "error", detail: "Your device could not complete passkey verification. Please try again or use your BGSNL password." };
+  if (name === "InvalidStateError" || error?.code === "ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED") return { severity: "warn", detail: "This device already has a passkey for your account." };
+  if (name === "ConstraintError") return { severity: "warn", detail: "This authenticator does not support the required passkey verification." };
+  if (["SecurityError", "NotSupportedError"].includes(name)) return { severity: "error", detail: "Passkeys are not available in this browser or website context." };
+  return { severity: "error", detail: "Your device could not complete passkey verification." };
 }
