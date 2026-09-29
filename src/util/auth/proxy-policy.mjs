@@ -13,7 +13,7 @@ const routes = {
     "event/get-purchase-status/:id", "event/event-details/:id", "event/events-list", "event/sold-ticket-count/:id", "event/check-member/:id/:eventId", "event/guest-list/:id",
     "future-event/full-event-details/:id", "future-event/full-data-events-list", "future-event/scanner-events", "future-event/draft-count",
     "payment/donation/config", "payment/subscription/plans", "payment/subscription/billing-details",
-    "internship/list", "internship/admin-list", "dashboard/members", "dashboard/events-analytics", "backoffice/accounts", "backoffice/accounts/:type/:id/membership",
+    "internship/list", "internship/admin-list", "dashboard/members", "dashboard/events-analytics", "backoffice/accounts", "backoffice/accounts/bulk-roles/template", "backoffice/accounts/:type/:id/membership",
     "support/profile", "support/conversations", "support/conversations/:id", "support/inbox", "support/inbox/:id",
     "monitoring/overview", "monitoring/jobs",
     "wordpress/posts", "wordpress/posts/:id",
@@ -21,7 +21,7 @@ const routes = {
   POST: [
     "support/live",
     "user/wallet/google", "user/wallet/card",
-    "backoffice/access-requests", "backoffice/accounts/:type/:id/cancel-subscription", "backoffice/accounts/:type/:id/transfer",
+    "backoffice/access-requests", "backoffice/accounts/bulk-roles/preview", "backoffice/accounts/bulk-roles/apply", "backoffice/accounts/:type/:id/cancel-subscription", "backoffice/accounts/:type/:id/transfer",
     "security/login", "security/profile-change/confirm", "security/check-email", "security/signup", "security/alumni-signup",
     "security/send-password-token", "security/verify-token", "security/encrypt-data",
     "security/google/login/challenge", "security/google/login", "security/google/link/challenge", "security/google/link", "security/google/disconnect",

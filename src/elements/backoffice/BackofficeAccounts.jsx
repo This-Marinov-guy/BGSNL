@@ -30,6 +30,7 @@ import { exportAccountsCsv } from "./export-accounts.mjs";
 const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
   loading: () => <LoadingSkeleton label="Loading member statistics" variant="cards" count={4} />,
 });
+const BulkRolesImport = dynamic(() => import("./BulkRolesImport"));
 
 const EMPTY_OPTIONS = { cities: [], roles: [], statuses: [] };
 const ROLE_LABELS = {
@@ -327,6 +328,7 @@ export default function BackofficeAccounts() {
   const [loadingList, setLoadingList] = useState(true);
   const [listError, setListError] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const requestSequence = useRef(0);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -451,6 +453,7 @@ export default function BackofficeAccounts() {
             <p>Find and manage member and alumni profiles, account status and administrative roles.</p>
           </div>
           {!statistics && <div className="workspace-heading-actions">
+            <button className={styles.importButton} onClick={() => setImportOpen(true)} type="button">Import sheet</button>
             <button
               className={styles.exportButton}
               disabled={loadingList || exporting || pagination.total === 0}
@@ -552,6 +555,11 @@ export default function BackofficeAccounts() {
         </section>}
       </main>
       {selected && canManageAccountType(user.roles, selected.type) && canEditAccount(user.roles, selected.roles) && <AccountEditor account={selected} currentAccountId={currentAccountId} actorRoles={user.roles || []} options={options} onClose={() => setSelected(null)} onSaved={saved} onMembershipChanged={() => { setSelected(null); setRefreshKey(key => key + 1); }} />}
+      {importOpen && <BulkRolesImport onClose={() => setImportOpen(false)} onApplied={({ updated }) => {
+        setImportOpen(false);
+        setRefreshKey(key => key + 1);
+        dispatch(showNotification({ severity: "success", detail: `${updated} ${updated === 1 ? "account" : "accounts"} updated.` }));
+      }} />}
     </>
   );
 }

@@ -42,6 +42,15 @@ export function getAccountStatusNotice(user) {
     };
   }
 
+  if (["active", "locked", "payment_awaiting"].includes(user.status) && !user.subscription?.id) {
+    return {
+      reason: "no_membership",
+      title: "Start your subscription",
+      description: "You do not have a subscription yet. Choose a plan to start your membership and access its benefits.",
+      actionLabel: "Start subscription",
+    };
+  }
+
   if (!user.billingLocked && !["locked", "payment_awaiting"].includes(user.status)) {
     if (!user.status || user.status === "active") return null;
 

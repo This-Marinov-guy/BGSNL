@@ -1,6 +1,6 @@
 # Wallet test setup
 
-Current scope: automatically provisioned account-bound digital cards with public QR links, backend revocation, a live public card page, signed Apple `.pkpass` generation, and Google generic-object creation/update with signed save links. The mock design preview remains separate. Production has not been deployed, Google publishing approval is not yet confirmed, and physical-device installation has not been verified. Automatic updates to already-installed native passes are not implemented; native passes explicitly say **Scan to verify** instead of presenting a stale Active badge.
+Current scope: automatically provisioned account-bound digital cards with public QR links, backend revocation, a live public card page, signed Apple `.pkpass` generation, and Google generic-object creation/update with signed save links. The mock design preview remains separate. Production issuance was enabled on 2026-09-29 after the owner-reported disabled Apple Wallet button. Google publishing approval was previously confirmed by the owner; physical-device installation remains unverified. Automatic updates to already-installed native passes are not implemented; native passes explicitly say **Scan to verify** instead of presenting a stale Active badge.
 
 ## Account settings
 
@@ -56,6 +56,13 @@ Use `bulgariansocietynetherlands@gmail.com` as the owner, not the unrelated Doma
 - With explicit owner approval, saved all 12 wallet variables as Production-only secrets in Vercel project `thismarinovguys-projects/bgsnl`, including the production Apple signing pair and Google service-account key. Vercel confirmed success and the Production scope of each variable. `WALLET_ISSUANCE_ENABLED=0` keeps downloads disabled pending deployment testing. Development and Preview were not changed. No redeployment occurred; Vercel requires a new deployment for these values to take effect.
 - Automatic pass updates are intentionally excluded: no Apple update service or push registration, and no background Google object/class updates. Current membership status must be checked through the QR-linked page. Locked memberships cannot request new downloads.
 - Production deployment and installation on physical Apple/Android devices remain required before declaring the rollout complete.
+
+### Production activation (2026-09-29)
+
+- Updated the existing Production-only `WALLET_ISSUANCE_ENABLED` Vercel variable to `1`. Existing provider credentials and individual provider flags were preserved.
+- Redeployed the current production source `f4da4e1a3831935292389fbfd2341acdffd9b040` as `dpl_6QoXknewahYNaEgBoquEYFTozLmt`; Vercel reported Ready and assigned `www.bulgariansociety.nl`. No local source changes were deployed.
+- All 21 wallet checks passed, including a real pass signed with the production Apple certificate and verification of its manifest and detached signature.
+- Refreshed the signed-in production account and verified that **Add to Apple Wallet** is enabled. Clicking it returned HTTP 200 from `/api/user/wallet/apple` in production logs at 16:09:30 UTC. The browser automation did not capture the download event; physical-device installation remains unverified. Vercel also logged a non-fatal Fontconfig configuration warning during generation.
 
 #### Production credential setup
 

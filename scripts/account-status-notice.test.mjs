@@ -1,11 +1,34 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { getAccountStatusNotice } from "../src/elements/subscriptions/account-status-notice.mjs";
+import { billingAction } from "../src/elements/subscriptions/subscription-checkout.mjs";
+
+const subscription = { id: "sub_test", status: "active" };
 
 test("healthy accounts and missing account data do not show a warning", () => {
-  for (const user of [undefined, null, { status: "active" }, { status: "active", tier: 0, hasBenefits: false }]) {
+  for (const user of [undefined, null, {}, { status: "active", subscription }]) {
     assert.equal(getAccountStatusNotice(user), null);
   }
+});
+
+test("eligible accounts without a subscription get the start-subscription banner and action", () => {
+  for (const status of ["active", "locked", "payment_awaiting"]) {
+    for (const missing of [undefined, null, {}, { customerId: "cus_test" }]) {
+      const user = { status, subscription: missing };
+      const notice = getAccountStatusNotice(user);
+      assert.equal(notice.reason, "no_membership");
+      assert.equal(notice.title, "Start your subscription");
+      assert.equal(notice.actionLabel, "Start subscription");
+      assert.equal(billingAction(user, notice.reason), "start");
+    }
+  }
+});
+
+test("Tier 0 alumni without a subscription can also start one", () => {
+  const user = { status: "active", isAlumni: true, tier: 0, hasBenefits: false };
+  const notice = getAccountStatusNotice(user);
+  assert.equal(notice.reason, "no_membership");
+  assert.equal(billingAction(user, notice.reason), "start");
 });
 
 test("requested profile information has its own notice instead of a billing warning", () => {
@@ -17,7 +40,7 @@ test("requested profile information has its own notice instead of a billing warn
 
 test("billing locks use the requested copy and always link to Settings, even without a Stripe customer", () => {
   for (const user of [{ status: "locked" }, { status: "payment_awaiting" }, { status: "active", billingLocked: true }]) {
-    const notice = getAccountStatusNotice(user);
+    const notice = getAccountStatusNotice({ ...user, subscription });
     assert.equal(notice.title, "Your membership is locked");
     assert.equal(notice.description, "Your subscription needs attention. Go to settings, change your payment method, subscription type or cancel your membership.");
     assert.equal(notice.href, "/user#settings");
@@ -58,7 +81,7 @@ test("verification outages do not falsely claim payment failure", () => {
 });
 
 test("payment failure keeps the outstanding-invoice clarification", () => {
-  const notice = getAccountStatusNotice({ status: "locked", lockReason: "payment_failed" });
+  const notice = getAccountStatusNotice({ status: "locked", lockReason: "payment_failed", subscription });
   assert.match(notice.paymentNote, /does not restore paid benefits/);
   assert.match(notice.paymentNote, /outstanding invoice/);
 });

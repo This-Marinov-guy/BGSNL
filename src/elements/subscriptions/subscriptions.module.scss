@@ -469,11 +469,20 @@
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.16em;
+  cursor: pointer;
 
-  &:hover,
+  &:visited { color: inherit; }
+
+  &:hover {
+    color: inherit;
+    text-decoration-thickness: 0.12em;
+  }
+
   &:focus-visible {
     color: inherit;
     text-decoration-thickness: 0.12em;
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
   }
 }
 
@@ -481,17 +490,29 @@
   background: transparent;
   border: 0;
   padding: 0;
+  box-shadow: none;
   color: var(--color-primary);
+  cursor: pointer;
+  font: inherit;
   font-weight: 700;
+  text-align: left;
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.16em;
 
-  &:hover,
-  &:focus-visible {
+  &:hover {
     color: var(--color-primary);
     text-decoration-thickness: 0.12em;
   }
+
+  &:focus-visible {
+    color: var(--color-primary);
+    text-decoration-thickness: 0.12em;
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+  &:active { opacity: 0.75; }
+  &:disabled { cursor: not-allowed; opacity: 0.55; }
 }
 
 .dangerBanner .textButton {

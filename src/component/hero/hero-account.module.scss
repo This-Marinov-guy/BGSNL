@@ -12,7 +12,8 @@
   text-transform: none;
   text-decoration: none;
 
-  &:is(a):hover { color: #fff; }
+  &:is(a),
+  &:is(a):is(:link, :visited, :hover, :focus, :active) { color: #fff !important; }
   &:focus-visible {
     outline: 3px solid #fff;
     outline-offset: 4px;

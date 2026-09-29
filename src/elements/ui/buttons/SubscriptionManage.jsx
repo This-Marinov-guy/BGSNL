@@ -7,7 +7,7 @@ import { canSwitchSubscription, hasBillingReference, hasCustomerId, hasEndedSubs
 import { SubscriptionCheckoutForm } from "@/elements/subscriptions/SubscriptionStart";
 import AppModal from "@/elements/ui/modals/AppModal";
 
-export default function SubscriptionManage({ canCancel = true, portalOnly = false, portalLabel = "Payments", hideSwitch = false, switchOnly = false, subscription, user }) {
+export default function SubscriptionManage({ canCancel = true, portalOnly = false, portalLabel = "Payments", portalButtonClassName, hideSwitch = false, switchOnly = false, subscription, user }) {
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
   request.current = sendRequest;
@@ -71,7 +71,7 @@ export default function SubscriptionManage({ canCancel = true, portalOnly = fals
         onClick={() => { setError(""); setSwitchOpen(true); }} disabled={!!pending} type="button" aria-haspopup="dialog">
         Switch
       </button>}
-      {showPayments && <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
+      {showPayments && <button className={portalButtonClassName || "settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"}
         onClick={() => openPortal()} disabled={!!pending} type="button">
         {pending === "manage" ? "Opening payments…" : portalLabel}
       </button>}
@@ -100,4 +100,4 @@ export default function SubscriptionManage({ canCancel = true, portalOnly = fals
     </>
   );
 }
-SubscriptionManage.propTypes = { canCancel: PropTypes.bool, portalOnly: PropTypes.bool, portalLabel: PropTypes.string, hideSwitch: PropTypes.bool, switchOnly: PropTypes.bool, subscription: PropTypes.object, user: PropTypes.object };
+SubscriptionManage.propTypes = { canCancel: PropTypes.bool, portalOnly: PropTypes.bool, portalLabel: PropTypes.string, portalButtonClassName: PropTypes.string, hideSwitch: PropTypes.bool, switchOnly: PropTypes.bool, subscription: PropTypes.object, user: PropTypes.object };

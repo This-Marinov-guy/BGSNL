@@ -15,7 +15,6 @@ import SubscriptionStart from "./SubscriptionStart";
 import SubscriptionManage from "@/elements/ui/buttons/SubscriptionManage";
 import { billingAction, hasCustomerId, hasSubscriptionId } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
-import { RetryButton } from "@/elements/ui/loading/LoadState";
 
 export default function AccountBillingAlert({ user, showAction = true, flushBottom = false, hideUnavailable = false }) {
   const dispatch = useDispatch();
@@ -37,19 +36,19 @@ export default function AccountBillingAlert({ user, showAction = true, flushBott
         <h2 id={titleId}>{notice.title}</h2>
         <div className={styles.dangerContent}>
           <p>{notice.reason === "subscription_ended" && hasSubscriptionId(user?.subscription) ? "Your subscription has ended. Renew your previous subscription or switch to another plan to restore paid benefits." : notice.description}</p>
-          {notice.reason === "unavailable" && showAction && <RetryButton label="Retry membership check" onClick={billing?.retry || (() => window.location.reload())} />}
+          {notice.reason === "unavailable" && showAction && <button className={styles.textButton} type="button" onClick={billing?.retry || (() => window.location.reload())}>Retry membership check</button>}
           {notice.amountDue > 0 && <p>Outstanding amount: <strong>{new Intl.NumberFormat("en-NL", { style: "currency", currency: notice.currency }).format(notice.amountDue / 100)}</strong></p>}
           {notice.paymentNote && <p>{notice.paymentNote}</p>}
           {notice.reason !== "unavailable" && showAction && <div className={styles.billingAlertActions}>
-            {notice.reason === "info_requested" ? <button type="button" className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
+            {notice.reason === "info_requested" ? <button type="button" className={styles.textButton} aria-haspopup="dialog"
               onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}>Complete profile</button>
               : action === "start" ? <>
-                <SubscriptionStart user={user} renewal={hasSubscriptionId(user?.subscription)} />
-                {hasSubscriptionId(user?.subscription) && <SubscriptionStart user={user} buttonLabel="Switch" modalTitle="Switch subscription" />}
+                <SubscriptionStart user={user} renewal={hasSubscriptionId(user?.subscription)} linkStyle />
+                {hasSubscriptionId(user?.subscription) && <SubscriptionStart user={user} buttonLabel="Switch" modalTitle="Switch subscription" linkStyle />}
               </>
               : action === "manage" && hasCustomerId(user?.subscription)
-                ? <SubscriptionManage portalOnly portalLabel="Resolve" subscription={user.subscription} user={user} />
-                : action === "support" && <a className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" href="/user#help">Contact support</a>}
+                ? <SubscriptionManage portalOnly portalLabel="Resolve" portalButtonClassName={styles.textButton} subscription={user.subscription} user={user} />
+                : action === "support" && <a className={styles.dangerLink} href="/user#help">Contact support</a>}
           </div>}
         </div>
       </section>}

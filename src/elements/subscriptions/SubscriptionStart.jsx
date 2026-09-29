@@ -330,7 +330,7 @@ export default function SubscriptionStart({ linkStyle = false, user, buttonLabel
 
   return (
     <>
-      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" onClick={() => {
+      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" aria-haspopup="dialog" onClick={() => {
         clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_CTA_CLICKED, { [ANALYTICS_PROPERTIES.SOURCE]: "subscription_start" });
         setOpen(true);
       }}>{buttonLabel || (renewal ? "Renew" : "Start subscription")}</button>
