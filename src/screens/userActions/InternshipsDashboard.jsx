@@ -7,6 +7,7 @@ import ScrollToTop from "@/component/common/ScrollToTop";
 import { FiArrowLeft, FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import InternshipList from "../../elements/actions/dashboard/internships/InternshipList";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 
 const InternshipsDashboard = () => {
   return (
@@ -23,7 +24,7 @@ const InternshipsDashboard = () => {
             <span>Administration</span>
           </Link>
         </nav>
-        <Suspense fallback={<p role="status">Loading internships…</p>}><InternshipList /></Suspense>
+        <Suspense fallback={<LoadingSkeleton label="Loading internships" variant="cards" count={4} />}><InternshipList /></Suspense>
       </main>
 
       <div className="backto-top">

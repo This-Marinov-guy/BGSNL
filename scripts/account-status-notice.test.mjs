@@ -53,6 +53,7 @@ test("administrative restrictions cannot be masked by payment failures or billin
 test("verification outages do not falsely claim payment failure", () => {
   const notice = getAccountStatusNotice({ status: "active", billingVerificationUnavailable: true });
   assert.equal(notice.title, "We could not verify your subscription");
+  assert.equal(notice.reason, "unavailable");
   assert.equal(notice.href, "/user#settings");
 });
 

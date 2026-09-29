@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 
 import { useState } from "react";
 import GlobalBackground from "../component/common/GlobalBackground";
@@ -27,7 +28,7 @@ export default function Maintenance() {
           {refreshing ? "Refreshing…" : "Refresh page"}
         </button>
         <p className={styles.note} role="status">
-          {refreshing ? "Checking if the website is ready…" : "Please check back in a little while."}
+          {refreshing ? <LoadingSkeleton label="Checking if the website is ready" variant="inline" /> : "Please check back in a little while."}
         </p>
       </main>
       <footer className={styles.footer}>

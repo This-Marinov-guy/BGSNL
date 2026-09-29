@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Loader from '../ui/loading/Loader'
+import { FiCheck } from '@/elements/ui/icons/IconlyIcons'
 
 const GifSearch = (props) => {
 
@@ -119,7 +120,7 @@ const GifSearch = (props) => {
                     color: "#155724",
                   }}
                 >
-                  GIF Selected ✓
+                  GIF Selected <FiCheck aria-hidden="true" size="1.25em" />
                 </p>
                 <button
                   onClick={() => {

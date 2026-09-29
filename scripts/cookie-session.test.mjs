@@ -219,6 +219,19 @@ test("restoration uses API-verified current account identity and never discloses
   assert.equal(data.session.userId, "alumni_current"); assert.deepEqual(data.session.roles, ["alumni"]);
   assert.equal(data.session.status, "locked"); assert.equal(data.token, undefined);
 });
+test("account restoration returns the verified profile with a single upstream read", async () => {
+  const account = { _id: "alumni_current", roles: ["alumni"], status: "active", name: "Test", region: "groningen", tickets: [] };
+  const h = await harness({ credential: token(), upstream: async () => Response.json({ user: account, celebrate: true, token: "private-jwt" }) });
+  const data = await (await h.request("session/current?account=1")).json();
+  assert.equal(h.calls.length, 1);
+  assert.equal(h.calls[0].url.href, "https://api.example.test/api/v1/user/current?withTickets=true&withChristmas=true");
+  assert.equal(data.session.userId, account._id);
+  assert.deepEqual(data.session.roles, ["alumni"]);
+  assert.equal(data.session.status, "active");
+  assert.deepEqual(data.user, account);
+  assert.equal(data.celebrate, true);
+  assert.equal(data.token, undefined);
+});
 test("expired cookies are not forwarded or restored and revoked cookies clear on API 401", async () => {
   const timestamp = Math.floor(Date.now() / 1000) - 30 * 86400 - 1;
   const expired = await harness({ credential: token({ auth_time: timestamp, iat: timestamp, exp: timestamp + 30 * 86400 }) });
@@ -320,6 +333,12 @@ test("Redux retains only public session metadata and restores roles without a st
   const previous = mod.default(state, mod.updateAccount({ hasBenefits: true, memberDiscount: true }));
   const switched = mod.default(previous, mod.login({ session: { ...session, userId: "other" } }));
   assert.equal(switched.hasBenefits, false); assert.equal(switched.memberDiscount, false);
+  const account = { _id: "member_fixture", hasBenefits: true, roles: ["member"] };
+  const restored = mod.default(undefined, mod.login({ session: { ...session }, user: account, celebrate: true }));
+  assert.equal(restored.initialAccount._id, account._id);
+  assert.equal(restored.hasBenefits, true);
+  assert.equal(restored.initialCelebrate, true);
+  assert.equal(mod.default(restored, mod.consumeInitialAccount()).initialAccount, undefined);
 });
 test("long-lived UI session timers use bounded chunks and expire exactly once", () => {
   let clock = 1000, delay, callback, expired = 0;

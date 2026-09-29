@@ -152,6 +152,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
       contentClassName="user-update-modal__body"
       show={modal.includes(USER_UPDATE_MODAL)}
       title={currentUser.status === "info_requested" ? "Complete your profile" : "Update your details"}
+      urlKey="edit-profile"
       onHide={closeHandler}
     >
       {currentUser.status === "info_requested" && <p>Please review your profile and fill in the missing information below.</p>}

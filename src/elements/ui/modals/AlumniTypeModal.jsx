@@ -10,7 +10,7 @@ export default function AlumniTypeModal({ isOpen, onClose }) {
   const user = useSelector(selectUser);
   return (
     <Dialog header="Choose your alumni subscription" visible={isOpen} onHide={onClose}
-      style={{ width: "min(640px, 94vw)" }} dismissableMask>
+      style={{ width: "min(1000px, 94vw)" }} dismissableMask>
       <SubscriptionPlanPicker user={user} alumniOnly />
     </Dialog>
   );

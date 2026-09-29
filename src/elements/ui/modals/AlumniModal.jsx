@@ -2,6 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Dialog } from "@/compat/primereact";
 import AlumniTypeModal from "./AlumniTypeModal";
+import { FaGraduationCap, FiCheck } from "@/elements/ui/icons/IconlyIcons";
 
 const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
   const actions = (
@@ -12,7 +13,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
         style={{ margin: 0 }}
         type="button"
       >
-        <span className="alumni-icon">🎓</span>
+        <span className="alumni-icon"><FaGraduationCap aria-hidden="true" /></span>
         Join Now
       </button>
       <a
@@ -104,7 +105,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                   marginRight: "10px",
                 }}
               >
-                ✓
+                <FiCheck aria-hidden="true" />
               </span>
               Access to exclusive alumni events and networking opportunities
             </li>
@@ -121,7 +122,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                   marginRight: "10px",
                 }}
               >
-                ✓
+                <FiCheck aria-hidden="true" />
               </span>
               Mentorship programs for current students
             </li>
@@ -138,7 +139,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                   marginRight: "10px",
                 }}
               >
-                ✓
+                <FiCheck aria-hidden="true" />
               </span>
               Career development resources and job opportunities
             </li>
@@ -155,7 +156,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                   marginRight: "10px",
                 }}
               >
-                ✓
+                <FiCheck aria-hidden="true" />
               </span>
               Special discounts on events and merchandise
             </li>
@@ -172,7 +173,7 @@ const AlumniModal = ({ isOpen, onClose, onJoinNow }) => {
                   marginRight: "10px",
                 }}
               >
-                ✓
+                <FiCheck aria-hidden="true" />
               </span>
               Alumni directory and networking platform
             </li>

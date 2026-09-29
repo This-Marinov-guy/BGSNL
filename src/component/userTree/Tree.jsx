@@ -302,7 +302,7 @@ export default function Tree({ style, nodes = [], onUserClick }) {
       img.addEventListener("error", () => {
         img.setAttribute(
           "href",
-          'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23e5e7eb"/><text x="50" y="50" text-anchor="middle" dy=".35em" fill="%23666" font-size="24">👤</text></svg>'
+          "/assets/images/avatar-placeholder.svg"
         );
       });
 

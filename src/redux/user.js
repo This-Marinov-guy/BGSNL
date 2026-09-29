@@ -10,14 +10,22 @@ export const userSlice = createSlice({
     login: (state, { payload }) => {
       if (!sessionIsActive(payload?.session)) return;
       Object.assign(state, empty());
+      delete state.initialAccount;
+      delete state.initialCelebrate;
       state.authInitialized = true;
       state.session = payload.session;
+      // Hand the already verified account response to the account page once.
+      if (payload.user) {
+        state.initialAccount = payload.user;
+        state.initialCelebrate = !!payload.celebrate;
+      }
       for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload.session, key)) state[key] = payload.session[key];
-      for (const key of accountFields) if (Object.hasOwn(payload, key)) state[key] = payload[key];
+      for (const key of accountFields) if (Object.hasOwn(payload.user || payload, key)) state[key] = (payload.user || payload)[key];
       for (const key of ["roles", "status", "region", "image"]) state.session[key] = state[key] ?? state.session[key];
     },
     clearSession: () => ({ ...empty(), authInitialized: true }),
     finishAuthInitialization: (state) => { state.authInitialized = true; },
+    consumeInitialAccount: (state) => { delete state.initialAccount; delete state.initialCelebrate; },
     updateAccount: (state, { payload }) => {
       for (const key of accountFields) if (Object.hasOwn(payload, key)) state[key] = payload[key];
       if (state.session) for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload, key)) state.session[key] = payload[key];
@@ -31,7 +39,7 @@ export const userSlice = createSlice({
     },
   },
 });
-export const { login, clearSession, finishAuthInitialization, updateAccount, refreshSession } = userSlice.actions;
+export const { login, clearSession, finishAuthInitialization, consumeInitialAccount, updateAccount, refreshSession } = userSlice.actions;
 export const logout = () => async (dispatch) => {
   await endBrowserSession();
   dispatch(clearSession());

@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
@@ -48,10 +48,14 @@ export default function MembershipCardThumbnail({ cardPath, locked, loading }) {
       <span className={styles.skeletonQr} aria-hidden="true" />
     </div>;
   }
+  if (error && !locked) {
+    return <div className={styles.thumbnail}>
+      <LoadErrorBanner compact message="Card preview unavailable." retryLabel="Retry card preview" onRetry={() => setAttempt(value => value + 1)} />
+    </div>;
+  }
   return <div className={`${styles.thumbnail} ${styles.thumbnailPlaceholder}`}>
     <IconlyWallet size={32} aria-hidden="true" />
-    <span role="status">{locked || result?.card.status === "locked" ? "Card locked" : error ? "Preview unavailable" : "Your card preview"}</span>
-    {error && !locked && <button type="button" onClick={() => setAttempt(value => value + 1)}><RetryIcon />Retry preview</button>}
+    <span role="status">{locked || result?.card.status === "locked" ? "Card locked" : "Your card preview"}</span>
   </div>;
 }
 

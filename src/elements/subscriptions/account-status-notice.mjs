@@ -34,6 +34,7 @@ export function getAccountStatusNotice(user) {
 
   if (user.billingVerificationUnavailable) {
     return {
+      reason: "unavailable",
       title: "We could not verify your subscription",
       description: "Billing is temporarily unavailable. Your profile and settings are still accessible, but benefits cannot be used until we verify your subscription. Please try again shortly.",
       href: "/user#settings",

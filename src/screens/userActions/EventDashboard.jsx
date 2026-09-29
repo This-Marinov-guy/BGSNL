@@ -12,10 +12,11 @@ import { selectUser } from "@/redux/user";
 import { EVENT_MANAGEMENT_ACCESS } from "@/util/defines/common";
 import styles from "./administration.module.scss";
 import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 import { EVENT_MODAL_QUERY_KEYS } from "@/util/event-dashboard-query.mjs";
 
 const EventsAnalyticsList = dynamic(() => import("@/elements/actions/dashboard/events-analytics/EventsAnalyticsList"), {
-  loading: () => <p role="status">Loading event analytics…</p>,
+  loading: () => <LoadingSkeleton label="Loading event analytics" variant="cards" count={4} />,
 });
 
 export default function EventDashboard() {

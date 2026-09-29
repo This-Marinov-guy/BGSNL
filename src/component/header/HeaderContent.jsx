@@ -1,6 +1,7 @@
 import {
   Fragment,
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -69,6 +70,22 @@ const getAccountInitials = (account) => {
   return Array.from(emailParts[0] || "U").slice(0, 2).join("").toUpperCase();
 };
 
+const SubmenuToggle = ({ label, id }) => (
+  <button
+    type="button"
+    className="submenu-toggle"
+    aria-label={`Expand ${label} submenu`}
+    aria-controls={id}
+    aria-expanded="false"
+    data-submenu-label={label}
+  />
+);
+
+SubmenuToggle.propTypes = {
+  label: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+};
+
 const HeaderContent = (props) => {
   const storedUser = useSelector(selectUser);
   // Account initialisation can finish while a streamed payment page is still
@@ -76,6 +93,7 @@ const HeaderContent = (props) => {
   const hydrated = useSyncExternalStore(subscribeToHydration, hydratedSnapshot, serverSnapshot);
   const user = hydrated ? storedUser : serverUser;
   const accountMenuRef = useRef(null);
+  const submenuId = useId();
   const navigationRef = useRef(null);
   const headerMotionRef = useRef({
     animation: null,
@@ -177,7 +195,8 @@ const HeaderContent = (props) => {
         <ul className={props.dark ? "mainmenu dark_nav" : "mainmenu"}>
           <li className="has-dropdown">
             <a style={{ cursor: "pointer" }}>Regions</a>
-            <ul className="submenu">
+            <SubmenuToggle label="Regions" id={`${submenuId}-regions`} />
+            <ul className="submenu" id={`${submenuId}-regions`}>
               <li>
                 <Link to="/">Netherlands</Link>
               </li>
@@ -220,7 +239,8 @@ const HeaderContent = (props) => {
                   </li> */}
               <li className="has-dropdown">
                 <a style={{ cursor: "pointer" }}>Events</a>
-                <ul className="submenu">
+                <SubmenuToggle label="Events" id={`${submenuId}-events`} />
+                <ul className="submenu" id={`${submenuId}-events`}>
                   <li>
                     <Link to={`/${region}/events/future-events`}>
                       Future Events
@@ -238,7 +258,8 @@ const HeaderContent = (props) => {
             <Fragment>
               <li className="has-dropdown">
                 <a style={{ cursor: "pointer" }}>Events</a>
-                <ul className="submenu">
+                <SubmenuToggle label="Events" id={`${submenuId}-events`} />
+                <ul className="submenu" id={`${submenuId}-events`}>
                   <li>
                     <Link to={`/events/future-events`}>Future Events</Link>
                   </li>
@@ -250,7 +271,8 @@ const HeaderContent = (props) => {
 
               <li className="has-dropdown">
                 <a style={{ cursor: "pointer" }}>About</a>
-                <ul className="submenu">
+                <SubmenuToggle label="About" id={`${submenuId}-about`} />
+                <ul className="submenu" id={`${submenuId}-about`}>
                   {!user.session && (
                     <li>
                       <Link to="/join-the-society">How to join</Link>
@@ -277,7 +299,8 @@ const HeaderContent = (props) => {
 
           <li className="has-dropdown">
             <a style={{ cursor: "pointer" }}>Partners</a>
-            <ul className="submenu">
+            <SubmenuToggle label="Partners" id={`${submenuId}-partners`} />
+            <ul className="submenu" id={`${submenuId}-partners`}>
               <li>
                 <Link to="/partners/pwc-bulgaria">PwC</Link>
               </li>
@@ -304,7 +327,8 @@ const HeaderContent = (props) => {
               {checkAuthorization(user.session, [...new Set([...ACCESS_4, ...SUPPORT_ACCESS])]) && (
                 <li className="has-dropdown">
                   <Link to="/user/dashboard">Dashboard</Link>
-                  <ul className="submenu">
+                  <SubmenuToggle label="Dashboard" id={`${submenuId}-dashboard`} />
+                  <ul className="submenu" id={`${submenuId}-dashboard`}>
                     <>
                       {checkAuthorization(user.session, ACCESS_4) && <>
                         <li><Link to="/user/dashboard/events">Events</Link></li>

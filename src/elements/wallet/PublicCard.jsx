@@ -1,10 +1,9 @@
 "use client";
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import DigitalMembershipCard from "./DigitalMembershipCard";
 import MembershipCardSkeleton from "./MembershipCardSkeleton";
-import { FiRotateCw } from "@/elements/ui/icons/IconlyIcons";
 import { ANALYTICS_EVENTS } from "@/util/analytics/events.mjs";
 import styles from "@/screens/private/WalletCardPreview.module.scss";
 
@@ -45,17 +44,10 @@ export default function PublicCard({ token, initialResult = null, initialError =
   }, [token, attempt, initialResult, initialError]);
   return <main className={`${styles.page} ${styles.publicPage}`}>
       {result ? <><DigitalMembershipCard card={result.card} qrImage={result.qrImage} tickets={result.ticketImages || []} verification={checking ? "checking" : error ? "error" : null} />
-        {error && <p role="alert">{error} <button type="button" onClick={() => setAttempt(value => value + 1)}><RetryIcon />Retry</button></p>}
+        {error && <LoadErrorBanner message={error} onRetry={() => setAttempt(value => value + 1)} />}
         <p className={styles.attribution}>By the might of <a href="https://bulgariansociety.nl">Bulgarian Society Netherlands</a></p></> : error
       && !checking ? <div className={styles.cardError}>
-        <p role="alert">{error}</p>
-        <button
-          aria-label="Try loading the membership card again"
-          className={styles.retryButton}
-          onClick={() => setAttempt((value) => value + 1)}
-          title="Try again"
-          type="button"
-        ><FiRotateCw size={22} /></button>
+        <LoadErrorBanner message={error} retryLabel="Try loading the membership card again" onRetry={() => setAttempt(value => value + 1)} />
       </div>
       : <MembershipCardSkeleton />}
   </main>;

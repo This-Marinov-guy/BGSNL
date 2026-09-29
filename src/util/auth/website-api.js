@@ -54,9 +54,10 @@ export async function websiteApi(request, parts) {
     return response;
   }
   const restore = path === "session/current" && request.method === "GET";
+  const restoreAccount = restore && new URL(request.url).searchParams.get("account") === "1";
   const activity = path === "session/activity" && request.method === "POST";
   const logout = path === "session/logout" && request.method === "POST";
-  const apiPath = restore ? "user/get-subscription-status" : browserApiPath(parts, request.method);
+  const apiPath = restore ? (restoreAccount ? "user/current" : "user/get-subscription-status") : browserApiPath(parts, request.method);
   if (!apiPath && !activity && !logout) return json({ message: "Not found" }, 404);
   const forwarded = new Headers({ "x-bgsnl-server-key": secret, "x-bgsnl-browser-proxy": "1", Origin: origin, Accept: "application/json" });
   const ipHeader = process.env.VERCEL ? "x-forwarded-for" : process.env.BGSNL_TRUSTED_CLIENT_IP_HEADER;
@@ -109,7 +110,9 @@ export async function websiteApi(request, parts) {
     if (!login && session) forwarded.set("Authorization", `Bearer ${credential}`);
     for (const name of ["content-type", "x-support-token"]) if (request.headers.has(name)) forwarded.set(name, request.headers.get(name));
     const target = apiUrl(apiPath);
-    target.search = new URL(request.url).search;
+    // The account page needs the full profile. Restore it with the session in
+    // one authenticated read so billing reconciliation runs only once.
+    target.search = restoreAccount ? "?withTickets=true&withChristmas=true" : new URL(request.url).search;
     if (target.search.length > 4000) return withCredentials(json({ message: "Request is too large" }, 413));
     const body = ["GET", "HEAD"].includes(request.method) ? undefined : await boundedBody(request.body, 40 * 1024 * 1024);
     const liveStream = (request.method === "GET" && /^event\/guest-list\/[^/]+\/stream$/.test(apiPath)) || (request.method === "POST" && apiPath === "support/live");
@@ -141,9 +144,12 @@ export async function websiteApi(request, parts) {
       const packet = { token: data.token, refreshToken: data.refreshToken };
       delete data.token;
       delete data.refreshToken;
+      const restoredAccount = restoreAccount ? data.user : data;
       if (restore) data.session = upstream.ok ? { ...session,
         ...Object.fromEntries(["userId", "roles", "name", "surname", "email", "status", "region", "image"]
-          .filter((key) => Object.hasOwn(data, key)).map((key) => [key, data[key]])) } : null;
+          .filter((key) => restoredAccount && Object.hasOwn(restoredAccount, key)).map((key) => [key, restoredAccount[key]])),
+        ...(restoreAccount && restoredAccount ? { userId: restoredAccount._id || restoredAccount.id || session.userId } : {}),
+      } : null;
       if (upstream.ok && changesSession(apiPath) && packet.token) {
         accept(packet, { login });
         data.session = session;

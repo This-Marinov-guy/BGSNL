@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 import AuthLayout from "@/layouts/authentication/AuthLayout";
 import CheckTicket from "@/screens/redirects/CheckTicket";
 import { ACCESS_4 } from "@/util/defines/common";
@@ -13,7 +14,7 @@ export const metadata = {
 export default function Page() {
   return (
     <AuthLayout access={ACCESS_4}>
-      <Suspense fallback={<p>Loading ticket scanner…</p>}><CheckTicket /></Suspense>
+      <Suspense fallback={<LoadingSkeleton label="Loading ticket scanner" variant="cards" />}><CheckTicket /></Suspense>
     </AuthLayout>
   );
 }

@@ -67,7 +67,7 @@ export default function EmailTicketPreferences({ checkout, details, preview = fa
                 valueMode="id"
                 onSelect={(value) => setFieldValue("addOns", value)}
               />
-              {previewComplete && <p role="status" className={styles.notice}>Your choices are valid. The live page would now open Stripe Checkout.</p>}
+              {previewComplete && <p role="status" className={styles.notice}>Your choices are valid. The live page would now open our secure checkout.</p>}
               {error && <div role="alert" className={styles.error}>{error}{needsReview && <button type="button" onClick={() => window.location.reload()}>Reload options</button>}</div>}
               <div className="purchase-actions"><a href={eventUrl} className="rn-button-style--2 rn-btn-reverse purchase-action-control">View event</a><button type="submit" disabled={isSubmitting || redirecting || needsReview} className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary">{isSubmitting || redirecting ? <><Loader /><span>Opening payment…</span></> : <><span>Continue to payment</span><IconlyArrowRight aria-hidden /></>}</button></div>
             </fieldset>

@@ -353,7 +353,7 @@ const Internships = ({ initialInternships = [] }) => {
                 <h4>Why Join BGSNL Community?</h4>
                 <div className="benefits-grid">
                   <div className="benefit-item">
-                    <div className="benefit-icon">🎯</div>
+                    <div className="benefit-icon"><FiBriefcase aria-hidden="true" /></div>
                     <h5>Exclusive Opportunities</h5>
                     <p>
                       Access to internships and job opportunities not available
@@ -361,19 +361,19 @@ const Internships = ({ initialInternships = [] }) => {
                     </p>
                   </div>
                   <div className="benefit-item">
-                    <div className="benefit-icon">🤝</div>
+                    <div className="benefit-icon"><FiUsers aria-hidden="true" /></div>
                     <h5>Professional Network</h5>
                     <p>
                       Connect with industry professionals and fellow students
                     </p>
                   </div>
                   <div className="benefit-item">
-                    <div className="benefit-icon">📈</div>
+                    <div className="benefit-icon"><FiChevronUp aria-hidden="true" /></div>
                     <h5>Career Development</h5>
                     <p>Get mentorship and guidance for your career growth</p>
                   </div>
                   <div className="benefit-item">
-                    <div className="benefit-icon">💼</div>
+                    <div className="benefit-icon"><FiBriefcase aria-hidden="true" /></div>
                     <h5>Partner Companies</h5>
                     <p>Direct access to our network of partner organizations</p>
                   </div>

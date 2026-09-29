@@ -32,8 +32,9 @@
 
 .membership-banner-heading {
   display: flex;
+  min-width: 0;
   gap: 0.8rem;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 0.75rem;
 
   .membership-banner-icon-wrapper {
@@ -43,6 +44,7 @@
 
   .membership-banner-title {
     min-width: 0;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -112,6 +114,7 @@
 
 .membership-offer-copy {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
 
   .membership-banner-heading {
@@ -123,23 +126,27 @@
 
   .membership-banner-title {
     flex: 1 1 auto;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   p {
+    min-width: 0;
     color: inherit;
     line-height: 1.35;
     margin: 8px 0 0 52px;
     opacity: 0.84;
+    overflow-wrap: anywhere;
   }
 
   ul {
     display: grid;
+    min-width: 0;
     gap: 2px;
     margin: 7px 0 0 52px;
     padding-left: 18px;
     color: inherit;
     line-height: 1.35;
+    overflow-wrap: anywhere;
   }
 
   li {
@@ -152,6 +159,7 @@
   align-items: center;
   justify-content: center;
   justify-self: start;
+  min-width: 0;
   width: min(calc(100% - 52px), 20rem);
   min-height: 42px;
   margin: 14px 0 0 52px;
@@ -159,5 +167,5 @@
   letter-spacing: 0.1em;
   line-height: 1.15;
   text-align: center;
-  white-space: nowrap;
+  white-space: normal;
 }

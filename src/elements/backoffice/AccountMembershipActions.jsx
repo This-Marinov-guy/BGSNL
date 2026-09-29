@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useHttpClient } from "@/hooks/common/http-hook";
@@ -89,7 +89,7 @@ export default function AccountMembershipActions({ account, disabled, onBusyChan
           </div>
         </div>}
     </div>
-    {loading ? <p role="status">Loading subscription…</p> : !details ? <div role="alert"><p>Membership details could not be loaded.</p><button type="button" className={styles.secondaryButton} onClick={load}><RetryIcon />Retry</button></div> : <>
+    {loading ? <LoadingSkeleton label="Loading subscription" /> : !details ? <LoadErrorBanner message="Membership details could not be loaded." onRetry={load} /> : <>
       <div className={styles.membershipAction}>
         <h4>Cancel subscription</h4>
         {details.canCancel ? <>
@@ -102,7 +102,7 @@ export default function AccountMembershipActions({ account, disabled, onBusyChan
               <button type="button" className={styles.dangerButton} disabled={disabled || pending} onClick={cancel}>{pending ? <><Loader /><span>Cancelling…</span></> : "Confirm cancellation"}</button>
             </div>
           </div>}
-        </> : <><p>{details.cancellationReason}</p>{details.billingUnavailable && <button type="button" className={styles.secondaryButton} disabled={pending || loading} onClick={load}><RetryIcon />Retry subscription check</button>}</>}
+        </> : <>{details.billingUnavailable ? <LoadErrorBanner message={details.cancellationReason} disabled={pending || loading} onRetry={load} retryLabel="Retry subscription check" /> : <p>{details.cancellationReason}</p>}</>}
       </div>
     </>}
   </section>;

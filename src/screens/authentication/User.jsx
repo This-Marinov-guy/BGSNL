@@ -6,8 +6,8 @@ import React, {
   useRef,
   useState,
 } from "react";
+import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
-import { Message } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
 import {
@@ -18,13 +18,13 @@ import {
 import PageHelmet from "../../component/common/Helmet";
 import FooterTwo from "../../component/footer/FooterTwo";
 import HeaderTwo from "../../component/header/HeaderTwo";
-import Christmas from "../../elements/special/Christmas";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
+import AlumniRegistrationButton from "@/elements/ui/buttons/AlumniRegistrationButton";
 import TabContent from "../../elements/ui/tabs/TabContent";
 import { useHttpClient } from "../../hooks/common/http-hook";
-import { selectUser, updateAccount } from "../../redux/user";
+import { consumeInitialAccount, selectUser, updateAccount } from "../../redux/user";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
 import { showModal } from "@/redux/modal";
 import { USER_UPDATE_MODAL } from "@/util/defines/common";
@@ -37,14 +37,20 @@ import { showNotification } from "../../redux/notification";
 import campaignStyles from "@/elements/campaigns/explore-version.module.scss";
 import { ANALYTICS_EVENTS } from "@/util/analytics/events.mjs";
 import { clarityEvent } from "@/util/functions/helpers";
+import { HOLIDAYS } from "@/util/configs/common";
+
+const Christmas = dynamic(() => import("../../elements/special/Christmas"));
 
 const User = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const user = useSelector(selectUser);
 
-  const [isPageLoading, setIsPageLoading] = useState(true);
+  const initialAccount = user.initialAccount;
+  const initialCelebrate = user.initialCelebrate;
+  const [isPageLoading, setIsPageLoading] = useState(!initialAccount);
   const [loadFailed, setLoadFailed] = useState(false);
-  const [currentUser, setCurrentUser] = useState();
-  const [hasBirthday, setHasBirthday] = useState();
+  const [currentUser, setCurrentUser] = useState(initialAccount);
+  const [hasBirthday, setHasBirthday] = useState(initialCelebrate);
   const [tab, setTab] = useState(ACCOUNT_TABS[0]);
   const [campaignOpenRequest, setCampaignOpenRequest] = useState(0);
 
@@ -79,7 +85,6 @@ const User = () => {
   request.current = sendRequest;
   const dispatch = useDispatch();
 
-  const user = useSelector(selectUser);
   const infoRequestOpened = useRef(null);
   const infoRequestAccount = currentUser?._id || currentUser?.id;
   useEffect(() => {
@@ -190,7 +195,8 @@ const User = () => {
         if (mounted) setIsPageLoading(false);
       }
     };
-    fetchCurrentUser();
+    if (initialAccount) dispatch(consumeInitialAccount());
+    else fetchCurrentUser();
     const timer = setInterval(fetchCurrentUser, 60000);
     window.addEventListener("focus", fetchCurrentUser);
     document.addEventListener("visibilitychange", fetchCurrentUser);
@@ -259,7 +265,7 @@ const User = () => {
           setHasBirthday(data.hasBirthday);
         }}
       />
-      {currentUser.hasBenefits && <Christmas currentUser={currentUser} />}
+      {HOLIDAYS.isChristmas && currentUser.hasBenefits && <Christmas currentUser={currentUser} />}
       <AccountCampaignAnnouncement
         key={currentUser._id || currentUser.id}
         accountId={currentUser._id || currentUser.id}
@@ -287,12 +293,21 @@ const User = () => {
         {/* Main Content Area */}
         <div className="user-content-area">
           <BillingAttentionProvider user={currentUser}>
-          <AccountBillingAlert user={currentUser} />
-          {currentUser?.tier === 0 && <Message 
-            severity="info"
-            text="As a tier 0 alumni, you are not eligible to any bonuses from the alumni program. Please upgrade your subscription from the settings tab."
-            className="user-dashboard-notice mb--20"
-           />}
+          <AccountBillingAlert user={currentUser} hideUnavailable />
+          {currentUser?.tier === 0 && <section className="user-dashboard-notice" aria-labelledby="alumni-tier-notice-title">
+            <h2 id="alumni-tier-notice-title">
+              <svg className="user-dashboard-notice__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 11v6" />
+                <circle cx="12" cy="7.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              Your Alumni Tier 0 membership
+            </h2>
+            <p>Alumni Tier 0 does not include alumni programme benefits. You can upgrade your subscription in Settings.</p>
+            <AlumniRegistrationButton asLink={false} className="user-dashboard-notice__action">
+              Upgrade tier
+            </AlumniRegistrationButton>
+          </section>}
 
           <div className="content-container">
             {/* Campaign Section */}
@@ -330,11 +345,11 @@ const User = () => {
       <FooterTwo forceRegion={currentUser.region ?? null} />
       {/* End Footer Style  */}
       {/* Start Back To Top */}
-      <div className="backto-top user-page-back-to-top">
+      {!isMobile && <div className="backto-top user-page-back-to-top">
         <ScrollToTop showUnder={160}>
           <FiChevronUp size={26} />
         </ScrollToTop>
-      </div>
+      </div>}
       {/* End Back To Top */}
     </React.Fragment>
   );

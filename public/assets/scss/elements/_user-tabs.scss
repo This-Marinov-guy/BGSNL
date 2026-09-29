@@ -477,35 +477,6 @@
     }
   }
 
-  /*
-   * Bare icon button: the pen alone, no circle or fill. Keeps a small padding
-   * so the hit area stays comfortably larger than the 1.25rem glyph, and a
-   * negative margin so that padding does not visually push the pen off the
-   * heading's right edge.
-   */
-  .column-edit-btn {
-    align-items: center;
-    background: none;
-    border: 0;
-    color: #017363;
-    cursor: pointer;
-    display: inline-flex;
-    flex: 0 0 auto;
-    justify-content: center;
-    margin-right: -0.35rem;
-    padding: 0.35rem;
-    transition: color 160ms ease;
-  }
-
-  .column-edit-btn:hover {
-    color: #014f44;
-  }
-
-  .column-edit-btn:focus-visible {
-    outline: 2px solid #017363;
-    outline-offset: 2px;
-  }
-
   .list-style--1 {
     list-style: none;
     padding: 0;
@@ -542,6 +513,30 @@
         }
       }
     }
+  }
+}
+
+/* Keep the Personal Information and CV edit controls visually identical. */
+:is(.user-info-column, .user-cv-section) .column-edit-btn {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: #017363;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  margin-right: -0.35rem;
+  padding: 0.35rem;
+  transition: color 160ms ease;
+
+  &:hover {
+    color: #014f44;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #017363;
+    outline-offset: 2px;
   }
 }
 

@@ -17,7 +17,7 @@ const { code: billingCode } = await transform(await readFile(new URL("../src/ele
   filename: "BillingActions.jsx", jsc: { parser: { syntax: "ecmascript", jsx: true }, transform: { react: { runtime: "automatic" } } }, module: { type: "commonjs" },
 });
 
-function harness({ subscription = { id: "sub_test", status: "active", priceId: "price_current" }, response } = {}) {
+function harness({ subscription = { id: "sub_test", customerId: "cus_test", status: "active", priceId: "price_current" }, response, ...props } = {}) {
   const slots = [];
   let cursor = 0;
   const calls = [];
@@ -53,7 +53,7 @@ function harness({ subscription = { id: "sub_test", status: "active", priceId: "
     },
   });
   const user = { status: "active", roles: ["member"], subscription };
-  const render = () => { cursor = 0; return exports.default({ subscription, user }); };
+  const render = () => { cursor = 0; return exports.default({ subscription, user, ...props }); };
   return { render, calls, redirects, reloads, user };
 }
 
@@ -72,31 +72,98 @@ test("active billing renders Cancel, Switch and Payments in the requested order"
   assert.deepEqual(elements(h.render()).filter(node => node.type === "button").map(label), ["Cancel", "Switch", "Payments"]);
 });
 
+test("Settings can place Switch in its own row without duplicating billing controls", () => {
+  assert.deepEqual(elements(harness({ hideSwitch: true }).render()).filter(node => node.type === "button").map(label), ["Cancel", "Payments"]);
+  const h = harness({ switchOnly: true });
+  assert.deepEqual(elements(h.render()).filter(node => node.type === "button").map(label), ["Switch"]);
+  button(h.render(), "Switch").props.onClick();
+  assert.equal(elements(h.render()).some(node => node.type === "app-modal" && node.props.title === "Switch subscription"), true);
+  assert.equal(h.calls.length, 0);
+});
+
 test("ended subscriptions and customer-only records show Payments without Cancel or Switch", () => {
   for (const subscription of [{ customerId: "cus_test" }, { id: "sub_test", status: "canceled", customerId: "cus_test" }, { id: "sub_test", status: "incomplete_expired", customerId: "cus_test" }]) {
     assert.deepEqual(elements(harness({ subscription }).render()).filter(node => node.type === "button").map(label), ["Payments"]);
   }
 });
 
-test("BillingActions combines the existing Start modal with Payments when a Stripe customer exists", () => {
+function billingHarness(billing = null) {
   const exports = {};
   vm.runInNewContext(billingCode, { exports, require: name => {
     if (["react/jsx-runtime", "prop-types"].includes(name)) return require(name);
     if (name.endsWith("subscription-checkout.mjs")) return policy;
-    if (name.endsWith("BillingAttentionProvider")) return { useBillingAttention: () => null };
+    if (name.endsWith("BillingAttentionProvider")) return { useBillingAttention: () => billing };
     if (name.endsWith("SubscriptionStart")) return { __esModule: true, default: "start-subscription" };
+    if (name.endsWith("AlumniRegistrationButton")) return { __esModule: true, default: "tier-up" };
     if (name.endsWith("SubscriptionManage")) return { __esModule: true, default: "payments" };
     if (name.endsWith("subscriptions.module.scss")) return { __esModule: true, default: {} };
     throw new Error(`Unexpected import: ${name}`);
   } });
+  return user => elements(exports.default({ user }));
+}
+
+test("BillingActions combines the existing Start modal with Payments when a Stripe customer exists", () => {
+  const render = billingHarness();
   for (const subscription of [{ customerId: "cus_test" }, { id: "sub_old", customerId: "cus_test", status: "canceled" }]) {
-    const children = elements(exports.default({ user: { status: "active", subscription } }));
+    const children = render({ status: "active", subscription });
     assert.deepEqual(children.filter(node => ["start-subscription", "payments"].includes(node.type)).map(node => node.type), ["start-subscription", "payments"]);
-    assert.equal(children.find(node => node.type === "payments").props.canCancel, false);
+    assert.equal(children.find(node => node.type === "payments").props.portalOnly, true);
   }
-  const noCustomer = elements(exports.default({ user: { status: "active" } }));
+  const noCustomer = render({ status: "active" });
   assert.equal(noCustomer.some(node => node.type === "payments"), false);
   assert.equal(noCustomer.some(node => node.type === "start-subscription"), true);
+});
+
+test("unknown or loading subscription state only keeps Payments with a customer ID", () => {
+  for (const billing of [{ loading: true }, { notice: { reason: "unavailable" } }, null]) {
+    for (const status of ["active", "canceled"]) {
+      const user = { status: "active", billingVerificationUnavailable: true, subscription: { id: "sub_test", customerId: "cus_test", status } };
+      const children = billingHarness(billing)(user);
+      assert.equal(children.some(node => node.type === "start-subscription"), false);
+      assert.equal(children.find(node => node.type === "payments").props.portalOnly, true);
+      assert.equal(billingHarness(billing)({ ...user, subscription: { id: "sub_test", status } }).some(node => node.type === "payments"), false);
+    }
+  }
+});
+
+test("Tier 0 Alumni get Tier up and Payments, respecting unavailable and loading states", () => {
+  const user = { status: "active", isAlumni: true, tier: 0, subscription: { customerId: "cus_test" } };
+  const children = billingHarness()(user);
+  assert.equal(label(children.find(node => node.type === "tier-up")), "Tier up");
+  assert.equal(children.some(node => node.type === "start-subscription"), false);
+  assert.equal(children.find(node => node.type === "payments").props.portalOnly, true);
+  for (const billing of [{ loading: true }, { notice: { reason: "unavailable" } }]) {
+    assert.equal(billingHarness(billing)(user).some(node => node.type === "tier-up"), false);
+  }
+  assert.equal(billingHarness()({ ...user, isAlumni: false }).some(node => node.type === "tier-up"), false);
+});
+
+test("confirmed subscription problems keep the full billing controls", () => {
+  for (const reason of ["payment_failed", "payment_pending", "subscription_paused"]) {
+    const children = billingHarness({ notice: { reason } })({ status: "locked", billingLocked: true,
+      subscription: { id: "sub_test", customerId: "cus_test", status: "past_due" } });
+    assert.equal(children.find(node => node.type === "payments").props.portalOnly, undefined);
+    assert.equal(children.some(node => node.type === "start-subscription"), false);
+  }
+});
+
+test("Payments stays available for restricted accounts with a customer ID", () => {
+  const children = billingHarness()({ status: "frozen", subscription: { customerId: "cus_test" } });
+  assert.equal(children.find(node => node.type === "payments").props.portalOnly, true);
+});
+
+test("a subscription without a customer ID does not show Payments", () => {
+  const h = harness({ subscription: { id: "sub_test", status: "active" } });
+  assert.deepEqual(elements(h.render()).filter(node => node.type === "button").map(label), ["Cancel", "Switch"]);
+});
+
+test("Resolve is portal-only and opens the customer portal without a mutation action", async () => {
+  const h = harness({ portalOnly: true, portalLabel: "Resolve" });
+  assert.deepEqual(elements(h.render()).filter(node => node.type === "button").map(label), ["Resolve"]);
+  await button(h.render(), "Resolve").props.onClick();
+  assert.equal(h.calls[0][0], "payment/subscription/customer-portal");
+  assert.deepEqual(Object.keys(h.calls[0][2]), ["url"]);
+  assert.equal(h.redirects[0], "https://billing.stripe.com/p/session/test");
 });
 
 test("Cancel and Keep subscription make no request; only confirmation opens cancellation", async () => {
@@ -107,7 +174,7 @@ test("Cancel and Keep subscription make no request; only confirmation opens canc
   button(h.render(), "Keep subscription").props.onClick();
   assert.equal(h.calls.length, 0);
   button(h.render(), "Cancel").props.onClick();
-  await button(h.render(), "Continue to Stripe").props.onClick();
+  await button(h.render(), "Review cancellation").props.onClick();
   assert.equal(h.calls[0][0], "payment/subscription/customer-portal");
   assert.equal(h.calls[0][2].action, "cancel");
   assert.equal(h.redirects.length, 1);
@@ -169,4 +236,52 @@ test("a pending portal request blocks repeated clicks", async () => {
   assert.equal(button(h.render(), "Opening payments…").props.disabled, true);
   finish({ url: "https://billing.stripe.com/p/session/test" });
   await first;
+});
+
+
+test("scheduled cancellation hides Cancel for both period-end and explicit dates", () => {
+  for (const cancellation of [{ cancelAtPeriodEnd: true }, { cancelAt: "2026-10-31T23:00:00Z" }]) {
+    const h = harness({ subscription: { id: "sub_test", customerId: "cus_test", status: "active", ...cancellation } });
+    assert.equal(button(h.render(), "Cancel"), undefined);
+    assert.ok(button(h.render(), "Payments"));
+    assert.equal(h.calls.length, 0);
+  }
+});
+
+test("ended subscriptions with an ID request renewal; new accounts retain Start", () => {
+  const render = billingHarness({ notice: { reason: "subscription_ended" } });
+  const ended = render({ status: "locked", subscription: { id: "sub_old", status: "canceled", priceId: "price_previous" } });
+  assert.equal(ended.find(node => node.type === "start-subscription").props.renewal, true);
+  const fresh = billingHarness()({ status: "active" });
+  assert.equal(fresh.find(node => node.type === "start-subscription").props.renewal, false);
+});
+
+test("scheduled end dates prefer explicit cancellation and tolerate missing or invalid data", () => {
+  assert.equal(policy.scheduledCancellationDate({ cancelAtPeriodEnd: true, currentPeriodEnd: "2026-10-01T12:00:00Z" }).toISOString(), "2026-10-01T12:00:00.000Z");
+  assert.equal(policy.scheduledCancellationDate({ cancelAtPeriodEnd: true, cancelAt: "2026-09-30T12:00:00Z", currentPeriodEnd: "2026-10-01T12:00:00Z" }).toISOString(), "2026-09-30T12:00:00.000Z");
+  assert.equal(policy.scheduledCancellationDate({ cancelAtPeriodEnd: true, cancelAt: "invalid", currentPeriodEnd: "2026-10-01T12:00:00Z" }).toISOString(), "2026-10-01T12:00:00.000Z");
+  for (const subscription of [undefined, {}, { currentPeriodEnd: "2026-10-01" }, { status: "canceled", cancelAtPeriodEnd: true }, { cancelAtPeriodEnd: true, currentPeriodEnd: "invalid" }]) {
+    assert.equal(policy.scheduledCancellationDate(subscription), null);
+  }
+});
+
+
+test("the Billing warning shows the cancellation date only while paid access remains", async () => {
+  const { code: noticeCode } = await transform(await readFile(new URL("../src/elements/subscriptions/SubscriptionCancellationNotice.jsx", import.meta.url), "utf8"), {
+    filename: "SubscriptionCancellationNotice.jsx", jsc: { parser: { syntax: "ecmascript", jsx: true }, transform: { react: { runtime: "automatic" } } }, module: { type: "commonjs" },
+  });
+  const exports = {};
+  vm.runInNewContext(noticeCode, { exports, require: name => {
+    if (["react/jsx-runtime", "prop-types"].includes(name)) return require(name);
+    if (name.endsWith("subscription-checkout.mjs")) return policy;
+    if (name.endsWith("IconlyIcons")) return { IconlyDanger: "warning-icon" };
+    if (name.endsWith("subscriptions.module.scss")) return { __esModule: true, default: {} };
+    throw new Error(`Unexpected import: ${name}`);
+  } });
+  const user = { status: "active", hasBenefits: true, subscription: { status: "active", cancelAtPeriodEnd: true, currentPeriodEnd: "2026-10-31T23:00:00Z" } };
+  assert.match(label(exports.default({ user })), /1 November 2026/);
+  assert.match(label(exports.default({ user })), /keep your paid benefits until then/);
+  for (const changed of [{ ...user, hasBenefits: false }, { ...user, status: "locked" }, { ...user, subscription: { status: "canceled", cancelAtPeriodEnd: true } }, { ...user, subscription: { status: "active" } }]) {
+    assert.equal(exports.default({ user: changed }), null);
+  }
 });

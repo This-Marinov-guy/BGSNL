@@ -11,7 +11,8 @@ export const useAppInitialization = () => {
     const controller = new AbortController();
     // Never migrate a browser-readable bearer token into the new cookie session.
     try { localStorage.removeItem("BGSNL_user_data"); localStorage.removeItem("BGSNL_session_life"); } catch { /* Storage disabled. */ }
-    browserFetch("/api/session/current", { signal: controller.signal }).then(async (response) => {
+    const accountPage = window.location.pathname === "/user";
+    browserFetch(accountPage ? "/api/session/current?account=1" : "/api/session/current", { signal: controller.signal }).then(async (response) => {
       const data = await response.json();
       if (!active) return;
       if (response.ok && data.session) dispatch(login(data));

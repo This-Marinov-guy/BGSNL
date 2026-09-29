@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Password } from "@/compat/primereact";
@@ -33,7 +33,7 @@ export default function ConnectedAccounts() {
   const submitting = useRef(false);
   const mounted = useRef(false);
   const statusRetryRequested = useRef(false);
-  useSecurityActionNotice(busy, google?.connected ? "Verifying your password and disconnecting Google…" : challenge ? "Connecting your Google account…" : "Verifying your password…");
+  useSecurityActionNotice(busy && !challenge, google?.connected ? "Verifying your password and disconnecting Google…" : "Verifying your password…");
 
   const notifyError = useCallback((message) => {
     dispatch(showNotification({
@@ -106,7 +106,7 @@ export default function ConnectedAccounts() {
           <span aria-hidden="true" className="settings-list__icon"><FaGoogle /></span>
           <div className="settings-list__text">
             <h3 className="settings-list__title">Google</h3>
-            <p className="settings-list__description">{!google ? loadFailed ? "You can continue using your BGSNL password." : "Loading your connected accounts…" : google.connected ? `Connected to ${google.email}`
+            <p className="settings-list__description">{!google ? loadFailed ? "You can continue using your BGSNL password." : <LoadingSkeleton label="Loading your connected accounts" variant="inline" /> : google.connected ? `Connected to ${google.email}`
               : google.eligible === false ? "Google connection is only available for BGSNL accounts with a Gmail address (@gmail.com). You can continue using your BGSNL password."
                 : google.enabled ? `Connect Google using ${google.accountEmail}. Only the same email address can be connected. Your existing password will still work.`
                 : "Google sign-in has not been enabled yet. You can continue using your BGSNL password."}</p>
@@ -151,9 +151,7 @@ export default function ConnectedAccounts() {
           </div>
         </div>
       </div>
-      {loadFailed && <div className={styles.connectionActions}>
-        <button type="button" className={primary} onClick={() => { statusRetryRequested.current = true; setAttempt((value) => value + 1); }}><RetryIcon />Try again</button>
-      </div>}
+      {loadFailed && <LoadErrorBanner message="Connected accounts could not be loaded. Your password is still available." onRetry={() => { statusRetryRequested.current = true; setAttempt((value) => value + 1); }} />}
       <PasskeySettings />
     </section>
   );

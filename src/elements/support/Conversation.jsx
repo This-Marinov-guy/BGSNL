@@ -1,7 +1,7 @@
 "use client";
 
 import VladiImage from "@/elements/ui/media/VladiImage";
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { IconlyRotate } from "@/elements/ui/icons/IconlyIcons";
 import { PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 
@@ -19,6 +19,7 @@ import { watchSupportLive } from "./support-live.mjs";
 import { markSupportSeen } from "./support-unread.mjs";
 import { isTemporarySupportError } from "./support-errors.mjs";
 import { supportScope } from "./support-state.mjs";
+import useModalUrl from "@/elements/ui/modals/useModalUrl";
 
 const formatTime = (value) => new Date(value).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 const PHOTO_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
@@ -48,6 +49,8 @@ export default function Conversation({ id, session, secret, staff, active, onBac
   const [busy, setBusy] = useState(false);
   const [olderLoading, setOlderLoading] = useState(false);
   const [newBelow, setNewBelow] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  useModalUrl(detailsOpen, "requester-details");
   const [reload, setReload] = useState(0);
   const list = useRef(null);
   const detailsPanel = useRef(null);
@@ -235,10 +238,10 @@ export default function Conversation({ id, session, secret, staff, active, onBac
     <div className={styles.threadHeader}>
       <div className={styles.threadHeadingRow}>
         <button className={styles.textButton} type="button" onClick={onBack}><IconlyArrowLeft size="1.25rem" /> Back to tickets</button>
-        {record && <div className={styles.threadTools}><small className={styles.ticketReference}><span className={styles.ticketTypeIcon} data-type={record.type || "problem"} title={SUPPORT_TYPE_LABELS[record.type || "problem"]}>{record.type === "recommendation" ? <IconlyImprove size="1.25rem" title="Recommendation" /> : <IconlyBug size="1.25rem" title="Problem report" />}</span>#{record.reference}</small>{staff && <button type="button" className={styles.detailsButton} aria-label="Open requester details" aria-haspopup="dialog" onClick={() => detailsPanel.current?.showModal()}><IconlyProfile size="1.25rem" /></button>}</div>}
+        {record && <div className={styles.threadTools}><small className={styles.ticketReference}><span className={styles.ticketTypeIcon} data-type={record.type || "problem"} title={SUPPORT_TYPE_LABELS[record.type || "problem"]}>{record.type === "recommendation" ? <IconlyImprove size="1.25rem" title="Recommendation" /> : <IconlyBug size="1.25rem" title="Problem report" />}</span>#{record.reference}</small>{staff && <button type="button" className={styles.detailsButton} aria-label="Open requester details" aria-haspopup="dialog" onClick={() => { detailsPanel.current?.showModal(); setDetailsOpen(true); }}><IconlyProfile size="1.25rem" /></button>}</div>}
       </div>
       {record && <><div className={styles.threadHeadingRow}><h3 className="type-subheading">{record.subject}</h3>{staff ? <div className={styles.statusControl} data-status={record.status}><SelectInput id={statusInputId} aria-label="Ticket status" value={record.status} disabled={busy} onChange={(event) => changeStatus(event.target.value)}>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</SelectInput></div> : <span className={`${styles.status} ${styles.ticketStatusBadge}`} data-status={record.status}>{STATUS_LABELS[record.status]}</span>}</div>
-        {staff && <dialog ref={detailsPanel} className={styles.detailsPanel} aria-labelledby={`${inputId}-details-title`}>
+        {staff && <dialog ref={detailsPanel} className={styles.detailsPanel} aria-labelledby={`${inputId}-details-title`} onClose={() => setDetailsOpen(false)}>
           <header className={styles.detailsPanelHeader}><h3 id={`${inputId}-details-title`} className="type-subheading">Requester details</h3><button type="button" className={`${styles.iconButton} ${styles.closeButton}`} aria-label="Close requester details" onClick={() => detailsPanel.current?.close()}><IconlyClose size="1.25rem" /></button></header>
           <div className={styles.contact}><strong>{record.contact.name}</strong><span>{record.contact.email || <PhoneActions phone={record.contact.phone} />}</span>{record.contact.email && record.contact.phone && <span><PhoneActions phone={record.contact.phone} /></span>}<small>{record.contact.source === "guest" ? "Guest · contact details not verified" : "Signed-in account"}</small><small>Reported page: {record.pagePath}</small>
           {record.environment && <AnimatedDisclosure className={styles.diagnostics} summary="Device details"><span>{[record.environment.deviceType, record.environment.browser, record.environment.platform].filter(Boolean).join(" · ")}</span>{record.environment.viewport?.width && <span>Viewport: {record.environment.viewport.width} × {record.environment.viewport.height}{record.environment.devicePixelRatio ? ` at ${record.environment.devicePixelRatio}×` : ""}</span>}{record.environment.screen?.width && <span>Screen: {record.environment.screen.width} × {record.environment.screen.height}</span>}{record.environment.timezone && <span>{record.environment.timezone}{record.environment.language ? ` · ${record.environment.language}` : ""}</span>}{record.environment.userAgent && <span className={styles.userAgent}>{record.environment.userAgent}</span>}</AnimatedDisclosure>}
@@ -254,7 +257,7 @@ export default function Conversation({ id, session, secret, staff, active, onBac
         if (!stick.current && list.current.scrollTop < 160) void older();
       }}>
         <div className={styles.messageContent} ref={messageContent}>
-        {record.before != null && <button className={styles.textButton} type="button" onClick={older} disabled={olderLoading}>{olderLoading ? "Loading earlier messages…" : "Load earlier messages"}</button>}
+        {record.before != null && (olderLoading ? <LoadingSkeleton label="Loading earlier messages" /> : <button className={styles.textButton} type="button" onClick={older}>Load earlier messages</button>)}
         {record.messages.map((message) => {
           const changedStatus = supportStatusChange(message);
           return <Fragment key={message.id}><article className={message.kind === "status" ? styles.statusMessage : styles.message} data-own={message.author === (staff ? "staff" : "requester")}>
@@ -271,7 +274,7 @@ export default function Conversation({ id, session, secret, staff, active, onBac
       </div>
       <button className={`${styles.textButton} ${styles.backToBottom}`} data-visible={newBelow} inert={!newBelow} aria-hidden={!newBelow} tabIndex={newBelow ? 0 : -1} type="button" onClick={() => { stick.current = true; list.current.scrollTop = list.current.scrollHeight; list.current.focus({ preventScroll: true }); setNewBelow(false); }}>Back to bottom</button>
     </div>}
-    {error && <div role="alert" className={styles.error}>{error} <button className={styles.textButton} type="button" onClick={() => setReload((value) => value + 1)}><RetryIcon />Refresh</button></div>}
+    {error && <LoadErrorBanner message={error} onRetry={() => setReload((value) => value + 1)} />}
     {record && (replyRestriction ? <div className={styles.closed} role="status"><IconlyDanger size="1.25rem" /><p>{replyRestriction}</p></div> : <form className={styles.composer} onSubmit={reply}>
       {record.status === "resolved" && <div className={styles.closed} role="status"><IconlyDanger size="1.25rem" /><p>This ticket is resolved. Replying will reopen it.</p></div>}
       {!!photos.length && <div className={styles.photoDrafts} aria-label="Photos to attach">{photos.map((file, index) => <PhotoDraft file={file} disabled={busy || !!pending.current} onRemove={() => setPhotos((current) => current.filter((_, itemIndex) => itemIndex !== index))} key={`${file.name}-${file.lastModified}-${index}`} />)}</div>}

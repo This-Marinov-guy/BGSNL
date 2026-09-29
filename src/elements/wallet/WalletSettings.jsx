@@ -13,7 +13,8 @@ import { browserFetch } from "@/util/auth/browser-request.mjs";
 import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "@/util/analytics/events.mjs";
 import { clarityEvent } from "@/util/functions/helpers";
 import { readWalletDevice, walletDeviceMessage, availableWalletProvider, validGoogleWalletSaveUrl } from "@/util/wallet/device-support.mjs";
-import { IconlyExternalLink, IconlyPlus, IconlyRotate, IconlyShare, IconlyWallet } from "@/elements/ui/icons/IconlyIcons";
+import { IconlyExternalLink, IconlyPlus, IconlyShare, IconlyWallet } from "@/elements/ui/icons/IconlyIcons";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import ImageTooltip from "@/elements/ui/media/ImageTooltip";
 import WalletBadge from "./WalletBadge";
 import MembershipCardThumbnail from "./MembershipCardThumbnail";
@@ -185,13 +186,13 @@ export default function WalletSettings({ user, preview = false }) {
     }
   };
 
-  let description = "Checking wallet support on this device…";
+  let description = "Wallet availability is being checked.";
   if (currentCheck?.error) description = "Wallet availability could not be checked. Please try again.";
   else if (currentCheck?.data?.eligible && !hasCard) description = "Your card is not available yet. Select Create to prepare it.";
   else if (device && !device.provider) description = walletDeviceMessage(device.reason);
   else if (provider) description = `Keep your membership card in ${provider === "apple" ? "Apple" : "Google"} Wallet.`;
   else if (currentCheck?.data) description = currentCheck.data.eligible
-    ? "Wallet cards are being prepared. Downloads will appear here when they are ready."
+    ? `Adding to ${device?.provider === "apple" ? "Apple" : "Google"} Wallet is currently unavailable. Your card is ready to open or share.`
     : "A wallet card is not currently available for this account.";
 
   const badgeProviders = device?.provider ? [device.provider]
@@ -204,10 +205,11 @@ export default function WalletSettings({ user, preview = false }) {
       : <span aria-hidden="true" className="settings-list__icon"><IconlyWallet /></span>}
     <div className="settings-list__text">
       <h3 className="settings-list__title">{roles?.includes("alumni") ? "Alumni card" : "Membership card"}</h3>
-      {preview && (membershipLocked || !hasCard) && <p className="settings-list__description">{membershipLocked ? "Resolve your membership status in Settings to access your card." : description}</p>}
+      {preview && (membershipLocked || !hasCard) && !currentCheck?.error && <p className="settings-list__description">{membershipLocked ? "Resolve your membership status in Settings to access your card." : controlsLoading ? <LoadingSkeleton label="Checking wallet support on this device" variant="inline" /> : description}</p>}
       {!membershipLocked && hasCard && <p className="settings-list__description">Your card is ready. Open or share it, or scan its QR code for current membership status.</p>}
       {!membershipLocked && shareMessage && <p className="settings-list__description" role="status">{shareMessage}</p>}
-      {!membershipLocked && actionError && <p className="settings-list__description" role="alert">{actionError}</p>}
+      {!membershipLocked && actionError && !currentCheck?.error && <p className="settings-list__description" role="alert">{actionError}</p>}
+      {!membershipLocked && currentCheck?.error && <LoadErrorBanner message="Wallet availability could not be checked." onRetry={() => setAttempt(value => value + 1)} />}
     </div>
     <div className={`settings-list__action ${styles.actions}`}>
       {membershipLocked ? <ImageTooltip label="Your membership is locked. Resolve your membership status to access your card." openOnClick>
@@ -234,10 +236,6 @@ export default function WalletSettings({ user, preview = false }) {
       </ImageTooltip>}
       {device && badgeProviders.map(badgeProvider => <WalletBadge key={badgeProvider} provider={badgeProvider}
         busy={busy} disabled={!hasCard || provider !== badgeProvider} unavailableReason={description} onClick={add} />)}
-      {currentCheck?.error && <ImageTooltip label="Try again">
-        <button type="button" aria-label="Try again" className={`settings-action ${styles.iconAction}`}
-          onClick={() => setAttempt((value) => value + 1)}><IconlyRotate /></button>
-      </ImageTooltip>}
       </>}
     </div>
   </Container>;

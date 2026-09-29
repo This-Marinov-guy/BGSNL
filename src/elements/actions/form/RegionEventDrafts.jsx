@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "framer-
 import { Link } from "@/util/navigation";
 import { useHttpClient } from "../../../hooks/common/http-hook";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
-import { FiChevronLeft, FiChevronRight } from "../../ui/icons/IconlyIcons";
+import { FiChevronLeft, FiChevronRight, IconlyArrowUpRight } from "../../ui/icons/IconlyIcons";
 
 const dateFormat = new globalThis.Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" });
 const timeFormat = new globalThis.Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Amsterdam" });
@@ -121,7 +121,7 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
                   {typeof poster === "string" && poster && <img className="event-region-drafts__poster" src={poster} alt={`${title} poster`} loading="lazy" />}
                 </div>
                 {note && <p className="event-draft-note"><strong>Note</strong>{note}</p>}
-                <Link to={`/user/dashboard/events/${encodeURIComponent(draft.id)}/edit`} className="event-region-drafts__continue" aria-label={`Continue ${title}`} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined} onClick={event => { if (disabled) event.preventDefault(); }}><span>Continue</span><span className="event-region-drafts__continue-icon" aria-hidden="true">↗</span></Link>
+                <Link to={`/user/dashboard/events/${encodeURIComponent(draft.id)}/edit`} className="event-region-drafts__continue" aria-label={`Continue ${title}`} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined} onClick={event => { if (disabled) event.preventDefault(); }}><span>Continue</span><span className="event-region-drafts__continue-icon" aria-hidden="true"><IconlyArrowUpRight /></span></Link>
               </div>
             </article>
           );

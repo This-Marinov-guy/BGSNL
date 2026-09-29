@@ -9,7 +9,7 @@ export default function EventPromoCodes() {
   const { values, setFieldValue } = useFormikContext();
   const id = useId();
   const codes = values.promoCodes?.codes ?? [];
-  return <OptionPanel name="promoCodes" title="Promo codes" description="Let buyers enter a code in Stripe Checkout to get a discount on this event’s tickets.">
+  return <OptionPanel name="promoCodes" title="Promo codes" description="Let buyers enter a code at checkout to get a discount on this event’s tickets.">
     <FieldArray name="promoCodes.codes">{({ push, remove }) => <div className="event-option-items">
       <OptionError name="promoCodes.codes" />
       {codes.map((code, index) => {

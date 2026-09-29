@@ -750,7 +750,7 @@
         visibility: visible;
         z-index: 9999;
         span {
-          color: #000000;
+          color: #ab1c02;
 
           cursor: pointer;
         }
@@ -880,5 +880,56 @@
   a {
     text-decoration: underline;
     cursor: pointer;
+  }
+}
+
+.submenu-toggle {
+  display: none;
+}
+
+@media only screen and (max-width: 1199px) {
+  .header-area .header-wrapper .mainmenunav ul.mainmenu > li.has-dropdown {
+    > a {
+      padding-right: 44px;
+    }
+
+    > a::after {
+      content: none;
+    }
+
+    > .submenu-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      color: #1f1f25;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+
+      &::after {
+        width: 0;
+        height: 0;
+        border-right: 9px solid transparent;
+        border-left: 9px solid transparent;
+        border-top: 9px solid currentColor;
+        content: "";
+        transition: transform 180ms ease;
+      }
+
+      &[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+      }
+
+      &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -2px;
+      }
+    }
   }
 }

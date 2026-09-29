@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../../elements/ui/functional/AnimatedDisclosure";
@@ -34,9 +34,7 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
         <div className="recovery-actions">
           {failed ? (
             <>
-              <button type="button" className="recovery-btn-primary" onClick={onRetry || (() => router.refresh())}>
-                <RetryIcon />Try again
-              </button>
+              <LoadErrorBanner message="We couldn’t load this page." onRetry={onRetry || (() => router.refresh())} />
               <a className="recovery-btn-secondary" href="/">Back to home</a>
             </>
           ) : (

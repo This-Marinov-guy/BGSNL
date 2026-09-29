@@ -442,6 +442,10 @@ Mainmenu Area
     min-width: 0;
     position: static;
     width: 100%;
+
+    .header-account-summary {
+      display: none;
+    }
   }
 
   .header-account-loading {

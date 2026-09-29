@@ -14,6 +14,7 @@ import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
 import StepContentTransition from "../../../ui/functional/StepContentTransition";
 import EventsLoading from "../../../ui/loading/EventsLoading";
+import { LoadErrorBanner } from "../../../ui/loading/LoadState";
 import Pagination from "../../../common/Pagination";
 import Filter from "../Filter";
 import Event from "./Event";
@@ -32,10 +33,12 @@ const archiveMonthLabel = (event) => {
 };
 
 const EventList = () => {
-    const { reloadEvents, eventsLoading } = useLoadEvents();
+    const { reloadEvents, eventsLoading, eventsError } = useLoadEvents();
     const [pastEvents, setPastEvents] = useState([]);
     const [pastTotal, setPastTotal] = useState(0);
     const [pastLoading, setPastLoading] = useState(false);
+    const [pastError, setPastError] = useState(false);
+    const [pastAttempt, setPastAttempt] = useState(0);
     const viewSelectId = useId();
     const { sendRequest } = useHttpClient();
     const sendRequestRef = useRef(sendRequest);
@@ -210,9 +213,11 @@ const EventList = () => {
         setPastEvents([]);
         setPastTotal(0);
         setPastLoading(true);
+        setPastError(false);
         sendRequestRef.current(`future-event/full-data-events-list?${params}`, "GET", null, {}, false, false, { signal: controller.signal })
             .then((response) => {
                 if (!active) return;
+                if (!Array.isArray(response?.events)) { setPastError(true); return; }
                 const pageEvents = response?.events || [];
                 const responseTotal = Number(response?.total);
                 const total = Number.isFinite(responseTotal) && responseTotal >= 0
@@ -230,9 +235,10 @@ const EventList = () => {
                 setPastEvents(pageEvents);
                 setPastTotal(total);
             })
+            .catch(() => { if (active) setPastError(true); })
             .finally(() => active && setPastLoading(false));
         return () => { active = false; controller.abort(); };
-    }, [showPastOrArchived, eventPage, eventPageSize, regionParam, sessionId, roleScope]);
+    }, [showPastOrArchived, eventPage, eventPageSize, regionParam, sessionId, roleScope, pastAttempt]);
 
     return (
         <>
@@ -289,7 +295,7 @@ const EventList = () => {
                 </label>
             </Filter>
             <StepContentTransition step={eventView === "active" ? 0 : eventView === "past" ? 1 : 2} direction={eventView === "active" ? "backward" : "forward"}>
-            {(showPastOrArchived ? pastLoading && pastEvents.length === 0 : eventsLoading) ? <EventsLoading /> : <div className="event-dashboard-content">
+            {(showPastOrArchived ? pastLoading && pastEvents.length === 0 : eventsLoading) ? <EventsLoading /> : (showPastOrArchived ? pastError : eventsError) ? <LoadErrorBanner message="Events could not be loaded." onRetry={() => showPastOrArchived ? setPastAttempt(value => value + 1) : reloadEvents(true)} /> : <div className="event-dashboard-content">
                 {!visibleCount && <p className="no-events-message">No {showDrafts ? "drafts" : showPastOrArchived ? "past or archived events" : "active events"} for the selected region.</p>}
                 {displayedSections.map((section) => {
                     if (!section.events.length) return null;

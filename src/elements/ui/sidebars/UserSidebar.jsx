@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import GridInterfaceIcon from "../icons/GridInterfaceIcon";
+import UpMotionIcon from "../icons/UpMotionIcon";
 import { useDispatch } from "react-redux";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -9,13 +10,13 @@ import {
   FaTag,
   FaTicketAlt,
   FaUser,
-  FiArrowUp,
   FiCalendar,
   FiEdit2,
   FiUsers,
   IconlyClose,
   IconlyQuestion,
   IconlyMessage,
+  IconlyChessPawn3D,
 } from "@/elements/ui/icons/IconlyIcons";
 import { Link } from "@/util/navigation";
 import { showModal } from "../../../redux/modal";
@@ -32,6 +33,7 @@ import {
 import { ACCOUNT_TABS } from "../../../util/defines/enum";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
+import { ALUMNI_MEMBERSHIP_SPECIFICS } from "@/util/defines/ALUMNI";
 
 const UserSidebar = ({
   currentUser,
@@ -43,6 +45,9 @@ const UserSidebar = ({
   toggleSidebar,
 }) => {
   const dispatch = useDispatch();
+  const tierIcon = currentUser.tier === 0
+    ? <IconlyChessPawn3D />
+    : ALUMNI_MEMBERSHIP_SPECIFICS.find((tier) => tier.id === currentUser.tier)?.icon;
   const getTabIcon = (tab) => {
     if (!currentUser.hasBenefits && ["tickets", "internships", "promotions"].includes(tab)) {
       return (
@@ -174,7 +179,7 @@ const UserSidebar = ({
         id="user-account-navigation"
       >
         {/* User Profile Overview */}
-        <div className="sidebar-user-profile">
+        <div className={`sidebar-user-profile${currentUser?.tier === 0 ? " has-tier-action" : ""}${currentUser?.isAlumni && currentUser.tier > 0 && tierIcon ? " has-tier-icon" : ""}`}>
           <button
             aria-label="Edit profile information"
             className="sidebar-profile-avatar"
@@ -202,11 +207,17 @@ const UserSidebar = ({
             <h2 className="sidebar-user-name archive">{currentUser.name}</h2>
             <p className="sidebar-user-status">
               <span className="status-active">
-                {formatRole(currentUser.roles)}{" "}
-                {currentUser?.isAlumni &&
-                  Number.isInteger(currentUser.tier) &&
-                  `Tier ${currentUser.tier}`}
+                {formatRole(currentUser.roles)}
               </span>
+              {currentUser?.isAlumni && Number.isInteger(currentUser.tier) && (
+                <span className="sidebar-user-tier" title={`Alumni Tier ${currentUser.tier}`}>
+                  Tier{" "}
+                  {currentUser.tier > 0 ? currentUser.tier : tierIcon ? <>
+                    <span className="sidebar-tier-button-label">{currentUser.tier}</span>
+                    <span className="sidebar-user-tier-icon" aria-hidden="true">{tierIcon}</span>
+                  </> : currentUser.tier}
+                </span>
+              )}
               {currentUser.region ? (
                 <span className="sidebar-user-region">
                   {capitalizeFirstLetter(currentUser.region, true)}
@@ -214,14 +225,17 @@ const UserSidebar = ({
               ) : null}
             </p>
           </div>
+          {currentUser?.isAlumni && currentUser.tier > 0 && tierIcon && (
+            <span className="sidebar-profile-tier-icon" aria-hidden="true">{tierIcon}</span>
+          )}
           {currentUser?.tier === 0 && (
-            <div className="sidebar-tier-action">
+            <div className="sidebar-tier-action" title="Update tier">
               <AlumniRegistrationButton
-                className="rn-button-style--2 rn-btn-green sidebar-tier-button"
+                className="sidebar-tier-button"
                 asLink={false}
               >
-                <FiArrowUp size={16} aria-hidden />
-                Update tier
+                <UpMotionIcon />
+                <span className="sidebar-tier-button-label">Update tier</span>
               </AlumniRegistrationButton>
             </div>
           )}

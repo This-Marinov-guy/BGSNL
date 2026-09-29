@@ -11,6 +11,7 @@ const ModalWindow = ({
   className,
   contentClassName,
   style,
+  urlKey,
 }) => {
   // Was assigned during render, which crashes SSR.
   useEffect(() => {
@@ -35,6 +36,7 @@ const ModalWindow = ({
       contentClassName={contentClassName}
       dismissableMask={Boolean(onHide)}
       style={{ width: "900px", ...style }}
+      urlKey={urlKey}
     >
       {children}
     </Dialog>
@@ -50,6 +52,7 @@ ModalWindow.propTypes = {
   className: PropTypes.string,
   contentClassName: PropTypes.string,
   style: PropTypes.object,
+  urlKey: PropTypes.string,
 };
 
 export default ModalWindow;

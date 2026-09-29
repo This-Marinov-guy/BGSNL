@@ -4,6 +4,7 @@ import {
   FaCog,
   FaSignOutAlt,
   FaUser,
+  IconlySwapVertical,
 } from "@/elements/ui/icons/IconlyIcons";
 import { showModal } from "../../../redux/modal";
 import { logout, selectUser } from "../../../redux/user";
@@ -12,6 +13,11 @@ import { ACTIVE_MEMBER, USER_UPDATE_MODAL } from "../../../util/defines/common";
 import AccessRequestBanner from "@/elements/backoffice/AccessRequestBanner";
 import MembershipTransferPrompt from "@/elements/subscriptions/MembershipTransferPrompt";
 import BillingActions from "@/elements/subscriptions/BillingActions";
+import SubscriptionManage from "@/elements/ui/buttons/SubscriptionManage";
+import SubscriptionStart from "@/elements/subscriptions/SubscriptionStart";
+import { useBillingAttention } from "@/elements/subscriptions/BillingAttentionProvider";
+import { billingAction } from "@/elements/subscriptions/subscription-checkout.mjs";
+import SubscriptionCancellationNotice from "@/elements/subscriptions/SubscriptionCancellationNotice";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
 import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
 import UserTabHeader from "./UserTabHeader";
@@ -52,6 +58,8 @@ SettingsRow.propTypes = {
 
 const SettingsTab = ({ user }) => {
   const dispatch = useDispatch();
+  const billing = useBillingAttention();
+  const subscriptionAction = billing?.loading ? "none" : billingAction(user, billing?.notice?.reason);
   const showAccessRequest = useSelector((state) => selectUser(state).roles?.includes(ACTIVE_MEMBER));
   const handleLogout = async () => {
     try { await dispatch(logout()); window.location.href = "/"; }
@@ -90,16 +98,25 @@ const SettingsTab = ({ user }) => {
             <h2 id="settings-membership" className="settings-group__title">Membership</h2>
             <ul className="settings-list">
               <li className="settings-list__alert">
-                <AccountBillingAlert user={user} showAction={false} flushBottom />
+                <AccountBillingAlert user={user} flushBottom />
+                <SubscriptionCancellationNotice user={user} />
               </li>
               <SettingsRow
                 action={
-                  <BillingActions user={user} />
+                  <BillingActions user={user} hideSwitch />
                 }
-                description='Control your payment methods, change subscription type or cancel current subscription'
+                description="Manage your payment methods, payments and subscription billing."
                 icon={<FaCog />}
                 title="Billing"
               />
+              {["start", "manage"].includes(subscriptionAction) && <SettingsRow
+                action={subscriptionAction === "manage"
+                  ? <SubscriptionManage subscription={user.subscription} user={user} switchOnly />
+                  : <SubscriptionStart user={user} buttonLabel="Switch" modalTitle="Switch subscription" />}
+                description="Choose a different membership type or subscription plan."
+                icon={<IconlySwapVertical />}
+                title="Switch subscription"
+              />}
               <WalletSettings user={user} />
             </ul>
             {showAccessRequest && <AccessRequestBanner />}

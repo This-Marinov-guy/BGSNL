@@ -1,32 +1,44 @@
 .profile {
   display: inline-flex;
   align-items: center;
-  gap: .85rem;
+  gap: 1rem;
   max-width: 100%;
-  padding: .75rem 1.25rem;
-  border-radius: .75rem;
-  background: var(--site-thread-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  background: transparent;
   color: #fff;
   font-family: "LeagueSpartan", "Roboto", sans-serif;
   text-align: left;
   text-transform: none;
   text-decoration: none;
-  transition: background-color 180ms ease, box-shadow 180ms ease;
 
-  &:is(a):hover { background: #01594d; color: #fff; }
-  &:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+  &:is(a):hover { color: #fff; }
+  &:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 4px;
+    .avatar { transform: scale(1.06); }
+    .copy strong { text-decoration-color: currentColor; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:is(a):hover {
+      .avatar { transform: scale(1.06); }
+      .copy strong { text-decoration-color: currentColor; }
+    }
+  }
 }
 
 .avatar {
   position: relative;
   display: grid;
   place-items: center;
-  flex: 0 0 3rem;
-  width: 3rem;
-  height: 3rem;
+  flex: 0 0 3.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   overflow: hidden;
   border-radius: 50%;
   background: rgb(255 255 255 / 18%);
+  transition: transform 180ms cubic-bezier(.16, 1, .3, 1);
 
   img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 }
@@ -37,12 +49,23 @@
   flex-direction: column;
   gap: .25rem;
   min-width: 0;
-  font-size: 1rem;
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  font-size: 1.125rem;
   line-height: 1.2;
   overflow-wrap: anywhere;
-  strong { font-size: 1.25rem; font-weight: 700; }
+  span, strong { font-family: inherit; }
+  strong {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: .2em;
+    transition: text-decoration-color 180ms ease;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .profile { transition: none; }
+  .profile .avatar { transform: none !important; transition: none; }
+  .copy strong { transition: none; }
 }

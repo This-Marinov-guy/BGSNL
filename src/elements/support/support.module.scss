@@ -127,8 +127,8 @@
 .photoRemove { position: absolute; top: -.35rem; right: -.35rem; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; border: 2px solid #fff; border-radius: 50%; background: #8f1737; color: #fff; cursor: pointer; &:focus-visible { outline: 3px solid #006f62; outline-offset: 2px; } }
 .photoError { color: #861330; }
 .conversation > .error, .closed { margin: .5rem 1.25rem; flex-shrink: 0; }
-.closed { display: flex; align-items: flex-start; gap: .65rem; padding: .85rem 1rem; border-radius: .65rem; background: #fbefd4; color: #765615; svg { flex-shrink: 0; margin-top: .15rem; } p { margin: 0; color: inherit; } }
-.composer > .closed { margin: 0 0 .5rem; padding: .65rem .75rem; gap: .5rem; align-items: center; p { font-size: 1rem; line-height: 1.4; } svg { width: 1rem; height: 1rem; margin-top: 0; } }
+.closed { display: flow-root; padding: .85rem 1rem; border-radius: .65rem; background: #fbefd4; color: #765615; svg { float: left; margin: .15rem .65rem .15rem 0; } p { margin: 0; color: inherit; } }
+.composer > .closed { margin: 0 0 .5rem; padding: .65rem .75rem; p { font-size: 1rem; line-height: 1.4; } svg { width: 1rem; height: 1rem; margin: 0 .5rem .1rem 0; } }
 .helpSection { display: grid; gap: 1.5rem; }
 .reportIntro {
   display: flex;

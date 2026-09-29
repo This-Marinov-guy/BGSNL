@@ -29,7 +29,7 @@ test("cancel opens the shared confirmation modal and only confirmation requests 
   assert.match(component, /Keep subscription/);
   assert.match(component, /onClick=\{\(\) => openPortal\("cancel"\)\}/);
   assert.match(component, /inFlight\.current/);
-  assert.match(actions, /<SubscriptionManage subscription=\{user\.subscription\} user=\{user\} \/>/);
+  assert.match(actions, /<SubscriptionManage subscription=\{user\.subscription\} user=\{user\} hideSwitch=\{hideSwitch\} \/>/);
   assert.doesNotMatch(actions, /primaryOnly|isSubscribed/);
 });
 
@@ -51,6 +51,19 @@ test("Stripe-ended subscriptions offer restart while scheduled cancellations sti
   assert.equal(canStartSubscription({ ...user, billingVerificationUnavailable: true }), false);
   assert.notEqual(billingAction({ ...user, billingVerificationUnavailable: true }, "unavailable"), "start");
   assert.equal(billingAction({ ...user, status: "active", subscription: { ...user.subscription, status: "active", cancelAtPeriodEnd: true } }), "manage");
+});
+
+test("unavailable lookups never infer a missing or manageable subscription", () => {
+  for (const subscription of [undefined, { customerId: "cus_existing" }, { id: "sub_current", status: "active" }, { id: "sub_old", status: "canceled" }]) {
+    assert.equal(billingAction({ status: "active", subscription }, "unavailable"), "none");
+    assert.equal(billingAction({ status: "active", subscription, billingVerificationUnavailable: true }), "none");
+  }
+});
+
+test("confirmed missing or ended billing takes precedence over stale account references", () => {
+  for (const reason of ["no_membership", "subscription_ended"]) {
+    assert.equal(billingAction({ status: "locked", billingVerificationUnavailable: true, subscription: { id: "sub_old", status: "active" } }, reason), "start");
+  }
 });
 
 test("missing, empty and customer-only subscriptions offer checkout", () => {

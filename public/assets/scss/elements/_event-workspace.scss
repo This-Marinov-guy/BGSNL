@@ -330,7 +330,7 @@
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid #dce3df;
+  border: 2px solid #9aafa3;
   border-radius: 0.8rem;
   background: #fff;
   transition:
@@ -339,7 +339,7 @@
     transform 180ms ease;
 
   &:hover {
-    border-color: #9ebbb0;
+    border-color: #548772;
     box-shadow: 0 0.55rem 1.4rem rgba(30, 63, 50, 0.09);
     transform: translateY(-2px);
   }
@@ -351,7 +351,7 @@
 }
 
 .event-card--draft {
-  border-color: #e4c65d;
+  border-color: #b99a32;
   background: #fffdf4;
 }
 

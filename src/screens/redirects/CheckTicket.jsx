@@ -1,6 +1,7 @@
 "use client";
 
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -68,6 +69,7 @@ export default function CheckTicket() {
   const [events, setEvents] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(!expectedEventId);
   const [eventsError, setEventsError] = useState("");
+  const [eventsAttempt, setEventsAttempt] = useState(0);
   const [selectedEventId, setSelectedEventId] = useState(expectedEventId || "");
   const [search, setSearch] = useState("");
   const [shareOpen, setShareOpen] = useState(false);
@@ -120,7 +122,7 @@ export default function CheckTicket() {
     }
     void loadEvents();
     return () => controller.abort();
-  }, [activeEventId]);
+  }, [activeEventId, eventsAttempt]);
 
   const reportError = useCallback((message) => {
     blocked.current = true;
@@ -340,7 +342,7 @@ export default function CheckTicket() {
             </button>)}
           </div>
         )}
-        {eventsError && <p role="alert">{eventsError}</p>}
+        {eventsError && <LoadErrorBanner message={eventsError} onRetry={() => setEventsAttempt(value => value + 1)} />}
         {!eventsLoading && !eventsError && !filteredEvents.length && <p className={styles.empty}>No events match this search.</p>}
       </section> : <section className={styles.scannerStep}>
         <div className={styles.actions}>
@@ -389,7 +391,7 @@ export default function CheckTicket() {
           {result.outcome !== "error" && <>
             <button className={styles.extendButton} type="button" aria-expanded={extended} aria-controls="scanner-ticket-details" onClick={() => { setTicketDetails(null); setDetailsError(""); setExtended(value => !value); }}><IconlyDocument aria-hidden="true" />{extended ? "Compact" : "Extend"}</button>
             {extended && <div id="scanner-ticket-details" className={styles.ticketDetails} aria-busy={!ticketDetails && !detailsError}>
-              {detailsError ? <div role="alert"><p>{detailsError}</p><button type="button" onClick={() => { setDetailsError(""); setTicketDetails(null); setDetailsAttempt(value => value + 1); }}><RetryIcon />Try again</button></div> : !ticketDetails ? <DetailsSkeleton /> : ticketDetails.length === 0 ? <p>No additional details available.</p> : ticketDetails.map((guest, index) => <section key={guest.id} className={styles.ticketDetail}>
+              {detailsError ? <LoadErrorBanner message={detailsError} onRetry={() => { setDetailsError(""); setTicketDetails(null); setDetailsAttempt(value => value + 1); }} /> : !ticketDetails ? <DetailsSkeleton /> : ticketDetails.length === 0 ? <p>No additional details available.</p> : ticketDetails.map((guest, index) => <section key={guest.id} className={styles.ticketDetail}>
                 <h3>Ticket {index + 1} · {guest.refunded ? "Refunded" : Number(guest.status) === 1 ? "Checked in" : "Not checked in"}</h3>
                 <dl>
                   <dt>Name</dt><dd>{guest.name || "Not provided"}</dd>

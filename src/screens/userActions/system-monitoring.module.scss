@@ -1,6 +1,8 @@
+@use "../../elements/ui/tabs/section-tabs" as section-tabs;
+
 .page { margin-top: clamp(7rem, 10vw, 9rem); padding-bottom: 4rem; }
 .back { margin-bottom: 1.25rem; }
-.back a { color: #087462; font-weight: 700; }
+.back a { display: inline-flex; align-items: center; gap: 0.45rem; color: #087462; font-weight: 700; }
 .heading { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 1rem; }
 .heading h1 { margin: 0 0 .5rem; }
 .heading p, .group > p, .metric p, .service p, .checked { color: #607168; margin: 0; }
@@ -36,9 +38,7 @@
 .jobAlert strong { font-size: 1.15rem; }
 .jobAlert p { margin: .2rem 0 0; }
 .jobAlert button { flex: none; border: 0; border-radius: .55rem; padding: .65rem .9rem; background: #952c2c; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
-.tabs { display: flex; gap: .4rem; margin: 1rem 0; border-bottom: 1px solid #cddbd2; }
-.tabs button { border: 0; border-bottom: 3px solid transparent; padding: .75rem 1rem; background: transparent; color: #51665a; font: inherit; font-weight: 700; cursor: pointer; }
-.tabs button[aria-selected="true"] { border-bottom-color: #087462; color: #075744; }
+.tabs { @include section-tabs.navigation; margin: 1rem 0; }
 .jobsPanel { padding: 1.5rem; border-radius: 1rem; background: #f0f5f1; }
 .jobsHeading { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
 .jobsHeading h2 { margin: 0 0 .25rem; }

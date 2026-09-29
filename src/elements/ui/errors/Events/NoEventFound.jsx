@@ -1,4 +1,4 @@
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import React from 'react'
 import { useNavigate } from "@/util/navigation"
 import HeaderTwo from '../../../../component/header/HeaderTwo'
@@ -19,14 +19,7 @@ const NoEventFound = () => {
                 <div className="error-button center_text mt--60">
                     <h4>Bummer...No such event was found after so much searching!</h4>
                     <div className="options-btns-div ">
-                        <button
-                            onClick={() => {
-                                window.location.reload()
-                            }}
-                            className="rn-button-style--2 rn-btn-reverse-green"
-                        >
-                            <RetryIcon />Try again
-                        </button>
+                        <LoadErrorBanner message="This event could not be found or loaded." onRetry={() => window.location.reload()} />
                         <button
                             onClick={() => navigate(-1)}
                             className="rn-button-style--2 rn-btn-reverse"

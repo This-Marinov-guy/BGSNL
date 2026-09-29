@@ -60,10 +60,23 @@ const HeaderTwo = (props) => {
   useEffect(() => {
     const header = headerRef.current;
     const toggleDropdown = (event) => {
-      const trigger = event.target.closest?.(".has-dropdown > a");
+      const trigger = event.target.closest?.(
+        ".has-dropdown > .submenu-toggle, .has-dropdown > a:not([href])"
+      );
       if (!trigger || !header.contains(trigger)) return;
-      trigger.parentElement.querySelector(".submenu")?.classList.toggle("active");
-      trigger.classList.toggle("open");
+      const parent = trigger.parentElement;
+      const submenu = parent.querySelector(":scope > .submenu");
+      if (!submenu) return;
+      const expanded = submenu.classList.toggle("active");
+      parent.querySelector(":scope > a")?.classList.toggle("open", expanded);
+      const button = parent.querySelector(":scope > .submenu-toggle");
+      if (button) {
+        button.setAttribute("aria-expanded", String(expanded));
+        button.setAttribute(
+          "aria-label",
+          `${expanded ? "Collapse" : "Expand"} ${button.dataset.submenuLabel} submenu`
+        );
+      }
     };
     header?.addEventListener("click", toggleDropdown);
     return () => header?.removeEventListener("click", toggleDropdown);

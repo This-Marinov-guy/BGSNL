@@ -2,6 +2,7 @@
 
 import PropTypes from "prop-types";
 import {
+  isValidElement,
   useEffect,
   useId,
   useLayoutEffect,
@@ -10,10 +11,17 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { FiX, FiMaximize2, FiMinimize2 } from "@/elements/ui/icons/IconlyIcons";
+import useModalUrl from "./useModalUrl";
 
 const CLOSE_ANIMATION_MS = 180;
 
 const joinClasses = (...classes) => classes.filter(Boolean).join(" ");
+
+const titleText = (value) => {
+  if (typeof value === "string" || typeof value === "number") return String(value);
+  if (Array.isArray(value)) return value.map(titleText).join(" ");
+  return isValidElement(value) ? titleText(value.props.children) : "";
+};
 
 /**
  * The single modal shell used across BGSNL.
@@ -45,6 +53,7 @@ const AppModal = ({
   maximized,
   onMaximize,
   initialFocusRef,
+  urlKey,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPresent, setIsPresent] = useState(open);
@@ -56,6 +65,7 @@ const AppModal = ({
   const fullscreenAnimationRef = useRef(null);
   const fullscreenOriginRef = useRef(null);
   const onCloseRef = useRef(onClose);
+  useModalUrl(open && modal, urlKey || titleText(title) || ariaLabel || className);
 
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -371,6 +381,7 @@ AppModal.propTypes = {
   maximized: PropTypes.bool,
   onMaximize: PropTypes.func,
   initialFocusRef: PropTypes.shape({ current: PropTypes.object }),
+  urlKey: PropTypes.string,
 };
 
 export default AppModal;

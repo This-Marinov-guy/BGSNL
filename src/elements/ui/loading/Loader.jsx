@@ -7,7 +7,7 @@ const Loader = () => {
       style={{ margin: "auto" }}
       className="d-flex align-items-center justify-content-center g--3 disabled"
     >
-      <span>Loading </span>
+      <span className="visually-hidden">Loading</span>
       <ProgressSpinner
         style={{ width: "20px", height: "20px" }}
         strokeWidth="8"

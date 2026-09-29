@@ -3,6 +3,7 @@
 /* global Intl */
 
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -141,7 +142,7 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
               {destination && <Link href={destination} className={`rn-button-style--2 rn-btn-green rn-btn-small ${styles.stateTransition}`}>
                 {result.kind === "subscription" ? result.isSignup ? "Continue to login" : "Go to my account" : ["ticket", "free"].includes(result.kind) ? "View event" : "Get in touch"} <FiArrowRight size={24} />
               </Link>}
-            </> : pending || unavailable ? <p role="status" className={styles.syncStatus}>Checking automatically…</p>
+            </> : pending || unavailable ? <LoadingSkeleton label="Checking payment status automatically" variant="inline" />
               : <button type="button" disabled={retrying} onClick={retry} className="rn-button-style--2 rn-btn-reverse-red rn-btn-small">
               <RetryIcon />{retrying ? "Checking checkout…" : result.canResume ? "Retry checkout" : result.kind === "donation" ? "Contact us to retry" : "Start checkout again"}
             </button>}

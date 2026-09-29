@@ -1,3 +1,6 @@
+"use client";
+
+import dynamic from "next/dynamic";
 import PropTypes from "prop-types";
 import {
   INTERNSHIPS,
@@ -7,15 +10,17 @@ import {
   SETTINGS,
   TICKETS,
 } from "../../../util/defines/enum";
-import InternshipsTab from "./InternshipsTab";
-import NewsTab from "./NewsTab";
 import ProfileTab from "./ProfileTab";
-import PromotionsTab from "./PromotionsTab";
-import SettingsTab from "./SettingsTab";
-import TicketsTab from "./TicketsTab";
-import HelpSection from "@/elements/support/HelpSection";
 import { getAccountStatusNotice } from "@/elements/subscriptions/account-status-notice.mjs";
 import UserTabHeader from "./UserTabHeader";
+
+const tabLoading = () => <div className="tab-content-wrapper" role="status">Loading section…</div>;
+const InternshipsTab = dynamic(() => import("./InternshipsTab"), { loading: tabLoading });
+const NewsTab = dynamic(() => import("./NewsTab"), { loading: tabLoading });
+const PromotionsTab = dynamic(() => import("./PromotionsTab"), { loading: tabLoading });
+const SettingsTab = dynamic(() => import("./SettingsTab"), { loading: tabLoading });
+const TicketsTab = dynamic(() => import("./TicketsTab"), { loading: tabLoading });
+const HelpSection = dynamic(() => import("@/elements/support/HelpSection"), { loading: tabLoading });
 
 const RESTRICTED_BENEFITS = {
   [TICKETS]: {

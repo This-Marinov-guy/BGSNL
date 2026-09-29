@@ -17,6 +17,7 @@ import {
   IconlyPlus,
 } from "@/elements/ui/icons/IconlyIcons";
 import { showNotification } from "@/redux/notification";
+import useModalUrl from "@/elements/ui/modals/useModalUrl";
 
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 5;
@@ -32,6 +33,7 @@ const clampZoom = (value) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
  * keep their plain lightbox.
  */
 const MediaPreview = ({ src, alt = "", fileName = "image", open, onClose }) => {
+  useModalUrl(open, "image-preview");
   const dispatch = useDispatch();
   const [zoom, setZoom] = useState(MIN_ZOOM);
   const [rotation, setRotation] = useState(0);

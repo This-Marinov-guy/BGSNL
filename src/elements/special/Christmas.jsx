@@ -16,6 +16,7 @@ import ValidatedFormik from "../ui/forms/ValidatedFormik";
 import ModalWindow from "../ui/modals/ModalWindow";
 import GifImage from "./GifImage";
 import GifSearch from "./GifSearch";
+import { IconlyHeart } from "@/elements/ui/icons/IconlyIcons";
 
 const schema = yup.object().shape({
   text: yup.string().required("You are not sending without a wish >:("),
@@ -127,7 +128,7 @@ const Christmas = (props) => {
                     fontStyle: "italic",
                   }}
                 >
-                  No cards yet - you can always send one to yourself 😊
+                  No cards yet - you can always send one to yourself <IconlyHeart aria-hidden="true" size="1.25em" />
                 </p>
               </div>
             )}

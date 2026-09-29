@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { SelectInput } from "@/compat/primereact";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -63,6 +63,7 @@ export function SubscriptionCheckoutForm({
   initialRegion = "",
   currentPriceId = "",
   currentTier,
+  renewalPriceId = null,
   onCheckout,
   onPendingChange,
   onMembershipGuideChange = () => {},
@@ -107,7 +108,10 @@ export function SubscriptionCheckoutForm({
   }, [attempt, loadPlans]);
 
   const options = plans?.filter((plan) => plan.type === type) ?? [];
-  const selected = options.find((plan) => plan.priceId === priceId && plan.priceId !== currentPriceId);
+  const renewing = renewalPriceId !== null;
+  const selected = renewing ? plans?.find(plan => plan.priceId === renewalPriceId)
+    : options.find((plan) => plan.priceId === priceId && plan.priceId !== currentPriceId);
+  const selectedType = renewing ? selected?.type : type;
   const currentPlan = currentPriceId ? plans?.find(plan => plan.priceId === currentPriceId) || { type: initialType, tier: currentTier } : null;
   const chargeNow = planChangeChargesImmediately(currentPlan, selected);
   const billsAtRenewal = !!currentPriceId && !!selected && !chargeNow;
@@ -151,7 +155,7 @@ export function SubscriptionCheckoutForm({
 
   const submit = async (event) => {
     event.preventDefault();
-    if (!selected || submitting.current || (type === "member" && !REGIONS.includes(region)) || (chargeNow && !quote)) return;
+    if (!selected || submitting.current || (selectedType === "member" && !REGIONS.includes(region)) || (chargeNow && !quote)) return;
     submitting.current = true;
     setPending(true);
     setCheckoutError("");
@@ -161,7 +165,7 @@ export function SubscriptionCheckoutForm({
       [ANALYTICS_PROPERTIES.MEMBERSHIP_PLAN]: subscriptionPlanLabel(selected),
     });
     try {
-      await onCheckout(selected.priceId, type === "member" ? region : undefined);
+      await onCheckout(selected.priceId, selectedType === "member" ? region : undefined);
       // Stay disabled while redirecting to Stripe or refreshing the saved plan.
     } catch {
       if (!mounted.current) return;
@@ -177,15 +181,18 @@ export function SubscriptionCheckoutForm({
 
   return (
     <form ref={form} tabIndex={-1} className={styles.checkoutForm} onSubmit={submit} aria-busy={pending || (!plans && !loadError)}>
-      <p>{currentPriceId ? "Choose your new plan. Alumni upgrades and changes between Member and Alumni require payment now. Other changes are billed at your next renewal." : "Choose Member or Alumni, then select your subscription. You will review the price and payment details securely before confirming."}</p>
+      <p id={`${id}-help`}>{renewing ? "Confirm your plan to start a new subscription. You will review the final price in our secure checkout before paying." : currentPriceId ? "Choose your new plan. Alumni upgrades and changes between Member and Alumni require payment now. Other changes are billed at your next renewal." : "Choose Member or Alumni, then select your subscription. You will review the price and payment details securely before confirming."}</p>
       {loadError || plans?.length === 0 ? (
-        <div role="status" className={styles.checkoutMessage}>
-          <p>{loadError ? "We could not load the available subscriptions." : "No paid subscriptions are available right now."}</p>
-          <button className={ACTION_CLASS} type="button" onClick={() => setAttempt((value) => value + 1)}><RetryIcon />Try again</button>
-        </div>
-      ) : !plans ? <SubscriptionOptionsSkeleton /> : (
+        <LoadErrorBanner message={loadError ? "We could not load the available subscriptions." : "No paid subscriptions are available right now."} onRetry={() => setAttempt((value) => value + 1)} />
+      ) : !plans ? <SubscriptionOptionsSkeleton /> : renewing && !selected ? (
+        <p role="alert">Your previous subscription plan is no longer available. Close this confirmation and use Switch to choose an available subscription.</p>
+      ) : (
         <>
-          <div className={`rn-form-group ${styles.checkoutField}`}>
+          {renewing ? <div className={styles.checkoutMessage}>
+            <p><strong>{selected.type === "alumni" ? "Alumni" : "Member"} subscription</strong></p>
+            <p>{subscriptionPlanLabel(selected)}</p>
+            <p>The subscription renews automatically until you cancel.</p>
+          </div> : <div className={`rn-form-group ${styles.checkoutField}`}>
             <div className={`rn-form-label-row ${styles.checkoutLabelRow}`}>
               <label htmlFor={`${id}-type`}>Membership type</label>
               <button
@@ -202,12 +209,12 @@ export function SubscriptionCheckoutForm({
             </div>
             <SelectInput className="bgsnl-form-control" id={`${id}-type`} value={type} disabled={pending} required
               onChange={(event) => chooseMembershipType(event.target.value)}>
-              <option value="">Choose Member or Alumni</option>
+              <option value="" disabled>Choose Member or Alumni</option>
               <option value="member" disabled={!plans.some((plan) => plan.type === "member")}>Member</option>
               <option value="alumni" disabled={!plans.some((plan) => plan.type === "alumni")}>Alumni</option>
             </SelectInput>
-          </div>
-          {type === "member" && <div className={`rn-form-group ${styles.checkoutField}`}>
+          </div>}
+          {selectedType === "member" && <div className={`rn-form-group ${styles.checkoutField}`}>
             <label htmlFor={`${id}-region`}>Region</label>
             <SelectInput className="bgsnl-form-control" id={`${id}-region`} value={region} disabled={pending} required
               onChange={event => setRegion(event.target.value)}>
@@ -215,7 +222,7 @@ export function SubscriptionCheckoutForm({
               {REGIONS.map(value => <option key={value} value={value}>{value === "breda_tilburg" ? "Breda–Tilburg" : value === "leiden_hague" ? "Leiden–The Hague" : value.charAt(0).toUpperCase() + value.slice(1)}</option>)}
             </SelectInput>
           </div>}
-          <div className={`rn-form-group ${styles.checkoutField}`}>
+          {!renewing && <div className={`rn-form-group ${styles.checkoutField}`}>
             <label htmlFor={`${id}-plan`}>{type === "alumni" ? "Alumni tier" : "Membership period"}</label>
             <SelectInput className="bgsnl-form-control" id={`${id}-plan`} value={priceId} disabled={!type || pending} required
               aria-describedby={`${id}-help`} onChange={(event) => {
@@ -232,8 +239,7 @@ export function SubscriptionCheckoutForm({
                 {subscriptionPlanLabel(plan)}{plan.priceId === currentPriceId ? " (current)" : ""}
               </option>)}
             </SelectInput>
-          </div>
-          {/* <p id={`${id}-help`} aria-live="polite">{scheduledDowngrade ? "No charge today. You keep your current tier and benefits until your next billing date, when the lower tier and price take effect." : billsAtRenewal ? "Your profile will update immediately. No charge today: your new price and payment period apply from your existing next billing date." : currentPriceId ? "You will review any charges and credits in Stripe before confirming. Your membership updates once payment is confirmed." : "Subscriptions renew automatically. Paid benefits become available after your payment is confirmed. You can manage or cancel your subscription in Billing."}</p> */}
+          </div>}
           {checkoutError && <p role="alert">{checkoutError}</p>}
           <div className={styles.checkoutActions}>
           <AnimatePresence initial={false}>
@@ -241,18 +247,15 @@ export function SubscriptionCheckoutForm({
               initial={{ opacity: 0, y: reduceMotion ? 0 : 6 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: reduceMotion ? 0 : -4, transition: { duration: reduceMotion ? 0 : 0.12 } }}
               transition={{ duration: reduceMotion ? 0 : 0.2 }}>
-              <IconlyDanger aria-hidden />
-              {!quote ? quoteError ? <div className={styles.checkoutMessage}>
-                <p>We couldn’t check the amount due. Please retry before continuing.</p>
-                <button className={ACTION_CLASS} type="button" onClick={() => setQuoteAttempt(value => value + 1)}><RetryIcon />Retry amount</button>
-              </div> : <div className={styles.chargeQuoteSkeleton} role="status" aria-label="Calculating payment amount">
+              {(!quoteError || quote) && <IconlyDanger aria-hidden />}
+              {!quote ? quoteError ? <LoadErrorBanner message="We couldn’t check the amount due. Please retry before continuing." retryLabel="Retry amount" onRetry={() => setQuoteAttempt(value => value + 1)} /> : <div className={styles.chargeQuoteSkeleton} role="status" aria-label="Calculating payment amount">
                 <span className={`${styles.skeletonBlock} ${styles.skeletonLine}`} aria-hidden />
                 <span className={`${styles.skeletonBlock} ${styles.skeletonLineShort} ${styles.skeletonLine}`} aria-hidden />
-              </div> : <p>{quote.amountDue > 0 ? <><strong>{chargeAmountLabel(quote)} will be taken from your payment method</strong> when you confirm in Stripe. This is the current estimate, including applicable credits. Stripe confirms the final amount.</> : <><strong>{chargeAmountLabel(quote)} due now.</strong> No payment is currently due. Review and confirm the change in Stripe.</>}</p>}
+              </div> : <p>{quote.amountDue > 0 ? <><strong>We will charge {chargeAmountLabel(quote)} to your payment method</strong> when you confirm. This estimate includes applicable credits. You will see the final amount before paying.</> : <><strong>{chargeAmountLabel(quote)} due now.</strong> No payment is currently due. Review and confirm the change in our secure billing page.</>}</p>}
             </motion.div>}
           </AnimatePresence>
-          <button aria-describedby={`${id}-help${chargeNow ? ` ${id}-charge-warning` : ""}`} className={ACTION_CLASS} type="submit" disabled={!selected || pending || (type === "member" && !region) || (chargeNow && !quote)}>
-            {pending ? billsAtRenewal ? "Updating subscription…" : "Opening payment…" : scheduledDowngrade ? "Schedule downgrade" : billsAtRenewal ? "Confirm switch" : "Continue to payment"}
+          <button aria-describedby={`${id}-help${chargeNow ? ` ${id}-charge-warning` : ""}`} className={ACTION_CLASS} type="submit" disabled={!selected || pending || (selectedType === "member" && !region) || (chargeNow && !quote)}>
+            {pending ? billsAtRenewal ? "Updating subscription…" : "Opening payment…" : renewing ? "Confirm renewal" : scheduledDowngrade ? "Schedule downgrade" : billsAtRenewal ? "Confirm switch" : "Continue to payment"}
           </button>
           </div>
         </>
@@ -290,12 +293,13 @@ SubscriptionCheckoutForm.propTypes = {
   initialRegion: PropTypes.string,
   currentPriceId: PropTypes.string,
   currentTier: PropTypes.number,
+  renewalPriceId: PropTypes.string,
   onCheckout: PropTypes.func.isRequired,
   onPendingChange: PropTypes.func.isRequired,
   onMembershipGuideChange: PropTypes.func,
 };
 
-export default function SubscriptionStart({ linkStyle = false, user }) {
+export default function SubscriptionStart({ linkStyle = false, user, buttonLabel, modalTitle, renewal = false }) {
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
   request.current = sendRequest;
@@ -329,12 +333,13 @@ export default function SubscriptionStart({ linkStyle = false, user }) {
       <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" onClick={() => {
         clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_CTA_CLICKED, { [ANALYTICS_PROPERTIES.SOURCE]: "subscription_start" });
         setOpen(true);
-      }}>Start subscription</button>
-      <AppModal open={open} onClose={close} title="Choose your subscription" closable={!pending && !membershipGuideOpen} dismissableMask={!pending && !membershipGuideOpen} suspended={membershipGuideOpen}>
-        {open && <SubscriptionCheckoutForm initialRegion={user?.region} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
+      }}>{buttonLabel || (renewal ? "Renew" : "Start subscription")}</button>
+      <AppModal open={open} onClose={close} title={modalTitle || (renewal ? "Renew subscription" : "Choose your subscription")} closable={!pending && !membershipGuideOpen} dismissableMask={!pending && !membershipGuideOpen} suspended={membershipGuideOpen}>
+        {open && <SubscriptionCheckoutForm initialRegion={user?.region} initialType={user?.isAlumni || user?.roles?.includes("alumni") ? "alumni" : "member"}
+          renewalPriceId={renewal ? user?.subscription?.priceId || "" : null} loadPlans={loadPlans} loadQuote={loadQuote} onCheckout={checkout} onPendingChange={updatePending} onMembershipGuideChange={setMembershipGuideOpen} />}
       </AppModal>
     </>
   );
 }
 
-SubscriptionStart.propTypes = { linkStyle: PropTypes.bool, user: PropTypes.object };
+SubscriptionStart.propTypes = { linkStyle: PropTypes.bool, user: PropTypes.object, renewal: PropTypes.bool, buttonLabel: PropTypes.string, modalTitle: PropTypes.string };

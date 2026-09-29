@@ -20,7 +20,7 @@ const Privacy = () => (
       <ul className="list-style--1 ml--20">
         <li>account and profile data, such as name, email address, phone number, region, photo and optional education or professional information;</li>
         <li>authentication and security data, including password hashes, Google sign-in identifiers, passkey public credentials, session/security records and account-recovery records;</li>
-        <li>subscription, payment and invoice references, billing status and transaction history. Card details are processed by Stripe and are not stored by BGSNL;</li>
+        <li>subscription, payment and invoice references, billing status and transaction history. Card details are processed by our payment provider, identified in our billing terms, and are not stored by BGSNL;</li>
         <li>event registrations, ticket information, attendance, submitted preferences and communications needed to deliver an event;</li>
         <li>internship applications and supporting material you choose to submit;</li>
         <li>support reports, messages, attachments, screenshots and related browser/device information necessary to investigate a report;</li>

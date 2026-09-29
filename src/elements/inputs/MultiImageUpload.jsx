@@ -9,6 +9,7 @@ import { Tooltip } from "@/compat/primereact";
 import {
   FaGripVertical,
   FiInfo,
+  FiFile,
   FiUpload,
   FiX,
 } from "@/elements/ui/icons/IconlyIcons";
@@ -563,7 +564,7 @@ const MultiImageUpload = ({
                           color: "#dc3545"
                         }}
                       >
-                        📄
+                        <FiFile aria-hidden="true" size="2rem" />
                       </div>
                       <span
                         style={{

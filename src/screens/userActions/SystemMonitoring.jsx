@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import HeaderTwo from "@/component/header/HeaderTwo";
+import { FiArrowLeft } from "@/elements/ui/icons/IconlyIcons";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import styles from "./system-monitoring.module.scss";
 
@@ -78,12 +80,12 @@ export default function SystemMonitoring() {
   const integrations = axiom?.integrations;
   return <><HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page ${styles.page}`}>
-      <nav className={styles.back}><Link href="/user/dashboard">← Administration</Link></nav>
+      <nav className={styles.back}><Link href="/user/dashboard"><FiArrowLeft aria-hidden="true" />Administration</Link></nav>
       <header className={styles.heading}><div><h1>System manager</h1>
         <p>Background jobs, Axiom activity and live service checks.</p></div>
         <button type="button" onClick={refresh} disabled={state === "loading"}>Refresh checks</button></header>
-      {state === "loading" && !snapshot && <p role="status">Checking systems…</p>}
-      {state === "error" && <p role="alert">Monitoring could not be loaded. Try refreshing the checks.</p>}
+      {state === "loading" && !snapshot && <LoadingSkeleton label="Checking systems" variant="cards" count={4} />}
+      {state === "error" && <LoadErrorBanner message="Monitoring could not be loaded." onRetry={refresh} />}
       {snapshot && <>
         <p className={styles.checked}>Checked {new Date(snapshot.checkedAt).toLocaleString()} · Axiom {axiom.status}
           {!axiom.ingestionEnabled && " · ingestion disabled in this environment"}</p>
@@ -115,8 +117,8 @@ export default function SystemMonitoring() {
               {jobs?.counts && <span>{filter === "all" ? total(jobs.counts) : jobs.counts[filter]}</span>}
             </button>)}
           </div>
-          {jobsState === "loading" && <p role="status">Loading jobs…</p>}
-          {jobsState === "error" && <p role="alert">Jobs could not be loaded. Try refreshing.</p>}
+          {jobsState === "loading" && <LoadingSkeleton label="Loading jobs" count={4} />}
+          {jobsState === "error" && <LoadErrorBanner message="Jobs could not be loaded." onRetry={() => setJobsRefresh(value => value + 1)} />}
           {jobsState === "ready" && jobs && (jobs.items.length ? <>
             <div className={styles.jobTableScroll}><table className={styles.jobTable}>
               <thead><tr><th scope="col">Job</th><th scope="col">Status</th><th scope="col">Attempts</th><th scope="col">Created</th><th scope="col">Finished</th><th scope="col">Failure</th></tr></thead>

@@ -1,3 +1,4 @@
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import {
   useCallback,
   useEffect,
@@ -43,6 +44,7 @@ const InternshipList = () => {
 
   const [internships, setInternships] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [editor, setEditor] = useState({ open: false, internship: null });
   const searchParams = useSearchParams();
   const requestedEditor = searchParams.get("edit");
@@ -73,12 +75,14 @@ const InternshipList = () => {
   };
 
   const loadInternships = async () => {
+    setLoadFailed(false);
     try {
       const data = await sendRequest("internship/admin-list");
-      if (!data) return;
+      if (!data) { setLoadFailed(true); return; }
       setLoadedInternships(data?.internships ?? []);
       setLoaded(true);
     } catch {
+      setLoadFailed(true);
       dispatch(showNotification({ severity: "error", detail: "Failed to load internships." }));
     }
   };
@@ -249,9 +253,10 @@ const InternshipList = () => {
         </div>
       </header>
 
-      {loading && internships.length === 0 && <p>Loading...</p>}
+      {!loadFailed && (!loaded || loading) && internships.length === 0 && <LoadingSkeleton label="Loading internships" variant="cards" count={4} />}
+      {loadFailed && <LoadErrorBanner message="Internships could not be loaded." onRetry={loadInternships} />}
 
-      {!loading && internships.length === 0 && (
+      {loaded && !loadFailed && !loading && internships.length === 0 && (
         <div className="empty-state">
           <p>No internships yet. Add the first one above.</p>
         </div>

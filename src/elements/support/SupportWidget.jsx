@@ -19,6 +19,7 @@ import { watchSupportLive } from "./support-live.mjs";
 import { useSupportUnread } from "./use-support-unread";
 import { supportTicketUnread } from "./support-unread.mjs";
 import { supportTicketFromSearch, supportTicketPath } from "./support-link.mjs";
+import useModalUrl from "@/elements/ui/modals/useModalUrl";
 
 const SupportDesk = dynamic(() => import("./SupportDesk"), { ssr: false, loading: () => <SupportLoading inset /> });
 
@@ -44,6 +45,7 @@ export default function SupportWidget() {
   const [open, setOpen] = useState(false);
   const [openedOnce, setOpenedOnce] = useState(false);
   const [mobile, setMobile] = useState(false);
+  useModalUrl(open && mobile, "support");
   const hasHero = pathname === "/" || REGIONS.some(region => pathname === `/${region}`);
   const [heroVisibility, setHeroVisibility] = useState({ pathname: null, visible: true });
   const heroVisible = hasHero && (heroVisibility.pathname !== pathname || heroVisibility.visible);

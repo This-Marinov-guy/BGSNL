@@ -1,9 +1,11 @@
 "use client";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import PropTypes from "prop-types";
 import { mountGoogleCredentialControl } from "./google-credential-control.mjs";
+import useSecurityActionNotice from "./useSecurityActionNotice";
 import styles from "./google-auth.module.scss";
 
 export default function GoogleCredentialButton({ challenge, onCredential, onError, onNotice, onInteraction, busy = false, autoPrompt = false }) {
@@ -13,6 +15,7 @@ export default function GoogleCredentialButton({ challenge, onCredential, onErro
   const [ready, setReady] = useState(false);
   const [rendered, setRendered] = useState(false);
   const lifecycle = useRef({ active: false, settled: false });
+  useSecurityActionNotice(busy, "Verifying your Google account…");
 
   useEffect(() => {
     lifecycle.current = { active: true, settled: false };
@@ -51,9 +54,8 @@ export default function GoogleCredentialButton({ challenge, onCredential, onErro
     <div className={styles.googleControl} aria-busy={busy}>
       <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive"
         onReady={() => setReady(true)} onError={() => reportError("Google could not load. Check your connection and browser content-blocker settings, then refresh the page and try again. Your BGSNL password still works.")} />
-      {!ready && <p role="status">Loading Google sign-in…</p>}
+      {!ready && <LoadingSkeleton label="Loading Google sign-in" variant="inline" />}
       <div ref={container} className={styles.googleControlReveal} data-visible={rendered} inert={busy ? true : undefined} />
-      {busy && <p role="status">Verifying your Google account…</p>}
     </div>
   );
 }

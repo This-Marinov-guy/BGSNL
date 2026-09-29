@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectInput, Calendar, ProgressSpinner } from "@/compat/primereact";
+import { SelectInput, Calendar } from "@/compat/primereact";
 
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,13 +20,15 @@ import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGI
 import adminStyles from "@/screens/userActions/administration.module.scss";
 import styles from "./backoffice.module.scss";
 import AccountMembershipActions from "./AccountMembershipActions";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { CopyableId, PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
+import useModalUrl from "@/elements/ui/modals/useModalUrl";
 import { ACCESS_3 } from "@/util/defines/common";
 import { canManageAccountType, canEditAccount, isEditableAccountRole, editableAccountRoles, protectedAccountRoles } from "./role-policy.mjs";
 import { exportAccountsCsv } from "./export-accounts.mjs";
 
 const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
-  loading: () => <p role="status">Loading member statistics…</p>,
+  loading: () => <LoadingSkeleton label="Loading member statistics" variant="cards" count={4} />,
 });
 
 const EMPTY_OPTIONS = { cities: [], roles: [], statuses: [] };
@@ -162,6 +164,7 @@ const editorState = (account) => ({
 });
 
 function AccountEditor({ account, currentAccountId, actorRoles, options, onClose, onSaved, onMembershipChanged }) {
+  useModalUrl(true, "account-editor");
   const [form, setForm] = useState(() => editorState(account));
   const [saving, setSaving] = useState(false);
   const [actionBusy, setActionBusy] = useState(false);
@@ -322,6 +325,7 @@ export default function BackofficeAccounts() {
   const [expandedAccountId, setExpandedAccountId] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [loadingList, setLoadingList] = useState(true);
+  const [listError, setListError] = useState(false);
   const [exporting, setExporting] = useState(false);
   const requestSequence = useRef(0);
   const user = useSelector(selectUser);
@@ -355,14 +359,17 @@ export default function BackofficeAccounts() {
     const sequence = ++requestSequence.current;
     const params = accountQuery({ type, page, pageSize: 25, search, city, status: statusFilter });
     setLoadingList(true);
+    setListError(false);
     setExpandedAccountId(null);
     sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, true, false, { signal: controller.signal })
       .then((response) => {
-        if (!active || sequence !== requestSequence.current || !response) return;
+        if (!active || sequence !== requestSequence.current) return;
+        if (!response) { setListError(true); return; }
         setAccounts(response.accounts || []);
         setOptions(response.options || EMPTY_OPTIONS);
         setPagination({ total: response.total || 0, totalPages: response.totalPages || 1 });
       })
+      .catch(() => { if (active && sequence === requestSequence.current) setListError(true); })
       .finally(() => active && sequence === requestSequence.current && setLoadingList(false));
     return () => { active = false; controller.abort(); };
   }, [type, page, search, city, statusFilter, statistics, refreshKey, accountRoleScope, user.region]);
@@ -473,11 +480,8 @@ export default function BackofficeAccounts() {
           </FilterPanel>
 
           {loadingList ? (
-            <div className={styles.accountsLoading} role="status">
-              <ProgressSpinner style={{ width: "40px", height: "40px" }} aria-hidden="true" />
-              <span className={styles.visuallyHidden}>Loading accounts…</span>
-            </div>
-          ) : accounts.length === 0 ? (
+            <LoadingSkeleton label="Loading accounts" count={5} />
+          ) : listError ? <LoadErrorBanner message="Accounts could not be loaded." onRetry={() => setRefreshKey(value => value + 1)} /> : accounts.length === 0 ? (
             <div className={styles.empty}><FiUsers aria-hidden /><h2>No accounts found</h2><p>Try a different search or city filter.</p></div>
           ) : (
             <div className={styles.tableWrap} aria-busy={loadingList}>

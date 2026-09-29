@@ -4,6 +4,19 @@ const ENDED_STATUSES = new Set(["canceled", "incomplete_expired"]);
 export const hasSubscriptionId = (subscription) => typeof subscription?.id === "string" && /^sub_[A-Za-z0-9]+$/.test(subscription.id.trim());
 export const hasCustomerId = (subscription) => typeof subscription?.customerId === "string" && /^cus_[A-Za-z0-9]+$/.test(subscription.customerId.trim());
 export const hasEndedSubscription = (subscription) => ENDED_STATUSES.has(subscription?.status);
+export const hasScheduledCancellation = (subscription) => !hasEndedSubscription(subscription) &&
+  !!(subscription?.cancelAtPeriodEnd || subscription?.cancelAt);
+
+export function scheduledCancellationDate(subscription) {
+  if (!hasScheduledCancellation(subscription)) return null;
+  for (const value of [subscription.cancelAt, subscription.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null]) {
+    if (!value) continue;
+    const date = new Date(value);
+    if (Number.isFinite(date.getTime())) return date;
+  }
+  return null;
+}
+
 
 export function hasBillingReference(subscription) {
   return hasSubscriptionId(subscription) || hasCustomerId(subscription);
@@ -23,14 +36,18 @@ export function canSwitchSubscription(user) {
   return user?.status === "active" && hasSubscriptionId(user.subscription) &&
     ["active", "trialing"].includes(user.subscription.status) &&
     !user.billingLocked && !user.billingVerificationUnavailable &&
-    !user.subscription.pendingUpdate && !user.subscription.cancelAtPeriodEnd;
+    !user.subscription.pendingUpdate && !hasScheduledCancellation(user.subscription);
 }
 
 export function billingAction(user, reason) {
+  // Unknown billing state is not evidence of either an active or absent subscription.
+  if (reason === "unavailable" || (!reason && user?.billingVerificationUnavailable)) return "none";
   if (!["active", "locked", "payment_awaiting"].includes(user?.status) ||
-      ["account_restricted", "account_sync_pending", "unsupported_plan"].includes(reason)) return "support";
-  if (canStartSubscription(user) && reason !== "unavailable") return "start";
-  return canManageSubscription(user) ? "manage" : "support";
+      ["account_restricted", "late_payment_review", "account_sync_pending"].includes(reason)) return "support";
+  if (["no_membership", "subscription_ended"].includes(reason)) return "start";
+  if (reason && hasSubscriptionId(user.subscription)) return "manage";
+  if (canStartSubscription(user)) return "start";
+  return hasSubscriptionId(user.subscription) && !hasEndedSubscription(user.subscription) ? "manage" : "support";
 }
 
 export function paidSubscriptionPlans(plans) {

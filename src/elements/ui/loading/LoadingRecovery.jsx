@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { RetryButton, LoadErrorBanner } from "./LoadState";
 import { useEffect, useState } from "react";
 import { scheduleLoadingRecovery } from "./loading-recovery.mjs";
 import styles from "./loading-recovery.module.scss";
@@ -8,7 +8,7 @@ import styles from "./loading-recovery.module.scss";
 export function LoadingRecoveryActions() {
   return (
     <div className={styles.actions}>
-      <button type="button" className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" onClick={() => window.location.reload()}><RetryIcon />Retry</button>
+      <RetryButton label="Retry loading the page" onClick={() => window.location.reload()} />
       {/* Recovery deliberately bypasses the router/client cache, including a
           stuck navigation or account initialization that refresh() preserves. */}
       <a className="rn-button-style--2 rn-btn-reverse-red rn-btn-small" href="/">Home</a>
@@ -24,8 +24,7 @@ export default function LoadingRecovery() {
   if (!isSlow) return null;
   return (
     <div className={styles.notice} aria-label="Loading help">
-      <p role="status" aria-live="polite">This is taking longer than expected.</p>
-      <LoadingRecoveryActions />
+      <LoadErrorBanner message="This is taking longer than expected." onRetry={() => window.location.reload()} showHome />
     </div>
   );
 }

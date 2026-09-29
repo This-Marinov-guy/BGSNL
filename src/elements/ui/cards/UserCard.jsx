@@ -396,14 +396,13 @@ const UserCard = ({ user, onUserRefresh }) => {
             <button
               aria-label={hasCV ? "Edit CV" : "Add CV"}
               type="button"
-              className="rn-button-style--2 rn-btn-small rn-btn-green"
+              className="column-edit-btn"
               onClick={() => setShowCVModal(true)}
-              style={{ padding: "5px 15px" }}
             >
               {hasCV ? (
-                <FiEdit2 aria-hidden size={16} />
+                <FiEdit2 aria-hidden size="1.25rem" />
               ) : (
-                <FiPlus aria-hidden size={16} />
+                <FiPlus aria-hidden size="1.25rem" />
               )}
             </button>
           </div>

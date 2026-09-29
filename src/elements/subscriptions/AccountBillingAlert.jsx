@@ -1,7 +1,6 @@
 "use client";
 /* global Intl */
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useId } from "react";
 import { useDispatch } from "react-redux";
 import { showModal } from "@/redux/modal";
@@ -12,17 +11,19 @@ import { IconlyDanger } from "@/elements/ui/icons/IconlyIcons";
 import { BillingStatusBannerSkeleton } from "./BillingStatusBanner";
 import { getAccountStatusNotice } from "./account-status-notice.mjs";
 import { useBillingAttention } from "./BillingAttentionProvider";
-import BillingActions from "./BillingActions";
 import SubscriptionStart from "./SubscriptionStart";
-import { billingAction } from "./subscription-checkout.mjs";
+import SubscriptionManage from "@/elements/ui/buttons/SubscriptionManage";
+import { billingAction, hasCustomerId, hasSubscriptionId } from "./subscription-checkout.mjs";
 import styles from "./subscriptions.module.scss";
+import { RetryButton } from "@/elements/ui/loading/LoadState";
 
-export default function AccountBillingAlert({ user, showAction = true, flushBottom = false }) {
+export default function AccountBillingAlert({ user, showAction = true, flushBottom = false, hideUnavailable = false }) {
   const dispatch = useDispatch();
   const titleId = useId();
   const reduceMotion = useReducedMotion();
   const billing = useBillingAttention();
-  const notice = billing?.notice || getAccountStatusNotice(user);
+  const accountNotice = billing?.notice || getAccountStatusNotice(user);
+  const notice = hideUnavailable && accountNotice?.reason === "unavailable" ? null : accountNotice;
   const loading = billing?.loading;
   const key = loading ? "loading" : notice ? `${notice.reason || notice.title}:${notice.description}` : null;
   const action = showAction && notice ? billingAction(user, notice.reason) : null;
@@ -35,17 +36,24 @@ export default function AccountBillingAlert({ user, showAction = true, flushBott
         <IconlyDanger className={styles.dangerIcon} aria-hidden />
         <h2 id={titleId}>{notice.title}</h2>
         <div className={styles.dangerContent}>
-          <p>{notice.description}{action === "start" && <> <SubscriptionStart user={user} linkStyle /></>}</p>
+          <p>{notice.reason === "subscription_ended" && hasSubscriptionId(user?.subscription) ? "Your subscription has ended. Renew your previous subscription or switch to another plan to restore paid benefits." : notice.description}</p>
+          {notice.reason === "unavailable" && showAction && <RetryButton label="Retry membership check" onClick={billing?.retry || (() => window.location.reload())} />}
           {notice.amountDue > 0 && <p>Outstanding amount: <strong>{new Intl.NumberFormat("en-NL", { style: "currency", currency: notice.currency }).format(notice.amountDue / 100)}</strong></p>}
           {notice.paymentNote && <p>{notice.paymentNote}</p>}
-          {(showAction && action !== "start" || notice.reason === "unavailable") && <div className={styles.billingAlertActions}>
-            {showAction && notice.reason === "info_requested" ? <button type="button" className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
-              onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}>Complete profile</button> : showAction && action !== "start" && <BillingActions user={user} />}
-            {notice.reason === "unavailable" && <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" onClick={billing.retry}><RetryIcon />Try again</button>}
+          {notice.reason !== "unavailable" && showAction && <div className={styles.billingAlertActions}>
+            {notice.reason === "info_requested" ? <button type="button" className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
+              onClick={() => dispatch(showModal(USER_UPDATE_MODAL))}>Complete profile</button>
+              : action === "start" ? <>
+                <SubscriptionStart user={user} renewal={hasSubscriptionId(user?.subscription)} />
+                {hasSubscriptionId(user?.subscription) && <SubscriptionStart user={user} buttonLabel="Switch" modalTitle="Switch subscription" />}
+              </>
+              : action === "manage" && hasCustomerId(user?.subscription)
+                ? <SubscriptionManage portalOnly portalLabel="Resolve" subscription={user.subscription} user={user} />
+                : action === "support" && <a className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small" href="/user#help">Contact support</a>}
           </div>}
         </div>
       </section>}
     </motion.div>}
   </AnimatePresence>;
 }
-AccountBillingAlert.propTypes = { user: PropTypes.object, showAction: PropTypes.bool, flushBottom: PropTypes.bool };
+AccountBillingAlert.propTypes = { user: PropTypes.object, showAction: PropTypes.bool, flushBottom: PropTypes.bool, hideUnavailable: PropTypes.bool };

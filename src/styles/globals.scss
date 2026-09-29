@@ -7,6 +7,20 @@ ul, ol {
   padding-left: 0;
 }
 
+/* Warning and error message text can use the full width after the icon. */
+.p-message:is(.p-message-warn, .p-message-error) .p-message-content {
+  display: flow-root;
+}
+
+.p-message:is(.p-message-warn, .p-message-error) .p-message-icon {
+  float: left;
+  margin: 0.1rem 0.65rem 0.2rem 0;
+}
+
+.p-message:is(.p-message-warn, .p-message-error) .p-message-text {
+  display: block;
+}
+
 /* Force phone prefix dropdown panel above Bootstrap modal (z-index: 1055) */
 .phone-prefix-panel {
   z-index: 9999 !important;

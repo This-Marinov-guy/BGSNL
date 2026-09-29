@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useEffect, useId, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Password } from "@/compat/primereact";
@@ -91,11 +91,8 @@ export default function PasskeySettings() {
                 </div>
               </div>
             )}
-            {!passkeys && loadFailed && <div className={styles.status} role="status">
-              <p>Passkeys could not be loaded. Your password is still available.</p>
-              <button type="button" className={primary} onClick={() => setAttempt((value) => value + 1)}><RetryIcon />Try again</button>
-            </div>}
-            {passkeys?.length === 0 && <p className={styles.status}>No passkeys yet. Add one on a device you trust.</p>}
+            {!passkeys && loadFailed && <LoadErrorBanner message="Passkeys could not be loaded. Your password is still available." onRetry={() => setAttempt((value) => value + 1)} />}
+            {/* {passkeys?.length === 0 && <p className={styles.status}>No passkeys yet. Add one on a device you trust.</p>} */}
             {passkeys?.length > 0 && <ul className={styles.list} aria-label="Registered passkeys">
               {passkeys.map((passkey) => <li key={passkey.id} className={styles.item}>
                 <div>

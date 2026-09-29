@@ -1,4 +1,5 @@
 "use client";
+import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -63,7 +64,7 @@ export default function DigitalMembershipCard({ card, qrImage, tickets = [], ver
 
   return <>
     <div className={styles.cardToolbar}>
-      <div className={styles.status} role="status" data-status={verification ? "locked" : card.status}>{verification === "checking" ? "Checking status…" : verification === "error" ? "Unverified" : card.status === "active" ? "Active" : "Locked"}</div>
+      <div className={styles.status} role="status" data-status={verification ? "locked" : card.status}>{verification === "checking" ? <LoadingSkeleton label="Checking membership status" variant="inline" /> : verification === "error" ? "Unverified" : card.status === "active" ? "Active" : "Locked"}</div>
       <button
         aria-controls="membership-card-tickets"
         aria-expanded={showTickets}

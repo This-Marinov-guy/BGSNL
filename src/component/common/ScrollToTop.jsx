@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
  */
 const ScrollToTop = ({ children, showUnder = 160, style }) => {
   const pathname = usePathname();
+  const isUserPage = pathname?.split("/").includes("user") ?? false;
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const ScrollToTop = ({ children, showUnder = 160, style }) => {
   }, [pathname]);
 
   useEffect(() => {
-    if (!children) return undefined;
+    if (!children || isUserPage) return undefined;
 
     const updateVisibility = () => {
       setIsVisible(window.scrollY > showUnder);
@@ -30,9 +31,9 @@ const ScrollToTop = ({ children, showUnder = 160, style }) => {
     window.addEventListener("scroll", updateVisibility, { passive: true });
 
     return () => window.removeEventListener("scroll", updateVisibility);
-  }, [children, showUnder]);
+  }, [children, showUnder, isUserPage]);
 
-  if (!children) return null;
+  if (!children || isUserPage) return null;
 
   return (
     <button

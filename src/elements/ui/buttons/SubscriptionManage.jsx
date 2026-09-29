@@ -3,11 +3,11 @@
 import { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useHttpClient } from "@/hooks/common/http-hook";
-import { canSwitchSubscription, hasBillingReference, hasEndedSubscription, hasSubscriptionId, requestSubscriptionCheckout } from "@/elements/subscriptions/subscription-checkout.mjs";
+import { canSwitchSubscription, hasBillingReference, hasCustomerId, hasEndedSubscription, hasScheduledCancellation, hasSubscriptionId, requestSubscriptionCheckout } from "@/elements/subscriptions/subscription-checkout.mjs";
 import { SubscriptionCheckoutForm } from "@/elements/subscriptions/SubscriptionStart";
 import AppModal from "@/elements/ui/modals/AppModal";
 
-export default function SubscriptionManage({ canCancel = true, subscription, user }) {
+export default function SubscriptionManage({ canCancel = true, portalOnly = false, portalLabel = "Payments", hideSwitch = false, switchOnly = false, subscription, user }) {
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
   request.current = sendRequest;
@@ -17,8 +17,9 @@ export default function SubscriptionManage({ canCancel = true, subscription, use
   const [guideOpen, setGuideOpen] = useState(false);
   const [error, setError] = useState("");
   const inFlight = useRef(false);
-  const showCancel = canCancel && hasSubscriptionId(subscription) && !hasEndedSubscription(subscription);
-  const showSwitch = hasSubscriptionId(subscription) && !hasEndedSubscription(subscription);
+  const showCancel = !switchOnly && !portalOnly && canCancel && hasSubscriptionId(subscription) && !hasEndedSubscription(subscription) && !hasScheduledCancellation(subscription);
+  const showSwitch = !hideSwitch && !portalOnly && hasSubscriptionId(subscription) && !hasEndedSubscription(subscription);
+  const showPayments = !switchOnly && hasCustomerId(subscription);
   const canSwitch = canSwitchSubscription(user);
   const closeConfirmation = useCallback(() => {
     if (!inFlight.current) { setConfirmCancel(false); setError(""); }
@@ -43,6 +44,7 @@ export default function SubscriptionManage({ canCancel = true, subscription, use
   }, []);
   const openPortal = async (action) => {
     if (inFlight.current || (action === "cancel" && (!showCancel || !confirmCancel))) return;
+    if (action !== "cancel" && !showPayments) return;
     inFlight.current = true;
     setPending(action || "manage");
     setError("");
@@ -69,12 +71,12 @@ export default function SubscriptionManage({ canCancel = true, subscription, use
         onClick={() => { setError(""); setSwitchOpen(true); }} disabled={!!pending} type="button" aria-haspopup="dialog">
         Switch
       </button>}
-      <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
+      {showPayments && <button className="settings-action rn-button-style--2 rn-btn-reverse-green rn-btn-small"
         onClick={() => openPortal()} disabled={!!pending} type="button">
-        {pending === "manage" ? "Opening payments…" : "Payments"}
-      </button>
+        {pending === "manage" ? "Opening payments…" : portalLabel}
+      </button>}
     </div>
-    {subscription.scheduledChange && <p role="status">Your change to Alumni Tier {subscription.scheduledChange.tier} is scheduled for your next billing date. You keep your current tier and benefits until then.</p>}
+    {!portalOnly && !hideSwitch && subscription.scheduledChange && <p role="status">Your change to Alumni Tier {subscription.scheduledChange.tier} is scheduled for your next billing date. You keep your current tier and benefits until then.</p>}
     {error && !confirmCancel && <p role="alert">{error}</p>}
     <AppModal open={switchOpen && showSwitch} onClose={closeSwitch} title="Switch subscription"
       closable={!pending && !guideOpen} dismissableMask={!pending && !guideOpen} suspended={guideOpen}>
@@ -88,14 +90,14 @@ export default function SubscriptionManage({ canCancel = true, subscription, use
       actions={<>
         <button className="rn-button-style--2 rn-btn-reverse-green rn-btn-small" type="button" disabled={!!pending} onClick={closeConfirmation}>Keep subscription</button>
         <button className="rn-button-style--2 rn-btn-reverse-red rn-btn-small" type="button" disabled={!!pending} onClick={() => openPortal("cancel")}>
-          {pending === "cancel" ? "Opening cancellation…" : "Continue to Stripe"}
+          {pending === "cancel" ? "Opening cancellation…" : "Review cancellation"}
         </button>
       </>}>
-      <p>You will review the cancellation date and confirm in Stripe. Your subscription will not change until you confirm there.</p>
+      <p>Review the cancellation date on our secure billing page. Your subscription will not change until you confirm.</p>
       <p>Cancelling does not settle outstanding invoices or restore locked membership benefits.</p>
       {error && <p role="alert">{error}</p>}
     </AppModal>
     </>
   );
 }
-SubscriptionManage.propTypes = { canCancel: PropTypes.bool, subscription: PropTypes.object, user: PropTypes.object };
+SubscriptionManage.propTypes = { canCancel: PropTypes.bool, portalOnly: PropTypes.bool, portalLabel: PropTypes.string, hideSwitch: PropTypes.bool, switchOnly: PropTypes.bool, subscription: PropTypes.object, user: PropTypes.object };

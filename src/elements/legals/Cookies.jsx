@@ -53,7 +53,7 @@ const Cookies = () => {
         <ul className="list-style--1 ml--20">
           <li><strong>Essential storage:</strong> session, security, payment-return and consent preferences needed to operate the website and protect accounts.</li>
           <li><strong>Optional analytics:</strong> Google Analytics, Microsoft Clarity, Ahrefs Analytics and Datafast may be loaded only after you choose optional analytics. They help us measure website use and improve the service.</li>
-          <li><strong>Third-party payment and sign-in services:</strong> Stripe, Google and similar providers can set or read technologies necessary for the service you actively request, under their own notices and settings.</li>
+          <li><strong>Third-party payment and sign-in services:</strong> Our payment provider (identified in our billing terms), Google and similar providers can set or read technologies necessary for the service you actively request, under their own notices and settings.</li>
         </ul>
 
         <h3 className="mt--40">3. Managing cookies</h3>

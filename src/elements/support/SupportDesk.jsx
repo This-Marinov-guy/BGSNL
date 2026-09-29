@@ -1,6 +1,6 @@
 "use client";
 
-import RetryIcon from "@/elements/ui/icons/RetryIcon";
+import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import Pagination from "@/elements/common/Pagination";
 
@@ -147,7 +147,7 @@ function DeskSession({ session, staff, active, welcomeImage, listDecoration, sel
         {welcomeImage}
       </div>}
       {staff && <FilterPanel onClear={() => { setStatus("all"); setPage(1); }}><label>Status<SelectInput className="bgsnl-form-control" value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="all">All reports</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</SelectInput></label></FilterPanel>}
-      {error && <div className={styles.error} role="alert">{error} <button className={styles.textButton} type="button" onClick={refresh}><RetryIcon />Try again</button></div>}
+      {error && <LoadErrorBanner message={error} onRetry={refresh} />}
       {loading && !items.length ? <SupportLoading /> : !items.length && !error ? staff ? <div className={styles.empty}>
         <h3 className={`type-subheading ${styles.emptyHeading}`}><IconlyMessage size="2.5rem" /><span>No reports here</span></h3><p>New reports and recommendations will appear here. Try a different status filter.</p>
       </div> : <div className={styles.ticketEmpty}>
@@ -160,7 +160,7 @@ function DeskSession({ session, staff, active, welcomeImage, listDecoration, sel
         <div className={styles.row}><small><time dateTime={record.lastMessageAt}>{new Date(record.lastMessageAt).toLocaleDateString("en-GB", { day: "2-digit", month: "numeric", year: "numeric" })}</time></small><IconlyArrowRight size="1.25rem" /></div>
       </button></li>)}</ul>}
       {staff ? <>
-        <small aria-live="polite">{loading ? "Loading tickets…" : total ? `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} of ${total} tickets` : "0 tickets"}</small>
+        <small aria-live="polite">{loading ? <LoadingSkeleton label="Loading tickets" variant="inline" /> : total ? `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} of ${total} tickets` : "0 tickets"}</small>
         <Pagination first={(page - 1) * pageSize} rows={pageSize} totalRecords={total} rowsPerPageOptions={[10, 25, 50]} ariaLabel="Support ticket pages" onPageChange={event => {
           setLoading(true); setItems([]); setPage(event.page + 1); setPageSize(event.rows);
         }} />

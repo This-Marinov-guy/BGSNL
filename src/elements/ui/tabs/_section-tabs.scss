@@ -1,0 +1,49 @@
+// Domakin ATS-style section navigation, using BGSNL colours and type sizes.
+@mixin navigation {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #c0cbc5 transparent;
+  border-bottom: 1px solid #d7dfda;
+
+  > a,
+  > button {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    margin: 0;
+    padding: 0.65rem 0.125rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: #53645b;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 180ms ease, border-color 180ms ease;
+
+    &:hover { color: #142d22; }
+    &:is([aria-current="page"], [aria-selected="true"]) {
+      color: #9e0d33;
+      border-bottom-color: #9e0d33;
+    }
+    &:focus-visible { outline: 2px solid #017363; outline-offset: -3px; border-radius: 3px; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    @media (prefers-reduced-motion: reduce) { transition: none; }
+  }
+}

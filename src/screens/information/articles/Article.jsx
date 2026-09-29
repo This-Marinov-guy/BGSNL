@@ -20,6 +20,7 @@ import HeaderTwo from "../../../component/header/HeaderTwo";
 import ChangeLanguageLinks from "../../../elements/ui/buttons/ChangeLanguageLinks";
 import NoArticleFound from "../../../elements/ui/errors/NoArticleFound";
 import PageLoading from "../../../elements/ui/loading/PageLoading";
+import useModalUrl from "@/elements/ui/modals/useModalUrl";
 import { useArticlesLoad } from "../../../hooks/common/api-hooks";
 import { selectSingleArticle } from "../../../redux/articles";
 import { selectPageLoading } from "../../../redux/loading";
@@ -83,6 +84,7 @@ const Article = ({ initialArticle = null }) => {
   const imageDialogRef = useRef(null);
   const imageTriggerRef = useRef(null);
   const [expandedImage, setExpandedImage] = useState(null);
+  useModalUrl(Boolean(expandedImage), "article-image");
   const [articleLookupComplete, setArticleLookupComplete] = useState(
     Boolean(initialArticle)
   );

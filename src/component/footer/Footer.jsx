@@ -132,7 +132,7 @@ const Footer = ({ forceRegion }) => {
                   <div className="col-lg-12">
                     <div className="copyright-text">
                       <p>
-                        Copyright ©️ {new Date().getFullYear()} Bulgarian
+                        Copyright © {new Date().getFullYear()} Bulgarian
                         Society Netherlands. All Rights Reserved.
                       </p>
 

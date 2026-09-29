@@ -2,10 +2,10 @@
 
 import PropTypes from "prop-types";
 import { usePathname } from "next/navigation";
-import { IconlyUnlink } from "@/elements/ui/icons/IconlyIcons";
 import HeaderTwo from "../../../component/header/HeaderTwo";
 import ImageFb from "../media/ImageFb";
-import LoadingRecovery, { LoadingRecoveryActions } from "../loading/LoadingRecovery";
+import LoadingRecovery from "../loading/LoadingRecovery";
+import { LoadErrorBanner } from "../loading/LoadState";
 
 const HeaderLoadingError = ({ isError = false, message = "" }) => {
   const pathname = usePathname();
@@ -22,8 +22,6 @@ const HeaderLoadingError = ({ isError = false, message = "" }) => {
       >
         <div
           className="account-state__content"
-          role={isError ? "alert" : undefined}
-          aria-live={isError ? "assertive" : undefined}
         >
           {!isError ? (
             <ImageFb
@@ -35,14 +33,10 @@ const HeaderLoadingError = ({ isError = false, message = "" }) => {
               src="/assets/images/logo/logo.webp"
             />
           ) : null}
-          {isError ? (
-            <span className="account-state__error-icon" aria-hidden="true">
-              <IconlyUnlink />
-            </span>
-          ) : null}
-          <h3 role={isError ? undefined : "status"}>{isError ? "Account unavailable" : isUserRoute ? "Loading your account" : "Loading"}</h3>
-          {isError && message ? <p>{message}</p> : null}
-          {isError ? <LoadingRecoveryActions /> : <LoadingRecovery />}
+          {isError ? <LoadErrorBanner onRetry={() => window.location.reload()} showHome>
+            <h3>Account unavailable</h3>
+            <p>{message || "We could not load your account. Please try again."}</p>
+          </LoadErrorBanner> : <><h3 role="status">{isUserRoute ? "Loading your account" : "Loading"}</h3><LoadingRecovery /></>}
         </div>
       </main>
     </>
