@@ -63,6 +63,9 @@ const nextConfig = {
   reactStrictMode: false,
   allowedDevOrigins: ["127.0.0.1"],
   outputFileTracingRoot: __dirname,
+  outputFileTracingIncludes: {
+    "/api/user/wallet/apple": ["./public/assets/wallet-cards/apple/*.png"],
+  },
 
   async redirects() {
     return [

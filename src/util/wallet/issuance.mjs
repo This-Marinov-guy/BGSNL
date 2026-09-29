@@ -72,16 +72,11 @@ export async function walletReadiness(env = process.env) {
   return result;
 }
 
-export async function appleWordmark(logo, scale) {
-  const width = 160 * scale;
-  const height = 50 * scale;
-  const mark = await sharp(logo).resize(46 * scale, 46 * scale, { fit: "contain", background: "#00000000" }).png().toBuffer();
-  const title = Buffer.from(`<svg width="${width}" height="${height}" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg">
-    <text x="51" y="21" fill="#000000" font-family="Arial, sans-serif" font-size="11" font-weight="700">Bulgarian Society</text>
-    <text x="51" y="37" fill="#000000" font-family="Arial, sans-serif" font-size="11" font-weight="700">Netherlands</text>
-  </svg>`);
-  return sharp({ create: { width, height, channels: 4, background: "#00000000" } })
-    .composite([{ input: mark, left: 0, top: 2 * scale }, { input: title, left: 0, top: 0 }]).png().toBuffer();
+// Checked-in raster artwork keeps signing independent of system fonts/Fontconfig.
+// Regenerate with node scripts/generate-apple-wallet-wordmark.mjs.
+export async function appleWordmark(scale) {
+  if (![1, 2, 3].includes(scale)) throw new Error("Invalid Apple Wallet image scale");
+  return readFile(path.join(process.cwd(), "public/assets/wallet-cards/apple", `logo${scale === 1 ? "" : `@${scale}x`}.png`));
 }
 
 export async function createApplePass(packet, env = process.env) {
@@ -91,7 +86,7 @@ export async function createApplePass(packet, env = process.env) {
   const buffers = {};
   for (const scale of [1, 2, 3]) {
     buffers[`icon${scale === 1 ? "" : `@${scale}x`}.png`] = await sharp(logo).resize(29 * scale, 29 * scale, { fit: "contain", background: "#00000000" }).png().toBuffer();
-    buffers[`logo${scale === 1 ? "" : `@${scale}x`}.png`] = await appleWordmark(logo, scale);
+    buffers[`logo${scale === 1 ? "" : `@${scale}x`}.png`] = await appleWordmark(scale);
   }
   const pass = new PKPass(buffers, certs, {
     formatVersion: 1, passTypeIdentifier: env.APPLE_WALLET_PASS_TYPE_ID, teamIdentifier: env.APPLE_WALLET_TEAM_ID,
@@ -101,7 +96,7 @@ export async function createApplePass(packet, env = process.env) {
   });
   pass.type = "generic";
   pass.primaryFields.push({ key: "name", value: `${packet.card.firstName} ${packet.card.surname}`, textAlignment: "PKTextAlignmentCenter" });
-  pass.secondaryFields.push({ key: "membership", label: "MEMBERSHIP", value: packet.card.membershipLabel, textAlignment: "PKTextAlignmentCenter" });
+  pass.secondaryFields.push({ key: "membership", label: "MEMBERSHIP", value: packet.card.membershipLabel, textAlignment: "PKTextAlignmentLeft" });
   pass.backFields.push({ key: "verify", label: "Live membership card", value: packet.publicUrl },
     { key: "notice", label: "Verification", value: "Scan the QR code for current Active / Locked status. This saved pass is not proof of current benefits." });
   pass.setBarcodes({ format: "PKBarcodeFormatQR", message: packet.publicUrl, messageEncoding: "iso-8859-1" });

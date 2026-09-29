@@ -13,9 +13,8 @@ const packet = { token: "abcdefghijklmnopqrstuv", publicUrl: "https://bulgarians
   card: { firstName: "Test", surname: "Member", membershipLabel: "Member of Groningen", status: "active" } };
 
 test("Apple Wallet wordmark leaves room for the complete society name", async () => {
-  const logo = await readFile(path.join(process.cwd(), "public/assets/images/logo/logo-nl-circle.png"));
   for (const scale of [1, 2, 3]) {
-    const { data, info } = await sharp(await appleWordmark(logo, scale)).raw().toBuffer({ resolveWithObject: true });
+    const { data, info } = await sharp(await appleWordmark(scale)).raw().toBuffer({ resolveWithObject: true });
     assert.equal(info.width, 160 * scale);
     assert.equal(info.height, 50 * scale);
     let rightmost = -1;
@@ -24,8 +23,19 @@ test("Apple Wallet wordmark leaves room for the complete society name", async ()
         if (data[(y * info.width + x) * info.channels + 3] > 0) rightmost = Math.max(rightmost, x);
       }
     }
-    assert.ok(rightmost >= 130 * scale && rightmost < 150 * scale, `Wordmark text reaches x=${rightmost} at ${scale}x`);
+    assert.ok(rightmost >= 130 * scale && rightmost < 158 * scale, `Wordmark text reaches x=${rightmost} at ${scale}x`);
   }
+});
+
+test("Apple wordmark rendering does not depend on installed fonts", () => {
+  const result = spawnSync(process.execPath, ["--input-type=module", "-e", `
+    import { appleWordmark } from "./src/util/wallet/issuance.mjs";
+    import { createHash } from "node:crypto";
+    for (const scale of [1, 2, 3]) console.log(createHash("sha256").update(await appleWordmark(scale)).digest("hex"));
+  `], { cwd: process.cwd(), env: { ...process.env, FONTCONFIG_FILE: "/nonexistent-bgsnl-fontconfig", FONTCONFIG_PATH: "/nonexistent-bgsnl-fonts" }, encoding: "utf8" });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stderr, "", "Bundled artwork must not attempt Fontconfig rendering");
+  assert.equal(result.stdout.trim().split("\n").length, 3);
 });
 
 test("proxy packet recovery only accepts canonical public card URLs", () => {
@@ -132,6 +142,10 @@ test("real Apple archive has a valid detached signature and matching manifest", 
   assert.equal(pass.webServiceURL, undefined);
   assert.equal(pass.authenticationToken, undefined);
   assert.equal(pass.generic.auxiliaryFields?.length || 0, 0);
+  assert.equal(pass.generic.secondaryFields.find(field => field.key === "membership").textAlignment, "PKTextAlignmentLeft");
+  for (const scale of [1, 2, 3]) {
+    assert.deepEqual(files.get(`logo${scale === 1 ? "" : `@${scale}x`}.png`), await appleWordmark(scale));
+  }
   const directory = await mkdtemp(path.join(tmpdir(), "bgsnl-wallet-signature-"));
   try {
     await writeFile(path.join(directory, "manifest.json"), files.get("manifest.json"), { mode: 0o600 });

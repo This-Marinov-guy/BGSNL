@@ -1559,6 +1559,21 @@
   }
 }
 
+.event-form-button--outline-danger {
+  border-color: #9e0d33;
+  background: transparent;
+  color: #9e0d33;
+
+  &:hover:not(:disabled) {
+    background: #fff1f4;
+    color: #9e0d33;
+  }
+
+  &:focus-visible {
+    outline-color: #9e0d33;
+  }
+}
+
 .event-form-button--draft {
   border-color: #d5aa17;
   background: #f4cd4d;

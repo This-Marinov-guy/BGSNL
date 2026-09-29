@@ -71,7 +71,7 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
         dismissableMask={false}
         blockScroll
         footer={<div className="event-draft-note-dialog__actions">
-          <button type="button" className="event-form-button event-form-button--ghost" disabled={saving} onClick={() => changeOpen(false)}>Cancel</button>
+          <button type="button" className="event-form-button event-form-button--outline-danger" disabled={saving} onClick={() => changeOpen(false)}>Cancel</button>
           <button type="button" className="event-form-button event-form-button--primary" disabled={saving || disabled} onClick={save}>
             {saving ? <><span className="event-form-button__spinner" aria-hidden="true" /><span role="status">{stage === "emailing" ? "Sending email…" : "Saving…"}</span></> : receiver ? canReuseDraft ? <><RetryIcon />Retry email</> : "Save & email link" : canReuseDraft ? "Done" : "Save draft"}
           </button>

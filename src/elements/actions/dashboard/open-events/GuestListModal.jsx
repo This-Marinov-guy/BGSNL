@@ -18,6 +18,7 @@ const GuestListModal = ({
 }) => {
   const eventId = event.id || event._id;
   const { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence } = useLiveGuestList(eventId, visible);
+  const presentCount = guests.filter((guest) => Number(guest.status) === 1 && !guest.refunded).length;
   const openScanner = () => {
     const url = new URL("/user/dashboard/ticket-scanner", window.location.origin);
     url.searchParams.set("forEvent", eventId);
@@ -35,7 +36,10 @@ const GuestListModal = ({
         className={`guest-list-modal${extended ? " guest-list-modal--extended" : ""}`}
         contentClassName="guest-list-modal__body"
         dismissableMask
-        header={<div><h2>Guest list</h2><p>{event.title || "Event"}</p></div>}
+        header={<div>
+          <h2>Guest list{!loading && !syncError && <> <span aria-label={`${presentCount} present out of ${guests.length} guests`}>({presentCount} / {guests.length})</span></>}</h2>
+          <p>{event.title || "Event"}</p>
+        </div>}
         maximized={maximized}
         onMaximize={({ maximized: nextMaximized }) => onMaximizeChange(nextMaximized)}
         onHide={closeGuestList}

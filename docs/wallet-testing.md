@@ -26,6 +26,12 @@ The v1 background is used unchanged. Fonts come from `public/assets/fonts`. The 
 
 Run `npm run test:wallet` and `npm run wallet:check` from BGSNL. The configuration check exits 1 while credentials are missing, and never prints key contents.
 
+## Apple artwork portability
+
+The Apple pass includes checked-in PNG wordmarks at 1x, 2x and 3x under `public/assets/wallet-cards/apple/`. The title is rendered ahead of deployment in white with bundled Archive, so missing production system fonts cannot turn letters into empty boxes. Regenerate these files with `node scripts/generate-apple-wallet-wordmark.mjs` after changing the logo or title; commit the generated PNGs alongside the generator. Next.js explicitly includes them in the Apple issuance function. The membership label and value use `PKTextAlignmentLeft`.
+
+Verify with `BGSNL_TEST_WALLET_SIGNING=1 npm run test:wallet`; the suite checks font-independent artwork, image bounds and inclusion, membership alignment, and the signed pass manifest. Artwork changes apply to newly downloaded passes after deployment. Existing passes do not update automatically; download/add the card again to receive the revised layout.
+
 ## Credentials
 
 Merge the entries in `.env.wallet.example` into your existing `.env.development.local`; do not overwrite existing values. Keep keys/certificates in the ignored `.wallet-local/` directory, never `public/`. Paths are relative to BGSNL, so the same paths work in the existing Docker bind mount. Restart the frontend after environment changes.
