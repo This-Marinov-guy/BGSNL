@@ -18,7 +18,7 @@ test("Apple Wallet wordmark leaves room for the complete society name", async ()
     assert.equal(info.width, 160 * scale);
     assert.equal(info.height, 50 * scale);
     let rightmost = -1;
-    for (let y = 0; y < 28 * scale; y++) {
+    for (let y = 0; y < info.height; y++) {
       for (let x = 50 * scale; x < info.width; x++) {
         if (data[(y * info.width + x) * info.channels + 3] > 0) rightmost = Math.max(rightmost, x);
       }
