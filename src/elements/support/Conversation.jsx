@@ -20,6 +20,7 @@ import { markSupportSeen } from "./support-unread.mjs";
 import { isTemporarySupportError } from "./support-errors.mjs";
 import { supportScope } from "./support-state.mjs";
 import useModalUrl from "@/elements/ui/modals/useModalUrl";
+import { supportMessageParts } from "./support-message-links.mjs";
 
 const formatTime = (value) => new Date(value).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 const PHOTO_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
@@ -264,7 +265,9 @@ export default function Conversation({ id, session, secret, staff, active, onBac
           {message.kind !== "status" && (message.author === "staff"
             ? <small className={`${styles.supportAuthor} weight-semibold`}><VladiImage className={styles.supportAvatar} src="/assets/images/vladi/head.png" alt="" width={24} height={33} /><span>Support</span></small>
             : <small className="weight-semibold">{staff ? record.contact.name : "You"}</small>)}
-          {message.text && <p>{changedStatus ? <>Status changed to <span className={`${styles.status} ${styles.ticketStatusBadge}`} data-status={changedStatus}>{STATUS_LABELS[changedStatus]}</span></> : message.text}</p>}
+          {message.text && <p>{changedStatus ? <>Status changed to <span className={`${styles.status} ${styles.ticketStatusBadge}`} data-status={changedStatus}>{STATUS_LABELS[changedStatus]}</span></> : supportMessageParts(message.text).map((part, index) => part.href
+            ? <a className={styles.messageLink} href={part.href} target={part.kind === "url" ? "_blank" : undefined} rel={part.kind === "url" ? "noopener noreferrer" : undefined} key={index}>{part.text}</a>
+            : <Fragment key={index}>{part.text}</Fragment>)}</p>}
           {!!message.attachments?.length && <div className={styles.messageAttachments}>{message.attachments.map((attachment, index) => <a href={attachment.url} target="_blank" rel="noreferrer" key={attachment.url} aria-label={attachment.type === "file" ? `Download ${attachment.name}` : `Open attached photo ${index + 1}`}>{attachment.type === "file" ? <span className={styles.attachedFile}>{attachment.name || "Download file"}</span> : <img src={attachment.url} alt={`Support attachment ${index + 1}`} loading="lazy" />}</a>)}</div>}
           <time className="type-small" dateTime={message.createdAt}>{formatTime(message.createdAt)}</time>
         </article>
