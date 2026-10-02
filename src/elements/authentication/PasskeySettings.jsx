@@ -29,9 +29,15 @@ export default function PasskeySettings() {
   const [editing, setEditing] = useState(null);
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const close = () => { setEditing(null); setPassword(""); setName(""); };
+  const [actionError, setActionError] = useState("");
+  const close = () => { setEditing(null); setPassword(""); setName(""); setActionError(""); };
   const { supported, phase, busy, run, cancel } = usePasskeyAction({ session,
-    onError: (error) => { setPassword(""); dispatch(showNotification(passkeyErrorNotice(error))); },
+    onError: (error) => {
+      setPassword("");
+      if (error?.systemFailure) setActionError("Passkeys could not be updated. Please try again.");
+      const notice = passkeyErrorNotice(error);
+      if (notice) dispatch(showNotification(notice));
+    },
     onSuccess: (result, purpose) => {
       setPasskeys(Array.isArray(result.passkeys) ? result.passkeys : null);
       close();
@@ -49,7 +55,8 @@ export default function PasskeySettings() {
     }).catch((error) => {
       if (!controller.signal.aborted) {
         setLoadFailed(true);
-        if (attempt > 0) dispatch(showNotification(passkeyErrorNotice(error)));
+        const notice = passkeyErrorNotice(error);
+        if (attempt > 0 && notice) dispatch(showNotification(notice));
       }
     });
     return () => controller.abort();
@@ -61,6 +68,7 @@ export default function PasskeySettings() {
     event.preventDefault();
     if (!editing || busy || !password || (!removing && (!supported || !name.trim()))) return;
     run({ ...editing, password, name: name.trim() });
+    setActionError("");
     setPassword("");
   };
 
@@ -128,6 +136,7 @@ export default function PasskeySettings() {
                       <button type="button" className={cancelButton} disabled={!editing || (busy && phase !== "device")}
                         onClick={() => { cancel(); close(); }}>Cancel</button>
                     </div>
+                    {actionError && <p role="alert">{actionError}</p>}
                   </form>
                 </div>
               </div>

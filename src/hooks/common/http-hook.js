@@ -12,6 +12,7 @@ import { clearSession } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
 import { serverEndpoint } from "../../util/defines/common";
 import { csrfHeaders, clearCsrf } from "../../util/auth/browser-request.mjs";
+import { requestErrorNotice } from "../../util/auth/request-error-notice.mjs";
 
 export const useHttpClient = (withPageLoading = false) => {
   const dispatch = useDispatch();
@@ -52,24 +53,11 @@ export const useHttpClient = (withPageLoading = false) => {
       return response.data;
     } catch (err) {
       if (axios.isCancel(err)) return undefined;
-      const errorMessage = err.response?.data?.message || err.message || "An error occurred";
-      const isSessionExpired = errorMessage.toLowerCase().includes("session expired") || 
-                               errorMessage.toLowerCase().includes("token expired") ||
-                               err.response?.status === 401;
-
-      if (isSessionExpired) dispatch(clearSession());
+      if (err.response?.status === 401 && err.response.headers?.["x-bgsnl-session-changed"] === "1") dispatch(clearSession());
       if (err.response?.status === 403) clearCsrf();
 
-      // Show error notification if refresh failed or error is not session-related
-      if (withError) {
-        dispatch(
-          showNotification({
-            severity: "error",
-            summary: "You got an error :(",
-            detail: errorMessage,
-          })
-        );
-      }
+      const notice = requestErrorNotice(err);
+      if (withError && notice) dispatch(showNotification(notice));
     } finally {
       if (withLoading) dispatch(stopLoading());
       if (withPageLoading) dispatch(stopPageLoading());

@@ -1070,6 +1070,10 @@ textarea.bgsnl-form-control {
   &.fade-out { pointer-events: none; }
 }
 
+.startup-overlay--public {
+  transition: opacity 180ms ease-out, visibility 0s linear 180ms;
+}
+
 @keyframes bgsnl-startup-content-enter {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }

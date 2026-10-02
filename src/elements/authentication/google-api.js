@@ -1,5 +1,5 @@
 import { serverEndpoint } from "@/util/defines/common";
-import { requestGoogleAuth } from "./google-request.mjs";
+import { GoogleRequestError, requestGoogleAuth } from "./google-request.mjs";
 
 // Keep Google credentials out of shared Axios defaults, console logs and URLs.
 export async function googleAuthRequest(path, data, session) {
@@ -7,7 +7,7 @@ export async function googleAuthRequest(path, data, session) {
   if ((path === "connected-accounts" || path === "google/link" || path === "google/disconnect") &&
       (typeof result.google?.enabled !== "boolean" || typeof result.google?.connected !== "boolean" ||
        typeof result.google?.eligible !== "boolean" || typeof result.google?.accountEmail !== "string")) {
-    throw new Error("Google account settings are temporarily unavailable. Please refresh the page and try again.");
+    throw new GoogleRequestError("Google account settings are temporarily unavailable. Please refresh the page and try again.");
   }
   return result;
 }

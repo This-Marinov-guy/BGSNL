@@ -12,7 +12,6 @@ import ContactTwo from "../../elements/contact/ContactTwo";
 import {
   DEFAULT_REGION,
   REGIONS,
-  REGION_EMAIL,
   REGION_SOCIALS,
 } from "../../util/defines/REGIONS_DESIGN";
 import { humanizeRegion } from "../../util/seo/site";
@@ -21,7 +20,6 @@ const Contact = () => {
   const { region } = useParams();
   const regionKey = REGION_SOCIALS[region] ? region : DEFAULT_REGION;
   const regionName = humanizeRegion(regionKey);
-  const contactEmail = REGION_EMAIL[regionKey];
   const regionLogo = REGIONS.includes(regionKey) ? regionKey : "logo-nl";
 
   return (
@@ -41,7 +39,6 @@ const Contact = () => {
         />
 
         <ContactTwo
-          contactEmail={contactEmail}
           regionKey={regionKey}
           regionLogo={regionLogo}
           regionName={regionName}

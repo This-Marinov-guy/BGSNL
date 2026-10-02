@@ -1,6 +1,7 @@
 "use client";
 
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { showNotification } from "@/redux/notification";
 import usePasskeyAction from "./usePasskeyAction";
@@ -10,15 +11,20 @@ import authStyles from "./google-auth.module.scss";
 
 export default function PasskeyLogin({ onLogin, disabled = false, onPendingChange }) {
   const dispatch = useDispatch();
+  const [actionError, setActionError] = useState("");
   const { supported, busy, run } = usePasskeyAction({
     onSuccess: onLogin, onPendingChange,
-    onError: (error) => dispatch(showNotification(passkeyErrorNotice(error))),
+    onError: (error) => {
+      if (error?.systemFailure) setActionError("Passkey sign-in could not be completed. Try again or use your password.");
+      const notice = passkeyErrorNotice(error);
+      if (notice) dispatch(showNotification(notice));
+    },
   });
   return (
     <div className={styles.login}>
       <button type="button" className={authStyles.googleButton} aria-label="Sign in with passkey" title="Sign in with passkey"
         disabled={disabled || busy || supported !== true} aria-busy={busy}
-        onClick={() => { if (!disabled && !busy && supported) run({ purpose: "login" }); }}>
+        onClick={() => { if (!disabled && !busy && supported) { setActionError(""); run({ purpose: "login" }); } }}>
         {busy ? <svg className={`${authStyles.googleLogo} ${styles.loginSpinner}`} viewBox="0 0 24 24" width="20" height="20"
           fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" focusable="false">
           <circle cx="12" cy="12" r="9" opacity="0.25" />
@@ -31,6 +37,7 @@ export default function PasskeyLogin({ onLogin, disabled = false, onPendingChang
         <span className={authStyles.passkeyLabel}>Passkey</span>
       </button>
       <span className={styles.screenReaderStatus} role="status">{busy ? "Signing in with passkey…" : ""}</span>
+      {actionError && <p role="alert">{actionError}</p>}
       {supported === false && <p>Passkeys require a supported browser and a secure connection. You can still use your password or Google.</p>}
     </div>
   );

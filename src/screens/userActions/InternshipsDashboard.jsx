@@ -1,10 +1,10 @@
 "use client";
 
 import React, { Suspense } from "react";
-import Link from "next/link";
-import styles from "./administration.module.scss";
 import ScrollToTop from "@/component/common/ScrollToTop";
-import { FiArrowLeft, FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import DashboardNavigation from "@/screens/userActions/DashboardNavigation";
+import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import InternshipList from "../../elements/actions/dashboard/internships/InternshipList";
 import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
@@ -17,13 +17,8 @@ const InternshipsDashboard = () => {
         colorblack="color--black"
         logoname="logo.png"
       />
-      <main className="container user-workspace-page event-admin-page">
-        <nav className={styles.views} aria-label="Internship administration">
-          <Link className={styles.backLink} href="/user/dashboard" aria-label="Back to administration">
-            <FiArrowLeft size={24} aria-hidden />
-            <span>Administration</span>
-          </Link>
-        </nav>
+      <main className={`container user-workspace-page event-admin-page ${workspace.page}`}>
+        <DashboardNavigation />
         <Suspense fallback={<LoadingSkeleton label="Loading internships" variant="cards" count={4} />}><InternshipList /></Suspense>
       </main>
 

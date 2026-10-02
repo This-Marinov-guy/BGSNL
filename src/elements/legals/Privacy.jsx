@@ -1,4 +1,4 @@
-import { REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
+import RegionEmailLink from "../contact/RegionEmailLink";
 
 const Privacy = () => (
   <div className="container">
@@ -9,7 +9,7 @@ const Privacy = () => (
       <p className="ml--20">
         Bulgarian Society Netherlands (BGSNL), KvK 95335048, is the controller
         for the personal data described below. For privacy questions or to make
-        a request, contact <a href={`mailto:${REGION_EMAIL.netherlands}`}>{REGION_EMAIL.netherlands}</a>.
+        a request, contact <RegionEmailLink />.
         Please do not send passwords, payment-card information or identity
         documents by ordinary email unless we specifically ask for a secure,
         proportionate verification method.

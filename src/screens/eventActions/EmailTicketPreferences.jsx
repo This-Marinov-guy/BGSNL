@@ -36,16 +36,17 @@ export default function EmailTicketPreferences({ checkout, details, preview = fa
               body: JSON.stringify({ addOns: values.addOns, preferences, revision }),
             });
             const result = await response.json();
-            if (!response.ok) { setNeedsReview(response.status === 409); throw new Error(result.message || "Could not open payment. Please try again."); }
+            if (!response.ok) { setNeedsReview(response.status === 409); throw new Error(result.message || "Could not complete your booking. Please try again."); }
             setRedirecting(true);
             window.location.assign(result.url);
-          } catch (failure) { setError(failure.message || "Could not open payment. Please try again."); }
+          } catch (failure) { setError(failure.message || "Could not complete your booking. Please try again."); }
         }}>
     {({ values, setFieldValue, isSubmitting }) => {
       const selectedAddOns = event.addOns.items
         .filter(item => values.addOns.includes(item._id));
       const total = price + selectedAddOns
         .reduce((sum, item) => sum + item.price, 0);
+      const freeBooking = (event.isFree || (!guest && event.isMemberFree)) && total === 0;
       const overviewPrice = <span aria-live="polite" aria-atomic="true">
         <span key={total} className={styles.animatedPrice}>{total === 0 ? "Free" : euro(total)}</span>
       </span>;
@@ -67,9 +68,9 @@ export default function EmailTicketPreferences({ checkout, details, preview = fa
                 valueMode="id"
                 onSelect={(value) => setFieldValue("addOns", value)}
               />
-              {previewComplete && <p role="status" className={styles.notice}>Your choices are valid. The live page would now open our secure checkout.</p>}
+              {previewComplete && <p role="status" className={styles.notice}>{freeBooking ? "Your choices are valid. The live page would now create your free ticket." : "Your choices are valid. The live page would now open our secure checkout."}</p>}
               {error && <div role="alert" className={styles.error}>{error}{needsReview && <button type="button" onClick={() => window.location.reload()}>Reload options</button>}</div>}
-              <div className="purchase-actions"><a href={eventUrl} className="rn-button-style--2 rn-btn-reverse purchase-action-control">View event</a><button type="submit" disabled={isSubmitting || redirecting || needsReview} className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary">{isSubmitting || redirecting ? <><Loader /><span>Opening payment…</span></> : <><span>Continue to payment</span><IconlyArrowRight aria-hidden /></>}</button></div>
+              <div className="purchase-actions"><a href={eventUrl} className="rn-button-style--2 rn-btn-reverse purchase-action-control">View event</a><button type="submit" disabled={isSubmitting || redirecting || needsReview} aria-busy={isSubmitting || redirecting} className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary">{isSubmitting || redirecting ? <><Loader /><span>{freeBooking ? "Creating ticket…" : "Opening payment…"}</span></> : <><span>{freeBooking ? "Get free ticket" : "Continue to payment"}</span><IconlyArrowRight aria-hidden /></>}</button></div>
             </fieldset>
           </Form>
       </div>

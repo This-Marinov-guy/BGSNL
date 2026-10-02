@@ -40,6 +40,7 @@ const InternshipApplyModal = ({
   const [selectedCV, setSelectedCV] = useState(null);
   const [selectedCoverLetter, setSelectedCoverLetter] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const cvInputRef = useRef(null);
   const coverLetterInputRef = useRef(null);
   const { sendRequest } = useHttpClient();
@@ -53,6 +54,7 @@ const InternshipApplyModal = ({
       setSelectedCV(null);
       setSelectedCoverLetter(null);
       setIsSubmitting(false);
+      setSubmitError("");
       [cvInputRef, coverLetterInputRef].forEach((inputRef) => {
         if (inputRef.current) {
           inputRef.current.value = "";
@@ -114,6 +116,7 @@ const InternshipApplyModal = ({
 
     setIsSubmitting(true);
 
+    setSubmitError("");
     try {
       // Prepare promises for CV and cover letter uploads
       const promises = [];
@@ -174,32 +177,16 @@ const InternshipApplyModal = ({
             });
           }
         } else {
-          dispatch(
-            showNotification({
-              severity: "error",
-              detail: "Failed to submit application. Please try again.",
-            })
-          );
+          setSubmitError("Your application could not be submitted. Please try again.");
         }
       } else {
         // Handle errors from document uploads
         if (cvResponse?.status !== true) {
-          dispatch(
-            showNotification({
-              severity: "error",
-              detail: "Failed to save CV. Please try again.",
-            })
-          );
+          setSubmitError("Your CV could not be saved. Please try again.");
         }
       }
-    } catch (err) {
-      console.error("Error applying for internship:", err);
-      dispatch(
-        showNotification({
-          severity: "error",
-          detail: "An error occurred while applying. Please try again.",
-        })
-      );
+    } catch {
+      setSubmitError("Your application could not be submitted. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -269,6 +256,7 @@ const InternshipApplyModal = ({
         style={{ padding: "10px 0" }}
         onSubmit={handleApply}
       >
+        {submitError && <p role="alert">{submitError}</p>}
         {/* CV Section */}
         <div className="mb--30">
           <h5 style={{ marginBottom: "15px" }}>Your CV</h5>

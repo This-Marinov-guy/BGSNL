@@ -53,7 +53,7 @@
       "fontFamilyNote": "Use the existing local fonts. Name increased from 46px to 60px and membership label from 34px to 44px for the larger-type preview. League Spartan weight remains to be confirmed.",
       "fallbackFamily": "sans-serif",
       "name": { "fontFamily": "Archive", "fontSize": 60, "fontWeight": 400, "textTransform": "uppercase", "align": "center" },
-      "membershipLabel": { "fontFamily": "League Spartan", "fontSize": 44, "fontWeight": null, "align": "center" }
+      "membershipLabel": { "fontFamily": "League Spartan", "fontSize": 44, "longLabelFontSize": 36, "fontWeight": null, "align": "center" }
     },
     "layout": {
       "profileImage": { "x": 308, "y": 340, "width": 464, "height": 477, "borderRadius": 42, "objectFit": "cover" },
@@ -65,6 +65,7 @@
       "scaleReferenceLayoutProportionally": true,
       "longNames": "Allow wrapping and adjust spacing to prevent overlap; do not silently truncate the full name.",
       "missingProfileImage": "Show a neutral avatar or initials.",
+      "longMembershipLabels": "Balance wrapped lines and use the 36px reference size for labels longer than 50 characters, keeping them above the QR code.",
       "note": "These are proposed web-preview behaviors. Native Wallet layouts require separate adaptations."
     }
   },
@@ -77,10 +78,11 @@
     "membershipLabel": {
       "dynamic": true,
       "showOnAccountPage": true,
-      "position": "single_line_below_name",
+      "position": "below_name_with_wrapping_for_long_labels",
       "memberTemplate": "Member of {city}",
       "alumniTemplate": "Alumni Tier {alumniTier}",
-      "examples": ["Member of Groningen", "Alumni Tier II"],
+      "leadershipPriority": ["national_board_member", "regional_board_member", "national_committee_member", "regional_committee_member"],
+      "examples": ["Member of Groningen", "Board Member of Groningen", "National Board Member", "Alumni Tier II", "Alumni Tier II & National Committee Member"],
       "showSeparateMembershipTypeLine": false
     },
     "status": { "dynamic": true, "showOnAccountPage": true, "allowedValues": ["active", "locked"], "displayAs": "badge" },

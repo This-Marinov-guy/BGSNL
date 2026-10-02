@@ -104,6 +104,8 @@ const Hero1 = ({ initialEvents = {}, initialNow }) => {
         src={`/assets/images/bg/paralax/${region || "netherlands"}.webp`}
         fallback={`/assets/images/bg/paralax/${region || "netherlands"}.jpg`}
         className="home_bg"
+        eager
+        fetchPriority="high"
       />
       {SlideList.map((value, index) => (
         <div

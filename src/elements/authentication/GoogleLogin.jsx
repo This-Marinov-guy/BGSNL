@@ -14,15 +14,17 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
   const dispatch = useDispatch();
   const [challenge, setChallenge] = useState(null);
   const [failed, setFailed] = useState(false);
+  const [actionError, setActionError] = useState("");
   const [preparing, setPreparing] = useState(false);
   const [feedback] = useState(createGoogleFeedbackGate);
   const [busy, setBusy] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const submitting = useRef(false);
   const mounted = useRef(false);
-  const notifyError = useCallback((message) => {
+  const notifyError = useCallback((failure) => {
     setFailed(true);
-    const notification = feedback.error(message);
+    if (failure?.systemFailure) setActionError("Google sign-in could not be completed. Try again or use your password.");
+    const notification = feedback.error(failure);
     if (notification) dispatch(showNotification(notification));
   }, [dispatch, feedback]);
 
@@ -31,7 +33,7 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
   useEffect(() => {
     mounted.current = true;
     let active = true;
-    setFailed(false); setChallenge(null);
+    setFailed(false); setChallenge(null); setActionError("");
     (async () => {
       try {
         const config = await googleAuthRequest("google/config");
@@ -44,7 +46,7 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
         const proof = createBrowserProof();
         const response = await googleAuthRequest("google/login/challenge", { proof });
         if (active) setChallenge({ ...response, proof });
-      } catch (failure) { if (active) notifyError(failure.message); }
+      } catch (failure) { if (active) notifyError(failure); }
       finally { if (active) setPreparing(false); }
     })();
     return () => { active = false; mounted.current = false; };
@@ -59,7 +61,7 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
       const response = await googleAuthRequest("google/login", { credential, challengeId: challenge.challengeId, proof: challenge.proof });
       if (mounted.current) { feedback.clear(); onLogin(response); }
     } catch (failure) {
-      if (mounted.current) { notifyError(failure.message); setChallenge(null); }
+      if (mounted.current) { notifyError(failure); setChallenge(null); }
     } finally {
       submitting.current = false;
       if (mounted.current) { setBusy(false); onPendingChange?.(false); }
@@ -99,6 +101,7 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
             </GoogleButton> : null}
         </div>
       </div>
+      {actionError && <p role="alert">{actionError}</p>}
     </div>
   );
 }

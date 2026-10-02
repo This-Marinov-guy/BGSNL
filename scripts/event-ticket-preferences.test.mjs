@@ -52,6 +52,20 @@ test("only trusted Stripe destinations can be returned to the browser", async ()
   }
 });
 
+test("confirmed free tickets can open only our tokenised receipt page", async () => {
+  const receipt = `https://bulgariansociety.nl/payment/return?token=${"a".repeat(64)}`;
+  const handler = createTicketPaymentHandler({ checkoutRequest: async () => ({ free: true, url: receipt }) });
+  const result = await handler(request(), params);
+  assert.equal(result.status, 200);
+  assert.deepEqual(await result.json(), { url: receipt });
+  for (const url of ["https://attacker.test/payment/return?token=" + "a".repeat(64), receipt + "&redirect=evil", receipt + "#other", "https://bulgariansociety.nl/user", "https://bulgariansociety.nl/payment/return?token=bad", "https://checkout.stripe.com/c/pay/test"]) {
+    const invalid = createTicketPaymentHandler({ checkoutRequest: async () => ({ free: true, url }) });
+    assert.equal((await invalid(request(), params)).status, 503);
+  }
+  const missingFlag = createTicketPaymentHandler({ checkoutRequest: async () => ({ url: receipt }) });
+  assert.equal((await missingFlag(request(), params)).status, 503);
+});
+
 test("missing scoped cookie or expired capability stays an error, never a login", async () => {
   const handler = createTicketPaymentHandler({ checkoutRequest: async () => { throw Object.assign(new Error("Expired"), { status: 410 }); } });
   const response = await handler(request(), params);

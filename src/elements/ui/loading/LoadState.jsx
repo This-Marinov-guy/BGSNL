@@ -2,7 +2,7 @@
 
 import PropTypes from "prop-types";
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
-import { FiAlertCircle, IconlyHome } from "@/elements/ui/icons/IconlyIcons";
+import { FiAlertCircle, FiAlertTriangle, IconlyHome } from "@/elements/ui/icons/IconlyIcons";
 import styles from "./load-state.module.scss";
 
 export function LoadingSkeleton({ label = "Loading content", variant = "lines", count = 3 }) {
@@ -23,9 +23,11 @@ export function RetryButton({ onClick, label = "Try again", disabled = false }) 
 }
 RetryButton.propTypes = { onClick: PropTypes.func.isRequired, label: PropTypes.string, disabled: PropTypes.bool };
 
-export function LoadErrorBanner({ message = "This content could not be loaded. Please try again.", onRetry, retryLabel = "Try again", disabled = false, compact = false, showHome = false, children }) {
-  return <div className={`${styles.error}${compact ? ` ${styles.compact}` : ""}`} role="alert">
-    <div className={styles.message}><FiAlertCircle aria-hidden="true" />{children || message}</div>
+export function LoadErrorBanner({ message = "This content could not be loaded. Please try again.", onRetry, retryLabel = "Try again", disabled = false, compact = false, showHome = false, severity = "error", children }) {
+  const isWarning = severity === "warning";
+  const Icon = isWarning ? FiAlertTriangle : FiAlertCircle;
+  return <div className={`${styles.error}${isWarning ? ` ${styles.warning}` : ""}${compact ? ` ${styles.compact}` : ""}`} role={isWarning ? "status" : "alert"}>
+    <div className={styles.message}><Icon aria-hidden="true" />{children || message}</div>
     <div className={styles.actions}>
       <RetryButton onClick={onRetry} label={retryLabel} disabled={disabled} />
       {showHome && <a className={styles.retry} href="/" aria-label="Go to home page" title="Go to home page">
@@ -34,4 +36,4 @@ export function LoadErrorBanner({ message = "This content could not be loaded. P
     </div>
   </div>;
 }
-LoadErrorBanner.propTypes = { message: PropTypes.string, onRetry: PropTypes.func.isRequired, retryLabel: PropTypes.string, disabled: PropTypes.bool, compact: PropTypes.bool, showHome: PropTypes.bool, children: PropTypes.node };
+LoadErrorBanner.propTypes = { message: PropTypes.string, onRetry: PropTypes.func.isRequired, retryLabel: PropTypes.string, disabled: PropTypes.bool, compact: PropTypes.bool, showHome: PropTypes.bool, severity: PropTypes.oneOf(["error", "warning"]), children: PropTypes.node };

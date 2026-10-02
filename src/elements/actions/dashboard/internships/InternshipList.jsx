@@ -8,20 +8,20 @@ import {
 import { useDispatch } from "react-redux";
 import {
   FaGripVertical,
+  FiChevronUp,
+  FiChevronDown,
   FiEdit2,
   FiTrash2,
 } from "@/elements/ui/icons/IconlyIcons";
 import { useSearchParams } from "next/navigation";
+import styles from "./internship-list.module.scss";
 import InternshipForm from "../../form/InternshipForm";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { showNotification } from "../../../../redux/notification";
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
 
 const FALLBACK_INTERNSHIP_IMAGE = "/assets/images/news/internships.jpg";
-const COMPACT_LAYOUT_BREAKPOINT = 992;
 const getOrderSignature = (items = []) => items.map((item) => item._id).join("|");
-const getIsCompactLayout = () =>
-  typeof window !== "undefined" ? window.innerWidth < COMPACT_LAYOUT_BREAKPOINT : false;
 
 const moveInternship = (items, draggedId, targetId) => {
   const draggedIndex = items.findIndex((item) => item._id === draggedId);
@@ -45,6 +45,7 @@ const InternshipList = () => {
   const [internships, setInternships] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [actionError, setActionError] = useState("");
   const [editor, setEditor] = useState({ open: false, internship: null });
   const searchParams = useSearchParams();
   const requestedEditor = searchParams.get("edit");
@@ -62,7 +63,6 @@ const InternshipList = () => {
   const [draggedId, setDraggedId] = useState(null);
   const [dragOverId, setDragOverId] = useState(null);
   const [savingOrder, setSavingOrder] = useState(false);
-  const [isCompactLayout, setIsCompactLayout] = useState(getIsCompactLayout);
   const persistedInternshipsRef = useRef([]);
   const autoSaveTimeoutRef = useRef(null);
 
@@ -83,7 +83,6 @@ const InternshipList = () => {
       setLoaded(true);
     } catch {
       setLoadFailed(true);
-      dispatch(showNotification({ severity: "error", detail: "Failed to load internships." }));
     }
   };
 
@@ -104,19 +103,9 @@ const InternshipList = () => {
     setEditor({ open: true, internship });
   }, [requestedEditor, loaded, internships, dispatch, closeEditor]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsCompactLayout(getIsCompactLayout());
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const handleToggleActive = async (item) => {
     if (toggling.has(item._id)) return;
+    setActionError("");
 
     setToggling((prev) => new Set(prev).add(item._id));
     setInternships((prev) =>
@@ -126,13 +115,14 @@ const InternshipList = () => {
     try {
       const formData = new FormData();
       formData.append("isActive", String(!item.isActive));
-      await sendRequest(`internship/edit/${item._id}`, "PATCH", formData);
+      const response = await sendRequest(`internship/edit/${item._id}`, "PATCH", formData);
+      if (!response?.status) throw new Error("Internship update failed");
     } catch {
       // revert on failure
       setInternships((prev) =>
         prev.map((i) => (i._id === item._id ? { ...i, isActive: item.isActive } : i))
       );
-      dispatch(showNotification({ severity: "error", detail: "Failed to update status." }));
+      setActionError("Internship status could not be updated. Please try again.");
     } finally {
       setToggling((prev) => {
         const next = new Set(prev);
@@ -144,13 +134,15 @@ const InternshipList = () => {
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
+    setActionError("");
     try {
-      await sendRequest(`internship/delete/${deleteTarget._id}`, "DELETE");
+      const response = await sendRequest(`internship/delete/${deleteTarget._id}`, "DELETE");
+      if (!response?.status) throw new Error("Internship deletion failed");
       dispatch(showNotification({ severity: "success", summary: "Internship deleted" }));
       setDeleteTarget(null);
       loadInternships();
     } catch {
-      dispatch(showNotification({ severity: "error", detail: "Failed to delete internship." }));
+      setActionError("Internship could not be deleted. Please try again.");
     }
   };
 
@@ -158,6 +150,7 @@ const InternshipList = () => {
     if (savingOrder || items.length === 0) return;
 
     setSavingOrder(true);
+    setActionError("");
 
     try {
       const data = await sendRequest(
@@ -174,7 +167,7 @@ const InternshipList = () => {
 
       setLoadedInternships(data?.internships ?? items);
     } catch {
-      dispatch(showNotification({ severity: "error", detail: "Failed to save internship order." }));
+      setActionError("Internship order could not be saved. Please try again.");
     } finally {
       setSavingOrder(false);
     }
@@ -244,7 +237,6 @@ const InternshipList = () => {
       <header className="event-workspace-heading event-dashboard-heading">
         <div>
           <h1>Internships dashboard</h1>
-          <p>Manage internship listings and visibility. Drag rows to reorder; changes save automatically.</p>
         </div>
         <div className="workspace-heading-actions">
           <button type="button" onClick={() => setEditor({ open: true, internship: null })} className="rn-button-style--2 rn-btn-reverse-green">
@@ -255,6 +247,7 @@ const InternshipList = () => {
 
       {!loadFailed && (!loaded || loading) && internships.length === 0 && <LoadingSkeleton label="Loading internships" variant="cards" count={4} />}
       {loadFailed && <LoadErrorBanner message="Internships could not be loaded." onRetry={loadInternships} />}
+      {actionError && <p role="alert">{actionError}</p>}
 
       {loaded && !loadFailed && !loading && internships.length === 0 && (
         <div className="empty-state">
@@ -262,223 +255,41 @@ const InternshipList = () => {
         </div>
       )}
 
-      {internships.map((item) => (
-        <div
-          key={item._id}
-          draggable={!savingOrder}
-          onDragStart={(event) => handleDragStart(event, item._id)}
-          onDragOver={(event) => handleDragOver(event, item._id)}
-          onDrop={(event) => handleDrop(event, item._id)}
-          onDragEnd={handleDragEnd}
-          style={{
-            display: "flex",
-            alignItems: isCompactLayout ? "flex-start" : "center",
-            gap: isCompactLayout ? "10px" : "16px",
-            padding: isCompactLayout ? "10px 8px" : "14px 20px",
-            marginBottom: isCompactLayout ? "8px" : "12px",
-            borderRadius: isCompactLayout ? "8px" : "10px",
-            border:
-              dragOverId === item._id && draggedId !== item._id
-                ? "1px solid #017363"
-                : "1px solid #e5e7eb",
-            backgroundColor: item.isActive ? "#fff" : "#f9fafb",
-            transition:
-              "background-color 0.2s, border-color 0.2s, box-shadow 0.2s",
-            cursor: savingOrder ? "default" : "grab",
-            opacity: draggedId === item._id ? 0.65 : 1,
-            boxShadow:
-              dragOverId === item._id && draggedId !== item._id
-                ? "0 0 0 3px rgba(1,115,99,0.12)"
-                : "none",
-            flexWrap: isCompactLayout ? "wrap" : "nowrap",
-          }}
-        >
-          <div
-            style={{
-              flex: isCompactLayout ? "0 0 auto" : "0 0 70px",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              color: "#6b7280",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "monospace",
-                letterSpacing: "1px",
-                userSelect: "none",
-              }}
-              title="Drag to reorder"
-            >
-              <FaGripVertical />
-            </span>
-            <span
-              style={{
-                color: "#9ca3af",
-                minWidth: "22px",
-              }}
-            >
-              {internships.findIndex(
-                (internship) => internship._id === item._id,
-              ) + 1}
-            </span>
-          </div>
-
-          {/* Logo */}
-          <div style={{ flex: "0 0 60px" }}>
-            <img
-              src={item.logo || FALLBACK_INTERNSHIP_IMAGE}
-              alt={item.company}
-              style={{
-                width: isCompactLayout ? "52px" : "60px",
-                height: isCompactLayout ? "36px" : "40px",
-                objectFit: "cover",
-                borderRadius: "4px",
-              }}
-            />
-          </div>
-
-          {/* Info */}
-          <div
-            style={{
-              flex: isCompactLayout ? "1 1 calc(100% - 162px)" : 1,
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                color: "#111827",
-                whiteSpace: isCompactLayout ? "normal" : "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                wordBreak: "break-word",
-              }}
-            >
-              {item.company}
+      <div className={styles.list}>
+        {internships.map((item, index) => (
+          <article key={item._id} className={styles.row} draggable={!savingOrder}
+            data-dragging={draggedId === item._id || undefined}
+            data-drop-target={dragOverId === item._id && draggedId !== item._id || undefined}
+            data-inactive={!item.isActive || undefined}
+            onDragStart={event => handleDragStart(event, item._id)}
+            onDragOver={event => handleDragOver(event, item._id)}
+            onDrop={event => handleDrop(event, item._id)} onDragEnd={handleDragEnd}>
+            <img className={styles.logo} src={item.logo || FALLBACK_INTERNSHIP_IMAGE} alt="" loading="lazy" />
+            <div className={styles.identity}><strong>{item.company}</strong><p>{item.specialty}</p></div>
+            <span className={styles.badge} data-local={item.label === "Bulgarian" || undefined}>{item.label}</span>
+            <button type="button" className={styles.visibility} aria-pressed={item.isActive}
+              aria-label={`Show ${item.company} internship`} disabled={toggling.has(item._id)}
+              onClick={() => handleToggleActive(item)}>
+              <span className={styles.track} aria-hidden /><span>{item.isActive ? "Active" : "Inactive"}</span>
+            </button>
+            <div className={styles.order} aria-label={`Reorder ${item.company}`}>
+              <FaGripVertical aria-hidden /><span>{index + 1}</span>
+              <button type="button" disabled={savingOrder || index === 0}
+                aria-label={`Move ${item.company} up`}
+                onClick={() => setInternships(items => moveInternship(items, item._id, internships[index - 1]._id))}><FiChevronUp aria-hidden /></button>
+              <button type="button" disabled={savingOrder || index === internships.length - 1}
+                aria-label={`Move ${item.company} down`}
+                onClick={() => setInternships(items => moveInternship(items, item._id, internships[index + 1]._id))}><FiChevronDown aria-hidden /></button>
             </div>
-            <div
-              style={{
-                color: "#6b7280",
-                whiteSpace: isCompactLayout ? "normal" : "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                wordBreak: "break-word",
-              }}
-            >
-              {item.specialty}
+            <div className={styles.actions}>
+              <button type="button" onClick={() => setEditor({ open: true, internship: item })}
+                aria-label={`Edit ${item.company} internship`} title="Edit"><FiEdit2 aria-hidden /></button>
+              <button type="button" className={styles.danger} onClick={() => setDeleteTarget(item)}
+                aria-label={`Delete ${item.company} internship`} title="Delete"><FiTrash2 aria-hidden /></button>
             </div>
-          </div>
-
-          {/* Label badge */}
-          <span
-            style={{
-              flexShrink: 0,
-              backgroundColor:
-                item.label === "Bulgarian" ? "#dcfce7" : "#dbeafe",
-              color: item.label === "Bulgarian" ? "#166534" : "#1e40af",
-              borderRadius: "9999px",
-              padding: "3px 10px",
-              order: isCompactLayout ? 4 : 0,
-            }}
-          >
-            {item.label}
-          </span>
-
-          {/* Active toggle */}
-          <div
-            style={{
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              gap: "7px",
-              marginLeft: isCompactLayout ? 0 : "auto",
-              order: isCompactLayout ? 5 : 0,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => handleToggleActive(item)}
-              disabled={toggling.has(item._id)}
-              title={item.isActive ? "Deactivate" : "Activate"}
-              style={{
-                position: "relative",
-                width: "40px",
-                height: "22px",
-                borderRadius: "11px",
-                border: "none",
-                backgroundColor: item.isActive ? "#017363" : "#d1d5db",
-                cursor: toggling.has(item._id) ? "default" : "pointer",
-                transition: "background-color 0.2s",
-                opacity: toggling.has(item._id) ? 0.6 : 1,
-                padding: 0,
-                flexShrink: 0,
-              }}
-            >
-              <span
-                style={{
-                  position: "absolute",
-                  top: "2px",
-                  left: item.isActive ? "20px" : "2px",
-                  width: "18px",
-                  height: "18px",
-                  borderRadius: "50%",
-                  backgroundColor: "#fff",
-                  transition: "left 0.2s",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                }}
-              />
-            </button>
-            <span
-              style={{
-                color: item.isActive ? "#166534" : "#9ca3af",
-                minWidth: "46px",
-              }}
-            >
-              {item.isActive ? "Active" : "Inactive"}
-            </span>
-          </div>
-
-          {/* Actions */}
-          <div
-            className="d-flex"
-            style={{
-              gap: "8px",
-              flexShrink: 0,
-              width: isCompactLayout ? "100%" : "auto",
-              justifyContent: isCompactLayout ? "flex-end" : "flex-start",
-              order: isCompactLayout ? 6 : 0,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setEditor({ open: true, internship: item })}
-              aria-label={`Edit ${item.company} internship`}
-              className="rn-button"
-              style={{
-                padding: "6px 14px",
-                minWidth: isCompactLayout ? "76px" : "auto",
-                textAlign: "center",
-              }}
-              title="Edit"
-            >
-              <FiEdit2 />
-            </button>
-            <button
-              className="rn-button-style--2 rn-btn-solid-red"
-              style={{
-                padding: "6px 14px",
-                border: "none",
-                cursor: "pointer",
-                minWidth: isCompactLayout ? "76px" : "auto",
-              }}
-              onClick={() => setDeleteTarget(item)}
-              title="Delete"
-            >
-              <FiTrash2 />
-            </button>
-          </div>
-        </div>
-      ))}
+          </article>
+        ))}
+      </div>
 
       <InternshipForm visible={editor.open} internship={editor.internship} onClose={closeEditor}
         onSaved={() => { closeEditor(); loadInternships(); }} />

@@ -1,9 +1,9 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import PropTypes from "prop-types";
+import DashboardNavigation from "@/screens/userActions/DashboardNavigation";
+import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 import HeaderTwo from "@/component/header/HeaderTwo";
-import { FiArrowLeft } from "@/elements/ui/icons/IconlyIcons";
 import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import styles from "./system-monitoring.module.scss";
@@ -79,10 +79,9 @@ export default function SystemMonitoring() {
   const operations = axiom?.operations;
   const integrations = axiom?.integrations;
   return <><HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
-    <main className={`container user-workspace-page ${styles.page}`}>
-      <nav className={styles.back}><Link href="/user/dashboard"><FiArrowLeft aria-hidden="true" />Administration</Link></nav>
-      <header className={styles.heading}><div><h1>System manager</h1>
-        <p>Background jobs, Axiom activity and live service checks.</p></div>
+    <main className={`container user-workspace-page ${styles.page} ${workspace.page}`}>
+      <DashboardNavigation />
+      <header className={`event-workspace-heading ${styles.heading}`}><div><h1>System manager</h1></div>
         <button type="button" onClick={refresh} disabled={state === "loading"}>Refresh checks</button></header>
       {state === "loading" && !snapshot && <LoadingSkeleton label="Checking systems" variant="cards" count={4} />}
       {state === "error" && <LoadErrorBanner message="Monitoring could not be loaded." onRetry={refresh} />}

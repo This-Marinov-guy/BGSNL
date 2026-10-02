@@ -6,6 +6,7 @@ import { browserFetch } from "@/util/auth/browser-request.mjs";
 import { createLiveRefresh } from "@/util/functions/live-refresh.mjs";
 import { mergeGuestList } from "@/util/functions/merge-guest-list.mjs";
 import { showNotification } from "@/redux/notification";
+import { requestErrorNotice } from "@/util/auth/request-error-notice.mjs";
 
 export const GUEST_LIST_CHANGED = "bgsnl:guest-list-changed";
 
@@ -102,10 +103,12 @@ export function useLiveGuestList(eventId, enabled, initialGuests = [], initialCo
         signal: AbortSignal.timeout(15000),
       });
       const data = await response.json();
-      if (!response.ok || !data.status) throw new Error(data.message || "Attendance could not be saved.");
+      if (!response.ok || !data.status) throw Object.assign(new Error("Attendance could not be saved"), { response: { status: response.status, data } });
       if (currentEvent.current === eventId) setGuests(current => current.map(item => String(item.id || item._id) === guestId ? { ...item, ...data.guest } : item));
     } catch (error) {
-      dispatch(showNotification({ severity: "error", detail: error.message || "Attendance could not be confirmed. Refreshing the guest list." }));
+      setSyncError(true);
+      const notice = requestErrorNotice(error);
+      if (notice) dispatch(showNotification(notice));
     } finally {
       if (currentEvent.current === eventId) {
         pending.current.delete(guestId);

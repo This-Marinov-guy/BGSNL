@@ -13,7 +13,7 @@ const { code } = await transform(await readFile(new URL("../src/elements/ui/load
 const exports = {};
 vm.runInNewContext(code, { exports, require: name => {
   if (["react/jsx-runtime", "prop-types"].includes(name)) return require(name);
-  if (name.endsWith("IconlyIcons")) return { FiAlertCircle: "alert-icon", IconlyHome: "home-icon" };
+  if (name.endsWith("IconlyIcons")) return { FiAlertCircle: "alert-icon", FiAlertTriangle: "warning-icon", IconlyHome: "home-icon" };
   return { __esModule: true, default: name.endsWith(".scss") ? new Proxy({}, { get: (_, key) => key }) : "retry-icon" };
 } });
 
@@ -50,6 +50,13 @@ test("failure banner announces its message and wires the matching retry", () => 
   assert.equal(retry.props.disabled, true);
 });
 
+test("slow-loading notice uses warning styling and a non-urgent status", () => {
+  const banner = exports.LoadErrorBanner({ message: "This is taking longer than expected.", severity: "warning", onRetry: () => {} });
+  assert.equal(banner.props.className, "error warning");
+  assert.equal(banner.props.role, "status");
+  assert.equal(banner.props.children[0].props.children[0].type, "warning-icon");
+});
+
 test("page and account loaders retain their visible labels as exceptions", async () => {
   const page = await readFile(new URL("../src/elements/ui/loading/PageLoading.jsx", import.meta.url), "utf8");
   const account = await readFile(new URL("../src/elements/ui/errors/HeaderLoadingError.jsx", import.meta.url), "utf8");
@@ -71,7 +78,7 @@ test("slow-loading banners offer an accessible icon-only home link without chang
   assert.equal(home.props.children.type, "home-icon");
   assert.equal(home.props.children.props["aria-hidden"], "true");
   const source = await readFile(new URL("../src/elements/ui/loading/LoadingRecovery.jsx", import.meta.url), "utf8");
-  assert.match(source, /<LoadErrorBanner[^>]*message="This is taking longer than expected\."[^>]*\bonRetry=/);
+  assert.match(source, /<LoadErrorBanner[^>]*severity="warning"[^>]*message="This is taking longer than expected\."[^>]*\bonRetry=/);
   assert.match(source, /showHome\s*\/>/);
 });
 

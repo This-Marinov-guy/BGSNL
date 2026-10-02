@@ -1,5 +1,6 @@
 import { eventModalData } from "@/util/functions/event-modal-data.mjs";
 import EventPanelEditButton from "@/elements/actions/form/EventPanelEditButton";
+import EventCampaignModal from "./EventCampaignModal";
 import { EventUpsellDetails, EventAddOnDetails, EventQuestionDetails, EventAdvertisedDetails } from "@/elements/actions/form/EventConfigurationPanels";
 import { useMemo, useState } from "react";
 import moment from "moment";
@@ -11,6 +12,7 @@ import {
 import { Dialog } from "@/compat/primereact";
 import {
   FiCheck,
+  FiMail,
   IconlyDelete,
   IconlyCopy,
   IconlyEdit,
@@ -155,6 +157,7 @@ const EventModal = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const guestListVisible = modalView === "guest-list";
+  const [emailsVisible, setEmailsVisible] = useState(false);
 
   const isDraft = event.status === "draft";
   const eventTitle = event.title || "Untitled draft";
@@ -272,6 +275,7 @@ const EventModal = ({
 
   return (
     <>
+      {emailsVisible && <EventCampaignModal event={storedEvent} open onClose={() => setEmailsVisible(false)} />}
       <ConfirmCenterModal
         text="Deleting this event cannot be undone. Are you sure you want to continue?"
         onConfirm={onDelete}
@@ -296,7 +300,7 @@ const EventModal = ({
         visible={guestListVisible}
       />
       <Dialog
-        suspended={!!previewMedia || guestListVisible}
+        suspended={!!previewMedia || guestListVisible || emailsVisible}
         className="event-details-modal"
         contentClassName="event-details-modal__body"
         dismissableMask
@@ -312,6 +316,7 @@ const EventModal = ({
             className="event-details-modal__actions"
             role="group"
           >
+            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setEmailsVisible(true)}><FiMail aria-hidden="true" /><span>Emails</span></button>}
             <button
               className="event-details-modal__action"
               onClick={() => editEvent()}

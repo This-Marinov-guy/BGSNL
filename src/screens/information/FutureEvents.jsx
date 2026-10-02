@@ -135,6 +135,7 @@ const FutureEventsContent = ({
     initialEvents && checkObjectOfArraysEmpty(storedEvents)
       ? initialEvents
       : storedEvents;
+  const showInitialLoading = eventsLoading && checkObjectOfArraysEmpty(source);
 
   const visibleEvents = visibleFutureEvents(source, displayAll ? REGIONS : [region], isAuth);
   useEffect(() => {
@@ -176,7 +177,7 @@ const FutureEventsContent = ({
               </div>
             </div>
             {displayAll ? (
-              eventsLoading ? (
+              showInitialLoading ? (
                 <EventsLoading />
               ) : (
                 <div className="col-lg-12 future-events-flow">
@@ -190,7 +191,7 @@ const FutureEventsContent = ({
               )
             ) : (
               <div className="col-lg-12 future-events-flow">
-                {eventsLoading ? (
+                {showInitialLoading ? (
                   <EventsLoading />
                 ) : sortedEvents.length > 0 ? (
                   carousel ? <FutureEventsCarousel events={sortedEvents} /> : <FocusCards

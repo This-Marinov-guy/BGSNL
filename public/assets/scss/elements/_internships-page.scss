@@ -154,25 +154,79 @@
 .internships-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 30px;
+  column-gap: 30px;
+  row-gap: 1rem;
   margin-bottom: 50px;
   align-items: stretch;
 
-  @media (max-width: 767px) {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  // Seven shared tracks keep each card section aligned with its neighbours.
+  > * {
+    align-self: stretch;
+    display: grid;
+    grid-row: span 7;
+    grid-template-rows: subgrid;
+    min-width: 0;
+    row-gap: inherit;
   }
 
-  > * {
-    height: 100%;
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    column-gap: 20px;
   }
+
 }
 
 .intern-card {
-  height: 100%;
-  display: flex !important;
-  flex-direction: column;
+  display: grid !important;
+  grid-template-rows: repeat(6, auto) minmax(auto, 1fr);
+  row-gap: 1rem;
+  min-width: 0;
   background: #fff;
+
+  > * { min-width: 0; overflow-wrap: anywhere; }
+
+  &__category {
+    min-height: 1.5rem;
+  }
+
+  &__logo {
+    align-items: center;
+    display: flex;
+    flex: 0 0 6rem;
+    height: 5rem;
+    justify-content: center;
+    min-width: 0;
+
+    img {
+      display: block;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+
+    > * { min-width: 0; }
+    > :last-child { grid-column: 1 / -1; }
+  }
+}
+
+.internships-grid .intern-card {
+  grid-row: span 7;
+  grid-template-rows: subgrid;
+  row-gap: inherit;
+}
+
+.internships-grid--pwc {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Preview Section */

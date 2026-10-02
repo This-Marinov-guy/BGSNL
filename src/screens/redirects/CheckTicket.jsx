@@ -4,16 +4,15 @@ import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { Dialog, Skeleton, Steps } from "@/compat/primereact";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import StepContentTransition from "@/elements/ui/functional/StepContentTransition";
 import { FiExternalLink, FiShare2, IconlyDocument } from "@/elements/ui/icons/IconlyIcons";
 import InfoHint from "@/elements/ui/icons/InfoHint";
 import { browserFetch } from "@/util/auth/browser-request.mjs";
+import { requestErrorNotice } from "@/util/auth/request-error-notice.mjs";
 import { parseTicketScan } from "@/util/functions/ticket-scan.mjs";
 import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGION_BADGES";
-import { showNotification } from "@/redux/notification";
 import styles from "./check-ticket.module.scss";
 import { estimateScanProgress } from "@/util/functions/scan-progress.mjs";
 
@@ -22,6 +21,8 @@ const mockGroupResult = () => ({
   total: 3, remaining: 2,
   guests: [0, 1, 2].map(index => ({ id: `mock-${index}`, name: "Mock Guest Trio", present: index === 0 })),
 });
+const scannerErrorMessage = (error, fallback) =>
+  requestErrorNotice({ response: { status: error?.status, data: { message: error?.message } } })?.detail || fallback;
 
 const ResultSkeleton = () => <div className={styles.resultSkeleton} role="status">
   <span className="visually-hidden">Updating ticket result…</span>
@@ -44,7 +45,6 @@ const DetailsSkeleton = () => <div role="status">
 export default function CheckTicket() {
   const params = useSearchParams();
   const mockPreview = process.env.NODE_ENV === "development" && params.get("preview") === "group";
-  const dispatch = useDispatch();
   const video = useRef(null);
   const busy = useRef(false);
   const blocked = useRef(false);
@@ -110,12 +110,12 @@ export default function CheckTicket() {
       try {
         const response = await browserFetch("/api/future-event/scanner-events", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message || "Events could not be loaded.");
+        if (!response.ok) throw Object.assign(new Error(data.message || "Events could not be loaded."), { status: response.status });
         setEvents((data.events || [])
           .filter((event) => !["draft", "archived"].includes(String(event.status || "").trim().toLowerCase()))
           .sort((first, second) => new Date(second.correctedDate || second.date || 0) - new Date(first.correctedDate || first.date || 0)));
       } catch (error) {
-        if (!controller.signal.aborted) setEventsError(error.name === "TimeoutError" ? "Loading events timed out. Refresh to try again." : error.message || "Events could not be loaded.");
+        if (!controller.signal.aborted) setEventsError(scannerErrorMessage(error, "Events could not be loaded. Refresh to try again."));
       } finally {
         if (!controller.signal.aborted) setEventsLoading(false);
       }
@@ -127,8 +127,7 @@ export default function CheckTicket() {
   const reportError = useCallback((message) => {
     blocked.current = true;
     setResult({ outcome: "error", message });
-    dispatch(showNotification({ severity: "error", detail: message }));
-  }, [dispatch]);
+  }, []);
 
   const check = useCallback(async (ticket, count) => {
     if (busy.current || !activeEventId) return;
@@ -161,14 +160,14 @@ export default function CheckTicket() {
         signal: AbortSignal.timeout(15000),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Check-in could not be confirmed.");
+      if (!response.ok) throw Object.assign(new Error(data.message || "Check-in could not be confirmed."), { status: response.status });
       blocked.current = ["choose_quantity", "confirm_required"].includes(data.outcome);
       setResult(data);
       if (data.outcome === "present") window.dispatchEvent(new CustomEvent("bgsnl:guest-list-changed", { detail: { eventId: data.eventId } }));
       setQuantity(1);
       if (data.outcome === "present") navigator.vibrate?.(80);
     } catch (error) {
-      reportError(error.name === "TimeoutError" ? "Connection timed out. Check this ticket again before admitting anyone." : error.message);
+      reportError(scannerErrorMessage(error, "Check-in could not be confirmed. Check this ticket again before admitting anyone."));
     } finally {
       busy.current = false;
       setPending(false);
@@ -194,18 +193,17 @@ export default function CheckTicket() {
           signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]),
         });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message || "Ticket details could not be loaded.");
+        if (!response.ok) throw Object.assign(new Error(data.message || "Ticket details could not be loaded."), { status: response.status });
         if (!controller.signal.aborted) setTicketDetails(data.ticketDetails || []);
       } catch (error) {
         if (controller.signal.aborted) return;
-        const message = error.name === "TimeoutError" ? "Loading ticket details timed out. Try again." : error.message;
+        const message = scannerErrorMessage(error, "Ticket details could not be loaded. Try again.");
         setDetailsError(message);
-        dispatch(showNotification({ severity: "error", detail: message }));
       }
     }
     void loadDetails();
     return () => controller.abort();
-  }, [extended, result, pending, activeEventId, mockPreview, detailsAttempt, dispatch]);
+  }, [extended, result, pending, activeEventId, mockPreview, detailsAttempt]);
 
   const acceptScan = useCallback((raw) => {
     if (busy.current || blocked.current || lastScan.current === raw) return;

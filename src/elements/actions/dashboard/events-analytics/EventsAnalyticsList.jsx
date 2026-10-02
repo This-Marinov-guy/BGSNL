@@ -231,21 +231,15 @@ const EventsAnalyticsList = () => {
 
   return (
     <>
-      <div
-        className="d-flex justify-content-between align-items-center mb--30 flex-wrap"
-        style={{ gap: "15px" }}
-      >
-        <h1 className="center_text" style={{ margin: 0 }}>
-          Event analytics
-        </h1>
-        <button
-          className="rn-button-style--2 rn-btn-green"
-          onClick={() => exportEventsCSV(events)}
-          disabled={loading || events.length === 0}
-        >
-          <span>Export Report</span>
-        </button>
-      </div>
+      <header className="event-workspace-heading event-dashboard-heading">
+        <div><h1>Event analytics</h1></div>
+        <div className="workspace-heading-actions">
+          <button type="button" className="rn-button-style--2 rn-btn-green"
+            onClick={() => exportEventsCSV(events)} disabled={loading || events.length === 0}>
+            <span>Export report</span>
+          </button>
+        </div>
+      </header>
 
       <Filter showRegion={isAdmin} onClear={(current) => {
         current.delete("from");
@@ -278,7 +272,7 @@ const EventsAnalyticsList = () => {
       </Filter>
 
       {/* Summary Panels */}
-      <div className="row mb--30">
+      <div className="row mb--30 dashboard-metrics">
         <div className="col-lg-3 col-md-6 col-12 mb--15">
           <div className="dashboard-stat-card">
             <p className="dashboard-stat-card__label">Total Revenue</p>

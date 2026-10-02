@@ -186,14 +186,9 @@ const PwcPartner = ({ initialInternships = [] }) => {
           </div>
 
           {pwcInternships.length > 0 ? (
-            <div className="row">
+            <div className="internships-grid internships-grid--pwc">
               {pwcInternships.map((internship) => (
-                <div
-                  key={internship._id || internship.id}
-                  className="col-lg-6 col-12"
-                >
-                  <InternshipCard internship={internship} />
-                </div>
+                <InternshipCard key={internship._id || internship.id} internship={internship} />
               ))}
             </div>
           ) : (

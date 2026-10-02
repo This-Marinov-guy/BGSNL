@@ -18,6 +18,9 @@ const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), {
 const TICKETS_PER_PAGE = 4;
 
 export function MembershipCardFront({ card, qrImage }) {
+  const membershipFontSize = card.membershipLabel.length > 50
+    ? spec.design.typography.membershipLabel.longLabelFontSize
+    : spec.design.typography.membershipLabel.fontSize;
   return (
           <article className={`${styles.card} ${styles.membershipCard}`} aria-label="Digital membership card">
             <Image className={styles.background} src="/assets/wallet-cards/v1/card-background.png" alt="" fill sizes="(max-width: 600px) 100vw, 540px" priority />
@@ -27,7 +30,7 @@ export function MembershipCardFront({ card, qrImage }) {
             </div>
             <div className={styles.memberText}>
               <h2 className={archive.className} style={{ fontSize: `${spec.design.typography.name.fontSize / 10.8}cqw` }}>{card.firstName} {card.surname}</h2>
-              <p className={spartan.className} style={{ fontSize: `${spec.design.typography.membershipLabel.fontSize / 10.8}cqw` }}>{card.membershipLabel}</p>
+              <p className={spartan.className} style={{ fontSize: `${membershipFontSize / 10.8}cqw` }}>{card.membershipLabel}</p>
             </div>
             <div className={styles.qr}><Image src={qrImage} alt="Membership card QR code" width={384} height={384} unoptimized /></div>
           </article>

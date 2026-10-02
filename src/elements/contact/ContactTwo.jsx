@@ -7,9 +7,9 @@ import {
 } from "../../util/functions/seo-helpers";
 import ImageFb from "../ui/media/ImageFb";
 import ContactForm from "./ContactForm";
+import RegionEmailLink from "./RegionEmailLink";
 
 const ContactTwo = ({
-  contactEmail,
   regionKey,
   regionLogo,
   regionName,
@@ -74,9 +74,7 @@ const ContactTwo = ({
                 width={160}
               />
 
-              <a className="contact-email-link" href={`mailto:${contactEmail}`}>
-                <span className="type-body">{contactEmail}</span>
-              </a>
+              <RegionEmailLink className="contact-email-link type-body" region={regionKey} />
             </div>
 
             {networkLinks.length > 0 ? (
@@ -126,7 +124,6 @@ const ContactTwo = ({
 };
 
 ContactTwo.propTypes = {
-  contactEmail: PropTypes.string.isRequired,
   regionKey: PropTypes.string.isRequired,
   regionLogo: PropTypes.string.isRequired,
   regionName: PropTypes.string.isRequired,

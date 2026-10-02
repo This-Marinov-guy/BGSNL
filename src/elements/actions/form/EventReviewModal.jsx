@@ -34,7 +34,7 @@ function ReviewImage({ value, label, className = "", imageClassName = "", showCa
 }
 ReviewImage.propTypes = { className: PropTypes.string, imageClassName: PropTypes.string, label: PropTypes.string.isRequired, showCaption: PropTypes.bool, value: PropTypes.any };
 
-export default function EventReviewModal({ values, extraImages = [], onCancel, onSubmit, draftAction, allowCloseDuringSubmit = false, disabled = false, updating = false }) {
+export default function EventReviewModal({ values, extraImages = [], onCancel, onSubmit, draftAction, promotionPrompt, allowCloseDuringSubmit = false, disabled = false, updating = false }) {
   const [busy, setBusy] = useState(false);
   const [stage, setStage] = useState(0);
   const [error, setError] = useState("");
@@ -80,6 +80,7 @@ export default function EventReviewModal({ values, extraImages = [], onCancel, o
 
   return <Dialog visible header={<div className="event-details-modal__heading"><div className="event-details-modal__title-row"><span className="event-card__status event-card__status--draft">Preview</span><h2>{title}</h2></div></div>} className="event-details-modal event-review-modal" contentClassName="event-details-modal__body" closable={canClose} closeOnEscape={canClose} dismissableMask={false} blockScroll suspended={draftOpen} onHide={close}>
     <div className="event-details-modal__content">
+      {promotionPrompt}
       {error && <p className="event-review-error" role="alert">{error}</p>}
       <div className="event-details-modal__actions" aria-label="Event actions" role="group">
         <button type="button" className="event-form-button event-form-button--ghost" disabled={disabled} onClick={close}>Continue editing</button>
@@ -136,4 +137,4 @@ export default function EventReviewModal({ values, extraImages = [], onCancel, o
     </div>
   </Dialog>;
 }
-EventReviewModal.propTypes = { values: PropTypes.object.isRequired, extraImages: PropTypes.array, onCancel: PropTypes.func.isRequired, onSubmit: PropTypes.func.isRequired, draftAction: PropTypes.element, allowCloseDuringSubmit: PropTypes.bool, disabled: PropTypes.bool, updating: PropTypes.bool };
+EventReviewModal.propTypes = { values: PropTypes.object.isRequired, extraImages: PropTypes.array, onCancel: PropTypes.func.isRequired, onSubmit: PropTypes.func.isRequired, draftAction: PropTypes.element, promotionPrompt: PropTypes.node, allowCloseDuringSubmit: PropTypes.bool, disabled: PropTypes.bool, updating: PropTypes.bool };

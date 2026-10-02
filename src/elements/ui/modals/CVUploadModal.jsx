@@ -25,7 +25,7 @@ const getPdfValidationMessage = (file) => {
   return "";
 };
 
-const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
+const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving, error = "" }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [shouldRemove, setShouldRemove] = useState(false);
   const fileInputRef = useRef(null);
@@ -106,6 +106,7 @@ const CVUploadModal = ({ visible, onHide, currentCV, onSave, isSaving }) => {
           id="cv-upload-form"
           onSubmit={handleSave}
         >
+        {error && <p role="alert">{error}</p>}
         {/* Current CV Status */}
         {currentCV && (
           <div className="mb--20">
@@ -199,6 +200,7 @@ CVUploadModal.propTypes = {
   currentCV: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   isSaving: PropTypes.bool.isRequired,
+  error: PropTypes.string,
 };
 
 export default CVUploadModal;

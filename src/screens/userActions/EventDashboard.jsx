@@ -5,7 +5,9 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ScrollToTop from "@/component/common/ScrollToTop";
-import { FiArrowLeft, FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import { FiChevronUp } from "@/elements/ui/icons/IconlyIcons";
+import DashboardNavigation from "@/screens/userActions/DashboardNavigation";
+import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import EventList from "@/elements/actions/dashboard/open-events/EventList";
 import { selectUser } from "@/redux/user";
@@ -33,12 +35,9 @@ export default function EventDashboard() {
 
   return <>
     <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
-    <main className="container user-workspace-page event-admin-page">
-      <nav className={styles.views} aria-label="Event administration">
-        <Link className={styles.backLink} href="/user/dashboard" aria-label="Back to administration">
-          <FiArrowLeft size={24} aria-hidden />
-          <span>Administration</span>
-        </Link>
+    <main className={`container user-workspace-page event-admin-page ${workspace.page}`}>
+      <DashboardNavigation />
+      <nav className={`${styles.views} ${workspace.viewNavigation}`} aria-label="Event administration">
         <div className={styles.viewTabs}>
             <Link href={viewUrl("")} aria-current={!analytics ? "page" : undefined} scroll={false}>Manage events</Link>
             {canViewAnalytics &&

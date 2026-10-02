@@ -28,6 +28,7 @@ export default function ConnectedAccounts() {
   const [password, setPassword] = useState("");
   const [challenge, setChallenge] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [actionError, setActionError] = useState("");
   const [busy, setBusy] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const submitting = useRef(false);
@@ -35,7 +36,12 @@ export default function ConnectedAccounts() {
   const statusRetryRequested = useRef(false);
   useSecurityActionNotice(busy && !challenge, google?.connected ? "Verifying your password and disconnecting Google…" : "Verifying your password…");
 
-  const notifyError = useCallback((message) => {
+  const notifyError = useCallback((failure) => {
+    if (failure?.systemFailure) {
+      setActionError("Google account settings could not be updated. Please try again.");
+      return;
+    }
+    const message = typeof failure === "string" ? failure : failure?.message;
     dispatch(showNotification({
       severity: "error",
       detail: message || "Google sign-in could not be completed. Please try again.",
@@ -57,13 +63,14 @@ export default function ConnectedAccounts() {
     }).catch((failure) => {
       if (active) {
         setLoadFailed(true);
-        if (interactive) notifyError(failure?.message);
+        if (interactive) notifyError(failure);
       }
     });
     return () => { active = false; };
   }, [session?.userId, session?.sessionVersion, attempt, notifyError]);
 
   const finish = (response, message) => {
+    setActionError("");
     setGoogle(response.google); setEditing(false); setChallenge(null); setPassword("");
     if (response.session) { dispatch(refreshSession(response.session)); announceSessionChange(); }
     dispatch(showNotification({ severity: "success", detail: message }));
@@ -76,6 +83,7 @@ export default function ConnectedAccounts() {
       return;
     }
     submitting.current = true; setBusy(true);
+    setActionError("");
     try {
       if (google.connected) {
         const response = await googleAuthRequest("google/disconnect", { password }, session);
@@ -85,16 +93,17 @@ export default function ConnectedAccounts() {
         const response = await googleAuthRequest("google/link/challenge", { password, proof }, session);
         if (mounted.current) { setChallenge({ ...response, proof }); setPassword(""); }
       }
-    } catch (failure) { if (mounted.current) notifyError(failure?.message); }
+    } catch (failure) { if (mounted.current) notifyError(failure); }
     finally { submitting.current = false; if (mounted.current) setBusy(false); }
   };
   const complete = async (credential) => {
     if (submitting.current || !challenge) return;
     submitting.current = true; setBusy(true);
+    setActionError("");
     try {
       const response = await googleAuthRequest("google/link", { credential, challengeId: challenge.challengeId, proof: challenge.proof }, session);
       if (mounted.current) finish(response, "Google account connected.");
-    } catch (failure) { if (mounted.current) { notifyError(failure?.message); setChallenge(null); } }
+    } catch (failure) { if (mounted.current) { notifyError(failure); setChallenge(null); } }
     finally { submitting.current = false; if (mounted.current) setBusy(false); }
   };
 
@@ -152,6 +161,7 @@ export default function ConnectedAccounts() {
         </div>
       </div>
       {loadFailed && <LoadErrorBanner message="Connected accounts could not be loaded. Your password is still available." onRetry={() => { statusRetryRequested.current = true; setAttempt((value) => value + 1); }} />}
+      {actionError && <p role="alert">{actionError}</p>}
       <PasskeySettings />
     </section>
   );

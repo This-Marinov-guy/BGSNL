@@ -35,8 +35,10 @@ const UserCard = ({ user, onUserRefresh }) => {
   const [isEditingQuote, setIsEditingQuote] = useState(false);
   const [quoteValue, setQuoteValue] = useState(user?.quote || "");
   const [isSavingQuote, setIsSavingQuote] = useState(false);
+  const [quoteError, setQuoteError] = useState("");
   const [showCVModal, setShowCVModal] = useState(false);
   const [isSavingCV, setIsSavingCV] = useState(false);
+  const [cvError, setCvError] = useState("");
   const [cvModalKey, setCvModalKey] = useState(0);
   const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
@@ -54,6 +56,7 @@ const UserCard = ({ user, onUserRefresh }) => {
 
   const handleSaveQuote = async (event) => {
     event.preventDefault();
+    setQuoteError("");
     try {
       setIsSavingQuote(true);
       const response = await sendRequest("user/alumni-quote", "PATCH", {
@@ -74,15 +77,9 @@ const UserCard = ({ user, onUserRefresh }) => {
         if (onUserRefresh) {
           refreshUser(onUserRefresh);
         }
-      }
-    } catch (err) {
-      dispatch(
-        showNotification({
-          severity: "error",
-          detail: "Failed to save quote. Please try again.",
-        })
-      );
-      console.error("Error saving quote:", err);
+      } else setQuoteError("Your quote could not be saved. Please try again.");
+    } catch {
+      setQuoteError("Your quote could not be saved. Please try again.");
     } finally {
       setIsSavingQuote(false);
     }
@@ -94,6 +91,7 @@ const UserCard = ({ user, onUserRefresh }) => {
   };
 
   const handleSaveCV = async (file, shouldRemove) => {
+    setCvError("");
     try {
       setIsSavingCV(true);
 
@@ -159,15 +157,9 @@ const UserCard = ({ user, onUserRefresh }) => {
         if (onUserRefresh) {
           refreshUser(onUserRefresh);
         }
-      }
-    } catch (err) {
-      dispatch(
-        showNotification({
-          severity: "error",
-          detail: "Failed to update CV. Please try again.",
-        })
-      );
-      console.error("Error updating CV:", err);
+      } else setCvError("Your CV could not be updated. Please try again.");
+    } catch {
+      setCvError("Your CV could not be updated. Please try again.");
     } finally {
       setIsSavingCV(false);
     }
@@ -309,6 +301,7 @@ const UserCard = ({ user, onUserRefresh }) => {
 
             {isEditingQuote ? (
               <form onSubmit={handleSaveQuote}>
+                {quoteError && <p role="alert">{quoteError}</p>}
                 <textarea
                   className="rn-form-control"
                   name="quote"
@@ -454,6 +447,7 @@ const UserCard = ({ user, onUserRefresh }) => {
           currentCV={cvDocument}
           onSave={handleSaveCV}
           isSaving={isSavingCV}
+          error={cvError}
         />
       </div>
     </article>

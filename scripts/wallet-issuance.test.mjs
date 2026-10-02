@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, verify } from "node:crypto";
-import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import nextEnv from "@next/env";
 import sharp from "sharp";
-import { appleWordmark, createApplePass, googleClass, googleObject, prepareGooglePass, signGoogleSaveUrl, validatePacket, walletPacketFromProxy, walletReadiness } from "../src/util/wallet/issuance.mjs";
+import { appleWordmark, createApplePass, googleClass, googleObject, nativeMembershipFields, prepareGooglePass, signGoogleSaveUrl, validatePacket, walletPacketFromProxy, walletReadiness } from "../src/util/wallet/issuance.mjs";
 
 const packet = { token: "abcdefghijklmnopqrstuv", publicUrl: "https://bulgariansociety.nl/c/abcdefghijklmnopqrstuv",
   card: { firstName: "Test", surname: "Member", membershipLabel: "Member of Groningen", status: "active" } };
@@ -66,6 +66,22 @@ test("Google payload shares the short QR and does not advertise a stale Active s
   assert.equal(object.subheader, undefined);
   assert.equal(object.hexBackgroundColor, "#D5E2D7");
   assert.match(object.logo.sourceUri.uri, /logo-nl-circle\.png$/);
+});
+
+test("native wallet fields split long leadership labels across available rows", () => {
+  const label = "Alumni Tier II & National Committee Member";
+  assert.deepEqual(nativeMembershipFields(label), {
+    membership: "Alumni Tier II", subtitle: "National Committee Member",
+    additional: [{ key: "role", label: "ROLE", value: "National Committee Member" }],
+  });
+  const object = googleObject({ ...packet, card: { ...packet.card, membershipLabel: label } },
+    { GOOGLE_WALLET_ISSUER_ID: "123456" });
+  assert.equal(object.textModulesData.find(item => item.id === "membership").body, "Alumni Tier II");
+  assert.equal(object.subheader.defaultValue.value, "National Committee Member");
+  assert.deepEqual(nativeMembershipFields("Committee Member of Leiden / The Hague"), {
+    membership: "Committee Member", subtitle: "Leiden / The Hague",
+    additional: [{ key: "region", label: "REGION", value: "Leiden / The Hague" }],
+  });
 });
 
 test("Google template shows membership without a status row on the front", () => {

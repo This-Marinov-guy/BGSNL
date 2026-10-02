@@ -5,9 +5,11 @@ export function createGoogleFeedbackGate() {
   return {
     begin: () => { active = true; },
     clear: () => { active = false; },
-    error: (message) => {
+    error: (failure) => {
       if (!active) return null;
       active = false;
+      if (failure?.systemFailure) return null;
+      const message = typeof failure === "string" ? failure : failure?.message;
       return { severity: "error", detail: message || "Google sign-in could not be completed. Please try again." };
     },
     notice: (message) => active ? { severity: "warn", detail: message } : null,

@@ -308,7 +308,7 @@ const MembersList = () => {
   return (
     <>
       <div
-        className="d-flex justify-content-between align-items-center mb--30 flex-wrap"
+        className="dashboard-statistics-toolbar"
         style={{ gap: "15px" }}
       >
         <h3 className="center_text" style={{ margin: 0 }}>
@@ -334,7 +334,7 @@ const MembersList = () => {
       </Filter>}
 
       {/* Summary Panels */}
-      <div className="row mb--30">
+      <div className="row mb--30 dashboard-metrics">
         <div className="col-lg-3 col-md-6 col-12 mb--15">
           <div className="dashboard-stat-card">
             <p className="dashboard-stat-card__label">

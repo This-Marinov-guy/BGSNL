@@ -40,6 +40,7 @@ const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
   const dispatch = useDispatch();
   const formId = useId();
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const submitting = useRef(false);
   const close = useCallback(() => { if (!submitting.current) onClose(); }, [onClose]);
 
@@ -150,6 +151,7 @@ const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
       formData.append("existingLogoUrl", selectedLogoUrl);
     }
 
+    setSaveError("");
     try {
       let responseData;
       if (isEdit) {
@@ -162,7 +164,10 @@ const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
         responseData = await sendRequest("internship/add", "POST", formData, {}, true, false);
       }
 
-      if (responseData?.status !== true) return;
+      if (responseData?.status !== true) {
+        setSaveError("The internship could not be saved. Please try again.");
+        return;
+      }
 
       dispatch(
         showNotification({
@@ -172,7 +177,7 @@ const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
       );
       onSaved();
     } catch {
-      dispatch(showNotification({ severity: "error", detail: "Something went wrong. Please try again." }));
+      setSaveError("The internship could not be saved. Please try again.");
     } finally {
       submitting.current = false;
       setSaving(false);
@@ -194,6 +199,7 @@ const InternshipForm = ({ internship, visible, onClose, onSaved }) => {
         </button>
       </div>}>
     <form id={formId} onSubmit={handleSubmit} aria-busy={saving}>
+      {saveError && <p role="alert">{saveError}</p>}
       <fieldset disabled={saving} inert={saving || undefined} style={{ margin: 0, padding: 0, border: 0, minWidth: 0 }}>
       <div className="row">
         {/* Left column */}

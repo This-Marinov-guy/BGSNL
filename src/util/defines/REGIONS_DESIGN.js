@@ -4,7 +4,6 @@ import {
   FaFlickr,
   FaInstagram,
   FaLinkedin,
-  FaMailBulk,
 } from "@/elements/ui/icons/IconlyIcons";
 
 export const BG_INDEX = 23;
@@ -43,19 +42,6 @@ export const REGION_SECOND_COLOR = {
   maastricht: "#381096",
   eindhoven: "#24632D",
   leiden_hague: "#034189",
-};
-
-export const REGION_EMAIL = {
-  netherlands: "info@bulgariansociety.nl",
-  support: "bgsn.tech.nl@gmail.com",
-  groningen: "bulgariansociety.gro@gmail.com",
-  rotterdam: "bulgariansociety.rtm@gmail.com",
-  leeuwarden: "bulgariansociety.lwd@gmail.com",
-  breda_tilburg: "bulgariansociety.bre@gmail.com",
-  amsterdam: "bulgariansociety.ams@gmail.com",
-  maastricht: "bulgariansociety.maas@gmail.com",
-  eindhoven: "bulgariansociety.eind@gmail.com",
-  leiden_hague: "bulgariansociety.leiden.hague@gmail.com",
 };
 
 export const REGION_GO_FUND_ME = {
@@ -108,11 +94,6 @@ export const REGION_SOCIALS = {
     {
       Social: <FaLinkedin />,
       link: "https://www.linkedin.com/company/bulgarian-society-netherlands",
-    },
-    {
-      special: true,
-      Social: <FaMailBulk />,
-      link: "mailto:" + REGION_EMAIL.netherlands,
     },
     {
       special: true,

@@ -105,6 +105,8 @@
   position: relative;
   display: inline-flex;
   flex: 0 0 auto;
+  padding: 0;
+  background: transparent;
 
   select {
     width: auto;

@@ -3,14 +3,14 @@
 .page.page { margin-top: clamp(7rem, 10vw, 9rem); padding-bottom: 4rem; }
 .heading { margin-bottom: 2rem; max-width: 48rem; }
 .heading > a { color: #087462; font-weight: 600; }
-.heading h1 { margin: 1rem 0 .75rem; }
+.heading h1 { margin: 0; }
 .heading p, .card p, .banner p { color: #607168; line-height: 1.65; margin: 0; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1.25rem; grid-auto-rows: 1fr; align-items: stretch; }
-.card { display: flex; flex-direction: column; padding: 1.75rem; border-radius: 1rem; background: #f0f5f1; color: #142d22; transition: background 150ms ease, transform 150ms ease; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1.25rem; align-items: start; }
+.card { display: flex; flex-direction: column; padding: 1.25rem; border-radius: 1rem; background: #f0f5f1; color: #142d22; transition: background 150ms ease, transform 150ms ease; }
 .card:hover { background: #e4efe7; color: #142d22; transform: translateY(-2px); }
 .card:focus-visible { outline: 3px solid #087462; outline-offset: 4px; }
 .card h2, .banner h2 { font-size: 1.5rem; margin: 0 0 .65rem; }
-.card > span { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; color: #087462; font-weight: 700; }
+.card > span { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; color: #087462; font-weight: 700; }
 .card > span > span {
   display: inline-flex;
   align-items: center;
@@ -40,7 +40,7 @@
 @media (max-width: 640px) { .banner { align-items: flex-start; flex-direction: column; padding: 1.5rem; gap: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } .card > span > span { transition: none; } }
 
-.card p { flex: 1; }
+.card p { flex: 0 1 auto; }
 .views { display: flex; align-items: center; gap: .75rem; min-width: 0; margin-bottom: 1.5rem; }
 .viewTabs { @include section-tabs.navigation; flex: 1; }
 .backLink {
@@ -73,16 +73,16 @@
   .heading h1 {
     font-size: clamp(1.9rem, 11vw, 2.55rem);
     line-height: 0.95;
-    margin: 0.35rem 0 0.45rem;
+    margin: 0;
   }
 
   .grid {
-    gap: 0.6rem;
+    gap: 0.75rem;
   }
 
   .card {
     border-radius: 0.55rem;
-    padding: 0.85rem;
+    padding: 1rem;
   }
 
   .card h2,
@@ -98,7 +98,7 @@
   .banner {
     border-radius: 0.55rem;
     margin-top: 0.75rem;
-    padding: 0.85rem;
+    padding: 1rem;
   }
 
   .views {

@@ -98,7 +98,7 @@ export default function BulkRolesImport({ onClose, onApplied }) {
       </ol>
       {!preview ? <form id="account-role-import-form" onSubmit={review} className={styles.importForm}>
         <p>Upload an Excel sheet to match members or alumni by email and update their editable roles.</p>
-        <p>List the complete set of editable roles for each account. Enter <strong>none</strong> to remove all editable roles. Base and protected roles are kept.</p>
+        <p>Enter <strong>support</strong> to grant the Support role or <strong>none</strong> to remove it. Other roles stay unchanged. Only Admin and Super Admin can import role changes.</p>
         <button type="button" className={styles.templateLink} disabled={downloading} onClick={downloadTemplate}>{downloading ? "Downloading template…" : "Download Excel template"}</button>
         <label className={styles.importFile} htmlFor="account-role-import-file">
           <strong>Excel file</strong>
@@ -113,7 +113,7 @@ export default function BulkRolesImport({ onClose, onApplied }) {
           {preview.rows.map(row => <article key={row.row} className={styles.importRow} data-status={row.status}>
             <div className={styles.importRowHeading}><strong>Row {row.row}: {row.email || "Missing email"}</strong><span>{row.status === "change" ? "Change" : row.status === "unchanged" ? "Unchanged" : "Error"}</span></div>
             {row.type && <p>{row.name ? `${row.name} · ` : ""}{row.type === "alumni" ? "Alumni" : "Member"}</p>}
-            {row.status === "error" ? <p className={styles.importRowError}>{row.message}</p> : <dl><div><dt>Current editable roles</dt><dd>{roleList(row.currentRoles)}</dd></div><div><dt>After import</dt><dd>{roleList(row.requestedRoles)}</dd></div></dl>}
+            {row.status === "error" ? <p className={styles.importRowError}>{row.message}</p> : <dl><div><dt>Current Support role</dt><dd>{roleList(row.currentRoles)}</dd></div><div><dt>After import</dt><dd>{roleList(row.requestedRoles)}</dd></div></dl>}
           </article>)}
         </div>
       </div>}

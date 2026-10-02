@@ -1,4 +1,7 @@
 import InfoHint from "../../ui/icons/InfoHint";
+import EventCampaignModal from "../dashboard/open-events/EventCampaignModal";
+import EventPromotionCampaignPrompt from "./EventPromotionCampaignPrompt";
+import { hasEventPromotionImprovement } from "@/util/functions/event-promotion-campaign.mjs";
 import { optionalPromotionDateSchema } from "@/util/functions/event-promotion-dates.mjs";
 import { eventEditSection, focusEventEditSection } from "@/util/functions/event-edit-sections.mjs";
 import EventPriceBadges from "./EventPriceBadges";
@@ -452,6 +455,8 @@ const EventForm = (props) => {
   const { loading, sendRequest } = useHttpClient();
 
   const [reviewValues, setReviewValues] = useState(null);
+  const [reviewPromotionEmail, setReviewPromotionEmail] = useState(false);
+  const [campaignEvent, setCampaignEvent] = useState(null);
   const submissionRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
   const [movingStep, setMovingStep] = useState(false);
@@ -1096,7 +1101,10 @@ const EventForm = (props) => {
         }
 
         if (!stayOnPage) {
-          navigate("/user/dashboard/events");
+          if (!saveAsDraft && reviewPromotionEmail && hasEventPromotionImprovement(initialData, values)) {
+            setReviewValues(null);
+            setCampaignEvent(responseData.event);
+          } else navigate("/user/dashboard/events");
           dispatch(
             showNotification(
               saveAsDraft
@@ -1221,6 +1229,7 @@ const EventForm = (props) => {
 
   return (
     <>
+      {campaignEvent && <EventCampaignModal event={campaignEvent} open initialKind="limited-offer" onClose={() => { setCampaignEvent(null); navigate("/user/dashboard/events"); }} />}
       <ValidatedFormik
         highlightTouchedErrors
         validationViewKey={currentStep}
@@ -1674,6 +1683,7 @@ const EventForm = (props) => {
               <EventUpsell currentEventId={eventId ?? initialData?.id ?? draftId} active={currentStep === 2} />
             </section>
 
+            {props.edit && hasEventPromotionImprovement(initialData, values) && <EventPromotionCampaignPrompt checked={reviewPromotionEmail} onChange={setReviewPromotionEmail} />}
             <footer className="event-form-actions">
               <Link
                 to="/user/dashboard/events"
@@ -1741,6 +1751,7 @@ const EventForm = (props) => {
             </fieldset>
           </Form>
           {reviewValues && <EventReviewModal
+            promotionPrompt={props.edit && hasEventPromotionImprovement(initialData, reviewValues) ? <EventPromotionCampaignPrompt checked={reviewPromotionEmail} onChange={setReviewPromotionEmail} /> : null}
             values={reviewValues}
             extraImages={extraImagesTouched ? extraImagesData.all ?? [] : savedImages}
             disabled={isBusy}

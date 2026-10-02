@@ -5,6 +5,9 @@ import path from "node:path";
 import { PKPass } from "passkit-generator";
 import { GoogleAuth } from "google-auth-library";
 import sharp from "sharp";
+import { nativeMembershipFields } from "./membership-fields.mjs";
+
+export { nativeMembershipFields } from "./membership-fields.mjs";
 
 export const WALLET_ORIGIN = "https://bulgariansociety.nl";
 // Version the approved layout instead of changing every installed pass's class
@@ -95,8 +98,10 @@ export async function createApplePass(packet, env = process.env) {
     sharingProhibited: true, voided: packet.card.status !== "active",
   });
   pass.type = "generic";
+  const fields = nativeMembershipFields(packet.card.membershipLabel);
   pass.primaryFields.push({ key: "name", value: `${packet.card.firstName} ${packet.card.surname}`, textAlignment: "PKTextAlignmentCenter" });
-  pass.secondaryFields.push({ key: "membership", label: "MEMBERSHIP", value: packet.card.membershipLabel, textAlignment: "PKTextAlignmentLeft" });
+  pass.secondaryFields.push({ key: "membership", label: "MEMBERSHIP", value: fields.membership, textAlignment: "PKTextAlignmentLeft" });
+  for (const field of fields.additional) pass.auxiliaryFields.push(field);
   pass.backFields.push({ key: "verify", label: "Live membership card", value: packet.publicUrl },
     { key: "notice", label: "Verification", value: "Scan the QR code for current Active / Locked status. This saved pass is not proof of current benefits." });
   pass.setBarcodes({ format: "PKBarcodeFormatQR", message: packet.publicUrl, messageEncoding: "iso-8859-1" });
@@ -119,16 +124,18 @@ export function googleClass(env = process.env) {
 
 export function googleObject(packet, env = process.env) {
   validatePacket(packet);
+  const fields = nativeMembershipFields(packet.card.membershipLabel);
   const localized = (value) => ({ defaultValue: { language: "en", value } });
   const issuer = env.GOOGLE_WALLET_ISSUER_ID;
   return {
     id: `${issuer}.bgsnl_v2_${packet.token}`, classId: `${issuer}.${GOOGLE_WALLET_TEMPLATE}`, state: packet.card.status === "active" ? "ACTIVE" : "INACTIVE",
     cardTitle: localized("Bulgarian society Netherlands"), header: localized(`${packet.card.firstName} ${packet.card.surname}`),
+    ...(fields.subtitle ? { subheader: localized(fields.subtitle) } : {}),
     hexBackgroundColor: "#D5E2D7",
     logo: { sourceUri: { uri: `${WALLET_ORIGIN}/assets/images/logo/logo-nl-circle.png` }, contentDescription: localized("Bulgarian Society Netherlands") },
     barcode: { type: "QR_CODE", value: packet.publicUrl },
     textModulesData: [
-      { id: "membership", header: "MEMBERSHIP", body: packet.card.membershipLabel },
+      { id: "membership", header: "MEMBERSHIP", body: fields.membership },
       { id: "notice", header: "Verification", body: "Scan the QR code for current Active / Locked status. This saved pass is not proof of current benefits." },
     ],
     linksModuleData: { uris: [{ id: "card", uri: packet.publicUrl, description: "BGSNL membership card" }] },
@@ -160,8 +167,8 @@ export async function prepareGooglePass(client, packet, env = process.env, signa
   const template = googleClass(env);
   await ensure("genericClass", object.classId, template);
   await ensure("genericObject", object.id, object);
-  // Clear the legacy subheader now that membership has its own labelled row.
-  await request({ url: `${base}/genericObject/${object.id}`, method: "PATCH", data: { ...object, subheader: null } });
+  // Clear legacy subheaders on ordinary cards while showing leadership on role cards.
+  await request({ url: `${base}/genericObject/${object.id}`, method: "PATCH", data: { ...object, subheader: object.subheader || null } });
   return object.id;
 }
 

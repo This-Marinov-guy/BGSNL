@@ -5,13 +5,14 @@ import CustomSpinner from "../../../ui/loading/CustomSpinner";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../../../redux/notification";
-import { SUCCESS_STYLE, WARNING_STYLE } from "../../../../util/defines/common";
+import { SUCCESS_STYLE } from "../../../../util/defines/common";
 
 const initialValue = { name: "", surname: "", email: "" };
 
 const GenerateTicketsModal = ({ visible, onHide, event }) => {
   const [inputs, setInputs] = useState([initialValue]);
   const [loading, setLoading] = useState(false);
+  const [generationError, setGenerationError] = useState("");
 
   const { sendRequest } = useHttpClient();
 
@@ -42,6 +43,7 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
   const handleSubmit = async (submitEvent) => {
     submitEvent.preventDefault();
     setLoading(true);
+    setGenerationError("");
     let success = false;
 
     for (let i = 0; i < inputs.length; i++) {
@@ -71,11 +73,11 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
           formData
         );
 
-        if (responseData.status) {
+        if (responseData?.status) {
           success = true;
         }
-      } catch (err) {
-        // The shared request hook reports individual ticket failures.
+      } catch {
+        // Keep the form available for a retry.
       }
     }
 
@@ -89,12 +91,7 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
       );
       setInputs([initialValue]);
     } else {
-      dispatch(
-        showNotification({
-          ...WARNING_STYLE,
-          summary: "No tickets were generated!",
-        })
-      );
+      setGenerationError("No tickets were generated. Please check the details and try again.");
     }
 
     setLoading(false);
@@ -131,6 +128,7 @@ const GenerateTicketsModal = ({ visible, onHide, event }) => {
       footer={actions}
     >
       <form id="generate-guest-tickets-form" onSubmit={handleSubmit}>
+        {generationError && <p role="alert">{generationError}</p>}
         {inputs.map((inputSet, index) => (
           <div className="multi-input-set mt--10" key={index}>
             <div className="hor_section_nospace mobile">

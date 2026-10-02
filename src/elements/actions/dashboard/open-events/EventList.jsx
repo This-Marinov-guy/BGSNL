@@ -261,7 +261,6 @@ const EventList = () => {
         <header className="event-workspace-heading event-dashboard-heading">
             <div>
                 <h1>Events dashboard</h1>
-                <p>Review drafts, schedules and ticket status without leaving the overview.</p>
             </div>
             <div className="workspace-heading-actions">
                 {canAddEvents && (

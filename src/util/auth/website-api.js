@@ -58,7 +58,7 @@ export async function websiteApi(request, parts) {
   const activity = path === "session/activity" && request.method === "POST";
   const logout = path === "session/logout" && request.method === "POST";
   const apiPath = restore ? (restoreAccount ? "user/current" : "user/get-subscription-status") : browserApiPath(parts, request.method);
-  if (!apiPath && !activity && !logout) return json({ message: "Not found" }, 404);
+  if (!apiPath && !activity && !logout) return json({ message: "This request could not be completed." }, 404);
   const forwarded = new Headers({ "x-bgsnl-server-key": secret, "x-bgsnl-browser-proxy": "1", Origin: origin, Accept: "application/json" });
   const ipHeader = process.env.VERCEL ? "x-forwarded-for" : process.env.BGSNL_TRUSTED_CLIENT_IP_HEADER;
   const ip = ipHeader ? request.headers.get(ipHeader)?.trim() : production ? null : "127.0.0.1";
@@ -130,17 +130,31 @@ export async function websiteApi(request, parts) {
         upstream = await send();
       }
     }
-    if (upstream.status >= 300 && upstream.status < 400) return withCredentials(json({ message: "Unexpected API redirect" }, 502));
+    if (upstream.status >= 300 && upstream.status < 400) {
+      console.error("Website API unexpected redirect", { method: request.method, path: apiPath, status: upstream.status });
+      return withCredentials(json({ message: "We could not complete your request. Please try again." }, 502));
+    }
+    if (upstream.status === 401 && !login && upstream.headers.get("x-bgsnl-session-invalid") === "1") {
+      return clear(json({ message: "Your session has ended. Please sign in again." }, 401));
+    }
+    // A business 401 has not invalidated the login. During restoration it is
+    // an unavailable read, not evidence that the browser session ended.
+    if (restore && upstream.status === 401) {
+      console.error("Website API account restoration rejected without session invalidation", { path: apiPath });
+      return withCredentials(json({ message: "The service is temporarily unavailable. Please try again." }, 503));
+    }
     let response;
     if (liveStream && upstream.ok && upstream.headers.get("content-type")?.includes("text/event-stream")) {
       response = new NextResponse(upstream.body, { status: 200, headers: { ...headers,
         "Content-Type": "text/event-stream", "Cache-Control": "private, no-store, no-transform", "X-Accel-Buffering": "no" } });
     } else if (upstream.headers.get("content-type")?.includes("application/json")) {
-      const data = JSON.parse((await boundedBody(upstream.body, 20 * 1024 * 1024)).toString("utf8"));
+      let data = JSON.parse((await boundedBody(upstream.body, 20 * 1024 * 1024)).toString("utf8"));
       if (upstream.status === 404 && data?.message === "No action found - please try different path!") {
         console.error("Website API upstream route missing", { method: request.method, path: apiPath, upstreamPath: target.pathname });
-        data.message = "Something went wrong - please try again!";
       }
+      if (upstream.status === 408 || upstream.status === 429 || upstream.status >= 500) {
+        data = { message: upstream.status === 429 ? "Please wait a moment and try again." : "We could not complete your request. Please try again." };
+      } else if (upstream.status === 404) data = { message: "The requested item could not be found." };
       const packet = { token: data.token, refreshToken: data.refreshToken };
       delete data.token;
       delete data.refreshToken;
@@ -163,7 +177,6 @@ export async function websiteApi(request, parts) {
       response.headers.set("Content-Disposition", "attachment");
       response.headers.set("Content-Security-Policy", "default-src 'none'; sandbox");
     } else response = json({ message: "The service could not complete your request. Please try again." }, upstream.status);
-    if (upstream.status === 401 && !login) return clear(response);
     if (upstream.headers.has("retry-after")) response.headers.set("Retry-After", upstream.headers.get("retry-after"));
     return withCredentials(response);
   } catch (error) {

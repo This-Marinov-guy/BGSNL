@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { TabView, TabPanel } from "@/compat/primereact";
 import { FaBriefcase } from "@/elements/ui/icons/IconlyIcons";
@@ -6,6 +6,7 @@ import Pagination from "../../common/Pagination";
 import InternshipCard from "../cards/InternshipCard";
 import SearchField from "../functional/SearchField";
 import { useHttpClient } from "../../../hooks/common/http-hook";
+import { LoadingSkeleton, LoadErrorBanner } from "../loading/LoadState";
 import UserTabHeader from "./UserTabHeader";
 
 const InternshipsTab = ({
@@ -14,8 +15,12 @@ const InternshipsTab = ({
   INIT_ITEMS_PER_PAGE,
 }) => {
   const { sendRequest } = useHttpClient();
+  const request = useRef(sendRequest);
+  request.current = sendRequest;
   const [activeIndex, setActiveIndex] = useState(0);
   const [internships, setInternships] = useState([]);
+  const [loadState, setLoadState] = useState("loading");
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [search, setSearch] = useState("");
 
   // Separate pagination state for each tab
@@ -26,13 +31,21 @@ const InternshipsTab = ({
   const [internationalRows, setInternationalRows] = useState(INIT_ITEMS_PER_PAGE);
 
   useEffect(() => {
-    const fetchInternships = async () => {
-      const data = await sendRequest("internship/list", "GET", null, {}, false, false);
-      const list = data?.internships;
-      if (list?.length) setInternships(list);
-    };
-    fetchInternships();
-  }, []);
+    let mounted = true;
+    setLoadState("loading");
+    request.current("internship/list", "GET", null, {}, false, false).then((data) => {
+      if (!mounted) return;
+      if (Array.isArray(data?.internships)) {
+        setInternships(data.internships);
+        setLoadState("loaded");
+      } else {
+        setLoadState("failed");
+      }
+    }).catch(() => {
+      if (mounted) setLoadState("failed");
+    });
+    return () => { mounted = false; };
+  }, [loadAttempt]);
 
   const normalizedSearch = search.trim().toLocaleLowerCase();
   const filteredInternships = normalizedSearch
@@ -62,6 +75,16 @@ const InternshipsTab = ({
       <p>{normalizedSearch ? "Try another company, position, location or keyword." : "Check back soon for new opportunities."}</p>
     </div>
   );
+
+  const renderContent = (list, category, first, rows, onPageChange) => {
+    if (loadState === "loading") {
+      return <LoadingSkeleton label="Loading internships" variant="cards" count={4} />;
+    }
+    if (loadState === "failed") {
+      return <LoadErrorBanner message="Internships could not be loaded." onRetry={() => setLoadAttempt((value) => value + 1)} />;
+    }
+    return list.length > 0 ? renderList(list, first, rows, onPageChange) : emptyState(category);
+  };
 
   const renderList = (list, first, rows, onPageChange) => {
     return (
@@ -126,36 +149,16 @@ const InternshipsTab = ({
           )}
           onTabChange={(e) => setActiveIndex(e.index)}
         >
-          <TabPanel header={`All (${filteredInternships.length})`}>
-            {filteredInternships.length > 0
-              ? renderList(filteredInternships, 0, filteredInternships.length, () => {})
-              : emptyState("available")}
+          <TabPanel header={loadState === "loaded" ? `All (${filteredInternships.length})` : "All"}>
+            {renderContent(filteredInternships, "available", 0, filteredInternships.length, () => {})}
           </TabPanel>
-          <TabPanel header={`Bulgarian (${bulgarianList.length})`}>
-            {bulgarianList.length > 0 ? (
-              renderList(
-                bulgarianList,
-                bulgarianFirst,
-                bulgarianRows,
-                handleBulgarianPageChange
-              )
-            ) : (
-              emptyState("Bulgarian")
-            )}
+          <TabPanel header={loadState === "loaded" ? `Bulgarian (${bulgarianList.length})` : "Bulgarian"}>
+            {renderContent(bulgarianList, "Bulgarian", bulgarianFirst, bulgarianRows, handleBulgarianPageChange)}
           </TabPanel>
           <TabPanel
-            header={`International & Remote (${internationalList.length})`}
+            header={loadState === "loaded" ? `International & Remote (${internationalList.length})` : "International & Remote"}
           >
-            {internationalList.length > 0 ? (
-              renderList(
-                internationalList,
-                internationalFirst,
-                internationalRows,
-                handleInternationalPageChange
-              )
-            ) : (
-              emptyState("international or remote")
-            )}
+            {renderContent(internationalList, "international or remote", internationalFirst, internationalRows, handleInternationalPageChange)}
           </TabPanel>
         </TabView>
       </div>

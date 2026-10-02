@@ -20,7 +20,8 @@ test("only explicitly known mock cards are returned", () => {
     const card = getTestCard(id, spec);
     assert.equal(card.mocked, true);
     assert.equal(card.status, id.endsWith("locked") ? "locked" : "active");
-    assert.equal(card.membershipLabel, id.startsWith("alumni") ? "Alumni Tier II" : "Member of Groningen");
+    assert.equal(card.membershipLabel, id === "alumni-committee-active" ? "Alumni Tier II & National Committee Member"
+      : id.startsWith("alumni") ? "Alumni Tier II" : "Member of Groningen");
     assert.equal(Object.hasOwn(card, "email"), false);
   }
 });
@@ -40,7 +41,11 @@ test("native drafts share QR URL and membership label, with locked mapped inacti
     assert.equal(drafts.google.genericObjects[0].barcode.value, url);
     assert.equal(drafts.apple.voided, card.status === "locked");
     assert.equal(drafts.google.genericObjects[0].state, card.status === "locked" ? "INACTIVE" : "ACTIVE");
-    assert.equal(drafts.apple.generic.secondaryFields[0].value, card.membershipLabel);
+    assert.equal(drafts.apple.generic.secondaryFields[0].value, id === "alumni-committee-active" ? "Alumni Tier II" : card.membershipLabel);
+    if (id === "alumni-committee-active") {
+      assert.equal(drafts.apple.generic.auxiliaryFields[0].value, "National Committee Member");
+      assert.equal(drafts.google.genericObjects[0].subheader.defaultValue.value, "National Committee Member");
+    }
     assert.match(drafts.apple.description, /TEST ONLY/);
   }
   assert.throws(() => buildPassDrafts({ mocked: false }, "https://example.com"));

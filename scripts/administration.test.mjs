@@ -13,11 +13,11 @@ test('administration overview follows the existing role scopes', () => {
   assert.deepEqual(available(['committee_member']), ['events']);
   assert.deepEqual(available(['active_member']), ['events']);
   assert.deepEqual(available(['board_member']), ['events', 'members']);
-  assert.deepEqual(available(['society_board_member']), ['events', 'members', 'internships']);
-  assert.deepEqual(available(['national_board_member']), ['events', 'members', 'internships']);
+  assert.deepEqual(available(['society_board_member']), ['events', 'members', 'internships', 'monthly-summary']);
+  assert.deepEqual(available(['national_board_member']), ['events', 'members', 'internships', 'monthly-summary']);
   assert.deepEqual(available(['regional_board_member']), ['events', 'members']);
   assert.deepEqual(available(['regional_committee_member']), ['events']);
-  assert.deepEqual(available(['national_committee_member']), ['events', 'members']);
+  assert.deepEqual(available(['national_committee_member']), ['events', 'members', 'monthly-summary']);
   assert.deepEqual(available(['developer']), ['monitoring']);
 });
 test('ordinary members reach access requests but cannot open admin panels', () => {

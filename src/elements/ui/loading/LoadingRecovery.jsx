@@ -24,7 +24,7 @@ export default function LoadingRecovery() {
   if (!isSlow) return null;
   return (
     <div className={styles.notice} aria-label="Loading help">
-      <LoadErrorBanner message="This is taking longer than expected." onRetry={() => window.location.reload()} showHome />
+      <LoadErrorBanner severity="warning" message="This is taking longer than expected." onRetry={() => window.location.reload()} showHome />
     </div>
   );
 }

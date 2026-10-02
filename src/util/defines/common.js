@@ -1,5 +1,4 @@
 import { capitalizeAfterSpace } from "../functions/capitalize";
-import { REGION_EMAIL } from "./REGIONS_DESIGN";
 
 // Browser traffic is same-origin; only the website server holds API credentials.
 export const serverEndpoint = "/api/v1/";
@@ -147,5 +146,3 @@ export const PAGE_TRANSLATION_TEXTS = {
 }
 
 // email attr
-export const BGSNL_CC_MAIL = `cc=${REGION_EMAIL.netherlands}`;
-export const BGSNL_INTERNSHIP_MAIL_SUBJECT = `subject=BGSNL%20Internship%20Program&${BGSNL_CC_MAIL}`;

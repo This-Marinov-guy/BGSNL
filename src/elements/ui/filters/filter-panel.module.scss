@@ -35,3 +35,5 @@
   .clear { justify-self: stretch; width: 100%; min-width: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .toggle svg, .clear { transition: none; } }
+
+.clearText { display: none; }

@@ -154,7 +154,7 @@ test("an upstream endpoint 404 uses a general message", async () => {
   const h = await harness({ upstream: async () => Response.json({ message: "No action found - please try different path!" }, { status: 404 }) });
   const response = await h.mutate("v1/security/login", { body: "{}" });
   assert.equal(response.status, 404);
-  assert.equal((await response.json()).message, "Something went wrong - please try again!");
+  assert.equal((await response.json()).message, "The requested item could not be found.");
 });
 test("requests without correct CSRF and same-origin proof never reach the API", async () => {
   const h = await harness({ credential: token() }); const csrf = await h.csrf();
@@ -232,13 +232,53 @@ test("account restoration returns the verified profile with a single upstream re
   assert.equal(data.celebrate, true);
   assert.equal(data.token, undefined);
 });
-test("expired cookies are not forwarded or restored and revoked cookies clear on API 401", async () => {
+test("expired cookies are not forwarded or restored and confirmed revocation clears the login", async () => {
   const timestamp = Math.floor(Date.now() / 1000) - 30 * 86400 - 1;
   const expired = await harness({ credential: token({ auth_time: timestamp, iat: timestamp, exp: timestamp + 30 * 86400 }) });
   assert.equal((await (await expired.request("session/current")).json()).session, null);
   assert.equal(expired.calls.length, 0); assert.equal(expired.jar.has(names.session), false);
-  const revoked = await harness({ credential: token(), upstream: async () => Response.json({ message: "Session revoked" }, { status: 401 }) });
-  assert.equal((await revoked.request("user/current")).status, 401); assert.equal(revoked.jar.has(names.session), false);
+  const revoked = await harness({ credential: token(), upstream: async () => Response.json({ message: "Session revoked" },
+    { status: 401, headers: { "X-BGSNL-Session-Invalid": "1" } }) });
+  const response = await revoked.request("user/current");
+  assert.equal(response.status, 401); assert.equal(revoked.jar.has(names.session), false);
+  assert.equal(response.headers.get("x-bgsnl-session-changed"), "1");
+  assert.equal((await response.json()).message, "Your session has ended. Please sign in again.");
+});
+test("business 401 retains the login, including when account restoration is rejected", async () => {
+  const credential = token();
+  const h = await harness({ credential, refresh: refreshToken, upstream: async () => Response.json({ message: "This action needs a different account" }, { status: 401 }) });
+  const denied = await h.request("user/current");
+  assert.equal(denied.status, 401);
+  assert.equal((await denied.json()).message, "This action needs a different account");
+  assert.equal(denied.headers.get("x-bgsnl-session-changed"), null);
+  assert.equal(h.jar.get(names.session), credential);
+  assert.equal(h.jar.get(names.refresh), refreshToken);
+  const restoration = await h.request("session/current");
+  assert.equal(restoration.status, 503);
+  assert.equal(restoration.headers.get("x-bgsnl-session-changed"), null);
+  assert.equal(h.jar.get(names.session), credential);
+  assert.equal(h.jar.get(names.refresh), refreshToken);
+});
+test("client request hook clears session state only after the website confirms invalidation", async () => {
+  const actions = [];
+  let responseHeaders = {};
+  const axios = { request: async () => { throw { response: { status: 401, headers: responseHeaders } }; }, isCancel: () => false };
+  const hook = await loadModule("src/hooks/common/http-hook.js", {
+    react: { useCallback: (callback) => callback },
+    "react-redux": { useDispatch: () => (action) => actions.push(action), useSelector: () => false },
+    "../../redux/loading": { selectLoading: () => false, startLoading: () => ({ type: "start" }), startPageLoading: () => ({ type: "startPage" }),
+      stopLoading: () => ({ type: "stop" }), stopPageLoading: () => ({ type: "stopPage" }) },
+    axios: { default: axios }, "../../redux/user": { clearSession: () => ({ type: "clearSession" }) },
+    "../../redux/notification": { showNotification: () => ({ type: "notice" }) },
+    "../../util/defines/common": { serverEndpoint: "/api/v1/" },
+    "../../util/auth/browser-request.mjs": { csrfHeaders: async () => ({}), clearCsrf: () => {} },
+    "../../util/auth/request-error-notice.mjs": { requestErrorNotice: () => null },
+  });
+  await hook.useHttpClient().sendRequest("user/current", "GET", null, {}, false);
+  assert.equal(actions.some((action) => action.type === "clearSession"), false);
+  responseHeaders = { "x-bgsnl-session-changed": "1" };
+  await hook.useHttpClient().sendRequest("user/current", "GET", null, {}, false);
+  assert.equal(actions.filter((action) => action.type === "clearSession").length, 1);
 });
 test("profile confirmation/Google/passkey replacements cannot extend the original login window", async () => {
   const jwt = token(), claims = cookiesPolicy.publicSession(jwt);
@@ -298,7 +338,12 @@ test("bounded bodies, missing configuration, rate limits and network failures fa
   const failed = await harness({ upstream: async () => { throw new Error("upstream-key-and-url"); } });
   const response = await failed.request("user/current"); assert.equal(response.status, 503); assert.doesNotMatch(await response.text(), /upstream-key/);
   const limited = await harness({ upstream: async () => Response.json({ message: "Slow down" }, { status: 429, headers: { "retry-after": "60" } }) });
-  assert.equal((await limited.request("common/get-about-data")).headers.get("retry-after"), "60");
+  const limitedResponse = await limited.request("common/get-about-data");
+  assert.equal(limitedResponse.headers.get("retry-after"), "60");
+  assert.equal((await limitedResponse.json()).message, "Please wait a moment and try again.");
+  const internal = await harness({ upstream: async () => Response.json({ message: "Database connection failed", data: { secret: "private" } }, { status: 503 }) });
+  const internalResponse = await internal.request("common/get-about-data");
+  assert.deepEqual(await internalResponse.json(), { message: "We could not complete your request. Please try again." });
 });
 test("client transport bootstraps CSRF once, strips bearer headers, and never replays failed mutations", async (t) => {
   browserTransport.clearCsrf(); const calls = [];

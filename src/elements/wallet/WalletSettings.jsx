@@ -37,8 +37,8 @@ export default function WalletSettings({ user, preview = false }) {
   const action = useRef(null);
   const reportError = useCallback((message) => {
     setActionError(message);
-    dispatch(showNotification({ severity: "error", summary: "Wallet card", detail: message, life: 6000, dismissToast: WALLET_LOADING_TOAST }));
-  }, [dispatch]);
+    toast.remove(WALLET_LOADING_TOAST);
+  }, []);
   const showLoadingToast = useCallback(() => {
     dispatch(showNotification({
       severity: "info",

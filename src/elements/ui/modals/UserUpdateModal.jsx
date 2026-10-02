@@ -35,6 +35,7 @@ import ValidatedFormik from "../forms/ValidatedFormik";
 import ModalWindow from "./ModalWindow";
 import { showNotification } from "../../../redux/notification";
 import { browserFetch } from "@/util/auth/browser-request.mjs";
+import { requestErrorNotice } from "@/util/auth/request-error-notice.mjs";
 
 const emptyStringToNull = (value, originalValue) =>
   originalValue === "" ? null : value;
@@ -129,6 +130,7 @@ const OTHER_UNIVERSITY_OPTION = {
 
 const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
   const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const { refreshUser } = useRefreshUser();
 
   const modal = useSelector(selectModal);
@@ -161,6 +163,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
         validationSchema={schema}
         onSubmit={async (values) => {
           setSaving(true);
+          setSubmitError("");
           try {
             const isWorking =
               values.isWorking || values.university === "working";
@@ -216,14 +219,16 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
             });
             const responseEditUser = await response.json().catch(() => ({}));
             if (!response.ok || responseEditUser?.status !== true) {
-              throw new Error(responseEditUser?.message || "Could not submit your profile changes. Please try again.");
+              throw Object.assign(new Error("Profile update failed"), { response: { status: response.status, data: responseEditUser } });
             }
             if (onUserRefresh) refreshUser(onUserRefresh);
             closeHandler();
             dispatch(showNotification({ severity: responseEditUser.confirmationRequired ? "info" : "success",
               detail: responseEditUser.message || "Your profile has been updated." }));
           } catch (error) {
-            dispatch(showNotification({ severity: "error", detail: error?.message || "Could not submit your profile changes. Please try again." }));
+            const notice = requestErrorNotice(error);
+            if (notice) dispatch(showNotification(notice));
+            else setSubmitError("Could not submit your profile changes. Please try again.");
           } finally {
             setSaving(false);
           }
@@ -252,6 +257,7 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
             encType="multipart/form-data"
             id="user-update-form"
           >
+            {submitError && <p role="alert">{submitError}</p>}
             <div className="user-update-form__photo">
               <div className="user-update-form__photo-control">
                 <ImageInput

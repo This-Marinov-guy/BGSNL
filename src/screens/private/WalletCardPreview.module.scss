@@ -333,7 +333,8 @@
   top: 62.74%; left: 7.41%; width: 85.18%;
   text-align: center;
   h2 { color: #406345; text-transform: uppercase; font-weight: 400; line-height: 1.2; margin: 0 0 1.5cqw; overflow-wrap: anywhere; }
-  p { color: #262626; line-height: 1.15; font-weight: 700; margin: 0; }
+  // The global mobile paragraph rule forces 28px; this line height must scale with the card.
+  p { color: #262626; line-height: 1.1 !important; font-weight: 700; margin: 0; overflow-wrap: anywhere; text-wrap: balance; }
 }
 .qr {
   position: absolute;

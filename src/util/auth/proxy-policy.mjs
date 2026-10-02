@@ -3,6 +3,9 @@
 // on their existing direct API/server-to-server paths.
 const routes = {
   GET: [
+    "dashboard/monthly-summary/:month",
+    "common/region-emails",
+    "event/:id/campaigns/:campaignId",
     "support/conversations/activity",
     "event/guest-list/:id/stream",
     "user/wallet/availability", "user/wallet/apple", "user/wallet/card",
@@ -19,6 +22,7 @@ const routes = {
     "wordpress/posts", "wordpress/posts/:id",
   ],
   POST: [
+    "event/:id/campaigns/preview", "event/:id/campaigns/confirm",
     "support/live",
     "user/wallet/google", "user/wallet/card",
     "backoffice/access-requests", "backoffice/accounts/bulk-roles/preview", "backoffice/accounts/bulk-roles/apply", "backoffice/accounts/:type/:id/cancel-subscription", "backoffice/accounts/:type/:id/transfer",
@@ -35,7 +39,7 @@ const routes = {
     "internship/add", "internship/member-apply", "support/conversations", "support/conversations/:id/messages", "support/conversations/:id/status",
     "support/inbox/:id/messages", "support/inbox/:id/status", "contest/register", "special/add-card",
   ],
-  PATCH: ["security/change-password", "user/edit-info", "user/alumni-quote", "user/edit-document/:id", "event/check-guest-list", "event/guest-presence",
+  PATCH: ["dashboard/monthly-summary/:month", "security/change-password", "user/edit-info", "user/alumni-quote", "user/edit-document/:id", "event/check-guest-list", "event/guest-presence",
     "future-event/edit-event/:id", "future-event/sales/:id", "internship/edit/:id", "internship/reorder", "backoffice/accounts/:type/:id"],
   DELETE: ["user/wallet/card", "user/cancel-membership", "user/delete-document/:id", "future-event/delete-event/:id", "internship/delete/:id"],
 };

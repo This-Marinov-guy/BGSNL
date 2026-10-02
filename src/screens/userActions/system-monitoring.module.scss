@@ -4,7 +4,7 @@
 .back { margin-bottom: 1.25rem; }
 .back a { display: inline-flex; align-items: center; gap: 0.45rem; color: #087462; font-weight: 700; }
 .heading { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 1rem; }
-.heading h1 { margin: 0 0 .5rem; }
+.heading h1 { margin: 0; }
 .heading p, .group > p, .metric p, .service p, .checked { color: #607168; margin: 0; }
 .heading button { border: 0; border-radius: .65rem; padding: .8rem 1.1rem; background: #087462; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 .heading button:disabled { opacity: .6; cursor: wait; }
@@ -64,3 +64,10 @@
 .jobPagination > div { display: flex; gap: .5rem; }
 @media (max-width: 900px) { .twoColumns { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .heading, .jobsHeading, .jobAlert { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: 1fr; } .group, .health, .jobsPanel { padding: 1rem; } .jobPagination { align-items: flex-start; flex-direction: column; } }
+
+.twoColumns, .metrics, .services { align-items: start; }
+.group, .metric, .service, .health, .jobsPanel { min-width: 0; overflow-wrap: anywhere; }
+.jobAlert { border-left-width: 1px; }
+.heading button, .jobsHeading button, .jobPagination button, .jobFilters button { min-height: 2.75rem; }
+.heading button:focus-visible, .jobsHeading button:focus-visible, .jobPagination button:focus-visible, .jobFilters button:focus-visible { outline: 3px solid #017363; outline-offset: 3px; }
+@media (max-width: 600px) { .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } .metric { padding: .75rem; } }

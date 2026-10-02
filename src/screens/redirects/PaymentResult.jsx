@@ -33,6 +33,7 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
   const router = useRouter();
   const dispatch = useDispatch();
   const [retrying, setRetrying] = useState(false);
+  const [retryError, setRetryError] = useState("");
   const [waitExpired, setWaitExpired] = useState(false);
   const retryInFlight = useRef(false);
   const [refreshing, refresh] = useTransition();
@@ -72,10 +73,6 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
     }
   };
 
-  useEffect(() => {
-    if (!documentUnavailable) return;
-    dispatch(showNotification({ severity: "error", detail: "Your document isn’t available right now. Please check again shortly or contact us.", life: 6000 }));
-  }, [documentUnavailable, dispatch]);
 
   useEffect(() => {
     setWaitExpired(false);
@@ -96,14 +93,15 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
     if (retryInFlight.current) return;
     retryInFlight.current = true;
     setRetrying(true);
+    setRetryError("");
     try {
       const response = await fetch("/payment/retry", { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ checkout }), signal: AbortSignal.timeout(20000) });
       const data = await response.json();
-      if (!response.ok || !data.url) throw new Error(data.message || "Please try again shortly.");
+      if (!response.ok || !data.url) throw new Error("Checkout could not be resumed.");
       window.location.assign(data.url);
-    } catch (error) {
-      dispatch(showNotification({ severity: "error", detail: error.name === "TimeoutError" ? "Payment verification is taking longer than expected. Please try again shortly." : error.message, life: 6000 }));
+    } catch {
+      setRetryError("We could not resume checkout. Please try again shortly.");
       retryInFlight.current = false;
       setRetrying(false);
     }
@@ -150,6 +148,8 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
               View event <FiArrowRight size={24} />
             </Link>}
           </div>
+          {retryError && <p role="alert" className={styles.note}>{retryError}</p>}
+          {documentUnavailable && <p role="alert" className={styles.note}>Your document isn’t available right now. Please check again shortly or contact us.</p>}
           {!successful && !pending && !unavailable && <p className={styles.note}>If your bank shows a pending amount, check its status before paying again. A temporary authorisation isn’t always a completed charge.</p>}
         </div>
 

@@ -3,8 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
-import { useDispatch } from "react-redux";
-import { showNotification } from "@/redux/notification";
 import { serverEndpoint } from "@/util/defines/common";
 import { ACTIVE_ACCOUNT_CAMPAIGNS, requestAccountCampaign, scheduleAccountCampaign, WHATS_NEW_CAMPAIGN } from "./account-campaign.mjs";
 
@@ -16,7 +14,6 @@ export default function AccountCampaignAnnouncement({ accountId, session, blocke
   const [presented, setPresented] = useState(false);
   const savingRef = useRef(false);
   const stopAutomatic = useRef(null);
-  const dispatch = useDispatch();
   const latest = useRef({ session, blocked });
   latest.current = { session, blocked };
   const close = useCallback(async () => {
@@ -28,11 +25,11 @@ export default function AccountCampaignAnnouncement({ accountId, session, blocke
     try {
       await requestAccountCampaign({ endpoint: serverEndpoint, campaign: WHATS_NEW_CAMPAIGN, markSeen: true });
     } catch {
-      dispatch(showNotification({ severity: "error", detail: "The update is closed, but we couldn’t save your preference. It may appear again on your next visit." }));
+      // The closed announcement can retry its background preference save later.
     } finally {
       savingRef.current = false;
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (!openRequest) return;

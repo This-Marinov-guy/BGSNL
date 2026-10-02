@@ -79,7 +79,7 @@ export default function AccountMembershipActions({ account, disabled, onBusyChan
     <div className={styles.membershipAction}>
       <h4>Transfer to {targetLabel}</h4>
       <p>Send the account holder a link to choose their {targetLabel} plan and confirm any billing change after signing in.</p>
-      {transferSent ? <p role="status">Transfer email queued. The account changes after its owner confirms the new plan.</p> : !confirmTransfer ?
+      {loading ? <><p>Checking transfer eligibility…</p><LoadingSkeleton label="Loading transfer eligibility" variant="inline" /></> : transferSent ? <p role="status">Transfer email queued. The account changes after its owner confirms the new plan.</p> : !confirmTransfer ?
         <button type="button" className={styles.secondaryButton} disabled={disabled || pending || !details?.canTransfer} onClick={() => { setConfirmTransfer(true); setConfirmCancel(false); }}>Send transfer link</button> :
         <div className={styles.actionConfirmation}>
           <p>Send the transfer request to <strong>{account.email}</strong>? Their current membership and subscription will stay unchanged until they confirm.</p>
@@ -89,10 +89,9 @@ export default function AccountMembershipActions({ account, disabled, onBusyChan
           </div>
         </div>}
     </div>
-    {loading ? <LoadingSkeleton label="Loading subscription" /> : !details ? <LoadErrorBanner message="Membership details could not be loaded." onRetry={load} /> : <>
-      <div className={styles.membershipAction}>
-        <h4>Cancel subscription</h4>
-        {details.canCancel ? <>
+    <div className={styles.membershipAction}>
+      <h4>Cancel subscription</h4>
+      {loading ? <><p>Checking subscription details…</p><LoadingSkeleton label="Loading subscription details" variant="inline" /></> : !details ? <LoadErrorBanner message="Membership details could not be loaded." onRetry={load} /> : details.canCancel ? <>
           <p>Stop renewal. Paid access continues until {displayDate(details.subscription.currentPeriodEnd)}.</p>
           {!confirmCancel ? <button type="button" className={styles.dangerButton} disabled={disabled || pending} onClick={() => { setConfirmCancel(true); setConfirmTransfer(false); }}>Cancel subscription</button> : <div className={styles.actionConfirmation}>
             <p>Cancel renewal for <strong>{account.name} {account.surname}</strong> ({account.email})?</p>
@@ -103,8 +102,7 @@ export default function AccountMembershipActions({ account, disabled, onBusyChan
             </div>
           </div>}
         </> : <>{details.billingUnavailable ? <LoadErrorBanner message={details.cancellationReason} disabled={pending || loading} onRetry={load} retryLabel="Retry subscription check" /> : <p>{details.cancellationReason}</p>}</>}
-      </div>
-    </>}
+    </div>
   </section>;
 }
 AccountMembershipActions.propTypes = {

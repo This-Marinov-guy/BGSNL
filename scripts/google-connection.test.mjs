@@ -223,7 +223,7 @@ test("offline and blocked network errors show recovery instructions", async (t) 
   t.mock.method(globalThis, "fetch", async () => { throw new TypeError("Failed to fetch"); });
   await assert.rejects(requestGoogleAuth(endpoint, {}), /Check your internet connection and browser privacy/);
 });
-for (const [status, message] of [[401, /expired/], [403, /denied/], [429, /15 minutes/], [502, /temporarily unavailable/]]) {
+for (const [status, message] of [[401, /expired/], [403, /denied/], [429, /wait a moment/], [502, /temporarily unavailable/]]) {
   test(`non-JSON HTTP ${status} responses show useful text, not a JSON parser error`, async (t) => {
     t.mock.method(globalThis, "fetch", async () => ({ headers: new Headers(), ok: false, status, json: async () => { throw new SyntaxError("Unexpected token <"); } }));
     await assert.rejects(requestGoogleAuth(endpoint, {}), message);
@@ -258,6 +258,11 @@ test("an explicit Google attempt shows one error and can retry with a fresh atte
   feedback.begin();
   assert.deepEqual(feedback.error("Google is unavailable."), { severity: "error", detail: "Google is unavailable." });
 });
+test("system failures during Google sign-in stay inline", () => {
+  const feedback = createGoogleFeedbackGate();
+  feedback.begin();
+  assert.equal(feedback.error({ systemFailure: true, message: "Internal database message" }), null);
+});
 test("waiting notices are visible only during a Google attempt and stop on cleanup", () => {
   const feedback = createGoogleFeedbackGate();
   feedback.begin();
@@ -266,17 +271,17 @@ test("waiting notices are visible only during a Google attempt and stop on clean
   assert.equal(feedback.notice("Still waiting for Google."), null);
   assert.equal(feedback.error("An old request failed."), null);
 });
-test("a background network failure is silent but the same failure after a click is reported", async (t) => {
+test("network failures remain silent as toasts, including after a click", async (t) => {
   const feedback = createGoogleFeedbackGate();
   t.mock.method(globalThis, "fetch", async () => { throw new TypeError("Failed to fetch"); });
   const attempt = async () => {
     try { await requestGoogleAuth(endpoint); }
-    catch (error) { return feedback.error(error.message); }
+    catch (error) { return feedback.error(error); }
     return null;
   };
   assert.equal(await attempt(), null);
   feedback.begin();
-  assert.match((await attempt()).detail, /Could not reach the sign-in service/);
+  assert.equal(await attempt(), null);
 });
 test("Google retries reuse Continue with Google and account preloading errors are gated", async () => {
   const login = await readFile(new URL("../src/elements/authentication/GoogleLogin.jsx", import.meta.url), "utf8");

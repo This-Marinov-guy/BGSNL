@@ -35,9 +35,15 @@ export const createTicketPaymentHandler = ({ checkoutRequest }) => async (reques
     if (!eventTicketCookieName(checkout)) return Response.json({ message: "This ticket link is invalid." }, { status: 410, headers: eventTicketPrivacyHeaders });
     const result = await checkoutRequest(checkout, "checkout", choices);
     const url = new URL(result.url);
-    if (url.protocol !== "https:" || url.hostname !== "checkout.stripe.com" || url.username || url.password) throw new Error("Invalid checkout destination");
+    if (result.free === true) {
+      const origin = new URL(request.url).origin;
+      const local = url.origin === origin && ["localhost", "127.0.0.1"].includes(url.hostname) && url.protocol === "http:";
+      if ((!local && !["https://bulgariansociety.nl", "https://www.bulgariansociety.nl"].includes(url.origin)) ||
+          url.username || url.password || url.hash || url.pathname !== "/payment/return" ||
+          [...url.searchParams.keys()].length !== 1 || !/^[a-f0-9]{64}$/.test(url.searchParams.get("token") || "")) throw new Error("Invalid ticket confirmation destination");
+    } else if (url.protocol !== "https:" || url.hostname !== "checkout.stripe.com" || url.port || url.username || url.password) throw new Error("Invalid checkout destination");
     return Response.json({ url: url.href }, { headers: eventTicketPrivacyHeaders });
   } catch (error) {
-    return Response.json({ message: error.status ? error.message : "Could not open payment. Please try again." }, { status: error.status || 503, headers: eventTicketPrivacyHeaders });
+    return Response.json({ message: error.status ? error.message : "Could not complete your booking. Please try again." }, { status: error.status || 503, headers: eventTicketPrivacyHeaders });
   }
 };

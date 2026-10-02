@@ -1,4 +1,6 @@
-export const TEST_CASES = ["member-active", "member-locked", "alumni-active", "alumni-locked"];
+import { nativeMembershipFields } from "./membership-fields.mjs";
+
+export const TEST_CASES = ["member-active", "member-locked", "alumni-active", "alumni-locked", "alumni-committee-active"];
 
 export function walletPreviewEnabled(env = process.env) {
   return env.NODE_ENV === "development";
@@ -12,7 +14,9 @@ export function getTestCard(id, spec) {
     mocked: true,
     firstName: spec.previewData.firstName,
     surname: spec.previewData.surname,
-    membershipLabel: alumni
+    membershipLabel: id === "alumni-committee-active"
+      ? "Alumni Tier II & National Committee Member"
+      : alumni
       ? spec.memberFields.membershipLabel.alumniTemplate.replace("{alumniTier}", "II")
       : spec.memberFields.membershipLabel.memberTemplate.replace("{city}", spec.previewData.city),
     status: id.endsWith("-locked") ? "locked" : "active",
@@ -35,6 +39,7 @@ export function buildPassDrafts(card, url, config = {}) {
   if (!["active", "locked"].includes(card.status)) throw new Error("Invalid card status");
   const name = `${card.firstName} ${card.surname}`;
   const status = card.status === "active" ? "Active" : "Locked";
+  const fields = nativeMembershipFields(card.membershipLabel);
   const localized = (value) => ({ defaultValue: { language: "en", value } });
   const issuer = config.googleIssuerId || "ISSUER_ID_REQUIRED";
   return {
@@ -51,8 +56,8 @@ export function buildPassDrafts(card, url, config = {}) {
       voided: card.status === "locked",
       generic: {
         primaryFields: [{ key: "name", value: name, textAlignment: "PKTextAlignmentCenter" }],
-        secondaryFields: [{ key: "membership", label: "MEMBERSHIP", value: card.membershipLabel, textAlignment: "PKTextAlignmentCenter" }],
-        auxiliaryFields: [{ key: "status", label: "STATUS", value: status }],
+        secondaryFields: [{ key: "membership", label: "MEMBERSHIP", value: fields.membership, textAlignment: "PKTextAlignmentCenter" }],
+        auxiliaryFields: [...fields.additional, { key: "status", label: "STATUS", value: status }],
         backFields: [{ key: "test", label: "Test pass", value: "Mock data only. Not proof of membership." }],
       },
       barcodes: [{ format: "PKBarcodeFormatQR", message: url, messageEncoding: "iso-8859-1" }],
@@ -65,9 +70,9 @@ export function buildPassDrafts(card, url, config = {}) {
         state: card.status === "active" ? "ACTIVE" : "INACTIVE",
         cardTitle: localized("BGSNL · TEST ONLY"),
         header: localized(name),
-        subheader: localized(card.membershipLabel),
+        subheader: fields.subtitle ? localized(fields.subtitle) : null,
         hexBackgroundColor: "#D5E2D7",
-        textModulesData: [{ id: "status", header: "Status", body: status }],
+        textModulesData: [{ id: "membership", header: "MEMBERSHIP", body: fields.membership }, { id: "status", header: "Status", body: status }],
         barcode: { type: "QR_CODE", value: url },
       }],
     },

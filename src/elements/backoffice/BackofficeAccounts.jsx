@@ -6,9 +6,11 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "rea
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
-import { Link, useSearchParams } from "@/util/navigation";
+import { useSearchParams } from "@/util/navigation";
+import DashboardNavigation from "@/screens/userActions/DashboardNavigation";
+import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 import HeaderTwo from "@/component/header/HeaderTwo";
-import { FiArrowLeft, FiChevronDown, FiDownload, FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
+import { FiChevronDown, FiDownload, FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 import { useHttpClient } from "@/hooks/common/http-hook";
@@ -23,8 +25,8 @@ import AccountMembershipActions from "./AccountMembershipActions";
 import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { CopyableId, PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 import useModalUrl from "@/elements/ui/modals/useModalUrl";
-import { ACCESS_3 } from "@/util/defines/common";
-import { canManageAccountType, canEditAccount, isEditableAccountRole, editableAccountRoles, protectedAccountRoles } from "./role-policy.mjs";
+import { ADMIN, SUPER_ADMIN } from "@/util/defines/common";
+import { canManageAccountType, canEditAccount, assignableAccountRoles, assignedEditableRoles, readOnlyAccountRoles } from "./role-policy.mjs";
 import { exportAccountsCsv } from "./export-accounts.mjs";
 
 const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
@@ -43,6 +45,7 @@ const ROLE_LABELS = {
   national_committee_member: "National committee member",
   admin: "Admin",
   support: "Support",
+  developer: "Developer",
   vip: "VIP",
   super_admin: "Super admin",
 };
@@ -145,7 +148,7 @@ EditorField.propTypes = {
   label: PropTypes.node.isRequired,
 };
 
-const editorState = (account) => ({
+const editorState = (account, actorRoles) => ({
   revision: account.revision,
   name: account.name || "",
   surname: account.surname || "",
@@ -161,18 +164,22 @@ const editorState = (account) => ({
   profession: account.profession || "",
   status: account.status || "",
   expireDate: formatDateInput(account.expireDate),
-  roles: editableAccountRoles(account.roles, account.type),
+  roles: assignedEditableRoles(account.roles, account.type, actorRoles),
 });
 
 function AccountEditor({ account, currentAccountId, actorRoles, options, onClose, onSaved, onMembershipChanged }) {
   useModalUrl(true, "account-editor");
-  const [form, setForm] = useState(() => editorState(account));
+  const [form, setForm] = useState(() => editorState(account, actorRoles));
   const [saving, setSaving] = useState(false);
   const [actionBusy, setActionBusy] = useState(false);
   const busy = saving || actionBusy;
   const closeEditor = useCallback(() => { if (!busy) onClose(); }, [busy, onClose]);
-  const dirty = JSON.stringify(form) !== JSON.stringify(editorState(account));
-  const canManageMembership = actorRoles.some(role => ACCESS_3.includes(role));
+  const dirty = JSON.stringify(form) !== JSON.stringify(editorState(account, actorRoles));
+  const canManageMembership = actorRoles.some(role => [ADMIN, SUPER_ADMIN].includes(role)) &&
+    (!account.roles.includes("vip") || actorRoles.includes("super_admin"));
+  const allowedRoles = assignableAccountRoles(actorRoles, account.type);
+  const roleChoices = options.roles.filter(role => allowedRoles.includes(role));
+  const readOnlyRoles = readOnlyAccountRoles(account.roles, account.type, actorRoles);
   const { sendRequest } = useHttpClient();
   const dispatch = useDispatch();
   const titleRef = useRef(null);
@@ -194,7 +201,7 @@ function AccountEditor({ account, currentAccountId, actorRoles, options, onClose
   };
 
   const toggleRole = (role) => {
-    if (!isEditableAccountRole(role, account.type) || isSelf) return;
+    if (!roleChoices.includes(role) || isSelf) return;
     setForm((current) => ({
       ...current,
       roles: current.roles.includes(role)
@@ -268,20 +275,19 @@ function AccountEditor({ account, currentAccountId, actorRoles, options, onClose
             {isSelf && <p className={styles.selfNotice}>Your own roles and status are protected to prevent accidental loss of access.</p>}
             <div className={styles.statusFields}>
               <EditorField id="account-editor-status" label="Account status"><SelectInput id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</SelectInput></EditorField>
-              {!account.roles?.includes("vip") && <EditorField id="account-editor-expiry" label="Membership expiry"><input id="account-editor-expiry" className="bgsnl-form-control" name="expireDate" type="date" min="1900-01-01" max="2200-12-31" value={form.expireDate} onChange={change} disabled={isSelf} required /></EditorField>}
+              {!form.roles.includes("vip") && !readOnlyRoles.includes("vip") && <EditorField id="account-editor-expiry" label="Membership expiry"><input id="account-editor-expiry" className="bgsnl-form-control" name="expireDate" type="date" min="1900-01-01" max="2200-12-31" value={form.expireDate} onChange={change} disabled={isSelf} required /></EditorField>}
             </div>
-            {protectedAccountRoles(account.roles).length > 0 && (
+            {roleChoices.length > 0 && readOnlyRoles.length > 0 && (
               <p className={styles.selfNotice}>
-                Read-only roles: {protectedAccountRoles(account.roles).map((role) => ROLE_LABELS[role]).join(", ")}.
+                Read-only roles: {readOnlyRoles.map((role) => ROLE_LABELS[role] || role.replaceAll("_", " ")).join(", ")}.
               </p>
             )}
-            {account.roles?.includes("vip") && <p className={styles.selfNotice}>VIP membership has no expiry date. Subscription payment requirements and account restrictions still apply.</p>}
-            {account.type === "alumni" && <p className={styles.selfNotice}>Alumni can be assigned national board or national committee roles.</p>}
-            <div className={styles.roles} aria-label="Account roles">
-              {options.roles.filter(role => isEditableAccountRole(role, account.type)).map((role) => {
+            {(form.roles.includes("vip") || readOnlyRoles.includes("vip")) && <p className={styles.selfNotice}>VIP membership has no expiry date. Subscription payment requirements and account restrictions still apply.</p>}
+            {roleChoices.length > 0 && <div className={styles.roles} aria-label="Account roles">
+              {roleChoices.map((role) => {
                 return <label key={role} className={styles.roleOption}><input type="checkbox" checked={form.roles.includes(role)} disabled={isSelf} onChange={() => toggleRole(role)} /><span>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span></label>;
               })}
-            </div>
+            </div>}
           </fieldset>
 
           {canManageMembership && <AccountMembershipActions account={account} disabled={saving || dirty} onBusyChange={setActionBusy} onChanged={onMembershipChanged} />}
@@ -328,8 +334,10 @@ export default function BackofficeAccounts() {
   const [loadingList, setLoadingList] = useState(true);
   const [listError, setListError] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
   const [importOpen, setImportOpen] = useState(false);
   const requestSequence = useRef(0);
+  const hasLoadedAccounts = useRef(false);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const accountRoleScope = [...(user.roles || [])].sort().join("|");
@@ -339,6 +347,8 @@ export default function BackofficeAccounts() {
   const currentAccountId = useMemo(() => {
     try { return user.session ? sessionClaims(user.session).userId : ""; } catch { return ""; }
   }, [user.session]);
+  const accountScope = `${currentAccountId}|${accountRoleScope}|${user.region || ""}`;
+  const loadedScope = useRef(accountScope);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -349,6 +359,13 @@ export default function BackofficeAccounts() {
   }, [searchInput]);
 
   useEffect(() => {
+    if (loadedScope.current !== accountScope) {
+      loadedScope.current = accountScope;
+      hasLoadedAccounts.current = false;
+      setAccounts([]);
+      setOptions(EMPTY_OPTIONS);
+      setPagination({ total: 0, totalPages: 1 });
+    }
     if (!canManageAccountType(accountRoleScope.split("|"), type)) {
       setAccounts([]);
       setSelected(null);
@@ -359,22 +376,24 @@ export default function BackofficeAccounts() {
     let active = true;
     const controller = new AbortController();
     const sequence = ++requestSequence.current;
+    const initialLoad = !hasLoadedAccounts.current;
     const params = accountQuery({ type, page, pageSize: 25, search, city, status: statusFilter });
-    setLoadingList(true);
-    setListError(false);
-    setExpandedAccountId(null);
-    sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, true, false, { signal: controller.signal })
+    if (initialLoad) { setLoadingList(true); setListError(false); }
+    sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, false, false, { signal: controller.signal })
       .then((response) => {
         if (!active || sequence !== requestSequence.current) return;
-        if (!response) { setListError(true); return; }
+        if (!response) { if (initialLoad) setListError(true); return; }
+        hasLoadedAccounts.current = true;
         setAccounts(response.accounts || []);
         setOptions(response.options || EMPTY_OPTIONS);
         setPagination({ total: response.total || 0, totalPages: response.totalPages || 1 });
+        setExpandedAccountId(current => response.accounts?.some(account => account.id === current) ? current : null);
+        setListError(false);
       })
-      .catch(() => { if (active && sequence === requestSequence.current) setListError(true); })
-      .finally(() => active && sequence === requestSequence.current && setLoadingList(false));
+      .catch(() => { if (initialLoad && active && sequence === requestSequence.current) setListError(true); })
+      .finally(() => { if (initialLoad && active && sequence === requestSequence.current) setLoadingList(false); });
     return () => { active = false; controller.abort(); };
-  }, [type, page, search, city, statusFilter, statistics, refreshKey, accountRoleScope, user.region]);
+  }, [type, page, search, city, statusFilter, statistics, refreshKey, accountRoleScope, accountScope]);
 
   const chooseType = (nextType) => {
     if (!canManageAccountType(user.roles, nextType)) return;
@@ -406,12 +425,14 @@ export default function BackofficeAccounts() {
   const exportDirectory = async () => {
     if (exporting || loadingList || pagination.total === 0) return;
     setExporting(true);
+    setExportError("");
     try {
       const requestPage = async (requestedPage) => {
         const params = accountQuery({ type, page: requestedPage, pageSize: 100, search, city, status: statusFilter });
         return sendRequestRef.current(`backoffice/accounts?${params}`, "GET", null, {}, false, false);
       };
       const first = await requestPage(1);
+      if (!first) throw new Error("Account export unavailable");
       if (!first?.accounts?.length) {
         dispatch(showNotification({ severity: "info", detail: "There are no accounts to export." }));
         return;
@@ -419,6 +440,7 @@ export default function BackofficeAccounts() {
       const pages = Math.max(1, Number(first.totalPages) || 1);
       const remainingPages = Array.from({ length: pages - 1 }, (_, index) => index + 2);
       const remaining = await Promise.all(remainingPages.map(requestPage));
+      if (remaining.some((response) => !response)) throw new Error("Account export unavailable");
       const exportAccounts = [
         ...first.accounts,
         ...remaining.flatMap((response) => response?.accounts || []),
@@ -426,7 +448,7 @@ export default function BackofficeAccounts() {
       exportAccountsCsv(exportAccounts, type);
       dispatch(showNotification({ severity: "success", detail: `${exportAccounts.length} ${type === "alumni" ? "alumni" : "member"} profiles exported.` }));
     } catch {
-      dispatch(showNotification({ severity: "error", detail: "The account export could not be prepared. Please try again." }));
+      setExportError("The account export could not be prepared. Please try again.");
     } finally {
       setExporting(false);
     }
@@ -435,12 +457,9 @@ export default function BackofficeAccounts() {
   return (
     <>
       <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
-      <main className={`container user-workspace-page event-admin-page ${styles.page}`}>
-        <nav className={adminStyles.views} aria-label="Account administration">
-          <Link className={adminStyles.backLink} to="/user/dashboard" aria-label="Back to administration">
-            <FiArrowLeft size={24} aria-hidden />
-            <span>Administration</span>
-          </Link>
+      <main className={`container user-workspace-page event-admin-page ${styles.page} ${workspace.page}`}>
+        <DashboardNavigation />
+        <nav className={`${adminStyles.views} ${workspace.viewNavigation}`} aria-label="Account administration">
           <div className={adminStyles.viewTabs}>
             <button type="button" aria-current={!statistics ? "page" : undefined} onClick={() => switchView("accounts")}>Manage accounts</button>
             <button type="button" aria-current={statistics ? "page" : undefined} onClick={() => switchView("statistics")}>Member statistics</button>
@@ -450,10 +469,9 @@ export default function BackofficeAccounts() {
         <header className="event-workspace-heading event-dashboard-heading">
           <div>
             <h1>Accounts dashboard</h1>
-            <p>Find and manage member and alumni profiles, account status and administrative roles.</p>
           </div>
           {!statistics && <div className="workspace-heading-actions">
-            <button className={styles.importButton} onClick={() => setImportOpen(true)} type="button">Import sheet</button>
+            {user.roles?.some(role => ["admin", "super_admin"].includes(role)) && <button className={styles.importButton} onClick={() => setImportOpen(true)} type="button">Import sheet</button>}
             <button
               className={styles.exportButton}
               disabled={loadingList || exporting || pagination.total === 0}
@@ -466,6 +484,7 @@ export default function BackofficeAccounts() {
           </div>}
         </header>
 
+        {exportError && <p role="alert">{exportError}</p>}
         {statistics ? <section className={styles.directory} aria-label="Member statistics"><AnalyticsAvailability title="Member analytics"><MembersList /></AnalyticsAvailability></section> : <section className={styles.directory} aria-label={`${type} directory`}>
           <FilterPanel
             onClear={() => { setType("member"); setSearchInput(""); setSearch(""); setCity(""); setStatusFilter(""); setPage(1); }}

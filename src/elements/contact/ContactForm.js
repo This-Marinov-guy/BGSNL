@@ -3,7 +3,7 @@ import emailjs from "emailjs-com";
 import { useParams } from "@/util/navigation";
 import PropTypes from "prop-types";
 import Loader from "../ui/loading/Loader";
-import { REGION_EMAIL } from "../../util/defines/REGIONS_DESIGN";
+import RegionEmailLink from "./RegionEmailLink";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import {
   contactPayloadFingerprint,
@@ -24,15 +24,15 @@ const DuplicateResult = () => (
   </p>
 );
 
-const FailResult = ({ contactEmail }) => (
+const FailResult = ({ region }) => (
   <p className="contact-form__status contact-form__status--error" role="alert">
     We could not send your message. Please try again or email us at{" "}
-    <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+    <RegionEmailLink region={region} />.
   </p>
 );
 
 FailResult.propTypes = {
-  contactEmail: PropTypes.string.isRequired,
+  region: PropTypes.string.isRequired,
 };
 
 function ContactForm(props) {
@@ -44,7 +44,6 @@ function ContactForm(props) {
   const lastSuccessfulIdentityRef = useRef("");
   const { sendRequest } = useHttpClient();
   const formId = useId();
-  const regionEmail = REGION_EMAIL[region] || REGION_EMAIL.netherlands;
 
   const sendEmail = async (e) => {
     e.preventDefault();
@@ -236,7 +235,7 @@ function ContactForm(props) {
           ) : result === "duplicate" ? (
             <DuplicateResult />
           ) : (
-            <FailResult contactEmail={regionEmail} />
+            <FailResult region={region} />
           )}
         </div>
       ) : null}

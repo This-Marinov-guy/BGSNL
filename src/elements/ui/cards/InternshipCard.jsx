@@ -65,41 +65,36 @@ const InternshipCard = (props) => {
 
   return (
     <div
-      className="intern-card border-1 mt--10 mr--10"
+      className="intern-card border-1"
       style={{ padding: "20px", borderRadius: "12px" }}
     >
       {/* Header Section with Logo and Company Info */}
-      {label && (
-        <span
-          style={{
-            backgroundColor: "#e0f2fe",
-            color: "#0c4a6e",
-            borderRadius: "9999px",
-            padding: "4px 12px",
-            textTransform: "uppercase",
-            textAlign: 'center',
-            marginBottom: '10px',
-            letterSpacing: "0.5px",
-          }}
-        >
-          {label}
-        </span>
-      )}
+      <div className="intern-card__category">
+        {label && (
+          <span
+            style={{
+              backgroundColor: "#e0f2fe",
+              color: "#0c4a6e",
+              borderRadius: "9999px",
+              padding: "4px 12px",
+              textTransform: "uppercase",
+              textAlign: 'center',
+              letterSpacing: "0.5px",
+            }}
+          >
+            {label}
+          </span>
+        )}
+      </div>
       <div
-        className="d-flex justify-content-between align-items-start mb--20"
+        className="d-flex justify-content-between align-items-start"
         style={{ gap: "15px" }}
       >
-        <div style={{ flex: "0 0 auto", maxWidth: "120px", margin: 'auto' }}>
+        <div className="intern-card__logo">
           <img
             src={logo || FALLBACK_INTERNSHIP_IMAGE}
             className={"responsive_img " + (logoClass || "")}
             alt="Company Logo"
-            style={{
-              width: "100%",
-              height: "auto",
-              objectFit: "contain",
-              maxHeight: "80px",
-            }}
           />
         </div>
 
@@ -123,14 +118,12 @@ const InternshipCard = (props) => {
       </div>
 
       {/* Quick Info Pills */}
-      <div className="d-flex flex-wrap mb--15" style={{ gap: "10px" }}>
+      <div className="intern-card__facts">
         <div
           className="bg-1"
           style={{
             padding: "10px 15px",
             borderRadius: "8px",
-            flex: "1 1 auto",
-            minWidth: "140px",
           }}
         >
           <h6 style={titleStyle}>Location</h6>
@@ -142,8 +135,6 @@ const InternshipCard = (props) => {
           style={{
             padding: "10px 15px",
             borderRadius: "8px",
-            flex: "1 1 auto",
-            minWidth: "140px",
           }}
         >
           <h6 style={titleStyle}>Duration</h6>
@@ -155,8 +146,6 @@ const InternshipCard = (props) => {
           style={{
             padding: "10px 15px",
             borderRadius: "8px",
-            flex: "1 1 auto",
-            minWidth: "140px",
           }}
         >
           <h6 style={titleStyle}>Benefits</h6>
@@ -166,7 +155,7 @@ const InternshipCard = (props) => {
 
       {/* Detailed Information Sections */}
       <div
-        className="bg-1 mb--10"
+        className="bg-1"
         style={{ padding: "15px", borderRadius: "8px" }}
       >
         <h6 style={titleStyle}>Description</h6>
@@ -174,7 +163,7 @@ const InternshipCard = (props) => {
       </div>
 
       <div
-        className="bg-1 mb--10"
+        className="bg-1"
         style={{ padding: "15px", borderRadius: "8px" }}
       >
         <h6 style={titleStyle}>Requirements</h6>
@@ -182,7 +171,7 @@ const InternshipCard = (props) => {
       </div>
 
       <div
-        className="bg-1 mb--15"
+        className="bg-1"
         style={{ padding: "15px", borderRadius: "8px" }}
       >
         <h6 style={titleStyle}>Languages</h6>
@@ -192,7 +181,7 @@ const InternshipCard = (props) => {
       {/* Action Buttons */}
       <div
         className="d-flex flex-column"
-        style={{ gap: "10px", marginTop: "auto" }}
+        style={{ gap: "10px" }}
       >
         <a
           href={website}

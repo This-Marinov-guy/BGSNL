@@ -8,7 +8,7 @@ import {
   findMembershipByProperty,
 } from "../../../util/defines/REGIONS_AUTH_CONFIG";
 import { isProd } from "../../../util/functions/helpers";
-import { REGION_EMAIL } from "../../../util/defines/REGIONS_DESIGN";
+import RegionEmailLink from "../../contact/RegionEmailLink";
 import PageLoading from "../loading/PageLoading";
 import {
   ACTIVE,
@@ -265,9 +265,7 @@ const AccountLocked = () => {
             <span>
               We are resolving an issue with your account. Except our apologies
               and please contact:{" "}
-              <a href={`mailto:${REGION_EMAIL["support"]}`}>
-                {REGION_EMAIL["support"]}
-              </a>
+              <RegionEmailLink region="support" />
             </span>
           </p>
 

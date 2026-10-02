@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import packageJson from "../../../package.json";
 import { Link, useParams } from "@/util/navigation";
 import {
-  REGION_EMAIL,
   REGION_MAIN_COLOR,
   REGION_SECOND_COLOR,
   REGION_SOCIALS,
@@ -11,6 +10,8 @@ import {
   REGIONS,
 } from "../../util/defines/REGIONS_DESIGN";
 import { getSocialAriaLabel } from "../../util/functions/seo-helpers";
+import RegionEmailLink from "../../elements/contact/RegionEmailLink";
+import { FaMailBulk } from "@/elements/ui/icons/IconlyIcons";
 import { useDispatch } from "react-redux";
 import { showModal } from "../../redux/modal";
 import { DONATION_MODAL } from "../../util/defines/common";
@@ -103,9 +104,7 @@ const Footer = ({ forceRegion }) => {
                       <h4>Find the society on</h4>
                       <ul className="ft-link">
                         <li>
-                          <a href={`mailto:${REGION_EMAIL["netherlands"]}`}>
-                            {REGION_EMAIL["netherlands"]}
-                          </a>
+                          <RegionEmailLink />
                         </li>
                       </ul>
 
@@ -123,6 +122,7 @@ const Footer = ({ forceRegion }) => {
                               </a>
                             </li>
                           ))}
+                          <li><RegionEmailLink label="Email Bulgarian Society Netherlands"><FaMailBulk /></RegionEmailLink></li>
                         </ul>
                       </div>
                     </div>
