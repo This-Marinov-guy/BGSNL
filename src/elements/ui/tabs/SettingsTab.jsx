@@ -17,7 +17,6 @@ import SubscriptionManage from "@/elements/ui/buttons/SubscriptionManage";
 import SubscriptionStart from "@/elements/subscriptions/SubscriptionStart";
 import { useBillingAttention } from "@/elements/subscriptions/BillingAttentionProvider";
 import { billingAction } from "@/elements/subscriptions/subscription-checkout.mjs";
-import SubscriptionCancellationNotice from "@/elements/subscriptions/SubscriptionCancellationNotice";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
 import ConnectedAccounts from "@/elements/authentication/ConnectedAccounts";
 import UserTabHeader from "./UserTabHeader";
@@ -102,7 +101,6 @@ const SettingsTab = ({ user }) => {
             <ul className="settings-list">
               <li className="settings-list__alert">
                 <AccountBillingAlert user={user} flushBottom />
-                <SubscriptionCancellationNotice user={user} />
               </li>
               <SettingsRow
                 action={

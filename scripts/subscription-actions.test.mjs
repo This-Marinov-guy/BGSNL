@@ -266,7 +266,7 @@ test("scheduled end dates prefer explicit cancellation and tolerate missing or i
 });
 
 
-test("the Billing warning shows the cancellation date only while paid access remains", async () => {
+test("the account danger banner shows the cancellation date only while paid access remains", async () => {
   const { code: noticeCode } = await transform(await readFile(new URL("../src/elements/subscriptions/SubscriptionCancellationNotice.jsx", import.meta.url), "utf8"), {
     filename: "SubscriptionCancellationNotice.jsx", jsc: { parser: { syntax: "ecmascript", jsx: true }, transform: { react: { runtime: "automatic" } } }, module: { type: "commonjs" },
   });
@@ -281,7 +281,9 @@ test("the Billing warning shows the cancellation date only while paid access rem
   const user = { status: "active", hasBenefits: true, subscription: { status: "active", cancelAtPeriodEnd: true, currentPeriodEnd: "2026-10-31T23:00:00Z" } };
   assert.match(label(exports.default({ user })), /1 November 2026/);
   assert.match(label(exports.default({ user })), /keep your paid benefits until then/);
-  for (const changed of [{ ...user, hasBenefits: false }, { ...user, status: "locked" }, { ...user, subscription: { status: "canceled", cancelAtPeriodEnd: true } }, { ...user, subscription: { status: "active" } }]) {
+  assert.equal(exports.default({ user }).props.role, "alert");
+  assert.match(label(exports.default({ user: { ...user, subscription: { status: "canceled", currentPeriodEnd: "2026-10-31T23:00:00Z" } } })), /1 November 2026/);
+  for (const changed of [{ ...user, hasBenefits: false }, { ...user, status: "locked" }, { ...user, subscription: { status: "canceled", cancelAtPeriodEnd: true } }, { ...user, subscription: { status: "active" } }, { ...user, subscription: { status: "canceled", currentPeriodEnd: "2026-09-01T00:00:00Z" } }]) {
     assert.equal(exports.default({ user: changed }), null);
   }
 });

@@ -34,6 +34,7 @@ test("website copy names the payment provider only in billing terms", async () =
   }
 });
 
-test("late payments lead to support rather than another payment", () => {
-  assert.equal(billingAction({ status: "locked", subscription: { id: "sub_old", customerId: "cus_old", status: "canceled" } }, "late_payment_review"), "support");
+test("ended subscriptions offer renewal", () => {
+  assert.equal(billingAction({ status: "locked", subscription: { id: "sub_old", customerId: "cus_old", status: "canceled" } }, "subscription_ended"), "start");
+  assert.equal(billingAction({ status: "locked", subscription: { id: "sub_old", customerId: "cus_old", status: "canceled" } }, "late_payment_review"), "start");
 });

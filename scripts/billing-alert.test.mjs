@@ -13,8 +13,8 @@ test("banner and billing use the same action policy", () => {
   assert.equal(billingAction({ status: "locked" }, "no_membership"), "start");
   const existing = { status: "locked", subscription: { id: "sub_current", customerId: "cus_current", status: "past_due" } };
   assert.equal(billingAction(existing, "payment_failed"), "manage");
-  assert.equal(billingAction(existing, "unavailable"), "manage");
-  assert.equal(billingAction({ status: "locked" }, "unavailable"), "support");
+  assert.equal(billingAction(existing, "unavailable"), "none");
+  assert.equal(billingAction({ status: "locked" }, "unavailable"), "none");
   assert.equal(billingAction(existing, "account_sync_pending"), "support");
   assert.equal(billingAction({ ...existing, status: "frozen" }, "payment_failed"), "support");
   assert.equal(billingAction({ ...existing, subscription: { ...existing.subscription, status: "canceled" } }, "subscription_ended"), "start");
@@ -26,10 +26,10 @@ test("both surfaces share the provider/actions and banner supports skeleton, ent
     load("elements/ui/tabs/SettingsTab.jsx"), load("screens/authentication/User.jsx"),
     load("elements/subscriptions/AccountBillingAlert.jsx"), load("elements/subscriptions/BillingAttentionProvider.jsx"),
   ]);
-  assert.match(settings, /<AccountBillingAlert user=\{user\} showAction=\{false\}/);
+  assert.match(settings, /<AccountBillingAlert user=\{user\} flushBottom/);
   assert.match(settings, /<BillingActions user=\{user\}/);
   assert.match(account, /<BillingAttentionProvider user=\{currentUser\}/);
-  assert.match(alert, /<BillingActions user=\{user\} \/>/);
+  assert.match(alert, /<SubscriptionStart user=\{user\} renewal=/);
   assert.match(alert, /loading \? <BillingStatusBannerSkeleton/);
   assert.match(alert, /<AnimatePresence mode="wait"/);
   assert.match(alert, /exit=\{/);

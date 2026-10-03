@@ -21,7 +21,11 @@ export default function AccountBillingAlert({ user, showAction = true, flushBott
   const titleId = useId();
   const reduceMotion = useReducedMotion();
   const billing = useBillingAttention();
-  const accountNotice = billing?.notice || getAccountStatusNotice(user);
+  const receivedNotice = billing?.notice || getAccountStatusNotice(user);
+  const accountNotice = receivedNotice?.reason === "late_payment_review" ? {
+    reason: "subscription_ended", title: "No active subscription",
+    description: "Renew your previous subscription or choose another plan to restore paid benefits.",
+  } : receivedNotice;
   const notice = hideUnavailable && accountNotice?.reason === "unavailable" ? null : accountNotice;
   const loading = billing?.loading;
   const key = loading ? "loading" : notice ? `${notice.reason || notice.title}:${notice.description}` : null;

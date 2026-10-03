@@ -26,6 +26,7 @@ import TabContent from "../../elements/ui/tabs/TabContent";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { consumeInitialAccount, selectUser, updateAccount } from "../../redux/user";
 import AccountBillingAlert from "@/elements/subscriptions/AccountBillingAlert";
+import SubscriptionCancellationNotice from "@/elements/subscriptions/SubscriptionCancellationNotice";
 import { showModal } from "@/redux/modal";
 import { USER_UPDATE_MODAL } from "@/util/defines/common";
 import BillingAttentionProvider from "@/elements/subscriptions/BillingAttentionProvider";
@@ -294,6 +295,7 @@ const User = () => {
         <div className="user-content-area">
           <BillingAttentionProvider user={currentUser}>
           <AccountBillingAlert user={currentUser} hideUnavailable />
+          <SubscriptionCancellationNotice user={currentUser} />
           {currentUser?.tier === 0 && <section className="user-dashboard-notice" aria-labelledby="alumni-tier-notice-title">
             <h2 id="alumni-tier-notice-title">
               <svg className="user-dashboard-notice__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true" focusable="false">

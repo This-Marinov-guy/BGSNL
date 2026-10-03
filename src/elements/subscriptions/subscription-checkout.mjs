@@ -43,8 +43,8 @@ export function billingAction(user, reason) {
   // Unknown billing state is not evidence of either an active or absent subscription.
   if (reason === "unavailable" || (!reason && user?.billingVerificationUnavailable)) return "none";
   if (!["active", "locked", "payment_awaiting"].includes(user?.status) ||
-      ["account_restricted", "late_payment_review", "account_sync_pending"].includes(reason)) return "support";
-  if (["no_membership", "subscription_ended"].includes(reason)) return "start";
+      ["account_restricted", "account_sync_pending"].includes(reason)) return "support";
+  if (["no_membership", "subscription_ended", "late_payment_review"].includes(reason)) return "start";
   if (reason && hasSubscriptionId(user.subscription)) return "manage";
   if (canStartSubscription(user)) return "start";
   return hasSubscriptionId(user.subscription) && !hasEndedSubscription(user.subscription) ? "manage" : "support";
