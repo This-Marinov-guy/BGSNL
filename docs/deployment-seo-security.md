@@ -10,14 +10,19 @@ Set the following server-only values in the production deployment manager. Do no
 | Koko mobile integration | API `KOKO_APP_PASS` | Separate random service key, at least 32 characters. |
 | Website revalidation | Website `SITEMAP_REVALIDATE_TOKEN` | Random secret used only by the GitHub workflow. |
 | Event archive schedule | Website `CRON_SECRET` | Separate random secret, at least 32 bytes. Vercel uses it to invoke the daily event-archive job. |
-| Event sitemap dispatch | API `GITHUB_SITEMAP_REPOSITORY`, `GITHUB_SITEMAP_DISPATCH_TOKEN` | Repository `owner/name` and a fine-grained token scoped to this repository with **Contents: write** only (required for GitHub repository dispatch). Optional; timed sitemap revalidation remains the fallback. |
+| Event sitemap dispatch | API `GITHUB_SITEMAP_REPOSITORY`, `GITHUB_SITEMAP_DISPATCH_TOKEN` | Repository `owner/name` and a fine-grained token scoped to this repository with **Contents: write** only (required for GitHub repository dispatch). Required for event-triggered and past-cutoff refreshes; daily revalidation remains the fallback. |
 | GitHub Actions | `SITEMAP_REVALIDATE_URL`, `SITEMAP_REVALIDATE_TOKEN` | URL is `https://www.bulgariansociety.nl/api/revalidate`; token must equal the website value. |
+
+The production event archive cron runs daily at 03:15 UTC. It archives events
+whose effective start time (`correctedDate`, or `date`) was at least three days
+earlier. Local development and preview deployments do not receive this Vercel
+cron invocation.
 
 ## Release order
 
 1. Deploy API and website with the SSR key pair and integration keys configured.
 2. Backfill existing event URLs once. First review the target environment, then run `npm run backfill:event-slugs -- --apply`; production additionally requires `--production-confirm=EVENT_SLUG_BACKFILL`.
-3. Follow the Next.js sitemap setup below: configure the shared revalidation secret, publish the workflow with the Next.js rollout, verify a manual run, then enable automatic runs. Configure the optional API dispatch token for event-triggered refreshes; failure to dispatch cannot fail the event operation.
+3. Follow the Next.js sitemap setup below: configure the shared revalidation secret, publish the workflow with the Next.js rollout, verify a manual run, then enable automatic runs. Configure the API dispatch token for event-triggered refreshes; failure to dispatch cannot fail the event operation.
 4. Verify the live domain, not localhost: `/`, a public event, article, `/sitemap.xml`, `/robots.txt`, `/llms.txt`, and a private `/user` route. Public event ID links should return a 308 to the stored-region slug URL; nonexistent/hidden event URLs must return 404.
 
 Public SSR fetches now fail visibly on upstream failures rather than emitting empty lists that could be indexed or interpreted as sitemap deletions. The API's public event serializers are allowlists; add new public fields intentionally rather than returning Mongoose documents.
@@ -26,7 +31,11 @@ Public SSR fetches now fail visibly on upstream failures rather than emitting em
 
 `.github/workflows/refresh-sitemap.yml` refreshes the Next.js discovery cache:
 
-- When the API dispatches `event-sitemap-changed` after publication or archival, once enabled.
+- When the API dispatches `event-sitemap-changed` after publication, an edit to a
+  published event, or an archival commit, once enabled. Edits include changes to
+  visibility, date and region that can add or remove the event URL.
+- When the API's minute worker detects a public event crossing the 48-hour
+  post-start cutoff; it retries until GitHub accepts the dispatch.
 - Manually through Actions → Refresh public event sitemap → Run workflow.
 - Daily at 06:17 UTC as a fallback, once enabled (GitHub scheduled runs can be delayed).
 
@@ -38,7 +47,7 @@ checks the sitemap XML and canonical domain, and reports the number of URLs.
 Set the repository secret `SITEMAP_REVALIDATE_TOKEN` to the same server-only
 value as the production website. `SITEMAP_REVALIDATE_URL` is optional and defaults
 to `https://www.bulgariansociety.nl/api/revalidate`. The API's separate,
-repository-scoped dispatch token is needed only for immediate event-triggered
+repository-scoped dispatch token is needed for event-triggered and past-cutoff
 refreshes; manual and scheduled runs do not require it. Do not copy a broad
 personal CLI token into the API environment.
 
@@ -82,10 +91,10 @@ that deployment can be verified before enabling automation.
    now run at 06:17 UTC. To pause automatic jobs later, set it back to `false`;
    manual runs remain available.
 
-### Immediate refresh after event changes (optional)
+### Immediate refresh after event changes
 
-Manual and daily refreshes work without this configuration. To also request a
-refresh when the API publishes or archives an event:
+Manual and daily refreshes work without this configuration. To request a
+refresh for every publication, published edit, archival and past-cutoff transition:
 
 1. Create a GitHub **fine-grained personal access token** with resource owner
    `This-Marinov-guy`, repository access limited to **BGSNL**, and repository

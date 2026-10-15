@@ -68,6 +68,13 @@ export async function containerServices() {
   const api = services.find(({ name }) => name === "bgsnl-api");
   const website = services.find(({ name }) => name === "bgsnl");
   const mailer = services.find(({ name }) => name === "domakin-mailer");
+  // Next restarts its dev server once V8 uses 80% of the heap. The default
+  // container heap is too small for this site's compiled Sass and interrupts
+  // Fast Refresh, leaving an open page without styles until a manual reload.
+  const nodeOptions = website.env.NODE_OPTIONS || "";
+  if (!/(?:^|\s)--max[-_]old[-_]space[-_]size(?:=|\s)/.test(nodeOptions)) {
+    website.env.NODE_OPTIONS = `${nodeOptions} --max-old-space-size=4096`.trim();
+  }
   if (process.env.BGSNL_E2E_MOCK_EMAILS !== "1") mailer.args.splice(2, 0, "--include", "templates/**/*", "--include", "openapi/**/*");
   // Do not pass --hostname: Next builds each request's absolute URL from the
   // bound hostname, so "0.0.0.0" would make every /api/* call fail the website

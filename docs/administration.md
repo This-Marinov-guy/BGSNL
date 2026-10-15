@@ -8,10 +8,20 @@
 | Internships | `/user/dashboard/internships` |
 | Members and alumni | `/user/dashboard/members` |
 | Support tickets | `/user/dashboard/support` |
+| Event metrics | `/user/dashboard/metrics/events` |
+| Member metrics | `/user/dashboard/metrics/members` |
 
-Event analytics is a view within Events (`/user/dashboard/events?view=analytics`), available to the existing board/admin roles. Member statistics is a tab in Members (`/user/dashboard/members?view=statistics`). Neither has an independent page, overview card or access-request option. Previous analytics/statistics URLs redirect to these views and retain filters.
+The overview and dashboard navigation link to one **Metrics** area with Events and Members tabs. It is available to every dashboard role, with the existing regional API scope. Members and Events contain only their management views. Legacy statistics routes and `?view=statistics` or `?view=analytics` links redirect to the Metrics tabs and retain filters. Monthly summary is no longer listed in the dashboard navigation or overview.
 
 Event and internship editors use `/<area>/new` and `/<area>/<id>/edit` under the dashboard. Guest-list checks use `/user/dashboard/guest-list`. Old administration URLs redirect while retaining query parameters, including existing ticket QR-code links.
+
+Regional board members cancelling a published event enter an eight-digit code
+emailed to the event region's contact address stored in the database. Admins
+and super admins confirm cancellation in the dialog without an email code.
+Archival then begins, followed by paid ticket refunds and cancellation emails.
+Codes expire after ten minutes. In dev, confirmation emails go to
+`vladsialvmarinov3142@gmail.com` so regional mailboxes are not contacted.
+The confirmation email is a dedicated Domakin Mailer automation.
 
 ## Image previews
 

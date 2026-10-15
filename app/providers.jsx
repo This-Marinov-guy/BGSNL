@@ -16,7 +16,7 @@ const Maintenance = dynamic(() => import("@/screens/Maintenance"));
 export default function Providers({ children }) {
   const pathname = usePathname();
   if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
-  if (!pathname?.startsWith("/c/")) return <FullProviders>{children}</FullProviders>;
+  if (!pathname?.startsWith("/c/") && !pathname?.startsWith("/event-feedback/")) return <FullProviders>{children}</FullProviders>;
   return <Provider store={store}><PrimeSSRProvider>
     <div className="global-site-shell">
       <GlobalBackground initiallyRevealed />

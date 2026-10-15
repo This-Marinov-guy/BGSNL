@@ -20,7 +20,6 @@ import {
 import ScrollToTop from "@/component/common/ScrollToTop";
 import {
   FiCheck,
-  FiChevronLeft,
   FiChevronUp,
 } from "@/elements/ui/icons/IconlyIcons";
 import {
@@ -49,6 +48,7 @@ import {
 } from "../../util/defines/UNIVERSITIES";
 import { ANALYTICS_EVENTS, USER_REGISTRATION_STEP_EVENTS } from "../../util/analytics/events.mjs";
 import { clarityEvent, encryptData } from "../../util/functions/helpers";
+import { browserFetch } from "../../util/auth/browser-request.mjs";
 
 const isSupportedImage = (value) =>
   !value ||
@@ -140,19 +140,15 @@ const schema = yup.object().shape({
 const stepConfig = [
   {
     label: "Region",
-    description: "Choose a city.",
   },
   {
     label: "Type",
-    description: "Select a type.",
   },
   {
     label: "Details",
-    description: "Fill your details.",
   },
   {
     label: "Payment",
-    description: "Review & payment.",
   },
 ];
 
@@ -178,6 +174,10 @@ const OTHER_UNIVERSITY_OPTION = {
 const SignUp = () => {
   const { region: routeRegion } = useParams();
   const [selectedRegion, setSelectedRegion] = useState(routeRegion ?? null);
+  const [guestPrefill, setGuestPrefill] = useState(null);
+  const [prefillLoading, setPrefillLoading] = useState(false);
+  const [prefillError, setPrefillError] = useState("");
+  const [prefillRetry, setPrefillRetry] = useState(0);
 
   const [activeStep, setActiveStep] = useState(routeRegion ? 1 : 0);
   const [transitionDirection, setTransitionDirection] = useState("forward");
@@ -185,6 +185,28 @@ const SignUp = () => {
   useEffect(() => {
     clarityEvent(ANALYTICS_EVENTS.USER_REGISTRATION_OPENED);
   }, []);
+
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get("prefill");
+    if (!token) return undefined;
+    const controller = new AbortController();
+    setPrefillLoading(true);
+    setPrefillError("");
+    browserFetch(`/api/v1/event/guest-signup-prefill?token=${encodeURIComponent(token)}`, { signal: controller.signal })
+      .then(async response => {
+        const result = await response.json();
+        if (!response.ok || !result?.prefill) throw new Error(result?.message || "This signup link could not be opened.");
+        if (!controller.signal.aborted) {
+          setGuestPrefill(result.prefill);
+          setSelectedRegion(REGIONS.includes(routeRegion) ? routeRegion : result.prefill.region);
+          if (!routeRegion) setActiveStep(1);
+          setPrefillError("");
+        }
+      }).catch(() => {
+        if (!controller.signal.aborted) setPrefillError("Your saved details could not be loaded. Choose a plan and enter your details to continue.");
+      }).finally(() => { if (!controller.signal.aborted) setPrefillLoading(false); });
+    return () => controller.abort();
+  }, [routeRegion, prefillRetry]);
 
   useEffect(() => {
     const event = USER_REGISTRATION_STEP_EVENTS[activeStep];
@@ -206,7 +228,7 @@ const SignUp = () => {
     window.history.replaceState(
       window.history.state,
       "",
-      `/${nextRegion}/signup`
+      `/${nextRegion}/signup${window.location.search}`
     );
   };
 
@@ -243,17 +265,18 @@ const SignUp = () => {
   }, [routeRegion]);
 
   let stepComp;
-  let stepButtons;
 
   switch (activeStep) {
     case 0:
       stepComp = <RegionOptions2 onSelectRegion={selectRegion} />;
-      stepButtons = null;
       break;
     case 1:
       stepComp = (
         <section className="signup-plan-section" aria-label="Membership plans">
           <div className="container">
+            {guestPrefill && <p role="status">Your region and ticket details are ready. Choose a membership plan to continue.</p>}
+            {prefillLoading && <p role="status">Loading your saved details…</p>}
+            {prefillError && <p role="alert">{prefillError} <button className="signup-back-button" type="button" onClick={() => setPrefillRetry(value => value + 1)}>Retry saved details</button></p>}
             <ul className="signup-benefit-grid" aria-label="Member benefits">
                   <li>
                     <FiCheck />
@@ -282,6 +305,7 @@ const SignUp = () => {
                 <button
                   key={val.id}
                   type="button"
+                  disabled={prefillLoading}
                   className={`signup-plan-card${val.label?.text ? " signup-plan-card--featured" : ""}`}
                   onClick={() => {
                     setSelectedMembershipIndex(i);
@@ -309,18 +333,6 @@ const SignUp = () => {
           </div>
         </section>
       );
-      stepButtons = (
-        <div className="signup-back-row container">
-          <button
-            type="button"
-            onClick={() => goToStep(activeStep - 1)}
-            className="signup-back-button"
-          >
-            <FiChevronLeft />
-            Change region
-          </button>
-        </div>
-      );
       break;
     case 2:
       stepComp = (
@@ -329,6 +341,7 @@ const SignUp = () => {
             <div className="container">
               <ValidatedFormik
                 className="inner"
+                enableReinitialize
                 validationSchema={schema}
                 onSubmit={async (values) => {
                   const isWorking =
@@ -340,7 +353,7 @@ const SignUp = () => {
                       values.image,
                       values.name +
                         values.surname +
-                        moment(values.birth).format("D MMM YYYY")
+                        moment(values.birth).format("DD-MM-YYYY")
                     );
                   } else {
                     formData.append("image", null);
@@ -421,11 +434,11 @@ const SignUp = () => {
                   }
                 }}
                 initialValues={{
-                  name: "",
-                  surname: "",
-                  phone: "",
+                  name: guestPrefill?.name || "",
+                  surname: guestPrefill?.surname || "",
+                  phone: guestPrefill?.phone || "",
                   birth: "",
-                  email: "",
+                  email: guestPrefill?.email || "",
                   university: "",
                   isWorking: false,
                   otherUniversityName: "",
@@ -449,14 +462,6 @@ const SignUp = () => {
                     className="signup-application-form"
                   >
                     <header className="signup-form-heading">
-                      <button
-                        aria-label="Back to plans"
-                        type="button"
-                        onClick={() => goToStep(1)}
-                        className="signup-back-button signup-form-heading__back"
-                      >
-                        <FiChevronLeft aria-hidden="true" />
-                      </button>
                       <h2>Complete your membership</h2>
                     </header>
                     <div className="signup-profile-block">
@@ -547,7 +552,7 @@ const SignUp = () => {
                               onSelect={(value) => {
                                 setFieldValue("birth", value);
                               }}
-                              placeholder="DD / MM / YYYY"
+                              placeholder="DD-MM-YYYY"
                             />
                           </div>
                           <ErrorMessage
@@ -569,6 +574,7 @@ const SignUp = () => {
                           </label>
                           <PhoneInput
                             name="phone"
+                            initialValue={values.phone}
                             placeholder="WhatsApp Phone"
                             onChange={(value) => setFieldValue("phone", value)}
                           />
@@ -1022,10 +1028,8 @@ const SignUp = () => {
           )}
         </div>
       );
-      stepButtons = null;
       break;
     default:
-      stepButtons = null;
       stepComp = null;
   }
 
@@ -1061,7 +1065,7 @@ const SignUp = () => {
           </nav>
         </header>
 
-        <div className="signup-steps container">
+        <div className="signup-steps signup-steps--member container">
           <Steps
             model={stepConfig}
             activeIndex={activeStep}
@@ -1074,16 +1078,7 @@ const SignUp = () => {
           step={activeStep}
         >
           <div className="signup-step-panel">
-            <div
-              className="signup-step-note container"
-              data-active-step={activeStep + 1}
-              data-step-count={stepConfig.length}
-              aria-live="polite"
-            >
-              <p>{stepConfig[activeStep]?.description}</p>
-            </div>
             {stepComp}
-            {stepButtons}
           </div>
         </StepContentTransition>
       </main>

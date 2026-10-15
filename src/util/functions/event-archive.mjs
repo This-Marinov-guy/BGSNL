@@ -1,4 +1,4 @@
-export const ARCHIVE_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
+export const ARCHIVE_AFTER_MS = 3 * 24 * 60 * 60 * 1000;
 const normalizedStatus = (event) => String(event?.status || "").trim().toLowerCase();
 
 export const eventDateTime = (event) => {

@@ -3,7 +3,7 @@ import { FieldArray, useFormikContext } from "formik";
 import { SelectInput } from "@/compat/primereact";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { IconlyPlus } from "@/elements/ui/icons/IconlyIcons";
-import { OptionError, OptionField, OptionSwitch } from "./EventOptionFields";
+import { OptionField, OptionSwitch } from "./EventOptionFields";
 
 export default function EventCollectData() {
   const { values, setFieldValue } = useFormikContext();
@@ -21,8 +21,7 @@ export default function EventCollectData() {
   };
   return <section className="event-collect-data" aria-labelledby={`${id}-title`}>
     <header><h3 id={`${id}-title`}>Collect data</h3><p>Ask guests for the details you need when they get a ticket. All questions are optional unless marked required.</p></header>
-    <FieldArray name="extraInputsForm">{({ push, remove }) => <div className="event-option-items">
-      <OptionError name="extraInputsForm" />
+    <FieldArray name="extraInputsForm">{({ push, remove }) => <div className="event-option-items" data-custom-validation-field data-field-name="extraInputsForm">
       {!questions.length && <p className="event-option-help">No extra questions added.</p>}
       <AnimatePresence initial={false}>
       {questions.map((question, index) => {
@@ -43,20 +42,20 @@ export default function EventCollectData() {
               <label htmlFor={typeId}>Answer type <span className="required-mark">*</span></label>
               <SelectInput id={typeId} name={`${prefix}.type`} value={question.type} onChange={event => setFieldValue(`${prefix}.type`, event.target.value)}>
                 <option value="" disabled>Choose an answer type</option><option value="text">Written answer</option><option value="select">Choose from options</option>
-              </SelectInput><OptionError name={`${prefix}.type`} />
+              </SelectInput>
             </div>
             <OptionSwitch className="event-option-grid__switch" name={`${prefix}.required`} label="Answer required" />
             {question.type === "select" && <OptionSwitch className="event-option-grid__switch" name={`${prefix}.multiselect`} label="Allow multiple answers" />}
           </div>
           {question.type === "select" && <div className="event-question-options">
-            <FieldArray name={`${prefix}.options`}>{({ push: addOption, remove: removeOption }) => <>
-              <h4>Answer options</h4><OptionError name={`${prefix}.options`} />
+            <FieldArray name={`${prefix}.options`}>{({ push: addOption, remove: removeOption }) => <div data-custom-validation-field data-field-name={`${prefix}.options`}>
+              <h4>Answer options</h4>
               {(question.options ?? []).map((option, optionIndex) => <div className="event-question-option" key={optionIndex}>
                 <OptionField name={`${prefix}.options[${optionIndex}]`} label={`Option ${optionIndex + 1} *`} />
                 <button className="event-option-remove" type="button" onClick={() => removeOption(optionIndex)} aria-label={`Remove option ${optionIndex + 1} from question ${index + 1}`}>Remove</button>
               </div>)}
               <button type="button" className="event-form-button event-form-button--ghost" disabled={(question.options?.length ?? 0) >= 100} onClick={() => addOption("")}><IconlyPlus aria-hidden className="event-form-button__icon" size={18} />Add option</button>
-            </>}</FieldArray>
+            </div>}</FieldArray>
           </div>}
         </motion.div>;
       })}

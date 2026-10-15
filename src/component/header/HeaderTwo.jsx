@@ -123,7 +123,7 @@ const HeaderTwo = (props) => {
           {props.centerContent}
 
           <div className="header-right header-red">
-            <HeaderContent forceRegion={region} />
+            <HeaderContent forceRegion={region} anonymous={props.anonymous} />
 
             {/* Start Humberger Menu  */}
             <div className="humberger-menu d-block d-xl-none pl--20">
@@ -156,6 +156,7 @@ const HeaderTwo = (props) => {
 };
 
 HeaderTwo.propTypes = {
+  anonymous: PropTypes.bool,
   forceRegion: PropTypes.string,
   centerContent: PropTypes.node,
 };

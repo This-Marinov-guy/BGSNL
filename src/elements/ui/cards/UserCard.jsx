@@ -2,7 +2,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import moment from "moment";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import {
@@ -197,7 +197,7 @@ const UserCard = ({ user, onUserRefresh }) => {
               {user?.birth && (
                 <li>
                   <span className="bold">Birth: </span>
-                  {moment(user.birth).format("D MMM YYYY")}
+                  {formatDisplayDate(user.birth)}
                 </li>
               )}
               <li>

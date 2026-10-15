@@ -15,12 +15,6 @@ const AddEvent = () => {
         logoname="logo.png"
       />
       <main className="container event-admin-page event-form-page">
-        <header className="event-workspace-heading">
-          <div>
-            <span className="event-workspace-heading__eyebrow">Events</span>
-            <h1>Create an event</h1>
-          </div>
-        </header>
         <EventForm />
       </main>
 

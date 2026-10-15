@@ -3,11 +3,11 @@ import moment from "moment-timezone";
 const EVENT_TIME_ZONE = "Europe/Amsterdam";
 const eventMoment = (value) => moment.tz(value, EVENT_TIME_ZONE).locale("en");
 
-export const MOMENT_DATE_TIME_YEAR = "Do MMM YYYY h:mm a";
-export const MOMENT_DATE_TIME = "Do MMM h:mm a";
-export const MOMENT_DATE_YEAR = "Do MMM YYYY";
-export const MOMENT_DATE = "Do MMM";
-export const EVENT_DATE_TIME = "Do MMM HH:mm";
+export const MOMENT_DATE_TIME_YEAR = "DD-MM-YYYY HH:mm";
+export const MOMENT_DATE_TIME = "DD-MM-YYYY HH:mm";
+export const MOMENT_DATE_YEAR = "DD-MM-YYYY";
+export const MOMENT_DATE = "DD-MM-YYYY";
+export const EVENT_DATE_TIME = "DD-MM-YYYY HH:mm";
 
 export const getEventDateTimePresentation = (date, correctedDate) => {
   // Public event labels must match during SSR and hydration, regardless of the
@@ -35,9 +35,9 @@ export const getEventDateTimePresentation = (date, correctedDate) => {
 
 // Format used for "updated" / corrected event date+time. Renders in the
 // event's Amsterdam timezone, consistently on the server and in the browser.
-export const CORRECTED_DATE_TIME = "DD - MM hh:mm a";
+export const CORRECTED_DATE_TIME = "DD-MM-YYYY HH:mm";
 
-// Stringly-typed ISO/Date input → "DD - MM hh:mm a" in the event's timezone.
+// Stringly-typed ISO/Date input → "DD-MM-YYYY HH:mm" in the event's timezone.
 // Returns "" when the input is missing or unparseable.
 export const formatCorrectedDateTime = (value) => {
   if (!value) return "";

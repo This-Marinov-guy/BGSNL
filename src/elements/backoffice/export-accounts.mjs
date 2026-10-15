@@ -1,3 +1,4 @@
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 const formulaPrefix = /^[=+\-@]/;
 
 const safeCell = (value) => {
@@ -6,7 +7,7 @@ const safeCell = (value) => {
 };
 
 const csvCell = (value) => `"${safeCell(value).replace(/"/g, '""')}"`;
-const dateOnly = (value) => String(value || "").slice(0, 10);
+const dateOnly = (value) => formatDisplayDate(String(value || "").slice(0, 10));
 const displayCity = (value) => String(value || "").replaceAll("_", " ");
 const displayStatus = (value) => String(value || "").replaceAll("_", " ");
 const displayRoles = (roles) => Array.isArray(roles) ? roles.map(displayStatus).join(", ") : "";

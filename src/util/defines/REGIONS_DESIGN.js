@@ -21,6 +21,7 @@ export const REGIONS = [
 
 export const DEFAULT_REGION = "netherlands";
 export const ADMIN_EVENT_REGIONS = [...REGIONS, DEFAULT_REGION];
+export const STATISTICS_REGIONS = [...ADMIN_EVENT_REGIONS, "unassigned"];
 
 export const REGION_MAIN_COLOR = {
   groningen: "#f92820",

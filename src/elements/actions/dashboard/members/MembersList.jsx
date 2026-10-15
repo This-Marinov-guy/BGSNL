@@ -1,434 +1,138 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
 import { useSelector } from "react-redux";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ComposedChart,
-  Legend,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { useHttpClient } from "../../../../hooks/common/http-hook";
-import { selectUser } from "../../../../redux/user";
-import {
-  sessionClaims,
-} from "../../../../util/functions/authorization";
-import { ALL_MEMBER_REGIONS_ACCESS } from "../../../../util/defines/common";
-import { REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
-import {
-  capitalizeFirstLetter,
-} from "../../../../util/functions/capitalize";
-import { hasOverlap } from "../../../../util/functions/helpers";
-import { SelectInput, Skeleton } from "@/compat/primereact";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Skeleton } from "@/compat/primereact";
+import InfoHint from "@/elements/ui/icons/InfoHint";
+import { useHttpClient } from "@/hooks/common/http-hook";
+import { selectUser } from "@/redux/user";
+import { sessionClaims } from "@/util/functions/authorization";
+import { ALL_MEMBER_REGIONS_ACCESS } from "@/util/defines/common";
+import { REGIONS, STATISTICS_REGIONS } from "@/util/defines/REGIONS_DESIGN";
+import { memberAverageComparison } from "@/util/analytics/member-average-comparison.mjs";
+import { monthBuckets } from "@/util/analytics/statistics-period.mjs";
 import Filter from "../Filter";
-import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
-import MemberAccordion from "./MemberAccordion";
-import { exportMemberDemographicsCSV, exportMembersCSV } from "./exportMembers";
+import { StatisticsDateField, useStatisticsPeriod } from "../StatisticsPeriod";
+import { statisticsTooltipStyle } from "../statistics-tooltip.mjs";
+import styles from "../statistics-page.module.scss";
 
-const MEMBER_STATUS_FILTERS = new Set(["active", "expired"]);
+const euro = new globalThis.Intl.NumberFormat("en-NL", { style: "currency", currency: "EUR" });
+const number = new globalThis.Intl.NumberFormat("en-NL");
+const wholeNumber = new globalThis.Intl.NumberFormat("en-NL", { maximumFractionDigits: 0 });
+const axis = { fill: "#607168", fontSize: 12 };
 
-const memberStatusCounts = (list) => list.reduce((counts, member) => {
-  if (member.isPaid) counts.active += 1;
-  else counts.expired += 1;
-  return counts;
-}, { active: 0, expired: 0 });
+function MonthlyAverageCard({ label, value, nationalValue, isNational, loading }) {
+  const comparison = memberAverageComparison(value, nationalValue, isNational);
+  const toneClass = comparison.tone === "up" ? styles.averageComparisonUp : comparison.tone === "down" ? styles.averageComparisonDown : "";
+  const hasNationalBaseline = nationalValue != null && Number.isFinite(Number(nationalValue)) && Number(nationalValue) > 0;
+  return <article className={styles.metric}>
+    <span>{label}</span>
+    <strong>{loading ? <Skeleton width="5rem" height="2.5rem" /> : value == null ? "—" : wholeNumber.format(value)}</strong>
+    {!isNational && (loading ? <Skeleton width="9rem" height="1rem" /> : <div className={styles.averageComparisonRow}>
+      <small className={`${styles.averageComparison} ${toneClass}`}>{comparison.label}</small>
+      {hasNationalBaseline && value != null && <InfoHint icon="info" label={`National baseline for ${label.toLowerCase()}`} text={`National baseline: ${wholeNumber.format(nationalValue)} ${label.toLowerCase()}.`} />}
+    </div>)}
+  </article>;
+}
 
-const chartNumber = (value) => Number.isFinite(value) ? value : 0;
-
-const euro = new globalThis.Intl.NumberFormat("en-NL", {
-  style: "currency",
-  currency: "EUR",
-  maximumFractionDigits: 0,
-});
-
-const membershipTrend = (list) => {
-  const months = Array.from({ length: 6 }, (_, index) => moment().startOf("month").subtract(5 - index, "months"));
-  const buckets = new Map(months.map((month) => [month.format("YYYY-MM"), {
-    key: month.format("YYYY-MM"),
-    label: month.format("MMM"),
-    starts: 0,
-    newMrr: 0,
-  }]));
-
-  list.forEach((member) => {
-    const started = moment(member.startDate);
-    if (!started.isValid()) return;
-    const bucket = buckets.get(started.format("YYYY-MM"));
-    if (!bucket) return;
-    bucket.starts += 1;
-    bucket.newMrr += Number(member.monthlyRevenue) || 0;
-  });
-
-  return [...buckets.values()].map((bucket) => ({
-    ...bucket,
-    newMrr: Math.round(bucket.newMrr * 100) / 100,
-  }));
+MonthlyAverageCard.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number,
+  nationalValue: PropTypes.number,
+  isNational: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
-const MembersStatsChart = ({ data, mode }) => {
-  const hasData = data.some((entry) => chartNumber(entry.active) + chartNumber(entry.expired) > 0);
-
-  return (
-    <section className="members-statistics-chart" aria-labelledby="members-statistics-chart-title">
-      <div className="members-statistics-chart__header">
-        <div>
-          <h4 id="members-statistics-chart-title">
-            {mode === "regions" ? "Members by city" : "Visible members"}
-          </h4>
-          <p>
-            {mode === "regions"
-              ? "Active and expired members grouped by region."
-              : "Active and expired split for the current access and filters."}
-          </p>
-        </div>
-      </div>
-      {hasData ? (
-        <div className="members-statistics-chart__canvas">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5ece8" vertical={false} />
-              <XAxis dataKey="label" tickLine={false} axisLine={false} interval={0} tick={{ fill: "#526158", fontSize: 12 }} />
-              <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
-              <Tooltip cursor={{ fill: "rgba(1, 115, 99, 0.06)" }} />
-              <Legend />
-              <Bar dataKey="active" name="Active" stackId="members" fill="#017363" radius={[5, 5, 0, 0]} />
-              <Bar dataKey="expired" name="Expired" stackId="members" fill="#dc3545" radius={[5, 5, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : (
-        <p className="members-statistics-chart__empty">No member statistics for the current filters.</p>
-      )}
-    </section>
-  );
-};
-
-MembersStatsChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    active: PropTypes.number.isRequired,
-    expired: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
-  })).isRequired,
-  mode: PropTypes.oneOf(["regions", "overall"]).isRequired,
-};
-
-const MemberRevenueTrend = ({ data }) => {
-  const hasData = data.some((entry) => entry.starts > 0 || entry.newMrr > 0);
-
-  return (
-    <section className="analytics-trend-card" aria-labelledby="member-revenue-trend-title">
-      <header className="analytics-trend-card__header">
-        <div>
-          <h4 id="member-revenue-trend-title">Membership growth and recurring value</h4>
-          <p>New membership periods and their monthly recurring value for the last six months.</p>
-        </div>
-      </header>
-      {hasData ? (
-        <div className="analytics-trend-card__canvas">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={data} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5ece8" vertical={false} />
-              <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
-              <YAxis yAxisId="count" allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} />
-              <YAxis yAxisId="revenue" orientation="right" tickLine={false} axisLine={false} tick={{ fill: "#526158", fontSize: 12 }} tickFormatter={(value) => `€${value}`} />
-              <Tooltip formatter={(value, name) => [name === "New monthly value" ? euro.format(value) : value, name]} />
-              <Legend />
-              <Bar yAxisId="count" dataKey="starts" name="Membership starts" fill="#017363" radius={[5, 5, 0, 0]} />
-              <Line yAxisId="revenue" type="monotone" dataKey="newMrr" name="New monthly value" stroke="#bd8a21" strokeWidth={3} dot={{ r: 3 }} />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
-      ) : <p className="analytics-trend-card__empty">No membership starts are available for the last six months.</p>}
-    </section>
-  );
-};
-
-MemberRevenueTrend.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    starts: PropTypes.number.isRequired,
-    newMrr: PropTypes.number.isRequired,
-  })).isRequired,
-};
-
-
-const MemberListSkeleton = () => (
-  <div className="dashboard-list-skeleton mt--20" aria-hidden="true">
-    {[0, 1].map((section) => (
-      <section className="region-section" key={section}>
-        <div className="row">
-          <div className="col-12">
-            <Skeleton width="11rem" height="1.75rem" className="mb-3" />
-          </div>
-        </div>
-        <div className="members-accordion-list">
-          {[0, 1, 2].map((row) => (
-            <div className="dashboard-list-skeleton__row member-accordion" key={row}>
-              <div className="dashboard-list-skeleton__main">
-                <Skeleton width="min(16rem, 70%)" height="1.2rem" />
-                <div className="dashboard-list-skeleton__meta">
-                  <Skeleton width="5.5rem" height="1rem" />
-                  <Skeleton width="4.5rem" height="1rem" />
-                  <Skeleton width="4rem" height="1rem" />
-                  <Skeleton width="6rem" height="1rem" />
-                </div>
-              </div>
-              <Skeleton shape="circle" size="2rem" />
-            </div>
-          ))}
-        </div>
-      </section>
-    ))}
-  </div>
-);
-
-const MembersList = () => {
-  const [members, setMembers] = useState([]);
-  const [summary, setSummary] = useState({
-    totalCount: 0,
-    totalUnpaid: 0,
-    mmr: 0,
-  });
+export default function MembersList({ tabs }) {
+  const [statistics, setStatistics] = useState({ summary: { totalActive: 0, totalInactive: 0, mmr: 0 }, monthly: {}, activeMonthly: {}, averages: {}, nationalAverages: {} });
   const [loading, setLoading] = useState(true);
-
+  const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
   const user = useSelector(selectUser);
-  const { roles, region } = sessionClaims(user.session);
-  const isAdmin = hasOverlap(roles, ALL_MEMBER_REGIONS_ACCESS);
-
-  const [searchParams, setSearchParams] = useFilterSearchParams();
-  const regionParam = REGIONS.includes(searchParams.get("region"))
-    ? searchParams.get("region")
-    : "";
-  const statusParam = MEMBER_STATUS_FILTERS.has(searchParams.get("memberStatus"))
-    ? searchParams.get("memberStatus")
-    : "";
-
-  const handleStatusChange = (event) => {
-    const nextStatus = event.target.value;
-    setSearchParams((current) => {
-      if (MEMBER_STATUS_FILTERS.has(nextStatus)) current.set("memberStatus", nextStatus);
-      else current.delete("memberStatus");
-      return current;
-    });
-  };
-
+  const { roles, region: assignedRegion } = sessionClaims(user.session);
+  const canChooseRegion = roles.some((role) => ALL_MEMBER_REGIONS_ACCESS.includes(role));
+  const missingRegion = !canChooseRegion && !REGIONS.includes(assignedRegion);
+  const { searchParams, from, to, setDate, invalid } = useStatisticsPeriod();
+  const region = canChooseRegion && STATISTICS_REGIONS.includes(searchParams.get("region")) ? searchParams.get("region") : "";
   const { sendRequest } = useHttpClient();
+  const requestRef = useRef(sendRequest);
+  requestRef.current = sendRequest;
 
   useEffect(() => {
+    if (invalid || missingRegion) { setLoading(false); return undefined; }
     let active = true;
     const controller = new AbortController();
-    const fetchMembers = async () => {
-      try {
-        setLoading(true);
-        const queryRegion = isAdmin && regionParam ? `?region=${regionParam}` : "";
-        const responseData = await sendRequest(
-          `dashboard/members${queryRegion}`,
-          "GET",
-          null,
-          {},
-          true,
-          false,
-          { signal: controller.signal }
-        );
-
-        if (active && responseData?.members) {
-          setMembers(responseData.members);
-          setSummary(responseData.summary);
-        }
-      } catch (err) {
-        if (active) console.error("Error loading members:", err);
-      } finally {
-        if (active) setLoading(false);
-      }
-    };
-
-    fetchMembers();
+    setLoading(true);
+    setError(false);
+    const params = new URLSearchParams({ from, to });
+    if (region) params.set("region", region);
+    requestRef.current(`dashboard/member-statistics?${params}`, "GET", null, {}, false, false, { signal: controller.signal })
+      .then((response) => {
+        if (!active) return;
+        if (!response?.summary || !response?.monthly || !response?.activeMonthly || !response?.averages || !response?.nationalAverages) { setError(true); return; }
+        setStatistics(response);
+      })
+      .catch(() => { if (active) setError(true); })
+      .finally(() => { if (active) setLoading(false); });
     return () => { active = false; controller.abort(); };
-  }, [regionParam, isAdmin]);
+  }, [region, from, to, invalid, missingRegion, retry]);
 
-  const filteredMembers = members.filter((member) => {
-    if (statusParam === "active") return Boolean(member.isPaid);
-    if (statusParam === "expired") return !member.isPaid;
-    return true;
-  });
-  const statusLabel = statusParam ? `${statusParam} ` : "";
+  const { totalActive: active, totalInactive: inactive, mmr } = statistics.summary;
+  const buckets = monthBuckets(from, to);
+  const timeline = buckets.filter((bucket) => Object.hasOwn(statistics.activeMonthly, bucket.key))
+    .map((bucket) => ({ ...bucket, members: statistics.activeMonthly[bucket.key] }));
+  const newMembers = buckets.reduce((total, bucket) => total + (statistics.monthly[bucket.key] || 0), 0);
+  const hasMembers = active + inactive > 0;
+  const isNational = canChooseRegion && !region;
 
-  // Group members by region
-  const membersByRegion = {};
-  const regionList = isAdmin
-    ? regionParam
-      ? REGIONS.filter((r) => r === regionParam)
-      : REGIONS
-    : REGIONS.filter((r) => r === region);
+  return <section className={styles.page} aria-label="Member metrics">
+    <header className={styles.heading}>
+      <h1>Member metrics</h1>
+      {tabs}
+    </header>
 
-  for (const r of regionList) {
-    membersByRegion[r] = filteredMembers.filter((m) => m.region === r);
-  }
+    <Filter title="Filter member metrics" allLabel="National" regions={STATISTICS_REGIONS} showRegion={canChooseRegion} onClear={(current) => {
+      current.delete("from"); current.delete("to"); current.delete("memberStatus");
+    }}>
+      <StatisticsDateField label="From" dateKey="from" value={from} onChange={setDate} />
+      <StatisticsDateField label="To" dateKey="to" value={to} onChange={setDate} />
+    </Filter>
 
-  // Members without a known region
-  const unknownRegion = filteredMembers.filter(
-    (m) => !m.region || !REGIONS.includes(m.region)
-  );
-  if (unknownRegion.length > 0) {
-    membersByRegion["other"] = unknownRegion;
-  }
-
-  const chartMode = isAdmin && !regionParam ? "regions" : "overall";
-  const chartData = chartMode === "regions"
-    ? Object.entries(membersByRegion).map(([key, regionMembers]) => {
-      const counts = memberStatusCounts(regionMembers);
-      return {
-        label: capitalizeFirstLetter(key, true),
-        active: counts.active,
-        expired: counts.expired,
-      };
-    })
-    : (() => {
-      const counts = memberStatusCounts(filteredMembers);
-      return [
-        { label: "Active", active: counts.active, expired: 0 },
-        { label: "Expired", active: 0, expired: counts.expired },
-      ];
-    })();
-  const activeCount = members.filter((member) => member.isPaid).length;
-  const inactiveCount = members.length - activeCount;
-  const expiringSoon = members.filter((member) => {
-    if (!member.isPaid || !member.expireDate) return false;
-    const expiry = moment(member.expireDate);
-    return expiry.isSameOrAfter(moment(), "day") && expiry.isSameOrBefore(moment().add(30, "days"), "day");
-  }).length;
-  const trendData = membershipTrend(filteredMembers);
-
-  return (
-    <>
-      <div
-        className="dashboard-statistics-toolbar"
-        style={{ gap: "15px" }}
-      >
-        <h3 className="center_text" style={{ margin: 0 }}>
-          Member statistics
-        </h3>
-        <div className="analytics-export-actions">
-          <button className="rn-button-style--2 rn-btn-green" onClick={() => exportMembersCSV(filteredMembers)} disabled={loading || filteredMembers.length === 0}><span>Export members</span></button>
-          <button className="analytics-export-actions__secondary" onClick={() => exportMemberDemographicsCSV(filteredMembers)} disabled={loading || filteredMembers.length === 0}><span>Export demographics</span></button>
+    {missingRegion ? <p className={styles.empty}>Your account needs an assigned region before you can view member metrics. Ask an administrator to set your region.</p> :
+      invalid ? <p className={styles.error} role="alert">The start date must be before the end date. Choose a valid date range or reset the filters.</p> :
+      error ? <p className={styles.error} role="alert">Member metrics could not be loaded. <button type="button" onClick={() => setRetry((value) => value + 1)}>Try again</button></p> : <>
+        <div className={`${styles.metrics} ${styles.memberSummary}`} aria-busy={loading}>
+          <article className={`${styles.metric} ${styles.metricActive}`}><span>Active members</span><strong>{loading ? <Skeleton width="5rem" height="2.5rem" /> : number.format(active)}</strong></article>
+          <article className={styles.metric}><span>New members</span><strong>{loading ? <Skeleton width="5rem" height="2.5rem" /> : number.format(newMembers)}</strong></article>
+          <article className={`${styles.metric} ${styles.metricInactive}`}><span>Inactive members</span><strong>{loading ? <Skeleton width="5rem" height="2.5rem" /> : number.format(inactive)}</strong></article>
+          <article className={styles.metric}><span>Monthly recurring revenue (MMR)</span><strong>{loading ? <Skeleton width="7rem" height="2.5rem" /> : euro.format(mmr)}</strong></article>
         </div>
-      </div>
 
-      {isAdmin && <Filter title="Member filters" onClear={(current) => {
-        current.delete("memberStatus");
-      }}>
-        <label>
-          <span>Status</span>
-          <SelectInput value={statusParam} onChange={handleStatusChange}>
-            <option value="">All</option>
-            <option value="active">Active</option>
-            <option value="expired">Expired</option>
-          </SelectInput>
-        </label>
-      </Filter>}
-
-      {/* Summary Panels */}
-      <div className="row mb--30 dashboard-metrics">
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <p className="dashboard-stat-card__label">
-              Monthly Recurring Revenue
-            </p>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="80px" /> : `€${summary.mmr}`}
-            </div>
+        <section className={styles.averageSection} aria-labelledby="member-average-title" aria-busy={loading}>
+          <h2 id="member-average-title">Monthly averages</h2>
+          <div className={styles.metrics} style={{ "--stat-columns": 2 }}>
+            <MonthlyAverageCard label="Active members per month" value={statistics.averages.averageActiveMembersMonth} nationalValue={statistics.nationalAverages.averageActiveMembersMonth} isNational={isNational} loading={loading} />
+            <MonthlyAverageCard label="New members per month" value={statistics.averages.averageNewMembersMonth} nationalValue={statistics.nationalAverages.averageNewMembersMonth} isNational={isNational} loading={loading} />
           </div>
-        </div>
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card">
-            <p className="dashboard-stat-card__label">Active members</p>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : activeCount}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card dashboard-stat-card--warning">
-            <p className="dashboard-stat-card__label">Inactive members</p>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : inactiveCount}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-3 col-md-6 col-12 mb--15">
-          <div className="dashboard-stat-card dashboard-stat-card--attention">
-            <p className="dashboard-stat-card__label">Renewals in 30 days</p>
-            <div className="dashboard-stat-card__value">
-              {loading ? <Skeleton width="60px" /> : expiringSoon}
-            </div>
-          </div>
-        </div>
-      </div>
+        </section>
 
-      {loading ? (
-        <div className="members-statistics-chart members-statistics-chart--loading">
-          <Skeleton width="12rem" className="mb-2" />
-          <Skeleton height="14rem" />
-        </div>
-      ) : (
-        <MembersStatsChart data={chartData} mode={chartMode} />
-      )}
+        {!loading && !hasMembers ? <p className={styles.empty}>No members found for this region selection.</p> : <section className={styles.chart} aria-labelledby="member-timeline-title" aria-busy={loading}>
+          <h2 id="member-timeline-title">Active members over time</h2>
+          {loading ? <Skeleton height="19rem" /> : !timeline.length ? <p>No dates in this period have occurred yet.</p> : <div className={styles.chartCanvas}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={timeline} margin={{ top: 8, right: 18, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#cbd5cf" vertical={false} />
+                <XAxis dataKey="label" tickLine={false} axisLine={false} tick={axis} minTickGap={14} />
+                <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={axis} width={32} />
+                <Tooltip {...statisticsTooltipStyle} />
+                <Line type="monotone" dataKey="members" name="Active members" stroke="var(--dashboard-accent)" strokeWidth={3} dot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>}
+        </section>}
+        {!loading && timeline.length > 0 && <table className={styles.srOnly}><caption>Active members by month</caption><thead><tr><th scope="col">Month</th><th scope="col">Active members</th></tr></thead><tbody>{timeline.map((month) => <tr key={month.key}><th scope="row">{month.label}</th><td>{month.members}</td></tr>)}</tbody></table>}
+      </>}
+  </section>;
+}
 
-      {loading ? (
-        <div className="analytics-trend-card analytics-trend-card--loading">
-          <Skeleton width="16rem" className="mb-2" />
-          <Skeleton height="15rem" />
-        </div>
-      ) : <MemberRevenueTrend data={trendData} />}
-
-      <p className="analytics-data-note">Demographic exports contain regional and study data only; direct identifiers are excluded.</p>
-
-      {loading ? (
-        <MemberListSkeleton />
-      ) : (
-        <div className="mt--20">
-          {Object.entries(membersByRegion).map(
-            ([regionKey, regionMembers], index) => (
-              <div className="region-section" key={regionKey}>
-                <div className="row">
-                  <div className="col-12">
-                    <h4 className="archive region-title">
-                      {capitalizeFirstLetter(regionKey, true)} ({regionMembers.length})
-                    </h4>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12">
-                    {regionMembers.length ? (
-                      <div className="members-accordion-list">
-                        {regionMembers.map((member) => (
-                          <MemberAccordion key={member._id} member={member} />
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="no-events-message">
-                        No {statusLabel}members in this region
-                      </p>
-                    )}
-                  </div>
-                </div>
-                {index <
-                  Object.keys(membersByRegion).length - 1 && (
-                  <hr className="region-divider" />
-                )}
-              </div>
-            )
-          )}
-        </div>
-      )}
-    </>
-  );
-};
-
-export default MembersList;
+MembersList.propTypes = { tabs: PropTypes.node.isRequired };

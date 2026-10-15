@@ -4,7 +4,6 @@ import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadStat
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Password } from "@/compat/primereact";
-import { FaGoogle } from "@/elements/ui/icons/IconlyIcons";
 import { selectUser, refreshSession } from "@/redux/user";
 import { announceSessionChange } from "@/util/auth/browser-session.mjs";
 import { showNotification } from "@/redux/notification";
@@ -112,7 +111,9 @@ export default function ConnectedAccounts() {
       <h2 id={`${id}-heading`} className="settings-group__title">Sign-in methods</h2>
       <ul className="settings-list">
         <li className="settings-list__item">
-          <span aria-hidden="true" className="settings-list__icon"><FaGoogle /></span>
+          <span aria-hidden="true" className={`settings-list__icon ${styles.settingsGoogleIcon}`}>
+            <img src="/assets/images/svg/3d/google.png" alt="" width="44" height="44" />
+          </span>
           <div className="settings-list__text">
             <h3 className="settings-list__title">Google</h3>
             <p className="settings-list__description">{!google ? loadFailed ? "You can continue using your BGSNL password." : <LoadingSkeleton label="Loading your connected accounts" variant="inline" /> : google.connected ? `Connected to ${google.email}`

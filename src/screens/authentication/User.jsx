@@ -1,6 +1,7 @@
 "use client";
 
 import React, {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -80,6 +81,26 @@ const User = () => {
 
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const emailExploreHandled = useRef(false);
+  const exploreFromEmail = searchParams.get("explore") === "v4";
+  const openExploreVersion4 = useCallback(() => {
+    setIsSidebarOpen(false);
+    setCampaignOpenRequest((count) => count + 1);
+    clarityEvent(ANALYTICS_EVENTS.EXPLORE_V4_CLICKED);
+  }, []);
+
+  useEffect(() => {
+    if (!exploreFromEmail) {
+      emailExploreHandled.current = false;
+      return;
+    }
+    if (!currentUser || emailExploreHandled.current) return;
+    emailExploreHandled.current = true;
+    openExploreVersion4();
+    const url = new URL(window.location.href);
+    url.searchParams.delete("explore");
+    window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+  }, [currentUser, exploreFromEmail, openExploreVersion4]);
 
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
@@ -239,11 +260,7 @@ const User = () => {
       type="button"
       className={campaignStyles.banner}
       aria-haspopup="dialog"
-      onClick={() => {
-        setIsSidebarOpen(false);
-        setCampaignOpenRequest((count) => count + 1);
-        clarityEvent(ANALYTICS_EVENTS.EXPLORE_V4_CLICKED);
-      }}
+      onClick={openExploreVersion4}
     >
       <span>Explore version 4</span>
     </button>

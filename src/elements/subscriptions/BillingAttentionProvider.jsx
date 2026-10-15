@@ -20,8 +20,9 @@ export default function BillingAttentionProvider({ user, children }) {
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState(null);
   const required = needsBillingAttention(user);
-  const key = JSON.stringify([user?._id || user?.id, user?.status, user?.subscription?.id,
-    user?.subscription?.status, user?.subscription?.syncedAt, user?.lockReason, user?.billingLocked, user?.billingVerificationUnavailable, attempt]);
+  const visualKey = JSON.stringify([user?._id || user?.id, user?.status, user?.subscription?.id,
+    user?.subscription?.status, user?.lockReason, user?.billingLocked, user?.billingVerificationUnavailable, attempt]);
+  const key = JSON.stringify([visualKey, user?.subscription?.syncedAt]);
 
   useEffect(() => {
     if (!required) return undefined;
@@ -38,11 +39,13 @@ export default function BillingAttentionProvider({ user, children }) {
       })();
       operation.current = { key, promise };
     }
-    operation.current.promise.then((notice) => { if (active) setResult({ key, notice }); });
+    operation.current.promise.then((notice) => { if (active) setResult({ visualKey, notice }); });
     return () => { active = false; };
   }, [key, required]);
 
-  const loading = required && result?.key !== key;
+  // A new sync timestamp requires a fresh check, but keeps the last result visible.
+  // Initial checks, account changes and explicit retries still use the skeleton.
+  const loading = required && result?.visualKey !== visualKey;
   return <BillingAttentionContext.Provider value={{ loading, notice: required && !loading ? result.notice : null,
     retry: () => setAttempt((value) => value + 1) }}>
     {children}

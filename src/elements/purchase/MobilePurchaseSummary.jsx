@@ -2,17 +2,24 @@
 
 import PropTypes from "prop-types";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import {
   FiX,
   IconlyCalendar,
+  IconlyImageOff,
   IconlyLocation,
+  IconlyShow,
 } from "@/elements/ui/icons/IconlyIcons";
 import ImageFb from "../ui/media/ImageFb";
 import { getEventDateTimePresentation } from "../../util/functions/date";
 
+const ImageGallery = dynamic(() => import("@/elements/ui/media/ImageGallery"), { ssr: false });
+
 const MobilePurchaseSummary = ({ event, price, ticketQuantity = 1, selectedAddOns = [] }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
+  const [posterPreviewOpen, setPosterPreviewOpen] = useState(false);
+  const [posterFailed, setPosterFailed] = useState(false);
 
   if (!isVisible) return null;
 
@@ -22,7 +29,7 @@ const MobilePurchaseSummary = ({ event, price, ticketQuantity = 1, selectedAddOn
     event.correctedDate
   );
 
-  return (
+  return <>
     <aside
       className={`purchase-mobile-summary${isClosing ? " is-closing" : ""}`}
       aria-hidden={isClosing}
@@ -46,9 +53,10 @@ const MobilePurchaseSummary = ({ event, price, ticketQuantity = 1, selectedAddOn
         <FiX aria-hidden />
       </button>
 
-      <div className="purchase-mobile-summary-poster">
-        <ImageFb src={event.poster} alt="" aria-hidden />
-      </div>
+      {event.poster && !posterFailed ? <button type="button" className="purchase-mobile-summary-poster" onClick={() => setPosterPreviewOpen(true)} aria-label={`Preview ${eventTitle} poster`}>
+        <ImageFb src={event.poster} alt="" aria-hidden onError={() => setPosterFailed(true)} />
+        <span className="purchase-mobile-summary-poster-icon" aria-hidden="true"><IconlyShow /></span>
+      </button> : <div className="purchase-mobile-summary-poster purchase-mobile-summary-poster--empty" role="img" aria-label="Poster unavailable"><IconlyImageOff aria-hidden="true" /></div>}
 
       <div className="purchase-mobile-summary-copy">
         <div className="purchase-mobile-summary-heading">
@@ -77,7 +85,8 @@ const MobilePurchaseSummary = ({ event, price, ticketQuantity = 1, selectedAddOn
         </span>
       </div>
     </aside>
-  );
+    {posterPreviewOpen && event.poster && !posterFailed && <ImageGallery images={[{ src: event.poster, alt: `${eventTitle} poster` }]} src={event.poster} alt={`${eventTitle} poster`} fileName={`${eventTitle}-poster`} open onClose={() => setPosterPreviewOpen(false)} />}
+  </>;
 };
 
 MobilePurchaseSummary.propTypes = {

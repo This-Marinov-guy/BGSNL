@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { decodeSessionToken, isSessionTokenValid, sessionExpiration, sameLoginSession, watchSessionExpiry, MAX_TIMER_DELAY, SESSION_LIFETIME_SECONDS } from "../src/util/functions/session-token.mjs";
+import { decodeSessionToken, isSessionTokenValid, sessionExpiration, sameLoginSession, watchSessionExpiry, MAX_TIMER_DELAY, SESSION_LIFETIME_SECONDS, LEGACY_SESSION_LIFETIME_SECONDS } from "../src/util/functions/session-token.mjs";
 
 const now = 1800000000000;
 const claims = { userId: "fixture", name: "България", roles: ["member"], version: 1, sessionVersion: 0, iss: "bgsnl-api", aud: "bgsnl-website",
@@ -13,7 +13,7 @@ test("safe JWT decoding handles Unicode, base64url and malformed storage", () =>
   for (const value of [null, "", "invalid", "a.b.c", {}, "a.W10.c"]) assert.equal(decodeSessionToken(value), null);
 });
 test("session metadata remains usable when access expires and preserves the original login age", () => {
-  const original = token(), refreshed = token({ iat: now / 1000 + 29 * 86400, exp: now / 1000 + 29 * 86400 + 900 });
+  const original = token(), refreshed = token({ iat: now / 1000 + 10 * 86400, exp: now / 1000 + 10 * 86400 + 900 });
   const expiresAt = now + SESSION_LIFETIME_SECONDS * 1000;
   assert.equal(sessionExpiration(original), expiresAt);
   assert.equal(sessionExpiration(refreshed), expiresAt);
@@ -21,15 +21,24 @@ test("session metadata remains usable when access expires and preserves the orig
   assert.equal(isSessionTokenValid(refreshed, { now: expiresAt }), false);
   for (const change of [{ auth_time: undefined }, { exp: claims.exp + 1 }, { iss: "other" }, { aud: "other" }, { version: 0 }, { iat: claims.exp + 1 }]) assert.equal(isSessionTokenValid(token(change), { now }), false);
 });
-test("long-lived sessions use safe timer chunks and expire only once", () => {
+test("legacy 30-day sessions use safe timer chunks and expire only once", () => {
   let clock = now, callback, delay, expired = 0;
-  const watcher = watchSessionExpiry(token(), () => { expired++; }, { now: () => clock, schedule: (fn, ms) => { callback = fn; delay = ms; return 1; }, cancel: () => {} });
+  const legacy = token({ session_exp: claims.auth_time + LEGACY_SESSION_LIFETIME_SECONDS });
+  const watcher = watchSessionExpiry(legacy, () => { expired++; }, { now: () => clock, schedule: (fn, ms) => { callback = fn; delay = ms; return 1; }, cancel: () => {} });
   assert.equal(delay, MAX_TIMER_DELAY);
   clock += MAX_TIMER_DELAY; callback();
   assert.equal(expired, 0);
-  assert.equal(delay, claims.session_exp * 1000 - clock);
-  clock = claims.session_exp * 1000; callback(); watcher.check();
+  assert.equal(delay, (claims.auth_time + LEGACY_SESSION_LIFETIME_SECONDS) * 1000 - clock);
+  clock = (claims.auth_time + LEGACY_SESSION_LIFETIME_SECONDS) * 1000; callback(); watcher.check();
   assert.equal(expired, 1);
+});
+test("legacy claims survive transition and sliding claims can extend beyond original day 30", () => {
+  assert.equal(sessionExpiration(token({ session_exp: claims.auth_time + LEGACY_SESSION_LIFETIME_SECONDS })),
+    now + LEGACY_SESSION_LIFETIME_SECONDS * 1000);
+  const iat = claims.auth_time + 20 * 86400;
+  assert.equal(sessionExpiration(token({ iat, exp: iat + 900, session_exp: iat + SESSION_LIFETIME_SECONDS })),
+    (iat + SESSION_LIFETIME_SECONDS) * 1000);
+  assert.equal(sessionExpiration(token({ session_exp: claims.auth_time + LEGACY_SESSION_LIFETIME_SECONDS + 1 })), null);
 });
 test("focus/visibility checks catch expiry after browser sleep; cleanup cancels it", () => {
   let clock = now, expired = 0;

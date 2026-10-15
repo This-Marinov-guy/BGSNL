@@ -126,6 +126,10 @@
   }
 }
 
+.signup-steps--member {
+  margin-bottom: 24px;
+}
+
 .signup-step-note {
   position: relative;
   min-height: 30px;
@@ -519,6 +523,11 @@
   }
 }
 
+.signup-plan-grid--member .signup-plan-card--featured .signup-plan-card__icon {
+  color: #9a7600;
+  background: rgba($gold, 0.2);
+}
+
 .signup-plan-card__price {
   display: flex;
   margin-top: 24px;
@@ -537,6 +546,14 @@
     color: rgba(31, 31, 37, 0.56);
     font-size: 1rem;
   }
+}
+
+.signup-plan-grid--member .signup-plan-card__price {
+  align-items: baseline;
+  flex-direction: row;
+  gap: 8px;
+
+  span { margin-top: 0; white-space: nowrap; }
 }
 
 .signup-plan-card__topline .signup-plan-card__price {
@@ -619,13 +636,6 @@
   font-size: 1rem;
   line-height: 1.5;
   text-align: center;
-}
-
-.signup-back-row {
-  display: flex;
-  margin-top: -56px;
-  margin-bottom: 32px;
-  justify-content: center;
 }
 
 .signup-back-button {
@@ -809,20 +819,22 @@
 }
 
 .signup-form-heading {
-  display: flex;
+  display: grid;
   margin-bottom: 30px;
   padding-bottom: 26px;
   align-items: center;
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
   gap: 18px;
   border-bottom: 1px solid rgba(2, 84, 32, 0.12);
 
   h2 {
-    margin: 0 0 0 auto;
+    grid-column: 2;
+    margin: 0;
     color: $heading-color;
     font-size: clamp(1.75rem, 3vw, 2.4rem);
     letter-spacing: -0.035em;
     line-height: 1.05;
-    text-align: right;
+    text-align: center;
   }
 
   p {
@@ -1176,13 +1188,13 @@
   }
 
   .signup-steps {
-    margin-bottom: 0;
-
     .p-steps,
     .p-stepper {
       padding: 5px 0;
     }
   }
+
+  .signup-steps--member { margin-bottom: 16px; }
 
   .signup-step-note {
     display: block;
@@ -1254,7 +1266,9 @@
   }
 
   .signup-form-heading {
-    flex-wrap: wrap;
+    gap: 12px;
+
+    h2 { font-size: clamp(1.5rem, 6vw, 1.9rem); }
   }
 
   .signup-agreements > div + div {

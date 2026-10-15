@@ -1,5 +1,5 @@
 "use client";
-/* global Intl */
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import PropTypes from "prop-types";
 import { IconlyDanger } from "@/elements/ui/icons/IconlyIcons";
@@ -15,9 +15,7 @@ export default function SubscriptionCancellationNotice({ user }) {
   return <section className={styles.dangerBanner} role="alert" aria-label="Subscription cancellation scheduled">
     <IconlyDanger className={styles.dangerIcon} aria-hidden />
     <h2>Your subscription is ending</h2>
-    <div className={styles.dangerContent}><p>Your subscription will end on <time dateTime={end.toISOString()}>{new Intl.DateTimeFormat("en-GB", {
-      day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Amsterdam",
-    }).format(end)}</time>. You keep your paid benefits until then.</p></div>
+    <div className={styles.dangerContent}><p>Your subscription will end on <time dateTime={end.toISOString()}>{formatDisplayDate(end)}</time>. You keep your paid benefits until then.</p></div>
   </section>;
 }
 

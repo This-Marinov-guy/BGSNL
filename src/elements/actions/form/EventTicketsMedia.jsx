@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { ErrorMessage, Field, useField, useFormikContext } from "formik";
+import { Field, useField, useFormikContext } from "formik";
 import PropTypes from "prop-types";
 import StepContentTransition from "../../ui/functional/StepContentTransition";
 import InfoHint from "../../ui/icons/InfoHint";
@@ -20,7 +20,6 @@ const PriceField = ({ name, label, required = false, placeholder }) => {
     <div className="rn-form-group event-ticket-price-field">
       <label htmlFor={id}>{label}{required && <span className="event-ticket-required required-mark"> *</span>}</label>
       <input {...field} value={field.value ?? ""} id={id} type="number" min={1} step="0.01" placeholder={placeholder} />
-      <ErrorMessage className="error" name={name} component="div" />
     </div>
   );
 };
@@ -32,7 +31,6 @@ const IncludedField = ({ name, label }) => {
     <div className="rn-form-group">
       <label htmlFor={id}>{label}</label>
       <Field id={id} name={name} placeholder="e.g., a welcome drink" />
-      <ErrorMessage className="error" name={name} component="div" />
     </div>
   );
 };
@@ -116,12 +114,12 @@ export default function EventTicketsMedia({ children }) {
           <div className="event-ticket-price-row">
             <div><h4>Guests</h4><p>Standard admission</p></div>
             <PriceField name="guestPrice" label="Guest price (€)" required placeholder="15.00" />
-            <IncludedField name="entryIncluding" label="Guest extras (optional)" />
+            <IncludedField name="entryIncluding" label="Guest extras" />
           </div>
           <div className="event-ticket-price-row">
             <div><h4>Members</h4><p>Member admission</p></div>
             {values.isMemberFree ? <p className="event-ticket-free-price">Free <span>€0.00 per ticket</span></p> : <PriceField name="memberPrice" label="Member price (€)" required placeholder="10.00" />}
-            <IncludedField name="memberIncluding" label="Member extras (optional)" />
+            <IncludedField name="memberIncluding" label="Member extras" />
           </div>
           {!values.isMemberFree && (
             <div className="event-ticket-price-row">
@@ -138,7 +136,6 @@ export default function EventTicketsMedia({ children }) {
           <div className="rn-form-group">
             <label htmlFor={`${id}-link`}>Ticket website <span className="event-ticket-required required-mark">*</span></label>
             <Field id={`${id}-link`} type="url" name="ticketLink" placeholder="https://tickets.example.com/your-event" aria-describedby={`${id}-link-help`} />
-            <ErrorMessage className="error" name="ticketLink" component="div" />
           </div>
           <p id={`${id}-link-help`} className="event-ticket-help">The event’s ticket button will open this link.</p>
         </div>
@@ -157,7 +154,6 @@ export default function EventTicketsMedia({ children }) {
             </div>
             <p className="event-ticket-help">The main image guests see for your event.</p>
             <ImageInput name="poster" initialImage={values.poster} onChange={(event) => setFieldValue("poster", event.target.files[0])} />
-            <ErrorMessage className="error" name="poster" component="div" />
           </div>
           <div className="event-ticket-media-panel event-ticket-media-panel--ticket">
             <div data-custom-validation-field data-field-name="ticketImg">
@@ -167,7 +163,6 @@ export default function EventTicketsMedia({ children }) {
               </div>
               <p className="event-ticket-help">JPG or PNG · 300:97 ratio (e.g., 1500 × 485 px).</p>
               <ImageInput name="ticketImg" initialImage={values.ticketImg} onChange={(event) => setFieldValue("ticketImg", event.target.files[0])} />
-              <ErrorMessage className="error" name="ticketImg" component="div" />
             </div>
             <div className="event-ticket-appearance">
               <TicketSwitch name="ticketColor" label="Name text" onValue="#faf9f6" offValue="#272528" onLabel="Light" offLabel="Dark" />
@@ -186,7 +181,6 @@ export default function EventTicketsMedia({ children }) {
             <label htmlFor={`${id}-limit`}>Ticket limit <span className="event-ticket-required required-mark">*</span></label>
             <span className="event-ticket-field-hint"><InfoHint label="About the ticket limit" text="The maximum number of tickets available for this event." /></span>
             <Field id={`${id}-limit`} type="number" placeholder="e.g., 100" name="ticketLimit" min={1} step={1} />
-            <ErrorMessage className="error" name="ticketLimit" component="div" />
           </div>
           <div className="rn-form-group">
             <label>Sales deadline <span className="event-ticket-required required-mark">*</span></label>
@@ -194,7 +188,6 @@ export default function EventTicketsMedia({ children }) {
             <div data-field-name="ticketTimer">
               <CalendarWithClock name="ticketTimer" mode="single" locale="en-nl" placeholder="Select ticket sales deadline" captionLayout="dropdown" min={new Date()} max={values.date ? new Date(values.date) : undefined} initialValue={values.ticketTimer} onSelect={(value) => setFieldValue("ticketTimer", value)} />
             </div>
-            <ErrorMessage className="error" name="ticketTimer" component="div" />
           </div>
         </div>
       </section>

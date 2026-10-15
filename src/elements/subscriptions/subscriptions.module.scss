@@ -1,11 +1,14 @@
-.tierUpButton.tierUpButton {
+.tierUpButton.tierUpButton,
+.renewButton.renewButton {
   background: #2563eb;
   border-color: #2563eb;
   color: #fff;
 
-  &:hover { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
   &:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
 }
+
+.tierUpButton.tierUpButton:hover { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+.renewButton.renewButton:hover { background: transparent; border-color: #2563eb; color: #2563eb; }
 
 .planPicker .tierGrid {
   align-items: stretch;

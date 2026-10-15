@@ -1,3 +1,4 @@
+import { formatDisplayDateTime } from "@/util/functions/display-date.mjs";
 import PropTypes from "prop-types";
 import EventPanelEditButton from "./EventPanelEditButton";
 import { defaultPromoAudiences, promoAudiences } from "@/util/functions/event-promo-codes.mjs";
@@ -9,7 +10,7 @@ const money = value => value == null || value === "" || !Number.isFinite(Number(
 const dateTime = value => {
   const date = value ? new Date(value) : null;
   return date && Number.isFinite(date.valueOf())
-    ? new globalThis.Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Amsterdam" }).format(date)
+    ? formatDisplayDateTime(date)
     : "Not set";
 };
 

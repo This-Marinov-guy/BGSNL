@@ -43,6 +43,7 @@ const EventList = () => {
     const { sendRequest } = useHttpClient();
     const sendRequestRef = useRef(sendRequest);
     const eventModalHistoryRef = useRef(false);
+    const listStartRef = useRef(null);
     sendRequestRef.current = sendRequest;
 
     const user = useSelector(selectUser);
@@ -294,7 +295,7 @@ const EventList = () => {
                 </label>
             </Filter>
             <StepContentTransition step={eventView === "active" ? 0 : eventView === "past" ? 1 : 2} direction={eventView === "active" ? "backward" : "forward"}>
-            {(showPastOrArchived ? pastLoading && pastEvents.length === 0 : eventsLoading) ? <EventsLoading /> : (showPastOrArchived ? pastError : eventsError) ? <LoadErrorBanner message="Events could not be loaded." onRetry={() => showPastOrArchived ? setPastAttempt(value => value + 1) : reloadEvents(true)} /> : <div className="event-dashboard-content">
+            {(showPastOrArchived ? pastLoading && pastEvents.length === 0 : eventsLoading) ? <EventsLoading /> : (showPastOrArchived ? pastError : eventsError) ? <LoadErrorBanner message="Events could not be loaded." onRetry={() => showPastOrArchived ? setPastAttempt(value => value + 1) : reloadEvents(true)} /> : <div className="event-dashboard-content" ref={listStartRef}>
                 {!visibleCount && <p className="no-events-message">No {showDrafts ? "drafts" : showPastOrArchived ? "past or archived events" : "active events"} for the selected region.</p>}
                 {displayedSections.map((section) => {
                     if (!section.events.length) return null;
@@ -320,6 +321,7 @@ const EventList = () => {
                         rowsPerPageOptions={EVENT_PAGE_SIZES}
                         totalRecords={pastTotal}
                         onPageChange={setEventPage}
+                        scrollTargetRef={listStartRef}
                     />
                 )}
             </div>}

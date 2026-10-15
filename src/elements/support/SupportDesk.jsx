@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
@@ -6,7 +7,7 @@ import Pagination from "@/elements/common/Pagination";
 
 import { SelectInput } from "@/compat/primereact";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -22,6 +23,7 @@ import { watchSupportLive } from "./support-live.mjs";
 import { useSupportUnread } from "./use-support-unread";
 import { supportTicketUnread } from "./support-unread.mjs";
 import { isTemporarySupportError } from "./support-errors.mjs";
+import { scrollToListStart } from "@/util/functions/pagination-scroll.mjs";
 
 const VIEW_TRANSITION = {
   initial: { opacity: 0, y: 10 },
@@ -64,6 +66,7 @@ function DeskSession({ session, staff, active, welcomeImage, listDecoration, sel
   const [status, setStatus] = useState("all");
   const [hasMore, setHasMore] = useState(false);
   const [reload, setReload] = useState(0);
+  const listStartRef = useRef(null);
   const refresh = () => setReload((value) => value + 1);
 
   useEffect(() => {
@@ -135,7 +138,7 @@ function DeskSession({ session, staff, active, welcomeImage, listDecoration, sel
       {view === "thread" && <motion.div key={`thread-${selected}`} className={styles.view} variants={viewTransition} initial="initial" animate="visible" exit="exit">
         <Conversation id={selected} session={session} secret={session ? undefined : guestReports().find(({ id }) => id === selected)?.secret} staff={staff} active={active} onBack={back} />
       </motion.div>}
-      {view === "list" && <motion.div key="list" className={styles.listView} variants={viewTransition} initial="initial" animate="visible" exit="exit">
+      {view === "list" && <motion.div key="list" className={styles.listView} ref={listStartRef} variants={viewTransition} initial="initial" animate="visible" exit="exit">
       {!staff && <div className={`${styles.ticketRequestsIntro} ${welcomeImage ? styles.withWelcomeImage : ""}`}>
         <div className={styles.ticketRequestsControls}>
           <h2 style={{marginBottom: '1rem'}} className={`page-breadcrumb__title archive ${styles.ticketRequestsTitle}`}>Ticket Requests</h2>
@@ -157,14 +160,14 @@ function DeskSession({ session, staff, active, welcomeImage, listDecoration, sel
         {seenReady && supportTicketUnread(record, seen, staff) && <span className={styles.unreadDot} role="img" aria-label="Unread ticket update" title="Unread ticket update" />}
         <div className={styles.row}><span className={`${styles.status} ${styles.ticketStatusBadge}`} data-status={record.status}>{STATUS_LABELS[record.status]}</span><small className={styles.ticketReference}><span className={styles.ticketTypeIcon} data-type={record.type || "problem"} title={SUPPORT_TYPE_LABELS[record.type || "problem"]}>{record.type === "recommendation" ? <IconlyImprove size="1.25rem" title="Recommendation" /> : <IconlyBug size="1.25rem" title="Problem report" />}</span>#{record.reference}</small></div>
         <strong>{record.subject}</strong>{staff && <span>{record.contact?.name} <small>· {record.contact?.source === "guest" ? "Guest" : "Account"}</small></span>}
-        <div className={styles.row}><small><time dateTime={record.lastMessageAt}>{new Date(record.lastMessageAt).toLocaleDateString("en-GB", { day: "2-digit", month: "numeric", year: "numeric" })}</time></small><IconlyArrowRight size="1.25rem" /></div>
+        <div className={styles.row}><small><time dateTime={record.lastMessageAt}>{formatDisplayDate(record.lastMessageAt)}</time></small><IconlyArrowRight size="1.25rem" /></div>
       </button></li>)}</ul>}
       {staff ? <>
         <small aria-live="polite">{loading ? <LoadingSkeleton label="Loading tickets" variant="inline" /> : total ? `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} of ${total} tickets` : "0 tickets"}</small>
-        <Pagination first={(page - 1) * pageSize} rows={pageSize} totalRecords={total} rowsPerPageOptions={[10, 25, 50]} ariaLabel="Support ticket pages" onPageChange={event => {
+        <Pagination first={(page - 1) * pageSize} rows={pageSize} totalRecords={total} rowsPerPageOptions={[10, 25, 50]} ariaLabel="Support ticket pages" scrollTargetRef={listStartRef} onPageChange={event => {
           setLoading(true); setItems([]); setPage(event.page + 1); setPageSize(event.rows);
         }} />
-      </> : (page > 1 || hasMore) && <nav className={styles.row} aria-label="Report pages"><button className={styles.textButton} type="button" disabled={page === 1 || loading} onClick={() => setPage((value) => value - 1)}>Previous</button><span>Page {page}</span><button className={styles.textButton} type="button" disabled={!hasMore || loading} onClick={() => setPage((value) => value + 1)}>Next</button></nav>}
+      </> : (page > 1 || hasMore) && <nav className={styles.row} aria-label="Report pages"><button className={styles.textButton} type="button" disabled={page === 1 || loading} onClick={() => { scrollToListStart(listStartRef); setPage((value) => value - 1); }}>Previous</button><span>Page {page}</span><button className={styles.textButton} type="button" disabled={!hasMore || loading} onClick={() => { scrollToListStart(listStartRef); setPage((value) => value + 1); }}>Next</button></nav>}
       {notice && <p role="status" className={styles.notice}>{notice}</p>}
       </motion.div>}
     </AnimatePresence>

@@ -19,6 +19,7 @@ import ScrollToTop from "@/component/common/ScrollToTop";
 import { useAppInitialization } from "@/hooks/session/app-init";
 import { useAuthSession } from "@/hooks/session/auth-session";
 import { removeLogsOnProd } from "@/util/functions/helpers";
+import SupportTicketAttentionProvider from "@/elements/support/SupportTicketAttentionProvider";
 
 const GlobalModals = dynamic(() => import("@/elements/ui/modals/GlobalModals"));
 const SupportWidget = dynamic(() => import("@/elements/support/SupportWidget"));
@@ -84,9 +85,11 @@ export default function FullProviders({ children }) {
         <div className={`global-site-shell${isUserRoute ? " global-site-shell--user" : ""}`}>
           {!isUserRoute && <GlobalBackground initiallyRevealed />}
           <div className="global-site-content">
-            <MainLayout>
-              <AppShell>{children}</AppShell>
-            </MainLayout>
+            <SupportTicketAttentionProvider>
+              <MainLayout>
+                <AppShell>{children}</AppShell>
+              </MainLayout>
+            </SupportTicketAttentionProvider>
           </div>
         </div>
       </PrimeSSRProvider>

@@ -1,7 +1,7 @@
 import { useId } from "react";
 import { FieldArray, useFormikContext } from "formik";
 import { SelectInput } from "@/compat/primereact";
-import { OptionDate, OptionError, OptionField, OptionPanel, OptionSwitch } from "./EventOptionFields";
+import { OptionDate, OptionField, OptionPanel, OptionSwitch } from "./EventOptionFields";
 import { defaultPromoAudiences, normalizePromoCode, normalizePromoCodeName, promoAudiences } from "@/util/functions/event-promo-codes.mjs";
 import { IconlyPlus } from "@/elements/ui/icons/IconlyIcons";
 
@@ -10,8 +10,7 @@ export default function EventPromoCodes() {
   const id = useId();
   const codes = values.promoCodes?.codes ?? [];
   return <OptionPanel name="promoCodes" title="Promo codes" description="Let buyers enter a code at checkout to get a discount on this event’s tickets.">
-    <FieldArray name="promoCodes.codes">{({ push, remove }) => <div className="event-option-items">
-      <OptionError name="promoCodes.codes" />
+    <FieldArray name="promoCodes.codes">{({ push, remove }) => <div className="event-option-items" data-custom-validation-field data-field-name="promoCodes.codes">
       {codes.map((code, index) => {
         const prefix = `promoCodes.codes[${index}]`;
         const locked = Boolean(code.id);
@@ -23,11 +22,12 @@ export default function EventPromoCodes() {
               <label htmlFor={`${id}-${index}-type`}>Discount type <span className="required-mark">*</span></label>
               <SelectInput id={`${id}-${index}-type`} name={`${prefix}.discountType`} value={code.discountType} disabled={locked} onChange={event => setFieldValue(`${prefix}.discountType`, Number(event.target.value))}>
                 <option value={2}>Percentage off (%)</option><option value={1}>Fixed amount off (€)</option>
-              </SelectInput><OptionError name={`${prefix}.discountType`} />
+              </SelectInput>
             </div>
             <OptionField name={`${prefix}.discount`} label={Number(code.discountType) === 1 ? "Amount off (€) *" : "Percentage off (%) *"} type="number" min="0.01" max={Number(code.discountType) === 2 ? 100 : undefined} step="0.01" disabled={locked} />
-            <OptionField name={`${prefix}.useLimit`} label="Maximum redemptions (optional)" type="number" min={1} step={1}  disabled={locked} />
-            {locked ? <OptionField name={`${prefix}.timeLimit`} label="Expiration" disabled /> : <div><OptionDate name={`${prefix}.timeLimit`} label="Expires at (optional)" />{code.timeLimit && <button type="button" className="event-option-remove" onClick={() => setFieldValue(`${prefix}.timeLimit`, "")}>Remove expiration</button>}</div>}
+            <OptionField name={`${prefix}.useLimit`} label="Maximum redemptions" type="number" min={1} step={1}  disabled={locked} />
+            <OptionField name={`${prefix}.minAmount`} label="Minimum order (€)" type="number" min={0.01} step="0.01" disabled={locked} />
+            {locked ? <OptionField name={`${prefix}.timeLimit`} label="Expiration" disabled /> : <div><OptionDate name={`${prefix}.timeLimit`} label="Expires at" />{code.timeLimit && <button type="button" className="event-option-remove" onClick={() => setFieldValue(`${prefix}.timeLimit`, "")}>Remove expiration</button>}</div>}
             <fieldset className="event-promo-audiences" data-custom-validation-field data-field-name={`${prefix}.audiences`}>
               <legend>Who can use this code?</legend>
               <div>{promoAudiences.map(audience => {
@@ -38,7 +38,6 @@ export default function EventPromoCodes() {
                   <button type="button" role="switch" className="event-ticket-switch" aria-checked={enabled} aria-label={`Allow this code for ${audience.label.toLowerCase()}`} onClick={() => setFieldValue(`${prefix}.audiences`, enabled ? audiences.filter(value => value !== audience.value) : [...audiences, audience.value])}><span aria-hidden="true" /></button>
                 </div>;
               })}</div>
-              <OptionError name={`${prefix}.audiences`} />
             </fieldset>
           </div>
         </div>;

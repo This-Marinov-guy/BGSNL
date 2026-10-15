@@ -57,10 +57,10 @@ export const exportMembersCSV = (members) => {
     m.region?.replace(/_/g, " ") || "",
     m.isPaid ? "Active" : "Expired",
     m.ticketsCount,
-    moment(m.startDate).format("DD/MM/YYYY"),
-    moment(m.expireDate).format("DD/MM/YYYY"),
+    moment(m.startDate).format("DD-MM-YYYY"),
+    moment(m.expireDate).format("DD-MM-YYYY"),
     m.hasSubscription ? "Yes" : "No",
-    m.nextBilling ? moment(m.nextBilling).format("DD/MM/YYYY") : "-",
+    m.nextBilling ? moment(m.nextBilling).format("DD-MM-YYYY") : "-",
   ]);
 
   downloadCsv(headers, rows, `members_report_${moment().format("YYYY-MM-DD")}.csv`);
@@ -92,7 +92,7 @@ export const exportMemberDemographicsCSV = (members) => {
     member.course || "Not provided",
     member.graduationDate || "Not provided",
     member.profession || "Not provided",
-    member.startDate ? moment(member.startDate).format("YYYY-MM") : "Not provided",
+    member.startDate ? moment(member.startDate).format("DD-MM-YYYY") : "Not provided",
   ]);
   downloadCsv(headers, rows, `member_demographics_${moment().format("YYYY-MM-DD")}.csv`);
 };

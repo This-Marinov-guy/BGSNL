@@ -12,7 +12,7 @@ export const Calendar = ({ initialValue, value, onSelect, ...props }) => (
   <PrimeCalendar
     {...props}
     value={toValidDate(value ?? initialValue)}
-    dateFormat="dd/mm/yy"
+    dateFormat="dd-mm-yy"
     onChange={(event) => onSelect(event.value)}
     showIcon
   />
@@ -24,7 +24,7 @@ export const CalendarWithClock = ({ initialValue, value, min, max, onSelect, ...
     value={toValidDate(value ?? initialValue)}
     minDate={toValidDate(min)}
     maxDate={toValidDate(max)}
-    dateFormat="dd/mm/yy"
+    dateFormat="dd-mm-yy"
     hourFormat="24"
     stepMinute={5}
     onChange={(event) => onSelect(event.value)}

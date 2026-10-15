@@ -1,12 +1,10 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import PropTypes from "prop-types";
 import AnimatedDisclosure from "../../ui/functional/AnimatedDisclosure";
 import { FiChevronDown, FiImage } from "../../ui/icons/IconlyIcons";
 
-const dateFormat = new globalThis.Intl.DateTimeFormat("en-GB", {
-  day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam",
-});
 const timeFormat = new globalThis.Intl.DateTimeFormat("en-GB", {
   hour: "2-digit", minute: "2-digit", timeZone: "Europe/Amsterdam",
 });
@@ -24,7 +22,7 @@ export default function EventEditSummary({ event }) {
     <span className="event-edit-summary__dot" aria-hidden="true">·</span>
     <dl className="event-edit-summary__facts">
       <div><dt>Event name</dt><dd>{title}</dd></div>
-      <div><dt>Date and time</dt><dd>{hasDate ? <time dateTime={date.toISOString()}><span>{dateFormat.format(date)}</span><span>{timeFormat.format(date)}</span></time> : "Date and time not set"}</dd></div>
+      <div><dt>Date and time</dt><dd>{hasDate ? <time dateTime={date.toISOString()}><span>{formatDisplayDate(date)}</span><span>{timeFormat.format(date)}</span></time> : "Date and time not set"}</dd></div>
     </dl>
   </div>;
 
@@ -36,7 +34,7 @@ export default function EventEditSummary({ event }) {
         <div className="event-edit-summary__mobile-info">
           <h3>{title}</h3>
           <dl>
-            <div><dt>Date</dt><dd>{hasDate ? <time dateTime={date.toISOString()}>{dateFormat.format(date)}</time> : "Not set"}</dd></div>
+            <div><dt>Date</dt><dd>{hasDate ? <time dateTime={date.toISOString()}>{formatDisplayDate(date)}</time> : "Not set"}</dd></div>
             <div><dt>Time</dt><dd>{hasDate ? <time dateTime={date.toISOString()}>{timeFormat.format(date)}</time> : "Not set"}</dd></div>
           </dl>
         </div>

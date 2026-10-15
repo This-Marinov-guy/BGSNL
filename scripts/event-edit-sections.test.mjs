@@ -19,10 +19,12 @@ function control({ disabled = false, hidden = false, visible = true } = {}) {
 
 function formFor(section, controls) {
   const container = {
+    closest: () => false,
+    getClientRects: () => [{}],
     querySelectorAll: selector => controls[selector] ?? [],
     scrollIntoView(options) { this.scrollOptions = options; },
   };
-  return { container, form: { querySelector: selector => selector === section.selector ? container : null } };
+  return { container, form: { querySelectorAll: selector => selector === section.selector ? [container] : [] } };
 }
 
 test("skips a locked region and focuses location while scrolling to the section start", () => {
@@ -56,4 +58,16 @@ test("does not focus hidden steps, inert transition copies, or missing controls"
   assert.equal(focusEventEditSection(form, section), false);
   assert.equal(hidden.focusOptions, undefined);
   assert.equal(focusEventEditSection(null, section), false);
+});
+
+test("focuses the visible section while an inert transition copy is still mounted", () => {
+  const section = eventEditSection("questions");
+  const inactive = formFor(section, { input: [control()] }).container;
+  inactive.closest = () => true;
+  const activeControl = control();
+  const active = formFor(section, { input: [activeControl] }).container;
+  const form = { querySelectorAll: () => [inactive, active] };
+  assert.equal(focusEventEditSection(form, section), true);
+  assert.equal(inactive.scrollOptions, undefined);
+  assert.deepEqual(activeControl.focusOptions, { preventScroll: true });
 });

@@ -34,8 +34,7 @@ export default function RecoveryScreen({ kind = "not-found", error, onRetry }) {
         <div className="recovery-actions">
           {failed ? (
             <>
-              <LoadErrorBanner message="We couldn’t load this page." onRetry={onRetry || (() => router.refresh())} />
-              <a className="recovery-btn-secondary" href="/">Back to home</a>
+              <LoadErrorBanner message="We couldn’t load this page." onRetry={onRetry || (() => router.refresh())} showHome />
             </>
           ) : (
             <>

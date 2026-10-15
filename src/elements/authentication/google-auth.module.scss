@@ -123,9 +123,25 @@
 }
 .googleControl { width: 100%; max-width: 25rem; min-width: 0; }
 .googleControlReveal {
+  position: relative;
   opacity: 0;
   transform: translateY(0.25rem);
   transition: opacity 220ms ease, transform 220ms ease;
+
+  // Google's sign-in button remains the click target. This mark only covers
+  // the SDK-rendered logo; it does not intercept mouse or keyboard input.
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 8px;
+    left: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff url("/assets/images/svg/3d/google.png") center / 40px 40px no-repeat;
+    pointer-events: none;
+  }
 
   &[data-visible="true"] { opacity: 1; transform: translateY(0); }
 
@@ -172,14 +188,21 @@
   &:disabled { background: #f1f3f4; color: #687078; }
 
   .googleLogo {
-    display: block;
-    flex: 0 0 20px;
-    width: 20px;
-    height: 20px;
+    display: grid;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    overflow: hidden;
+
+    img { display: block; max-width: none; width: 40px; height: 40px; }
   }
 
   @media (prefers-reduced-motion: reduce) { transition: none; }
 }
+
+.settingsGoogleIcon { overflow: hidden; }
+.settingsGoogleIcon img { display: block; flex: none; max-width: none; width: 44px; height: 44px; }
 
 .connectionActionButtons {
   display: flex;

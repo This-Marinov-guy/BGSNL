@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getAccountStatusNotice } from "../src/elements/subscriptions/account-status-notice.mjs";
+import { getAccountStatusNotice, hasTicketBenefitIssue } from "../src/elements/subscriptions/account-status-notice.mjs";
 import { billingAction } from "../src/elements/subscriptions/subscription-checkout.mjs";
 
 const subscription = { id: "sub_test", status: "active" };
@@ -9,6 +9,18 @@ test("healthy accounts and missing account data do not show a warning", () => {
   for (const user of [undefined, null, {}, { status: "active", subscription }]) {
     assert.equal(getAccountStatusNotice(user), null);
   }
+});
+
+test("ticket member benefits are unavailable while the account needs attention", () => {
+  const active = { session: true, status: "active", subscription, hasBenefits: true, memberDiscount: true };
+  assert.equal(hasTicketBenefitIssue(active), false);
+  assert.equal(hasTicketBenefitIssue({ ...active, session: false }), false);
+  for (const account of [
+    { ...active, hasBenefits: false },
+    { ...active, status: "locked", billingLocked: true },
+    { ...active, billingVerificationUnavailable: true },
+    { ...active, subscription: null },
+  ]) assert.equal(hasTicketBenefitIssue(account), true);
 });
 
 test("eligible accounts without a subscription get the start-subscription banner and action", () => {

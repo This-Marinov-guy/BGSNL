@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useEffect, useId, useState } from "react";
@@ -17,7 +18,7 @@ import styles from "./passkeys.module.scss";
 const primary = "rn-button-style--2 rn-btn-reverse-green rn-btn-small";
 const danger = "rn-button-style--2 rn-btn-reverse-red rn-btn-small";
 const cancelButton = "rn-button-style--2 rn-btn-red rn-btn-small";
-const date = (value) => value && Number.isFinite(Date.parse(value)) ? new Date(value).toLocaleDateString() : null;
+const date = (value) => value && Number.isFinite(Date.parse(value)) ? formatDisplayDate(value) : null;
 
 export default function PasskeySettings() {
   const { session } = useSelector(selectUser);

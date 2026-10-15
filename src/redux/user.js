@@ -31,9 +31,11 @@ export const userSlice = createSlice({
       if (state.session) for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload, key)) state.session[key] = payload[key];
     },
     refreshSession: (state, { payload }) => {
-      if (!state.session || !sessionIsActive(payload) || payload.auth_time !== state.session.auth_time ||
-          payload.sid !== state.session.sid || payload.exp < state.session.exp ||
-          payload.sessionVersion < state.session.sessionVersion || payload.accessExp < state.session.accessExp) return;
+      if (!state.session || !sessionIsActive(payload) || !Number.isSafeInteger(payload.accessExp) ||
+          payload.auth_time !== state.session.auth_time ||
+          payload.sid !== state.session.sid ||
+          payload.sessionVersion < state.session.sessionVersion || payload.accessExp < state.session.accessExp ||
+          (payload.accessExp === state.session.accessExp && payload.exp < state.session.exp)) return;
       state.session = payload;
       for (const key of ["roles", "status", "region", "image"]) if (Object.hasOwn(payload, key)) state[key] = payload[key];
     },

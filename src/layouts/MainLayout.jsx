@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster, toast, useToasterStore } from "react-hot-toast";
 import {
   selectNotification,
   selectNotificationIndex,
@@ -14,6 +14,7 @@ import {
   FiAlertTriangle,
   IconlyInfo,
 } from "../elements/ui/icons/IconlyIcons";
+import { newestToastIdsToRemove } from "../util/functions/toast-limit.mjs";
 
 /*
  * react-hot-toast ships its own animated icons for success and error only, so
@@ -44,32 +45,12 @@ const TOAST_ICONS = {
 
 const SiteExtras = dynamic(() => import("./SiteExtras"));
 
-const MainLayout = ({ children }) => {
+const NotificationBridge = () => {
   const notification = useSelector(selectNotification);
   const notificationIndex = useSelector(selectNotificationIndex);
-  const [toastPortalTarget, setToastPortalTarget] = useState(null);
-
-  const pathname = usePathname();
-  const isScanner = pathname === "/user/dashboard/ticket-scanner";
-
-  /*
-   * Ids of error toasts still on screen, so a later success can clear them —
-   * once an action succeeds, the failure that preceded it is stale and should
-   * not sit next to the confirmation.
-   *
-   * A ref rather than useToasterStore(): that hook would re-render this shell
-   * on every toast change, and it wraps the whole app. Dismissing an id that
-   * has already expired is a no-op, so stale entries are harmless.
-   */
-  const errorToastIds = useRef([]);
-
-  useEffect(() => {
-    setToastPortalTarget(document.body);
-  }, []);
-
-  // Scroll reset on navigation now lives in <ScrollToTop /> (app/providers.jsx).
-  // The old `[window.location.pathname]` dependency evaluated during render,
-  // which crashes server rendering.
+  const { toasts } = useToasterStore();
+  const toastsRef = useRef(toasts);
+  toastsRef.current = toasts;
 
   useEffect(() => {
     if (notification.dismissToast) toast.dismiss(notification.dismissToast);
@@ -83,16 +64,27 @@ const MainLayout = ({ children }) => {
 
     if (!message) return;
 
+    let visible = toastsRef.current.filter((item) =>
+      item.visible && !item.dismissed && item.id !== notification.dismissToast
+    );
+    if (severity === "success") {
+      // A successful retry makes any visible error messages stale.
+      visible.filter((item) => item.type === "error").forEach((item) => toast.dismiss(item.id));
+      visible = visible.filter((item) => item.type !== "error");
+    }
+    newestToastIdsToRemove(visible, notification.toastId).forEach((id) => toast.remove(id));
+
     const theme = TOAST_THEMES[severity] ?? TOAST_THEMES.info;
     const options = {
       className: "bgsnl-toast",
       duration: notification.life ?? 8000,
+      id: notification.toastId,
       position: notification.position || "top-center",
       style: { background: theme.background, color: theme.color },
     };
 
     if (notification.loading) {
-      toast.loading(message, { ...options, id: notification.toastId,
+      toast.loading(message, { ...options,
         iconTheme: { primary: theme.color, secondary: "transparent" },
       });
     } else if (severity === "success" || severity === "error") {
@@ -107,11 +99,9 @@ const MainLayout = ({ children }) => {
       };
 
       if (severity === "success") {
-        errorToastIds.current.forEach((id) => toast.dismiss(id));
-        errorToastIds.current = [];
         toast.success(message, withIcon);
       } else {
-        errorToastIds.current.push(toast.error(message, withIcon));
+        toast.error(message, withIcon);
       }
     } else {
       toast(message, {
@@ -121,8 +111,25 @@ const MainLayout = ({ children }) => {
     }
   }, [notificationIndex, notification]);
 
+  return null;
+};
+
+const MainLayout = ({ children }) => {
+  const [toastPortalTarget, setToastPortalTarget] = useState(null);
+  const pathname = usePathname();
+  const isScanner = pathname === "/user/dashboard/ticket-scanner";
+
+  useEffect(() => {
+    setToastPortalTarget(document.body);
+  }, []);
+
+  // Scroll reset on navigation now lives in <ScrollToTop /> (app/providers.jsx).
+  // The old `[window.location.pathname]` dependency evaluated during render,
+  // which crashes server rendering.
+
   return (
     <>
+      <NotificationBridge />
       {toastPortalTarget
         ? createPortal(
             <Toaster

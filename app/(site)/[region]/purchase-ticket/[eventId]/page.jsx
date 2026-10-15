@@ -15,7 +15,8 @@ export async function generateMetadata({ params }) {
     canonicalId,
     `/${event?.region || region}/event-details/${encodeURIComponent(canonicalId)}`,
     event,
-    region
+    region,
+    false
   );
 
   return {

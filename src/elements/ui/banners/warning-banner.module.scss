@@ -1,0 +1,18 @@
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  min-width: 0;
+  padding: 1rem;
+  border-radius: .65rem;
+  background: var(--campaign-warning-surface, #fff4d6);
+  color: var(--campaign-warning-ink, #674707);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.icon { flex: 0 0 1.5rem; margin-top: .1rem; }
+.content { min-width: 0; overflow-wrap: anywhere; }
+.title { display: block; margin-bottom: .2rem; font-weight: 700; }
+.content p { margin: 0; color: inherit; }
+.content p strong { color: #4b3205; font-weight: 800; }

@@ -3,6 +3,7 @@
 import React, {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import {
@@ -49,6 +50,7 @@ const Internships = ({ initialInternships = [] }) => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const [searchParams, setSearchParams] = useFilterSearchParams();
+  const listStartRef = useRef(null);
 
   // `initialInternships` comes from the server render, so the list is in the
   // HTML instead of behind a <Loader />. The effect below still refetches after
@@ -261,6 +263,7 @@ const Internships = ({ initialInternships = [] }) => {
           </FilterPanel>
 
           {/* All Internships Grid with pagination */}
+          <div ref={listStartRef} aria-hidden="true" />
           {internships.length > 0 ? (
             <>
               {paginatedList.length > 0 ? (
@@ -311,6 +314,7 @@ const Internships = ({ initialInternships = [] }) => {
                       totalRecords={totalRecords}
                       rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
                       onPageChange={onPageChange}
+                      scrollTargetRef={listStartRef}
                       ariaLabel="Internships pagination"
                     />
                   </motion.div>

@@ -16,7 +16,7 @@ import { chargeAmountLabel, paidSubscriptionPlans, planChangeChargesImmediately,
 import styles from "./subscriptions.module.scss";
 import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 
-const ACTION_CLASS = "rn-button-style--2 rn-btn-reverse-green rn-btn-small";
+const ACTION_CLASS = "rn-button-style--2 rn-btn-small";
 
 const MEMBERSHIP_TYPES = [
   {
@@ -330,7 +330,7 @@ export default function SubscriptionStart({ linkStyle = false, user, buttonLabel
 
   return (
     <>
-      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS}`} type="button" aria-haspopup="dialog" onClick={() => {
+      <button className={linkStyle ? styles.textButton : `settings-action ${ACTION_CLASS} ${renewal ? styles.renewButton : "rn-btn-reverse-green"}`} type="button" aria-haspopup="dialog" onClick={() => {
         clarityEvent(ANALYTICS_EVENTS.MEMBERSHIP_CTA_CLICKED, { [ANALYTICS_PROPERTIES.SOURCE]: "subscription_start" });
         setOpen(true);
       }}>{buttonLabel || (renewal ? "Renew" : "Start subscription")}</button>

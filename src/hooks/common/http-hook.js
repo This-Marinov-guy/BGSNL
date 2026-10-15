@@ -28,7 +28,7 @@ export const useHttpClient = (withPageLoading = false) => {
     headers = {},
     withError = true,
     withLoading = true,
-    { signal, timeout = 60000 } = {},
+    { signal, timeout = 60000, onFailure } = {},
   ) => {
     // Loading must not be a callback dependency: consumers fetch in effects.
     if (signal?.aborted) return undefined;
@@ -53,6 +53,7 @@ export const useHttpClient = (withPageLoading = false) => {
       return response.data;
     } catch (err) {
       if (axios.isCancel(err)) return undefined;
+      onFailure?.({ status: err.response?.status ?? null });
       if (err.response?.status === 401 && err.response.headers?.["x-bgsnl-session-changed"] === "1") dispatch(clearSession());
       if (err.response?.status === 403) clearCsrf();
 

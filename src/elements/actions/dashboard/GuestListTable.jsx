@@ -1,4 +1,4 @@
-import moment from "moment";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import { useEffect, useId, useRef } from "react";
 import PropTypes from "prop-types";
 import InfoHint from "@/elements/ui/icons/InfoHint";
@@ -97,7 +97,36 @@ const GuestTypeBadge = ({ type }) => {
 
 GuestTypeBadge.propTypes = { type: PropTypes.string };
 
-const GuestListTable = ({ columns = {}, guests, search = "", extended = false, editable = false, onPresenceChange, pendingGuestIds = [] }) => {
+const GuestActions = ({ guest, onEdit, onRefund, canRefund }) => {
+  const menuId = useId();
+  const menuRef = useRef(null);
+  const refunded = Boolean(guest.refunded);
+  const hasPayment = Boolean(guest.transactionId && guest.transactionId !== "-");
+  const positionMenu = event => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    if (!menuRef.current) return;
+    menuRef.current.style.left = `${Math.max(8, Math.min(bounds.right - 176, window.innerWidth - 184))}px`;
+    menuRef.current.style.top = `${bounds.bottom + 112 > window.innerHeight ? Math.max(8, bounds.top - 112) : bounds.bottom + 6}px`;
+  };
+  const select = action => { menuRef.current?.hidePopover(); action(guest); };
+  return <div className="guest-list__row-actions">
+    {/* React 19 supports the native popover target as a camel-cased property. */}
+    {/* eslint-disable-next-line react/no-unknown-property */}
+    <button type="button" className="guest-list__more" popoverTarget={menuId} onClick={positionMenu}
+      aria-label={`Actions for ${guest.name || "guest"}`} title="Guest actions">⋮</button>
+    <div id={menuId} ref={menuRef} popover="auto" className="guest-list__row-menu">
+      <button type="button" onClick={() => select(onEdit)}>Edit</button>
+      {canRefund && onRefund && <button type="button" className="guest-list__row-menu-refund"
+        disabled={refunded || !hasPayment}
+        onClick={() => select(onRefund)}>{refunded ? "Already refunded" : !hasPayment ? "No payment to refund" : "Refund"}</button>}
+    </div>
+  </div>;
+};
+GuestActions.propTypes = { guest: PropTypes.object.isRequired, onEdit: PropTypes.func.isRequired,
+  onRefund: PropTypes.func, canRefund: PropTypes.bool };
+
+const GuestListTable = ({ columns = {}, guests, search = "", extended = false, editable = false, onPresenceChange,
+  onEdit, onRefund, canRefund = false, pendingGuestIds = [] }) => {
   const tableRef = useRef(null);
   const previousExtended = useRef(extended);
   useEffect(() => {
@@ -114,7 +143,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
 
   const pending = new Set(pendingGuestIds);
   const matches = filterGuestList(guests, search);
-  const columnCount = 5 + (extended ? 2 + Number(Boolean(columns.preferences)) + Number(Boolean(columns.addOns)) : 0);
+  const columnCount = 5 + Number(Boolean(onEdit)) + (extended ? 2 + Number(Boolean(columns.preferences)) + Number(Boolean(columns.addOns)) : 0);
 
   return (
     <div className="guest-list__table-wrap">
@@ -137,6 +166,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
             </th>
             <th>Purchased</th>
             {extended && <><th>Ticket</th><th>Transaction ID</th></>}
+            {onEdit && <th className="guest-list__actions-column">Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -168,11 +198,12 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                     </button>
                   ) : <span className={`guest-list__presence guest-list__presence--${isPresent ? "present" : "missing"}`}>{isPresent ? "Present" : "Missing"}</span>}
                 </td>
-                <td>{guest.timestamp ? moment(guest.timestamp).format("DD MMM YYYY") : "—"}</td>
+                <td>{guest.timestamp ? formatDisplayDate(guest.timestamp) : "—"}</td>
                 {extended && <>
                   <td>{ticketHref(guest.ticket) ? <a className="guest-list__ticket-link" href={ticketHref(guest.ticket)} target="_blank" rel="noopener noreferrer"><IconlyTicket aria-hidden="true" /><span>Ticket</span></a> : "—"}</td>
                   <td>{guest.transactionId || "—"}</td>
                 </>}
+                {onEdit && <td className="guest-list__actions-column"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} canRefund={canRefund} /></td>}
               </tr>
             );
           })}
@@ -209,6 +240,9 @@ GuestListTable.propTypes = {
     })),
   })).isRequired,
   onPresenceChange: PropTypes.func,
+  onEdit: PropTypes.func,
+  onRefund: PropTypes.func,
+  canRefund: PropTypes.bool,
   pendingGuestIds: PropTypes.arrayOf(PropTypes.string),
 };
 

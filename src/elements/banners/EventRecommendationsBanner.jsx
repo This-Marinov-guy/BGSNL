@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -48,12 +49,7 @@ function RecommendationCard({ link }) {
   const dateValue = link.correctedDate || link.date;
   const parsedDate = dateValue ? new Date(dateValue) : null;
   const formattedDate = parsedDate && Number.isFinite(parsedDate.getTime())
-    ? new globalThis.Intl.DateTimeFormat("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      timeZone: "Europe/Amsterdam",
-    }).format(parsedDate)
+    ? formatDisplayDate(parsedDate)
     : "";
 
   return <a className={styles.card} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={`${link.name} (opens in a new tab)`}>

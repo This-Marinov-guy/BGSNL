@@ -27,7 +27,7 @@ import MembershipOfferBanner from "../../elements/banners/MembershipOfferBanner"
 import BillingStatusBanner, {
   BillingStatusBannerSkeleton,
 } from "../../elements/subscriptions/BillingStatusBanner";
-import { getAccountStatusNotice } from "../../elements/subscriptions/account-status-notice.mjs";
+import { hasTicketBenefitIssue } from "../../elements/subscriptions/account-status-notice.mjs";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
@@ -109,7 +109,11 @@ const EventDetails = ({ initialEvent = null }) => {
     return <NoEventFound />;
   }
 
-  const price = estimatePriceByEvent(selectedEvent, user, {
+  const ticketBenefitIssue = hasTicketBenefitIssue(user);
+  // Keep ticket pricing in step with the account warning even if an older
+  // memberDiscount value is still present while billing status refreshes.
+  const ticketUser = ticketBenefitIssue ? { ...user, memberDiscount: false } : user;
+  const price = estimatePriceByEvent(selectedEvent, ticketUser, {
     withIncludedText: false,
     blockDiscounts: false,
     withMemberBadge: true,
@@ -118,8 +122,8 @@ const EventDetails = ({ initialEvent = null }) => {
   const eventImages = Array.from(
     new Set([selectedEvent.poster, ...(selectedEvent.images || [])].filter(Boolean))
   );
-  const userIsMember = isMember(user);
-  const discountApplied = hasAppliedTicketDiscount(selectedEvent, user);
+  const userIsMember = isMember(ticketUser);
+  const discountApplied = hasAppliedTicketDiscount(selectedEvent, ticketUser);
   const userIsLoggedIn = Boolean(user?.session);
   const ticketIsFree =
     selectedEvent.isFree || (userIsMember && selectedEvent.isMemberFree);
@@ -151,8 +155,7 @@ const EventDetails = ({ initialEvent = null }) => {
   const showAccountAttention =
     !selectedEvent.ticketLink &&
     user.authInitialized &&
-    userIsLoggedIn &&
-    (user.hasBenefits !== true || Boolean(getAccountStatusNotice(user)));
+    ticketBenefitIssue;
   const useGuestEventLayout =
     accountBannerLoading || showMembershipOffer || showAccountAttention;
   const factsInsideBookingCard = !useGuestEventLayout;

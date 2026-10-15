@@ -37,6 +37,8 @@ import {
   sessionClaims,
 } from "../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
+import { useSupportTicketAttention } from "@/elements/support/SupportTicketAttentionProvider";
+import { TREASURY_URL } from "@/util/administration.mjs";
 
 const useBrowserLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -45,6 +47,7 @@ const subscribeToHydration = () => () => {};
 const hydratedSnapshot = () => true;
 const serverSnapshot = () => false;
 const serverUser = { authInitialized: false, session: null, image: "" };
+const anonymousUser = { authInitialized: true, session: null, image: "" };
 
 const getAccountInitials = (account) => {
   const nameParts = [account?.name, account?.surname]
@@ -88,10 +91,11 @@ SubmenuToggle.propTypes = {
 
 const HeaderContent = (props) => {
   const storedUser = useSelector(selectUser);
+  const hasUnanswered = useSupportTicketAttention();
   // Account initialisation can finish while a streamed payment page is still
   // arriving. Hydrate the same neutral header the server rendered first.
   const hydrated = useSyncExternalStore(subscribeToHydration, hydratedSnapshot, serverSnapshot);
-  const user = hydrated ? storedUser : serverUser;
+  const user = props.anonymous ? anonymousUser : hydrated ? storedUser : serverUser;
   const accountMenuRef = useRef(null);
   const submenuId = useId();
   const navigationRef = useRef(null);
@@ -345,7 +349,12 @@ const HeaderContent = (props) => {
                           </Link>
                         </li>
                       )}
-                      {checkAuthorization(user.session, SUPPORT_ACCESS) && <li><Link to="/user/dashboard/support">Support Tickets</Link></li>}
+                      {checkAuthorization(user.session, SUPPORT_ACCESS) && <li><Link to="/user/dashboard/support"
+                        aria-label={hasUnanswered ? "Support tickets, unanswered tickets" : undefined}>
+                        Support Tickets{hasUnanswered && <span className="support-attention-dot" aria-hidden="true" />}
+                      </Link></li>}
+                      <li><a href={TREASURY_URL} target="_blank" rel="noopener noreferrer"
+                        aria-label="Treasury (opens in a new tab)">Treasury</a></li>
                     </>
                   </ul>
                 </li>
@@ -446,6 +455,7 @@ const HeaderContent = (props) => {
 };
 
 HeaderContent.propTypes = {
+  anonymous: PropTypes.bool,
   dark: PropTypes.bool,
   forceRegion: PropTypes.string,
 };

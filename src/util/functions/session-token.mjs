@@ -1,5 +1,6 @@
 // UI expiry only. The API verifies the signature and current account access.
-export const SESSION_LIFETIME_SECONDS = 30 * 24 * 60 * 60;
+export const SESSION_LIFETIME_SECONDS = 14 * 24 * 60 * 60;
+export const LEGACY_SESSION_LIFETIME_SECONDS = 30 * 24 * 60 * 60;
 export const ACCESS_LIFETIME_SECONDS = 15 * 60;
 export const MAX_TIMER_DELAY = 2 ** 31 - 1;
 
@@ -18,7 +19,7 @@ export function sessionExpiration(token) {
   if (!Number.isSafeInteger(claims?.auth_time) || claims.auth_time <= 0 ||
       claims.token_use !== "access" || typeof claims.sid !== "string" || !/^[\da-f-]{36}$/.test(claims.sid) ||
       !Number.isSafeInteger(claims.session_exp) || claims.session_exp < claims.auth_time + SESSION_LIFETIME_SECONDS ||
-      claims.session_exp > Math.max(claims.auth_time + SESSION_LIFETIME_SECONDS, claims.iat + 3600) ||
+      claims.session_exp > Math.max(claims.auth_time + LEGACY_SESSION_LIFETIME_SECONDS, claims.iat + SESSION_LIFETIME_SECONDS) ||
       !Number.isSafeInteger(claims.exp) || claims.exp > claims.iat + ACCESS_LIFETIME_SECONDS || claims.exp > claims.session_exp ||
       !Number.isSafeInteger(claims.iat) || claims.iat < claims.auth_time || claims.iat >= claims.exp ||
       claims.iss !== "bgsnl-api" || claims.aud !== "bgsnl-website") return null;
@@ -39,7 +40,7 @@ export function sameLoginSession(left, right) {
     a.sid === b.sid && a.sessionVersion === b.sessionVersion && a.version === b.version;
 }
 
-// Re-arm long timers: 30 days exceeds the browser's signed 32-bit timeout limit.
+// Re-arm long timers: 14 days exceeds the browser's signed 32-bit timeout limit.
 export function watchSessionExpiry(token, onExpire, {
   now = Date.now, schedule = setTimeout, cancel = clearTimeout,
 } = {}) {

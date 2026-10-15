@@ -17,6 +17,11 @@
 }
 .header { display: flex; align-items: start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
 .overview, .editor { padding: 1.5rem; background: var(--dashboard-surface); border-radius: var(--dashboard-radius); margin: 1.5rem 0; }
+.overviewHeader { align-items: center; display: flex; gap: .75rem; justify-content: space-between; margin-bottom: .75rem; }
+.overviewHeader h2 { margin: 0; }
+.overviewHeader .refreshButton { flex: 0 0 auto; height: 2.75rem; padding: 0; width: 2.75rem; }
+.refreshButton:active:not(:disabled) { transform: scale(.95); }
+.refreshButton[aria-busy="true"] svg { animation: monthly-refresh-spin 1s linear infinite; }
 .hint { color: var(--dashboard-muted); font-size: 1rem; font-weight: 400; }
 .items, .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0 0; }
 .items button { max-width: 100%; overflow-wrap: anywhere; text-align: left; }
@@ -32,4 +37,5 @@
   .actions > button { flex: 1 1 auto; }
   .page .primary { flex-basis: 100%; }
 }
-@media (prefers-reduced-motion: reduce) { .page button { transition: none; } }
+@keyframes monthly-refresh-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .page button { transition: none; } .refreshButton[aria-busy="true"] svg { animation: none; } }

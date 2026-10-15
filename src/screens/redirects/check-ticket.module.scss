@@ -29,7 +29,18 @@
 .eventPoster, .eventPosterFallback { display: block; width: 100%; height: 100%; background: #e7eee8; object-fit: cover; }
 .eventPosterFallback { display: grid; place-items: center; color: #607168; font-size: 1rem; }
 .eventCardContent { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; min-width: 0; padding: .75rem; }
-.eventCard strong { min-width: 0; font-size: 1rem; line-height: 1.25; }
+.eventCard strong {
+  display: -webkit-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 1rem;
+  line-height: 1.25;
+}
 .regionBadge { flex: 0 0 auto; padding: .2rem .45rem; border: 1px solid var(--region-badge-border); border-radius: 999px; background: var(--region-badge-background); color: var(--region-badge-color); font-size: 1rem; font-weight: 800; line-height: 1.2; }
 .empty { padding: 1rem 0 0; }
 .checkIn.scanning { padding-block: 1.25rem; }

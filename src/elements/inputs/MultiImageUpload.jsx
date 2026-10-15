@@ -31,6 +31,7 @@ const MultiImageUpload = ({
   existingImages = [], 
   onImagesChange,
   onValidationChange,
+  showInlineErrors = true,
   name = "images",
   maxImages = DEFAULT_MAX_IMAGES,
   maxFileSize = DEFAULT_MAX_FILE_SIZE,
@@ -492,6 +493,15 @@ const MultiImageUpload = ({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onClick={!images.length ? () => fileInputRef.current?.click() : undefined}
+        role={!images.length ? "button" : undefined}
+        tabIndex={!images.length ? 0 : undefined}
+        onKeyDown={!images.length ? (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            fileInputRef.current?.click();
+          }
+        } : undefined}
+        aria-label={!images.length ? "Add images" : undefined}
       >
         {!images.length ? <>
           <FiUpload style={{ color: "#6c757d", marginBottom: "10px" }} />
@@ -622,7 +632,7 @@ const MultiImageUpload = ({
       </div>
 
       {/* Error Message */}
-      {error && showError && (
+      {showInlineErrors && error && showError && (
         <div className="error-message" style={{ 
           color: "#dc3545", 
           marginTop: "10px",
@@ -643,6 +653,7 @@ MultiImageUpload.propTypes = {
   existingImages: PropTypes.arrayOf(PropTypes.string),
   onImagesChange: PropTypes.func,
   onValidationChange: PropTypes.func,
+  showInlineErrors: PropTypes.bool,
   name: PropTypes.string,
   maxImages: PropTypes.number,
   maxFileSize: PropTypes.number,

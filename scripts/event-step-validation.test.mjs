@@ -38,3 +38,26 @@ test("resuming later steps retains validation of earlier fields", () => {
 test("collect-data errors return to Tickets & media before Upsell", () => {
   assert.deepEqual(blockingEventStep({ extraInputsForm: [{ placeholder: "Required" }] }, 2), { step: 1, paths: ["extraInputsForm.0.placeholder"] });
 });
+
+test("full submit routes upsell group errors to the visible step", () => {
+  assert.deepEqual(blockingEventStep({ earlyBird: { "at-least-one-limit": "Set an early-bird ticket count or end date." } }, 3), {
+    step: 2,
+    paths: ["earlyBird.at-least-one-limit"],
+  });
+  assert.deepEqual(blockingEventStep({ promoCodes: { codes: [{ discount: "Enter a discount" }] } }, 3), {
+    step: 2,
+    paths: ["promoCodes.codes.0.discount"],
+  });
+  assert.deepEqual(blockingEventStep({ title: "Required", earlyBird: { price: "Required" } }, 3), {
+    step: 0,
+    paths: ["title"],
+  });
+});
+
+test("full submit still reports an unmapped validation error", () => {
+  assert.deepEqual(blockingEventStep({ futureField: "Explain the new field" }, 3, 1), {
+    step: 1,
+    paths: ["futureField"],
+  });
+  assert.equal(blockingEventStep({ futureField: "Explain the new field" }, 2), null);
+});

@@ -11,6 +11,11 @@ export function trackSessionActivity({ session, onSession, onEnd, request = brow
   let current = session, stopped = false, busy = false, pending = false;
   let lastSent = 0, activityTimer, deadlineTimer;
   const visible = () => documentTarget.visibilityState === "visible";
+  const isCurrentOrNewer = (next) => next?.sid === current.sid && next.auth_time === current.auth_time &&
+    Number.isSafeInteger(next.exp) && next.exp > 0 && Number.isSafeInteger(next.accessExp ?? 0) &&
+    (next.sessionVersion ?? 0) >= (current.sessionVersion ?? 0) &&
+    (next.accessExp ?? 0) >= (current.accessExp ?? 0) &&
+    ((next.accessExp ?? 0) > (current.accessExp ?? 0) || next.exp >= current.exp);
   function armDeadline(delay = Math.max(0, current.exp * 1000 - now())) {
     cancel(deadlineTimer);
     if (!stopped) deadlineTimer = schedule(() => check(), Math.min(delay, 2 ** 31 - 1));
@@ -28,8 +33,8 @@ export function trackSessionActivity({ session, onSession, onEnd, request = brow
       if (response.status === 401 || (response.ok && !data.session)) {
         stop(); onEnd(); return;
       }
-      if (response.ok && data.session?.sid === current.sid && data.session.auth_time === current.auth_time) {
-        current = { ...data.session, exp: Math.max(current.exp, data.session.exp) };
+      if (response.ok && isCurrentOrNewer(data.session)) {
+        current = data.session;
         onSession(current);
       }
       // During an outage keep the UI/form in place; the API still denies access.
@@ -76,5 +81,9 @@ export function trackSessionActivity({ session, onSession, onEnd, request = brow
   for (const event of ["focus", "pageshow", "online"]) windowTarget.addEventListener(event, check);
   documentTarget.addEventListener("visibilitychange", check);
   armDeadline();
-  return { stop, check };
+  return { stop, check, updateSession(next) {
+    if (stopped || !isCurrentOrNewer(next)) return;
+    current = next;
+    armDeadline();
+  } };
 }

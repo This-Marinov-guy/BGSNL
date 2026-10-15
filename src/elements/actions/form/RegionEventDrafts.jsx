@@ -1,3 +1,4 @@
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import { useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "framer-motion";
@@ -6,7 +7,6 @@ import { useHttpClient } from "../../../hooks/common/http-hook";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import { FiChevronLeft, FiChevronRight, IconlyArrowUpRight } from "../../ui/icons/IconlyIcons";
 
-const dateFormat = new globalThis.Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" });
 const timeFormat = new globalThis.Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Amsterdam" });
 
 function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
@@ -78,12 +78,14 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
             <div className="event-region-drafts__content">
               <div className="event-region-drafts__card-header">
                 <div className="event-region-drafts__facts">
-                  <div className="event-region-drafts__skeleton-title" />
+                  <div className="event-region-drafts__title-row">
+                    <div className="event-region-drafts__skeleton-title" />
+                    <div className="event-region-drafts__skeleton-arrow" />
+                  </div>
                   <div className="event-region-drafts__skeleton-date" />
                 </div>
                 <div className="event-region-drafts__skeleton-poster" />
               </div>
-              <div className="event-region-drafts__skeleton-button" />
             </div>
           </div>)}
         </div>
@@ -112,17 +114,21 @@ function RegionEventDrafts({ region, currentDraftId, disabled = false }) {
           const note = typeof draft.draftData?.note === "string" ? draft.draftData.note.trim() : "";
           return (
             <article className="event-region-drafts__card" key={draft.id} aria-roledescription="slide" aria-label={`${index + 1} of ${result.drafts.length}`}>
-              <div className="event-region-drafts__content">
-                <div className="event-region-drafts__card-header">
-                  <div className="event-region-drafts__facts">
-                    <h4>{title}</h4>
-                    {hasDate ? <time dateTime={date.toISOString()}>{dateFormat.format(date)} · {timeFormat.format(date)}</time> : <p>Date and time not set</p>}
+              <Link to={`/user/dashboard/events/${encodeURIComponent(draft.id)}/edit`} className="event-region-drafts__card-link" aria-label={`Continue draft: ${title}`} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined} onClick={event => { if (disabled) event.preventDefault(); }}>
+                <div className="event-region-drafts__content">
+                  <div className="event-region-drafts__card-header">
+                    <div className="event-region-drafts__facts">
+                      <div className="event-region-drafts__title-row">
+                        <h4>{title}</h4>
+                        <span className="event-region-drafts__continue-icon" aria-hidden="true"><IconlyArrowUpRight size="1rem" /></span>
+                      </div>
+                      {hasDate ? <time dateTime={date.toISOString()}>{formatDisplayDate(date)} · {timeFormat.format(date)}</time> : <p>Date and time not set</p>}
+                    </div>
+                    {typeof poster === "string" && poster && <img className="event-region-drafts__poster" src={poster} alt={`${title} poster`} loading="lazy" />}
                   </div>
-                  {typeof poster === "string" && poster && <img className="event-region-drafts__poster" src={poster} alt={`${title} poster`} loading="lazy" />}
+                  {note && <p className="event-draft-note"><strong>Note</strong>{note}</p>}
                 </div>
-                {note && <p className="event-draft-note"><strong>Note</strong>{note}</p>}
-                <Link to={`/user/dashboard/events/${encodeURIComponent(draft.id)}/edit`} className="event-region-drafts__continue" aria-label={`Continue ${title}`} aria-disabled={disabled || undefined} tabIndex={disabled ? -1 : undefined} onClick={event => { if (disabled) event.preventDefault(); }}><span>Continue</span><span className="event-region-drafts__continue-icon" aria-hidden="true"><IconlyArrowUpRight /></span></Link>
-              </div>
+              </Link>
             </article>
           );
         })}

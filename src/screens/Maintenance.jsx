@@ -4,6 +4,7 @@ import { LoadingSkeleton } from "@/elements/ui/loading/LoadState";
 import { useState } from "react";
 import GlobalBackground from "../component/common/GlobalBackground";
 import StaticHeaderLogo from "../component/header/StaticHeaderLogo";
+import { IconlyRotate } from "@/elements/ui/icons/IconlyIcons";
 import styles from "./Maintenance.module.scss";
 
 export default function Maintenance() {
@@ -24,8 +25,9 @@ export default function Maintenance() {
           We’re updating the Bulgarian Society website.
           Thanks for your patience while we get everything ready.
         </p>
-        <button className={styles.refresh} type="button" onClick={refresh} disabled={refreshing}>
-          {refreshing ? "Refreshing…" : "Refresh page"}
+        <button className={styles.refresh} type="button" onClick={refresh} disabled={refreshing}
+          aria-label={refreshing ? "Refreshing page" : "Refresh page"} aria-busy={refreshing} title="Refresh page">
+          <IconlyRotate aria-hidden="true" size="1.35rem" />
         </button>
         <p className={styles.note} role="status">
           {refreshing ? <LoadingSkeleton label="Checking if the website is ready" variant="inline" /> : "Please check back in a little while."}

@@ -15,6 +15,7 @@ export const allowedWebsiteOrigin = (origin, production) => {
   if (["https://www.bulgariansociety.nl", "https://bulgariansociety.nl"].includes(origin)) return true;
   return !production && /^http:\/\/(localhost|127\.0\.0\.1):300[0-2]$/.test(origin || "");
 };
+export const isLegacySessionToken = (token) => decodeSessionToken(token)?.session_policy !== "idle-14d";
 export function publicSession(token, now = Date.now(), { allowExpired = false } = {}) {
   const claims = decodeSessionToken(token);
   if (!claims || !isSessionTokenValid(token, { now: allowExpired ? claims.iat * 1000 : now, version: process.env.NEXT_PUBLIC_AUTH_VERSION ?? 1 })) return null;

@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 /* global Intl */
 
@@ -180,7 +181,7 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
                 </button>
               </dd>
             </div>}
-            <div><dt>Date</dt><dd>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Amsterdam" }).format(new Date(result.date))}</dd></div>
+            <div><dt>Date</dt><dd>{formatDisplayDate(result.date)}</dd></div>
             <div><dt>Status</dt><dd>{successful ? free ? "Confirmed" : "Paid" : pending ? "Processing" : state === "expired" ? "Expired" : "Not completed"}</dd></div>
             {result.refunded > 0 && <div><dt>Refunded</dt><dd>{money(result.refunded, result.currency)}</dd></div>}
           </dl>

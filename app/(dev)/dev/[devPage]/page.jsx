@@ -4,6 +4,7 @@ import TicketPlayground from "@/screens/private/TicketPlayground";
 import WhatsNewPreview from "@/screens/private/WhatsNewPreview";
 import PaymentResultPreview from "@/screens/private/PaymentResultPreview";
 import WalletCardPreview from "@/screens/private/WalletCardPreview";
+import EventFeedbackPage from "@/screens/feedback/EventFeedbackPage";
 import HeaderLoadingError from "@/elements/ui/errors/HeaderLoadingError";
 
 const AccountUnavailablePreview = () => (
@@ -11,6 +12,10 @@ const AccountUnavailablePreview = () => (
     isError
     message="We could not load your account. Check your connection and try again."
   />
+);
+
+const FeedbackSuccessPreview = () => (
+  <EventFeedbackPage ticketId={"0".repeat(24)} initialState={{ phase: "success", eventTitle: "tetet" }} />
 );
 
 /**
@@ -29,6 +34,7 @@ const SCREENS = {
   playground: TicketPlayground,
   "whats-new": WhatsNewPreview,
   "payment-result": PaymentResultPreview,
+  "feedback-success": FeedbackSuccessPreview,
   "account-unavailable": AccountUnavailablePreview,
 };
 

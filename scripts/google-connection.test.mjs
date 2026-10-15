@@ -296,12 +296,17 @@ test("Google retries reuse Continue with Google and account preloading errors ar
 test("settings and login share the branded Google button without changing account eligibility", async () => {
   const connected = await readFile(new URL("../src/elements/authentication/ConnectedAccounts.jsx", import.meta.url), "utf8");
   const button = await readFile(new URL("../src/elements/authentication/GoogleButton.jsx", import.meta.url), "utf8");
+  const styles = await readFile(new URL("../src/elements/authentication/google-auth.module.scss", import.meta.url), "utf8");
   assert.match(connected, /<GoogleButton disabled=\{busy \|\| editing \|\| !google\.enabled \|\| google\.eligible !== true\}/);
   assert.match(connected, /onClick=\{\(\) => setEditing\(true\)\}>\s+Connect Google\s+<\/GoogleButton>/);
   assert.match(connected, /google\.connected \? <button type="button" className=\{danger\}/);
   assert.match(button, /className=\{styles\.googleButton\}/);
   assert.match(button, /disabled=\{disabled \|\| busy\} aria-busy=\{busy\}/);
-  assert.match(button, /aria-hidden="true" focusable="false"/);
+  assert.match(connected, /settingsGoogleIcon/);
+  assert.match(button, /src="\/assets\/images\/svg\/3d\/google\.png" alt=""/);
+  assert.match(button, /aria-hidden="true"/);
+  assert.match(styles, /background: #fff url\("\/assets\/images\/svg\/3d\/google\.png"\)/);
+  assert.match(styles, /pointer-events: none/);
 });
 test("Google password panels animate both ways without keeping hidden controls active", async () => {
   const connected = await readFile(new URL("../src/elements/authentication/ConnectedAccounts.jsx", import.meta.url), "utf8");

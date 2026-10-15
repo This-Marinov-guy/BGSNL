@@ -1,23 +1,18 @@
 import InfoHint from "../../ui/icons/InfoHint";
 import { useId } from "react";
-import { ErrorMessage, Field, useField, useFormikContext } from "formik";
+import { Field, useField, useFormikContext } from "formik";
 import PropTypes from "prop-types";
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "framer-motion";
 import { CalendarWithClock } from "../../inputs/common/Calendar";
 
-export function OptionError({ name }) {
-  return <ErrorMessage name={name}>{message => typeof message === "string" ? <div className="error" data-validation-message-for={name}>{message}</div> : null}</ErrorMessage>;
-}
-OptionError.propTypes = { name: PropTypes.string.isRequired };
-
-export function OptionField({ name, label, type = "text", ...props }) {
+export function OptionField({ name, label, type = "text", validationAlias, ...props }) {
   const id = useId();
   const required = /\*\s*$/.test(label);
-  return <div className="rn-form-group" data-custom-validation-field data-field-name={name}>
-    <label htmlFor={id}>{required ? label.replace(/\s*\*\s*$/, "") : label}{required && <> <span className="required-mark">*</span></>}</label><Field id={id} name={name} type={type} {...props} /><OptionError name={name} />
+  return <div className="rn-form-group" data-custom-validation-field data-field-name={validationAlias || name}>
+    <label htmlFor={id}>{required ? label.replace(/\s*\*\s*$/, "") : label}{required && <> <span className="required-mark">*</span></>}</label><Field id={id} name={name} type={type} {...props} />
   </div>;
 }
-OptionField.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, type: PropTypes.string };
+OptionField.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, type: PropTypes.string, validationAlias: PropTypes.string };
 
 export function OptionDate({ name, label, required = false, clearable = false }) {
   const [field] = useField(name);
@@ -25,7 +20,6 @@ export function OptionDate({ name, label, required = false, clearable = false })
   return <div className="rn-form-group" data-custom-validation-field data-field-name={name}>
     <label>{label}{required && <> <span className="required-mark">*</span></>}</label>
     <CalendarWithClock name={name} mode="single" locale="en-nl" captionLayout="dropdown" showButtonBar={clearable} initialValue={field.value} onSelect={value => setFieldValue(name, value)} />
-    <OptionError name={name} />
   </div>;
 }
 OptionDate.propTypes = { name: PropTypes.string.isRequired, label: PropTypes.string.isRequired, required: PropTypes.bool, clearable: PropTypes.bool };
@@ -53,10 +47,10 @@ Reveal.propTypes = { children: PropTypes.node, id: PropTypes.string };
 export function OptionPanel({ name, title, description, children }) {
   const id = useId();
   const [field, , helpers] = useField(`${name}.isEnabled`);
-  const enabled = field.value === true;
+  const enabled = field.value === true || field.value === "true";
   return <section className={`event-option-panel${enabled ? " is-enabled" : ""}`} data-event-option={name} aria-labelledby={`${id}-title`}>
     <header className="event-option-header"><div className="event-option-title"><h3 id={`${id}-title`}>{title}</h3>{description && <InfoHint label={`About ${title.toLowerCase()}`} text={description} />}</div>
-      <button type="button" role="switch" className="event-ticket-switch" aria-label={`Enable ${title.toLowerCase()}`} aria-checked={enabled} aria-expanded={enabled} aria-controls={`${id}-body`} onClick={() => helpers.setValue(!enabled, false)}><span aria-hidden="true" /></button>
+      <button type="button" name={`${name}.isEnabled`} role="switch" className="event-ticket-switch" aria-label={`Enable ${title.toLowerCase()}`} aria-checked={enabled} aria-expanded={enabled} aria-controls={`${id}-body`} onClick={() => helpers.setValue(!enabled, false)}><span aria-hidden="true" /></button>
     </header>
     <AnimatePresence initial={false}>{enabled && <Reveal id={`${id}-body`}>{children}</Reveal>}</AnimatePresence>
   </section>;

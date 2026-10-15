@@ -13,7 +13,7 @@
 .error.warning { background: #fff4d6; color: #674707; }
 .message { flex: 1; min-width: 0; overflow-wrap: anywhere; p { margin: 0; color: inherit; } }
 .message > svg { float: left; width: 1.5rem; height: 1.5rem; margin: 0 0.75rem 0.2rem 0; }
-.actions { display: flex; flex: none; align-items: center; }
+.actions { display: flex; flex: none; align-items: center; gap: .5rem; }
 .error.compact {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

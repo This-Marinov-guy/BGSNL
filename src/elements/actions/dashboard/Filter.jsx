@@ -6,7 +6,7 @@ import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize'
 import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 
-const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title = "Event filters" }) => {
+const Filter = ({ regions = REGIONS, allLabel = "All", showRegion = true, children, onClear, onRegionChange, title = "Event filters" }) => {
     const [searchParams, setSearchParams] = useFilterSearchParams();
 
     const handleRegionChange = (event) => {
@@ -14,6 +14,7 @@ const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title
             if (event.target.value) current.set("region", event.target.value);
             else current.delete("region");
             current.delete("page");
+            onRegionChange?.(current);
             return current;
         });
     };
@@ -34,7 +35,7 @@ const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title
                 {showRegion && <label>
                     <span>Region</span>
                     <SelectInput value={searchParams.get("region") || ''} onChange={handleRegionChange}>
-                        <option value="">All</option>
+                        <option value="">{allLabel}</option>
                         {regions.map((val, index) => (
                             <option value={val} key={index}>{capitalizeFirstLetter(val, true)}</option>
                         ))}
@@ -47,9 +48,11 @@ const Filter = ({ regions = REGIONS, showRegion = true, children, onClear, title
 
 Filter.propTypes = {
     regions: PropTypes.arrayOf(PropTypes.string),
+    allLabel: PropTypes.string,
     showRegion: PropTypes.bool,
     children: PropTypes.node,
     onClear: PropTypes.func,
+    onRegionChange: PropTypes.func,
     title: PropTypes.string,
 };
 

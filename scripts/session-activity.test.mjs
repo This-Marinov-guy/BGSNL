@@ -50,6 +50,24 @@ test("a stale tab checks the shared server deadline instead of logging out an ac
   await h.advance(1000); assert.deepEqual(h.calls, ["/api/session/current"]);
   assert.equal(h.ended(), 0); assert.equal(h.changes.length, 1); h.tracker.stop();
 });
+test("a newer server token can shorten a legacy deadline", async () => {
+  let calls = 0;
+  const h = harness({ expiresIn: 30 * 86400000, reply: (_url, session, clock) =>
+    ++calls === 1 ? Response.json({ session: { ...session, accessExp: 900,
+      exp: clock / 1000 + 14 * 86400 } }) : Response.json({}, { status: 401 }) });
+  h.win.emit("pointerdown"); await h.advance(0);
+  assert.equal(h.changes.at(-1).exp, h.session.exp - 16 * 86400);
+  await h.advance(14 * 86400000);
+  assert.deepEqual(h.calls, ["/api/session/activity", "/api/session/current"]);
+  assert.equal(h.ended(), 1);
+});
+test("a newer session from another request resets the activity watcher", async () => {
+  const h = harness({ expiresIn: 30 * 86400000, reply: () => Response.json({}, { status: 401 }) });
+  h.tracker.updateSession({ ...h.session, accessExp: 900, exp: h.session.exp - 16 * 86400 });
+  await h.advance(14 * 86400000);
+  assert.deepEqual(h.calls, ["/api/session/current"]);
+  assert.equal(h.ended(), 1);
+});
 test("confirmed expiry logs out once; an outage leaves UI state intact and retries verification", async () => {
   const expired = harness({ expiresIn: 1000, reply: () => Response.json({}, { status: 401 }) });
   await expired.advance(1000); await expired.advance(30000); assert.equal(expired.ended(), 1);

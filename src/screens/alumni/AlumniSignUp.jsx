@@ -196,7 +196,7 @@ const AlumniSignUp = () => {
                       values.image,
                       values.name +
                         values.surname +
-                        moment(values.birth).format("D MMM YYYY")
+                        moment(values.birth).format("DD-MM-YYYY")
                     );
                   } else {
                     formData.append("image", null);

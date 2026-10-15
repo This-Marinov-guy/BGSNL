@@ -1,10 +1,13 @@
 import { SITE_NAME, SITE_SHORT_NAME } from "./site";
+import PropTypes from "prop-types";
 
 export const SHARE_IMAGE_SIZE = { width: 1200, height: 630 };
 
-export default function ShareImage({ eyebrow, title, description }) {
+export default function ShareImage({ eyebrow, title, description, imageSrc, imageFit = "cover" }) {
   const titleLength = Array.from(title || "").length;
-  const titleSize = titleLength > 90 ? 52 : titleLength > 55 ? 62 : 74;
+  const titleSize = imageSrc
+    ? (titleLength > 90 ? 42 : titleLength > 55 ? 50 : 62)
+    : (titleLength > 90 ? 52 : titleLength > 55 ? 62 : 74);
 
   return (
     <div
@@ -50,10 +53,9 @@ export default function ShareImage({ eyebrow, title, description }) {
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          gap: "22px",
-          letterSpacing: "0.03em",
-          zIndex: 1,
+        alignItems: "center",
+        gap: "22px",
+        letterSpacing: "0.03em",
         }}
       >
         <span
@@ -66,19 +68,20 @@ export default function ShareImage({ eyebrow, title, description }) {
             borderRadius: "26px",
             background: "#ffffff",
             color: "#15111f",
+            fontSize: "22px",
+            fontWeight: 700,
           }}
         >
           {SITE_SHORT_NAME}
         </span>
-        <span>{eyebrow || SITE_NAME}</span>
+        <span style={{ fontSize: "24px", fontWeight: 600 }}>{eyebrow || SITE_NAME}</span>
       </div>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          width: "960px",
+          width: imageSrc ? "620px" : "960px",
           gap: "24px",
-          zIndex: 1,
         }}
       >
         <div
@@ -86,9 +89,11 @@ export default function ShareImage({ eyebrow, title, description }) {
             display: "flex",
             lineHeight: 1.04,
             letterSpacing: "-0.035em",
+            fontSize: `${titleSize}px`,
+            fontWeight: 700,
           }}
         >
-          {title}
+          {truncateTitle(title)}
         </div>
         {description ? (
           <div
@@ -97,6 +102,7 @@ export default function ShareImage({ eyebrow, title, description }) {
               maxWidth: "880px",
               lineHeight: 1.3,
               color: "#ded8e7",
+              fontSize: imageSrc ? "22px" : "26px",
             }}
           >
             {description}
@@ -107,11 +113,45 @@ export default function ShareImage({ eyebrow, title, description }) {
         style={{
           display: "flex",
           color: "#bdb4c9",
-          zIndex: 1,
+          fontSize: "19px",
         }}
       >
         bulgariansociety.nl
       </div>
+      {imageSrc ? (
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
+            top: "64px",
+            right: "64px",
+            width: "420px",
+            height: "502px",
+            borderRadius: "20px",
+            overflow: "hidden",
+            background: "#30293a",
+          }}
+        >
+          <img
+            src={imageSrc}
+            alt=""
+            style={{ width: "100%", height: "100%", objectFit: imageFit }}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
+
+function truncateTitle(value = "") {
+  const characters = Array.from(value);
+  return characters.length > 105 ? `${characters.slice(0, 104).join("").trimEnd()}…` : value;
+}
+
+ShareImage.propTypes = {
+  eyebrow: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  imageSrc: PropTypes.string,
+  imageFit: PropTypes.oneOf(["cover", "contain"]),
+};

@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import { SelectInput, Calendar } from "@/compat/primereact";
 
@@ -6,32 +7,27 @@ import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "rea
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "@/util/navigation";
 import DashboardNavigation from "@/screens/userActions/DashboardNavigation";
 import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import { FiChevronDown, FiDownload, FiEdit2, FiSearch, FiUsers, IconlyClose } from "@/elements/ui/icons/IconlyIcons";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
-import AnalyticsAvailability from "@/elements/actions/dashboard/AnalyticsAvailability";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import { showNotification } from "@/redux/notification";
 import { selectUser } from "@/redux/user";
 import { sessionClaims } from "@/util/functions/authorization";
 import { capitalizeFirstLetter } from "@/util/functions/capitalize";
 import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGION_BADGES";
-import adminStyles from "@/screens/userActions/administration.module.scss";
 import styles from "./backoffice.module.scss";
 import AccountMembershipActions from "./AccountMembershipActions";
 import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { CopyableId, PhoneActions } from "@/elements/ui/dashboard/DashboardActions";
 import useModalUrl from "@/elements/ui/modals/useModalUrl";
+import { scrollToListStart } from "@/util/functions/pagination-scroll.mjs";
 import { ADMIN, SUPER_ADMIN } from "@/util/defines/common";
 import { canManageAccountType, canEditAccount, assignableAccountRoles, assignedEditableRoles, readOnlyAccountRoles } from "./role-policy.mjs";
 import { exportAccountsCsv } from "./export-accounts.mjs";
 
-const MembersList = dynamic(() => import("@/elements/actions/dashboard/members/MembersList"), {
-  loading: () => <LoadingSkeleton label="Loading member statistics" variant="cards" count={4} />,
-});
 const BulkRolesImport = dynamic(() => import("./BulkRolesImport"));
 
 const EMPTY_OPTIONS = { cities: [], roles: [], statuses: [] };
@@ -66,7 +62,7 @@ const accountQuery = ({ type, page, pageSize, search, city, status }) => {
 const previewDate = value => {
   const date = value ? new Date(value) : null;
   return date && Number.isFinite(date.getTime())
-    ? new globalThis.Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "Europe/Amsterdam" }).format(date)
+    ? formatDisplayDate(date)
     : "Not provided";
 };
 
@@ -253,7 +249,7 @@ function AccountEditor({ account, currentAccountId, actorRoles, options, onClose
               <EditorField id="account-editor-surname" label="Last name"><input id="account-editor-surname" className="bgsnl-form-control" name="surname" value={form.surname} onChange={change} required /></EditorField>
               <EditorField className={styles.fullField} id="account-editor-email" label="Email"><input id="account-editor-email" className="bgsnl-form-control" name="email" type="email" value={form.email} onChange={change} required /></EditorField>
               <EditorField id="account-editor-phone" label="Mobile number"><input id="account-editor-phone" className="bgsnl-form-control" name="phone" type="tel" value={form.phone} onChange={change} required={account.type === "member"} /></EditorField>
-              <EditorField id="account-editor-birth" label="Date of birth"><Calendar inputId="account-editor-birth" name="birth" dateFormat="dd/mm/yy" value={form.birth ? new Date(`${form.birth}T00:00:00`) : null} onChange={({ value }) => setForm(current => ({ ...current, birth: value ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}` : "" }))} required={account.type === "member"} /></EditorField>
+              <EditorField id="account-editor-birth" label="Date of birth"><Calendar inputId="account-editor-birth" name="birth" dateFormat="dd-mm-yy" value={form.birth ? new Date(`${form.birth}T00:00:00`) : null} onChange={({ value }) => setForm(current => ({ ...current, birth: value ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}` : "" }))} required={account.type === "member"} /></EditorField>
               <EditorField className={styles.fullField} id="account-editor-region" label="City"><SelectInput id="account-editor-region" className="bgsnl-form-control" name="region" value={form.region} onChange={change}><option value="">Not assigned</option>{options.cities.map((city) => <option value={city} key={city}>{formatCity(city)}</option>)}</SelectInput></EditorField>
             </div>
           </fieldset>
@@ -275,7 +271,7 @@ function AccountEditor({ account, currentAccountId, actorRoles, options, onClose
             {isSelf && <p className={styles.selfNotice}>Your own roles and status are protected to prevent accidental loss of access.</p>}
             <div className={styles.statusFields}>
               <EditorField id="account-editor-status" label="Account status"><SelectInput id="account-editor-status" className="bgsnl-form-control" name="status" value={form.status} onChange={change} disabled={isSelf}>{statuses.map((status) => <option value={status} key={status}>{status.replaceAll("_", " ")}</option>)}</SelectInput></EditorField>
-              {!form.roles.includes("vip") && !readOnlyRoles.includes("vip") && <EditorField id="account-editor-expiry" label="Membership expiry"><input id="account-editor-expiry" className="bgsnl-form-control" name="expireDate" type="date" min="1900-01-01" max="2200-12-31" value={form.expireDate} onChange={change} disabled={isSelf} required /></EditorField>}
+              {!form.roles.includes("vip") && !readOnlyRoles.includes("vip") && <EditorField id="account-editor-expiry" label="Membership expiry"><Calendar inputId="account-editor-expiry" name="expireDate" dateFormat="dd-mm-yy" minDate={new Date(1900, 0, 1)} maxDate={new Date(2200, 11, 31)} value={form.expireDate ? new Date(`${form.expireDate}T00:00:00`) : null} onChange={({ value }) => setForm(current => ({ ...current, expireDate: value ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(value.getDate()).padStart(2, "0")}` : "" }))} disabled={isSelf} required /></EditorField>}
             </div>
             {roleChoices.length > 0 && readOnlyRoles.length > 0 && (
               <p className={styles.selfNotice}>
@@ -317,8 +313,6 @@ AccountEditor.propTypes = {
 };
 
 export default function BackofficeAccounts() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const statistics = searchParams.get("view") === "statistics";
   const [type, setType] = useState("member");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -337,6 +331,7 @@ export default function BackofficeAccounts() {
   const [exportError, setExportError] = useState("");
   const [importOpen, setImportOpen] = useState(false);
   const requestSequence = useRef(0);
+  const listStartRef = useRef(null);
   const hasLoadedAccounts = useRef(false);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
@@ -372,7 +367,6 @@ export default function BackofficeAccounts() {
       setType("member");
       return undefined;
     }
-    if (statistics) return undefined;
     let active = true;
     const controller = new AbortController();
     const sequence = ++requestSequence.current;
@@ -393,22 +387,13 @@ export default function BackofficeAccounts() {
       .catch(() => { if (initialLoad && active && sequence === requestSequence.current) setListError(true); })
       .finally(() => { if (initialLoad && active && sequence === requestSequence.current) setLoadingList(false); });
     return () => { active = false; controller.abort(); };
-  }, [type, page, search, city, statusFilter, statistics, refreshKey, accountRoleScope, accountScope]);
+  }, [type, page, search, city, statusFilter, refreshKey, accountRoleScope, accountScope]);
 
   const chooseType = (nextType) => {
     if (!canManageAccountType(user.roles, nextType)) return;
     setType(nextType);
     setPage(1);
     setSelected(null);
-  };
-
-  const switchView = (view) => {
-    setSelected(null);
-    setSearchParams((current) => {
-      if (view === "statistics") current.set("view", "statistics");
-      else current.delete("view");
-      return current;
-    });
   };
 
   const saved = (account) => {
@@ -459,18 +444,11 @@ export default function BackofficeAccounts() {
       <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
       <main className={`container user-workspace-page event-admin-page ${styles.page} ${workspace.page}`}>
         <DashboardNavigation />
-        <nav className={`${adminStyles.views} ${workspace.viewNavigation}`} aria-label="Account administration">
-          <div className={adminStyles.viewTabs}>
-            <button type="button" aria-current={!statistics ? "page" : undefined} onClick={() => switchView("accounts")}>Manage accounts</button>
-            <button type="button" aria-current={statistics ? "page" : undefined} onClick={() => switchView("statistics")}>Member statistics</button>
-          </div>
-        </nav>
-
         <header className="event-workspace-heading event-dashboard-heading">
           <div>
             <h1>Accounts dashboard</h1>
           </div>
-          {!statistics && <div className="workspace-heading-actions">
+          <div className="workspace-heading-actions">
             {user.roles?.some(role => ["admin", "super_admin"].includes(role)) && <button className={styles.importButton} onClick={() => setImportOpen(true)} type="button">Import sheet</button>}
             <button
               className={styles.exportButton}
@@ -481,11 +459,11 @@ export default function BackofficeAccounts() {
               <FiDownload aria-hidden />
               <span>{exporting ? "Preparing sheet…" : "Export sheet"}</span>
             </button>
-          </div>}
+          </div>
         </header>
 
         {exportError && <p role="alert">{exportError}</p>}
-        {statistics ? <section className={styles.directory} aria-label="Member statistics"><AnalyticsAvailability title="Member analytics"><MembersList /></AnalyticsAvailability></section> : <section className={styles.directory} aria-label={`${type} directory`}>
+        <section className={styles.directory} aria-label={`${type} directory`} ref={listStartRef}>
           <FilterPanel
             onClear={() => { setType("member"); setSearchInput(""); setSearch(""); setCity(""); setStatusFilter(""); setPage(1); }}
             summary={(
@@ -496,7 +474,7 @@ export default function BackofficeAccounts() {
             title="Filter accounts"
           >
             <label><span>Show</span><SelectInput className="bgsnl-form-control" value={type} onChange={(event) => chooseType(event.target.value)}><option value="member">Members</option>{canManageAccountType(user.roles, "alumni") && <option value="alumni">Alumni</option>}</SelectInput></label>
-            <label className={styles.searchField}><span>Search</span><div><FiSearch aria-hidden /><input className="bgsnl-form-control" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div></label>
+            <label className={styles.searchField}><span>Search</span><div><FiSearch aria-hidden /><input className="bgsnl-form-control" type="search" placeholder="Name, email, phone, customer or subscription ID" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} /></div></label>
             <label><span>City</span><SelectInput className="bgsnl-form-control" value={city} onChange={(event) => { setCity(event.target.value); setPage(1); }}><option value="">All cities</option>{options.cities.map((item) => <option key={item} value={item}>{formatCity(item)}</option>)}<option value="unassigned">Not assigned</option></SelectInput></label>
             <label><span>Status</span><SelectInput className="bgsnl-form-control" aria-label="Account status filter" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); }}><option value="">All statuses</option>{options.statuses.map(status => <option value={status} key={status}>{capitalizeFirstLetter(status.replaceAll("_", " ").replaceAll("-", " "))}</option>)}</SelectInput></label>
           </FilterPanel>
@@ -567,11 +545,11 @@ export default function BackofficeAccounts() {
           )}
 
           <nav className={styles.pagination} aria-label="Account pages">
-            <button type="button" disabled={page <= 1 || loadingList} onClick={() => setPage((current) => current - 1)}>Previous</button>
+            <button type="button" disabled={page <= 1 || loadingList} onClick={() => { scrollToListStart(listStartRef); setPage((current) => current - 1); }}>Previous</button>
             <span>Page {page} of {pagination.totalPages}</span>
-            <button type="button" disabled={page >= pagination.totalPages || loadingList} onClick={() => setPage((current) => current + 1)}>Next</button>
+            <button type="button" disabled={page >= pagination.totalPages || loadingList} onClick={() => { scrollToListStart(listStartRef); setPage((current) => current + 1); }}>Next</button>
           </nav>
-        </section>}
+        </section>
       </main>
       {selected && canManageAccountType(user.roles, selected.type) && canEditAccount(user.roles, selected.roles) && <AccountEditor account={selected} currentAccountId={currentAccountId} actorRoles={user.roles || []} options={options} onClose={() => setSelected(null)} onSaved={saved} onMembershipChanged={() => { setSelected(null); setRefreshKey(key => key + 1); }} />}
       {importOpen && <BulkRolesImport onClose={() => setImportOpen(false)} onApplied={({ updated }) => {

@@ -14,7 +14,8 @@ test("active and past archive views partition non-draft events", () => {
   assert.equal(isPastOrArchivedEvent({ status: "draft" }, now), false);
 });
 
-test("only events older than a full week are scheduled for archival", () => {
+test("only events at least three days old are scheduled for archival", () => {
+  assert.equal(ARCHIVE_AFTER_MS, 3 * 24 * 60 * 60 * 1000);
   assert.equal(shouldArchiveEvent(dated(-ARCHIVE_AFTER_MS + 1), now), false);
   assert.equal(shouldArchiveEvent(dated(-ARCHIVE_AFTER_MS, "opened"), now), true);
   assert.equal(shouldArchiveEvent({ ...dated(-ARCHIVE_AFTER_MS - 1), correctedDate: new Date(now + 60_000).toISOString() }, now), false);

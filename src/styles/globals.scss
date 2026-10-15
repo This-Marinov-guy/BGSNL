@@ -42,6 +42,18 @@ ul, ol {
   color-scheme: light;
 }
 
+.support-attention-dot {
+  display: inline-block;
+  flex: 0 0 .625rem;
+  width: .625rem;
+  height: .625rem;
+  margin-inline-start: .45rem;
+  border-radius: 50%;
+  background: #d92d20;
+  box-shadow: 0 0 0 2px #fff;
+  vertical-align: middle;
+}
+
 @media (max-width: 767px) {
   :root {
     --support-launcher-width: 3.25rem;
@@ -1063,14 +1075,14 @@ textarea.bgsnl-form-control {
 .startup-overlay {
   background: var(--site-background);
   transition: opacity 260ms ease-out, visibility 0s linear 260ms;
-  // Release the server-rendered page even if hydration fails completely.
-  animation: bgsnl-startup-failsafe 0s 12s forwards;
   > .page-loading { animation: none; }
   .page-loading__content { animation: bgsnl-startup-content-enter 220ms ease-out both; }
   &.fade-out { pointer-events: none; }
 }
 
 .startup-overlay--public {
+  // Public server-rendered content remains accessible if hydration fails.
+  animation: bgsnl-startup-failsafe 0s 12s forwards;
   transition: opacity 180ms ease-out, visibility 0s linear 180ms;
 }
 
@@ -1670,6 +1682,12 @@ form[data-validation-submitted="true"] .has-validation-error .event-ticket-media
  */
 .bgsnl-toast-layer {
   z-index: var(--layer-toast) !important;
+}
+
+.bgsnl-toast {
+  white-space: pre-line;
+  max-height: min(60vh, 32rem);
+  overflow-y: auto;
 }
 
 /*

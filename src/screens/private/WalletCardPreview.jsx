@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import DigitalMembershipCard from "@/elements/wallet/DigitalMembershipCard";
 import MembershipCardSkeleton from "@/elements/wallet/MembershipCardSkeleton";
+import { IconlyRotate } from "@/elements/ui/icons/IconlyIcons";
 import { TEST_CASES } from "@/util/wallet/test-card.mjs";
 import styles from "./WalletCardPreview.module.scss";
 
@@ -38,6 +39,7 @@ export default function WalletCardPreview() {
   }, [cardId, reload]);
 
   const card = result?.card;
+  const loading = !result && !error;
   return (
     <main className={styles.page}>
       <h1>Membership card preview</h1>
@@ -51,10 +53,13 @@ export default function WalletCardPreview() {
           {!TEST_CASES.includes(cardId) && <option value={cardId}>Unknown card</option>}
           {TEST_CASES.map((id) => <option key={id} value={id}>{id.replaceAll("-", " · ")}</option>)}
         </select>
-        <button type="button" onClick={() => setReload((value) => value + 1)}>Refresh status</button>
+        <button className={styles.refreshButton} type="button" onClick={() => setReload((value) => value + 1)}
+          disabled={loading} aria-label="Refresh status" aria-busy={loading} title="Refresh status">
+          <IconlyRotate aria-hidden="true" size="1.25rem" />
+        </button>
       </div>
       {error && <p role="alert">{error}. No active status is assumed.</p>}
-      {!result && !error && <MembershipCardSkeleton />}
+      {loading && <MembershipCardSkeleton />}
       {card && <>
         <DigitalMembershipCard card={card} qrImage={result.qrImage} tickets={result.ticketImages || []} />
         <p className={styles.hint}>The status badge sits above the card for this preview. Your supplied background is unchanged.</p>

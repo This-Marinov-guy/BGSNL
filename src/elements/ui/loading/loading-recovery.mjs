@@ -1,4 +1,4 @@
-export const SLOW_LOADING_DELAY_MS = 7000;
+export const SLOW_LOADING_DELAY_MS = 15000;
 
 // Ignore same-page/hash links and never allow a retry to leave this origin.
 export function getLoadingDestination(href, currentHref) {

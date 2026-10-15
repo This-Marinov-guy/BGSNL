@@ -16,12 +16,15 @@ export function eventEditSection(name) {
 }
 
 export function focusEventEditSection(form, section) {
-  const container = form?.querySelector(section.selector);
-  if (!container) return false;
-  const candidates = section.controls ? section.controls.split(',').flatMap(selector => [...container.querySelectorAll(selector.trim())]) : [container];
-  const control = candidates.find(node => !node.matches(':disabled') && !node.closest('[hidden], [inert]') && node.getClientRects().length);
-  if (!control) return false;
-  control.focus({ preventScroll: true });
-  container.scrollIntoView({ block: 'start', behavior: 'instant' });
-  return true;
+  if (!form || !section) return false;
+  for (const container of form.querySelectorAll(section.selector)) {
+    if (container.closest('[hidden], [inert]') || !container.getClientRects().length) continue;
+    const candidates = section.controls ? section.controls.split(',').flatMap(selector => [...container.querySelectorAll(selector.trim())]) : [container];
+    const control = candidates.find(node => !node.matches(':disabled') && !node.closest('[hidden], [inert]') && node.getClientRects().length);
+    if (!control) continue;
+    control.focus({ preventScroll: true });
+    container.scrollIntoView({ block: 'start', behavior: 'instant' });
+    return true;
+  }
+  return false;
 }

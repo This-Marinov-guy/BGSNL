@@ -26,6 +26,7 @@ import {
   ACCESS_4,
   BILLING_LOCKED_STATUSES,
   BILLING_LOCK_EXEMPT,
+  DASHBOARD_ACCESS,
   SUPPORT_ACCESS,
   formatRole,
   USER_UPDATE_MODAL,
@@ -34,6 +35,7 @@ import { ACCOUNT_TABS } from "../../../util/defines/enum";
 import { capitalizeFirstLetter } from "../../../util/functions/capitalize";
 import AlumniRegistrationButton from "../buttons/AlumniRegistrationButton";
 import { ALUMNI_MEMBERSHIP_SPECIFICS } from "@/util/defines/ALUMNI";
+import { useSupportTicketAttention } from "@/elements/support/SupportTicketAttentionProvider";
 
 const UserSidebar = ({
   currentUser,
@@ -45,6 +47,7 @@ const UserSidebar = ({
   toggleSidebar,
 }) => {
   const dispatch = useDispatch();
+  const hasUnanswered = useSupportTicketAttention();
   const tierIcon = currentUser.tier === 0
     ? <IconlyChessPawn3D />
     : ALUMNI_MEMBERSHIP_SPECIFICS.find((tier) => tier.id === currentUser.tier)?.icon;
@@ -104,6 +107,11 @@ const UserSidebar = ({
    */
   const adminLinks = [
     { icon: <FiCalendar />, label: "Administration", to: "/user/dashboard" },
+    hasRole(DASHBOARD_ACCESS) && {
+      icon: adminNavLocked ? restrictedIcon : <FiCalendar />,
+      label: "Metrics",
+      to: "/user/dashboard/metrics/events",
+    },
     hasRole(MEMBER_ADMIN_ACCESS) && {
       icon: adminNavLocked ? restrictedIcon : <FiUsers />,
       label: "Manage Members",
@@ -282,12 +290,15 @@ const UserSidebar = ({
                       rel={link.newTab ? "noopener noreferrer" : undefined}
                       target={link.newTab ? "_blank" : undefined}
                       to={link.to}
+                      aria-label={hasUnanswered && link.to === "/user/dashboard/support" ? "Support tickets, unanswered tickets" : undefined}
                       onClick={() => {
                         if (isMobile) toggleSidebar();
                       }}
                     >
                       <span className="sidebar-icon">{link.icon}</span>
-                      <span className="sidebar-label">{link.label}</span>
+                      <span className="sidebar-label">{link.label}
+                        {hasUnanswered && link.to === "/user/dashboard/support" && <span className="support-attention-dot" aria-hidden="true" />}
+                      </span>
                     </Link>
                   </li>
                 ))}

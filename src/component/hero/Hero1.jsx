@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import moment from "moment-timezone";
+import { formatDisplayDateTime } from "@/util/functions/display-date.mjs";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import {
@@ -28,9 +29,7 @@ const eventDateValue = (event) =>
   moment.tz(event?.correctedDate || event?.date || "", "Europe/Amsterdam").valueOf();
 
 const formatEventDate = (event) =>
-  moment.tz(event?.correctedDate || event?.date, "Europe/Amsterdam")
-    .locale("en")
-    .format("D MMM, HH:mm");
+  formatDisplayDateTime(event?.correctedDate || event?.date);
 
 const Hero1 = ({ initialEvents = {}, initialNow }) => {
   const user = useSelector(selectUser);

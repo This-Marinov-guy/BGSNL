@@ -14,6 +14,7 @@ const privateIndexingHeaders = [
 
 const privateRouteSources = [
   "/c/:path*",
+  "/event-feedback/:path*",
   "/user/:path*",
   "/login",
   "/signup",
@@ -69,10 +70,12 @@ const nextConfig = {
 
   async redirects() {
     return [
-      { source: "/user/dashboard/event-analytics", destination: "/user/dashboard/events?view=analytics", permanent: false },
-      { source: "/user/events-analytics", destination: "/user/dashboard/events?view=analytics", permanent: false },
-      { source: "/user/dashboard/member-statistics", destination: "/user/dashboard/members?view=statistics", permanent: false },
-      { source: "/user/members", destination: "/user/dashboard/members?view=statistics", permanent: false },
+      { source: "/user/dashboard/metrics", destination: "/user/dashboard/metrics/events", permanent: false },
+      { source: "/user/dashboard/event-statistics", destination: "/user/dashboard/metrics/events", permanent: false },
+      { source: "/user/dashboard/member-statistics", destination: "/user/dashboard/metrics/members", permanent: false },
+      { source: "/user/dashboard/event-analytics", destination: "/user/dashboard/metrics/events", permanent: false },
+      { source: "/user/events-analytics", destination: "/user/dashboard/metrics/events", permanent: false },
+      { source: "/user/members", destination: "/user/dashboard/metrics/members", permanent: false },
     ];
   },
 
@@ -85,6 +88,7 @@ const nextConfig = {
             header.key === "Referrer-Policy" && (source === "/login" || source.startsWith("/user"))
               ? { ...header, value: process.env.NODE_ENV === "development" ? "no-referrer-when-downgrade" : "strict-origin-when-cross-origin" }
               : header),
+          ...(source === "/event-feedback/:path*" ? [{ key: "Cache-Control", value: "private, no-store" }] : []),
           ...(source === "/login" || source.startsWith("/user")
             ? [{ key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" }]
             : []),

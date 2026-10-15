@@ -18,7 +18,7 @@ import {
 
 export { SITE_URL, absoluteUrl, stripHtml, toMetadata, truncateText };
 
-export async function buildEventMetadata(eventId, path, initialEvent = null, region) {
+export async function buildEventMetadata(eventId, path, initialEvent = null, region, useGeneratedImage = true) {
   const event = initialEvent || await getEventDetails(eventId, region);
 
   if (!event) {
@@ -28,9 +28,10 @@ export async function buildEventMetadata(eventId, path, initialEvent = null, reg
   return toMetadata({
     title: event.newTitle || event.title,
     description: truncateText(event.description || event.text),
+    image: event.poster,
     imageAlt: `${event.newTitle || event.title} — BGSNL event`,
     path,
     type: "event",
-    useGeneratedImage: true,
+    useGeneratedImage,
   });
 }

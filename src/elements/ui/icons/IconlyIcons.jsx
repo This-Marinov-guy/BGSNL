@@ -448,6 +448,13 @@ export const IconlyDelete = (props) => (
   </IconlySvg>
 );
 
+export const IconlyArchive = (props) => (
+  <IconlySvg fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <rect x="3" y="4" width="18" height="4" rx="1" />
+    <path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4" />
+  </IconlySvg>
+);
+
 export const IconlyEdit = (props) => (
   <IconlySvg {...props}>
 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">

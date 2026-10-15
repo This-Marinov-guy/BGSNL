@@ -20,7 +20,7 @@ export const exportEventsCSV = (events) => {
   const rows = events.map((e) => [
     e.title,
     e.region?.replace(/_/g, " ") || "",
-    moment(e.date).format("DD/MM/YYYY HH:mm"),
+    moment(e.date).format("DD-MM-YYYY HH:mm"),
     e.location || "",
     e.ticketCost,
     e.totalTickets,

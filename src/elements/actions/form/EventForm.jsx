@@ -1,7 +1,7 @@
 import InfoHint from "../../ui/icons/InfoHint";
 import EventCampaignModal from "../dashboard/open-events/EventCampaignModal";
-import EventPromotionCampaignPrompt from "./EventPromotionCampaignPrompt";
-import { hasEventPromotionImprovement } from "@/util/functions/event-promotion-campaign.mjs";
+import EventPromotionCampaignModal from "./EventPromotionCampaignModal";
+import { eventPromotionChanges, hasEventPromotionImprovement } from "@/util/functions/event-promotion-campaign.mjs";
 import { optionalPromotionDateSchema } from "@/util/functions/event-promotion-dates.mjs";
 import { eventEditSection, focusEventEditSection } from "@/util/functions/event-edit-sections.mjs";
 import EventPriceBadges from "./EventPriceBadges";
@@ -14,11 +14,12 @@ import {
   useState,
 } from "react";
 import {
-  ErrorMessage,
   Field,
   Form,
+  getIn,
   setIn,
   setNestedObjectValues,
+  useFormikContext,
 } from "formik";
 import PropTypes from "prop-types";
 import {
@@ -61,6 +62,7 @@ import {
 } from "../../../util/functions/helpers";
 import { CalendarWithClock } from "../../inputs/common/Calendar";
 import MultiImageUpload from "../../inputs/MultiImageUpload";
+import { DEFAULT_MAX_IMAGE_SIZE_BYTES } from "../../inputs/common/ImageInput";
 import ValidatedFormik from "../../ui/forms/ValidatedFormik";
 import Loader from "../../ui/loading/Loader";
 import StepContentTransition from "../../ui/functional/StepContentTransition";
@@ -86,20 +88,53 @@ const EVENT_FORM_STEPS = [
 
 const EVENT_FORM_GUARD_STATE = "__bgsnlEventFormGuard";
 
+const eventBoolean = (value) => value === true || value === "true" || value === 1 || value === "1";
+
+const positiveEventNumber = (label) => yup.number()
+  .transform((value, original) => original === "" ? null : value)
+  .typeError(`Enter a valid ${label.toLowerCase()}`)
+  .min(1, `${label} must be greater than zero`);
+
+const eventErrorContext = (path) => {
+  const match = path.match(/^(extraInputsForm|promoCodes\.codes|addOns\.items|subEvent\.links)(?:\.|\[)([0-9]+)/);
+  if (!match) return "";
+  const group = {
+    extraInputsForm: "Question",
+    "promoCodes.codes": "Promo code",
+    "addOns.items": "Add-on",
+    "subEvent.links": "Related event",
+  }[match[1]];
+  return `${group} ${Number(match[2]) + 1}: `;
+};
+
+const eventValidationToast = (errors, blocked) => {
+  const issues = blocked.paths
+    .map((path) => {
+      const message = getIn(errors, path);
+      return typeof message === "string" ? `${eventErrorContext(path)}${message}` : "";
+    })
+    .filter((message) => typeof message === "string" && message.trim());
+  return {
+    severity: "error",
+    summary: `Check ${EVENT_FORM_STEPS[blocked.step].label.toLowerCase()}`,
+    detail: issues.join("\n") || "Check the highlighted field.",
+    life: Math.min(30000, 8000 + issues.length * 1000),
+  };
+};
+
 const scheduleFirstInvalidEventField = (form, attempt = 0) => {
   if (!form || typeof window === "undefined") return;
 
   window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-    const activeStep = form.querySelector(".event-form-step:not([hidden])") || form;
+    const activeStep = form.querySelector(".signup-step-transition__current .event-form-step:not([hidden])") || form;
     const invalid = activeStep.querySelector([
       '[data-form-validation-invalid="true"]',
       '[aria-invalid="true"]',
       ".has-validation-error",
-      ".error:not([hidden])",
     ].join(", "));
 
     if (!invalid) {
-      if (attempt < 4) {
+      if (attempt < 12) {
         window.setTimeout(() => scheduleFirstInvalidEventField(form, attempt + 1), 50);
       }
       return;
@@ -108,13 +143,49 @@ const scheduleFirstInvalidEventField = (form, attempt = 0) => {
     const container = invalid.closest(
       "[data-custom-validation-field], [data-field-name], .rn-form-group, .form-group"
     ) || invalid;
-    const control = invalid.matches("input:not([type=hidden]), select, textarea, button")
+    const control = invalid.matches("input:not([type=hidden]), select, textarea, [role=button][tabindex]")
       ? invalid
-      : container.querySelector("input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled])");
+      : container.querySelector("input:not([type=hidden]):not([disabled]):not([style*='display: none']), select:not([disabled]), textarea:not([disabled]), .image_input_window[role=button], .upload-dropzone[role=button], button:not([disabled]):not(.info-hint__trigger)");
     const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     container.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
-    control?.focus({ preventScroll: true });
+    if (!control && !container.hasAttribute("tabindex")) container.tabIndex = -1;
+    (control || container).focus({ preventScroll: true });
   }));
+};
+
+const EventSubmitValidation = ({ currentStep, formRef, setCurrentStep, setFurthestStep, setTransitionDirection }) => {
+  const { errors, isValidating, submitCount } = useFormikContext();
+  const dispatch = useDispatch();
+  const handledSubmitRef = useRef(0);
+  const blocked = submitCount > 0 && !isValidating
+    ? blockingEventStep(errors, EVENT_FORM_STEPS.length, currentStep)
+    : null;
+
+  useEffect(() => {
+    if (!submitCount) { handledSubmitRef.current = 0; return; }
+    if (!blocked || handledSubmitRef.current === submitCount) return;
+    handledSubmitRef.current = submitCount;
+    dispatch(showNotification(eventValidationToast(errors, blocked)));
+    if (blocked.step === currentStep) return;
+    setTransitionDirection(blocked.step > currentStep ? "forward" : "backward");
+    setCurrentStep(blocked.step);
+    setFurthestStep(step => Math.max(step, blocked.step));
+  }, [blocked?.step, currentStep, dispatch, errors, setCurrentStep, setFurthestStep, setTransitionDirection, submitCount]);
+
+  useEffect(() => {
+    if (!blocked || blocked.step !== currentStep || handledSubmitRef.current !== submitCount) return;
+    scheduleFirstInvalidEventField(formRef.current);
+  }, [blocked?.step, currentStep, formRef, submitCount]);
+
+  return null;
+};
+
+EventSubmitValidation.propTypes = {
+  currentStep: PropTypes.number.isRequired,
+  formRef: PropTypes.object.isRequired,
+  setCurrentStep: PropTypes.func.isRequired,
+  setFurthestStep: PropTypes.func.isRequired,
+  setTransitionDirection: PropTypes.func.isRequired,
 };
 
 const UnsavedEventGuard = ({
@@ -125,12 +196,12 @@ const UnsavedEventGuard = ({
   saving,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [pendingNavigation, setPendingNavigation] = useState(null);
   const [savingDraft, setSavingDraft] = useState(false);
   const [emailingReminder, setEmailingReminder] = useState(false);
   const [reminderEmail, setReminderEmail] = useState(defaultEmail);
   const [reminderError, setReminderError] = useState("");
-  const [saveError, setSaveError] = useState(false);
   const guardId = useId();
   const reminderInputId = useId();
   const activeRef = useRef(active);
@@ -218,7 +289,6 @@ const UnsavedEventGuard = ({
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      setSaveError(false);
       setPendingNavigation({ type: "url", url: destination.href });
     };
 
@@ -234,7 +304,6 @@ const UnsavedEventGuard = ({
       if (event.state?.[EVENT_FORM_GUARD_STATE] === guardIdRef.current) return;
 
       window.history.forward();
-      setSaveError(false);
       setPendingNavigation({ type: "back" });
     };
 
@@ -277,7 +346,6 @@ const UnsavedEventGuard = ({
     if (isBusy) return;
     setPendingNavigation(null);
     setReminderError("");
-    setSaveError(false);
   };
 
   const leavePage = () => {
@@ -289,7 +357,6 @@ const UnsavedEventGuard = ({
     bypassRef.current = true;
     setPendingNavigation(null);
     setReminderError("");
-    setSaveError(false);
 
     if (destination.type === "back") {
       window.history.go(isCurrentSentinel ? -2 : -1);
@@ -312,7 +379,6 @@ const UnsavedEventGuard = ({
 
   const saveDraftAndLeave = async () => {
     setSavingDraft(true);
-    setSaveError(false);
     const savedDraft = await onSaveDraftRef.current();
     setSavingDraft(false);
 
@@ -321,24 +387,25 @@ const UnsavedEventGuard = ({
       return;
     }
 
-    setSaveError(true);
+    dispatch(showNotification({ severity: "error", summary: "Draft could not be saved", detail: "Please try again or keep editing." }));
   };
 
   const emailReminderAndLeave = async () => {
     const receiver = reminderEmail.trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(receiver)) {
       setReminderError("Enter a valid email address.");
+      dispatch(showNotification({ severity: "error", summary: "Check reminder email", detail: "Enter a valid email address." }));
+      document.getElementById(reminderInputId)?.focus();
       return;
     }
 
     setEmailingReminder(true);
     setReminderError("");
-    setSaveError(false);
 
     const savedDraft = await onSaveDraftRef.current();
     if (!savedDraft?.id) {
       setEmailingReminder(false);
-      setSaveError(true);
+      dispatch(showNotification({ severity: "error", summary: "Draft could not be saved", detail: "Please try again or keep editing." }));
       return;
     }
 
@@ -350,9 +417,7 @@ const UnsavedEventGuard = ({
       return;
     }
 
-    setReminderError(
-      "The draft was saved, but the reminder could not be sent. Please try again."
-    );
+    dispatch(showNotification({ severity: "error", summary: "Reminder could not be sent", detail: "The draft was saved. Please try sending the reminder again." }));
   };
 
   return (
@@ -366,14 +431,7 @@ const UnsavedEventGuard = ({
       footerClassName="event-unsaved-dialog__footer"
       footer={
         <div className="event-unsaved-dialog__actions">
-          <button
-            type="button"
-            className="event-form-button event-form-button--ghost"
-            disabled={isBusy}
-            onClick={keepEditing}
-          >
-            Keep editing
-          </button>
+
           <button
             type="button"
             className="event-form-button event-unsaved-dialog__discard"
@@ -406,7 +464,6 @@ const UnsavedEventGuard = ({
             type="email"
             value={reminderEmail}
             autoComplete="email"
-            aria-describedby={`${reminderInputId}-message`}
             aria-invalid={Boolean(reminderError)}
             onChange={(event) => {
               setReminderEmail(event.target.value);
@@ -423,22 +480,7 @@ const UnsavedEventGuard = ({
           {emailingReminder ? "Saving & sending…" : "Email link & leave"}
         </button>
       </div>
-      <p
-        id={`${reminderInputId}-message`}
-        className={
-          reminderError
-            ? "event-unsaved-dialog__error"
-            : "event-unsaved-dialog__hint"
-        }
-        role={reminderError ? "alert" : undefined}
-      >
-        {reminderError || "We’ll save the draft and email its continue link."}
-      </p>
-      {saveError && (
-        <p className="event-unsaved-dialog__error" role="alert">
-          We could not save the draft. Please try again or keep editing.
-        </p>
-      )}
+
     </Dialog>
   );
 };
@@ -455,7 +497,8 @@ const EventForm = (props) => {
   const { loading, sendRequest } = useHttpClient();
 
   const [reviewValues, setReviewValues] = useState(null);
-  const [reviewPromotionEmail, setReviewPromotionEmail] = useState(false);
+  const [reviewEditSection, setReviewEditSection] = useState(null);
+  const [promotionSave, setPromotionSave] = useState(null);
   const [campaignEvent, setCampaignEvent] = useState(null);
   const submissionRef = useRef(false);
   const [submitting, setSubmitting] = useState(false);
@@ -470,6 +513,7 @@ const EventForm = (props) => {
   const isBusy = submitting || movingStep || savingAndExiting;
   const [draftId, setDraftId] = useState(null);
   const [draftStatus, setDraftStatus] = useState("idle");
+  const draftErrorNotifiedRef = useRef(false);
   const [lastSavedAt, setLastSavedAt] = useState(null);
   const [extraImagesData, setExtraImagesData] = useState({
     existing: [],
@@ -507,6 +551,30 @@ const EventForm = (props) => {
     const frame = requestAnimationFrame(() => focusEventEditSection(formRef.current, initialSection));
     return () => cancelAnimationFrame(frame);
   }, [initialSection]);
+  useEffect(() => {
+    if (!reviewEditSection || reviewValues) return;
+    let retry;
+    const frame = requestAnimationFrame(() => {
+      if (focusEventEditSection(formRef.current, reviewEditSection)) {
+        setReviewEditSection(null);
+      } else {
+        retry = window.setTimeout(() => {
+          focusEventEditSection(formRef.current, reviewEditSection);
+          setReviewEditSection(null);
+        }, 400);
+      }
+    });
+    return () => { cancelAnimationFrame(frame); window.clearTimeout(retry); };
+  }, [reviewEditSection, reviewValues, currentStep]);
+  const editFromReview = name => {
+    const section = eventEditSection(name);
+    if (!section) return;
+    setTransitionDirection(section.step > currentStep ? "forward" : "backward");
+    setCurrentStep(section.step);
+    setFurthestStep(step => Math.max(step, section.step));
+    setReviewEditSection(section);
+    setReviewValues(null);
+  };
   const initialData = draftData
     ? {
         ...storedInitialData,
@@ -597,15 +665,14 @@ const EventForm = (props) => {
 
   const schema = yup.object().shape({
     region: yup.string().required("Region is required"),
-    title: yup.string().required("Title is required"),
+    title: yup.string().required("Event name is required"),
     description: yup.string(),
     date: yup.string().required("Date is required"),
     location: yup.string().required("Location is required"),
-    ticketTimer: yup.string().required("Ticket Timer is required"),
-    ticketLimit: yup
-      .number()
+    ticketTimer: yup.string().required("Sales deadline is required"),
+    ticketLimit: positiveEventNumber("Ticket limit")
       .required("Ticket Limit is required")
-      .min(1, "Must be greater than 0"),
+      .integer("Ticket limit must be a whole number"),
     isFree: yup.bool(),
     isMemberFree: yup.bool(),
     memberOnly: yup.bool(),
@@ -619,10 +686,7 @@ const EventForm = (props) => {
         isSaleClosed || isFree || isTicketLink,
       then: () => yup.mixed().nullable(),
       otherwise: () =>
-        yup
-          .number()
-          .required("Guest Price is required")
-          .min(1, "Must be greater than 0"),
+        positiveEventNumber("Guest price").required("Guest price is required"),
       }
     ),
 
@@ -633,10 +697,7 @@ const EventForm = (props) => {
           isSaleClosed || isFree || isMemberFree || isTicketLink,
         then: () => yup.mixed().nullable(),
         otherwise: () =>
-          yup
-            .number()
-            .required("Member Price is required")
-            .min(1, "Must be greater than 0"),
+          positiveEventNumber("Member price").required("Member price is required"),
       }),
 
     activeMemberPrice: yup
@@ -646,42 +707,42 @@ const EventForm = (props) => {
           isSaleClosed || isFree || isMemberFree || isTicketLink,
         then: () => yup.mixed().nullable(),
         otherwise: () =>
-          yup.number().transform((value, originalValue) => originalValue === "" ? null : value).min(1, "Must be greater than 0").nullable(),
+          positiveEventNumber("Active member price").nullable(),
       }),
 
     earlyBird: yup
       .object()
       .shape({
         isEnabled: yup.boolean().required(),
-        price: yup.number().when("isEnabled", {
+        price: yup.mixed().when("isEnabled", {
           is: true,
           then: () =>
-            yup
-              .number()
+            positiveEventNumber("Early bird guest price")
               .required(
                 "Early Bird Price is required when Early Bird is enabled"
-              )
-              .min(1, "Must be greater than 0"),
-          otherwise: () => yup.number().nullable(),
+              ),
+          otherwise: () => yup.mixed().nullable(),
         }),
-        memberPrice: yup.number().when("isEnabled", {
+        memberPrice: yup.mixed().when("isEnabled", {
           is: true,
           then: () =>
-            yup
-              .number()
+            positiveEventNumber("Early bird member price")
               .required(
                 "Early Bird Member Price is required when Early Bird is enabled"
-              )
-              .min(1, "Must be greater than 0"),
-          otherwise: () => yup.number().nullable(),
+              ),
+          otherwise: () => yup.mixed().nullable(),
         }),
-        ticketLimit: yup.number().nullable().min(1, "Must be greater than 0"),
+        ticketLimit: yup.mixed().when("isEnabled", {
+          is: true,
+          then: () => positiveEventNumber("Early bird ticket count").nullable().integer("Early bird ticket count must be a whole number"),
+          otherwise: () => yup.mixed().nullable(),
+        }),
         ticketTimer: yup.string().nullable(),
         excludeMembers: yup.boolean(),
       })
       .test(
         "at-least-one-limit",
-        "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
+        "Set an early-bird ticket count or end date.",
         function (value) {
           const { isEnabled, ticketLimit, ticketTimer } = value;
           if (!isEnabled) return true;
@@ -693,7 +754,7 @@ const EventForm = (props) => {
             return this.createError({
               path: "earlyBird.at-least-one-limit",
               message:
-                "Either Ticket Limit or Ticket Timer must be provided when Early Bird is enabled",
+                "Set an early-bird ticket count or end date.",
             });
           }
 
@@ -705,27 +766,27 @@ const EventForm = (props) => {
       .object()
       .shape({
         isEnabled: yup.boolean().required(),
-        price: yup.number().when("isEnabled", {
+        price: yup.mixed().when("isEnabled", {
           is: true,
           then: () =>
-            yup
-              .number()
-              .required("Late Bird Price is required when Late Bird is enabled")
-              .min(1, "Must be greater than 0"),
-          otherwise: () => yup.number().nullable(),
+            positiveEventNumber("Late bird guest price")
+              .required("Late Bird Price is required when Late Bird is enabled"),
+          otherwise: () => yup.mixed().nullable(),
         }),
-        memberPrice: yup.number().when("isEnabled", {
+        memberPrice: yup.mixed().when("isEnabled", {
           is: true,
           then: () =>
-            yup
-              .number()
+            positiveEventNumber("Late bird member price")
               .required(
                 "Late Bird Member Price is required when Late Bird is enabled"
-              )
-              .min(1, "Must be greater than 0"),
-          otherwise: () => yup.number().nullable(),
+              ),
+          otherwise: () => yup.mixed().nullable(),
         }),
-        ticketLimit: yup.number().nullable().min(1, "Must be greater than 0"),
+        ticketLimit: yup.mixed().when("isEnabled", {
+          is: true,
+          then: () => positiveEventNumber("Late bird ticket count").nullable().integer("Late bird ticket count must be a whole number"),
+          otherwise: () => yup.mixed().nullable(),
+        }),
         startTimer: yup.string().when("isEnabled", {
           is: true,
           then: () =>
@@ -740,7 +801,7 @@ const EventForm = (props) => {
       })
       .test(
         "at-least-one-limit",
-        "Either Ticket Limit or Ticket Timer must be provided when Late Bird is enabled",
+        "Set a late-bird ticket count or start date.",
         function (value) {
           const { isEnabled, ticketLimit, startTimer } = value;
           if (!isEnabled) return true;
@@ -752,7 +813,7 @@ const EventForm = (props) => {
             return this.createError({
               path: "lateBird.at-least-one-limit",
               message:
-                "Either Ticket Limit or Ticket Timer must be provided when Late Bird is enabled",
+                "Set a late-bird ticket count or start date.",
             });
           }
 
@@ -762,34 +823,50 @@ const EventForm = (props) => {
 
     guestPromotion: yup.object().shape({
       isEnabled: yup.boolean().required(),
-      discount: yup.number().when("isEnabled", {
+      discount: yup.mixed().when("isEnabled", {
         is: true,
         then: () =>
-          yup
-            .number()
-            .required("Please enter discount %")
-            .min(5, "Must be at least 5%")
-            .max(95, "Cannot exceed 95%"),
-        otherwise: () => yup.number().nullable(),
+          yup.number().transform((value, original) => original === "" ? null : value)
+            .typeError("Enter a valid guest discount")
+            .required("Enter a guest discount")
+            .min(5, "Guest discount must be at least 5%")
+            .max(95, "Guest discount cannot exceed 95%"),
+        otherwise: () => yup.mixed().nullable(),
       }),
-      startTimer: optionalPromotionDateSchema,
-      endTimer: optionalPromotionDateSchema,
+      startTimer: yup.mixed().when("isEnabled", {
+        is: true,
+        then: () => optionalPromotionDateSchema,
+        otherwise: () => yup.mixed().nullable(),
+      }),
+      endTimer: yup.mixed().when("isEnabled", {
+        is: true,
+        then: () => optionalPromotionDateSchema,
+        otherwise: () => yup.mixed().nullable(),
+      }),
     }),
 
     memberPromotion: yup.object().shape({
       isEnabled: yup.boolean().required(),
-      discount: yup.number().when("isEnabled", {
+      discount: yup.mixed().when("isEnabled", {
         is: true,
         then: () =>
-          yup
-            .number()
-            .required("Please enter discount %")
-            .min(5, "Must be at least 5%")
-            .max(95, "Cannot exceed 95%"),
-        otherwise: () => yup.number().nullable(),
+          yup.number().transform((value, original) => original === "" ? null : value)
+            .typeError("Enter a valid member discount")
+            .required("Enter a member discount")
+            .min(5, "Member discount must be at least 5%")
+            .max(95, "Member discount cannot exceed 95%"),
+        otherwise: () => yup.mixed().nullable(),
       }),
-      startTimer: optionalPromotionDateSchema,
-      endTimer: optionalPromotionDateSchema,
+      startTimer: yup.mixed().when("isEnabled", {
+        is: true,
+        then: () => optionalPromotionDateSchema,
+        otherwise: () => yup.mixed().nullable(),
+      }),
+      endTimer: yup.mixed().when("isEnabled", {
+        is: true,
+        then: () => optionalPromotionDateSchema,
+        otherwise: () => yup.mixed().nullable(),
+      }),
     }),
 
     addOns: yup.object().shape({
@@ -811,10 +888,14 @@ const EventForm = (props) => {
               yup.object().shape({
                 title: yup.string().required("Item title is required"),
                 description: yup.string().nullable(),
-                price: yup.number().nullable(),
+                price: yup.number()
+                  .transform((value, original) => original === "" ? null : value)
+                  .typeError("Enter a valid add-on price")
+                  .min(0, "Add-on price cannot be negative")
+                  .nullable(),
               })
             )
-            .min(1, "At least one add-on item is required"),
+            .min(1, "Add at least one add-on item"),
         otherwise: () => yup.array().nullable(),
       }),
     }),
@@ -836,15 +917,19 @@ const EventForm = (props) => {
 
     subEvent: yup
       .object({
-        description: yup.string().max(1000, "Description is too long"),
+        description: yup.mixed().when("links", {
+          is: (links) => Array.isArray(links) && links.length > 0,
+          then: () => yup.string().max(1000, "Recommendation heading must be 1000 characters or fewer"),
+          otherwise: () => yup.mixed().nullable(),
+        }),
         links: yup
           .array()
-          .max(50, "Too many related-event links")
+          .max(50, "Select no more than 50 related events")
           .of(
             yup.object({
               name: yup
                 .string()
-                .max(200, "Link name is too long")
+                .max(200, "Related event name must be 200 characters or fewer")
                 .test(
                   "paired-sub-event-name",
                   "Add a name for this link",
@@ -855,7 +940,7 @@ const EventForm = (props) => {
                 ),
               href: yup
                 .string()
-                .max(2048, "Link is too long")
+                .max(2048, "Related event link is too long")
                 .test(
                   "valid-sub-event-link",
                   "Enter a valid HTTP(S) link",
@@ -866,7 +951,7 @@ const EventForm = (props) => {
                     return Boolean(name) && /^https?:\/\/[^\s]+$/i.test(href);
                   }
                 ),
-              poster: yup.string().transform((value, original) => original === "" ? null : value).max(2048, "Poster URL is too long").url("Poster must be a valid URL").nullable(),
+              poster: yup.string().transform((value, original) => original === "" ? null : value).max(2048, "Related event poster URL is too long").url("Related event poster must have a valid URL").nullable(),
             })
           ),
       })
@@ -940,6 +1025,9 @@ const EventForm = (props) => {
           typeof value === "string" ||
           ["image/jpg", "image/jpeg", "image/png"].includes(value?.type)
       )
+      .test("fileSize", "Ticket image must be 5 MB or smaller", (value) =>
+        !value || typeof value === "string" || value.size <= DEFAULT_MAX_IMAGE_SIZE_BYTES
+      )
       .test(
         "aspectRatio",
         "Ticket image must use the 300:97 aspect ratio",
@@ -968,6 +1056,9 @@ const EventForm = (props) => {
         (value) =>
           typeof value === "string" ||
           ["image/jpg", "image/jpeg", "image/png"].includes(value?.type)
+      )
+      .test("fileSize", "Poster must be 5 MB or smaller", (value) =>
+        !value || typeof value === "string" || value.size <= DEFAULT_MAX_IMAGE_SIZE_BYTES
       ),
     extraImagesValidation: yup.string().test(
       "fileValidation",
@@ -1056,14 +1147,21 @@ const EventForm = (props) => {
     setTransitionDirection("backward");
     setCurrentStep(0);
     dispatch(showNotification({ severity: "error", summary: "Region required", detail: "Choose a region before saving a draft." }));
-    requestAnimationFrame(() => formRef.current?.querySelector('button[name="region"]')?.focus());
+    scheduleFirstInvalidEventField(formRef.current);
     return false;
+  };
+
+  const notifyQuietDraftFailure = (notify = true) => {
+    setDraftStatus("error");
+    if (!notify || draftErrorNotifiedRef.current) return;
+    draftErrorNotifiedRef.current = true;
+    dispatch(showNotification({ severity: "error", summary: "Draft could not be saved", detail: "Your changes are still here. Please try again." }));
   };
 
   const submitValues = async (
     values,
     saveAsDraft = false,
-    { stayOnPage = false, quiet = false, draftStep = currentStep, onProgress } = {}
+    { stayOnPage = false, quiet = false, notifyOnFailure = true, suppressRequestErrorToast = false, draftStep = currentStep, onProgress, reviewPromotionEmail = false } = {}
   ) => {
     if (submissionRef.current || (saveAsDraft && !requireDraftRegion(values))) return null;
     submissionRef.current = true;
@@ -1079,6 +1177,7 @@ const EventForm = (props) => {
       const existingEventId = props.edit ? eventId : null;
       const recordId = existingDraftId || existingEventId;
       const payload = buildFormData(canManageAllRegions ? values : { ...values, region: accountRegion }, saveAsDraft, draftStep);
+      const showRequestFeedback = !quiet && !onProgress && !suppressRequestErrorToast;
       onProgress?.(1);
       const responseData = await sendRequest(
         recordId
@@ -1087,24 +1186,28 @@ const EventForm = (props) => {
         recordId ? "PATCH" : "POST",
         payload,
         {},
-        true,
-        !quiet && !onProgress
+        showRequestFeedback,
+        showRequestFeedback
       );
 
-      if (responseData?.status) {
+      if (responseData?.status && responseData.event) {
         onProgress?.(2);
         if (saveAsDraft) {
+          draftErrorNotifiedRef.current = false;
           setDraftId(responseData.event.id);
           setDraftStatus("saved");
           setLastSavedAt(new Date());
           setSavedImages(responseData.event.images ?? []);
         }
 
+        dispatch(
+          recordId
+            ? editEventFromAll(responseData.event)
+            : addEventToAll(responseData.event)
+        );
+
         if (!stayOnPage) {
-          if (!saveAsDraft && reviewPromotionEmail && hasEventPromotionImprovement(initialData, values)) {
-            setReviewValues(null);
-            setCampaignEvent(responseData.event);
-          } else navigate("/user/dashboard/events");
+          setReviewValues(null);
           dispatch(
             showNotification(
               saveAsDraft
@@ -1114,20 +1217,16 @@ const EventForm = (props) => {
                   : EVENT_ADDED
             )
           );
+          if (!saveAsDraft && reviewPromotionEmail && hasEventPromotionImprovement(initialData, values)) {
+            setCampaignEvent(responseData.event);
+          } else navigate("/user/dashboard/events");
         }
-
-        dispatch(
-          recordId
-            ? editEventFromAll(responseData.event)
-            : addEventToAll(responseData.event)
-        );
         return responseData.event;
       }
-      if (quiet) setDraftStatus("error");
+      if (quiet) notifyQuietDraftFailure(notifyOnFailure);
       return null;
     } catch (err) {
-      // Request errors are surfaced by useHttpClient.
-      if (quiet) setDraftStatus("error");
+      if (quiet) notifyQuietDraftFailure(notifyOnFailure);
       return null;
     } finally {
       submissionRef.current = false;
@@ -1145,15 +1244,19 @@ const EventForm = (props) => {
         const errors = await formik.validateForm();
         if (Object.keys(errors).length) {
           await formik.setTouched(setNestedObjectValues(errors, true), false);
-          const blocked = blockingEventStep(errors, EVENT_FORM_STEPS.length);
+          const blocked = blockingEventStep(errors, EVENT_FORM_STEPS.length, currentStep);
           const invalidStep = blocked?.step ?? EVENT_FORM_STEPS.length - 1;
           setTransitionDirection(invalidStep > currentStep ? "forward" : "backward");
           setCurrentStep(invalidStep);
           setFurthestStep(step => Math.max(step, invalidStep));
-          dispatch(showNotification({ severity: "error", summary: "Invalid inputs", detail: "You have missing/invalid fields" }));
+          dispatch(showNotification(eventValidationToast(errors, blocked)));
           scheduleFirstInvalidEventField(formRef.current);
           return;
         }
+      }
+      if (hasEventPromotionImprovement(initialData, formik.values)) {
+        setPromotionSave({ ...formik.values });
+        return;
       }
       await submitValues(formik.values, canSaveDraft);
     } finally {
@@ -1177,13 +1280,8 @@ const EventForm = (props) => {
             setTransitionDirection(blocked.step > currentStep ? "forward" : "backward");
             setCurrentStep(blocked.step);
           }
-          dispatch(showNotification({ severity: "error", summary: "Complete the required fields", detail: "Check the highlighted fields before continuing." }));
-          requestAnimationFrame(() => {
-            const field = formRef.current?.querySelector(`[name="${blocked.paths[0]}"], [data-field-name="${blocked.paths[0]}"]`);
-            const control = field?.matches("input, select, textarea, button") ? field : field?.querySelector("input:not([type=hidden]), select, textarea, button");
-            (control || field)?.scrollIntoView({ block: "center", behavior: "smooth" });
-            control?.focus({ preventScroll: true });
-          });
+          dispatch(showNotification(eventValidationToast(errors, blocked)));
+          scheduleFirstInvalidEventField(formRef.current);
           return;
         }
       }
@@ -1230,17 +1328,32 @@ const EventForm = (props) => {
   return (
     <>
       {campaignEvent && <EventCampaignModal event={campaignEvent} open initialKind="limited-offer" onClose={() => { setCampaignEvent(null); navigate("/user/dashboard/events"); }} />}
+      {promotionSave && <EventPromotionCampaignModal open eventTitle={promotionSave.title}
+        changes={eventPromotionChanges(initialData, promotionSave)} onClose={() => setPromotionSave(null)}
+        onConfirm={async reviewPromotionEmail => {
+          setSavingAndExiting(true);
+          try {
+            const result = await submitValues(promotionSave, false, { reviewPromotionEmail, suppressRequestErrorToast: true });
+            if (result) setPromotionSave(null);
+            return result;
+          } finally { setSavingAndExiting(false); }
+        }} />}
       <ValidatedFormik
         highlightTouchedErrors
+        showValidationToast={false}
         validationViewKey={currentStep}
         className="container"
         validationSchema={schema}
         onSubmit={async (values) => { if (!submissionRef.current) setReviewValues({ ...values }); }}
         initialValues={{
           note: typeof initialData?.note === "string" ? initialData.note : "",
-          memberOnly: initialData?.memberOnly ?? false,
+          memberOnly: eventBoolean(initialData?.memberOnly),
           hidden: initialData?.hidden ?? false,
-          extraInputsForm: initialData?.extraInputsForm ?? [],
+          extraInputsForm: (Array.isArray(initialData?.extraInputsForm) ? initialData.extraInputsForm : []).map((input) => ({
+            ...input,
+            required: eventBoolean(input?.required),
+            multiselect: eventBoolean(input?.multiselect),
+          })),
           subEvent: initialData?.subEvent ?? null,
           region: canManageAllRegions ? initialData?.region ?? "" : accountRegion,
           title: initialData?.title ?? "",
@@ -1249,10 +1362,10 @@ const EventForm = (props) => {
           location: initialData?.location ?? "",
           ticketLimit: initialData?.ticketLimit ?? "",
           ticketTimer: initialData?.ticketTimer ?? "",
-          isTicketLink: initialData?.isTicketLink ?? false,
-          isSaleClosed: initialData?.isSaleClosed ?? false,
-          isFree: initialData?.isFree ?? false,
-          isMemberFree: initialData?.isMemberFree ?? false,
+          isTicketLink: eventBoolean(initialData?.isTicketLink),
+          isSaleClosed: eventBoolean(initialData?.isSaleClosed),
+          isFree: eventBoolean(initialData?.isFree),
+          isMemberFree: eventBoolean(initialData?.isMemberFree),
           guestPrice:
             initialData?.product?.guest?.price !== undefined &&
             !isNaN(initialData.product.guest.price)
@@ -1296,8 +1409,8 @@ const EventForm = (props) => {
               !isNaN(initialData.earlyBird.memberPrice)
                 ? initialData.earlyBird.memberPrice
                 : undefined,
-            isEnabled: initialData?.earlyBird?.isEnabled ?? false,
-            excludeMembers: initialData?.earlyBird?.excludeMembers ?? false,
+            isEnabled: eventBoolean(initialData?.earlyBird?.isEnabled),
+            excludeMembers: eventBoolean(initialData?.earlyBird?.excludeMembers),
           },
           lateBird: {
             ticketLimit:
@@ -1316,11 +1429,11 @@ const EventForm = (props) => {
               !isNaN(initialData.lateBird.memberPrice)
                 ? initialData.lateBird.memberPrice
                 : undefined,
-            isEnabled: initialData?.lateBird?.isEnabled ?? false,
-            excludeMembers: initialData?.lateBird?.excludeMembers ?? false,
+            isEnabled: eventBoolean(initialData?.lateBird?.isEnabled),
+            excludeMembers: eventBoolean(initialData?.lateBird?.excludeMembers),
           },
           guestPromotion: {
-            isEnabled: initialData?.promotion?.guest?.isEnabled ?? false,
+            isEnabled: eventBoolean(initialData?.promotion?.guest?.isEnabled),
             startTimer: initialData?.promotion?.guest?.startTimer ?? "",
             endTimer: initialData?.promotion?.guest?.endTimer ?? "",
             discount:
@@ -1330,7 +1443,7 @@ const EventForm = (props) => {
                 : undefined,
           },
           memberPromotion: {
-            isEnabled: initialData?.promotion?.member?.isEnabled ?? false,
+            isEnabled: eventBoolean(initialData?.promotion?.member?.isEnabled),
             startTimer: initialData?.promotion?.member?.startTimer ?? "",
             endTimer: initialData?.promotion?.member?.endTimer ?? "",
             discount:
@@ -1340,9 +1453,9 @@ const EventForm = (props) => {
                 : undefined,
           },
           addOns: {
-            isEnabled: initialData?.addOns?.isEnabled ?? false,
-            isMandatory: initialData?.addOns?.isMandatory ?? false,
-            multi: initialData?.addOns?.multi ?? false,
+            isEnabled: eventBoolean(initialData?.addOns?.isEnabled),
+            isMandatory: eventBoolean(initialData?.addOns?.isMandatory),
+            multi: eventBoolean(initialData?.addOns?.multi),
             title: initialData?.addOns?.title ?? "",
             description: initialData?.addOns?.description ?? "",
             items:
@@ -1353,7 +1466,7 @@ const EventForm = (props) => {
           promoCodes: {
             isEnabled:
               initialData?.status === EVENT_DRAFT
-                ? initialData?.promoCodes?.isEnabled ?? false
+                ? eventBoolean(initialData?.promoCodes?.isEnabled)
                 : initialData?.product?.promoCodes?.length > 0,
             codes: (initialData?.status === EVENT_DRAFT
               ? initialData?.promoCodes?.codes ?? [{}]
@@ -1371,7 +1484,7 @@ const EventForm = (props) => {
                   defaultEmail={userClaims?.email ?? ""}
                   disabled={loading || isBusy}
                   onSave={async (note) => {
-                    const savedDraft = await submitValues({ ...values, note }, true, { quiet: true, stayOnPage: true });
+                    const savedDraft = await submitValues({ ...values, note }, true, { quiet: true, notifyOnFailure: false, stayOnPage: true });
                     if (savedDraft) {
                       const syncedValues = { ...values, note };
                       ["poster", "ticketImg", "images"].forEach((field) => {
@@ -1419,6 +1532,7 @@ const EventForm = (props) => {
                 submitValues(values, true, {
                   stayOnPage: true,
                   quiet: true,
+                  notifyOnFailure: false,
                 })
               }
             />
@@ -1436,9 +1550,12 @@ const EventForm = (props) => {
               </p>
             </div>
 
+            <EventSubmitValidation currentStep={currentStep} formRef={formRef} setCurrentStep={setCurrentStep}
+              setFurthestStep={setFurthestStep} setTransitionDirection={setTransitionDirection} />
+
             <StepContentTransition step={currentStep} direction={transitionDirection}>
             <div className="event-form-step-panel">
-            <div className={`event-draft-status is-${draftStatus}`} role="status">
+            {draftStatus !== "error" && <div className={`event-draft-status is-${draftStatus}`} role="status">
               <span className="event-draft-status__dot" aria-hidden="true" />
               {draftStatus === "saving" && "Saving draft…"}
               {draftStatus === "saved" &&
@@ -1450,11 +1567,10 @@ const EventForm = (props) => {
                       })}`
                     : ""
                 }`}
-              {draftStatus === "error" && "Draft could not be saved. Try again."}
               {draftStatus === "idle" &&
                 (canSaveDraft && !props.edit
                   && 'Auto save enabled')}
-            </div>
+            </div>}
 
             {/* ========== REQUIRED SECTIONS ========== */}
             <section
@@ -1468,7 +1584,7 @@ const EventForm = (props) => {
                   <p>Start with the information guests need to identify the event.</p>
                 </div>
                 <span className="event-form-required-note">
-                  <strong><span className="required-mark">*</span> Required</strong> · all other fields are optional
+                  <strong><span className="required-mark">*</span> Required</strong>
                 </span>
               </header>
 
@@ -1515,11 +1631,6 @@ const EventForm = (props) => {
                         );
                       })}
                     </Field>
-                    <ErrorMessage
-                      className="error"
-                      name="region"
-                      component="div"
-                    />
                   </div>
                 </div>
                 <div className="col-lg-6 col-md-12 col-12">
@@ -1536,11 +1647,6 @@ const EventForm = (props) => {
                       placeholder="e.g., De Nieuwe Kantine, Amsterdam"
                       name="location"
                     ></Field>
-                    <ErrorMessage
-                      className="error"
-                      name="location"
-                      component="div"
-                    />
                   </div>
                 </div>
               </div>
@@ -1560,11 +1666,6 @@ const EventForm = (props) => {
                       placeholder="e.g., Summer Beach Party 2024"
                       name="title"
                     ></Field>
-                    <ErrorMessage
-                      className="error"
-                      name="title"
-                      component="div"
-                    />
                   </div>
                 </div>
                 <div className="col-lg-6 col-12">
@@ -1590,11 +1691,6 @@ const EventForm = (props) => {
                         }}
                       />
                     </div>
-                    <ErrorMessage
-                      className="error"
-                      name="date"
-                      component="div"
-                    />
                   </div>
                 </div>
               </div>
@@ -1615,11 +1711,6 @@ const EventForm = (props) => {
                       name="text"
                       rows={6}
                     />
-                    <ErrorMessage
-                      className="error"
-                      name="text"
-                      component="div"
-                    />
                   </div>
                 </div>
               </div>
@@ -1635,7 +1726,7 @@ const EventForm = (props) => {
                   <h2 id="event-step-tickets">Tickets &amp; media</h2>
                 </div>
                 <span className="event-form-required-note">
-                  <strong><span className="required-mark">*</span> Required</strong> · all other fields are optional
+                  <strong><span className="required-mark">*</span> Required</strong>
                 </span>
               </header>
 
@@ -1652,15 +1743,12 @@ const EventForm = (props) => {
                     existingImages={savedImages}
                     onImagesChange={handleExtraImagesChange}
                     name="extraImagesValidation"
-                    onValidationChange={(message) =>
-                      setFieldValue("extraImagesValidation", message)
-                    }
+                    showInlineErrors={false}
+                    onValidationChange={(message) => {
+                      setFieldValue("extraImagesValidation", message);
+                      if (message) dispatch(showNotification({ severity: "error", summary: "Check extra images", detail: message }));
+                    }}
                     maxImages={5}
-                  />
-                  <ErrorMessage
-                    className="error"
-                    name="extraImagesValidation"
-                    component="div"
                   />
                 </div>
               </EventTicketsMedia>
@@ -1683,7 +1771,6 @@ const EventForm = (props) => {
               <EventUpsell currentEventId={eventId ?? initialData?.id ?? draftId} active={currentStep === 2} />
             </section>
 
-            {props.edit && hasEventPromotionImprovement(initialData, values) && <EventPromotionCampaignPrompt checked={reviewPromotionEmail} onChange={setReviewPromotionEmail} />}
             <footer className="event-form-actions">
               <Link
                 to="/user/dashboard/events"
@@ -1751,14 +1838,15 @@ const EventForm = (props) => {
             </fieldset>
           </Form>
           {reviewValues && <EventReviewModal
-            promotionPrompt={props.edit && hasEventPromotionImprovement(initialData, reviewValues) ? <EventPromotionCampaignPrompt checked={reviewPromotionEmail} onChange={setReviewPromotionEmail} /> : null}
+            promotionChanges={eventPromotionChanges(initialData, reviewValues)}
             values={reviewValues}
             extraImages={extraImagesTouched ? extraImagesData.all ?? [] : savedImages}
             disabled={isBusy}
             updating={props.edit && initialData?.status !== EVENT_DRAFT}
             draftAction={draftAction}
             onCancel={() => setReviewValues(null)}
-            onSubmit={(onProgress) => submitValues(reviewValues, false, { onProgress })}
+            onEditSection={editFromReview}
+            onSubmit={(onProgress, reviewPromotionEmail) => submitValues(reviewValues, false, { onProgress, reviewPromotionEmail })}
           />}
           </>
           );

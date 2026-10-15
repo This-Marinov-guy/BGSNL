@@ -33,6 +33,7 @@ import ImageInput from "../../inputs/common/ImageInput";
 import PhoneInput from "../../inputs/common/PhoneInput";
 import ValidatedFormik from "../forms/ValidatedFormik";
 import ModalWindow from "./ModalWindow";
+import WarningBanner from "@/elements/ui/banners/WarningBanner";
 import { showNotification } from "../../../redux/notification";
 import { browserFetch } from "@/util/auth/browser-request.mjs";
 import { requestErrorNotice } from "@/util/auth/request-error-notice.mjs";
@@ -597,6 +598,12 @@ const UserUpdateModal = ({ currentUser, onUserRefresh }) => {
                 </div>
               </div>
             </div>
+            {(values.email.trim().toLowerCase() !== String(currentUser.email || "").trim().toLowerCase() || Boolean(values.password)) &&
+              <WarningBanner>
+                <p>We will send a confirmation email to <strong>{currentUser.email}</strong> to verify this request.
+                  {values.email.trim().toLowerCase() !== String(currentUser.email || "").trim().toLowerCase() &&
+                    " You will also need to confirm the new email address."}</p>
+              </WarningBanner>}
             <div className="user-update-form__actions">
               <button
                 disabled={saving}

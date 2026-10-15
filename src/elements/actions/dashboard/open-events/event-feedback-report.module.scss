@@ -1,0 +1,69 @@
+.modal {
+  --report-accent: #017363;
+  --report-ink: #19251f;
+  --report-muted: #607168;
+  --report-surface: #f0f5f1;
+  width: min(64rem, calc(100vw - 2rem));
+}
+
+.content { color: var(--report-ink); display: grid; gap: 1rem; }
+.content p { margin: 0; }
+.loading { display: grid; gap: 1rem; }
+.toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; }
+.toolbar strong { font-size: 1.25rem; }
+.toolbar button,
+.pagination button,
+.detailsButton {
+  background: #fff;
+  border: 1px solid var(--report-accent);
+  border-radius: .6rem;
+  color: var(--report-accent);
+  cursor: pointer;
+  font: inherit;
+  min-height: 2.75rem;
+  padding: .55rem .85rem;
+}
+.toolbar button:hover:not(:disabled),
+.pagination button:hover:not(:disabled),
+.detailsButton:hover { background: var(--report-surface); }
+.toolbar .refreshButton { align-items: center; display: inline-flex; flex: 0 0 auto; height: 2.75rem; justify-content: center; padding: 0; width: 2.75rem; }
+.refreshButton svg { height: 1.25rem; width: 1.25rem; }
+.refreshButton:active:not(:disabled) { transform: scale(.95); }
+.refreshButton:disabled { cursor: wait; opacity: .6; }
+.refreshButton[aria-busy="true"] svg { animation: feedback-refresh-spin 1s linear infinite; }
+.toolbar button:focus-visible,
+.pagination button:focus-visible,
+.detailsButton:focus-visible { outline: 2px solid var(--report-accent); outline-offset: 2px; }
+.pagination button:disabled { cursor: not-allowed; opacity: .45; }
+.empty { background: var(--report-surface); border-radius: .75rem; padding: 1.5rem; }
+.empty h3 { font-size: 1.25rem; margin: 0 0 .5rem; }
+.empty p { color: var(--report-muted); }
+.tableWrap { overflow-x: auto; }
+.table { border-collapse: collapse; min-width: 42rem; width: 100%; }
+.table th,
+.table td { border-bottom: 1px solid #d5e2da; padding: .85rem .75rem; text-align: left; vertical-align: top; }
+.table thead th { background: var(--report-surface); color: var(--report-muted); font-size: 1rem; font-weight: 700; white-space: nowrap; }
+.table thead th:nth-child(2),
+.table thead th:nth-child(3) { text-align: right; }
+.table tbody th { font-weight: normal; }
+.table .person { min-width: 12rem; }
+.person strong,
+.person span { display: block; overflow-wrap: anywhere; }
+.person strong { font-weight: 700; }
+.person span { color: var(--report-muted); font-size: 1rem; }
+.table .number { font-weight: 700; text-align: right; white-space: nowrap; }
+.detailsButton { white-space: nowrap; }
+.detailsRow td { background: var(--report-surface); padding: 1rem; }
+.detailsRow dl { display: grid; gap: 1rem; margin: 0; }
+.detailsRow dt { font-weight: 700; margin-bottom: .25rem; }
+.detailsRow dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.pagination { align-items: center; display: flex; gap: .75rem; justify-content: flex-end; }
+.pagination span { color: var(--report-muted); }
+
+@media (max-width: 540px) {
+  .toolbar { flex-direction: row; }
+  .pagination { justify-content: space-between; }
+}
+
+@keyframes feedback-refresh-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .refreshButton[aria-busy="true"] svg { animation: none; } }

@@ -2,7 +2,7 @@
 
 import PropTypes from "prop-types";
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   FiChevronUp,
@@ -43,6 +43,7 @@ const ArticlesPage = ({ initialArticles = [] }) => {
   const initialPage = Math.max(0, Number(searchParams.get("page") || 1) - 1);
   const [query, setQuery] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const listStartRef = useRef(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => { setQuery(searchInput); setFirst(0); }, 350);
@@ -149,6 +150,7 @@ const ArticlesPage = ({ initialArticles = [] }) => {
           <section
             className="articles-library"
             aria-labelledby="all-articles-title"
+            ref={listStartRef}
           >
             <div className="articles-library-toolbar">
               <div>
@@ -184,6 +186,7 @@ const ArticlesPage = ({ initialArticles = [] }) => {
                       totalRecords={filteredArticles.length}
                       rowsPerPageOptions={[6, 9, 12]}
                       onPageChange={onPageChange}
+                      scrollTargetRef={listStartRef}
                       ariaLabel="Articles pagination"
                     />
                   </div>

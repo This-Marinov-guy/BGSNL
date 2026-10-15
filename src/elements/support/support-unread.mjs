@@ -17,6 +17,11 @@ export function supportTicketUnread(ticket, seen, staff = false) {
   return ticket.lastAuthor === (staff ? "requester" : "staff") && ticket.revision > (seen[ticket.id] ?? -1);
 }
 
+export function supportUnreadMessageCount(conversations, seen) {
+  return conversations.reduce((total, ticket) => total + ticket.requesterMessageRevisions.filter(
+    revision => revision > (seen[ticket.id] ?? -1)).length, 0);
+}
+
 export function markSupportSeen(scope, ticket) {
   if (!ticket || !Number.isSafeInteger(ticket.revision)) return;
   const seen = readSupportSeen(scope);

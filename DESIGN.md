@@ -22,7 +22,7 @@ LeagueSpartan, Roboto, sans-serif. Body/control text stays at least 1rem. Dashbo
 - Filters: retain blue label panel; desktop fields share a row and reset uses a 44px column. Tablet two columns; mobile disclosure with stacked fields and a labelled reset.
 - Cards: existing complete border, compact image at upper right, two-column facts. No decorative single-edge borders.
 - Accounts: desktop table with contained horizontal scroll; mobile identity first, region and actions second. Long names and email addresses wrap.
-- Internships: compact identity row, labelled availability toggle, separate edit/delete actions and 44px up/down reorder controls alongside drag-and-drop. Layout is CSS-based, without viewport resize state.
+- Internships: compact identity row, labelled availability toggle, separate edit/delete actions and a 44px drag handle with arrow-key reordering. Layout is CSS-based, without viewport resize state.
 - Motion: existing short 150–250ms transitions; respect reduced motion.
 
 ## Copy and states
@@ -47,3 +47,11 @@ one primary Save news action, and one expanded news item at a time. The email
 preview is a contained 40rem document viewport, not a fixed-height content panel.
 News is optional; the automatic email still runs without it. Loading uses the
 shared skeleton and failures use the shared icon-only retry banner.
+
+Metrics views place the Events and Members tabs beside the page title, above the existing full-width, layered layout:
+filters, flat pale-green totals, then event and member charts. Native date fields and
+the existing filter panel handle regional scope and academic-year defaults.
+The charts use the dashboard accent for data and include a text table for
+screen readers; chart cards keep the dashboard radius and content-based height.
+Event metric cards share their row height. The total-ticket breakdown reuses
+the established green for members and red for guests.

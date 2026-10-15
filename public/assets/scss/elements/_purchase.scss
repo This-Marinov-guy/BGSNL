@@ -2424,11 +2424,20 @@
     }
 
     .purchase-mobile-summary-poster {
+      position: relative;
       width: 58px;
       height: 70px;
       overflow: hidden;
       background: #f4f6f4;
+      border: 1px solid #dce2de;
       border-radius: 6px;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover { border-color: #017363; }
+      &:focus-visible { outline: 2px solid #017363; outline-offset: 2px; }
+      &:active { transform: translateY(1px); }
+      &:disabled { cursor: default; }
 
       picture,
       img {
@@ -2440,6 +2449,33 @@
       img {
         object-fit: cover;
       }
+    }
+
+    .purchase-mobile-summary-poster-icon {
+      align-items: center;
+      background: #10291f;
+      border-radius: 50%;
+      bottom: 3px;
+      color: #fff;
+      display: flex;
+      height: 23px;
+      justify-content: center;
+      position: absolute;
+      right: 3px;
+      width: 23px;
+
+      svg { height: 16px; width: 16px; }
+    }
+
+    .purchase-mobile-summary-poster--empty {
+      align-items: center;
+      color: #59665f;
+      cursor: default;
+      display: flex;
+      justify-content: center;
+
+      svg { height: 1.5rem; width: 1.5rem; }
+      &:hover { border-color: #dce2de; }
     }
 
     .purchase-mobile-summary-copy {

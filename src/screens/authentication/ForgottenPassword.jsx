@@ -233,7 +233,7 @@ const ForgottenPassword = (props) => {
                                 }
                             })}
                             touchUI
-                            dateFormat="dd/mm/yy"
+                            dateFormat="dd-mm-yy"
                         />
                     </div>
                     <input

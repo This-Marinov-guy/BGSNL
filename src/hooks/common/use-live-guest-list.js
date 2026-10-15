@@ -118,5 +118,12 @@ export function useLiveGuestList(eventId, enabled, initialGuests = [], initialCo
     }
   }, [eventId, dispatch]);
 
-  return { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence };
+  const applyGuestUpdate = useCallback(guest => {
+    const guestId = String(guest.id || guest._id || "");
+    if (!guestId) return;
+    setGuests(current => current.map(item => String(item.id || item._id) === guestId ? { ...item, ...guest } : item));
+    refresh.current?.invalidate();
+  }, []);
+
+  return { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate };
 }

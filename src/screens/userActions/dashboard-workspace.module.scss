@@ -66,7 +66,49 @@
   a:hover { background: #e5f0eb; color: #017363; }
   a[aria-current="page"] { background: #017363; color: #fff; }
 }
+.externalLink { gap: .35rem; svg { flex-shrink: 0; } }
+.metricTabs {
+  display: flex;
+  gap: .25rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0;
+  padding: .25rem;
+  border-radius: var(--dashboard-radius);
+  background: #e5eee8;
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: .5rem 1.25rem;
+    border-radius: .5rem;
+    color: #53645b;
+    font-weight: 600;
+    text-decoration: none;
+    &:hover { color: #025d51; }
+    &:focus-visible { outline: 3px solid var(--dashboard-accent); outline-offset: 2px; }
+    &[aria-current="page"] { background: #fff; color: var(--dashboard-accent); box-shadow: 0 1px 3px rgb(25 37 31 / 8%); }
+  }
+}
 .mobileSections { display: none; }
+.unreadCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 .3rem;
+  margin-inline-start: .45rem;
+  border-radius: 999px;
+  background: #c81919;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+}
 
 .viewNavigation.viewNavigation {
   margin: 0 0 1.25rem;
@@ -142,6 +184,7 @@
     a:hover { background: #fff; }
     a[aria-current="page"] { background: #017363; color: #fff; }
   }
+  .metricTabs { width: 100%; a { flex: 1; } }
   .viewNavigation.viewNavigation > div { flex: 1; > a, > button { flex: 1 1 0; padding-inline: .5rem; } }
 }
 @media (prefers-reduced-motion: reduce) { .mobileSections summary svg { transition: none; } }

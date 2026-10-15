@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDateTime } from "@/util/functions/display-date.mjs";
 
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
@@ -396,7 +397,7 @@ export default function CheckTicket() {
                   <dt>Email</dt><dd>{guest.email || "Not provided"}</dd>
                   <dt>Phone</dt><dd>{guest.phone || "Not provided"}</dd>
                   <dt>Type</dt><dd>{guest.type || "Not provided"}</dd>
-                  <dt>Purchased</dt><dd>{guest.timestamp && !Number.isNaN(new Date(guest.timestamp).getTime()) ? new Date(guest.timestamp).toLocaleString("en-GB") : "Not provided"}</dd>
+                  <dt>Purchased</dt><dd>{guest.timestamp && !Number.isNaN(new Date(guest.timestamp).getTime()) ? formatDisplayDateTime(guest.timestamp) : "Not provided"}</dd>
                   <dt>Transaction ID</dt><dd>{guest.transactionId || "Not provided"}</dd>
                   <dt>Add-ons</dt><dd>{guest.addOns?.map(item => item.title).filter(Boolean).join(", ") || "None"}</dd>
                   {Object.entries(guest.preferences || {}).filter(([key, value]) => !["fixture", "pricingTier"].includes(key) && ["string", "number", "boolean"].includes(typeof value)).map(([key, value]) => <div className={styles.preferenceRow} key={key}><dt>{key}</dt><dd>{String(value)}</dd></div>)}

@@ -1,5 +1,6 @@
 import { SelectInput } from "@/compat/primereact";
 import PropTypes from "prop-types";
+import { scrollToListStart } from "@/util/functions/pagination-scroll.mjs";
 import {
   IconlyArrowLeft,
   IconlyArrowRight,
@@ -45,6 +46,7 @@ const Pagination = ({
   totalRecords = 0,
   rowsPerPageOptions = [],
   onPageChange,
+  scrollTargetRef,
   className = "",
   ariaLabel = "Pagination",
 }) => {
@@ -62,6 +64,7 @@ const Pagination = ({
   if (pageCount <= 1 && !showRowsSelector) return null;
 
   const emitPageChange = (nextPage, nextRows, originalEvent) => {
+    scrollToListStart(scrollTargetRef);
     onPageChange?.({
       originalEvent,
       first: (nextPage - 1) * nextRows,
@@ -156,6 +159,7 @@ Pagination.propTypes = {
   totalRecords: PropTypes.number,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   onPageChange: PropTypes.func,
+  scrollTargetRef: PropTypes.object,
   className: PropTypes.string,
   ariaLabel: PropTypes.string,
 };

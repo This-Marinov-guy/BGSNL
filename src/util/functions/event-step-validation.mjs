@@ -1,6 +1,7 @@
 export const eventStepFields = [
   ["region", "location", "title", "date", "text"],
   ["isFree", "isMemberFree", "isTicketLink", "ticketLink", "guestPrice", "memberPrice", "activeMemberPrice", "entryIncluding", "memberIncluding", "poster", "ticketImg", "ticketColor", "ticketName", "ticketQR", "ticketLimit", "ticketTimer", "extraImagesValidation", "extraInputsForm"],
+  ["earlyBird", "lateBird", "guestPromotion", "memberPromotion", "promoCodes", "addOns", "subEvent"],
 ];
 
 function errorPaths(value, prefix) {
@@ -9,12 +10,23 @@ function errorPaths(value, prefix) {
   return Object.entries(value).flatMap(([key, child]) => errorPaths(child, `${prefix}.${key}`));
 }
 
+export function eventErrorPaths(errors) {
+  if (!errors || typeof errors !== "object") return [];
+  return Object.entries(errors).flatMap(([field, value]) => errorPaths(value, field));
+}
+
 // Validate every completed step before a forward jump, so returning to an
 // earlier step cannot bypass fields invalidated in an already visited step.
-export function blockingEventStep(errors, targetStep) {
+export function blockingEventStep(errors, targetStep, fallbackStep = eventStepFields.length - 1) {
   for (let step = 0; step < Math.min(targetStep, eventStepFields.length); step++) {
     const paths = eventStepFields[step].flatMap((field) => errorPaths(errors[field], field));
     if (paths.length) return { step, paths };
+  }
+  // A new schema field must never make full submission fail silently just
+  // because its step mapping has not been added yet.
+  if (targetStep >= eventStepFields.length) {
+    const paths = eventErrorPaths(errors);
+    if (paths.length) return { step: fallbackStep, paths };
   }
   return null;
 }

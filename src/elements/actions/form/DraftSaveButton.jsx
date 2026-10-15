@@ -1,16 +1,18 @@
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 import { Dialog } from "@/compat/primereact";
+import { showNotification } from "../../../redux/notification";
 
 export default function DraftSaveButton({ note = "", defaultEmail = "", disabled = false, onOpenChange, onBeforeOpen, onSave, onEmailReminder, onComplete }) {
   const id = useId();
+  const dispatch = useDispatch();
   const emailRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [text, setText] = useState(note);
   const [email, setEmail] = useState(defaultEmail);
   const [stage, setStage] = useState(null);
-  const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [savedDraft, setSavedDraft] = useState(null);
   const savingRef = useRef(false);
@@ -18,24 +20,25 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
   const changeOpen = (next) => { setOpen(next); onOpenChange?.(next); };
   const receiver = email.trim().toLowerCase();
   const canReuseDraft = savedDraft?.note === text.trim();
+  const showError = detail => dispatch(showNotification({ severity: "error", summary: "Draft could not be completed", detail }));
 
   const save = async () => {
     if (savingRef.current || disabled) return;
     if (receiver && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(receiver)) {
       setEmailError("Enter a valid email address, or leave it blank.");
+      showError("Enter a valid email address, or leave it blank.");
       emailRef.current?.focus();
       return;
     }
     savingRef.current = true;
     setEmailError("");
-    setError("");
     let draft = canReuseDraft ? savedDraft : null;
     try {
       if (!draft) {
         setStage("saving");
         const result = await onSave(text.trim());
         if (!result?.id) {
-          setError("The draft could not be saved. Your note is still here; please try again.");
+          showError("The draft could not be saved. Your note is still here; please try again.");
           return;
         }
         draft = { id: result.id, note: text.trim() };
@@ -45,14 +48,14 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
         setStage("emailing");
         const result = await onEmailReminder(draft.id, receiver);
         if (!result?.status) {
-          setError("Your draft is saved, but the email could not be queued. Try again, or clear the email to finish without sending it.");
+          showError("Your draft is saved, but the email could not be queued. Try again, or clear the email to finish without sending it.");
           return;
         }
       }
       changeOpen(false);
       onComplete(receiver);
     } catch {
-      setError(draft ? "Your draft is saved, but the email could not be queued. Please try again." : "The draft could not be saved. Your note is still here; please try again.");
+      showError(draft ? "Your draft is saved, but the email could not be queued. Please try again." : "The draft could not be saved. Your note is still here; please try again.");
     } finally {
       savingRef.current = false;
       setStage(null);
@@ -61,7 +64,7 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
 
   return (
     <>
-      <button type="button" disabled={disabled} className="event-form-button event-form-button--draft" onClick={() => { if (onBeforeOpen?.() === false) return; setText(note); setEmail(defaultEmail); setError(""); setEmailError(""); setSavedDraft(null); changeOpen(true); }}>Save as draft</button>
+      <button type="button" disabled={disabled} className="event-form-button event-form-button--draft" onClick={() => { if (onBeforeOpen?.() === false) return; setText(note); setEmail(defaultEmail); setEmailError(""); setSavedDraft(null); changeOpen(true); }}>Save as draft</button>
       <Dialog
         visible={open}
         header="Save event draft"
@@ -79,16 +82,15 @@ export default function DraftSaveButton({ note = "", defaultEmail = "", disabled
       >
         <p>Leave a note for anyone continuing this draft. It will appear on the draft cards.</p>
         <div className="rn-form-group">
-          <label htmlFor={id}>Note (optional)</label>
+          <label htmlFor={id}>Note</label>
           <textarea id={id} name="draftNote" rows={4} maxLength={1000} value={text} disabled={saving} placeholder="e.g., Waiting for the venue to confirm the time." onChange={event => setText(event.target.value)} aria-describedby={`${id}-count`} />
         </div>
         <p id={`${id}-count`} className="event-draft-note-dialog__count">{text.length}/1000</p>
         <div className={`rn-form-group${emailError ? " has-validation-error" : ""}`}>
-          <label htmlFor={`${id}-email`}>Send continue link to (optional)</label>
+          <label htmlFor={`${id}-email`}>Send continue link to</label>
           <input ref={emailRef} id={`${id}-email`} name="draftReminderEmail" type="email" autoComplete="email" maxLength={254} value={email} disabled={saving} placeholder="you@example.com" onChange={event => { setEmail(event.target.value); setEmailError(""); }} aria-invalid={Boolean(emailError)} aria-describedby={`${id}-email-help`} />
         </div>
-        <p id={`${id}-email-help`} className={emailError ? "event-unsaved-dialog__error" : "event-draft-note-dialog__hint"} role={emailError ? "alert" : undefined}>{emailError || "We’ll email a link to continue this draft. Leave blank to save without an email."}</p>
-        {error && <p className="event-unsaved-dialog__error" role="alert">{error}</p>}
+        <p id={`${id}-email-help`} className="event-draft-note-dialog__hint">We’ll email a link to continue this draft. Leave blank to save without an email.</p>
       </Dialog>
     </>
   );

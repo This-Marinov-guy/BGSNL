@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 
 import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -7,11 +8,10 @@ import { useHttpClient } from "@/hooks/common/http-hook";
 import { useDispatch } from "react-redux";
 import { showNotification } from "@/redux/notification";
 import Loader from "@/elements/ui/loading/Loader";
+import WarningBanner from "@/elements/ui/banners/WarningBanner";
 import styles from "./backoffice.module.scss";
 
-const displayDate = value => value ? new globalThis.Intl.DateTimeFormat("en-GB", {
-  dateStyle: "long", timeZone: "Europe/Amsterdam",
-}).format(new Date(value)) : "the end of the current billing period";
+const displayDate = value => value ? formatDisplayDate(value) : "the end of the current billing period";
 
 export default function AccountMembershipActions({ account, disabled, onBusyChange, onChanged }) {
   const [details, setDetails] = useState(null);
@@ -82,7 +82,8 @@ export default function AccountMembershipActions({ account, disabled, onBusyChan
       {loading ? <><p>Checking transfer eligibility…</p><LoadingSkeleton label="Loading transfer eligibility" variant="inline" /></> : transferSent ? <p role="status">Transfer email queued. The account changes after its owner confirms the new plan.</p> : !confirmTransfer ?
         <button type="button" className={styles.secondaryButton} disabled={disabled || pending || !details?.canTransfer} onClick={() => { setConfirmTransfer(true); setConfirmCancel(false); }}>Send transfer link</button> :
         <div className={styles.actionConfirmation}>
-          <p>Send the transfer request to <strong>{account.email}</strong>? Their current membership and subscription will stay unchanged until they confirm.</p>
+          <WarningBanner><p>We will send a confirmation email to <strong>{account.email}</strong> to verify this request.</p></WarningBanner>
+          <p>Their current membership and subscription will stay unchanged until they confirm a new plan.</p>
           <div className={styles.actionButtons}>
             <button type="button" className={styles.secondaryButton} disabled={pending} onClick={() => setConfirmTransfer(false)}>Back</button>
             <button type="button" className={styles.primaryButton} disabled={disabled || pending} onClick={requestTransfer}>{pending && pendingAction === "transfer" ? "Sending…" : `Request transfer to ${targetLabel}`}</button>

@@ -28,8 +28,9 @@ test("page guards and dashboard cards preserve renamed role permissions", async 
   const source = await readFile(new URL("../src/util/defines/common.js", import.meta.url), "utf8");
   const block = source.slice(source.indexOf("// member roles"), source.indexOf("// A billing hold"));
   const frontend = await import(`data:text/javascript,${encodeURIComponent(block)}`);
-  const expected = { events: frontend.ACCESS_4, members: frontend.MEMBER_ADMIN_ACCESS, internships: frontend.ACCESS_2,
-    "monthly-summary": [...frontend.ACCESS_2, frontend.NATIONAL_COMMITTEE_MEMBER], support: frontend.SUPPORT_ACCESS,
+  const expected = { "event-statistics": frontend.DASHBOARD_ACCESS, "member-statistics": frontend.DASHBOARD_ACCESS,
+    events: frontend.ACCESS_4, members: frontend.MEMBER_ADMIN_ACCESS, internships: frontend.ACCESS_2,
+    support: frontend.SUPPORT_ACCESS,
     monitoring: frontend.MONITORING_ACCESS };
   for (const area of administrationAreas) assert.deepEqual([...area.roles].sort(), [...expected[area.id]].sort());
   for (const access of ["ACCESS_1", "ACCESS_2", "ACCESS_3"]) assert.equal(frontend[access].includes("national_committee_member"), false);

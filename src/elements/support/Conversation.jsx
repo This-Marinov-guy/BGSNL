@@ -1,4 +1,5 @@
 "use client";
+import { formatDisplayDateTime } from "@/util/functions/display-date.mjs";
 
 import VladiImage from "@/elements/ui/media/VladiImage";
 import { LoadingSkeleton, LoadErrorBanner } from "@/elements/ui/loading/LoadState";
@@ -22,7 +23,7 @@ import { supportScope } from "./support-state.mjs";
 import useModalUrl from "@/elements/ui/modals/useModalUrl";
 import { supportMessageParts } from "./support-message-links.mjs";
 
-const formatTime = (value) => new Date(value).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+const formatTime = (value) => formatDisplayDateTime(value);
 const PHOTO_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const MAX_PHOTOS = 3;
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;

@@ -1,3 +1,4 @@
+import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import moment from "moment";
 import PropTypes from "prop-types";
 import { Dialog } from "@/compat/primereact";
@@ -63,7 +64,7 @@ const AlumniUserModal = ({ isOpen, isClosing, user, onClose }) => {
     .join("")
     .toUpperCase();
   const joinDate = user.joinDate && moment(user.joinDate).isValid()
-    ? moment(user.joinDate).format("DD MMM YYYY")
+    ? formatDisplayDate(user.joinDate)
     : null;
   const quote = user.quote?.trim();
 

@@ -16,6 +16,8 @@ const InternshipsTab = ({
 }) => {
   const { sendRequest } = useHttpClient();
   const request = useRef(sendRequest);
+  const bulgarianListRef = useRef(null);
+  const internationalListRef = useRef(null);
   request.current = sendRequest;
   const [activeIndex, setActiveIndex] = useState(0);
   const [internships, setInternships] = useState([]);
@@ -76,20 +78,20 @@ const InternshipsTab = ({
     </div>
   );
 
-  const renderContent = (list, category, first, rows, onPageChange) => {
+  const renderContent = (list, category, first, rows, onPageChange, scrollTargetRef) => {
     if (loadState === "loading") {
       return <LoadingSkeleton label="Loading internships" variant="cards" count={4} />;
     }
     if (loadState === "failed") {
       return <LoadErrorBanner message="Internships could not be loaded." onRetry={() => setLoadAttempt((value) => value + 1)} />;
     }
-    return list.length > 0 ? renderList(list, first, rows, onPageChange) : emptyState(category);
+    return list.length > 0 ? renderList(list, first, rows, onPageChange, scrollTargetRef) : emptyState(category);
   };
 
-  const renderList = (list, first, rows, onPageChange) => {
+  const renderList = (list, first, rows, onPageChange, scrollTargetRef) => {
     return (
       <>
-        <div className="internships-grid">
+        <div className="internships-grid" ref={scrollTargetRef}>
           {list.slice(first, first + rows).map((i, index) => (
             <InternshipCard
               key={i._id ?? index}
@@ -107,6 +109,7 @@ const InternshipsTab = ({
             totalRecords={list.length ?? 0}
             rowsPerPageOptions={[INIT_ITEMS_PER_PAGE, 10, 15]}
             onPageChange={onPageChange}
+            scrollTargetRef={scrollTargetRef}
             ariaLabel="Member internships pagination"
           />
         </div>
@@ -153,12 +156,12 @@ const InternshipsTab = ({
             {renderContent(filteredInternships, "available", 0, filteredInternships.length, () => {})}
           </TabPanel>
           <TabPanel header={loadState === "loaded" ? `Bulgarian (${bulgarianList.length})` : "Bulgarian"}>
-            {renderContent(bulgarianList, "Bulgarian", bulgarianFirst, bulgarianRows, handleBulgarianPageChange)}
+            {renderContent(bulgarianList, "Bulgarian", bulgarianFirst, bulgarianRows, handleBulgarianPageChange, bulgarianListRef)}
           </TabPanel>
           <TabPanel
             header={loadState === "loaded" ? `International & Remote (${internationalList.length})` : "International & Remote"}
           >
-            {renderContent(internationalList, "international or remote", internationalFirst, internationalRows, handleInternationalPageChange)}
+            {renderContent(internationalList, "international or remote", internationalFirst, internationalRows, handleInternationalPageChange, internationalListRef)}
           </TabPanel>
         </TabView>
       </div>

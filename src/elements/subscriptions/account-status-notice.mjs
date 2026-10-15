@@ -4,6 +4,10 @@ export function needsBillingAttention(user) {
     (!!user.billingLocked || !!user.billingVerificationUnavailable || ["locked", "payment_awaiting"].includes(user.status));
 }
 
+export function hasTicketBenefitIssue(user) {
+  return !!user?.session && (user.hasBenefits !== true || getAccountStatusNotice(user) !== null);
+}
+
 export function getAccountStatusNotice(user) {
   if (!user) return null;
   if (user.status === "info_requested") return {

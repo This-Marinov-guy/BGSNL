@@ -10,27 +10,27 @@ function setup(t) {
   t.after(cancel);
   return { cancel, shown: () => shown };
 }
-test("the recovery notice appears at seven seconds, never before", (t) => {
+test("the recovery notice appears at fifteen seconds, never before", (t) => {
   const timer = setup(t);
   t.mock.timers.tick(SLOW_LOADING_DELAY_MS - 1); assert.equal(timer.shown(), 0);
   t.mock.timers.tick(1); assert.equal(timer.shown(), 1);
 });
 test("fast loads and unmounted loaders leave no delayed notice", (t) => {
   const timer = setup(t);
-  t.mock.timers.tick(6900); timer.cancel(); t.mock.timers.tick(20000);
+  t.mock.timers.tick(14900); timer.cancel(); t.mock.timers.tick(20000);
   assert.equal(timer.shown(), 0);
 });
 test("a slow loader is notified once without recurring callbacks", (t) => {
   const timer = setup(t);
-  t.mock.timers.tick(7000); assert.equal(timer.shown(), 1);
+  t.mock.timers.tick(SLOW_LOADING_DELAY_MS); assert.equal(timer.shown(), 1);
   t.mock.timers.tick(60000); assert.equal(timer.shown(), 1);
 });
 test("each mounted loader gets its own fresh delay", (t) => {
   const first = setup(t);
-  t.mock.timers.tick(6000);
+  t.mock.timers.tick(14000);
   let secondShown = false;
   const cancelSecond = scheduleLoadingRecovery(() => { secondShown = true; }); t.after(cancelSecond);
-  first.cancel(); t.mock.timers.tick(6999);
+  first.cancel(); t.mock.timers.tick(SLOW_LOADING_DELAY_MS - 1);
   assert.equal(first.shown(), 0); assert.equal(secondShown, false);
   t.mock.timers.tick(1); assert.equal(secondShown, true);
 });
@@ -38,7 +38,7 @@ test("React setup/cleanup replay cannot leave a second timer behind", (t) => {
   const first = setup(t); first.cancel();
   let shown = 0;
   const cancel = scheduleLoadingRecovery(() => { shown++; }); t.after(cancel);
-  t.mock.timers.tick(7000);
+  t.mock.timers.tick(SLOW_LOADING_DELAY_MS);
   assert.equal(first.shown(), 0); assert.equal(shown, 1);
 });
 test("only the page and account loading components mount the delayed notice", async () => {

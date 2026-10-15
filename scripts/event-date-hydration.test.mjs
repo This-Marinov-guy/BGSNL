@@ -31,14 +31,14 @@ test("event text matches server rendering across visitor timezones and locales",
   for (const zone of ["Europe/Amsterdam", "America/New_York", "Asia/Tokyo"]) {
     assert.deepEqual(renderDates(zone, "bg"), server, zone);
   }
-  assert.equal(server.summer.label, "29th Sep 14:35");
-  assert.equal(server.winter.label, "29th Dec 13:35");
-  assert.equal(server.midnight.label, "30th Sep 01:35");
-  assert.equal(server.wallTime.label, "29th Sep 14:35");
+  assert.equal(server.summer.label, "29-09-2026 14:35");
+  assert.equal(server.winter.label, "29-12-2026 13:35");
+  assert.equal(server.midnight.label, "30-09-2026 01:35");
+  assert.equal(server.wallTime.label, "29-09-2026 14:35");
   assert.equal(server.wallTime.value, "2026-09-29T12:35:00.000Z");
   assert.equal(server.corrected.isUpdated, true);
-  assert.equal(server.corrected.label, "30th Sep 14:35");
-  assert.equal(server.correctedLabel, "30 - 09 02:35 pm");
+  assert.equal(server.corrected.label, "30-09-2026 14:35");
+  assert.equal(server.correctedLabel, "30-09-2026 14:35");
   assert.equal(server.empty.label, "");
   assert.equal(server.invalid, "");
 });

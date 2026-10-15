@@ -43,6 +43,7 @@ export const ALL_EVENT_REGIONS_ACCESS = [...ACCESS_2, NATIONAL_COMMITTEE_MEMBER]
 export const EVENT_MANAGEMENT_ACCESS = [...ACCESS_3, NATIONAL_COMMITTEE_MEMBER];
 export const ALL_MEMBER_REGIONS_ACCESS = [...ACCESS_2, NATIONAL_COMMITTEE_MEMBER];
 export const MEMBER_ADMIN_ACCESS = [...ACCESS_3, NATIONAL_COMMITTEE_MEMBER];
+export const DASHBOARD_ACCESS = [...new Set([...ACCESS_4, SUPPORT, DEVELOPER])];
 
 
 // A billing hold ("locked"/"payment_awaiting") should not block admin/super
@@ -127,7 +128,7 @@ export const getStyleBySeverity = (severity) => {
 export const EVENT_ADDED = { summary: 'Event added', ...SUCCESS_STYLE };
 export const EVENT_EDITED = { summary: 'Event edited', ...SUCCESS_STYLE };
 export const EVENT_DRAFT_SAVED = { summary: 'Event draft saved', ...SUCCESS_STYLE };
-export const EVENT_DELETED = { summary: 'Event deleted', ...SUCCESS_STYLE };
+export const EVENT_ARCHIVED = { summary: 'Event archived', ...SUCCESS_STYLE };
 
 export const GENERAL_ERROR = { summary: 'Something went wrong - please try again or report to support!', ...DANGER_STYLE };
 

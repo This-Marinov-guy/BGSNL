@@ -1,24 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { administrationAreas, canAdminister } from '../src/util/administration.mjs';
+import { administrationAreas, canAdminister, statisticsRedirectPath } from '../src/util/administration.mjs';
 import { accountRouteState } from '../src/util/functions/account-route-state.mjs';
 import { browserApiPath } from '../src/util/auth/proxy-policy.mjs';
+import nextConfig from '../next.config.mjs';
 const available = (roles) => administrationAreas.filter((area) => canAdminister(area, roles)).map(({ id }) => id);
 test('administration overview follows the existing role scopes', () => {
   assert.equal(available(['admin']).length, administrationAreas.length);
   assert.equal(available(['super_admin']).length, administrationAreas.length);
   assert.deepEqual(available(['member']), []);
   assert.deepEqual(available(['alumni']), []);
-  assert.deepEqual(available(['support']), ['support']);
-  assert.deepEqual(available(['committee_member']), ['events']);
-  assert.deepEqual(available(['active_member']), ['events']);
-  assert.deepEqual(available(['board_member']), ['events', 'members']);
-  assert.deepEqual(available(['society_board_member']), ['events', 'members', 'internships', 'monthly-summary']);
-  assert.deepEqual(available(['national_board_member']), ['events', 'members', 'internships', 'monthly-summary']);
-  assert.deepEqual(available(['regional_board_member']), ['events', 'members']);
-  assert.deepEqual(available(['regional_committee_member']), ['events']);
-  assert.deepEqual(available(['national_committee_member']), ['events', 'members', 'monthly-summary']);
-  assert.deepEqual(available(['developer']), ['monitoring']);
+  const statistics = ['event-statistics', 'member-statistics'];
+  assert.deepEqual(available(['support']), [...statistics, 'support']);
+  assert.deepEqual(available(['committee_member']), [...statistics, 'events']);
+  assert.deepEqual(available(['active_member']), [...statistics, 'events']);
+  assert.deepEqual(available(['board_member']), [...statistics, 'events', 'members']);
+  assert.deepEqual(available(['society_board_member']), [...statistics, 'events', 'members', 'internships']);
+  assert.deepEqual(available(['national_board_member']), [...statistics, 'events', 'members', 'internships']);
+  assert.deepEqual(available(['regional_board_member']), [...statistics, 'events', 'members']);
+  assert.deepEqual(available(['regional_committee_member']), [...statistics, 'events']);
+  assert.deepEqual(available(['national_committee_member']), [...statistics, 'events', 'members']);
+  assert.deepEqual(available(['developer']), [...statistics, 'monitoring']);
 });
 test('ordinary members reach access requests but cannot open admin panels', () => {
   const user = { authInitialized: true, session: 'test', status: 'active', roles: ['member'] };
@@ -35,6 +37,34 @@ test('access requests use only the explicit POST proxy route', () => {
 test('system manager jobs use the explicit read-only proxy route', () => {
   assert.equal(browserApiPath(['monitoring', 'jobs'], 'GET'), 'monitoring/jobs');
   assert.equal(browserApiPath(['monitoring', 'jobs'], 'POST'), null);
+  assert.equal(browserApiPath(['monitoring', 'quotas'], 'GET'), 'monitoring/quotas');
+  assert.equal(browserApiPath(['monitoring', 'quotas'], 'POST'), null);
+});
+
+test('statistics use explicit read-only proxy routes', () => {
+  for (const path of ['member-statistics', 'event-statistics']) {
+    assert.equal(browserApiPath(['dashboard', path], 'GET'), `dashboard/${path}`);
+    assert.equal(browserApiPath(['dashboard', path], 'POST'), null);
+  }
+});
+
+test('statistics belong to Metrics and legacy tab URLs retain their filters', () => {
+  assert.deepEqual(administrationAreas.filter(area => area.section === 'metrics').map(area => area.id),
+    ['event-statistics', 'member-statistics']);
+  assert.equal(statisticsRedirectPath('event', { view: 'analytics', region: 'groningen', from: '2026-08-25' }),
+    '/user/dashboard/metrics/events?region=groningen&from=2026-08-25');
+  assert.equal(statisticsRedirectPath('member', { view: 'statistics', to: '2026-10-13', region: ['amsterdam', 'groningen'] }),
+    '/user/dashboard/metrics/members?to=2026-10-13&region=amsterdam&region=groningen');
+});
+
+test('legacy route redirects open Metrics tabs', async () => {
+  const redirects = await nextConfig.redirects();
+  for (const source of ['/user/dashboard/event-statistics', '/user/dashboard/event-analytics', '/user/events-analytics']) {
+    assert.equal(redirects.find(row => row.source === source)?.destination, '/user/dashboard/metrics/events');
+  }
+  for (const source of ['/user/dashboard/member-statistics', '/user/members']) {
+    assert.equal(redirects.find(row => row.source === source)?.destination, '/user/dashboard/metrics/members');
+  }
 });
 
 

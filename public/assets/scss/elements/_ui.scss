@@ -740,6 +740,10 @@ hr {
   color: $theme-color-3 !important;
 }
 
+.event-form-steps .p-step:has(~ .p-step-active) .p-stepper-separator {
+  background-color: $theme-color-3;
+}
+
 .rdp-caption_label {
 
   margin-left: 10px;

@@ -30,7 +30,7 @@ Mobile:
 Keep existing loading skeletons, retry, empty, export-in-progress and pagination states. Preserve URL query ownership. Links have current-page semantics; mobile disclosure exposes expanded state natively. Controls have visible keyboard focus and at least 44px targets. Text wraps; tables alone may scroll horizontally. No autofocus. Respect reduced motion.
 
 ## Validation
-Check overview, events/manage/analytics, accounts/manage/statistics, internships, support and monitoring at mobile, tablet and desktop widths. Exercise navigation, filter disclosure, query persistence and long labels. Confirm event form sources are untouched. No open product questions.
+Check overview, Events, Members, the Metrics pages, internships, support and monitoring at mobile, tablet and desktop widths. Exercise navigation, filter disclosure, query persistence and long labels. Confirm event form sources are untouched. No open product questions.
 
 
 ## Verification and UX review

@@ -29,21 +29,18 @@ export default function StartupOverlay({ children }) {
       if (settled) return;
       settled = true;
       clearInterval(interval);
-      clearTimeout(deadline);
       frame = requestAnimationFrame(() => setReady(true));
     };
     const check = () => {
       if (!startupContentReady(content.current, document, window.innerHeight,
         { publicPage: isPublicEntry, homePage: isHomeEntry })) { readySince = null; return; }
-      if (isPublicEntry) { finish(); return; }
       // Let child effects and their initial requests commit before reveal.
       if (readySince === null) readySince = performance.now();
       else if (performance.now() - readySince >= 100) finish();
     };
     const interval = setInterval(check, 50);
-    const deadline = setTimeout(finish, 10000);
     check();
-    return () => { settled = true; clearInterval(interval); clearTimeout(deadline); cancelAnimationFrame(frame); };
+    return () => { settled = true; clearInterval(interval); cancelAnimationFrame(frame); };
   }, [isPublicEntry, isHomeEntry]);
   return <>
     {!dismissed && <div className={`initial-loading-screen startup-overlay ${isPublicEntry ? "startup-overlay--public" : ""} ${ready ? "fade-out" : "fade-in"}`}

@@ -26,7 +26,7 @@ export const useLoadEvents = () => {
         ? "future-event/full-data-events-list"
         : `event/events-list`;
 
-      const responseData = await sendRequest(url, "GET", null, {}, false, false, { timeout: 5000 });
+      const responseData = await sendRequest(url, "GET", null, {}, false, false, { timeout: withFullData ? 15000 : 5000 });
       if (!Array.isArray(responseData?.events)) throw new Error("Events unavailable");
       setEventsError(false);
       dispatch(withFullData ? loadEventsDashboard(responseData.events) : loadEvents(responseData.events));

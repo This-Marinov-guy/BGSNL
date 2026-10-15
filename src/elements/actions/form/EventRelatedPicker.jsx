@@ -1,3 +1,4 @@
+import { formatDisplayDateTime } from "@/util/functions/display-date.mjs";
 import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useEffect, useId, useRef, useState } from "react";
 import PropTypes from "prop-types";
@@ -7,19 +8,19 @@ import { useHttpClient } from "../../../hooks/common/http-hook";
 import { SITE_URL } from "../../../util/seo/site";
 import { relatedEventOptions, visibleRelatedEvents, isRelatedEventSelected, relatedEventLink, relatedEventPoster } from "../../../util/functions/related-events.mjs";
 import { FiCheck, FiImage } from "../../ui/icons/IconlyIcons";
-import { OptionError, OptionField } from "./EventOptionFields";
+import { OptionField } from "./EventOptionFields";
 
 const formatDate = value => {
   const date = new Date(value);
-  return Number.isFinite(date.valueOf()) ? new globalThis.Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Amsterdam" }).format(date) : "Date to be announced";
+  return Number.isFinite(date.valueOf()) ? formatDisplayDateTime(date) : "Date to be announced";
 };
 
 
 function SelectedEventRow({ link, index, onRemove }) {
   const present = useIsPresent();
   const reduced = useReducedMotion();
-  return <motion.li layout initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }} transition={{ duration: reduced ? 0 : 0.22 }} inert={!present || undefined}>
-    <div><strong>{link.name || "Untitled link"}</strong><OptionError name={`subEvent.links[${index}].name`} /><OptionError name={`subEvent.links[${index}].href`} /></div>
+  return <motion.li layout initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 }} transition={{ duration: reduced ? 0 : 0.22 }} inert={!present || undefined} data-custom-validation-field data-field-name={`subEvent.links[${index}].href`}>
+    <div data-field-name={`subEvent.links[${index}].poster`}><strong data-field-name={`subEvent.links[${index}].name`}>{link.name || "Untitled link"}</strong></div>
     <button className="event-option-remove" type="button" disabled={!present} onClick={onRemove} aria-label={`Remove ${link.name || "link"}`}>Remove</button>
   </motion.li>;
 }
@@ -31,7 +32,7 @@ function SelectedEvents({ links, onRemove }) {
   return <motion.div className="event-related-selection-transition" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: reduced ? 0 : 0.25 }} inert={!present || undefined}>
     <div className="event-related-selected">
       <OptionField name="subEvent.description" label="Recommendation heading" placeholder="You might also like" maxLength={1000} />
-      <ul aria-label="Advertised events"><AnimatePresence initial={false}>{links.map((link, index) => <SelectedEventRow key={link.href || link.name} link={link} index={index} onRemove={() => onRemove(index)} />)}</AnimatePresence></ul>
+      <ul aria-label="Advertised events" data-custom-validation-field data-field-name="subEvent.links"><AnimatePresence initial={false}>{links.map((link, index) => <SelectedEventRow key={link.href || link.name} link={link} index={index} onRemove={() => onRemove(index)} />)}</AnimatePresence></ul>
     </div>
   </motion.div>;
 }
@@ -92,7 +93,6 @@ export default function EventRelatedPicker({ currentEventId, active = true }) {
   return <section className="event-option-panel event-related-picker" aria-labelledby={`${id}-heading`}>
     <header className="event-option-header"><div className="event-option-title"><h3 id={`${id}-heading`}>Advertise other events</h3></div></header>
     <AnimatePresence initial={false}>{links.length > 0 && <SelectedEvents key="selected-events" links={links} onRemove={index => updateLinks(links.filter((_, i) => i !== index))} />}</AnimatePresence>
-    <OptionError name="subEvent" /><OptionError name="subEvent.links" />
     <div className="rn-form-group event-related-search"><label htmlFor={`${id}-search`}>Find an event</label><input id={`${id}-search`} type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search by name or region" /></div>
     {result.loading ? <div className="event-related-skeleton" role="status" aria-label="Loading events" aria-busy="true">{[0, 1, 2].map(index => <div key={index} aria-hidden="true"><span /><span /></div>)}</div> : <>
       {result.error && <LoadErrorBanner message="Some events couldn’t be loaded." onRetry={() => setAttempt(value => value + 1)} />}

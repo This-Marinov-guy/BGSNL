@@ -9,7 +9,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
-import { FiHelpCircle } from "./IconlyIcons";
+import { FiHelpCircle, FiInfo } from "./IconlyIcons";
 import { getTooltipContainer, getTooltipPosition } from "../tooltip-position.mjs";
 
 /**
@@ -35,7 +35,7 @@ const VIEWPORT_MARGIN = 8;
 /** Space between the trigger and the bubble. */
 const TRIGGER_GAP = 8;
 
-const InfoHint = ({ label = "More information", text }) => {
+const InfoHint = ({ label = "More information", text, icon = "help" }) => {
   const id = useId();
   const triggerRef = useRef(null);
   const bubbleRef = useRef(null);
@@ -116,13 +116,14 @@ const InfoHint = ({ label = "More information", text }) => {
         aria-describedby={id}
         className="info-hint__trigger"
         onBlur={() => setOpen(false)}
+        onClick={() => setOpen(true)}
         onFocus={() => setOpen(true)}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
         ref={triggerRef}
         type="button"
       >
-        <FiHelpCircle aria-hidden size="0.72rem" />
+        {icon === "info" ? <FiInfo aria-hidden size="1rem" /> : <FiHelpCircle aria-hidden size="0.72rem" />}
         <span className="visually-hidden">{label}</span>
       </button>
       {mounted ? createPortal(bubble, getTooltipContainer(triggerRef.current)) : bubble}
@@ -134,6 +135,7 @@ InfoHint.propTypes = {
   /** Accessible name for the trigger; the visible hint lives in `text`. */
   label: PropTypes.string,
   text: PropTypes.node.isRequired,
+  icon: PropTypes.oneOf(["help", "info"]),
 };
 
 export default InfoHint;

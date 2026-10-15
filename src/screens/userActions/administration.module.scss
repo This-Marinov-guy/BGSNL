@@ -1,16 +1,14 @@
 @use "../../elements/ui/tabs/section-tabs" as section-tabs;
 
 .page.page { margin-top: clamp(7rem, 10vw, 9rem); padding-bottom: 4rem; }
-.heading { margin-bottom: 2rem; max-width: 48rem; }
-.heading > a { color: #087462; font-weight: 600; }
-.heading h1 { margin: 0; }
-.heading p, .card p, .banner p { color: #607168; line-height: 1.65; margin: 0; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1.25rem; align-items: start; }
-.card { display: flex; flex-direction: column; padding: 1.25rem; border-radius: 1rem; background: #f0f5f1; color: #142d22; transition: background 150ms ease, transform 150ms ease; }
+.areaSection { margin-top: 1.25rem; }
+.card p, .banner p { color: #607168; line-height: 1.65; margin: 0; }
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; align-items: stretch; }
+.card { display: flex; min-width: 0; flex-direction: column; height: 100%; padding: 1rem; border-radius: var(--dashboard-radius); background: var(--dashboard-surface); color: var(--dashboard-ink); transition: background 150ms ease, transform 150ms ease; }
 .card:hover { background: #e4efe7; color: #142d22; transform: translateY(-2px); }
 .card:focus-visible { outline: 3px solid #087462; outline-offset: 4px; }
 .card h2, .banner h2 { font-size: 1.5rem; margin: 0 0 .65rem; }
-.card > span { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; color: #087462; font-weight: 700; }
+.card > span { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: auto; padding-top: 1rem; color: #087462; font-weight: 700; }
 .card > span > span {
   display: inline-flex;
   align-items: center;
@@ -27,10 +25,9 @@
   color: #fff;
   transform: rotate(45deg);
 }
-.banner { display: flex; align-items: center; gap: 2rem; justify-content: space-between; margin-top: 2rem; padding: 2rem; border-radius: 1rem; background: #f7f1e5; }
+.banner { display: flex; align-items: center; gap: 2rem; justify-content: space-between; margin-top: 0; padding: 2rem; border-radius: var(--dashboard-radius); background: #f7f1e5; }
 .banner > div { max-width: 42rem; }
 .banner button { flex-shrink: 0; }
-.empty { padding: 2rem; background: #f0f5f1; border-radius: 1rem; }
 .form { display: grid; gap: 1.5rem; max-width: 34rem; padding: .5rem; }
 .form p { margin: 0; }
 .form fieldset { display: grid; gap: .9rem; border: 0; margin: 0; padding: 0; }
@@ -40,7 +37,8 @@
 @media (max-width: 640px) { .banner { align-items: flex-start; flex-direction: column; padding: 1.5rem; gap: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } .card > span > span { transition: none; } }
 
-.card p { flex: 0 1 auto; }
+.card p { flex: 1 1 auto; }
+@media (max-width: 1199px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .views { display: flex; align-items: center; gap: .75rem; min-width: 0; margin-bottom: 1.5rem; }
 .viewTabs { @include section-tabs.navigation; flex: 1; }
 .backLink {
@@ -66,17 +64,8 @@
     padding: 0.45rem 0.45rem 2rem;
   }
 
-  .heading {
-    margin-bottom: 1rem;
-  }
-
-  .heading h1 {
-    font-size: clamp(1.9rem, 11vw, 2.55rem);
-    line-height: 0.95;
-    margin: 0;
-  }
-
   .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
   }
 
@@ -91,13 +80,8 @@
     margin-bottom: 0.4rem;
   }
 
-  .card > span {
-    margin-top: 0.9rem;
-  }
-
   .banner {
     border-radius: 0.55rem;
-    margin-top: 0.75rem;
     padding: 1rem;
   }
 
@@ -106,3 +90,4 @@
     margin: 0 0 0.9rem;
   }
 }
+@media (max-width: 640px) { .grid { grid-template-columns: minmax(0, 1fr); } }

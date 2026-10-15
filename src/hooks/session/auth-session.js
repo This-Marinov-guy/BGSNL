@@ -9,8 +9,12 @@ export const useAuthSession = () => {
   const { session } = useSelector(selectUser);
   const dispatch = useDispatch();
   const currentSession = useRef(session);
+  const activityTracker = useRef(null);
   const sid = session?.sid, sessionVersion = session?.sessionVersion;
-  useEffect(() => { currentSession.current = session; }, [session]);
+  useEffect(() => {
+    currentSession.current = session;
+    activityTracker.current?.updateSession(session);
+  }, [session]);
   useEffect(() => {
     const synchronize = (event) => {
       if (event.key === SESSION_CHANGED_EVENT || event.key === null) {
@@ -30,6 +34,7 @@ export const useAuthSession = () => {
         window.location.replace("/login");
       },
     });
-    return watcher.stop;
+    activityTracker.current = watcher;
+    return () => { activityTracker.current = null; watcher.stop(); };
   }, [sid, sessionVersion, dispatch]);
 };

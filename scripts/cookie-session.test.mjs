@@ -19,7 +19,7 @@ const refreshToken = `${sid}.0.fixture-signature`;
 const token = (extra = {}) => {
   const timestamp = Math.floor(Date.now() / 1000);
   return `fixture.${Buffer.from(JSON.stringify({ userId: "member_fixture", roles: ["member"], status: "active", version: 1, sessionVersion: 0,
-    token_use: "access", sid, auth_time: timestamp, iat: timestamp, exp: timestamp + 900, session_exp: (extra.auth_time ?? timestamp) + 30 * 86400,
+    token_use: "access", sid, session_policy: "idle-14d", auth_time: timestamp, iat: timestamp, exp: timestamp + 900, session_exp: (extra.auth_time ?? timestamp) + 14 * 86400,
     iss: "bgsnl-api", aud: "bgsnl-website", ...extra,
     ...(extra.accessExp ? { exp: extra.accessExp, session_exp: extra.exp } : {}) })).toString("base64url")}.signature`;
 };
@@ -205,6 +205,30 @@ test("anonymous public submissions and guest support use CSRF without requiring 
   assert.equal(h.calls[0].options.headers.get("x-support-token"), "guest-only-secret");
   assert.equal(h.calls[0].options.headers.get("authorization"), null);
 });
+test("feedback links load and submit without a login while mutations retain CSRF protection", async () => {
+  const ticketId = "b".repeat(24);
+  const h = await harness();
+  assert.equal((await h.request(`event/feedback/${ticketId}`)).status, 200);
+  assert.equal(h.calls.at(-1).options.headers.get("authorization"), null);
+  assert.equal((await h.mutate(`event/feedback/${ticketId}`, {
+    headers: { "content-type": "application/json" }, body: JSON.stringify({ answers: {} }),
+  })).status, 200);
+  assert.equal(h.calls.at(-1).options.headers.get("authorization"), null);
+  assert.equal(h.calls.at(-1).url.pathname, `/api/v1/event/feedback/${ticketId}`);
+});
+test("feedback links ignore expired login cookies and never renew or forward them", async () => {
+  const ticketId = "b".repeat(24);
+  const timestamp = Math.floor(Date.now() / 1000);
+  const expired = token({ auth_time: timestamp - 1000, iat: timestamp - 1000, exp: timestamp - 100 });
+  const h = await harness({ credential: expired, refresh: refreshToken });
+  assert.equal((await h.request(`event/feedback/${ticketId}`)).status, 200);
+  assert.equal((await h.mutate(`event/feedback/${ticketId}`, { headers: { "content-type": "application/json" }, body: "{}" })).status, 200);
+  assert.equal(h.calls.length, 2);
+  for (const call of h.calls) {
+    assert.equal(call.url.pathname, `/api/v1/event/feedback/${ticketId}`);
+    assert.equal(call.options.headers.get("authorization"), null);
+  }
+});
 test("webhooks and service-only paths are absent from the browser proxy", async () => {
   const h = await harness();
   for (const path of ["payment/webhook", "payment/subscription/webhook", "google-scripts/update", "mobile/login", "payment/result",
@@ -231,6 +255,21 @@ test("account restoration returns the verified profile with a single upstream re
   assert.deepEqual(data.user, account);
   assert.equal(data.celebrate, true);
   assert.equal(data.token, undefined);
+});
+test("restoration renews a legacy cookie into the 14-day activity policy", async () => {
+  const timestamp = Math.floor(Date.now() / 1000), auth = timestamp - 20 * 86400;
+  const h = await harness({ credential: token({ auth_time: auth, session_exp: auth + 30 * 86400,
+    session_policy: undefined }), refresh: refreshToken, upstream: async (url) => {
+    if (url.pathname.endsWith("/security/session/refresh")) return Response.json({
+      token: token({ auth_time: auth, session_exp: timestamp + 14 * 86400 }), refreshToken,
+    });
+    return Response.json({ status: true });
+  } });
+  const response = await h.request("session/current");
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).session.exp, timestamp + 14 * 86400);
+  assert.equal(h.calls.length, 2);
+  assert.equal(response.cookies.get(names.refresh).expires.getTime(), (timestamp + 14 * 86400) * 1000);
 });
 test("expired cookies are not forwarded or restored and confirmed revocation clears the login", async () => {
   const timestamp = Math.floor(Date.now() / 1000) - 30 * 86400 - 1;
@@ -373,6 +412,9 @@ test("Redux retains only public session metadata and restores roles without a st
   assert.equal(state.token, undefined); assert.deepEqual(state.roles, ["member"]); assert.equal(state.status, "active");
   assert.equal(mod.selectIsAuth({ user: state }), true);
   assert.equal(mod.default(state, mod.refreshSession({ ...session, exp: session.exp + 1 })).session.exp, session.exp + 1);
+  const shortened = mod.default(state, mod.refreshSession({ ...session, accessExp: session.accessExp + 900, exp: session.exp - 16 * 86400 }));
+  assert.equal(shortened.session.exp, session.exp - 16 * 86400);
+  assert.equal(mod.default(shortened, mod.refreshSession(session)).session.exp, shortened.session.exp);
   assert.equal(mod.default(state, mod.refreshSession({ ...session, sid: "other", exp: session.exp + 1 })).session.exp, session.exp);
   assert.equal(mod.selectIsAuth({ user: mod.default(state, mod.clearSession()) }), false);
   const previous = mod.default(state, mod.updateAccount({ hasBenefits: true, memberDiscount: true }));
@@ -480,7 +522,7 @@ test("arbitrary auth/validation failures and outages never replay a write", asyn
     assert.equal(h.calls.length, 1); assert.equal(h.jar.has(names.refresh), status === 503);
   }
 });
-test("activity requires CSRF, preserves original login age, and can extend the day-30 deadline", async () => {
+test("activity requires CSRF, preserves original login age, and can extend a legacy deadline", async () => {
   const timestamp = Math.floor(Date.now() / 1000), auth = timestamp - 30 * 86400 + 60;
   const h = await harness({ credential: token({ auth_time: auth, exp: timestamp + 60, session_exp: timestamp + 60 }), refresh: refreshToken,
     upstream: async (url) => {

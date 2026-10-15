@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { markSupportSeen, readSupportSeen, supportTicketUnread, SUPPORT_SEEN_CHANGED } from "./support-unread.mjs";
+import { markSupportSeen, readSupportSeen, supportTicketUnread, supportUnreadMessageCount, SUPPORT_SEEN_CHANGED } from "./support-unread.mjs";
 
 test("unread dots distinguish incoming replies from own messages and new staff tickets", () => {
   assert.equal(supportTicketUnread({ id: "a", revision: 0, lastAuthor: "requester" }, {}), false);
@@ -8,6 +8,16 @@ test("unread dots distinguish incoming replies from own messages and new staff t
   assert.equal(supportTicketUnread({ id: "a", revision: 2, lastAuthor: "staff" }, { a: 1 }), true);
   assert.equal(supportTicketUnread({ id: "a", revision: 2, lastAuthor: "staff" }, { a: 2 }), false);
   assert.equal(supportTicketUnread({ id: "a", revision: 2, lastAuthor: "staff" }, {}, true), false);
+});
+
+test("badge counts incoming messages after the viewed revision across tickets", () => {
+  const activity = [
+    { id: "first", requesterMessageRevisions: [0, 1, 3, 5] },
+    { id: "second", requesterMessageRevisions: [0, 2] },
+  ];
+  assert.equal(supportUnreadMessageCount(activity, {}), 6);
+  assert.equal(supportUnreadMessageCount(activity, { first: 2, second: 2 }), 2);
+  assert.equal(supportUnreadMessageCount(activity, { first: 5, second: 2 }), 0);
 });
 
 test("read state persists per viewer, never regresses, and notifies other mounted views", t => {

@@ -1,8 +1,7 @@
 import { eventModalData } from "@/util/functions/event-modal-data.mjs";
-import EventPanelEditButton from "@/elements/actions/form/EventPanelEditButton";
+import EventDetailsContent from "@/elements/actions/form/EventDetailsContent";
 import EventCampaignModal from "./EventCampaignModal";
-import { EventUpsellDetails, EventAddOnDetails, EventQuestionDetails, EventAdvertisedDetails } from "@/elements/actions/form/EventConfigurationPanels";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
 import PropTypes from "prop-types";
 import {
@@ -13,12 +12,13 @@ import { Dialog } from "@/compat/primereact";
 import {
   FiCheck,
   FiMail,
+  IconlyArchive,
   IconlyDelete,
   IconlyCopy,
   IconlyEdit,
-  IconlyExternalLink,
   IconlyLink,
   IconlyImageOff,
+  IconlyDocument,
   IconlyTicket,
   FiUsers,
 } from "@/elements/ui/icons/IconlyIcons";
@@ -37,8 +37,9 @@ import { showNotification } from "../../../../redux/notification";
 import { selectUser } from "../../../../redux/user";
 import {
   EVENT_MANAGEMENT_ACCESS,
+  ACCESS_3,
   ACCESS_4,
-  EVENT_DELETED,
+  EVENT_ARCHIVED,
 } from "../../../../util/defines/common";
 import { checkAuthorization } from "../../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
@@ -49,6 +50,8 @@ import {
 import ConfirmCenterModal from "../../../ui/modals/ConfirmCenterModal";
 import GenerateTicketsModal from "./GenerateTicketsModal";
 import GuestListModal from "./GuestListModal";
+import EventFeedbackModal from "./EventFeedbackModal";
+import WarningBanner from "@/elements/ui/banners/WarningBanner";
 
 import { eventSalesClosed, eventStatusLabel } from "../../../../util/functions/event-status.mjs";
 
@@ -57,46 +60,6 @@ const EMPTY_VALUE = "Not set";
 const formatOptionalDate = (value) =>
   value ? moment(value).format(MOMENT_DATE_TIME) : EMPTY_VALUE;
 
-const formatPrice = (value) => {
-  if (value == null || value === "") return EMPTY_VALUE;
-
-  const amount = Number(value);
-
-  return Number.isFinite(amount)
-    ? `€${amount.toLocaleString("en-NL", { maximumFractionDigits: 2 })}`
-    : EMPTY_VALUE;
-};
-
-const EventFact = ({ label, value, highlight = false }) => (
-  <div className="event-details-modal__fact">
-    <dt>{label}</dt>
-    <dd className={highlight ? "is-highlighted" : undefined}>{value}</dd>
-  </div>
-);
-
-EventFact.propTypes = {
-  highlight: PropTypes.bool,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.node,
-};
-
-const DetailSection = ({ title, description, children, className = "", onEdit }) => (
-  <section className={`event-details-modal__section ${className}`.trim()}>
-    <header className="event-details-modal__section-heading">
-      <div><h3>{title}</h3>{description ? <p>{description}</p> : null}</div>
-      <EventPanelEditButton title={title} onEdit={onEdit} />
-    </header>
-    {children}
-  </section>
-);
-
-DetailSection.propTypes = {
-  onEdit: PropTypes.func,
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  description: PropTypes.string,
-  title: PropTypes.string.isRequired,
-};
 
 const EventImage = ({ label, src, alt, onPreview }) => src ? (
   <ImageTooltip label={label}>
@@ -119,20 +82,6 @@ EventImage.propTypes = {
   src: PropTypes.string,
 };
 
-const PriceOption = ({ label, price, including }) => (
-  <article className="event-details-modal__price-option">
-    <span>{label}</span>
-    <strong>{price}</strong>
-    <p>{including || "Standard entry"}</p>
-  </article>
-);
-
-PriceOption.propTypes = {
-  including: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
-};
-
 const EventModal = ({
   event: storedEvent,
   extended,
@@ -148,7 +97,17 @@ const EventModal = ({
   show,
 }) => {
   const event = useMemo(() => eventModalData(storedEvent), [storedEvent]);
-  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
+  const [confirmArchiveVisible, setConfirmArchiveVisible] = useState(false);
+  const [confirmCancelVisible, setConfirmCancelVisible] = useState(false);
+  const [cancelPreview, setCancelPreview] = useState(null);
+  const [cancelPreviewLoading, setCancelPreviewLoading] = useState(false);
+  const [cancelPreviewError, setCancelPreviewError] = useState(false);
+  const [confirmation, setConfirmation] = useState(null);
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [cancelError, setCancelError] = useState("");
+  const [requestSubmitting, setRequestSubmitting] = useState(false);
+  const [cancelSubmitting, setCancelSubmitting] = useState(false);
+  const confirmationInputRef = useRef(null);
   const [ticketGeneratorVisible, setTicketGeneratorVisible] = useState(false);
   const [previewMedia, setPreviewMedia] = useState(null);
   const [savingSales, setSavingSales] = useState(false);
@@ -158,6 +117,11 @@ const EventModal = ({
   const dispatch = useDispatch();
   const guestListVisible = modalView === "guest-list";
   const [emailsVisible, setEmailsVisible] = useState(false);
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
+
+  useEffect(() => {
+    if (confirmCancelVisible && confirmation) confirmationInputRef.current?.focus();
+  }, [confirmCancelVisible, confirmation]);
 
   const isDraft = event.status === "draft";
   const eventTitle = event.title || "Untitled draft";
@@ -168,6 +132,19 @@ const EventModal = ({
   const statusLabel = eventStatusLabel(event);
   const salesClosed = statusLabel === "Past" || eventSalesClosed(event);
   const canToggleSales = !isDraft && !["archived", "cancelled"].includes(event.status) && checkAuthorization(user.session, ACCESS_4);
+  const canCancel = !isDraft && !["archived", "cancelled", "canceled"].includes(event.status) && checkAuthorization(user.session, ACCESS_3);
+  const cancelCounts = cancelPreview?.counts;
+  const cancellationNeedsEmail = cancelPreview?.confirmationRequired !== false;
+  const ticketsToRefund = cancelCounts?.paid ?? 0;
+  const ticketTotal = cancelCounts?.total ?? (ticketsToRefund + (cancelCounts?.free ?? 0));
+  const allTicketsFree = event.isFree === true && ticketsToRefund === 0;
+  const cancellationGroups = [
+    { label: "Guest tickets", total: cancelCounts?.guestTotal ?? cancelCounts?.guest ?? 0,
+      paid: cancelCounts?.guest ?? 0, free: cancelCounts?.guestFree ?? 0, isFree: event.isFree === true },
+    { label: "Member tickets", total: cancelCounts?.memberTotal ?? cancelCounts?.member ?? 0,
+      paid: cancelCounts?.member ?? 0, free: cancelCounts?.memberFree ?? 0,
+      isFree: event.isFree === true || event.isMemberFree === true },
+  ];
   const statusModifier = statusLabel
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
@@ -184,16 +161,16 @@ const EventModal = ({
 
   const closeModal = () => setShow(false);
 
-  const onDelete = async () => {
+  const onArchive = async () => {
     const responseData = await sendRequest(
       `future-event/delete-event/${event.id}`,
       "DELETE"
     );
 
     if (responseData.status) {
-      dispatch(showNotification(EVENT_DELETED));
+      dispatch(showNotification(EVENT_ARCHIVED));
       loadData();
-      setConfirmDeleteVisible(false);
+      setConfirmArchiveVisible(false);
       closeModal();
       dispatch(
         removeEventFromAll({
@@ -202,6 +179,71 @@ const EventModal = ({
         })
       );
     }
+  };
+
+  const loadCancellationPreview = async () => {
+    setCancelPreviewLoading(true);
+    setCancelPreviewError(false);
+    const response = await sendRequest(`future-event/cancel-event/${event.id}/preview`, "GET", null, {}, false, false);
+    if (response?.status) {
+      setCancelPreview(response);
+      setConfirmation(response.confirmation || null);
+    }
+    else setCancelPreviewError(true);
+    setCancelPreviewLoading(false);
+  };
+
+  const openCancellation = () => {
+    setCancelPreview(null);
+    setConfirmation(null);
+    setConfirmationCode("");
+    setCancelError("");
+    setConfirmCancelVisible(true);
+    void loadCancellationPreview();
+  };
+
+  const finishCancellation = () => {
+    dispatch(showNotification({ severity: "success", summary: "Event cancelled",
+      detail: ticketsToRefund > 0
+        ? "Full refunds and cancellation emails are being processed."
+        : ticketTotal > 0 ? "Cancellation emails are being processed." : "The event has been cancelled." }));
+    setConfirmCancelVisible(false);
+    closeModal();
+    dispatch(removeEventFromAll({ region: event.region, eventId: event.id }));
+    loadData();
+  };
+
+  const requestCancellation = async () => {
+    if (!cancelPreview || requestSubmitting) return;
+    setRequestSubmitting(true);
+    setCancelError("");
+    try {
+      const response = await sendRequest(`future-event/cancel-event/${event.id}`, "POST", {}, {}, false, false);
+      if (response?.status && response.confirmationRequired === false && response.cancellationQueued) {
+        finishCancellation();
+      } else if (response?.status && response.confirmation) {
+        setConfirmation(response.confirmation);
+        setConfirmationCode("");
+        if (response.confirmation.sent) dispatch(showNotification({ severity: "success", summary: "Confirmation email sent",
+          detail: `Check ${response.confirmation.sentTo} for the 8-digit code.` }));
+        else dispatch(showNotification({ severity: "info", summary: "Code already sent",
+          detail: `Check ${response.confirmation.sentTo}. You can resend after one minute.` }));
+      } else setCancelError(cancellationNeedsEmail
+        ? "We could not send a new confirmation email. The event is still active. Check the regional contact address or try again after one minute."
+        : "We could not verify the cancellation result. Refresh the event list before trying again.");
+    } finally { setRequestSubmitting(false); }
+  };
+
+  const onCancelEvent = async () => {
+    if (!cancelPreview || !confirmation || !/^\d{8}$/.test(confirmationCode) || cancelSubmitting) return;
+    setCancelSubmitting(true);
+    setCancelError("");
+    try {
+      const response = await sendRequest(`future-event/cancel-event/${event.id}/confirm`, "POST", { code: confirmationCode }, {}, false, false);
+      if (response?.status) {
+        finishCancellation();
+      } else setCancelError("The code was not accepted. Check it, or request a new email if it has expired.");
+    } finally { setCancelSubmitting(false); }
   };
 
   const toggleSales = async () => {
@@ -276,13 +318,76 @@ const EventModal = ({
   return (
     <>
       {emailsVisible && <EventCampaignModal event={storedEvent} open onClose={() => setEmailsVisible(false)} />}
+      {feedbackVisible && <EventFeedbackModal event={storedEvent} onClose={() => setFeedbackVisible(false)} />}
       <ConfirmCenterModal
-        text="Deleting this event cannot be undone. Are you sure you want to continue?"
-        onConfirm={onDelete}
-        visible={confirmDeleteVisible}
-        setVisible={setConfirmDeleteVisible}
+        title="Archive draft?"
+        text="This draft will be removed from the active event list and cannot be restored."
+        confirmLabel="Archive event"
+        cancelLabel="Keep draft"
+        destructive
+        onConfirm={onArchive}
+        visible={confirmArchiveVisible}
+        setVisible={setConfirmArchiveVisible}
         loading={loading}
       />
+      <Dialog
+        className="event-cancellation-modal"
+        header="Cancel event"
+        maximizable={false}
+        visible={confirmCancelVisible}
+        onHide={() => { if (!cancelSubmitting && !requestSubmitting) setConfirmCancelVisible(false); }}
+        footer={<div className="event-cancellation-modal__actions">
+          <button type="button" className="event-cancellation-modal__back" onClick={() => setConfirmCancelVisible(false)} disabled={cancelSubmitting || requestSubmitting}>Keep event</button>
+          <button type="button" className={`event-cancellation-modal__confirm${cancellationNeedsEmail && !confirmation ? " event-cancellation-modal__confirm--request" : ""}`}
+            onClick={cancellationNeedsEmail && confirmation ? onCancelEvent : requestCancellation}
+            disabled={!cancelPreview || cancelPreviewLoading || requestSubmitting || cancelSubmitting || (cancellationNeedsEmail && confirmation && !/^\d{8}$/.test(confirmationCode))}
+            aria-busy={requestSubmitting || cancelSubmitting}>
+            {requestSubmitting ? cancellationNeedsEmail ? "Sending email…" : "Cancelling…" : cancelSubmitting ? "Cancelling…" :
+              cancellationNeedsEmail && !confirmation ? "Send confirmation email" : ticketsToRefund > 0 ? "Cancel event and refund tickets" : "Cancel event"}
+          </button>
+        </div>}
+      >
+        <p><strong>{eventTitle}</strong> will be archived and ticket sales will close {cancelPreview
+          ? cancellationNeedsEmail ? "after the regional email code is confirmed" : "when you cancel it"
+          : "after you confirm cancellation"}. Ticket holders will then receive a cancellation email.</p>
+        {cancelPreviewLoading ? <p role="status">Loading ticket counts…</p> : null}
+        {cancelPreviewError ? <div role="alert"><p>Could not load the ticket counts. Try again before confirming.</p>
+          <button type="button" onClick={loadCancellationPreview}>Retry</button></div> : null}
+        {cancelPreview ? <>
+          {cancellationNeedsEmail && <WarningBanner>
+            <p>{confirmation ? "A confirmation email was sent to" : "We will send a confirmation email to"} <strong>{confirmation?.sentTo || cancelPreview.confirmationEmail || "the regional contact"}</strong> to verify this request.</p>
+          </WarningBanner>}
+          <dl className={`event-cancellation-modal__counts${allTicketsFree ? " event-cancellation-modal__counts--single" : ""}`}>
+            {allTicketsFree ? <div><dt>Tickets</dt><dd><span>{ticketTotal}</span><span className="event-cancellation-modal__free-badge">Free</span></dd></div>
+              : cancellationGroups.map(group => <div key={group.label}>
+                <dt>{group.label}</dt>
+                <dd>
+                  <span>{group.total}</span>
+                  {group.isFree && group.paid === 0 ? <span className="event-cancellation-modal__free-badge">Free</span> : null}
+                  {group.paid > 0 ? <span className="event-cancellation-modal__count-detail">{group.paid} to refund</span> : null}
+                  {group.free > 0 && (!group.isFree || group.paid > 0) ?
+                    <span className="event-cancellation-modal__count-detail">{group.free} free</span> : null}
+                </dd>
+              </div>)}
+          </dl>
+          {allTicketsFree ? null : ticketsToRefund > 0 ? <p>Paid tickets will be refunded in full.</p> :
+            ticketTotal > 0 ? <p>Free tickets will be voided. No refund is due.</p> :
+              <p>No tickets have been issued.</p>}
+          {confirmation ? <div className="event-cancellation-modal__confirmation">
+            <p role="status">Enter the 8-digit code from that email. It expires after 10 minutes.</p>
+            <label htmlFor="event-cancellation-code">Confirmation code</label>
+            <input id="event-cancellation-code" ref={confirmationInputRef} type="text" inputMode="numeric" autoComplete="one-time-code"
+              pattern="[0-9]{8}" maxLength={8} value={confirmationCode}
+              onChange={e => { setConfirmationCode(e.target.value.replace(/\D/g, "").slice(0, 8)); setCancelError(""); }}
+              onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); void onCancelEvent(); } }}
+              aria-describedby="event-cancellation-code-hint" />
+            <p id="event-cancellation-code-hint">Enter the code from the email to enable cancellation.</p>
+            <button type="button" className="event-cancellation-modal__resend" disabled={requestSubmitting || cancelSubmitting}
+              onClick={requestCancellation}>Resend code</button>
+          </div> : null}
+          {cancelError ? <p className="event-cancellation-modal__error" role="alert">{cancelError}</p> : null}
+        </> : null}
+      </Dialog>
       <GenerateTicketsModal
         visible={ticketGeneratorVisible}
         onHide={() => setTicketGeneratorVisible(false)}
@@ -300,7 +405,7 @@ const EventModal = ({
         visible={guestListVisible}
       />
       <Dialog
-        suspended={!!previewMedia || guestListVisible || emailsVisible}
+        suspended={!!previewMedia || guestListVisible || emailsVisible || feedbackVisible || confirmCancelVisible || ticketGeneratorVisible}
         className="event-details-modal"
         contentClassName="event-details-modal__body"
         dismissableMask
@@ -310,13 +415,17 @@ const EventModal = ({
         onHide={closeModal}
         visible={show}
       >
-        <div className="event-details-modal__content">
-          <div
-            aria-label="Event actions"
-            className="event-details-modal__actions"
-            role="group"
-          >
+        <EventDetailsContent
+          event={event}
+          statusLabel={statusLabel}
+          statusModifier={statusModifier}
+          dateLabel={eventDate}
+          regionLabel={eventRegion}
+          salesStatus={isDraft ? "Not open" : eventSalesClosed(event) ? "Closed" : "Open"}
+          onEdit={editEvent}
+          actions={<>
             {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setEmailsVisible(true)}><FiMail aria-hidden="true" /><span>Emails</span></button>}
+            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setFeedbackVisible(true)}><IconlyDocument aria-hidden="true" /><span>Feedback</span></button>}
             <button
               className="event-details-modal__action"
               onClick={() => editEvent()}
@@ -376,219 +485,40 @@ const EventModal = ({
                 <span>{savingSales ? "Saving…" : `Sales ${salesClosed ? "closed" : "open"}`}</span>
               </button>
             )}
-            <button
+            {isDraft ? <button
               className="event-details-modal__action event-details-modal__action--danger"
-              onClick={() => setConfirmDeleteVisible(true)}
+              onClick={() => setConfirmArchiveVisible(true)}
               type="button"
-              title="Delete event"
+              title="Archive event"
             >
-              <IconlyDelete aria-hidden="true" />
-              <span>Delete</span>
-            </button>
-          </div>
-
-          <section className="event-details-modal__summary">
-            <div className="event-details-modal__summary-media">
-              <div className="event-details-modal__panel-actions"><EventPanelEditButton title="Event images" onEdit={() => editEvent("media")} /></div>
-            <div className="event-details-modal__media-overview">
-              <div className="event-details-modal__poster">
-                {event.poster ? (
-                  <ImageTooltip label="Poster">
-                  <ImagePreviewTrigger
-                    aria-label="Open poster media preview"
-                    className="event-details-modal__poster-preview"
-                    imageClassName="event-details-modal__poster-image"
-                    onClick={() =>
-                      setPreviewMedia({
-                        alt: `${eventTitle} poster`,
-                        fileName: `${eventTitle}-poster`,
-                        src: event.poster,
-                      })
-                    }
-                    src={event.poster}
-                    alt={`${eventTitle} poster`}
-                    type="button"
-                  />
-                  </ImageTooltip>
-                ) : (
-                  <div className="event-details-modal__poster-empty" role="img" aria-label="No poster available">
-                    <IconlyImageOff aria-hidden="true" />
-                  </div>
-                )}
-              </div>
-              <div className="event-details-modal__media-section" aria-label="Event media">
-                <div className="event-details-modal__media-grid">
-                  <EventImage
-                    alt={`${eventTitle} ticket`}
-                    label="Ticket"
-                    onPreview={() =>
-                      setPreviewMedia({
-                        alt: `${eventTitle} ticket`,
-                        fileName: `${eventTitle}-ticket`,
-                        src: event.ticketImg,
-                      })
-                    }
-                    src={event.ticketImg}
-                  />
-                  {event.images?.map((image, index) => (
-                    <EventImage
-                      alt={`${eventTitle} additional image ${index + 1}`}
-                      key={`${image}-${index}`}
-                      label={`Additional ${index + 1}`}
-                      onPreview={() =>
-                        setPreviewMedia({
-                          alt: `${eventTitle} additional image ${index + 1}`,
-                          fileName: `${eventTitle}-image-${index + 1}`,
-                          src: image,
-                        })
-                      }
-                      src={image}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-            </div>
-            <div>
-            <div className="event-details-modal__panel-actions"><EventPanelEditButton title="Event summary" onEdit={() => editEvent("details")} /></div>
-            <dl className="event-details-modal__summary-facts">
-              <EventFact
-                label="Status"
-                value={<span className={`event-card__status event-card__status--${statusModifier}`}>{statusLabel}</span>}
-              />
-              <EventFact label="Date and time" value={eventDate} />
-              <EventFact label="Location" value={event.location || EMPTY_VALUE} />
-              <EventFact label="Region" value={eventRegion} />
-              <EventFact
-                label="Capacity"
-                value={event.ticketLimit ?? EMPTY_VALUE}
-              />
-              <EventFact
-                label="Visibility"
-                value={event.hidden ? "Hidden" : "Visible"}
-              />
-            </dl>
-            </div>
-          </section>
-
-          <div className="event-details-modal__layout">
-            <div className="event-details-modal__main-column">
-              <DetailSection title="Event details" onEdit={() => editEvent("details")}>
-                <dl className="event-details-modal__facts-grid">
-                  <EventFact
-                    label="Subtitle"
-                    value={event.description || "None"}
-                  />
-                  <EventFact
-                    label="Audience"
-                    value={event.memberOnly ? "Members only" : "Everyone"}
-                  />
-                  <EventFact
-                    label="Additional form fields"
-                    value={event.extraInputsForm?.length > 0 ? `${event.extraInputsForm.length} configured` : "None"}
-                  />
-                  <EventFact label="Recommended events" value={event.subEvent?.links?.filter(link => link.name && link.href).length || "None"} />
-                  {event.subEventDescription ? (
-                    <EventFact
-                      label="Sub-event"
-                      value={event.subEventDescription}
-                    />
-                  ) : null}
-                </dl>
-              </DetailSection>
-
-              <DetailSection title="Description" onEdit={() => editEvent("description")}>
-                <p className="event-details-modal__description">
-                  {event.text || "No description provided."}
-                </p>
-              </DetailSection>
-              <EventUpsellDetails values={event} onEdit={() => editEvent("upsell")} />
-              <EventAddOnDetails addOns={event.addOns} onEdit={() => editEvent("addons")} />
-              <EventAdvertisedDetails links={event.subEvent?.links ?? []} onEdit={() => editEvent("advertised")} renderImage={link => (
-                <figure className="event-review-modal__advertised-poster">
-                  <ImagePreviewTrigger
-                    className="event-review-modal__media-trigger"
-                    imageClassName="event-review-modal__advertised-image"
-                    src={link.poster}
-                    alt={`${link.name} poster`}
-                    aria-label={`Preview ${link.name} poster`}
-                    onClick={() => setPreviewMedia({ src: link.poster, alt: `${link.name} poster`, fileName: `${link.name}-poster` })}
-                  />
-                </figure>
-              )} />
-            </div>
-
-            <aside className="event-details-modal__side-column">
-              <DetailSection title="Ticket settings" onEdit={() => editEvent("tickets")}>
-                <dl className="event-details-modal__facts-grid event-details-modal__facts-grid--single">
-                  <EventFact
-                    label="Sales close"
-                    value={formatOptionalDate(event.ticketTimer)}
-                  />
-                  <EventFact
-                    label="Sales status"
-                    value={isDraft ? "Not open" : eventSalesClosed(event) ? "Closed" : "Open"}
-                  />
-                  <EventFact label="Ticket type" value={event.isFree ? "Free for everyone" : event.isTicketLink ? "External ticket platform" : event.isMemberFree ? "Free for members" : "Paid tickets"} />
-                  <EventFact label="Guest name" value={String(event.ticketName) === "true" ? "Shown on ticket" : "Hidden"} />
-                  <EventFact label="QR code" value={String(event.ticketQR) === "true" ? "Shown on ticket" : "Hidden"} />
-                </dl>
-              </DetailSection>
-
-              <DetailSection title="Pricing" onEdit={() => editEvent("pricing")}>
-                {event.isFree ? (
-                  <span className="event-details-modal__free-label">Free</span>
-                ) : event.isTicketLink ? (
-                  <div className="event-details-modal__notice">
-                    <IconlyExternalLink aria-hidden="true" />
-                    <div>
-                      <strong>External ticketing</strong>
-                      {event.ticketLink ? <a href={event.ticketLink} rel="noreferrer" target="_blank">Open ticket page</a> : <span>Ticket link not set</span>}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="event-details-modal__pricing-list">
-                    {event.product?.guest ? (
-                      <PriceOption
-                        including={event.entryIncluding}
-                        label="Guest"
-                        price={formatPrice(event.product.guest.price)}
-                      />
-                    ) : null}
-                    {event.product?.member || event.isMemberFree ? (
-                      <PriceOption
-                        including={event.memberIncluding}
-                        label="Member"
-                        price={
-                          event.isMemberFree
-                            ? "Free"
-                            : formatPrice(event.product?.member?.price)
-                        }
-                      />
-                    ) : null}
-                    {event.product?.activeMember || event.product?.member || event.isMemberFree ? (
-                      <PriceOption
-                        label="Active member"
-                        price={event.isMemberFree ? "Free" : formatPrice(event.product?.activeMember?.price === "" ? event.product?.member?.price : event.product?.activeMember?.price ?? event.product?.member?.price)}
-                      />
-                    ) : null}
-                    {!event.product?.guest &&
-                    !event.product?.member &&
-                    !event.product?.activeMember &&
-                    !event.isMemberFree ? (
-                      <p className="event-details-modal__empty-copy">
-                        No pricing configured.
-                      </p>
-                    ) : null}
-                  </div>
-                )}
-              </DetailSection>
-              <EventQuestionDetails questions={event.extraInputsForm ?? []} onEdit={() => editEvent("questions")} />
-            </aside>
-          </div>
-
-
-        </div>
+              <IconlyArchive aria-hidden="true" />
+              <span>Archive event</span>
+            </button> : null}
+            {canCancel ? <button
+              className="event-details-modal__action event-details-modal__action--danger"
+              onClick={openCancellation}
+              type="button"
+              title="Cancel event"
+            ><IconlyDelete aria-hidden="true" /><span>Cancel event</span></button> : null}
+          </>}
+          poster={event.poster ? <ImageTooltip label="Poster"><ImagePreviewTrigger
+            aria-label="Open poster media preview" className="event-details-modal__poster-preview"
+            imageClassName="event-details-modal__poster-image" src={event.poster} alt={`${eventTitle} poster`} type="button"
+            onClick={() => setPreviewMedia({ alt: `${eventTitle} poster`, fileName: `${eventTitle}-poster`, src: event.poster })}
+          /></ImageTooltip> : <div className="event-details-modal__poster-empty" role="img" aria-label="No poster available"><IconlyImageOff aria-hidden="true" /></div>}
+          media={<>
+            <EventImage alt={`${eventTitle} ticket`} label="Ticket" src={event.ticketImg}
+              onPreview={() => setPreviewMedia({ alt: `${eventTitle} ticket`, fileName: `${eventTitle}-ticket`, src: event.ticketImg })} />
+            {event.images?.map((image, index) => <EventImage key={`${image}-${index}`}
+              alt={`${eventTitle} additional image ${index + 1}`} label={`Additional ${index + 1}`} src={image}
+              onPreview={() => setPreviewMedia({ alt: `${eventTitle} additional image ${index + 1}`, fileName: `${eventTitle}-image-${index + 1}`, src: image })} />)}
+          </>}
+          renderAdvertisedImage={link => <figure className="event-review-modal__advertised-poster">
+            <ImagePreviewTrigger className="event-review-modal__media-trigger" imageClassName="event-review-modal__advertised-image"
+              src={link.poster} alt={`${link.name} poster`} aria-label={`Preview ${link.name} poster`}
+              onClick={() => setPreviewMedia({ src: link.poster, alt: `${link.name} poster`, fileName: `${link.name}-poster` })} />
+          </figure>}
+        />
       </Dialog>
       {previewMedia ? (
         <ImageGallery

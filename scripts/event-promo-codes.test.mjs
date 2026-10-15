@@ -19,9 +19,12 @@ test('promo names immediately remove whitespace and become uppercase', () => {
   assert.equal(normalizePromoCode({ code: 'summer 2026' }).code, 'SUMMER2026');
 });
 test('invalid restrictions and duplicate codes block review', async () => {
-  for (const patch of [{ audiences: [] }, { discount: 101 }, { useLimit: 0 }, { useLimit: 1.5 }, { timeLimit: 'invalid' }, { code: 'invalid_code' }]) {
+  for (const patch of [{ audiences: [] }, { discount: 101 }, { useLimit: 0 }, { useLimit: 1.5 }, { minAmount: -1 }, { timeLimit: 'invalid' }, { code: 'invalid_code' }]) {
     await assert.rejects(promoCodesSchema.validate({ isEnabled: true, codes: [{ ...code(), ...patch }] }));
   }
-  await assert.rejects(promoCodesSchema.validate({ isEnabled: true, codes: [code(), code()] }));
+  await assert.rejects(
+    promoCodesSchema.validate({ isEnabled: true, codes: [code(), code()] }),
+    error => error.path === 'codes[1].code',
+  );
   await promoCodesSchema.validate({ isEnabled: false, codes: [{ code: '' }] });
 });
