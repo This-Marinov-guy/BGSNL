@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "BGSNL: Start development stack (mock emails)",
+      "type": "process",
+      "command": "node",
+      "args": ["scripts/dev-docker.mjs", "e2e"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "BGSNL: Stop development stack",
+      "type": "process",
+      "command": "node",
+      "args": ["scripts/dev-docker.mjs", "stop"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "BGSNL: Development stack status",
+      "type": "process",
+      "command": "node",
+      "args": ["scripts/dev-docker.mjs", "status"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "BGSNL: Follow development logs",
+      "type": "process",
+      "command": "node",
+      "args": ["scripts/dev-docker.mjs", "logs"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated" }
+    }
+  ]
+}

@@ -42,6 +42,13 @@ export const IconlyArrowUpRight = (props) => (
   </IconlySvg>
 );
 
+export const IconlyYouTube = (props) => (
+  <IconlySvg {...props}>
+    <rect x="2" y="5" width="20" height="14" rx="4" fill="#ff0033" />
+    <path d="m10 8 6 4-6 4V8Z" fill="#fff" />
+  </IconlySvg>
+);
+
 export const IconlyArrowDown = (props) => (
   <IconlySvg {...props}>
     <g transform="rotate(180 12 12)">

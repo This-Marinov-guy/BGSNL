@@ -38,7 +38,7 @@ import {
 } from "../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../util/functions/capitalize";
 import { useSupportTicketAttention } from "@/elements/support/SupportTicketAttentionProvider";
-import { TREASURY_URL } from "@/util/administration.mjs";
+import { TREASURY_URL, TUTORIAL_PLAYLIST_URL } from "@/util/administration.mjs";
 
 const useBrowserLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -355,6 +355,8 @@ const HeaderContent = (props) => {
                       </Link></li>}
                       <li><a href={TREASURY_URL} target="_blank" rel="noopener noreferrer"
                         aria-label="Treasury (opens in a new tab)">Treasury</a></li>
+                      <li><a href={TUTORIAL_PLAYLIST_URL} target="_blank" rel="noopener noreferrer"
+                        aria-label="Tutorials on YouTube (opens in a new tab)">Tutorials</a></li>
                     </>
                   </ul>
                 </li>

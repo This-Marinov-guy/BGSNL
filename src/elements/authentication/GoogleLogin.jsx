@@ -14,7 +14,6 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
   const dispatch = useDispatch();
   const [challenge, setChallenge] = useState(null);
   const [failed, setFailed] = useState(false);
-  const [actionError, setActionError] = useState("");
   const [preparing, setPreparing] = useState(false);
   const [feedback] = useState(createGoogleFeedbackGate);
   const [busy, setBusy] = useState(false);
@@ -23,7 +22,6 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
   const mounted = useRef(false);
   const notifyError = useCallback((failure) => {
     setFailed(true);
-    if (failure?.systemFailure) setActionError("Google sign-in could not be completed. Try again or use your password.");
     const notification = feedback.error(failure);
     if (notification) dispatch(showNotification(notification));
   }, [dispatch, feedback]);
@@ -33,7 +31,7 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
   useEffect(() => {
     mounted.current = true;
     let active = true;
-    setFailed(false); setChallenge(null); setActionError("");
+    setFailed(false); setChallenge(null);
     (async () => {
       try {
         const config = await googleAuthRequest("google/config");
@@ -101,7 +99,6 @@ export default function GoogleLogin({ onLogin, disabled = false, onPendingChange
             </GoogleButton> : null}
         </div>
       </div>
-      {actionError && <p role="alert">{actionError}</p>}
     </div>
   );
 }

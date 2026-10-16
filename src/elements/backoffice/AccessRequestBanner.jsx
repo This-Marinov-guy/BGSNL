@@ -36,7 +36,7 @@ export default function AccessRequestBanner() {
       <div><h2 id={headingId}>Need access to another area?</h2>
         <p>{missing.length ? "Tell the team what you need. Your account ID, email and requested areas will be included for review." : "Your account already has access to every administration area."}</p>
       </div>
-      {missing.length > 0 && <button className="rn-button-style--2 rn-btn-green" type="button" onClick={() => setOpen(true)}>Request access</button>}
+      {missing.length > 0 && <button className={styles.bannerAction} type="button" onClick={() => setOpen(true)}>Request access</button>}
     </section>
     <Dialog visible={open} onHide={() => { if (!sending) setOpen(false); }} header="Request administration access" closable={!sending} dismissableMask={!sending}>
       <form className={styles.form} onSubmit={submit}><p>Select the areas you need. Requests are reviewed by the team before access is granted.</p>

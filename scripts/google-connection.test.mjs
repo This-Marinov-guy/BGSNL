@@ -258,10 +258,13 @@ test("an explicit Google attempt shows one error and can retry with a fresh atte
   feedback.begin();
   assert.deepEqual(feedback.error("Google is unavailable."), { severity: "error", detail: "Google is unavailable." });
 });
-test("system failures during Google sign-in stay inline", () => {
+test("an attempted Google system failure shows a safe toast message", () => {
   const feedback = createGoogleFeedbackGate();
   feedback.begin();
-  assert.equal(feedback.error({ systemFailure: true, message: "Internal database message" }), null);
+  assert.deepEqual(feedback.error({ systemFailure: true, message: "Internal database message" }), {
+    severity: "error", detail: "Google sign-in could not be completed. Try again or use your password.",
+  });
+  assert.equal(feedback.error({ systemFailure: true, message: "Late error" }), null);
 });
 test("waiting notices are visible only during a Google attempt and stop on cleanup", () => {
   const feedback = createGoogleFeedbackGate();
@@ -271,7 +274,7 @@ test("waiting notices are visible only during a Google attempt and stop on clean
   assert.equal(feedback.notice("Still waiting for Google."), null);
   assert.equal(feedback.error("An old request failed."), null);
 });
-test("network failures remain silent as toasts, including after a click", async (t) => {
+test("network failures are silent during setup and show a safe toast after a click", async (t) => {
   const feedback = createGoogleFeedbackGate();
   t.mock.method(globalThis, "fetch", async () => { throw new TypeError("Failed to fetch"); });
   const attempt = async () => {
@@ -281,7 +284,7 @@ test("network failures remain silent as toasts, including after a click", async 
   };
   assert.equal(await attempt(), null);
   feedback.begin();
-  assert.equal(await attempt(), null);
+  assert.deepEqual(await attempt(), { severity: "error", detail: "Google sign-in could not be completed. Try again or use your password." });
 });
 test("Google retries reuse Continue with Google and account preloading errors are gated", async () => {
   const login = await readFile(new URL("../src/elements/authentication/GoogleLogin.jsx", import.meta.url), "utf8");

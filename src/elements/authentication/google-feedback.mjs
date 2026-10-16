@@ -8,7 +8,7 @@ export function createGoogleFeedbackGate() {
     error: (failure) => {
       if (!active) return null;
       active = false;
-      if (failure?.systemFailure) return null;
+      if (failure?.systemFailure) return { severity: "error", detail: "Google sign-in could not be completed. Try again or use your password." };
       const message = typeof failure === "string" ? failure : failure?.message;
       return { severity: "error", detail: message || "Google sign-in could not be completed. Please try again." };
     },

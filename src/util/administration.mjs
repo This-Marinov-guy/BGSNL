@@ -12,6 +12,7 @@ export const administrationAreas = [
 ];
 export const canAdminister = (area, roles = []) => area.roles.some((role) => roles.includes(role));
 export const TREASURY_URL = "https://dashboard.bulgariansociety.nl/";
+export const TUTORIAL_PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLU1t16fVON6U&playnext=1&index=1";
 
 export const statisticsRedirectPath = (kind, params = {}) => {
   const query = new URLSearchParams();
