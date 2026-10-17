@@ -68,6 +68,9 @@ export async function containerServices() {
   const api = services.find(({ name }) => name === "bgsnl-api");
   const website = services.find(({ name }) => name === "bgsnl");
   const mailer = services.find(({ name }) => name === "domakin-mailer");
+  // The Mailer's /health includes every provider, including SMTP channels not
+  // used by this site. An unrelated provider outage must not block :3000.
+  mailer.health = "/";
   // Next restarts its dev server once V8 uses 80% of the heap. The default
   // container heap is too small for this site's compiled Sass and interrupts
   // Fast Refresh, leaving an open page without styles until a manual reload.

@@ -3,6 +3,7 @@
 import {
   Fragment,
   useEffect,
+  useId,
   useState,
 } from "react";
 import { Form } from "formik";
@@ -12,12 +13,12 @@ import {
   useSelector,
 } from "react-redux";
 import * as yup from "yup";
-import { Message } from "@/compat/primereact";
 import ScrollToTop from "@/component/common/ScrollToTop";
 import {
   FiChevronUp,
   IconlyArrowLeft,
   IconlyArrowRight,
+  IconlyDanger,
 } from "@/elements/ui/icons/IconlyIcons";
 import {
   useNavigate,
@@ -34,6 +35,7 @@ import {
   PurchaseAdditionalInformation,
 } from "../../elements/purchase/PurchaseFormOptions";
 import SponsoredBySmall from "../../elements/ui/alerts/SponsoredBySmall";
+import subscriptionStyles from "../../elements/subscriptions/subscriptions.module.scss";
 import DynamicTicketBadge from "../../elements/ui/badges/DynamicTicketBadge";
 import ExternalPlatformTicketSale from "../../elements/ui/errors/Events/ExternalPlatformTicketSale";
 import NoEventFound from "../../elements/ui/errors/Events/NoEventFound";
@@ -89,6 +91,23 @@ const formatEuro = (value) =>
     maximumFractionDigits: 2,
   }).format(value);
 
+const PriceWarningBanner = ({ title, children }) => {
+  const titleId = useId();
+
+  return (
+    <section className={`${subscriptionStyles.dangerBanner} purchase-price-warning`} role="alert" aria-labelledby={titleId}>
+      <IconlyDanger className={subscriptionStyles.dangerIcon} aria-hidden />
+      <h2 id={titleId}>{title}</h2>
+      <div className={subscriptionStyles.dangerContent}>{children}</div>
+    </section>
+  );
+};
+
+PriceWarningBanner.propTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
 // The parent waits for session restoration before choosing member checkout.
 const MemberPurchase = ({ initialEvent = null }) => {
   const { sendRequest } = useHttpClient();
@@ -98,7 +117,8 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [eventClosed, setEventClosed] = useState(false);
-  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+  const [priceCheck, setPriceCheck] = useState({ key: "", status: "checking", alreadyRegistered: false });
+  const [priceCheckAttempt, setPriceCheckAttempt] = useState(0);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [{ schema, schemaFields }, setValidation] = useState(() =>
     buildMemberValidation(initialEvent)
@@ -112,6 +132,38 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const user = useSelector(selectUser);
 
   const navigate = useNavigate();
+  const priceCheckKey = selectedEvent?.id && currentUser?.id
+    ? `${selectedEvent.id}:${currentUser.id}`
+    : "";
+
+  useEffect(() => {
+    if (!priceCheckKey) return undefined;
+
+    const controller = new AbortController();
+    setPriceCheck({ key: priceCheckKey, status: "checking", alreadyRegistered: false });
+
+    const checkPrice = async () => {
+      const result = await sendRequest(
+        "event/check-ticket-eligibility",
+        "POST",
+        { eventId: selectedEvent.id, userId: currentUser.id },
+        {},
+        false,
+        false,
+        { signal: controller.signal }
+      );
+      if (controller.signal.aborted) return;
+
+      if (result?.alreadyRegistered || result?.type === "free" || result?.type === "paid") {
+        setPriceCheck({ key: priceCheckKey, status: "ready", alreadyRegistered: Boolean(result.alreadyRegistered) });
+      } else {
+        setPriceCheck({ key: priceCheckKey, status: "error", alreadyRegistered: false });
+      }
+    };
+
+    checkPrice();
+    return () => controller.abort();
+  }, [currentUser?.id, priceCheckAttempt, priceCheckKey, selectedEvent?.id, sendRequest]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -168,11 +220,14 @@ const MemberPurchase = ({ initialEvent = null }) => {
     return <ExternalPlatformTicketSale link={selectedEvent.ticketLink} />;
   }
 
-  const baseTicketPrice = ticketPriceAmountByEvent(
+  const priceChecked = priceCheck.key === priceCheckKey && priceCheck.status === "ready";
+  const priceCheckFailed = priceCheck.key === priceCheckKey && priceCheck.status === "error";
+  const alreadyRegistered = priceChecked && priceCheck.alreadyRegistered;
+  const baseTicketPrice = priceChecked ? ticketPriceAmountByEvent(
     selectedEvent,
     { ...currentUser, session: user.session ?? "" },
     { blockDiscounts: alreadyRegistered }
-  );
+  ) : null;
   const addOnTotal = selectedAddOns.reduce(
     (total, item) => total + (Number(item?.price) || 0),
     0
@@ -181,7 +236,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
     ? null
     : baseTicketPrice + addOnTotal;
   const displayedTicketPrice = checkoutTotal === null
-    ? "TBA"
+    ? priceChecked ? "TBA" : "Checking…"
     : checkoutTotal === 0
       ? "Free"
       : (
@@ -189,14 +244,21 @@ const MemberPurchase = ({ initialEvent = null }) => {
           {formatEuro(checkoutTotal)}
         </span>
       );
-  const discountApplied = hasAppliedTicketDiscount(
+  const discountApplied = priceChecked && hasAppliedTicketDiscount(
     selectedEvent,
     { ...currentUser, session: user.session ?? "" },
     { blockDiscounts: alreadyRegistered }
   );
   const checkoutActionLabel = checkoutTotal === 0
-    ? "Get ticket"
-    : "Proceed to payment";
+    ? "Confirm"
+    : "Payment";
+  const notifyPendingPriceCheck = () => dispatch(showNotification({
+    severity: "warn",
+    detail: priceCheckFailed
+      ? "We couldn't check your ticket price. Select Check price again, then submit your booking."
+      : "We're checking your ticket price. Wait for it to appear, then submit your booking again.",
+    life: 5000,
+  }));
 
   return (
     <Fragment>
@@ -228,14 +290,14 @@ const MemberPurchase = ({ initialEvent = null }) => {
               event={selectedEvent}
               factsInsideOverview
               price={displayedTicketPrice}
-              priceBadge={
+              priceBadge={priceChecked &&
                 <DynamicTicketBadge
                   isMember={!alreadyRegistered}
                   product={selectedEvent?.product}
                 />
               }
               showMemberPriceComparison={false}
-              usesMemberPrice={!alreadyRegistered}
+              usesMemberPrice={priceChecked && !alreadyRegistered}
               ticketQuantity={1}
               ticketUnitPrice={baseTicketPrice}
               selectedAddOns={selectedAddOns}
@@ -247,6 +309,11 @@ const MemberPurchase = ({ initialEvent = null }) => {
           <ValidatedFormik
             validationSchema={schema}
             onSubmit={async (values) => {
+              if (!priceChecked) {
+                notifyPendingPriceCheck();
+                return;
+              }
+              if (isLoading) return;
               try {
                 setIsLoading(true);
 
@@ -286,17 +353,14 @@ const MemberPurchase = ({ initialEvent = null }) => {
                   formData
                 );
 
-                // Member already has a ticket — warn once, then allow guest-price fallback
+                // A ticket may have been purchased after the advance check.
                 if (responseData?.alreadyRegistered) {
-                  dispatch(
-                    showNotification({
-                      severity: "warn",
-                      detail:
-                        "You have already used the member price for this event. Additional tickets use the guest price.",
-                      life: 4000,
-                    })
-                  );
-                  setAlreadyRegistered(true);
+                  setPriceCheck({ key: priceCheckKey, status: "ready", alreadyRegistered: true });
+                  dispatch(showNotification({
+                    severity: "warn",
+                    detail: "Your member-priced ticket is already purchased. Review the guest price, then submit your booking again.",
+                    life: 6000,
+                  }));
                   return;
                 }
 
@@ -324,11 +388,21 @@ const MemberPurchase = ({ initialEvent = null }) => {
             }}
           >
             {({ values, setFieldValue }) => (
-              <Form id="form" encType="multipart/form-data" className="row g-4 purchase-form">
+              <Form
+                id="form"
+                encType="multipart/form-data"
+                className="row g-4 purchase-form"
+                onSubmitCapture={(event) => {
+                  if (priceChecked && !isLoading) return;
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!isLoading) notifyPendingPriceCheck();
+                }}
+              >
                 <div className="col-12">
                   <div className="purchase-form-heading">
                     <h1 className="type-heading-md">Complete your booking</h1>
-                    <p>Your account details and member price are applied automatically.</p>
+                    <p>Your account details are applied automatically. We check your ticket price before you continue.</p>
                   </div>
                 </div>
                 <PurchaseAdditionalInformation inputs={selectedEvent.extraInputsForm || []} />
@@ -343,12 +417,26 @@ const MemberPurchase = ({ initialEvent = null }) => {
 
                 <div className="col-12">
                   {alreadyRegistered && (
-                    <Message
-                      severity="warn"
-                      className="mb--20"
-                      text="Your member-priced ticket is already purchased. This additional ticket uses the guest price."
-                    />
+                    <PriceWarningBanner title="Guest price applies">
+                      <p>You have already used the member price for this event. This additional ticket uses the guest price shown above.</p>
+                    </PriceWarningBanner>
                   )}
+                  {!priceChecked && (priceCheckFailed ? (
+                    <div id="purchase-price-check-status">
+                      <PriceWarningBanner title="Price check unavailable">
+                        <p>We couldn&apos;t check your ticket price. Try again before continuing.</p>
+                        <button
+                          type="button"
+                          className={`${subscriptionStyles.textButton} purchase-price-check-retry`}
+                          onClick={() => setPriceCheckAttempt((attempt) => attempt + 1)}
+                        >
+                          Check price again
+                        </button>
+                      </PriceWarningBanner>
+                    </div>
+                  ) : (
+                    <p id="purchase-price-check-status" className="purchase-price-checking" role="status">Checking your ticket price…</p>
+                  ))}
 
                   <div className="purchase-actions">
                     <button
@@ -362,6 +450,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
 
                     <button
                       disabled={isLoading}
+                      aria-describedby={!priceChecked ? "purchase-price-check-status" : undefined}
                       type="submit"
                       className="rn-button-style--2 rn-btn-reverse-green purchase-action-control purchase-action-primary "
                     >

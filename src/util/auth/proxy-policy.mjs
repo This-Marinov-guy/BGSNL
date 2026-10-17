@@ -18,7 +18,7 @@ const routes = {
     "user/campaigns/:id", "user/active-alumni", "user/tree-layout",
     "common/get-total-member-count", "common/get-member-count", "common/get-active-member-count", "common/get-about-data",
     "event/get-purchase-status/:id", "event/event-details/:id", "event/events-list", "event/sold-ticket-count/:id", "event/check-member/:id/:eventId", "event/guest-list/:id",
-    "future-event/full-event-details/:id", "future-event/full-data-events-list", "future-event/scanner-events", "future-event/draft-count", "future-event/cancel-event/:eventId/preview",
+    "future-event/full-event-details/:id", "future-event/full-data-events-list", "future-event/scanner-access", "future-event/scanner-events", "future-event/draft-count", "future-event/cancel-event/:eventId/preview",
     "payment/donation/config", "payment/subscription/plans", "payment/subscription/billing-details",
     "internship/list", "internship/admin-list", "dashboard/members", "dashboard/events-analytics", "dashboard/member-statistics", "dashboard/event-statistics", "backoffice/accounts", "backoffice/accounts/bulk-roles/template", "backoffice/accounts/:type/:id/membership",
     "support/profile", "support/conversations", "support/conversations/:id", "support/inbox", "support/inbox/unanswered", "support/inbox/activity", "support/inbox/:id",

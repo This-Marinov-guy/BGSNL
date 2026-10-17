@@ -49,7 +49,7 @@ LoaderCore.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function MultiStepLoader({ loadingStates, loading, value, duration = 2000, loop = true, children, closable = false, onClose, className = "" }) {
+export default function MultiStepLoader({ loadingStates, loading, value, duration = 2000, loop = true, children, closable = false, onClose, className = "", label = "Saving your event" }) {
   const [currentState, setCurrentState] = useState(0);
   const [mounted, setMounted] = useState(false);
   const overlayRef = useRef(null);
@@ -134,7 +134,7 @@ export default function MultiStepLoader({ loadingStates, loading, value, duratio
   if (!mounted) return null;
 
   return createPortal(<AnimatePresence mode="wait">
-    {loading && <motion.div ref={overlayRef} role="dialog" aria-modal="true" aria-label="Saving your event" tabIndex={-1} className={`multi-step-loader${className ? ` ${className}` : ""}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={reducedMotion ? { duration: 0 } : undefined}>
+    {loading && <motion.div ref={overlayRef} role="dialog" aria-modal="true" aria-label={label} tabIndex={-1} className={`multi-step-loader${className ? ` ${className}` : ""}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={reducedMotion ? { duration: 0 } : undefined}>
       <div className="multi-step-loader__content">
         {children}
         <div className="multi-step-loader__viewport">
@@ -160,4 +160,5 @@ MultiStepLoader.propTypes = {
   closable: PropTypes.bool,
   onClose: PropTypes.func,
   className: PropTypes.string,
+  label: PropTypes.string,
 };

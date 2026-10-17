@@ -8,6 +8,7 @@ import { store } from "@/redux/store";
 import PrimeSSRProvider from "./prime-ssr-provider";
 import GlobalBackground from "@/component/common/GlobalBackground";
 import PageLoading from "@/elements/ui/loading/PageLoading";
+import { SCANNER_PATH } from "@/util/auth/scanner-return.mjs";
 
 // Public QR cards should not download the authenticated application shell.
 const FullProviders = dynamic(() => import("./full-providers"), { loading: () => <PageLoading /> });
@@ -16,7 +17,12 @@ const Maintenance = dynamic(() => import("@/screens/Maintenance"));
 export default function Providers({ children }) {
   const pathname = usePathname();
   if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
-  if (!pathname?.startsWith("/c/") && !pathname?.startsWith("/event-feedback/")) return <FullProviders>{children}</FullProviders>;
+  if (pathname === SCANNER_PATH) return <Provider store={store}><PrimeSSRProvider>
+    <div className="global-site-shell global-site-shell--user">
+      <div className="global-site-content">{children}</div>
+    </div>
+  </PrimeSSRProvider></Provider>;
+  if (!pathname?.startsWith("/c/") && !pathname?.startsWith("/event-feedback/") && !pathname?.startsWith("/wallet/ticket")) return <FullProviders>{children}</FullProviders>;
   return <Provider store={store}><PrimeSSRProvider>
     <div className="global-site-shell">
       <GlobalBackground initiallyRevealed />

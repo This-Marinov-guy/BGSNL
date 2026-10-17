@@ -69,7 +69,7 @@
   "scripts": {
     "wallet:check": "node scripts/wallet-check.mjs",
     "wallet:csr": "node scripts/wallet-csr.mjs",
-    "test:wallet": "node --test scripts/wallet.test.mjs scripts/wallet-issuance.test.mjs",
+    "test:wallet": "node --test scripts/wallet.test.mjs scripts/wallet-issuance.test.mjs scripts/event-ticket-wallet.test.mjs",
     "test:passkeys": "node --test scripts/passkeys.test.mjs",
     "dev": "next dev --webpack",
     "dev:all": "node scripts/dev-docker.mjs",

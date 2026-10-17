@@ -1431,7 +1431,7 @@
     background: transparent;
     border: 0;
     border-radius: 0;
-    font-weight: 700;
+    font-weight: 600;
 
     svg {
       width: 32px;
@@ -1556,7 +1556,7 @@
       color: #9cad9f;
       font-family: "LeagueSpartan", "Roboto", sans-serif;
       font-size: 1rem;
-      font-weight: 700;
+      font-weight: 600;
     }
 
     ul {
@@ -1725,7 +1725,7 @@
     padding: 0.25rem 0.55rem;
     color: #19251f;
     font-family: "LeagueSpartan", "Roboto", sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
     background: #add8e6;
     border-radius: 0.4rem;
@@ -1795,7 +1795,7 @@
     color: #19251f;
     font-family: "LeagueSpartan", "Roboto", sans-serif;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
     background: #add8e6;
     border-radius: 0.4rem;
@@ -1804,7 +1804,7 @@
   .purchase-field-meta {
     color: #4f6259;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 600;
 
     &.is-required {
       color: #c51e3a;
@@ -2306,6 +2306,22 @@
     margin-top: 1.5rem;
   }
 
+  .purchase-price-warning {
+    margin-bottom: 0;
+  }
+
+  .purchase-price-checking {
+    margin: 0 0 1rem;
+    color: #58645e;
+  }
+
+  .purchase-price-check-retry {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 0.5rem;
+  }
+
   .purchase-action-control {
     display: inline-flex;
     min-height: 50px;
@@ -2637,11 +2653,24 @@
     }
 
     .purchase-actions {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.65fr);
+      gap: 0.5rem;
     }
 
     .purchase-action-control {
+      min-width: 0;
       width: 100%;
+      padding: 0.65rem 0.4rem;
+      gap: 0.3rem;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+
+      svg {
+        flex: 0 0 16px;
+        width: 16px;
+        height: 16px;
+      }
     }
   }
 }

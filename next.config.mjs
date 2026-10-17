@@ -15,6 +15,8 @@ const privateIndexingHeaders = [
 const privateRouteSources = [
   "/c/:path*",
   "/event-feedback/:path*",
+  "/wallet/ticket/:path*",
+  "/wallet/ticket",
   "/user/:path*",
   "/login",
   "/signup",
@@ -62,10 +64,15 @@ const discoveryHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  // Wallet URLs carry the issued ticket token; keep development request logs
+  // from printing that bearer link while retaining normal route logging.
+  logging: { incomingRequests: { ignore: [/\/wallet\/ticket(?:[/?]|$)/] } },
   allowedDevOrigins: ["127.0.0.1"],
   outputFileTracingRoot: __dirname,
   outputFileTracingIncludes: {
     "/api/user/wallet/apple": ["./public/assets/wallet-cards/apple/*.png"],
+    "/wallet/ticket/apple": ["./public/assets/wallet-cards/apple/*.png", "./public/assets/images/logo/*.webp", "./public/assets/images/logo/logo-nl-circle.png"],
+    "/wallet/ticket/artwork": ["./public/assets/wallet-cards/google/*-event-wide-logo.png"],
   },
 
   async redirects() {
@@ -97,6 +104,10 @@ const nextConfig = {
             : []),
         ],
       })),
+      {
+        source: "/user/dashboard/ticket-scanner/:path*",
+        headers: [{ key: "Referrer-Policy", value: "no-referrer" }],
+      },
       ...browserCachedPublicSources.map((source) => ({
         source,
         headers: browserCachedPublicHeaders,

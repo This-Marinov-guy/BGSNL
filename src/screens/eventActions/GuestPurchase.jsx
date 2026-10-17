@@ -254,8 +254,8 @@ const GuestPurchase = ({ initialEvent = null }) => {
       );
   const discountApplied = hasAppliedTicketDiscount(selectedEvent, user);
   const checkoutActionLabel = checkoutTotal === 0
-    ? "Get ticket"
-    : "Proceed to payment";
+    ? "Confirm"
+    : "Payment";
 
   return (
     <Fragment>

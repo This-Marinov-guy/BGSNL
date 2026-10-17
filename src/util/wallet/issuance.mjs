@@ -6,6 +6,7 @@ import { PKPass } from "passkit-generator";
 import { GoogleAuth } from "google-auth-library";
 import sharp from "sharp";
 import { nativeMembershipFields } from "./membership-fields.mjs";
+import { EVENT_TICKET_REGIONS } from "./event-ticket-brand.mjs";
 
 export { nativeMembershipFields } from "./membership-fields.mjs";
 
@@ -77,9 +78,10 @@ export async function walletReadiness(env = process.env) {
 
 // Checked-in raster artwork keeps signing independent of system fonts/Fontconfig.
 // Regenerate with node scripts/generate-apple-wallet-wordmark.mjs.
-export async function appleWordmark(scale) {
+export async function appleWordmark(scale, variant = "logo") {
   if (![1, 2, 3].includes(scale)) throw new Error("Invalid Apple Wallet image scale");
-  return readFile(path.join(process.cwd(), "public/assets/wallet-cards/apple", `logo${scale === 1 ? "" : `@${scale}x`}.png`));
+  if (!["logo", "event-logo", ...EVENT_TICKET_REGIONS.map(region => `event-logo-${region}`)].includes(variant)) throw new Error("Invalid Apple Wallet wordmark variant");
+  return readFile(path.join(process.cwd(), "public/assets/wallet-cards/apple", `${variant}${scale === 1 ? "" : `@${scale}x`}.png`));
 }
 
 export async function createApplePass(packet, env = process.env) {

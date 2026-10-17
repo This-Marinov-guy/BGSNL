@@ -27,6 +27,11 @@ import GoogleLogin from "@/elements/authentication/GoogleLogin";
 import PasskeyLogin from "@/elements/authentication/PasskeyLogin";
 import authStyles from "@/elements/authentication/google-auth.module.scss";
 import { supportTicketFromSearch, supportTicketPath } from "@/elements/support/support-link.mjs";
+import { SCANNER_RESUME_PATH } from "@/util/auth/scanner-return.mjs";
+
+const scannerReturnFromSearch = (search) => {
+  return new URLSearchParams(search).get("scannerReturn") === "1" ? SCANNER_RESUME_PATH : null;
+};
 
 const Login = () => {
   const isAuthenticated = useSelector(selectIsAuth);
@@ -57,7 +62,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuthenticated) {
       const ticket = supportTicketFromSearch(window.location.search);
-      navigate(loginDestination.current || (ticket ? supportTicketPath(ticket) : "/user#profile"), { replace: true });
+      navigate(loginDestination.current || scannerReturnFromSearch(window.location.search) || (ticket ? supportTicketPath(ticket) : "/user#profile"), { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
@@ -75,6 +80,7 @@ const Login = () => {
     const previous = sessionStorage.getItem("prevUrl");
     let destination = "/user#profile";
     if (previous?.startsWith("/") && !previous.startsWith("//") && !previous.includes("\\")) destination = previous;
+    destination = scannerReturnFromSearch(window.location.search) || destination;
     if (responseData.billingLocked || responseData.status === "locked" || responseData.billingVerificationUnavailable) destination = "/user#settings";
     const ticket = supportTicketFromSearch(window.location.search);
     if (ticket) destination = supportTicketPath(ticket, destination === "/user#settings" ? destination : "/");

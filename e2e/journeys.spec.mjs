@@ -140,6 +140,14 @@ for (const actor of ["guest", "member", "alumni", "active"]) {
   test(`buy a ticket as ${actor} through the UI`, async ({ page }) => {
     expect(publicEventUrl, "Event creation must finish before ticket tests").toBeTruthy();
     if (actor !== "guest") await logIn(page, accounts[actor]);
+    let releasePriceCheck;
+    if (actor === "member") {
+      const priceCheckHeld = new Promise((resolve) => { releasePriceCheck = resolve; });
+      await page.route("**/event/check-ticket-eligibility", async (route) => {
+        await priceCheckHeld;
+        await route.continue();
+      });
+    }
     await page.goto(publicEventUrl.replace("/event-details/", "/purchase-ticket/"));
     await dismissCookies(page);
     await expect(page.getByRole("heading", { name: "Complete your booking" })).toBeVisible();
@@ -153,7 +161,16 @@ for (const actor of ["guest", "member", "alumni", "active"]) {
       await setPhone(page);
       await page.locator('input[name="phone"]').press("Tab");
     }
-    await page.getByRole("button", { name: "Proceed to payment" }).click();
+    if (actor === "member") {
+      await expect(page.getByText("Checking your ticket price…")).toBeVisible();
+      await page.getByRole("button", { name: "Payment" }).click();
+      await expect(page.getByText("We're checking your ticket price. Wait for it to appear, then submit your booking again.")).toBeVisible();
+      releasePriceCheck();
+    }
+    if (actor !== "guest") {
+      await expect(page.getByText("Checking your ticket price…")).not.toBeVisible();
+    }
+    await page.getByRole("button", { name: "Payment" }).click();
     await expect.poll(() => page.url()).toMatch(/\/payment\/event-ticket\/|checkout\.stripe\.com/);
     if (page.url().includes("/payment/event-ticket/")) {
       await page.getByRole("button", { name: "Continue to payment" }).click();

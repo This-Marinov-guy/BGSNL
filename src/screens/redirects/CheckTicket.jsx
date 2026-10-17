@@ -5,12 +5,14 @@ import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import PropTypes from "prop-types";
 import { Dialog, Skeleton, Steps } from "@/compat/primereact";
 import HeaderTwo from "@/component/header/HeaderTwo";
 import StepContentTransition from "@/elements/ui/functional/StepContentTransition";
 import { FiExternalLink, FiShare2, IconlyDocument } from "@/elements/ui/icons/IconlyIcons";
 import InfoHint from "@/elements/ui/icons/InfoHint";
 import { browserFetch } from "@/util/auth/browser-request.mjs";
+import { clearScannerEventsCache, readScannerEventsCache, writeScannerEventsCache } from "@/util/auth/scanner-events-cache.mjs";
 import { requestErrorNotice } from "@/util/auth/request-error-notice.mjs";
 import { parseTicketScan } from "@/util/functions/ticket-scan.mjs";
 import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGION_BADGES";
@@ -43,7 +45,7 @@ const DetailsSkeleton = () => <div role="status">
   </div>
 </div>;
 
-export default function CheckTicket() {
+export default function CheckTicket({ scannerUserId }) {
   const params = useSearchParams();
   const mockPreview = process.env.NODE_ENV === "development" && params.get("preview") === "group";
   const video = useRef(null);
@@ -104,17 +106,27 @@ export default function CheckTicket() {
 
   useEffect(() => {
     if (activeEventId) return undefined;
+    const cachedEvents = readScannerEventsCache(scannerUserId);
+    if (cachedEvents) {
+      setEvents(cachedEvents);
+      setEventsLoading(false);
+      setEventsError("");
+      return undefined;
+    }
     const controller = new AbortController();
     async function loadEvents() {
+      setEvents([]);
       setEventsLoading(true);
       setEventsError("");
       try {
         const response = await browserFetch("/api/future-event/scanner-events", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
         const data = await response.json();
         if (!response.ok) throw Object.assign(new Error(data.message || "Events could not be loaded."), { status: response.status });
-        setEvents((data.events || [])
+        const nextEvents = (data.events || [])
           .filter((event) => !["draft", "archived"].includes(String(event.status || "").trim().toLowerCase()))
-          .sort((first, second) => new Date(second.correctedDate || second.date || 0) - new Date(first.correctedDate || first.date || 0)));
+          .sort((first, second) => new Date(second.correctedDate || second.date || 0) - new Date(first.correctedDate || first.date || 0));
+        writeScannerEventsCache(scannerUserId, nextEvents);
+        setEvents(nextEvents);
       } catch (error) {
         if (!controller.signal.aborted) setEventsError(scannerErrorMessage(error, "Events could not be loaded. Refresh to try again."));
       } finally {
@@ -123,7 +135,7 @@ export default function CheckTicket() {
     }
     void loadEvents();
     return () => controller.abort();
-  }, [activeEventId, eventsAttempt]);
+  }, [activeEventId, eventsAttempt, scannerUserId]);
 
   const reportError = useCallback((message) => {
     blocked.current = true;
@@ -341,7 +353,7 @@ export default function CheckTicket() {
             </button>)}
           </div>
         )}
-        {eventsError && <LoadErrorBanner message={eventsError} onRetry={() => setEventsAttempt(value => value + 1)} />}
+        {eventsError && <LoadErrorBanner message={eventsError} onRetry={() => { clearScannerEventsCache(scannerUserId); setEventsAttempt(value => value + 1); }} />}
         {!eventsLoading && !eventsError && !filteredEvents.length && <p className={styles.empty}>No events match this search.</p>}
       </section> : <section className={styles.scannerStep}>
         <div className={styles.actions}>
@@ -425,3 +437,5 @@ export default function CheckTicket() {
     </Dialog>
   </>;
 }
+
+CheckTicket.propTypes = { scannerUserId: PropTypes.string.isRequired };
