@@ -13,6 +13,9 @@ import { scrollToListStart } from "@/util/functions/pagination-scroll.mjs";
 
 const total = (record) => Object.values(record || {}).reduce((sum, value) => sum + Number(value || 0), 0);
 const label = (value) => String(value || "Other").replace(/[_-]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+const euro = (cents) => new globalThis.Intl.NumberFormat("en-NL", { style: "currency", currency: "EUR" }).format(cents / 100);
+const paymentType = (value) => value === "member_revenue_transfer" ? "Member revenue transfer" : label(value);
+const paymentReason = (value) => value === "waiting_stripe_funds" ? "Waiting for Stripe funds" : label(value);
 
 function Traffic({ title, count, values }) {
   const points = (values || []).map((item) => Number(item.count || 0));
@@ -173,6 +176,10 @@ export default function SystemMonitoring() {
   const [jobs, setJobs] = useState(null);
   const [jobsState, setJobsState] = useState("idle");
   const [jobsRefresh, setJobsRefresh] = useState(0);
+  const [payments, setPayments] = useState(null);
+  const [paymentsState, setPaymentsState] = useState("idle");
+  const [paymentPage, setPaymentPage] = useState(1);
+  const [paymentsRefresh, setPaymentsRefresh] = useState(0);
   const [quotaSnapshot, setQuotaSnapshot] = useState(null);
   const [quotasState, setQuotasState] = useState("idle");
   const [quotasRefresh, setQuotasRefresh] = useState(0);
@@ -181,6 +188,7 @@ export default function SystemMonitoring() {
   const [lastService, setLastService] = useState(null);
   const [lastQuota, setLastQuota] = useState(null);
   const jobsStartRef = useRef(null);
+  const paymentsStartRef = useRef(null);
   const load = useCallback(async (signal) => {
     setState("loading");
     const result = await sendRequest("monitoring/overview", "GET", null, {}, false, false, { signal });
@@ -211,6 +219,20 @@ export default function SystemMonitoring() {
     return () => controller.abort();
   }, [tab, loadJobs, jobsRefresh]);
 
+  const loadPayments = useCallback(async (signal) => {
+    setPaymentsState("loading");
+    const result = await sendRequest(`monitoring/payments?page=${paymentPage}`, "GET", null, {}, false, false, { signal });
+    if (signal?.aborted) return;
+    if (result?.items) { setPayments(result); setPaymentsState("ready"); }
+    else setPaymentsState("error");
+  }, [sendRequest, paymentPage]);
+  useEffect(() => {
+    if (tab !== "payments") return undefined;
+    const controller = new AbortController();
+    loadPayments(controller.signal);
+    return () => controller.abort();
+  }, [tab, loadPayments, paymentsRefresh]);
+
   const loadQuotas = useCallback(async (signal, fresh = false) => {
     setQuotasState("loading");
     const result = await sendRequest(`monitoring/quotas${fresh ? "?refresh=1" : ""}`, "GET", null, {}, false, false, { signal });
@@ -229,12 +251,13 @@ export default function SystemMonitoring() {
   const refresh = () => {
     if (tab === "quotas") setQuotasRefresh((value) => value + 1);
     else if (tab === "jobs") setJobsRefresh((value) => value + 1);
+    else if (tab === "payments") setPaymentsRefresh((value) => value + 1);
     else load();
   };
   const switchTabWithArrow = (event) => {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
-    const tabs = ["overview", "quotas", "jobs"];
+    const tabs = ["overview", "payments", "quotas", "jobs"];
     const nextTab = tabs[(tabs.indexOf(tab) + (event.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
     setTab(nextTab);
     document.getElementById(`monitoring-${nextTab}-tab`)?.focus();
@@ -258,9 +281,10 @@ export default function SystemMonitoring() {
     setExpandedQuota(opening ? name : null);
     if (opening) revealDetails("quota-detail-panel");
   };
-  const refreshing = tab === "quotas" ? quotasState === "loading" : tab === "jobs" ? jobsState === "loading" : state === "loading";
-  const refreshLabel = tab === "quotas" ? "Refresh usage" : tab === "jobs" ? "Refresh jobs" : "Refresh checks";
+  const refreshing = tab === "quotas" ? quotasState === "loading" : tab === "jobs" ? jobsState === "loading" : tab === "payments" ? paymentsState === "loading" : state === "loading";
+  const refreshLabel = tab === "quotas" ? "Refresh usage" : tab === "jobs" ? "Refresh jobs" : tab === "payments" ? "Refresh payments" : "Refresh checks";
   const jobsMatchSelection = jobs?.status === jobFilter && jobs?.page === jobPage;
+  const paymentsMatchSelection = payments?.page === paymentPage;
   return <><HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page ${styles.page} ${workspace.page}`}>
       <DashboardNavigation />
@@ -277,6 +301,8 @@ export default function SystemMonitoring() {
         <div className={styles.tabs} role="tablist" aria-label="System monitoring sections" onKeyDown={switchTabWithArrow}>
           <button id="monitoring-overview-tab" type="button" role="tab" aria-controls="monitoring-overview-panel"
             aria-selected={tab === "overview"} tabIndex={tab === "overview" ? 0 : -1} onClick={() => setTab("overview")}>Overview</button>
+          <button id="monitoring-payments-tab" type="button" role="tab" aria-controls="monitoring-payments-panel"
+            aria-selected={tab === "payments"} tabIndex={tab === "payments" ? 0 : -1} onClick={() => setTab("payments")}>Payments</button>
           <button id="monitoring-quotas-tab" type="button" role="tab" aria-controls="monitoring-quotas-panel"
             aria-selected={tab === "quotas"} tabIndex={tab === "quotas" ? 0 : -1} onClick={() => setTab("quotas")}>Usage</button>
           <button id="monitoring-jobs-tab" type="button" role="tab" aria-controls="monitoring-jobs-panel"
@@ -285,7 +311,34 @@ export default function SystemMonitoring() {
         {snapshot?.jobs?.available && Object.values(snapshot.jobs.sources).some((available) => !available) &&
           <p role="status" className={styles.notice}>One job source is unavailable. Failed-job counts may be incomplete.</p>}
         {snapshot?.jobs && !snapshot.jobs.available && <p role="status" className={styles.notice}>Job counts are temporarily unavailable.</p>}
-        {tab === "jobs" ? <section id="monitoring-jobs-panel" role="tabpanel" aria-labelledby="monitoring-jobs-tab" className={styles.jobsPanel} ref={jobsStartRef}>
+        {tab === "payments" ? <section id="monitoring-payments-panel" role="tabpanel" aria-labelledby="monitoring-payments-tab" className={styles.jobsPanel} ref={paymentsStartRef}>
+          <div className={styles.jobsHeading}><div><h2>Pending regional transfers</h2>
+            <p>Shares from paid Member invoices waiting for funds in the BGSNL Stripe balance. Entries clear after Stripe confirms the transfer.</p></div></div>
+          {(paymentsState === "idle" || paymentsState === "loading" && !paymentsMatchSelection) && <LoadingSkeleton label="Loading pending payments" count={4} />}
+          {paymentsState === "error" && <LoadErrorBanner message={paymentsMatchSelection
+            ? "Pending payments could not be refreshed. Showing the last loaded results." : "Pending payments could not be loaded. Try again."}
+            onRetry={() => setPaymentsRefresh(value => value + 1)} />}
+          {paymentsState === "loading" && paymentsMatchSelection && <p className={styles.refreshing} role="status">Refreshing pending payments…</p>}
+          {paymentsMatchSelection && payments && (payments.items.length ? <>
+            <p className={styles.paymentCount}>{payments.total.toLocaleString()} {payments.total === 1 ? "transfer" : "transfers"} waiting for Stripe funds</p>
+            <div className={styles.jobTableScroll}><table className={`${styles.jobTable} ${styles.paymentTable}`}>
+              <thead><tr><th scope="col">Invoice</th><th scope="col">Region</th><th scope="col">Amount</th><th scope="col">Reason</th><th scope="col">Invoice paid</th><th scope="col">Tracked since</th></tr></thead>
+              <tbody>{payments.items.map((payment) => <tr key={payment.invoiceId}>
+                <td><strong>{payment.invoiceId}</strong><small>{paymentType(payment.type)} · {payment.subscriptionId}</small></td>
+                <td>{label(payment.region)}</td>
+                <td className={styles.paymentAmount}>{euro(payment.amountCents)}</td>
+                <td><span className={`${styles.jobStatus} ${styles.pending}`}>{paymentReason(payment.reason)}</span></td>
+                <td>{payment.invoicePaidAt ? formatDisplayDateTime(payment.invoicePaidAt) : "—"}</td>
+                <td>{payment.createdAt ? formatDisplayDateTime(payment.createdAt) : "—"}</td>
+              </tr>)}</tbody>
+            </table></div>
+            <div className={styles.jobPagination}><span>Page {payments.page} · {payments.total.toLocaleString()} pending</span>
+              <div><button type="button" disabled={paymentsState === "loading" || paymentPage <= 1}
+                onClick={() => { scrollToListStart(paymentsStartRef); setPaymentPage(page => page - 1); }}>Previous</button>
+                <button type="button" disabled={paymentsState === "loading" || !payments.hasMore}
+                  onClick={() => { scrollToListStart(paymentsStartRef); setPaymentPage(page => page + 1); }}>Next</button></div></div>
+          </> : <p className={styles.paymentEmpty}>No regional transfers are waiting for Stripe funds. Any new balance shortage will appear here and clear after its transfer succeeds.</p>)}
+        </section> : tab === "jobs" ? <section id="monitoring-jobs-panel" role="tabpanel" aria-labelledby="monitoring-jobs-tab" className={styles.jobsPanel} ref={jobsStartRef}>
           <div className={styles.jobsHeading}><div><h2>Background jobs</h2><p>Marketing-email capture, spreadsheet sync, scheduled work, mail dispatch, and in-process Sheets jobs. Completed jobs remain for one day; failed jobs for seven days.</p></div>
             <button className={styles.refreshButton} type="button" onClick={() => setJobsRefresh((value) => value + 1)}
               disabled={jobsState === "loading"} aria-label="Refresh jobs" aria-busy={jobsState === "loading"}

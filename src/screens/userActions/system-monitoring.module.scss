@@ -111,6 +111,10 @@
 .completed { background: #d9f2e5; color: #14623d; }
 .jobPagination { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; color: #52695b; }
 .jobPagination > div { display: flex; gap: .5rem; }
+.paymentCount { margin: 1.25rem 0 .75rem; color: var(--dashboard-ink); font-weight: 600; }
+.paymentTable th:nth-child(3), .paymentAmount { text-align: right; white-space: nowrap; }
+.paymentTable td:first-child { max-width: 20rem; overflow-wrap: anywhere; }
+.paymentEmpty { margin: 1.25rem 0 0; color: var(--dashboard-muted); }
 @media (max-width: 700px) { .axiomDatasets { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .heading, .jobsHeading, .jobAlert { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: 1fr; } .health, .jobsPanel { padding: 1rem; } .detailSurface { padding: 1rem; } .detailHeader { flex-wrap: wrap; } .jobPagination { align-items: flex-start; flex-direction: column; } }
 
