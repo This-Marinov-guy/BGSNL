@@ -4,15 +4,15 @@ import { visibleFutureEvents } from "../src/util/functions/visible-future-events
 import { shouldArchiveEvent } from "../src/util/functions/event-archive.mjs";
 
 const now = Date.parse("2026-09-28T12:00:00Z");
-const grace = 48 * 60 * 60 * 1000;
+const grace = 24 * 60 * 60 * 1000;
 const event = (id, age, overrides = {}) => ({
   id, status: "opened", date: new Date(now - age).toISOString(), ...overrides,
 });
 
-test("future listings hide active events at exactly 48 hours, independently of archiving", () => {
+test("future listings hide active events at exactly 24 hours, independently of archiving", () => {
   const source = { amsterdam: [
     event("upcoming", -1), event("today", 0), event("recent", grace - 1),
-    event("two-days", grace), event("older", grace + 1),
+    event("one-day", grace), event("older", grace + 1),
   ] };
   const before = structuredClone(source);
   for (const signedIn of [false, true]) {
@@ -31,6 +31,17 @@ test("corrected dates control visibility in both directions", () => {
   ] };
   assert.deepEqual(visibleFutureEvents(source, ["amsterdam"], false, now).map(item => item.id),
     ["rescheduled-future"]);
+});
+
+test("an updated time on the same date takes priority over the original time", () => {
+  const oldTime = "2026-09-27T10:00:00Z";
+  const newTime = "2026-09-27T13:00:00Z";
+  const source = { amsterdam: [
+    event("moved-later", 0, { date: oldTime, correctedDate: newTime }),
+    event("moved-earlier", 0, { date: newTime, correctedDate: oldTime }),
+  ] };
+  assert.deepEqual(visibleFutureEvents(source, ["amsterdam"], false, now).map(item => item.id),
+    ["moved-later"]);
 });
 
 test("age filtering preserves regional, hidden, and member-only restrictions", () => {

@@ -1,6 +1,6 @@
 import { eventDateTime } from "./event-archive.mjs";
 
-const FUTURE_EVENT_GRACE_MS = 2 * 24 * 60 * 60 * 1000;
+const FUTURE_EVENT_GRACE_MS = 24 * 60 * 60 * 1000;
 
 export function visibleFutureEvents(eventsByRegion, regions, isAuthenticated = false, now = Date.now()) {
   const cutoff = now - FUTURE_EVENT_GRACE_MS;

@@ -2,6 +2,7 @@ export const ARCHIVE_AFTER_MS = 3 * 24 * 60 * 60 * 1000;
 const normalizedStatus = (event) => String(event?.status || "").trim().toLowerCase();
 
 export const eventDateTime = (event) => {
+  // correctedDate is the edited date and time together, stored as one timestamp.
   const time = new Date(event?.correctedDate || event?.date).getTime();
   return Number.isFinite(time) ? time : null;
 };
