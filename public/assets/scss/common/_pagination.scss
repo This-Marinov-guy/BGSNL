@@ -29,7 +29,7 @@
   color: $body-color-2;
   font-family: $heading-font;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   cursor: pointer;
@@ -97,7 +97,7 @@
   color: rgba(2, 84, 32, 0.52);
   font-family: $heading-font;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
 }
 
@@ -120,7 +120,7 @@
     color: $body-color-2;
     font-family: $heading-font;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
     transition: border-color 180ms ease, box-shadow 180ms ease;

@@ -80,19 +80,19 @@ $type-line-heading: 1.2;
 $type-line-body: 1.6;
 $type-line-relaxed: 1.75;
 
-// Keep weight choices as deliberate, reusable roles instead of per-component
-// corrections. The hero title is the only component-level exception.
+// Keep non-Archive text on a restrained 400/500/600 hierarchy.
+// Archive display lettering retains its existing explicit weights.
 $type-weight-light: 300;
 $type-weight-regular: 400;
 $type-weight-medium: 500;
 $type-weight-semibold: 600;
-$type-weight-bold: 700;
-$type-weight-black: 900;
+$type-weight-bold: 600;
+$type-weight-black: 600;
 
 // Backwards-compatible aliases used by legacy templates.
 $body-line-height: $type-line-body;
 $body-font-size: $type-size-body;
-$body-font-weight: $type-weight-medium;
+$body-font-weight: $type-weight-regular;
 $a: $type-size-subheading;
 $h1: $type-size-heading-lg;
 $h2: $type-size-heading-md;

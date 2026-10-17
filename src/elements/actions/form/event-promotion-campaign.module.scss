@@ -18,7 +18,7 @@
 }
 .intro { font-size: 1rem; line-height: 1.5; }
 .changes { display: grid; gap: .5rem;
-  h3 { font-size: 1rem; font-weight: 700; }
+  h3 { font-size: 1rem; font-weight: 600; }
   ul { display: grid; gap: .25rem; padding-left: 1.25rem; line-height: 1.5; }
 }
 .choice { position: relative; display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: var(--campaign-radius); background: var(--campaign-choice-surface); cursor: pointer;
@@ -31,7 +31,7 @@
   input:checked + .switch::after { transform: translateX(1.25rem); }
 }
 .choiceCopy { flex: 1; display: grid; gap: .25rem; line-height: 1.35;
-  strong { font-weight: 700; }
+  strong { font-weight: 600; }
   span { color: var(--campaign-ink); }
 }
 .switch { flex: 0 0 auto; width: 2.75rem; height: 1.5rem; padding: .15rem; border-radius: 1rem; background: var(--campaign-muted); transition: background 180ms, box-shadow 180ms, transform 180ms;

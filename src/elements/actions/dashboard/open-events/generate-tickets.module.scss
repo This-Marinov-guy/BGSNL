@@ -29,7 +29,7 @@
 .guestSlot { overflow: hidden; }
 .guest { background: #fff; border: 1px solid #d6e2da; border-radius: var(--ticket-radius); padding: 1rem; }
 .guestHeader { align-items: center; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: .75rem; }
-.guestHeader h3 { color: var(--ticket-ink); font-size: 1.125rem; font-weight: 700; line-height: 1.2; margin: 0; }
+.guestHeader h3 { color: var(--ticket-ink); font-size: 1.125rem; font-weight: 600; line-height: 1.2; margin: 0; }
 .remove {
   align-items: center;
   background: transparent;
@@ -51,7 +51,7 @@
 .fields { display: grid; gap: .75rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .field { display: grid; gap: .375rem; min-width: 0; }
 .emailField { grid-column: 1 / -1; }
-.fieldLabel { color: var(--ticket-ink); font-size: 1rem; font-weight: 700; justify-self: start; line-height: 1.2; padding: .2rem .35rem; }
+.fieldLabel { color: var(--ticket-ink); font-size: 1rem; font-weight: 600; justify-self: start; line-height: 1.2; padding: .2rem .35rem; }
 .field[data-invalid="true"] .fieldLabel { background: #9e0d33; border-radius: .25rem; color: #fff; }
 .field input {
   background: #fff;
@@ -79,7 +79,7 @@
   cursor: pointer;
   display: flex;
   font: inherit;
-  font-weight: 700;
+  font-weight: 600;
   gap: .5rem;
   justify-content: center;
   min-height: 2.85rem;

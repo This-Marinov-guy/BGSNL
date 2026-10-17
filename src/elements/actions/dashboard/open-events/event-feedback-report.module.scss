@@ -42,20 +42,20 @@
 .table { border-collapse: collapse; min-width: 42rem; width: 100%; }
 .table th,
 .table td { border-bottom: 1px solid #d5e2da; padding: .85rem .75rem; text-align: left; vertical-align: top; }
-.table thead th { background: var(--report-surface); color: var(--report-muted); font-size: 1rem; font-weight: 700; white-space: nowrap; }
+.table thead th { background: var(--report-surface); color: var(--report-muted); font-size: 1rem; font-weight: 600; white-space: nowrap; }
 .table thead th:nth-child(2),
 .table thead th:nth-child(3) { text-align: right; }
 .table tbody th { font-weight: normal; }
 .table .person { min-width: 12rem; }
 .person strong,
 .person span { display: block; overflow-wrap: anywhere; }
-.person strong { font-weight: 700; }
+.person strong { font-weight: 600; }
 .person span { color: var(--report-muted); font-size: 1rem; }
-.table .number { font-weight: 700; text-align: right; white-space: nowrap; }
+.table .number { font-weight: 600; text-align: right; white-space: nowrap; }
 .detailsButton { white-space: nowrap; }
 .detailsRow td { background: var(--report-surface); padding: 1rem; }
 .detailsRow dl { display: grid; gap: 1rem; margin: 0; }
-.detailsRow dt { font-weight: 700; margin-bottom: .25rem; }
+.detailsRow dt { font-weight: 600; margin-bottom: .25rem; }
 .detailsRow dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
 .pagination { align-items: center; display: flex; gap: .75rem; justify-content: flex-end; }
 .pagination span { color: var(--report-muted); }

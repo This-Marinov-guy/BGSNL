@@ -674,7 +674,7 @@
   &__label {
     margin: 0 0 4px;
     color: var(--stat-color);
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.25;
   }
 
@@ -683,7 +683,7 @@
     color: var(--stat-color);
     font-family: "LeagueSpartan", "Roboto", sans-serif;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1;
     font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
@@ -753,7 +753,7 @@
   border-radius: .5rem;
   background: #fff;
   color: #016557;
-  font-weight: 700;
+  font-weight: 600;
   transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
 
   &:hover:not(:disabled) {
@@ -806,7 +806,7 @@
   overflow: hidden;
   color: #526158;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   text-align: right;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -827,9 +827,9 @@
     background: #f4f8f5;
   }
 
-  span { color: #526158; font-size: 1rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }
+  span { color: #526158; font-size: 1rem; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; }
   strong { color: #15372f; font-size: 1.12rem; font-variant-numeric: tabular-nums; }
-  small { min-height: 1.1em; color: #526158; font-weight: 600; }
+  small { min-height: 1.1em; color: #526158; font-weight: 500; }
 }
 
 .analytics-data-note {
@@ -1214,7 +1214,6 @@
   max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  touch-action: pan-x;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -1237,11 +1236,11 @@
   th {
     background: #f1f6f3;
     color: #405148;
-    font-weight: 700;
+    font-weight: 600;
     white-space: nowrap;
   }
 
-  td:first-child { font-weight: 700; }
+  td:first-child { font-weight: 600; }
   td a { color: #016557; text-decoration: none; }
   td a:hover { text-decoration: underline; }
   tr[data-refunded="true"] td { background: #fff0f1; color: #8f263d; }
@@ -1254,7 +1253,7 @@
   min-width: 12rem;
 
   div { display: grid; gap: .05rem; }
-  dt { color: #526158; font-size: 1rem; font-weight: 700; }
+  dt { color: #526158; font-size: 1rem; font-weight: 600; }
   dd { margin: 0; overflow-wrap: anywhere; }
 }
 
@@ -1269,7 +1268,7 @@
   border: 1px solid transparent;
   border-radius: .45rem;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -1288,9 +1287,9 @@
 .guest-list__more {
   width: 2.75rem;
   height: 2.75rem;
-  border: 1px solid #d8e4de;
+  border: 0;
   border-radius: .6rem;
-  background: #fff;
+  background: transparent;
   color: #17463c;
   cursor: pointer;
   font-size: 1.7rem;
@@ -1396,7 +1395,7 @@ button.guest-list__presence {
     background: #edf2ef;
     color: #23483f;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 600;
   }
   button[type="submit"] { background: #017363; color: #fff; }
   button.guest-list__refund-confirm { background: #a61b35; color: #fff; }
@@ -1418,7 +1417,7 @@ button.guest-list__presence {
   justify-content: space-between;
   min-height: 2.75rem;
 
-  .guest-list__fee-choice-label { display: inline-flex; align-items: center; color: #24352c; font-weight: 600; }
+  .guest-list__fee-choice-label { display: inline-flex; align-items: center; color: #24352c; font-weight: 500; }
   .info-hint { margin-left: .35rem; }
 }
 
@@ -1451,8 +1450,8 @@ button.guest-list__presence {
 
   > div { display: flex; justify-content: space-between; gap: 1rem; }
   dt { color: #607168; }
-  dd { margin: 0; color: #19251f; font-weight: 700; text-align: right; }
-  > div:last-child { margin-top: .25rem; font-weight: 700; }
+  dd { margin: 0; color: #19251f; font-weight: 600; text-align: right; }
+  > div:last-child { margin-top: .25rem; font-weight: 600; }
 }
 
 .ticket-scanner-link {

@@ -458,7 +458,7 @@ hr {
   flex: 1 1 auto;
   font-family: "LeagueSpartan", "Roboto", sans-serif !important;
   font-size: 1.3rem !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
   letter-spacing: -0.02em;
   line-height: 1.15;
   margin: 0;
@@ -1085,7 +1085,7 @@ label {
   color: #fff;
   font-family: "LeagueSpartan", "Roboto", sans-serif !important;
   font-size: clamp(1.8rem, 3vw, 2.4rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.05;
   margin: 6px 0 10px;
@@ -1114,7 +1114,7 @@ label {
 .login_eyebrow {
   color: #8f1d37;
   font-size: $type-size-minimum;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.12em;
   margin: 0;
   text-transform: uppercase;
@@ -1124,7 +1124,7 @@ label {
   color: #171d1a;
   font-family: "LeagueSpartan", "Roboto", sans-serif !important;
   font-size: clamp(2.15rem, 4vw, 3rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 1;
   margin: 9px 0 10px;
@@ -1177,7 +1177,7 @@ label {
   color: #232b27;
   display: inline-flex;
   font-size: $type-size-minimum;
-  font-weight: 700;
+  font-weight: 600;
   left: 14px;
   line-height: 1;
   margin: 0;
@@ -1200,7 +1200,7 @@ label {
   display: inline-flex;
   font-family: "LeagueSpartan", "Roboto", sans-serif;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   justify-content: center;
   letter-spacing: 0.035em;
   min-height: 50px;
@@ -1250,7 +1250,7 @@ label {
 
 .login_text_link {
   color: #017363;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -1274,7 +1274,7 @@ label {
   border-radius: 10px;
   color: white !important;
   display: flex;
-  font-weight: 700;
+  font-weight: 600;
   justify-content: center;
   line-height: 1.3;
   min-height: 48px;
@@ -1612,7 +1612,7 @@ label {
       background: #f6fbf8;
       color: #017363;
       font: inherit;
-      font-weight: 700;
+      font-weight: 600;
       text-align: center;
       transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
 

@@ -115,7 +115,7 @@
 .newspaper-page__masthead p {
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.16em;
   margin: 0;
   text-transform: uppercase;
@@ -152,7 +152,7 @@
 .newspaper-page__story-copy h3 {
   color: var(--newspaper-ink);
   font-family: "LeagueSpartan", "Roboto", sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.025em;
   margin: 0;
   text-wrap: balance;
@@ -181,7 +181,7 @@
   color: var(--newspaper-muted);
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.08em;
   margin-top: 1.5rem !important;
   text-transform: uppercase;
@@ -192,7 +192,7 @@
   display: flex;
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 600;
   justify-content: flex-end;
   letter-spacing: 0.14em;
   margin: 0.75rem 0 clamp(1.5rem, 3vw, 2.5rem);
@@ -278,7 +278,7 @@
   display: inline-block;
   font-family: "Roboto", sans-serif;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.12em;
   padding: 0 0 0.3rem;
   text-decoration: none;
@@ -325,7 +325,7 @@
   cursor: pointer;
   font-family: "Roboto", sans-serif;
   font-size: var(--newspaper-control-size);
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.1em;
   padding: 0.5rem;
   text-transform: uppercase;

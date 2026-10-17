@@ -319,7 +319,7 @@ BLog Details Styles
   color: $body-color-2;
   font-family: $heading-font;
   font-size: $type-size-minimum;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
 
   svg {
@@ -377,7 +377,7 @@ BLog Details Styles
     color: rgba(2, 84, 32, 0.72);
     font-family: $heading-font;
     font-size: $type-size-minimum;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   > div {
@@ -394,7 +394,7 @@ BLog Details Styles
     color: $body-color-2;
     font-family: $heading-font;
     font-size: $type-size-minimum;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     transition: color 180ms ease, background-color 180ms ease;
 
@@ -684,7 +684,7 @@ BLog Details Styles
   color: #fff;
   font-family: $heading-font;
   font-size: $type-size-minimum;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -710,7 +710,7 @@ BLog Details Styles
     color: $theme-color-3;
     font-family: $heading-font;
     font-size: $type-size-minimum;
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: none;
 
     svg {

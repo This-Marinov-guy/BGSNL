@@ -5,7 +5,7 @@
   margin-bottom: 1.5rem;
   color: #232b27;
 }
-.summary { margin-top: 0.5rem; font-weight: 600; }
+.summary { margin-top: 0.5rem; font-weight: 500; }
 .body { padding-top: 0; }
 .description { margin: 0 0 1rem; color: inherit; }
 .controlsRow { display: block; min-width: 0; }
@@ -16,7 +16,7 @@
   grid-auto-flow: row;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
   > * { min-width: 0; }
-  label { display: grid; gap: 0.4rem; margin: 0; color: #232b27; font-weight: 600; }
+  label { display: grid; gap: 0.4rem; margin: 0; color: #232b27; font-weight: 500; }
   input, select, :global(.p-calendar), :global(.p-select) { width: 100%; min-width: 0; }
   input, select { background-color: #fff; }
 }
@@ -28,7 +28,7 @@
 .toggle { display: none; }
 @media (max-width: 767px) {
   .body { padding-top: 0.75rem; }
-  .toggle { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+  .toggle { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 600; cursor: pointer; }
   .toggle svg { transition: transform 250ms ease; }
   .rotated { transform: rotate(180deg); }
   .controls { grid-template-columns: minmax(0, 1fr); }

@@ -86,12 +86,12 @@
 .conversation { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
 .threadHeader { display: grid; gap: .25rem; padding: .5rem 1rem; background: #fff; flex-shrink: 0; h3 { overflow-wrap: anywhere; margin: 0; } > .textButton { justify-self: start; } }
 .threadTools { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
-.detailsButton { min-height: 2.75rem; padding: .4rem .65rem; border: 0; border-radius: .5rem; background: #eaf2ed; color: var(--site-thread-primary); font-weight: 600; cursor: pointer; &:hover { background: #dcebe3; } &:focus-visible { outline: 2px solid var(--site-thread-primary); outline-offset: 2px; } }
+.detailsButton { min-height: 2.75rem; padding: .4rem .65rem; border: 0; border-radius: .5rem; background: #eaf2ed; color: var(--site-thread-primary); font-weight: 500; cursor: pointer; &:hover { background: #dcebe3; } &:focus-visible { outline: 2px solid var(--site-thread-primary); outline-offset: 2px; } }
 .threadHeadingRow > .textButton { min-height: 2.75rem; }
 .threadHeadingRow:has(.statusControl) { align-items: center; }
 .threadHeadingRow { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; min-width: 0; h3 { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } > .status, > .ticketReference { flex-shrink: 0; } }
 .contact { display: grid; gap: .15rem; overflow-wrap: anywhere; padding: .75rem; background: #f3f6f1; border-radius: .65rem; }
-.diagnostics { margin-top: .35rem; color: #53675c; summary { width: fit-content; cursor: pointer; color: var(--site-thread-primary); font-weight: 650; } span { display: block; margin-top: .2rem; } }
+.diagnostics { margin-top: .35rem; color: #53675c; summary { width: fit-content; cursor: pointer; color: var(--site-thread-primary); font-weight: 600; } span { display: block; margin-top: .2rem; } }
 .userAgent { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 1rem; line-height: 1.35; }
 .statusControl {
   --ticket-status-bg: #e1ede6;
@@ -103,7 +103,7 @@
     background: var(--ticket-status-bg); color: var(--ticket-status-color); border-color: transparent;
   }
   :global(.bgsnl-select-input.p-select) { width: 100%; height: auto; min-height: 0 !important; padding: 0; border: 0 !important; border-radius: .65rem; color: var(--ticket-status-color) !important; }
-  :global(.bgsnl-select-input) > button { gap: .5rem; min-height: 2.25rem; padding: .2rem .65rem; border-radius: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; transition: filter 160ms ease; &:hover:not(:disabled) { filter: brightness(.96); } &:disabled { cursor: wait; } &::before { content: ""; width: .45rem; height: .45rem; flex-shrink: 0; border-radius: 50%; background: currentColor; } }
+  :global(.bgsnl-select-input) > button { gap: .5rem; min-height: 2.25rem; padding: .2rem .65rem; border-radius: inherit; font-size: 1rem; font-weight: 500; cursor: pointer; transition: filter 160ms ease; &:hover:not(:disabled) { filter: brightness(.96); } &:disabled { cursor: wait; } &::before { content: ""; width: .45rem; height: .45rem; flex-shrink: 0; border-radius: 50%; background: currentColor; } }
   :global(.bgsnl-select-input) :global(.p-select-value) { min-height: 0; padding: 0 !important; font: inherit; }
   :global(.p-select-indicator) { display: flex; width: auto; padding: 0; svg { width: 1rem; height: 1rem; } }
 }
@@ -280,10 +280,10 @@
   padding: .25rem .6rem;
   border-radius: .4rem;
   background: #e1ede6;
-  font-weight: 600;
+  font-weight: 500;
   &[data-status="rejected"] { background: #fbe8ed; }
   &[data-status="paused"] { background: #fbefd4; }
 }
 .ticketReference { display: inline-flex; align-items: center; gap: .4rem; }
 .ticketTypeIcon { display: inline-flex; color: #d92d20; &[data-type="recommendation"] { color: var(--site-thread-primary); } }
-.requestType { color: var(--site-thread-primary); font-weight: 600; }
+.requestType { color: var(--site-thread-primary); font-weight: 500; }

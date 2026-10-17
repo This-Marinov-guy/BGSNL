@@ -2,17 +2,17 @@
 
 .page { margin-top: clamp(7rem, 10vw, 9rem); padding-bottom: 4rem; }
 .back { margin-bottom: 1.25rem; }
-.back a { display: inline-flex; align-items: center; gap: 0.45rem; color: #087462; font-weight: 700; }
+.back a { display: inline-flex; align-items: center; gap: 0.45rem; color: #087462; font-weight: 600; }
 .heading { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 1rem; }
 .heading h1 { margin: 0; }
 .heading p, .metric p, .service p, .axiomDataset > p { color: var(--dashboard-muted); margin: 0; }
-.heading button { border: 0; border-radius: .65rem; padding: .8rem 1.1rem; background: #087462; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.heading button { border: 0; border-radius: .65rem; padding: .8rem 1.1rem; background: #087462; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
 .heading button:disabled { opacity: .6; cursor: wait; }
 .notice { padding: 1rem; border-radius: .65rem; background: #fff1df; color: #6c450a; }
 .health { padding: 1.5rem; border-radius: 1rem; background: var(--dashboard-surface); }
 .health h2 { margin: 0 0 .25rem; font-size: 1.5rem; }
 .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin-top: .75rem; }
-.metric h5 { margin: 0 0 .6rem; color: var(--dashboard-muted); font-size: 1rem; font-weight: 600; }
+.metric h5 { margin: 0 0 .6rem; color: var(--dashboard-muted); font-size: 1rem; font-weight: 500; }
 .metric strong { display: block; color: #142d22; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1; }
 .metric p { margin-top: .45rem; }
 .bars { display: flex; align-items: flex-end; height: 3rem; gap: 2px; margin-top: .9rem; }
@@ -20,7 +20,7 @@
 .breakdown { margin: 0; }
 .breakdown div { display: flex; justify-content: space-between; gap: .5rem; padding: .35rem 0; }
 .breakdown dt { text-transform: capitalize; }
-.breakdown dd { margin: 0; font-weight: 700; }
+.breakdown dd { margin: 0; font-weight: 600; }
 .health { margin-top: 1rem; }
 .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: .75rem; margin-top: 1.25rem; }
 .service { min-width: 0; border-radius: var(--dashboard-radius); background: #fff; overflow: hidden; }
@@ -43,7 +43,7 @@
 .detailHeader > div { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; }
 .detailHeader h3 { margin: 0; color: var(--dashboard-ink); font-size: 1.35rem; }
 .detailHeader h3:focus-visible { outline: 3px solid var(--dashboard-accent); outline-offset: 3px; }
-.detailHeader button { flex: none; padding: .55rem .8rem; border: 1px solid var(--dashboard-accent); border-radius: .55rem; background: #fff; color: var(--dashboard-accent); font: inherit; font-weight: 700; cursor: pointer; }
+.detailHeader button { flex: none; padding: .55rem .8rem; border: 1px solid var(--dashboard-accent); border-radius: .55rem; background: #fff; color: var(--dashboard-accent); font: inherit; font-weight: 600; cursor: pointer; }
 .detailHeader button:hover { background: #edf6f0; }
 .detailHeader button:focus-visible { outline: 3px solid var(--dashboard-accent); outline-offset: 3px; }
 .detailContent { animation: detail-content-in .2s ease both; }
@@ -51,21 +51,21 @@
 .detailSurface .lastCheck { margin: 1rem 0 0; color: var(--dashboard-muted); }
 @keyframes detail-content-in { from { opacity: 0; transform: translateY(.35rem); } to { opacity: 1; transform: translateY(0); } }
 .serviceHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; }
-.serviceName { font-size: 1rem; font-weight: 700; }
+.serviceName { font-size: 1rem; font-weight: 600; }
 .service p { margin-top: .6rem; font-size: 1rem; }
 .service .lastCheck { margin-top: .85rem; }
-.lastCheck time { color: var(--dashboard-ink); font-weight: 700; }
+.lastCheck time { color: var(--dashboard-ink); font-weight: 600; }
 .serviceFacts { display: grid; gap: .5rem; margin: .3rem 0 0; }
 .serviceFacts div { display: flex; justify-content: space-between; gap: 1rem; }
 .serviceFacts dt { color: var(--dashboard-muted); }
-.serviceFacts dd { margin: 0; font-weight: 700; text-align: right; }
+.serviceFacts dd { margin: 0; font-weight: 600; text-align: right; }
 .sectionNote { margin: .25rem 0 0; color: var(--dashboard-muted); }
 .refreshing { margin-top: 1rem; color: var(--dashboard-muted); }
 .quotaMetric { margin-top: 1rem; }
 .quotaMetricHeading { display: flex; justify-content: space-between; gap: 1rem; }
 .quotaMetricHeading span, .quotaMetric small { color: var(--dashboard-muted); }
-.quotaMetric p { margin: .35rem 0; color: var(--dashboard-ink); font-weight: 700; }
-.quotaMetric .quotaAvailable { color: var(--dashboard-muted); font-weight: 600; }
+.quotaMetric p { margin: .35rem 0; color: var(--dashboard-ink); font-weight: 600; }
+.quotaMetric .quotaAvailable { color: var(--dashboard-muted); font-weight: 500; }
 .quotaMetric small { display: block; margin-top: .35rem; }
 .quotaTrack { height: .65rem; overflow: hidden; border-radius: 99px; background: var(--dashboard-surface); }
 .quotaTrack span { display: block; height: 100%; border-radius: inherit; background: var(--dashboard-accent); }
@@ -74,29 +74,29 @@
 .axiomNotice { margin-top: .85rem; }
 .axiomDatasets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2rem; margin-top: 1.5rem; }
 .axiomDataset:last-child { grid-column: 1 / -1; }
-.axiomDataset h4 { margin: 0 0 .25rem; font-size: 1rem; font-weight: 700; }
+.axiomDataset h4 { margin: 0 0 .25rem; font-size: 1rem; font-weight: 600; }
 .axiomDataset > p:last-child { margin-top: .75rem; }
 .integrationEvents { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding: 0; margin: .75rem 0 0; list-style: none; }
 .integrationEvents li { display: grid; gap: .2rem; }
 .integrationEvents span { color: var(--dashboard-muted); }
-.status { border-radius: 99px; padding: .2rem .55rem; text-transform: capitalize; font-size: 1rem; font-weight: 700; }
+.status { border-radius: 99px; padding: .2rem .55rem; text-transform: capitalize; font-size: 1rem; font-weight: 600; }
 .healthy { background: #d9f2e5; color: #14623d; }
 .unhealthy { background: #ffe5e4; color: #a22d2d; }
 .unverified { background: #fff0d4; color: #765000; }
 .jobAlert { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; padding: 1rem 1.25rem; border: 1px solid #b83d3d; border-left: .4rem solid #b83d3d; border-radius: .75rem; background: #fff0ef; color: #7f1d1d; }
 .jobAlert strong { font-size: 1.15rem; }
 .jobAlert p { margin: .2rem 0 0; }
-.jobAlert button { flex: none; border: 0; border-radius: .55rem; padding: .65rem .9rem; background: #952c2c; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.jobAlert button { flex: none; border: 0; border-radius: .55rem; padding: .65rem .9rem; background: #952c2c; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
 .tabs { @include section-tabs.navigation; margin: 1rem 0; }
 .jobsPanel { padding: 1.5rem; border-radius: 1rem; background: #f0f5f1; }
 .jobsHeading { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
 .jobsHeading h2 { margin: 0 0 .25rem; }
 .jobsHeading p { margin: 0; color: #607168; }
 .jobsNote { margin: .65rem 0 0; color: #607168; }
-.jobsHeading button, .jobPagination button { border: 1px solid #087462; border-radius: .55rem; padding: .55rem .8rem; background: #fff; color: #075744; font: inherit; font-weight: 700; cursor: pointer; }
+.jobsHeading button, .jobPagination button { border: 1px solid #087462; border-radius: .55rem; padding: .55rem .8rem; background: #fff; color: #075744; font: inherit; font-weight: 600; cursor: pointer; }
 .jobsHeading button:disabled, .jobPagination button:disabled { opacity: .5; cursor: default; }
 .jobFilters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.5rem 0 1rem; }
-.jobFilters button { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid #cddbd2; border-radius: 99px; padding: .5rem .8rem; background: #fff; color: #244a36; font: inherit; font-weight: 700; cursor: pointer; }
+.jobFilters button { display: inline-flex; align-items: center; gap: .45rem; border: 1px solid #cddbd2; border-radius: 99px; padding: .5rem .8rem; background: #fff; color: #244a36; font: inherit; font-weight: 600; cursor: pointer; }
 .jobFilters button[aria-pressed="true"] { border-color: #087462; background: #087462; color: #fff; }
 .jobFilters span { font-size: 1rem; opacity: .8; }
 .jobTableScroll { overflow-x: auto; border-radius: .7rem; background: #fff; }
@@ -105,7 +105,7 @@
 .jobTable th { color: #52695b; font-size: 1rem; }
 .jobTable td strong, .jobTable td small { display: block; }
 .jobTable td small { margin-top: .2rem; color: #607168; }
-.jobStatus { display: inline-block; border-radius: 99px; padding: .25rem .55rem; font-size: 1rem; font-weight: 700; text-transform: capitalize; }
+.jobStatus { display: inline-block; border-radius: 99px; padding: .25rem .55rem; font-size: 1rem; font-weight: 600; text-transform: capitalize; }
 .failed { background: #ffe5e4; color: #a22d2d; }
 .pending { background: #fff0d4; color: #765000; }
 .completed { background: #d9f2e5; color: #14623d; }

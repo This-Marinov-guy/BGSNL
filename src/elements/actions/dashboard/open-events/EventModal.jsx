@@ -299,7 +299,7 @@ const EventModal = ({
           {statusLabel}
         </span>
         <div className="event-details-modal__title-with-copy">
-          <h2>{eventTitle}</h2>
+          <h2 title={eventTitle}>{eventTitle}</h2>
           <button
             type="button"
             className="event-details-modal__copy-id"

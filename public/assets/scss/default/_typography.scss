@@ -240,7 +240,7 @@ input[type="reset"],
 input[type="submit"],
 [class*="rn-btn"],
 [class*="rn-button"] {
-  font-weight: $type-weight-semibold;
+  font-weight: $type-weight-medium;
 }
 input,
 label,
@@ -267,7 +267,7 @@ select {
 .footer-area {
   .footer-left .inner h2 {
     font-size: min(4.6875rem, 14cqi);
-    font-weight: $type-weight-black;
+    font-weight: 900;
 
     @media #{$lg-layout} {
       font-size: min(3.125rem, 14cqi);

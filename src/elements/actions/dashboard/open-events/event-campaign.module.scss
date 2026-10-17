@@ -13,7 +13,7 @@
   color: var(--campaign-ink);
   p { margin: 0; }
   fieldset { margin: 0; padding: 0; border: 0; }
-  legend, summary { font-size: 1rem; font-weight: 700; }
+  legend, summary { font-size: 1rem; font-weight: 600; }
   summary { cursor: pointer; padding: .75rem 0; }
 }
 .options { display: flex; gap: .75rem; flex-wrap: wrap;
@@ -23,7 +23,7 @@
   label:active { opacity: .8; }
   input:focus-visible { outline: 2px solid var(--campaign-accent); outline-offset: 2px; }
 }
-.field { display: flex; flex-direction: column; gap: .5rem; font-weight: 700;
+.field { display: flex; flex-direction: column; gap: .5rem; font-weight: 600;
   input, select { min-height: 2.75rem; font: inherit; width: 100%; }
 }
 .notice { display: flex; gap: .5rem; padding: 1rem; border-radius: var(--campaign-radius); background: var(--campaign-surface);

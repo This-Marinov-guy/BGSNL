@@ -147,15 +147,15 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
 
   return (
     <div className="guest-list__table-wrap">
-      <table className="guest-list__table" ref={tableRef}>
-        <thead>
-          <tr>
-            <th className="guest-list__name-column">Name</th>
-            <th>{extended ? "Contact" : "Email"}</th>
-            {extended && columns.preferences && <th className="guest-list__preferences-column">Preferences</th>}
-            {extended && columns.addOns && <th>Add-ons</th>}
-            <th>Type</th>
-            <th>
+      <table className="guest-list__table" ref={tableRef} role="table">
+        <thead role="rowgroup">
+          <tr role="row">
+            <th className="guest-list__name-column" role="columnheader" scope="col">Name</th>
+            <th role="columnheader" scope="col">{extended ? "Contact" : "Email"}</th>
+            {extended && columns.preferences && <th className="guest-list__preferences-column" role="columnheader" scope="col">Preferences</th>}
+            {extended && columns.addOns && <th role="columnheader" scope="col">Add-ons</th>}
+            <th role="columnheader" scope="col">Type</th>
+            <th role="columnheader" scope="col">
               <span className="guest-list__presence-heading">
                 Presence
                 <InfoHint
@@ -164,26 +164,27 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                 />
               </span>
             </th>
-            <th>Purchased</th>
-            {extended && <><th>Ticket</th><th>Transaction ID</th></>}
-            {onEdit && <th className="guest-list__actions-column">Actions</th>}
+            <th role="columnheader" scope="col">Purchased</th>
+            {extended && <><th role="columnheader" scope="col">Ticket</th><th role="columnheader" scope="col">Transaction ID</th></>}
+            {onEdit && <th className="guest-list__actions-column" role="columnheader" scope="col">Actions</th>}
           </tr>
         </thead>
-        <tbody>
-          {!matches.length && <tr><td colSpan={columnCount}><span role="status">No guests match your search.</span></td></tr>}
+        <tbody role="rowgroup">
+          {!matches.length && <tr role="row"><td colSpan={columnCount} role="cell"><span role="status">No guests match your search.</span></td></tr>}
           {matches.map((guest, index) => {
             const id = guestId(guest);
             const isPresent = Number(guest.status) === 1;
             const isRefunded = Boolean(guest.refunded);
             const isPending = pending.has(id);
+            const ticketUrl = ticketHref(guest.ticket);
             return (
-              <tr key={id || `${guest.email}-${index}`} data-refunded={isRefunded || undefined}>
-                <td className="guest-list__name-column">{guest.name || "—"}</td>
-                <td><GuestContact email={guest.email} phone={guest.phone} name={guest.name} extended={extended} /></td>
-                {extended && columns.preferences && <td className="guest-list__preferences-column"><GuestPreferences preferences={guest.preferences} /></td>}
-                {extended && columns.addOns && <td><GuestAddOns addOns={guest.addOns} /></td>}
-                <td><GuestTypeBadge type={guest.type} /></td>
-                <td>
+              <tr key={id || `${guest.email}-${index}`} data-refunded={isRefunded || undefined} role="row">
+                <td className="guest-list__name-column" data-label="Name" role="cell">{guest.name || "—"}</td>
+                <td className="guest-list__contact-cell" data-label={extended ? "Contact" : "Email"} role="cell"><GuestContact email={guest.email} phone={guest.phone} name={guest.name} extended={extended} /></td>
+                {extended && columns.preferences && <td className="guest-list__preferences-column" data-label="Preferences" role="cell"><GuestPreferences preferences={guest.preferences} /></td>}
+                {extended && columns.addOns && <td className="guest-list__add-ons-cell" data-label="Add-ons" role="cell"><GuestAddOns addOns={guest.addOns} /></td>}
+                <td className="guest-list__type-cell" data-label="Type" role="cell"><GuestTypeBadge type={guest.type} /></td>
+                <td className="guest-list__presence-cell" data-label="Presence" role="cell">
                   {isRefunded ? <span className="guest-list__presence guest-list__presence--refunded">Refunded</span> : editable ? (
                     <button
                       aria-busy={isPending || undefined}
@@ -198,12 +199,12 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                     </button>
                   ) : <span className={`guest-list__presence guest-list__presence--${isPresent ? "present" : "missing"}`}>{isPresent ? "Present" : "Missing"}</span>}
                 </td>
-                <td>{guest.timestamp ? formatDisplayDate(guest.timestamp) : "—"}</td>
+                <td className="guest-list__purchased-cell" data-label="Purchased" role="cell">{guest.timestamp ? formatDisplayDate(guest.timestamp) : "—"}</td>
                 {extended && <>
-                  <td>{ticketHref(guest.ticket) ? <a className="guest-list__ticket-link" href={ticketHref(guest.ticket)} target="_blank" rel="noopener noreferrer"><IconlyTicket aria-hidden="true" /><span>Ticket</span></a> : "—"}</td>
-                  <td>{guest.transactionId || "—"}</td>
+                  <td className="guest-list__ticket-cell" data-label={ticketUrl ? undefined : "Ticket"} role="cell">{ticketUrl ? <a className="guest-list__ticket-link" href={ticketUrl} target="_blank" rel="noopener noreferrer"><IconlyTicket aria-hidden="true" /><span>Ticket</span></a> : "—"}</td>
+                  <td className="guest-list__transaction-cell" data-label="Transaction ID" role="cell">{guest.transactionId || "—"}</td>
                 </>}
-                {onEdit && <td className="guest-list__actions-column"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} canRefund={canRefund} /></td>}
+                {onEdit && <td className="guest-list__actions-column" data-label="Actions" role="cell"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} canRefund={canRefund} /></td>}
               </tr>
             );
           })}

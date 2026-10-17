@@ -106,7 +106,7 @@
   align-items: center;
   gap: 0.4rem;
   color: #017363;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .planPicker {
@@ -139,7 +139,7 @@
     cursor: pointer;
     display: flex;
     font: inherit;
-    font-weight: 700;
+    font-weight: 600;
     gap: 0.5rem;
     min-height: 2.75rem;
     padding: 0;
@@ -468,7 +468,7 @@
 
 .dangerLink {
   color: inherit;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.16em;
@@ -497,7 +497,7 @@
   color: var(--color-primary);
   cursor: pointer;
   font: inherit;
-  font-weight: 700;
+  font-weight: 600;
   text-align: left;
   text-decoration: underline;
   text-decoration-thickness: 0.08em;

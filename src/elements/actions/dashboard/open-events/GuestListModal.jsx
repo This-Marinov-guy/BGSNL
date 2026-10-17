@@ -251,7 +251,7 @@ const GuestListModal = ({
         suspended={Boolean(editGuest || refundGuest)}
         header={<div>
           <h2>Guest list{!loading && !syncError && <> <span aria-label={`${presentCount} present out of ${guests.length} guests`}>({presentCount} / {guests.length})</span></>}</h2>
-          <p>{event.title || "Event"}</p>
+          <p title={event.title || "Event"}>{event.title || "Event"}</p>
         </div>}
         maximized={maximized}
         onMaximize={({ maximized: nextMaximized }) => onMaximizeChange(nextMaximized)}

@@ -1,8 +1,12 @@
 # BGSNL design system
 
-Extracted from the existing dashboard and shared controls. This pass applies to dashboard overview/list screens, excluding event creation and editing.
+Extracted from the existing dashboard and shared controls. The typography policy below applies sitewide; the dashboard sections apply to overview/list screens, excluding event creation and editing.
 
 Character: a compact, approachable administration workspace in the existing BGSNL brand.
+
+## Sitewide typography
+
+Roboto body copy uses weight 400 so paragraphs remain comfortable to read. Labels, navigation, and controls use 500; LeagueSpartan headings and deliberate emphasis use 600. These roles apply at mobile and desktop widths. Archive is the display font exception: its established weights, including the homepage hero and footer title, stay intact.
 
 ## Dashboard tokens
 Defined on `.page` in `src/screens/userActions/dashboard-workspace.module.scss`:
@@ -24,6 +28,7 @@ LeagueSpartan, Roboto, sans-serif. Body/control text stays at least 1rem. Dashbo
 - Filters: retain blue label panel; desktop fields share a row and reset uses a 44px column. Tablet two columns; mobile disclosure with stacked fields and a labelled reset.
 - Cards: existing complete border, compact image at upper right, two-column facts. No decorative single-edge borders.
 - Accounts: desktop table with contained horizontal scroll; mobile identity first, region and actions second. Long names and email addresses wrap.
+- Guest list: desktop table; mobile rows use compact cards with name and actions first, email beneath, type and presence together, and short metadata on one line. The modal body scrolls vertically beneath its fixed header, including in fullscreen mode.
 - Internships: compact identity row, labelled availability toggle, separate edit/delete actions and a 44px drag handle with arrow-key reordering. Layout is CSS-based, without viewport resize state.
 - Motion: existing short 150–250ms transitions; respect reduced motion.
 

@@ -69,12 +69,12 @@ export default function ShareImage({ eyebrow, title, description, imageSrc, imag
             background: "#ffffff",
             color: "#15111f",
             fontSize: "22px",
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           {SITE_SHORT_NAME}
         </span>
-        <span style={{ fontSize: "24px", fontWeight: 600 }}>{eyebrow || SITE_NAME}</span>
+        <span style={{ fontSize: "24px", fontWeight: 500 }}>{eyebrow || SITE_NAME}</span>
       </div>
       <div
         style={{
@@ -90,7 +90,7 @@ export default function ShareImage({ eyebrow, title, description, imageSrc, imag
             lineHeight: 1.04,
             letterSpacing: "-0.035em",
             fontSize: `${titleSize}px`,
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           {truncateTitle(title)}

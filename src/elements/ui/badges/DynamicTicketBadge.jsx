@@ -5,7 +5,7 @@ import SolidBadge from "./SolidBadge";
 const birdBadgeStyle = {
   fontFamily: '"LeagueSpartan", sans-serif',
   fontSize: "1.35rem",
-  fontWeight: 700,
+  fontWeight: 600,
 };
 
 const DynamicTicketBadge = ({ product, isMember }) => {

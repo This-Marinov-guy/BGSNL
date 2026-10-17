@@ -81,7 +81,7 @@
   font-size: 1.25rem;
   line-height: 1.35;
 
-  strong { color: inherit; font-weight: 700; }
+  strong { color: inherit; font-weight: 600; }
 }
 
 .photo {
@@ -135,7 +135,7 @@
   background: var(--join-button);
   color: var(--join-button-text);
   font-size: 1.0625rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.35;
   text-decoration: none;
   transition: background-color 180ms ease, transform 180ms ease;
@@ -151,7 +151,7 @@
 .learnMore {
   color: var(--join-accent);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.5;
   text-decoration: underline;
   text-underline-offset: 0.2em;

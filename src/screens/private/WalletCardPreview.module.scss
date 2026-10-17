@@ -70,7 +70,7 @@
   border-radius: 999px;
   background: #e1f1e4;
   color: #285f35;
-  font-weight: 700;
+  font-weight: 600;
   &[data-status="locked"] { background: #f4e4df; color: #913d27; }
 }
 .cardToolbar {
@@ -95,7 +95,7 @@
   color: #406345;
   font-family: "LeagueSpartan", "Roboto", sans-serif;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
 
@@ -350,7 +350,7 @@
   text-align: center;
   h2 { color: #406345; text-transform: uppercase; font-weight: 400; line-height: 1.2; margin: 0 0 1.5cqw; overflow-wrap: anywhere; }
   // The global mobile paragraph rule forces 28px; this line height must scale with the card.
-  p { color: #262626; line-height: 1.1 !important; font-weight: 700; margin: 0; overflow-wrap: anywhere; text-wrap: balance; }
+  p { color: #262626; line-height: 1.1 !important; font-weight: 600; margin: 0; overflow-wrap: anywhere; text-wrap: balance; }
 }
 .qr {
   position: absolute;
@@ -368,7 +368,7 @@
   a {
     color: #406345;
     font-family: inherit;
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
