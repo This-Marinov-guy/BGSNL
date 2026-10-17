@@ -65,6 +65,8 @@ const GuestListModal = ({
   const [refundAmount, setRefundAmount] = useState("");
   const [refundReason, setRefundReason] = useState("");
   const [includeFee, setIncludeFee] = useState(false);
+  const [delivery, setDelivery] = useState(null);
+  const [deliveryBusy, setDeliveryBusy] = useState(false);
   const refundRequest = useRef(0);
   const presentCount = guests.filter((guest) => Number(guest.status) === 1 && !guest.refunded).length;
   const openScanner = () => {
@@ -167,8 +169,47 @@ const GuestListModal = ({
     finally { setRefundBusy(false); }
   };
 
+  const submitDelivery = async submitEvent => {
+    submitEvent.preventDefault();
+    if (!delivery || deliveryBusy) return;
+    setDeliveryBusy(true);
+    const { guest, kind } = delivery;
+    const action = kind === "receipt" ? "receipt" : "ticket";
+    try {
+      const guestId = guest.id || guest._id;
+      const response = await browserFetch(`/api/event/guest-list/${eventId}/guests/${guestId}/send-${action}`, {
+        method: "POST", signal: AbortSignal.timeout(kind === "ticket" ? 120000 : 30000),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.status) throw new Error(data.message || `Could not send the ${action}. Please try again.`);
+      setDelivery(null);
+      dispatch(showNotification({ severity: "success",
+        summary: kind === "receipt" ? "Receipt email accepted" : "Ticket email accepted",
+        detail: `Requested for ${data.email || guest.email}.` }));
+    } catch (error) {
+      dispatch(showNotification({ severity: "error", summary: `Could not send ${action}`,
+        detail: error.name === "TimeoutError"
+          ? `The request timed out. Check ${kind === "receipt" ? "the guest's inbox or Stripe" : "the guest's inbox"} before trying again.`
+          : error.message || `Could not send the ${action}. Please try again.` }));
+    } finally { setDeliveryBusy(false); }
+  };
+
   return (
     <>
+      <Dialog className="guest-list-delivery-modal" header={delivery?.kind === "receipt" ? "Send Stripe receipt" : "Send ticket"}
+        maximizable={false} visible={Boolean(delivery)} onHide={() => { if (!deliveryBusy) setDelivery(null); }}>
+        <form onSubmit={submitDelivery}>
+          <p>{delivery?.kind === "receipt"
+            ? <>Email the Stripe receipt for this payment to <strong>{delivery.guest.email}</strong>. If other tickets were bought in the same payment, the receipt covers the full purchase.</>
+            : <>Send the ticket email again to <strong>{delivery?.guest.email}</strong>.</>}</p>
+          <div className="guest-list__form-actions">
+            <button type="button" onClick={() => setDelivery(null)} disabled={deliveryBusy}>Cancel</button>
+            <button type="submit" disabled={deliveryBusy} aria-busy={deliveryBusy}>
+              {deliveryBusy ? "Sending…" : delivery?.kind === "receipt" ? "Send receipt" : "Send ticket"}
+            </button>
+          </div>
+        </form>
+      </Dialog>
       <Dialog className="guest-list-edit-modal" header="Edit attendee" maximizable={false}
         visible={Boolean(editGuest)} onHide={() => { if (!editBusy) setEditGuest(null); }}>
         <form className="guest-list__edit-form" onSubmit={saveEdit}>
@@ -248,7 +289,7 @@ const GuestListModal = ({
         className={`guest-list-modal${extended ? " guest-list-modal--extended" : ""}`}
         contentClassName="guest-list-modal__body"
         dismissableMask
-        suspended={Boolean(editGuest || refundGuest)}
+        suspended={Boolean(editGuest || refundGuest || delivery)}
         header={<div>
           <h2>Guest list{!loading && !syncError && <> <span aria-label={`${presentCount} present out of ${guests.length} guests`}>({presentCount} / {guests.length})</span></>}</h2>
           <p title={event.title || "Event"}>{event.title || "Event"}</p>
@@ -269,6 +310,8 @@ const GuestListModal = ({
           <GuestListTable columns={columns} search={search} extended={extended} editable guests={guests}
             onPresenceChange={updatePresence} onEdit={canEdit ? openEdit : undefined}
             onRefund={canRefund ? openRefund : undefined} canRefund={canRefund}
+            onSendTicket={canEdit ? guest => setDelivery({ kind: "ticket", guest }) : undefined}
+            onSendReceipt={canRefund ? guest => setDelivery({ kind: "receipt", guest }) : undefined}
             pendingGuestIds={pendingGuestIds} />
         )}
         <p className="guest-list__sync-note" role="status">{syncError ? "Connection interrupted. The list may be out of date; reconnecting automatically." : live ? "Live attendance updates. Changes sync quietly in the background." : "Syncing in the background. Reconnecting to live updates."}</p>

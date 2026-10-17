@@ -97,16 +97,20 @@ const GuestTypeBadge = ({ type }) => {
 
 GuestTypeBadge.propTypes = { type: PropTypes.string };
 
-const GuestActions = ({ guest, onEdit, onRefund, canRefund }) => {
+const GuestActions = ({ guest, onEdit, onRefund, onSendTicket, onSendReceipt, canRefund }) => {
   const menuId = useId();
   const menuRef = useRef(null);
   const refunded = Boolean(guest.refunded);
-  const hasPayment = Boolean(guest.transactionId && guest.transactionId !== "-");
+  const hasPayment = /^(pi|cs)_/.test(String(guest.transactionId || ""));
+  const ticketUrl = ticketHref(guest.ticket);
+  const hasTicket = Boolean(ticketUrl?.startsWith("https://") && !new URL(ticketUrl).username && !new URL(ticketUrl).password);
   const positionMenu = event => {
     const bounds = event.currentTarget.getBoundingClientRect();
     if (!menuRef.current) return;
     menuRef.current.style.left = `${Math.max(8, Math.min(bounds.right - 176, window.innerWidth - 184))}px`;
-    menuRef.current.style.top = `${bounds.bottom + 112 > window.innerHeight ? Math.max(8, bounds.top - 112) : bounds.bottom + 6}px`;
+    const menuHeight = 12 + 44 * (Number(Boolean(onEdit)) + Number(Boolean(onSendTicket)) +
+      Number(Boolean(onSendReceipt)) + Number(Boolean(canRefund && onRefund)));
+    menuRef.current.style.top = `${bounds.bottom + menuHeight > window.innerHeight ? Math.max(8, bounds.top - menuHeight - 6) : bounds.bottom + 6}px`;
   };
   const select = action => { menuRef.current?.hidePopover(); action(guest); };
   return <div className="guest-list__row-actions">
@@ -115,18 +119,24 @@ const GuestActions = ({ guest, onEdit, onRefund, canRefund }) => {
     <button type="button" className="guest-list__more" popoverTarget={menuId} onClick={positionMenu}
       aria-label={`Actions for ${guest.name || "guest"}`} title="Guest actions">⋮</button>
     <div id={menuId} ref={menuRef} popover="auto" className="guest-list__row-menu">
-      <button type="button" onClick={() => select(onEdit)}>Edit</button>
+      {onEdit && <button type="button" onClick={() => select(onEdit)}>Edit</button>}
+      {onSendTicket && <button type="button" disabled={refunded || !hasTicket}
+        title={refunded ? "Refunded tickets cannot be sent" : !hasTicket ? "No ticket image is available" : undefined}
+        onClick={() => select(onSendTicket)}>{refunded ? "Ticket refunded" : hasTicket ? "Send ticket" : "No ticket to send"}</button>}
+      {onSendReceipt && <button type="button" disabled={refunded || !hasPayment}
+        title={refunded ? "Refunded payments cannot receive a receipt" : !hasPayment ? "No Stripe payment is available" : undefined}
+        onClick={() => select(onSendReceipt)}>{refunded ? "Payment refunded" : hasPayment ? "Send receipt" : "No receipt available"}</button>}
       {canRefund && onRefund && <button type="button" className="guest-list__row-menu-refund"
         disabled={refunded || !hasPayment}
         onClick={() => select(onRefund)}>{refunded ? "Already refunded" : !hasPayment ? "No payment to refund" : "Refund"}</button>}
     </div>
   </div>;
 };
-GuestActions.propTypes = { guest: PropTypes.object.isRequired, onEdit: PropTypes.func.isRequired,
-  onRefund: PropTypes.func, canRefund: PropTypes.bool };
+GuestActions.propTypes = { guest: PropTypes.object.isRequired, onEdit: PropTypes.func,
+  onRefund: PropTypes.func, onSendTicket: PropTypes.func, onSendReceipt: PropTypes.func, canRefund: PropTypes.bool };
 
 const GuestListTable = ({ columns = {}, guests, search = "", extended = false, editable = false, onPresenceChange,
-  onEdit, onRefund, canRefund = false, pendingGuestIds = [] }) => {
+  onEdit, onRefund, onSendTicket, onSendReceipt, canRefund = false, pendingGuestIds = [] }) => {
   const tableRef = useRef(null);
   const previousExtended = useRef(extended);
   useEffect(() => {
@@ -143,7 +153,8 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
 
   const pending = new Set(pendingGuestIds);
   const matches = filterGuestList(guests, search);
-  const columnCount = 5 + Number(Boolean(onEdit)) + (extended ? 2 + Number(Boolean(columns.preferences)) + Number(Boolean(columns.addOns)) : 0);
+  const hasActions = Boolean(onEdit || onSendTicket || onSendReceipt);
+  const columnCount = 5 + Number(hasActions) + (extended ? 2 + Number(Boolean(columns.preferences)) + Number(Boolean(columns.addOns)) : 0);
 
   return (
     <div className="guest-list__table-wrap">
@@ -166,7 +177,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
             </th>
             <th role="columnheader" scope="col">Purchased</th>
             {extended && <><th role="columnheader" scope="col">Ticket</th><th role="columnheader" scope="col">Transaction ID</th></>}
-            {onEdit && <th className="guest-list__actions-column" role="columnheader" scope="col">Actions</th>}
+            {hasActions && <th className="guest-list__actions-column" role="columnheader" scope="col">Actions</th>}
           </tr>
         </thead>
         <tbody role="rowgroup">
@@ -204,7 +215,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                   <td className="guest-list__ticket-cell" data-label={ticketUrl ? undefined : "Ticket"} role="cell">{ticketUrl ? <a className="guest-list__ticket-link" href={ticketUrl} target="_blank" rel="noopener noreferrer"><IconlyTicket aria-hidden="true" /><span>Ticket</span></a> : "—"}</td>
                   <td className="guest-list__transaction-cell" data-label="Transaction ID" role="cell">{guest.transactionId || "—"}</td>
                 </>}
-                {onEdit && <td className="guest-list__actions-column" data-label="Actions" role="cell"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} canRefund={canRefund} /></td>}
+                {hasActions && <td className="guest-list__actions-column" data-label="Actions" role="cell"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} onSendTicket={onSendTicket} onSendReceipt={onSendReceipt} canRefund={canRefund} /></td>}
               </tr>
             );
           })}
@@ -243,6 +254,8 @@ GuestListTable.propTypes = {
   onPresenceChange: PropTypes.func,
   onEdit: PropTypes.func,
   onRefund: PropTypes.func,
+  onSendTicket: PropTypes.func,
+  onSendReceipt: PropTypes.func,
   canRefund: PropTypes.bool,
   pendingGuestIds: PropTypes.arrayOf(PropTypes.string),
 };

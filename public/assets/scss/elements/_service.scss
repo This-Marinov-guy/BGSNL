@@ -1355,7 +1355,8 @@ button.guest-list__presence {
 .guest-list__skeleton { display: grid; gap: .6rem; }
 
 .bgsnl-modal.guest-list-edit-modal,
-.bgsnl-modal.guest-list-refund-modal { width: min(32rem, calc(100vw - 2rem)); }
+.bgsnl-modal.guest-list-refund-modal,
+.bgsnl-modal.guest-list-delivery-modal { width: min(32rem, calc(100vw - 2rem)); }
 
 .guest-list__edit-form,
 .guest-list__refund-form {
