@@ -2,7 +2,7 @@ import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import { useEffect, useId, useRef } from "react";
 import PropTypes from "prop-types";
 import InfoHint from "@/elements/ui/icons/InfoHint";
-import { IconlyTicket, IconlyChat, IconlyCall } from "@/elements/ui/icons/IconlyIcons";
+import { IconlyTicket, IconlyChat, IconlyCall, IconlyEdit, IconlyDocument, IconlyWallet } from "@/elements/ui/icons/IconlyIcons";
 import { filterGuestList } from "@/util/functions/guest-list-search.mjs";
 
 const ticketHref = value => {
@@ -107,7 +107,8 @@ const GuestActions = ({ guest, onEdit, onRefund, onSendTicket, onSendReceipt, ca
   const positionMenu = event => {
     const bounds = event.currentTarget.getBoundingClientRect();
     if (!menuRef.current) return;
-    menuRef.current.style.left = `${Math.max(8, Math.min(bounds.right - 176, window.innerWidth - 184))}px`;
+    const menuWidth = 208;
+    menuRef.current.style.left = `${Math.max(8, Math.min(bounds.right - menuWidth, window.innerWidth - menuWidth - 8))}px`;
     const menuHeight = 12 + 44 * (Number(Boolean(onEdit)) + Number(Boolean(onSendTicket)) +
       Number(Boolean(onSendReceipt)) + Number(Boolean(canRefund && onRefund)));
     menuRef.current.style.top = `${bounds.bottom + menuHeight > window.innerHeight ? Math.max(8, bounds.top - menuHeight - 6) : bounds.bottom + 6}px`;
@@ -119,16 +120,16 @@ const GuestActions = ({ guest, onEdit, onRefund, onSendTicket, onSendReceipt, ca
     <button type="button" className="guest-list__more" popoverTarget={menuId} onClick={positionMenu}
       aria-label={`Actions for ${guest.name || "guest"}`} title="Guest actions">⋮</button>
     <div id={menuId} ref={menuRef} popover="auto" className="guest-list__row-menu">
-      {onEdit && <button type="button" onClick={() => select(onEdit)}>Edit</button>}
+      {onEdit && <button type="button" onClick={() => select(onEdit)}><IconlyEdit aria-hidden="true" /><span>Edit</span></button>}
       {onSendTicket && <button type="button" disabled={refunded || !hasTicket}
         title={refunded ? "Refunded tickets cannot be sent" : !hasTicket ? "No ticket image is available" : undefined}
-        onClick={() => select(onSendTicket)}>{refunded ? "Ticket refunded" : hasTicket ? "Send ticket" : "No ticket to send"}</button>}
+        onClick={() => select(onSendTicket)}><IconlyTicket aria-hidden="true" /><span>{refunded ? "Ticket refunded" : hasTicket ? "Send ticket" : "No ticket to send"}</span></button>}
       {onSendReceipt && <button type="button" disabled={refunded || !hasPayment}
         title={refunded ? "Refunded payments cannot receive a receipt" : !hasPayment ? "No Stripe payment is available" : undefined}
-        onClick={() => select(onSendReceipt)}>{refunded ? "Payment refunded" : hasPayment ? "Send receipt" : "No receipt available"}</button>}
+        onClick={() => select(onSendReceipt)}><IconlyDocument aria-hidden="true" /><span>{refunded ? "Payment refunded" : hasPayment ? "Send receipt" : "No receipt available"}</span></button>}
       {canRefund && onRefund && <button type="button" className="guest-list__row-menu-refund"
         disabled={refunded || !hasPayment}
-        onClick={() => select(onRefund)}>{refunded ? "Already refunded" : !hasPayment ? "No payment to refund" : "Refund"}</button>}
+        onClick={() => select(onRefund)}><IconlyWallet aria-hidden="true" /><span>{refunded ? "Already refunded" : !hasPayment ? "No payment to refund" : "Refund"}</span></button>}
     </div>
   </div>;
 };

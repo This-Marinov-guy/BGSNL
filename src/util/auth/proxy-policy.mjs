@@ -29,6 +29,8 @@ const routes = {
     "event/:id/campaigns/preview", "event/:id/campaigns/confirm",
     "event/feedback/:ticketId",
     "event/guest-list/:eventId/guests/:guestId/refund",
+    "event/guest-list/:eventId/guests/:guestId/send-ticket",
+    "event/guest-list/:eventId/guests/:guestId/send-receipt",
     "support/live",
     "user/wallet/google", "user/wallet/card",
     "backoffice/access-requests", "backoffice/accounts/bulk-roles/preview", "backoffice/accounts/bulk-roles/apply", "backoffice/accounts/:type/:id/cancel-subscription", "backoffice/accounts/:type/:id/transfer",

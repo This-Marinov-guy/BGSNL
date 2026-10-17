@@ -452,7 +452,7 @@ test("the website manifest covers browser routes but keeps integration and serve
     "future-event": "Events/future-events-routes.js", payment: "payments-routes.js", internship: "internship-routes.js", dashboard: "dashboard-routes.js",
     backoffice: "backoffice-routes.js", support: "support-routes.js", monitoring: "monitoring-routes.js",
     wordpress: "Integration/wordpress-routes.js", contest: "contest-routes.js", special: "special-routes.js" };
-  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "user/wallet/public/fixture", "event/sync-calendar-events", "future-event/archive-expired", "security/session/refresh", "security/session/activity", "security/session/logout", "monitoring/web-events"];
+  const privatePaths = ["payment/result", "payment/event-ticket", "user/export-vital-stats", "user/wallet/public/fixture", "event/wallet/details", "event/sync-calendar-events", "future-event/archive-expired", "security/session/refresh", "security/session/activity", "security/session/logout", "monitoring/web-events"];
   for (const [group, file] of Object.entries(routeFiles)) {
     const source = await readFile(new URL(`../../BGSNL-API/routes/${file}`, import.meta.url), "utf8");
     for (const [, method, route] of source.matchAll(/\b(?:\w*Router|router)\.(get|post|patch|delete)\(\s*["']([^"']+)["']/g)) {
@@ -464,9 +464,22 @@ test("the website manifest covers browser routes but keeps integration and serve
   assert.equal(proxyPolicy.browserApiPath(["security", "login"], "GET"), null);
   assert.equal(proxyPolicy.browserApiPath(["user", "new-maintenance-job"], "POST"), null);
 });
+
+test("guest delivery POST requests reach the API through the website proxy", async () => {
+  const h = await harness({ credential: token() });
+  const base = `event/guest-list/${"a".repeat(24)}/guests/${"b".repeat(24)}`;
+  for (const action of ["send-ticket", "send-receipt"]) {
+    const path = `${base}/${action}`;
+    const response = await h.mutate(`v1/${path}`);
+    assert.equal(response.status, 200, path);
+    assert.equal(h.calls.at(-1).url.pathname, `/api/v1/${path}`);
+    assert.equal((await h.request(`v1/${path}`)).status, 404, `GET ${path} must remain blocked`);
+  }
+  assert.equal(h.calls.length, 2);
+});
 test("confirmation has no global analytics scripts", async () => {
   const analytics = await readFile(new URL("../src/component/common/WebsiteAnalytics.jsx", import.meta.url), "utf8");
-  assert.match(analytics, /if \([^;\n]*pathname === "\/account\/confirm"[^;\n]*\) return null/);
+  assert.match(analytics, /pathname === "\/account\/confirm"[\s\S]*?\) return null;/);
   const helpers = await readFile(new URL("../src/util/functions/helpers.js", import.meta.url), "utf8");
   for (const name of ["gaTrack", "clarityTrack"]) assert.match(helpers, new RegExp(`${name} = \\(\\) => \\{\\s+if \\(window.location.pathname === "/account/confirm"\\) return`));
 });

@@ -1304,7 +1304,7 @@
   position: fixed;
   inset: auto;
   margin: 0;
-  width: 11rem;
+  width: 13rem;
   padding: .35rem;
   border: 1px solid #d8e4de;
   border-radius: .6rem;
@@ -1312,7 +1312,9 @@
   box-shadow: 0 6px 18px rgb(23 70 60 / 15%);
 
   button {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
     width: 100%;
     min-height: 2.75rem;
     padding: .6rem .7rem;
@@ -1323,6 +1325,7 @@
     cursor: pointer;
     text-align: left;
   }
+  button svg { width: 1.125rem; height: 1.125rem; flex: none; }
   button:hover:not(:disabled), button:focus-visible { background: #e0efe9; }
   button:focus-visible { outline: 2px solid #017363; outline-offset: -2px; }
   button:disabled { color: #7d8b84; cursor: not-allowed; }
