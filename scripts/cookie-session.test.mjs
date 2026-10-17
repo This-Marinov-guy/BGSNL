@@ -477,6 +477,14 @@ test("guest delivery POST requests reach the API through the website proxy", asy
   }
   assert.equal(h.calls.length, 2);
 });
+test("free guest ticket DELETE reaches the API through the website proxy", async () => {
+  const h = await harness({ credential: token() });
+  const path = `event/guest-list/${"a".repeat(24)}/guests/${"b".repeat(24)}`;
+  const response = await h.mutate(`v1/${path}`, { method: "DELETE" });
+  assert.equal(response.status, 200);
+  assert.equal(h.calls.at(-1).url.pathname, `/api/v1/${path}`);
+  assert.equal((await h.request(`v1/${path}`)).status, 404);
+});
 test("confirmation has no global analytics scripts", async () => {
   const analytics = await readFile(new URL("../src/component/common/WebsiteAnalytics.jsx", import.meta.url), "utf8");
   assert.match(analytics, /pathname === "\/account\/confirm"[\s\S]*?\) return null;/);

@@ -125,5 +125,10 @@ export function useLiveGuestList(eventId, enabled, initialGuests = [], initialCo
     refresh.current?.invalidate();
   }, []);
 
-  return { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate };
+  const removeGuest = useCallback(guestId => {
+    setGuests(current => current.filter(item => String(item.id || item._id) !== String(guestId)));
+    refresh.current?.invalidate();
+  }, []);
+
+  return { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate, removeGuest };
 }

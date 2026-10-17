@@ -48,7 +48,7 @@ const GuestListModal = ({
   visible,
 }) => {
   const eventId = event.id || event._id;
-  const { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate } = useLiveGuestList(eventId, visible);
+  const { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate, removeGuest } = useLiveGuestList(eventId, visible);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const canEdit = checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS);
@@ -67,6 +67,8 @@ const GuestListModal = ({
   const [includeFee, setIncludeFee] = useState(false);
   const [delivery, setDelivery] = useState(null);
   const [deliveryBusy, setDeliveryBusy] = useState(false);
+  const [deleteGuest, setDeleteGuest] = useState(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
   const refundRequest = useRef(0);
   const presentCount = guests.filter((guest) => Number(guest.status) === 1 && !guest.refunded).length;
   const openScanner = () => {
@@ -194,8 +196,41 @@ const GuestListModal = ({
     } finally { setDeliveryBusy(false); }
   };
 
+  const submitDelete = async submitEvent => {
+    submitEvent.preventDefault();
+    if (!deleteGuest || deleteBusy) return;
+    setDeleteBusy(true);
+    try {
+      const guestId = deleteGuest.id || deleteGuest._id;
+      const response = await browserFetch(`/api/event/guest-list/${eventId}/guests/${guestId}`, {
+        method: "DELETE", signal: AbortSignal.timeout(30000),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.status) throw new Error(data.message || "Could not delete this free ticket. Please try again.");
+      removeGuest(guestId);
+      setDeleteGuest(null);
+      dispatch(showNotification({ severity: "success", summary: "Free ticket deleted",
+        detail: `The ticket for ${deleteGuest.name || "this guest"} can no longer be used.` }));
+    } catch (error) {
+      dispatch(showNotification({ severity: "error", summary: "Could not delete ticket",
+        detail: error.message || "Please try again." }));
+    } finally { setDeleteBusy(false); }
+  };
+
   return (
     <>
+      <Dialog className="guest-list-delivery-modal" header="Delete free ticket" maximizable={false}
+        visible={Boolean(deleteGuest)} onHide={() => { if (!deleteBusy) setDeleteGuest(null); }}>
+        <form onSubmit={submitDelete}>
+          <p>Delete the free ticket for <strong>{deleteGuest?.name || "this guest"}</strong>? It will be removed from the guest list and can no longer be scanned. This cannot be undone.</p>
+          <div className="guest-list__form-actions">
+            <button type="button" autoFocus onClick={() => setDeleteGuest(null)} disabled={deleteBusy}>Keep ticket</button>
+            <button type="submit" className="guest-list__refund-confirm" disabled={deleteBusy} aria-busy={deleteBusy}>
+              {deleteBusy ? "Deleting…" : "Delete ticket"}
+            </button>
+          </div>
+        </form>
+      </Dialog>
       <Dialog className="guest-list-delivery-modal" header={delivery?.kind === "receipt" ? "Send Stripe receipt" : "Send ticket"}
         maximizable={false} visible={Boolean(delivery)} onHide={() => { if (!deliveryBusy) setDelivery(null); }}>
         <form onSubmit={submitDelivery}>
@@ -289,7 +324,7 @@ const GuestListModal = ({
         className={`guest-list-modal${extended ? " guest-list-modal--extended" : ""}`}
         contentClassName="guest-list-modal__body"
         dismissableMask
-        suspended={Boolean(editGuest || refundGuest || delivery)}
+        suspended={Boolean(editGuest || refundGuest || delivery || deleteGuest)}
         header={<div>
           <h2>Guest list{!loading && !syncError && <> <span aria-label={`${presentCount} present out of ${guests.length} guests`}>({presentCount} / {guests.length})</span></>}</h2>
           <p title={event.title || "Event"}>{event.title || "Event"}</p>
@@ -310,6 +345,7 @@ const GuestListModal = ({
           <GuestListTable columns={columns} search={search} extended={extended} editable guests={guests}
             onPresenceChange={updatePresence} onEdit={canEdit ? openEdit : undefined}
             onRefund={canRefund ? openRefund : undefined} canRefund={canRefund}
+            onDelete={canRefund ? setDeleteGuest : undefined}
             onSendTicket={canEdit ? guest => setDelivery({ kind: "ticket", guest }) : undefined}
             onSendReceipt={canRefund ? guest => setDelivery({ kind: "receipt", guest }) : undefined}
             pendingGuestIds={pendingGuestIds} />

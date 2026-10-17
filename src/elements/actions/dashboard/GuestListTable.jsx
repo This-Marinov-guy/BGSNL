@@ -2,7 +2,7 @@ import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import { useEffect, useId, useRef } from "react";
 import PropTypes from "prop-types";
 import InfoHint from "@/elements/ui/icons/InfoHint";
-import { IconlyTicket, IconlyChat, IconlyCall, IconlyEdit, IconlyDocument, IconlyWallet } from "@/elements/ui/icons/IconlyIcons";
+import { IconlyTicket, IconlyChat, IconlyCall, IconlyEdit, IconlyDocument, IconlyWallet, IconlyDelete } from "@/elements/ui/icons/IconlyIcons";
 import { filterGuestList } from "@/util/functions/guest-list-search.mjs";
 
 const ticketHref = value => {
@@ -91,13 +91,13 @@ GuestAddOns.propTypes = {
 };
 
 const GuestTypeBadge = ({ type }) => {
-  const key = typeKey(type);
+  const key = typeKey(type).replace(/^free_/, "");
   return <span className={`guest-list__type guest-list__type--${key}`}>{TYPE_LABELS[key] || type || "Guest"}</span>;
 };
 
 GuestTypeBadge.propTypes = { type: PropTypes.string };
 
-const GuestActions = ({ guest, onEdit, onRefund, onSendTicket, onSendReceipt, canRefund }) => {
+const GuestActions = ({ guest, onEdit, onRefund, onDelete, onSendTicket, onSendReceipt, canRefund }) => {
   const menuId = useId();
   const menuRef = useRef(null);
   const refunded = Boolean(guest.refunded);
@@ -110,7 +110,7 @@ const GuestActions = ({ guest, onEdit, onRefund, onSendTicket, onSendReceipt, ca
     const menuWidth = 208;
     menuRef.current.style.left = `${Math.max(8, Math.min(bounds.right - menuWidth, window.innerWidth - menuWidth - 8))}px`;
     const menuHeight = 12 + 44 * (Number(Boolean(onEdit)) + Number(Boolean(onSendTicket)) +
-      Number(Boolean(onSendReceipt)) + Number(Boolean(canRefund && onRefund)));
+      Number(Boolean(onSendReceipt)) + Number(Boolean(canRefund && (guest.isFree ? onDelete : onRefund))));
     menuRef.current.style.top = `${bounds.bottom + menuHeight > window.innerHeight ? Math.max(8, bounds.top - menuHeight - 6) : bounds.bottom + 6}px`;
   };
   const select = action => { menuRef.current?.hidePopover(); action(guest); };
@@ -127,17 +127,19 @@ const GuestActions = ({ guest, onEdit, onRefund, onSendTicket, onSendReceipt, ca
       {onSendReceipt && <button type="button" disabled={refunded || !hasPayment}
         title={refunded ? "Refunded payments cannot receive a receipt" : !hasPayment ? "No Stripe payment is available" : undefined}
         onClick={() => select(onSendReceipt)}><IconlyDocument aria-hidden="true" /><span>{refunded ? "Payment refunded" : hasPayment ? "Send receipt" : "No receipt available"}</span></button>}
-      {canRefund && onRefund && <button type="button" className="guest-list__row-menu-refund"
+      {canRefund && guest.isFree && onDelete && <button type="button" className="guest-list__row-menu-refund"
+        onClick={() => select(onDelete)}><IconlyDelete aria-hidden="true" /><span>Delete ticket</span></button>}
+      {canRefund && !guest.isFree && onRefund && <button type="button" className="guest-list__row-menu-refund"
         disabled={refunded || !hasPayment}
         onClick={() => select(onRefund)}><IconlyWallet aria-hidden="true" /><span>{refunded ? "Already refunded" : !hasPayment ? "No payment to refund" : "Refund"}</span></button>}
     </div>
   </div>;
 };
 GuestActions.propTypes = { guest: PropTypes.object.isRequired, onEdit: PropTypes.func,
-  onRefund: PropTypes.func, onSendTicket: PropTypes.func, onSendReceipt: PropTypes.func, canRefund: PropTypes.bool };
+  onRefund: PropTypes.func, onDelete: PropTypes.func, onSendTicket: PropTypes.func, onSendReceipt: PropTypes.func, canRefund: PropTypes.bool };
 
 const GuestListTable = ({ columns = {}, guests, search = "", extended = false, editable = false, onPresenceChange,
-  onEdit, onRefund, onSendTicket, onSendReceipt, canRefund = false, pendingGuestIds = [] }) => {
+  onEdit, onRefund, onDelete, onSendTicket, onSendReceipt, canRefund = false, pendingGuestIds = [] }) => {
   const tableRef = useRef(null);
   const previousExtended = useRef(extended);
   useEffect(() => {
@@ -154,7 +156,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
 
   const pending = new Set(pendingGuestIds);
   const matches = filterGuestList(guests, search);
-  const hasActions = Boolean(onEdit || onSendTicket || onSendReceipt);
+  const hasActions = Boolean(onEdit || onSendTicket || onSendReceipt || onRefund || onDelete);
   const columnCount = 5 + Number(hasActions) + (extended ? 2 + Number(Boolean(columns.preferences)) + Number(Boolean(columns.addOns)) : 0);
 
   return (
@@ -195,7 +197,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                 <td className="guest-list__contact-cell" data-label={extended ? "Contact" : "Email"} role="cell"><GuestContact email={guest.email} phone={guest.phone} name={guest.name} extended={extended} /></td>
                 {extended && columns.preferences && <td className="guest-list__preferences-column" data-label="Preferences" role="cell"><GuestPreferences preferences={guest.preferences} /></td>}
                 {extended && columns.addOns && <td className="guest-list__add-ons-cell" data-label="Add-ons" role="cell"><GuestAddOns addOns={guest.addOns} /></td>}
-                <td className="guest-list__type-cell" data-label="Type" role="cell"><GuestTypeBadge type={guest.type} /></td>
+                <td className="guest-list__type-cell" data-label="Type" role="cell"><GuestTypeBadge type={guest.type} />{guest.isFree && <span className="guest-list__type guest-list__type--free">Free</span>}</td>
                 <td className="guest-list__presence-cell" data-label="Presence" role="cell">
                   {isRefunded ? <span className="guest-list__presence guest-list__presence--refunded">Refunded</span> : editable ? (
                     <button
@@ -216,7 +218,7 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                   <td className="guest-list__ticket-cell" data-label={ticketUrl ? undefined : "Ticket"} role="cell">{ticketUrl ? <a className="guest-list__ticket-link" href={ticketUrl} target="_blank" rel="noopener noreferrer"><IconlyTicket aria-hidden="true" /><span>Ticket</span></a> : "—"}</td>
                   <td className="guest-list__transaction-cell" data-label="Transaction ID" role="cell">{guest.transactionId || "—"}</td>
                 </>}
-                {hasActions && <td className="guest-list__actions-column" data-label="Actions" role="cell"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} onSendTicket={onSendTicket} onSendReceipt={onSendReceipt} canRefund={canRefund} /></td>}
+                {hasActions && <td className="guest-list__actions-column" data-label="Actions" role="cell"><GuestActions guest={guest} onEdit={onEdit} onRefund={onRefund} onDelete={onDelete} onSendTicket={onSendTicket} onSendReceipt={onSendReceipt} canRefund={canRefund} /></td>}
               </tr>
             );
           })}
@@ -244,6 +246,7 @@ GuestListTable.propTypes = {
     name: PropTypes.string,
     preferences: PropTypes.object,
     refunded: PropTypes.bool,
+    isFree: PropTypes.bool,
     status: PropTypes.number,
     timestamp: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     type: PropTypes.string,
@@ -255,6 +258,7 @@ GuestListTable.propTypes = {
   onPresenceChange: PropTypes.func,
   onEdit: PropTypes.func,
   onRefund: PropTypes.func,
+  onDelete: PropTypes.func,
   onSendTicket: PropTypes.func,
   onSendReceipt: PropTypes.func,
   canRefund: PropTypes.bool,

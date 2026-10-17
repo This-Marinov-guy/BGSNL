@@ -49,7 +49,8 @@ const routes = {
   ],
   PATCH: ["security/change-password", "user/edit-info", "user/alumni-quote", "user/edit-document/:id", "event/check-guest-list", "event/guest-presence", "event/guest-list/:eventId/guests/:guestId",
     "future-event/edit-event/:id", "future-event/sales/:id", "internship/edit/:id", "internship/reorder", "backoffice/accounts/:type/:id"],
-  DELETE: ["user/wallet/card", "user/cancel-membership", "user/delete-document/:id", "future-event/delete-event/:id", "internship/delete/:id"],
+  DELETE: ["user/wallet/card", "user/cancel-membership", "user/delete-document/:id", "future-event/delete-event/:id", "internship/delete/:id",
+    "event/guest-list/:eventId/guests/:guestId"],
 };
 const allowed = Object.fromEntries(Object.entries(routes).map(([method, paths]) => [method,
   paths.map((path) => new RegExp(`^${path.replace(/:[a-zA-Z]+/g, "[a-zA-Z0-9_-]+")}$`))]));
