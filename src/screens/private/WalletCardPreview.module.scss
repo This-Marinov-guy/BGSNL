@@ -19,7 +19,7 @@
   padding: clamp(8px, 2.5dvh, 24px) 16px;
 
   .status {
-    padding: clamp(4px, 0.8dvh, 6px) clamp(12px, 2.2dvh, 18px);
+    padding: var(--badge-padding-block) var(--badge-padding-inline);
     font-size: 1rem;
     line-height: 1.15;
   }
@@ -66,8 +66,8 @@
 .status {
   display: inline-flex;
   align-items: center;
-  padding: 6px 18px;
-  border-radius: 999px;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
   background: #e1f1e4;
   color: #285f35;
   font-weight: 600;

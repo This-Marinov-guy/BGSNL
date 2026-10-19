@@ -437,27 +437,28 @@
   display: inline-flex;
   align-items: center;
   flex: 0 0 auto;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  background: #e0efe9;
-  color: #017363;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
+  background: var(--badge-green);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
   line-height: 1.2;
 }
 
 .event-card__status--draft {
-  background: #fff0b8;
-  color: #745400;
+  background: var(--badge-amber);
+  color: var(--badge-text-soft);
 }
 
 .event-card__status--archived {
-  background: #edf0ee;
-  color: #536159;
+  background: var(--badge-neutral);
+  color: var(--badge-text);
 }
 
 .event-card__status--sales-closed,
 .event-card__status--cancelled {
-  background: #fbe7e7;
-  color: #9e0d33;
+  background: var(--badge-red);
+  color: var(--badge-text);
 }
 
 .event-card__title-row {
@@ -650,30 +651,32 @@
 }
 
 .event-details-modal__status {
-  background: #e0efe9;
-  border-radius: 0.45rem;
-  color: #017363;
+  background: var(--badge-green);
+  border-radius: var(--badge-radius);
+  color: var(--badge-text);
   flex: 0 0 auto;
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  font-weight: 600;
   line-height: 1;
-  padding: 0.45rem 0.65rem;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
 }
 
 .event-details-modal__status--draft {
-  background: #fff0b8;
-  color: #745400;
+  background: var(--badge-amber);
+  color: var(--badge-text-soft);
 }
 
 .event-details-modal__status--sales-closed,
 .event-details-modal__status--closed,
 .event-details-modal__status--cancelled {
-  background: #fbe7e7;
-  color: #9e0d33;
+  background: var(--badge-red);
+  color: var(--badge-text);
 }
 
 .event-card__status--past,
 .event-details-modal__status--past {
-  background: #fff0df;
-  color: #a4470b;
+  background: var(--badge-orange);
+  color: var(--badge-text);
 }
 
 .event-details-modal__heading-meta {
@@ -1012,9 +1015,6 @@
     white-space: normal;
   }
 
-  .guest-list-modal button.guest-list__presence {
-    min-height: 2.75rem;
-  }
 }
 
 .guest-list__toggle-label {
@@ -1147,12 +1147,13 @@
 }
 
 .event-cancellation-modal__free-badge {
-  background: #dff1e7;
-  border-radius: 999px;
-  color: #05623e;
+  background: var(--badge-green);
+  border-radius: var(--badge-radius);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.25rem 0.65rem;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
 }
 
 .event-cancellation-modal__count-detail {
@@ -2155,10 +2156,9 @@
   }
 
   .event-card__status {
-    border: 1px solid currentColor;
-    background: transparent;
+    border: 0;
     font-size: 1rem;
-    padding: 0.18rem 0.38rem;
+    padding: var(--badge-padding-block) var(--badge-padding-inline);
   }
 
   .event-card__title {
@@ -4071,10 +4071,12 @@ form[data-validation-submitted="true"]
   align-items: center;
   flex-wrap: wrap;
   gap: 0.45rem;
-  padding: 0.55rem 0.7rem;
-  border-radius: 6px;
-  background: $label-color;
-  color: #232b27;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
+  background: var(--badge-neutral);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  font-weight: 600;
   font-size: 1rem;
   line-height: 1.25;
 }
@@ -4158,7 +4160,7 @@ form[data-validation-submitted="true"]
   }
   .event-form-step__header--upsell .event-form-price-badge {
     gap: 0.25rem;
-    padding: 0.5rem;
+    padding: var(--badge-padding-block) var(--badge-padding-inline);
   }
   .event-form-step__header--upsell .event-form-price-badge__item {
     gap: 0.25rem;

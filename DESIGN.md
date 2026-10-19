@@ -22,6 +22,7 @@ Defined on `.page` in `src/screens/userActions/dashboard-workspace.module.scss`:
 LeagueSpartan, Roboto, sans-serif. Body/control text stays at least 1rem. Dashboard headings scale from 2rem to 3rem with 1.1 line height. Use 4/8/12/16/24/32px spacing: small gaps inside controls, 24px between sections. Panels follow their content; the two overview banners share their grid row height so their bottom-right actions align.
 
 ## Components
+- Badges: solid semantic fills, no contrasting border, compact `.18rem .45rem` padding, `.45rem` corner radius, LeagueSpartan 600, and white text (`--badge-text`). Amber and other visually lighter fills use warm off-white (`--badge-text-soft`); the fills are dark enough for readable light text. Website badge tokens live in `src/styles/globals.scss`; email markup uses equivalent pixel values inline for email-client compatibility. This keeps status, region, ticket, and role labels consistent without enlarging dense lists.
 - Main navigation: green current-area fill, neutral inactive links; mobile native disclosure overlays content below its trigger. Local management/analytics navigation uses a pale green track and white selected segment.
 - Buttons: existing solid green primary, outlined secondary and cancellation, solid red filter reset. Minimum interactive target 44px. Visible keyboard focus, no autofocus.
 - Overview banners: matching row height on desktop; underlined link-style actions sit at the bottom right with 44px touch targets. The access action remains a button because it opens a dialog.

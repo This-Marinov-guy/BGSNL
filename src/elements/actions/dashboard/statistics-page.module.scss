@@ -7,21 +7,6 @@
   :global(.event-dashboard-filters) { margin: 0; }
 }
 
-.heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: .75rem 1.5rem;
-
-  h1 {
-    margin: 0;
-    color: var(--dashboard-ink);
-    font-size: clamp(2rem, 3vw, 3rem);
-    line-height: 1.1;
-  }
-}
-
 .metrics {
   display: grid;
   grid-template-columns: repeat(var(--stat-columns, 3), minmax(0, 1fr));

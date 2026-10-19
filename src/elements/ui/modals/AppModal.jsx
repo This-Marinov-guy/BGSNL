@@ -54,6 +54,7 @@ const AppModal = ({
   onMaximize,
   initialFocusRef,
   urlKey,
+  syncUrl = true,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPresent, setIsPresent] = useState(open);
@@ -65,7 +66,7 @@ const AppModal = ({
   const fullscreenAnimationRef = useRef(null);
   const fullscreenOriginRef = useRef(null);
   const onCloseRef = useRef(onClose);
-  useModalUrl(open && modal, urlKey || titleText(title) || ariaLabel || className);
+  useModalUrl(open && modal && syncUrl, urlKey || titleText(title) || ariaLabel || className);
 
   useEffect(() => {
     onCloseRef.current = onClose;
@@ -382,6 +383,7 @@ AppModal.propTypes = {
   onMaximize: PropTypes.func,
   initialFocusRef: PropTypes.shape({ current: PropTypes.object }),
   urlKey: PropTypes.string,
+  syncUrl: PropTypes.bool,
 };
 
 export default AppModal;

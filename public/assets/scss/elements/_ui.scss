@@ -411,6 +411,7 @@ hr {
 
 .bgsnl-modal-mask--suspended {
   pointer-events: none;
+  z-index: 10999;
 }
 
 .bgsnl-modal-mask.is-closing {

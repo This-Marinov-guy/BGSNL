@@ -20,7 +20,9 @@ export async function GET(request) {
   if (!packet) notFound();
   try {
     if (!(await walletReadiness()).google.available) return failure(request, "provider");
-    const response = Response.redirect(await createGoogleEventTicketUrl(packet), 303);
+    const saveUrl = await createGoogleEventTicketUrl(packet);
+    if (identity.response === "json") return Response.json({ saveUrl }, { headers: ticketWalletHeaders });
+    const response = Response.redirect(saveUrl, 303);
     for (const [name, value] of Object.entries(ticketWalletHeaders)) response.headers.set(name, value);
     return response;
   } catch { return failure(request, "prepare"); }

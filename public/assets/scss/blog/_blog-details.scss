@@ -678,8 +678,8 @@ BLog Details Styles
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.55rem 0.75rem;
-  border-radius: 999px;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
   background: rgba(0, 32, 23, 0.78);
   color: #fff;
   font-family: $heading-font;

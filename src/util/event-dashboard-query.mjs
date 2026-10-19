@@ -22,7 +22,7 @@ export function clearEventModalQuery(params) {
 export function readEventDashboardQuery(params) {
   const requestedView = params.get("eventView");
   const eventView = EVENT_VIEWS.includes(requestedView) ? requestedView : "active";
-  const modalView = params.get("modal") === "guest-list" ? "guest-list" : "event";
+  const modalView = params.getAll("modal").includes("guest-list") ? "guest-list" : "event";
   const requestedPageSize = positiveInteger(params.get("pageSize"), EVENT_PAGE_SIZES[0]);
 
   return {

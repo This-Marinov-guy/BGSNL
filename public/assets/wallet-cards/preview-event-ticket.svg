@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="title description">
+  <title id="title">Community dinner sample ticket</title>
+  <desc id="description">A non-valid sample ticket for the Wallet page preview.</desc>
+  <rect width="1200" height="460" fill="#edf3ee"/>
+  <rect x="24" y="24" width="1152" height="412" rx="24" fill="#ffffff" stroke="#017363" stroke-width="3"/>
+  <rect x="24" y="24" width="24" height="412" rx="12" fill="#017363"/>
+  <text x="88" y="104" fill="#017363" font-family="Arial, sans-serif" font-size="28" font-weight="700">BULGARIAN SOCIETY GRONINGEN</text>
+  <text x="88" y="192" fill="#19251f" font-family="Arial, sans-serif" font-size="64" font-weight="700">Community dinner</text>
+  <text x="88" y="257" fill="#607168" font-family="Arial, sans-serif" font-size="30">20 October 2026 · 19:00 · Groningen</text>
+  <text x="88" y="331" fill="#19251f" font-family="Arial, sans-serif" font-size="30">Ticket for Alex</text>
+  <rect x="850" y="284" width="266" height="86" rx="12" fill="#f0f5f1"/>
+  <text x="983" y="325" fill="#017363" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">PREVIEW ONLY</text>
+  <text x="983" y="353" fill="#607168" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">Not valid for entry</text>
+</svg>

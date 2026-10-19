@@ -488,10 +488,11 @@
   position: absolute;
   top: 14px;
   right: 14px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  color: #493900;
-  background: rgba(229, 184, 11, 0.2);
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
+  color: var(--badge-text-soft);
+  background: var(--badge-amber);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -624,8 +625,8 @@
   top: 0;
   right: auto;
   left: 50%;
-  color: #3d3100;
-  background: $gold;
+  color: var(--badge-text-soft);
+  background: var(--badge-amber);
   transform: translate(-50%, -50%);
 }
 

@@ -21,11 +21,7 @@ export default function SupportInbox() {
     <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page event-admin-page ${styles.inboxPage} ${ticketId ? styles.inboxDetailPage : workspace.page}`}>
       {!ticketId && <><DashboardNavigation />
-      <header className="event-workspace-heading event-dashboard-heading">
-        <div>
-          <h1>Support tickets</h1>
-        </div>
-      </header></>}
+      <h1 className="visually-hidden">Support tickets</h1></>}
       <div className={`${styles.embedded} ${ticketId ? styles.inboxChat : ""}`}><SupportDesk staff selectedTicketId={ticketId} onSelectTicket={selectTicket} /></div>
     </main>
   </>;

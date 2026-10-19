@@ -32,6 +32,19 @@ ul, ol {
   --site-background: #fbf8f1;
   --site-thread-primary: #017363;
   --site-thread-secondary: #9e0d33;
+  --badge-green: #017363;
+  --badge-blue: #234e91;
+  --badge-amber: #795707;
+  --badge-red: #9e0d33;
+  --badge-neutral: #59655f;
+  --badge-purple: #5b2796;
+  --badge-teal: #17627c;
+  --badge-orange: #934718;
+  --badge-text: #fff;
+  --badge-text-soft: #f3f0e8;
+  --badge-padding-block: .18rem;
+  --badge-padding-inline: .45rem;
+  --badge-radius: .45rem;
   // Above floating page controls and logo headers, below shared modals (11000).
   --layer-support: 10500;
   // Keep critical mobile actions above the support launcher, below modals.

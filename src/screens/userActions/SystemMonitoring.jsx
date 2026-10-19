@@ -288,9 +288,7 @@ export default function SystemMonitoring() {
   return <><HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page ${styles.page} ${workspace.page}`}>
       <DashboardNavigation />
-      <header className={`event-workspace-heading ${styles.heading}`}><div><h1>System manager</h1></div>
-        <button className={styles.refreshButton} type="button" onClick={refresh} disabled={refreshing}
-          aria-label={refreshLabel} aria-busy={refreshing} title={refreshLabel}><IconlyRotate aria-hidden="true" size="1.25rem" /></button></header>
+      <h1 className="visually-hidden">System manager</h1>
       <>
         {snapshot?.jobs?.available && snapshot.jobs.counts.failed > 0 &&
           <section className={styles.jobAlert} aria-label="Failed jobs" role="alert">
@@ -298,15 +296,19 @@ export default function SystemMonitoring() {
               <p>Background jobs need attention.</p></div>
             <button type="button" onClick={() => openJobs("failed")}>View failed jobs</button>
           </section>}
-        <div className={styles.tabs} role="tablist" aria-label="System monitoring sections" onKeyDown={switchTabWithArrow}>
-          <button id="monitoring-overview-tab" type="button" role="tab" aria-controls="monitoring-overview-panel"
-            aria-selected={tab === "overview"} tabIndex={tab === "overview" ? 0 : -1} onClick={() => setTab("overview")}>Overview</button>
-          <button id="monitoring-payments-tab" type="button" role="tab" aria-controls="monitoring-payments-panel"
-            aria-selected={tab === "payments"} tabIndex={tab === "payments" ? 0 : -1} onClick={() => setTab("payments")}>Payments</button>
-          <button id="monitoring-quotas-tab" type="button" role="tab" aria-controls="monitoring-quotas-panel"
-            aria-selected={tab === "quotas"} tabIndex={tab === "quotas" ? 0 : -1} onClick={() => setTab("quotas")}>Usage</button>
-          <button id="monitoring-jobs-tab" type="button" role="tab" aria-controls="monitoring-jobs-panel"
-            aria-selected={tab === "jobs"} tabIndex={tab === "jobs" ? 0 : -1} onClick={() => setTab("jobs")}>All jobs</button>
+        <div className={styles.tabsRow}>
+          <div className={styles.tabs} role="tablist" aria-label="System monitoring sections" onKeyDown={switchTabWithArrow}>
+            <button id="monitoring-overview-tab" type="button" role="tab" aria-controls="monitoring-overview-panel"
+              aria-selected={tab === "overview"} tabIndex={tab === "overview" ? 0 : -1} onClick={() => setTab("overview")}>Overview</button>
+            <button id="monitoring-payments-tab" type="button" role="tab" aria-controls="monitoring-payments-panel"
+              aria-selected={tab === "payments"} tabIndex={tab === "payments" ? 0 : -1} onClick={() => setTab("payments")}>Payments</button>
+            <button id="monitoring-quotas-tab" type="button" role="tab" aria-controls="monitoring-quotas-panel"
+              aria-selected={tab === "quotas"} tabIndex={tab === "quotas" ? 0 : -1} onClick={() => setTab("quotas")}>Usage</button>
+            <button id="monitoring-jobs-tab" type="button" role="tab" aria-controls="monitoring-jobs-panel"
+              aria-selected={tab === "jobs"} tabIndex={tab === "jobs" ? 0 : -1} onClick={() => setTab("jobs")}>All jobs</button>
+          </div>
+          <button className={styles.refreshButton} type="button" onClick={refresh} disabled={refreshing}
+            aria-label={refreshLabel} aria-busy={refreshing} title={refreshLabel}><IconlyRotate aria-hidden="true" size="1.25rem" /></button>
         </div>
         {snapshot?.jobs?.available && Object.values(snapshot.jobs.sources).some((available) => !available) &&
           <p role="status" className={styles.notice}>One job source is unavailable. Failed-job counts may be incomplete.</p>}

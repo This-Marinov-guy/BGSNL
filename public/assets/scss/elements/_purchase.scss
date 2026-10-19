@@ -2512,7 +2512,7 @@
       .event-date-updated-badge {
         position: static;
         flex: 0 0 auto;
-        padding: 0.25rem 0.35rem;
+        padding: var(--badge-padding-block) var(--badge-padding-inline);
       }
     }
 

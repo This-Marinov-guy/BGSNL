@@ -479,21 +479,26 @@ a {
 }
 
 .badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: $type-weight-medium;
-  padding: 5px 10px;
-  border: solid 1px;
-  border-radius: 10px;
-
-  color: $white;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border: 0;
+  border-radius: var(--badge-radius);
+  background: var(--badge-green);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
   white-space: pre-line;
   max-width: 15em;
 
+  small { font-size: inherit; }
+
   &.new-badge {
-    color: #f92820;
-    border-color: #f92820;
+    background: var(--badge-red);
+    color: var(--badge-text);
   }
 }
 

@@ -15,7 +15,6 @@
   .primary:hover:not(:disabled) { background: var(--dashboard-accent); opacity: .9; }
   .quiet { border: 0; text-decoration: underline; padding-left: .5rem; padding-right: .5rem; }
 }
-.header { display: flex; align-items: start; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
 .overview, .editor { padding: 1.5rem; background: var(--dashboard-surface); border-radius: var(--dashboard-radius); margin: 1.5rem 0; }
 .overviewHeader { align-items: center; display: flex; gap: .75rem; justify-content: space-between; margin-bottom: .75rem; }
 .overviewHeader h2 { margin: 0; }

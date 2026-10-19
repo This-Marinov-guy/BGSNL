@@ -223,9 +223,9 @@ export const estimatePriceByEvent = (
 
   if (selectedTier && selectedPrice !== null) {
     const memberBadge = buyerState.isActiveMember ? (
-      <SolidBadge color="#e5b80b" text="Extra discounted" />
+      <SolidBadge color="#795707" text="Extra discounted" style={{ color: "#f3f0e8" }} />
     ) : buyerState.isMember ? (
-      <SolidBadge color="#add8e6" text="Discounted" />
+      <SolidBadge color="#234e91" text="Discounted" />
     ) : null;
 
     return (

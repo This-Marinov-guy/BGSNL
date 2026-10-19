@@ -197,7 +197,11 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
                 <td className="guest-list__contact-cell" data-label={extended ? "Contact" : "Email"} role="cell"><GuestContact email={guest.email} phone={guest.phone} name={guest.name} extended={extended} /></td>
                 {extended && columns.preferences && <td className="guest-list__preferences-column" data-label="Preferences" role="cell"><GuestPreferences preferences={guest.preferences} /></td>}
                 {extended && columns.addOns && <td className="guest-list__add-ons-cell" data-label="Add-ons" role="cell"><GuestAddOns addOns={guest.addOns} /></td>}
-                <td className="guest-list__type-cell" data-label="Type" role="cell"><GuestTypeBadge type={guest.type} />{guest.isFree && <span className="guest-list__type guest-list__type--free">Free</span>}</td>
+                <td className="guest-list__type-cell" data-label="Type" role="cell">
+                  {guest.isFree
+                    ? <span className="guest-list__type guest-list__type--free">Free</span>
+                    : <GuestTypeBadge type={guest.type} />}
+                </td>
                 <td className="guest-list__presence-cell" data-label="Presence" role="cell">
                   {isRefunded ? <span className="guest-list__presence guest-list__presence--refunded">Refunded</span> : editable ? (
                     <button

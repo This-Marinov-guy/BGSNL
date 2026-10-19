@@ -41,7 +41,7 @@
   font-size: 1rem;
   line-height: 1.25;
 }
-.regionBadge { flex: 0 0 auto; padding: .2rem .45rem; border: 1px solid var(--region-badge-border); border-radius: 999px; background: var(--region-badge-background); color: var(--region-badge-color); font-size: 1rem; font-weight: 600; line-height: 1.2; }
+.regionBadge { flex: 0 0 auto; padding: var(--badge-padding-block) var(--badge-padding-inline); border: 0; border-radius: var(--badge-radius); background: var(--region-badge-background); color: var(--region-badge-color); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.2; }
 .empty { padding: 1rem 0 0; }
 .checkIn.scanning { padding-block: 1.25rem; }
 .scanning .stepper { margin: .75rem 0 .25rem; }
@@ -90,12 +90,12 @@
   button { margin: 10px 10px 0 0; }
 }
 .result h2.name { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 400; overflow-wrap: anywhere; }
-.result .status { display: inline-block; max-width: 100%; margin: 0 0 .85rem; padding: .35rem .8rem; border-radius: 999px; background: #dce3de; color: #24392d; font-size: 1rem; font-weight: 500; line-height: 1.35; }
-.result[data-outcome="present"] .status { background: #017363; color: #fff; }
+.result .status { display: inline-block; max-width: 100%; margin: 0 0 .85rem; padding: var(--badge-padding-block) var(--badge-padding-inline); border-radius: var(--badge-radius); background: var(--badge-neutral); color: var(--badge-text); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.2; }
+.result[data-outcome="present"] .status { background: var(--badge-green); }
 .result[data-outcome="already_present"] .status,
 .result[data-outcome="choose_quantity"] .status,
-.result[data-outcome="confirm_required"] .status { background: #ffe08a; color: #493600; }
-.result[data-outcome="error"] .status { background: #8c332a; color: #fff; }
+.result[data-outcome="confirm_required"] .status { background: var(--badge-amber); color: var(--badge-text-soft); }
+.result[data-outcome="error"] .status { background: var(--badge-red); }
 .searchField { margin: 1rem 0 1.5rem; }
 .checkIn button.extendButton { display: inline-flex; align-items: center; gap: .4rem; background: transparent; color: #245a33; }
 .extendButton svg { width: 20px; height: 20px; }

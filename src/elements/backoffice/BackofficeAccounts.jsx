@@ -444,23 +444,19 @@ export default function BackofficeAccounts() {
       <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
       <main className={`container user-workspace-page event-admin-page ${styles.page} ${workspace.page}`}>
         <DashboardNavigation />
-        <header className="event-workspace-heading event-dashboard-heading">
-          <div>
-            <h1>Accounts dashboard</h1>
-          </div>
-          <div className="workspace-heading-actions">
-            {user.roles?.some(role => ["admin", "super_admin"].includes(role)) && <button className={styles.importButton} onClick={() => setImportOpen(true)} type="button">Import sheet</button>}
-            <button
-              className={styles.exportButton}
-              disabled={loadingList || exporting || pagination.total === 0}
-              onClick={exportDirectory}
-              type="button"
-            >
-              <FiDownload aria-hidden />
-              <span>{exporting ? "Preparing sheet…" : "Export sheet"}</span>
-            </button>
-          </div>
-        </header>
+        <h1 className="visually-hidden">Accounts</h1>
+        <div className={workspace.toolbar}>
+          {user.roles?.some(role => ["admin", "super_admin"].includes(role)) && <button className={styles.importButton} onClick={() => setImportOpen(true)} type="button">Import sheet</button>}
+          <button
+            className={styles.exportButton}
+            disabled={loadingList || exporting || pagination.total === 0}
+            onClick={exportDirectory}
+            type="button"
+          >
+            <FiDownload aria-hidden />
+            <span>{exporting ? "Preparing sheet…" : "Export sheet"}</span>
+          </button>
+        </div>
 
         {exportError && <p role="alert">{exportError}</p>}
         <section className={styles.directory} aria-label={`${type} directory`} ref={listStartRef}>
@@ -514,7 +510,7 @@ export default function BackofficeAccounts() {
                         </div>
                       </td>
                       <td data-label="Contact" className={`${styles.detailCell} ${styles.contactCell}`}><a href={`mailto:${account.email}`}>{account.email}</a><small>{account.phone ? <PhoneActions phone={account.phone} /> : "No mobile number"}</small></td>
-                      <td data-label="Region" className={styles.regionCell} style={getRegionBadgeStyle(account.region)}>{formatRegionBadgeLabel(account.region)}</td>
+                      <td data-label="Region" className={styles.regionCell} style={getRegionBadgeStyle(account.region)}><span>{formatRegionBadgeLabel(account.region)}</span></td>
                       <td data-label="Status" className={`${styles.detailCell} ${styles.statusCell}`}><span className={styles.status} data-status={account.status}>{account.status.replaceAll("_", " ")}</span></td>
                       <td data-label="Roles" className={styles.rolesCell}><div className={styles.roleTags}>{account.roles.length ? account.roles.map((role) => <span key={role} data-role={role}>{ROLE_LABELS[role] || role.replaceAll("_", " ")}</span>) : <span>No roles</span>}</div></td>
                       <td className={styles.actionCell}>

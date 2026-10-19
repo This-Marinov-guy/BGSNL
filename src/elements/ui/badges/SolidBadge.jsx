@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const SolidBadge = ({ color, text, className, style }) => {
   return (
     <div
-      style={{ backgroundColor: color, border: color, ...style }}
-      className={"badge " + className}
+      style={{ backgroundColor: color, ...style }}
+      className={`badge${className ? ` ${className}` : ""}`}
     >
       <small>{text}</small>
     </div>
@@ -12,3 +13,10 @@ const SolidBadge = ({ color, text, className, style }) => {
 };
 
 export default SolidBadge;
+
+SolidBadge.propTypes = {
+  color: PropTypes.string,
+  text: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  style: PropTypes.object,
+};

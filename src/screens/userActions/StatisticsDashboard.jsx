@@ -28,7 +28,9 @@ export default function StatisticsDashboard({ kind }) {
     <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page event-admin-page ${workspace.page}`}>
       <DashboardNavigation />
-      {kind === "events" ? <EventsAnalyticsList tabs={tabs} /> : <MembersList tabs={tabs} />}
+      <h1 className="visually-hidden">{kind === "events" ? "Event metrics" : "Member metrics"}</h1>
+      {tabs}
+      {kind === "events" ? <EventsAnalyticsList /> : <MembersList />}
     </main>
   </>;
 }

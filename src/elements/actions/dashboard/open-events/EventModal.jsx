@@ -406,6 +406,7 @@ const EventModal = ({
       />
       <Dialog
         suspended={!!previewMedia || guestListVisible || emailsVisible || feedbackVisible || confirmCancelVisible || ticketGeneratorVisible}
+        syncUrl={false}
         className="event-details-modal"
         contentClassName="event-details-modal__body"
         dismissableMask

@@ -45,10 +45,11 @@ export default function MonthlySummary() {
   return <><HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
     <main className={`container user-workspace-page ${workspace.page} ${styles.page}`}>
       <DashboardNavigation />
-      <header className={`event-workspace-heading ${styles.header}`}><div><h1>Monthly summary</h1></div>
+      <h1 className="visually-hidden">Monthly summary</h1>
+      <div className={workspace.toolbar}>
         <div className="rn-form-group"><label htmlFor="summary-month">Month</label><input id="summary-month" type="month" value={month} min="2000-01" max="2099-12" onChange={event => {
           if (event.target.value) { setMonth(event.target.value); setSummary(null); }
-        }} /></div></header>
+        }} /></div></div>
       {loading && !summary && <LoadingSkeleton label="Loading monthly email preview" count={4} />}
       {error && <LoadErrorBanner message={error} onRetry={() => load()} disabled={loading} />}
       {summary && <>

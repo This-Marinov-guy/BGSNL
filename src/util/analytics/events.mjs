@@ -2,6 +2,7 @@
 // to prevent reporting from being fragmented by spelling variations.
 export const ANALYTICS_EVENTS = Object.freeze({
   WALLET_ADD_CLICKED: "wallet_add_clicked",
+  EVENT_TICKET_WALLET_DOWNLOAD_STARTED: "event_ticket_wallet_download_started",
   USER_REGISTRATION_OPENED: "user_registration_opened",
   USER_REGISTRATION_STEP_1_VIEWED: "user_registration_step_1_viewed",
   USER_REGISTRATION_STEP_2_VIEWED: "user_registration_step_2_viewed",

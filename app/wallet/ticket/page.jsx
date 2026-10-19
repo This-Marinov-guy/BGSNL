@@ -1,5 +1,4 @@
 import { readEventTicket, validTicketWalletQuery } from "@/util/wallet/event-ticket-server";
-import { walletReadiness } from "@/util/wallet/issuance.mjs";
 import EventTicketWallet from "@/screens/eventActions/EventTicketWallet";
 import PropTypes from "prop-types";
 import { notFound } from "next/navigation";
@@ -15,10 +14,8 @@ export default async function Page({ searchParams }) {
   try { packet = await readEventTicket(identity); }
   catch { return <EventTicketWallet state="error" />; }
   if (!packet) notFound();
-  let readiness;
-  try { readiness = await walletReadiness(); }
-  catch { return <EventTicketWallet state="error" packet={packet} />; }
-  return <EventTicketWallet state="ready" packet={packet} providers={readiness} issueError={identity.walletError} />;
+  return <EventTicketWallet state="ready" packet={packet} issueError={identity.walletError}
+    autoDownloadPass={identity.autoDownloadPass === "true"} />;
 }
 
 Page.propTypes = { searchParams: PropTypes.object };

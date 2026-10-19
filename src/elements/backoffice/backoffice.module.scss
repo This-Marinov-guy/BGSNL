@@ -73,28 +73,24 @@
 .mobileStatusDot { display: none; }
 .avatar { display: inline-grid; place-items: center; width: 2.7rem; height: 2.7rem; flex: 0 0 auto; overflow: hidden; border-radius: .75rem; background: #deece6; color: #006f61; font-weight: 600; }
 .avatarImage { display: block; width: 100%; height: 100%; object-fit: cover; }
-.status { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .6rem; border-radius: 999px; background: #edf1ee; color: #58655e; font-size: 1rem; font-weight: 500; text-transform: capitalize; white-space: nowrap; }
+.status { display: inline-flex; align-items: center; gap: .35rem; padding: var(--badge-padding-block) var(--badge-padding-inline); border-radius: var(--badge-radius); background: var(--badge-neutral); color: var(--badge-text); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; text-transform: capitalize; white-space: nowrap; }
 .status::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: currentColor; }
-.status, .mobileStatusDot { color: #58655e; }
-.status[data-status="active"] { background: #e2f2e8; }
-.status[data-status="locked"], .status[data-status="frozen"] { background: #fff0f2; }
-.status[data-status="active"], .mobileStatusDot[data-status="active"] { color: #05622d; }
-.status[data-status="locked"], .status[data-status="frozen"],
-.mobileStatusDot[data-status="locked"], .mobileStatusDot[data-status="frozen"] { color: #941c3c; }
+.mobileStatusDot { color: var(--badge-neutral); }
+.status[data-status="active"] { background: var(--badge-green); }
+.status[data-status="locked"], .status[data-status="frozen"] { background: var(--badge-red); }
+.mobileStatusDot[data-status="active"] { color: var(--badge-green); }
+.mobileStatusDot[data-status="locked"], .mobileStatusDot[data-status="frozen"] { color: var(--badge-red); }
 .roleTags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; justify-items: center; min-width: 10rem; gap: .35rem; }
-.roleTags span { text-align: center; min-width: 0; max-width: 100%; height: fit-content; line-height: 1.25; padding: .25rem .5rem; border-radius: .35rem; background: #f1f3ec; color: #435249; font-size: 1rem; white-space: normal; overflow-wrap: anywhere; }
+.roleTags span { text-align: center; min-width: 0; max-width: 100%; height: fit-content; line-height: 1.25; padding: var(--badge-padding-block) var(--badge-padding-inline); border-radius: var(--badge-radius); background: var(--badge-neutral); color: var(--badge-text); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; white-space: normal; overflow-wrap: anywhere; }
 .roleTags span:last-child:nth-child(odd) { grid-column: 1 / -1; }
-.roleTags span[data-role="super_admin"] { background: #ede4ff; color: #5b2796; }
-.roleTags span[data-role="admin"] { background: #ffe4e9; color: #972540; }
-.roleTags span[data-role="national_board_member"] { background: #dceaff; color: #234e91; }
-.roleTags span[data-role="national_committee_member"] { background: #e5e7ff; color: #434696; }
-.roleTags span[data-role="regional_board_member"], .roleTags span[data-role="board_member"] { background: #d9f0e9; color: #11634f; }
-.roleTags span[data-role="regional_committee_member"], .roleTags span[data-role="committee_member"] { background: #dcf1fa; color: #17627c; }
-.roleTags span[data-role="active_member"] { background: #e5f2d8; color: #3a641f; }
-.roleTags span[data-role="support"] { background: #ffead9; color: #934718; }
-.roleTags span[data-role="vip"] { background: #fff2c7; color: #795707; }
-.roleTags span[data-role="member"] { background: #e8edf0; color: #465865; }
-.roleTags span[data-role="alumni"] { background: #f2e3ef; color: #79406e; }
+.roleTags span[data-role="super_admin"], .roleTags span[data-role="national_committee_member"], .roleTags span[data-role="alumni"] { background: var(--badge-purple); }
+.roleTags span[data-role="admin"] { background: var(--badge-red); }
+.roleTags span[data-role="national_board_member"], .roleTags span[data-role="member"] { background: var(--badge-blue); }
+.roleTags span[data-role="regional_board_member"], .roleTags span[data-role="board_member"], .roleTags span[data-role="active_member"] { background: var(--badge-green); }
+.roleTags span[data-role="regional_committee_member"], .roleTags span[data-role="committee_member"] { background: var(--badge-teal); }
+.roleTags span[data-role="support"] { background: var(--badge-orange); }
+.roleTags span[data-role="vip"] { background: var(--badge-amber); color: var(--badge-text-soft); }
+.regionCell span { display: inline-flex; align-items: center; max-width: 100%; padding: var(--badge-padding-block) var(--badge-padding-inline); border-radius: var(--badge-radius); background: var(--region-badge-background); color: var(--region-badge-color); font-family: "LeagueSpartan", "Roboto", sans-serif; font-weight: 600; line-height: 1.2; }
 
 .actionCell { width: 1%; }
 .editButton, .iconButton, .primaryButton, .secondaryButton, .pagination button { border: 0; cursor: pointer; font-weight: 500; transition: background 160ms ease, color 160ms ease, transform 160ms ease; }
@@ -199,7 +195,7 @@
   .person { min-width: 0; align-items: center; gap: .7rem; }
   .person strong { line-height: 1.3; overflow-wrap: anywhere; }
   .mobileEmail { display: block; max-width: 100%; margin-top: .2rem; color: #596961; font-size: 1rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: normal; overflow-wrap: anywhere; }
-  .regionCell { grid-column: 1; grid-row: 2; display: inline-flex !important; align-items: center; width: fit-content; max-width: 100%; padding: .35rem .6rem !important; border: 1px solid var(--region-badge-border, #b9d9ce) !important; border-radius: 999px !important; background: var(--region-badge-background, #e8f3ef); color: var(--region-badge-color, #017363); font-size: 1rem; font-weight: 600; text-transform: capitalize; }
+  .regionCell { grid-column: 1; grid-row: 2; display: inline-flex !important; align-items: center; width: fit-content; max-width: 100%; padding: 0 !important; border: 0 !important; font-size: 1rem; text-transform: capitalize; }
   .rolesCell, .detailCell { display: none !important; }
   .editButton { min-width: 5.4rem; height: 2.45rem; justify-content: center; padding: .55rem .75rem; }
   .editButton span { display: inline; }

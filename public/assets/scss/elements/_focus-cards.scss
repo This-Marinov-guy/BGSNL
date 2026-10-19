@@ -87,16 +87,16 @@
   bottom: 10px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.76);
-  color: #ffffff;
+  gap: 6px;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
+  background: var(--badge-neutral);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
 
 
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  backdrop-filter: blur(8px);
 }
 
 .focus-card-region {
@@ -105,16 +105,16 @@
   right: 10px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   max-width: calc(100% - 20px);
-  padding: 6px 9px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 5px;
-  background: rgba(16, 41, 31, 0.84);
-  color: #ffffff;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border: 0;
+  border-radius: var(--badge-radius);
+  background: var(--badge-green);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
   line-height: 1;
   text-transform: uppercase;
-  backdrop-filter: blur(8px);
 
   svg {
     flex: 0 0 auto;
@@ -278,10 +278,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(37, 99, 235, 0.08);
-  color: #1d4ed8;
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  border-radius: var(--badge-radius);
+  background: var(--badge-blue);
+  color: var(--badge-text);
+  font-family: "LeagueSpartan", "Roboto", sans-serif;
 
 
   letter-spacing: 0.04em;

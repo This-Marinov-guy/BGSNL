@@ -21,6 +21,7 @@ import Event from "./Event";
 import EventModal from "./EventModal";
 import { eventDateTime, isActiveEvent } from "@/util/functions/event-archive.mjs";
 import { clearEventModalQuery, EVENT_PAGE_SIZES, readEventDashboardQuery } from "@/util/event-dashboard-query.mjs";
+import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 
 const ARCHIVE_BATCH_SIZE = 8;
 const eventKey = event => String(event?.id || event?._id || "");
@@ -259,21 +260,12 @@ const EventList = () => {
                 show
             />
         )}
-        <header className="event-workspace-heading event-dashboard-heading">
-            <div>
-                <h1>Events dashboard</h1>
-            </div>
-            <div className="workspace-heading-actions">
-                {canAddEvents && (
-                    <Link
-                        to="/user/dashboard/events/create"
-                        className="rn-button-style--2 rn-btn-reverse-green"
-                    >
-                        <span>Create event</span>
-                    </Link>
-                )}
-            </div>
-        </header>
+        <h1 className="visually-hidden">Events</h1>
+        {canAddEvents && <div className={workspace.toolbar}>
+            <Link to="/user/dashboard/events/create" className="rn-button-style--2 rn-btn-reverse-green">
+                <span>Create event</span>
+            </Link>
+        </div>}
         {/* {isAuthorized && <div className="event-dashboard-stats" aria-label="Event totals">
             <div><span>Visible events</span><strong>{visibleEvents.length}</strong></div>
             <div><span>Upcoming</span><strong>{upcomingCount}</strong></div>

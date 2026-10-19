@@ -12,6 +12,7 @@ import {
 } from "@/elements/ui/icons/IconlyIcons";
 import { useSearchParams } from "next/navigation";
 import styles from "./internship-list.module.scss";
+import workspace from "@/screens/userActions/dashboard-workspace.module.scss";
 import InternshipForm from "../../form/InternshipForm";
 import { useHttpClient } from "../../../../hooks/common/http-hook";
 import { showNotification } from "../../../../redux/notification";
@@ -256,16 +257,12 @@ const InternshipList = () => {
 
   return (
     <>
-      <header className="event-workspace-heading event-dashboard-heading">
-        <div>
-          <h1>Internships dashboard</h1>
-        </div>
-        <div className="workspace-heading-actions">
-          <button type="button" onClick={() => setEditor({ open: true, internship: null })} className="rn-button-style--2 rn-btn-reverse-green">
-            <span>Add internship</span>
-          </button>
-        </div>
-      </header>
+      <h1 className="visually-hidden">Internships</h1>
+      <div className={workspace.toolbar}>
+        <button type="button" onClick={() => setEditor({ open: true, internship: null })} className="rn-button-style--2 rn-btn-reverse-green">
+          <span>Add internship</span>
+        </button>
+      </div>
 
       {!loadFailed && (!loaded || loading) && internships.length === 0 && <LoadingSkeleton label="Loading internships" variant="cards" count={4} />}
       {loadFailed && <LoadErrorBanner message="Internships could not be loaded." onRetry={loadInternships} />}

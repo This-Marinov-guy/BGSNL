@@ -1,6 +1,5 @@
 import { formatDisplayDate } from "@/util/functions/display-date.mjs";
 import React, { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import {
   Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,
@@ -35,7 +34,7 @@ const averageMetrics = [
   { key: "averageEventRefund", label: "Average refunds per event", format: value => euro.format(value), detail: "Recorded refund amounts per event." },
 ];
 
-export default function EventsAnalyticsList({ tabs }) {
+export default function EventsAnalyticsList() {
   const [events, setEvents] = useState([]);
   const [averages, setAverages] = useState({});
   const [nationalAverages, setNationalAverages] = useState({});
@@ -103,11 +102,6 @@ export default function EventsAnalyticsList({ tabs }) {
   });
 
   return <section className={styles.page} aria-label="Event metrics">
-    <header className={styles.heading}>
-      <h1>Event metrics</h1>
-      {tabs}
-    </header>
-
     <Filter title="Filter event metrics" allLabel="National" regions={STATISTICS_REGIONS} showRegion={canChooseRegion} onRegionChange={(current) => current.delete("event")} onClear={(current) => {
       current.delete("from"); current.delete("to"); current.delete("event");
     }}>
@@ -190,5 +184,3 @@ export default function EventsAnalyticsList({ tabs }) {
       </>}
   </section>;
 }
-
-EventsAnalyticsList.propTypes = { tabs: PropTypes.node.isRequired };

@@ -322,6 +322,7 @@ const GuestListModal = ({
       <Dialog
         aria-label={`Guest list for ${event.title || "event"}`}
         className={`guest-list-modal${extended ? " guest-list-modal--extended" : ""}`}
+        syncUrl={false}
         contentClassName="guest-list-modal__body"
         dismissableMask
         suspended={Boolean(editGuest || refundGuest || delivery || deleteGuest)}

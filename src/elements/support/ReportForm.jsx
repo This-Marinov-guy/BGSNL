@@ -46,7 +46,6 @@ export default function ReportForm({ session, profile, onCreated, onBack, active
   const [slideDirection, setSlideDirection] = useState(null);
   const recommendation = type === "recommendation";
   const dispatch = useDispatch();
-  const [contactMethod, setContactMethod] = useState("email");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [formReady, setFormReady] = useState(false);
@@ -69,12 +68,10 @@ export default function ReportForm({ session, profile, onCreated, onBack, active
     if (!required.every(field => field.value.trim() && field.validity.valid)) return false;
     if (!session) {
       const contact = form.elements.namedItem("contact")?.value.trim() || "";
-      if (contactMethod === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
-      const digits = contact.replace(/\D/g, "").length;
-      return /^[+\d\s().-]+$/.test(contact) && digits >= 7 && digits <= 15;
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
     }
     return true;
-  }, [session, contactMethod]);
+  }, [session]);
   const updateFormReady = useCallback(() => setFormReady(readFormReady()), [readFormReady]);
   useEffect(updateFormReady, [updateFormReady, active]);
 
@@ -85,7 +82,7 @@ export default function ReportForm({ session, profile, onCreated, onBack, active
     if (submitting.current || !active || (!pending.current && !readFormReady())) return;
     const form = new FormData(event.currentTarget);
     const data = { type, subject: String(form.get("subject") || ""), text: String(form.get("text") || ""),
-      contact: session ? undefined : { name: String(form.get("name") || ""), [contactMethod]: String(form.get("contact") || "") },
+      contact: session ? undefined : { name: String(form.get("name") || ""), email: String(form.get("contact") || "") },
       website: String(form.get("website") || ""), pagePath: window.location.pathname, environment: recommendation ? undefined : clientEnvironment() };
     // A failed/ambiguous submission must keep its identity and payload. Do not
     // turn Retry into a second conversation.
@@ -148,17 +145,14 @@ export default function ReportForm({ session, profile, onCreated, onBack, active
       <fieldset disabled={busy || (!!error && !!pending.current)}>
         {session ? <p className={styles.identity}>Sending as <strong>{profile?.contact?.name || "your signed-in account"}</strong>{profile?.contact?.email && <small>{profile.contact.email}</small>}</p> : <>
           <div className="rn-form-group"><label htmlFor={`${id}-name`}>Your name</label><input className="bgsnl-form-control" id={`${id}-name`} name="name" autoComplete="name" maxLength={160} required /></div>
-          <div className={styles.methodSwitch} aria-label="Contact method">
-            {[["email", "Email"], ["phone", "Phone"]].map(([value, label]) => <button key={value} type="button" aria-pressed={contactMethod === value} onClick={() => setContactMethod(value)}>{label}</button>)}
-          </div>
-          <div className="rn-form-group"><label htmlFor={`${id}-contact`}>{contactMethod === "email" ? "Email address" : "Phone number"}</label><input key={contactMethod} className="bgsnl-form-control" id={`${id}-contact`} name="contact" type={contactMethod === "email" ? "email" : "tel"} autoComplete={contactMethod === "email" ? "email" : "tel"} maxLength={contactMethod === "email" ? 254 : 40} placeholder={contactMethod === "phone" ? "+31 …" : "you@example.com"} required /></div>
+          <div className="rn-form-group"><label htmlFor={`${id}-contact`}>Email address</label><input className="bgsnl-form-control" id={`${id}-contact`} name="contact" type="email" autoComplete="email" maxLength={254} placeholder="you@example.com" required /></div>
         </>}
         <div className="rn-form-group"><label htmlFor={`${id}-subject`}>{recommendation ? "What do you recommend?" : "What isn’t working?"}</label><input className="bgsnl-form-control" id={`${id}-subject`} name="subject" maxLength={140} placeholder={recommendation ? "A short title for your idea" : "A short description of the problem"} required /></div>
         <div className="rn-form-group"><label htmlFor={`${id}-message`}>{recommendation ? "Tell us more" : "What happened?"}</label><textarea className="bgsnl-form-control" id={`${id}-message`} name="text" rows={4} maxLength={4000} placeholder={recommendation ? "Describe your idea and how it could help…" : "Include the steps that led to the problem…"} required /></div>
         <AttachmentDropzone files={files} onChange={setFiles} disabled={busy || !!pending.current} />
         <div className={styles.honeypot} aria-hidden="true"><label htmlFor={`${id}-website`}>Leave this empty<input id={`${id}-website`} name="website" tabIndex={-1} autoComplete="off" /></label></div>
       </fieldset>
-      {!session && <small>Guest replies stay in this browser for up to 90 days. Contact details help our team follow up; they are not used to verify your identity.</small>}
+      {!session && <small>Guest replies stay in this browser for up to 90 days. Your email helps our team follow up; it is not used to verify your identity.</small>}
       {error && <p role="alert" className={styles.error}>{error}{pending.current && " Retry sends the same request, without duplicating it."}</p>}
       <button className="rn-button-style--2 rn-btn-solid-green rn-btn-small" type="submit" aria-busy={busy} aria-label={busy ? "Sending request" : undefined} disabled={busy || !active || (!pending.current && !formReady)}>{busy ? <ProgressSpinner style={{ width: "1.25rem", height: "1.25rem" }} strokeWidth="8" animationDuration=".5s" aria-hidden="true" /> : <>{pending.current && error ? <RetryIcon /> : <IconlySend size="1.25rem" />} {pending.current && error ? "Retry request" : recommendation ? "Send recommendation" : "Send report"}</>}</button>
     </form>

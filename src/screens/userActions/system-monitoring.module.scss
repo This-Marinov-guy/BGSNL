@@ -3,11 +3,7 @@
 .page { margin-top: clamp(7rem, 10vw, 9rem); padding-bottom: 4rem; }
 .back { margin-bottom: 1.25rem; }
 .back a { display: inline-flex; align-items: center; gap: 0.45rem; color: #087462; font-weight: 600; }
-.heading { display: flex; justify-content: space-between; align-items: end; gap: 1.5rem; margin-bottom: 1rem; }
-.heading h1 { margin: 0; }
-.heading p, .metric p, .service p, .axiomDataset > p { color: var(--dashboard-muted); margin: 0; }
-.heading button { border: 0; border-radius: .65rem; padding: .8rem 1.1rem; background: #087462; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
-.heading button:disabled { opacity: .6; cursor: wait; }
+.metric p, .service p, .axiomDataset > p { color: var(--dashboard-muted); margin: 0; }
 .notice { padding: 1rem; border-radius: .65rem; background: #fff1df; color: #6c450a; }
 .health { padding: 1.5rem; border-radius: 1rem; background: var(--dashboard-surface); }
 .health h2 { margin: 0 0 .25rem; font-size: 1.5rem; }
@@ -79,15 +75,16 @@
 .integrationEvents { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; padding: 0; margin: .75rem 0 0; list-style: none; }
 .integrationEvents li { display: grid; gap: .2rem; }
 .integrationEvents span { color: var(--dashboard-muted); }
-.status { border-radius: 99px; padding: .2rem .55rem; text-transform: capitalize; font-size: 1rem; font-weight: 600; }
-.healthy { background: #d9f2e5; color: #14623d; }
-.unhealthy { background: #ffe5e4; color: #a22d2d; }
-.unverified { background: #fff0d4; color: #765000; }
+.status { border-radius: var(--badge-radius); padding: var(--badge-padding-block) var(--badge-padding-inline); background: var(--badge-neutral); color: var(--badge-text); font-family: "LeagueSpartan", "Roboto", sans-serif; text-transform: capitalize; font-size: 1rem; font-weight: 600; }
+.healthy { background: var(--badge-green); }
+.unhealthy { background: var(--badge-red); }
+.unverified { background: var(--badge-amber); color: var(--badge-text-soft); }
 .jobAlert { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; padding: 1rem 1.25rem; border: 1px solid #b83d3d; border-left: .4rem solid #b83d3d; border-radius: .75rem; background: #fff0ef; color: #7f1d1d; }
 .jobAlert strong { font-size: 1.15rem; }
 .jobAlert p { margin: .2rem 0 0; }
 .jobAlert button { flex: none; border: 0; border-radius: .55rem; padding: .65rem .9rem; background: #952c2c; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
-.tabs { @include section-tabs.navigation; margin: 1rem 0; }
+.tabsRow { display: flex; align-items: center; gap: 1rem; min-width: 0; margin: 1rem 0; }
+.tabs { @include section-tabs.navigation; flex: 1; }
 .jobsPanel { padding: 1.5rem; border-radius: 1rem; background: #f0f5f1; }
 .jobsHeading { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
 .jobsHeading h2 { margin: 0 0 .25rem; }
@@ -105,10 +102,10 @@
 .jobTable th { color: #52695b; font-size: 1rem; }
 .jobTable td strong, .jobTable td small { display: block; }
 .jobTable td small { margin-top: .2rem; color: #607168; }
-.jobStatus { display: inline-block; border-radius: 99px; padding: .25rem .55rem; font-size: 1rem; font-weight: 600; text-transform: capitalize; }
-.failed { background: #ffe5e4; color: #a22d2d; }
-.pending { background: #fff0d4; color: #765000; }
-.completed { background: #d9f2e5; color: #14623d; }
+.jobStatus { display: inline-block; border-radius: var(--badge-radius); padding: var(--badge-padding-block) var(--badge-padding-inline); background: var(--badge-neutral); color: var(--badge-text); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; text-transform: capitalize; }
+.failed { background: var(--badge-red); }
+.pending { background: var(--badge-amber); color: var(--badge-text-soft); }
+.completed { background: var(--badge-green); }
 .jobPagination { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; color: #52695b; }
 .jobPagination > div { display: flex; gap: .5rem; }
 .paymentCount { margin: 1.25rem 0 .75rem; color: var(--dashboard-ink); font-weight: 600; }
@@ -116,15 +113,17 @@
 .paymentTable td:first-child { max-width: 20rem; overflow-wrap: anywhere; }
 .paymentEmpty { margin: 1.25rem 0 0; color: var(--dashboard-muted); }
 @media (max-width: 700px) { .axiomDatasets { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .heading, .jobsHeading, .jobAlert { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: 1fr; } .health, .jobsPanel { padding: 1rem; } .detailSurface { padding: 1rem; } .detailHeader { flex-wrap: wrap; } .jobPagination { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 600px) { .jobsHeading, .jobAlert { align-items: flex-start; flex-direction: column; } .metrics { grid-template-columns: 1fr; } .health, .jobsPanel { padding: 1rem; } .detailSurface { padding: 1rem; } .detailHeader { flex-wrap: wrap; } .jobPagination { align-items: flex-start; flex-direction: column; } }
 
 .metrics, .services, .axiomDatasets { align-items: start; }
 .metric, .service, .health, .jobsPanel { min-width: 0; overflow-wrap: anywhere; }
 .jobAlert { border-left-width: 1px; }
-.heading button, .jobsHeading button, .jobPagination button, .jobFilters button { min-height: 2.75rem; }
-.heading button:focus-visible, .jobsHeading button:focus-visible, .jobPagination button:focus-visible, .jobFilters button:focus-visible { outline: 3px solid #017363; outline-offset: 3px; }
-.heading .refreshButton, .jobsHeading .refreshButton { display: inline-grid; width: 2.75rem; height: 2.75rem; flex: none; place-items: center; padding: 0; }
-.heading .refreshButton:hover:not(:disabled) { background: #075744; }
+.tabsRow > .refreshButton, .jobsHeading button, .jobPagination button, .jobFilters button { min-height: 2.75rem; }
+.tabsRow > .refreshButton:focus-visible, .jobsHeading button:focus-visible, .jobPagination button:focus-visible, .jobFilters button:focus-visible { outline: 3px solid #017363; outline-offset: 3px; }
+.tabsRow > .refreshButton, .jobsHeading .refreshButton { display: inline-grid; width: 2.75rem; height: 2.75rem; flex: none; place-items: center; padding: 0; }
+.tabsRow > .refreshButton { border: 0; border-radius: .65rem; background: #087462; color: #fff; font: inherit; cursor: pointer; }
+.tabsRow > .refreshButton:disabled { opacity: .6; cursor: wait; }
+.tabsRow > .refreshButton:hover:not(:disabled) { background: #075744; }
 .jobsHeading .refreshButton:hover:not(:disabled) { background: #eaf5f0; }
 .refreshButton:active:not(:disabled) { transform: scale(.95); }
 .refreshButton[aria-busy="true"] svg { animation: refresh-icon-spin 1s linear infinite; }

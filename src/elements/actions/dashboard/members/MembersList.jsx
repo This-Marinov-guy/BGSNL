@@ -43,7 +43,7 @@ MonthlyAverageCard.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-export default function MembersList({ tabs }) {
+export default function MembersList() {
   const [statistics, setStatistics] = useState({ summary: { totalActive: 0, totalInactive: 0, mmr: 0 }, monthly: {}, activeMonthly: {}, averages: {}, nationalAverages: {} });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -86,11 +86,6 @@ export default function MembersList({ tabs }) {
   const isNational = canChooseRegion && !region;
 
   return <section className={styles.page} aria-label="Member metrics">
-    <header className={styles.heading}>
-      <h1>Member metrics</h1>
-      {tabs}
-    </header>
-
     <Filter title="Filter member metrics" allLabel="National" regions={STATISTICS_REGIONS} showRegion={canChooseRegion} onClear={(current) => {
       current.delete("from"); current.delete("to"); current.delete("memberStatus");
     }}>
@@ -134,5 +129,3 @@ export default function MembersList({ tabs }) {
       </>}
   </section>;
 }
-
-MembersList.propTypes = { tabs: PropTypes.node.isRequired };
