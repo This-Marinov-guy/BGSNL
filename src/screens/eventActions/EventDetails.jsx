@@ -353,7 +353,8 @@ const EventDetails = ({ initialEvent = null }) => {
                     </div>
                   </div>
 
-                  {useGuestEventLayout && memberSaving !== null && (
+                  {/* NOTE: too much */}
+                  {/* {useGuestEventLayout && memberSaving !== null && (
                     <div
                       className="event-price-comparison "
                       aria-label="Price comparison"
@@ -368,7 +369,7 @@ const EventDetails = ({ initialEvent = null }) => {
                         Member {formatEuro(memberPrice)}
                       </span>
                     </div>
-                  )}
+                  )} */}
                 </div>
 
                 {ticketInclusions && (
