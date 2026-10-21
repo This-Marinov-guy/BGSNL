@@ -64,6 +64,11 @@ export function browserApiPath(parts, method = "GET") {
 }
 export const changesSession = (path) => ["security/login", "security/google/login", "security/google/link", "security/google/disconnect", "security/passkeys/login", "security/passkeys/remove", "security/profile-change/confirm", "user/refresh-token"].includes(path);
 export const startsSession = (path) => ["security/login", "security/google/login", "security/passkeys/login"].includes(path);
+export const changesAccount = (path, method) => method !== "GET" && [
+  "user/edit-info", "security/change-password", "security/profile-change/confirm",
+  "security/google/link", "security/google/disconnect", "security/passkeys/register", "security/passkeys/remove",
+  "payment/subscription/change",
+].includes(path);
 
 export async function boundedBody(stream, maximum) {
   if (!stream) return undefined;

@@ -1,5 +1,3 @@
-import { clearScannerEventsCache } from "./scanner-events-cache.mjs";
-
 // Public UI state only. This object is never an authentication credential.
 export const SESSION_CHANGED_EVENT = "bgsnl-session-changed";
 export const SESSION_NOTICE_KEY = "bgsnl-profile-notice";
@@ -24,7 +22,6 @@ export function watchSessionDeadline(session, onExpire, { now = Date.now, schedu
 
 export function announceSessionChange() {
   if (typeof window === "undefined") return;
-  clearScannerEventsCache();
   // Only a random event marker is stored, never credentials or profile data.
   try { localStorage.setItem(SESSION_CHANGED_EVENT, crypto.randomUUID()); } catch { /* Storage may be disabled. */ }
 }

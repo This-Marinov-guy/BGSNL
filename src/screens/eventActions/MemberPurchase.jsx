@@ -116,7 +116,7 @@ const MemberPurchase = ({ initialEvent = null }) => {
   const [selectedEvent, setSelectedEvent] = useState(initialEvent);
   const [currentUser, setCurrentUser] = useState();
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
-  const [eventClosed, setEventClosed] = useState(false);
+  const [eventClosed, setEventClosed] = useState(initialEvent?.isSaleClosed === true || initialEvent?.availabilityUnavailable === true);
   const [priceCheck, setPriceCheck] = useState({ key: "", status: "checking", alreadyRegistered: false });
   const [priceCheckAttempt, setPriceCheckAttempt] = useState(0);
   const [selectedAddOns, setSelectedAddOns] = useState([]);

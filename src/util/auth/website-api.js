@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { isIP } from "node:net";
 import { API_URL } from "../api/server";
 import { cookieNames, cookieOptions, publicSession, isLegacySessionToken, createCsrf, validCsrf, requireBrowserMutation, allowedWebsiteOrigin } from "./cookie-policy.mjs";
-import { browserApiPath, changesSession, startsSession, boundedBody } from "./proxy-policy.mjs";
+import { browserApiPath, changesAccount, changesSession, startsSession, boundedBody } from "./proxy-policy.mjs";
 
 const headers = { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer" };
 const json = (data, status = 200) => NextResponse.json(data, { status, headers });
@@ -55,6 +55,7 @@ export async function websiteApi(request, parts) {
   }
   const restore = path === "session/current" && request.method === "GET";
   const restoreAccount = restore && new URL(request.url).searchParams.get("account") === "1";
+  const freshAccountReturn = restoreAccount && new URL(request.url).searchParams.get("fresh") === "1";
   const activity = path === "session/activity" && request.method === "POST";
   const logout = path === "session/logout" && request.method === "POST";
   const apiPath = restore ? (restoreAccount ? "user/current" : "user/get-subscription-status") : browserApiPath(parts, request.method);
@@ -110,13 +111,15 @@ export async function websiteApi(request, parts) {
     if (restore && !original) return clear(json({ session: null }), { keepCsrf: true });
     const login = startsSession(apiPath);
     if (!login && !sessionlessFeedback && original && (!session || session.accessExp * 1000 <= Date.now() + 60000 ||
-        (restore && isLegacySessionToken(credential)))) await renew();
+        (restore && isLegacySessionToken(credential)) || (freshAccountReturn && refresh))) await renew();
     if (!login && !sessionlessFeedback && session) forwarded.set("Authorization", `Bearer ${credential}`);
     for (const name of ["content-type", "x-support-token"]) if (request.headers.has(name)) forwarded.set(name, request.headers.get(name));
     const target = apiUrl(apiPath);
     // The account page needs the full profile. Restore it with the session in
     // one authenticated read so billing reconciliation runs only once.
-    target.search = restoreAccount ? "?withTickets=true&withChristmas=true" : new URL(request.url).search;
+    target.search = restoreAccount
+      ? `?withTickets=true&withChristmas=true${new URL(request.url).searchParams.get("fresh") === "1" ? "&fresh=1" : ""}`
+      : new URL(request.url).search;
     if (target.search.length > 4000) return withCredentials(json({ message: "Request is too large" }, 413));
     const body = ["GET", "HEAD"].includes(request.method) ? undefined : await boundedBody(request.body, 40 * 1024 * 1024);
     const liveStream = (request.method === "GET" && /^event\/guest-list\/[^/]+\/stream$/.test(apiPath)) || (request.method === "POST" && apiPath === "support/live");
@@ -133,6 +136,16 @@ export async function websiteApi(request, parts) {
         forwarded.set("Authorization", `Bearer ${credential}`);
         upstream = await send();
       }
+    }
+    // The API has verified the existing session but rejected its old region
+    // claim before dispatching a handler. Refresh and replay a read with the
+    // newly signed region; mutations are never replayed.
+    if (upstream.status === 401 && request.method === "GET" && refresh &&
+        upstream.headers.get("x-bgsnl-session-invalid") === "1" &&
+        upstream.headers.get("x-bgsnl-region-changed") === "1") {
+      await renew();
+      forwarded.set("Authorization", `Bearer ${credential}`);
+      upstream = await send();
     }
     if (upstream.status >= 300 && upstream.status < 400) {
       console.error("Website API unexpected redirect", { method: request.method, path: apiPath, status: upstream.status });
@@ -162,6 +175,13 @@ export async function websiteApi(request, parts) {
       const packet = { token: data.token, refreshToken: data.refreshToken };
       delete data.token;
       delete data.refreshToken;
+      const accountData = apiPath === "user/current" ? data.user : apiPath === "user/get-subscription-status" ? data : null;
+      if (upstream.ok && accountData && refresh && session) {
+        const nextId = accountData._id || accountData.id || accountData.userId;
+        const rolesChanged = Array.isArray(accountData.roles) &&
+          (accountData.roles.length !== session.roles?.length || accountData.roles.some((role) => !session.roles.includes(role)));
+        if (rolesChanged || (nextId && nextId !== session.userId)) await renew();
+      }
       const restoredAccount = restoreAccount ? data.user : data;
       if (restore) data.session = upstream.ok ? { ...session,
         ...Object.fromEntries(["userId", "roles", "name", "surname", "email", "status", "region", "image"]
@@ -182,6 +202,7 @@ export async function websiteApi(request, parts) {
       response.headers.set("Content-Security-Policy", "default-src 'none'; sandbox");
     } else response = json({ message: "The service could not complete your request. Please try again." }, upstream.status);
     if (upstream.headers.has("retry-after")) response.headers.set("Retry-After", upstream.headers.get("retry-after"));
+    if (upstream.ok && changesAccount(apiPath, request.method)) response.headers.set("X-BGSNL-Account-Changed", "1");
     return withCredentials(response);
   } catch (error) {
     console.error("Website API request failed", { method: request.method, path: apiPath, name: error?.name, status: error?.status });

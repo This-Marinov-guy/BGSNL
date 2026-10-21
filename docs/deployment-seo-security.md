@@ -8,7 +8,8 @@ Set the following server-only values in the production deployment manager. Do no
 | API proxy ingress | `TRUST_PROXY_HOPS` | Exact trusted reverse-proxy hop count, normally `1`; never use unrestricted proxy trust. |
 | Google Scripts export | API `GOOGLE_SCRIPTS_PASS` | Separate random service key, at least 32 characters. The integration is intentionally unavailable until configured. |
 | Koko mobile integration | API `KOKO_APP_PASS` | Separate random service key, at least 32 characters. |
-| Website revalidation | Website `SITEMAP_REVALIDATE_TOKEN` | Random secret used only by the GitHub workflow. |
+| Website revalidation | Website `SITEMAP_REVALIDATE_TOKEN` | Random server-only secret shared with the API and GitHub workflow. |
+| Direct event revalidation | API `SITEMAP_REVALIDATE_URL`, `SITEMAP_REVALIDATE_TOKEN` | Optional direct POST to the website after event changes. URL is `https://www.bulgariansociety.nl/api/revalidate`; token must equal the website value. |
 | Event archive schedule | Website `CRON_SECRET` | Separate random secret, at least 32 bytes. Vercel uses it to invoke the daily event-archive job. |
 | Event sitemap dispatch | API `GITHUB_SITEMAP_REPOSITORY`, `GITHUB_SITEMAP_DISPATCH_TOKEN` | Repository `owner/name` and a fine-grained token scoped to this repository with **Contents: write** only (required for GitHub repository dispatch). Required for event-triggered and past-cutoff refreshes; daily revalidation remains the fallback. |
 | GitHub Actions | `SITEMAP_REVALIDATE_URL`, `SITEMAP_REVALIDATE_TOKEN` | URL is `https://www.bulgariansociety.nl/api/revalidate`; token must equal the website value. |
@@ -43,6 +44,13 @@ The workflow requests no repository permissions, performs no checkout/commits,
 and cannot deploy the site. Runs are serialized and time-limited. After the
 protected POST confirms revalidation, it fetches `/sitemap.xml` and `/llms.txt`,
 checks the sitemap XML and canonical domain, and reports the number of URLs.
+
+For faster public event updates, configure the same `SITEMAP_REVALIDATE_URL`
+and `SITEMAP_REVALIDATE_TOKEN` on the API. It sends a direct signed request
+after an event write, while the GitHub workflow remains a fallback. The website
+expires the public event cache immediately on either request. Event lists also
+have a 60-second timed fallback; individual event descriptions have a five-minute
+fallback, while availability and sale-sensitive prices are fetched live.
 
 Set the repository secret `SITEMAP_REVALIDATE_TOKEN` to the same server-only
 value as the production website. `SITEMAP_REVALIDATE_URL` is optional and defaults

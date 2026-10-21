@@ -1,3 +1,6 @@
+import { clearScannerEventsCache } from "./scanner-events-cache.mjs";
+import { clearRecentScannerEvent } from "./scanner-recent-event.mjs";
+
 let csrfPromise;
 let csrfExpires = 0;
 
@@ -31,6 +34,9 @@ export async function browserFetch(url, options = {}) {
   const dedicated = /^\/api\/(?:support\/live|user\/wallet\/(?:availability|apple|google)|event\/guest-list\/[^/?]+\/stream)(?:\?|$)/.test(url);
   const target = /^\/api\/v[1-9]\d*(?:\/|\?|$)/.test(url) || dedicated ? url : `/api/v1/${url.slice("/api/".length)}`;
   const response = await fetch(target, { ...options, headers, credentials: "same-origin", cache: "no-store", redirect: "error" });
+  if (response.ok && response.headers.get("X-BGSNL-Account-Changed") === "1" && typeof window !== "undefined") {
+    window.dispatchEvent(new Event("bgsnl:account-changed"));
+  }
   // Do not replay mutations: the caller can retry after receiving an explicit error.
   if (response.status === 403 || response.headers.get("X-BGSNL-Session-Changed") === "1") clearCsrf();
   return response;
@@ -40,4 +46,6 @@ export async function endBrowserSession() {
   const response = await browserFetch("/api/session/logout", { method: "POST" });
   if (!response.ok) throw new Error("Could not sign out. Please retry.");
   clearCsrf();
+  clearScannerEventsCache();
+  clearRecentScannerEvent();
 }

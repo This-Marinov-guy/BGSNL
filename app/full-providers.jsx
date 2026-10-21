@@ -32,7 +32,7 @@ const CampaignLayout = dynamic(() => import("@/layouts/CampaignLayout"));
 const AppShell = ({ children }) => {
   const pathname = usePathname();
   const isScanner = pathname === "/user/dashboard/ticket-scanner";
-  const { isLoading } = useAppInitialization();
+  const { isLoading } = useAppInitialization({ skip: isScanner });
   useAuthSession();
 
   useEffect(() => {
@@ -74,6 +74,7 @@ AppShell.propTypes = {
 export default function FullProviders({ children }) {
   const pathname = usePathname();
   const isUserRoute = pathname?.startsWith("/user");
+  const isScanner = pathname === "/user/dashboard/ticket-scanner";
   // Maintenance must not start sessions, API requests or modals.
   if (process.env.NEXT_PUBLIC_MAINTENANCE === "1") return <Maintenance />;
 
@@ -85,11 +86,8 @@ export default function FullProviders({ children }) {
         <div className={`global-site-shell${isUserRoute ? " global-site-shell--user" : ""}`}>
           {!isUserRoute && <GlobalBackground initiallyRevealed />}
           <div className="global-site-content">
-            <SupportTicketAttentionProvider>
-              <MainLayout>
-                <AppShell>{children}</AppShell>
-              </MainLayout>
-            </SupportTicketAttentionProvider>
+            {isScanner ? <MainLayout><AppShell>{children}</AppShell></MainLayout> :
+              <SupportTicketAttentionProvider><MainLayout><AppShell>{children}</AppShell></MainLayout></SupportTicketAttentionProvider>}
           </div>
         </div>
       </PrimeSSRProvider>

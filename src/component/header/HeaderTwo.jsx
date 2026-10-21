@@ -31,6 +31,9 @@ const HeaderTwo = (props) => {
   const params = useParams();
   const requestedRegion = props.forceRegion ?? params.region;
   const region = REGIONS.includes(requestedRegion) ? requestedRegion : null;
+  const logoRegion = (REGIONS.includes(props.logoRegion) || props.logoRegion === "netherlands") ? props.logoRegion : region;
+  const nationalLogo = logoRegion === "netherlands";
+  const logoBase = logoRegion || (isWinter ? "logo-xmas" : "logo");
 
   const activeStrap = getActiveStrap();
 
@@ -81,24 +84,12 @@ const HeaderTwo = (props) => {
     header?.addEventListener("click", toggleDropdown);
     return () => header?.removeEventListener("click", toggleDropdown);
   }, []);
-  let logoUrl = (
+  const logoUrl = (
     <ImageFb
       className="logo"
-      src={`/assets/images/logo/${
-        region && REGIONS.includes(region)
-          ? region
-          : isWinter
-          ? "logo-xmas"
-          : "logo"
-      }.webp`}
-      fallback={`/assets/images/logo/${
-        region && REGIONS.includes(region)
-          ? region
-          : isWinter
-          ? "logo-xmas"
-          : "logo"
-      }.jpg`}
-      alt="Logo"
+      src={nationalLogo ? "/assets/images/logo/logo-nl-circle.png" : `/assets/images/logo/${logoBase}.webp`}
+      fallback={nationalLogo ? "/assets/images/logo/logo-nl-circle.png" : `/assets/images/logo/${logoBase}.jpg`}
+      alt={logoRegion ? `${logoRegion.replaceAll("_", " ")} region logo` : "Logo"}
     />
   );
 
@@ -158,6 +149,7 @@ const HeaderTwo = (props) => {
 HeaderTwo.propTypes = {
   anonymous: PropTypes.bool,
   forceRegion: PropTypes.string,
+  logoRegion: PropTypes.string,
   centerContent: PropTypes.node,
 };
 

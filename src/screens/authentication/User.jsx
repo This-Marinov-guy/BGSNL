@@ -20,6 +20,7 @@ import PageHelmet from "../../component/common/Helmet";
 import FooterTwo from "../../component/footer/FooterTwo";
 import HeaderTwo from "../../component/header/HeaderTwo";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
+import { LoadErrorBanner } from "../../elements/ui/loading/LoadState";
 import UserUpdateModal from "../../elements/ui/modals/UserUpdateModal";
 import UserSidebar from "../../elements/ui/sidebars/UserSidebar";
 import AlumniRegistrationButton from "@/elements/ui/buttons/AlumniRegistrationButton";
@@ -51,6 +52,7 @@ const User = () => {
   const initialCelebrate = user.initialCelebrate;
   const [isPageLoading, setIsPageLoading] = useState(!initialAccount);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [refreshFailed, setRefreshFailed] = useState(false);
   const [currentUser, setCurrentUser] = useState(initialAccount);
   const [hasBirthday, setHasBirthday] = useState(initialCelebrate);
   const [tab, setTab] = useState(ACCOUNT_TABS[0]);
@@ -198,35 +200,51 @@ const User = () => {
 
     let mounted = true;
     let refreshing = false;
-    const fetchCurrentUser = async () => {
-      if (refreshing || document.visibilityState === "hidden") return;
+    let pendingRefresh = false;
+    let hasAccount = Boolean(initialAccount);
+    const fetchCurrentUser = async (force = false) => {
+      if (refreshing) { pendingRefresh ||= force; return; }
+      if (document.visibilityState === "hidden") return;
       refreshing = true;
       try {
-        const response = await request.current("user/current?withTickets=true&withChristmas=true", "GET", null, {}, false, false);
+        const response = await request.current(`user/current?withTickets=true&withChristmas=true${force ? "&fresh=1" : ""}`, "GET", null, {}, false, false);
         if (!mounted) return;
         if (!response?.user) {
-          setLoadFailed(true);
+          if (hasAccount) setRefreshFailed(true);
+          else setLoadFailed(true);
           return;
         }
+        hasAccount = true;
         setCurrentUser(response.user);
         setHasBirthday(response.celebrate);
         setLoadFailed(false);
+        setRefreshFailed(false);
         dispatch(updateAccount(response.user));
+      } catch {
+        if (mounted) {
+          if (hasAccount) setRefreshFailed(true);
+          else setLoadFailed(true);
+        }
       } finally {
         refreshing = false;
         if (mounted) setIsPageLoading(false);
+        if (mounted && pendingRefresh) { pendingRefresh = false; void fetchCurrentUser(true); }
       }
     };
     if (initialAccount) dispatch(consumeInitialAccount());
     else fetchCurrentUser();
-    const timer = setInterval(fetchCurrentUser, 60000);
-    window.addEventListener("focus", fetchCurrentUser);
-    document.addEventListener("visibilitychange", fetchCurrentUser);
+    const onVisible = () => { void fetchCurrentUser(); };
+    const onAccountChanged = () => { void fetchCurrentUser(true); };
+    const timer = setInterval(onVisible, 60000);
+    window.addEventListener("focus", onVisible);
+    window.addEventListener("bgsnl:account-changed", onAccountChanged);
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       mounted = false;
       clearInterval(timer);
-      window.removeEventListener("focus", fetchCurrentUser);
-      document.removeEventListener("visibilitychange", fetchCurrentUser);
+      window.removeEventListener("focus", onVisible);
+      window.removeEventListener("bgsnl:account-changed", onAccountChanged);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, [user.session?.userId, user.session?.sessionVersion, dispatch]);
 
@@ -294,6 +312,9 @@ const User = () => {
 
       {/* Start User Page Container with Sidebar */}
       <main className="user-page-container" id="user-account-content">
+        {refreshFailed && <LoadErrorBanner compact severity="warning"
+          message="We couldn't refresh your account. The details shown may be out of date."
+          retryLabel="Refresh account" onRetry={() => window.dispatchEvent(new Event("bgsnl:account-changed"))} />}
         {/* Sidebar */}
         <div className={campaignStyles.navigation}>
         <div className={campaignStyles.desktopBanner}>{exploreBanner}</div>

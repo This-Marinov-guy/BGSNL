@@ -2,10 +2,8 @@
   max-width: 760px;
   margin: 8.75rem auto 4rem;
   padding: clamp(1.25rem, 3vw, 2.5rem);
-  border: 1px solid rgb(1 115 99 / 12%);
-  border-radius: 1.25rem;
-  background: rgb(255 255 255 / 92%);
-  box-shadow: 0 1.25rem 3.5rem rgb(2 84 32 / 9%);
+  border: 0;
+  background: transparent;
   color: #18271c;
   h2 { font-size: 26px; margin-bottom: 12px; }
   button:not(:global(.p-step-header)):where(:not(:global(.info-hint__trigger))) { min-height: 48px; padding: 10px 18px; border-radius: 10px; border: 0; background: #406345; color: white; font-weight: 500; cursor: pointer; }
@@ -13,8 +11,10 @@
 }
 .heading > p { margin: 0 0 .45rem; color: #087462; font-size: 1rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .heading > h1 { margin: 0; max-width: none; font-size: clamp(1.6rem, 5.5vw, 3rem); white-space: nowrap; }
-.heading > span { display: block; max-width: 38rem; margin-top: .85rem; color: #607168; line-height: 1.6; }
-.stepper { margin: 2rem 0 1.5rem; }
+.scannerEventBadge { display: block; width: fit-content; max-width: min(100%, 32ch); overflow: hidden; padding: var(--badge-padding-block) var(--badge-padding-inline); border-radius: var(--badge-radius); background: var(--region-badge-background); color: var(--region-badge-color); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+.heading > .scannerEventBadge { margin-top: .55rem; }
+.mobileHeaderIdentity { display: none; }
+.mobileHeaderTitle { display: none; }
 .actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; margin: 0 0 .5rem; }
 .eventPicker { color: #18271c; }
 .eventPicker h2 { margin: 0 0 8px; }
@@ -22,34 +22,25 @@
 .eventPicker [role="alert"] { color: #9b2920; }
 .search { display: grid !important; gap: .5rem; margin: 1.35rem 0 1rem; color: #314339; font-size: 1rem; font-weight: 600; }
 .eventCards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: .85rem; padding: .2rem; }
-.eventCard { display: grid; grid-template-rows: 9rem auto; gap: 0; width: 100%; min-height: 0 !important; padding: 0 !important; overflow: hidden; border: 1px solid #d3ded5 !important; border-radius: .8rem !important; background: rgb(255 255 255 / 78%) !important; color: #18271c !important; text-align: left; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease; }
+.eventCard { position: relative; display: block; width: 100%; aspect-ratio: 13 / 9; min-height: 0 !important; padding: 0 !important; overflow: hidden; border: 1px solid #d3ded5 !important; border-radius: .8rem !important; background: #e7eee8 !important; color: #18271c !important; transition: transform 180ms ease, border-color 180ms ease; }
 .eventCard:hover { border-color: #087462 !important; background: #fff !important; transform: translateY(-2px); }
 .eventCard:active { transform: translateY(0) scale(.99); }
-.eventCard:focus-visible, .search input:focus-visible { outline: 3px solid rgb(8 116 98 / 35%); outline-offset: 3px; }
-.eventPoster, .eventPosterFallback { display: block; width: 100%; height: 100%; background: #e7eee8; object-fit: cover; }
+.eventCard:focus-visible, .searchField input:focus-visible { outline: 3px solid rgb(8 116 98 / 35%); outline-offset: 3px; }
+.eventPoster, .eventPosterFallback { position: absolute; inset: 0; display: block; width: 100%; height: 100%; background: #e7eee8; object-fit: cover; }
 .eventPosterFallback { display: grid; place-items: center; color: #607168; font-size: 1rem; }
-.eventCardContent { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; min-width: 0; padding: .75rem; }
-.eventCard strong {
-  display: -webkit-box;
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  font-size: 1rem;
-  line-height: 1.25;
-}
-.regionBadge { flex: 0 0 auto; padding: var(--badge-padding-block) var(--badge-padding-inline); border: 0; border-radius: var(--badge-radius); background: var(--region-badge-background); color: var(--region-badge-color); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.2; }
+.regionBadge { position: absolute; bottom: .7rem; left: 50%; max-width: calc(100% - 1.4rem); padding: var(--badge-padding-block) var(--badge-padding-inline); border: 0; border-radius: var(--badge-radius); background: var(--region-badge-background); color: var(--region-badge-color); font-family: "LeagueSpartan", "Roboto", sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.2; text-align: center; transform: translateX(-50%); }
+.eventCardSkeleton { position: relative; aspect-ratio: 13 / 9; overflow: hidden; border-radius: .8rem; }
+.eventBadgeSkeleton { position: absolute; bottom: .7rem; left: 50%; transform: translateX(-50%); }
 .empty { padding: 1rem 0 0; }
+.checkIn button.refreshEvents { display: block; margin: 1rem auto 0; padding: .5rem .75rem; background: transparent; color: #245a33; }
+.checkIn button.refreshEvents:hover { text-decoration: underline; }
 .checkIn.scanning { padding-block: 1.25rem; }
-.scanning .stepper { margin: .75rem 0 .25rem; }
 .scannerStep { min-width: 0; }
 .checkIn button.shareButton, .checkIn button.changeEvent { display: inline-flex; align-items: center; gap: .45rem; padding-inline: 0; background: transparent; color: #245a33; }
 .shareButton { margin-left: auto; }
 .cameraWindow { position: relative; width: min(100%, clamp(10rem, 26dvh, 15rem)); aspect-ratio: 1; margin-inline: auto; overflow: hidden; border-radius: 1rem; background: #18271c; }
 .camera { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cameraWindow[data-camera-error="true"] .camera { visibility: hidden; }
 .cameraGuide {
   position: absolute;
   top: 43%;
@@ -71,8 +62,11 @@
 .cameraHint { position: absolute; bottom: .75rem; left: .75rem; right: .75rem; width: fit-content; max-width: calc(100% - 1.5rem); margin: 0 auto; padding: .4rem .75rem; border-radius: .5rem; background: rgb(0 0 0 / 65%); color: #fff; font-size: 1rem; line-height: 1.4; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cameraHint[data-signal="close"] { background: #ffe08a; color: #493600; }
 .cameraHint[data-signal="success"] { background: #017363; color: #fff; }
-.cameraMessage { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem; padding: 1.5rem; color: #fff; text-align: center; }
-.cameraMessage p { max-width: 32ch; margin: 0; color: inherit; }
+.cameraMessage { position: absolute; inset: 0; display: grid; place-items: center; }
+.checkIn button.cameraRetry { display: grid; place-items: center; width: 64px; min-height: 64px; padding: 0; border-radius: 50%; background: #fff; color: #245a33; transition: background 150ms ease, transform 150ms ease; }
+.checkIn button.cameraRetry:hover { background: #e7eee8; }
+.checkIn button.cameraRetry:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.checkIn button.cameraRetry:active { transform: scale(.94); }
 .waitingResult { padding: 1rem 0; text-align: center; color: #607168; }
 .waitingResult p { margin: 0; }
 .result {
@@ -110,33 +104,36 @@
 }
 .ticketDetail + .ticketDetail { margin-top: 1.5rem; }
 .ticketDetail h3 { font-size: 1rem; margin: 0 0 .75rem; }
-.ticketDetail dl { display: grid; grid-template-columns: minmax(6rem, 1fr) minmax(0, 2fr); gap: .5rem 1rem; margin: 0; font-size: 1rem; }
+.ticketDetail dl { display: grid; gap: .65rem; margin: 0; font-size: 1rem; }
+.ticketDetailRow { display: grid; grid-template-columns: minmax(7rem, 1fr) minmax(0, 2fr); gap: 1rem; }
 .ticketDetail dt { font-weight: 500; }
 .ticketDetail dd { margin: 0; overflow-wrap: anywhere; }
-.preferenceRow { display: contents; }
-.confirmSettings { display: flex; align-items: center; justify-content: center; gap: .5rem; margin-top: 1rem; background: transparent; }
-.checkIn .switchLabel { display: flex; align-items: center; gap: .65rem; position: relative; margin: 0; min-height: 44px; cursor: pointer; background: transparent; box-shadow: none; }
-.switchLabel input { position: absolute; opacity: 0; width: 1px; height: 1px; min-height: 0; padding: 0; }
-.switchTrack { width: 44px; height: 26px; border-radius: 20px; background: #68766c; transition: background 160ms ease; }
-.switchTrack::after { content: ""; display: block; width: 20px; height: 20px; margin: 3px; border-radius: 50%; background: white; transition: transform 160ms ease; }
-.switchLabel input:checked + .switchTrack { background: #017363; }
-.switchLabel input:checked + .switchTrack::after { transform: translateX(18px); }
-.switchLabel input:focus-visible + .switchTrack { outline: 3px solid #017363; outline-offset: 3px; }
-.switchLabel input:disabled + .switchTrack { opacity: .6; }
-.quantityActions { display: flex; align-items: end; justify-content: center; gap: .75rem; flex-wrap: wrap; margin-top: .75rem; }
+.quantityActions { display: flex; flex-direction: column; align-items: center; gap: .5rem; margin-top: .75rem; }
 .result .quantityActions button { margin: 0; }
 .remaining { background: transparent; padding: 0; font-variant-numeric: tabular-nums; }
-.checkIn .quantityStepper { display: inline-flex; align-items: center; gap: .5rem; width: auto; padding: 0 .25rem !important; }
-.checkIn .quantityStepper:focus-within { border-color: #017363 !important; box-shadow: 0 0 0 3px rgb(1 115 99 / 13%); }
-.quantityStepper output { min-width: 1.5rem; text-align: center; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
-.checkIn .quantityStepper button { display: grid; place-items: center; min-width: 44px; padding: 10px; background: transparent; color: #245a33; }
+.quantitySelection { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: .5rem; width: min(100%, 16rem); }
+.checkIn button.quantityAdjust { display: grid; place-items: center; min-width: 44px; padding: 0; border: 0; background: transparent; color: #245a33; }
+.checkIn button.quantityAdjust:hover:not(:disabled) { color: #017363; }
+.checkIn button.quantityAdjust:active:not(:disabled) { transform: scale(.95); }
+.checkIn button.quantityAdjust:disabled { cursor: not-allowed; }
+.checkIn button.checkSelected { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-width: 0; width: 100%; padding-inline: .5rem; background: #9e0d33; color: #fff; font-size: 1rem; white-space: nowrap; }
+.checkIn button.checkSelected:hover { background: #800a29; }
+.checkIn button.checkSelected:active { transform: scale(.98); }
+.selectedCount { display: inline-grid; place-items: center; min-width: 1.4rem; min-height: 1.4rem; padding-inline: .3rem; border-radius: 999px; background: rgb(255 255 255 / 20%); font-variant-numeric: tabular-nums; }
+.checkIn button.checkAll { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; width: min(100%, 9.5rem); background: #406345; color: #fff; }
+.checkIn button.checkAll:hover { background: #34553a; }
+.checkIn button.checkAll:active { transform: scale(.98); }
+.checkIn button.quantityAdjust:focus-visible, .checkIn button.checkSelected:focus-visible, .checkIn button.checkAll:focus-visible { outline: 3px solid #017363; outline-offset: 2px; }
 .checkIn button.clearButton { display: block; margin: .5rem auto 0; background: transparent; color: #8c332a; padding-inline: .75rem; }
 .checkIn button.clearButton:hover { text-decoration: underline; }
-@media (prefers-reduced-motion: reduce) { .switchTrack, .switchTrack::after { transition: none; } }
-
 @media (max-width: 767px) {
-  .checkIn { margin: 6.4rem 0 2rem; border-inline: 0; border-radius: 0; padding: 1.25rem 1rem 2rem; }
+  .checkIn { margin: 5rem 0 2rem; padding: 1.25rem 1rem 2rem; }
+  .heading { display: none; }
+  .mobileHeaderIdentity { display: flex; flex: 1 1 0; flex-direction: column; align-items: center; gap: .2rem; min-width: 0; padding-inline: .25rem; }
+  .mobileHeaderTitle { display: block; margin: 0; color: #18271c; font-size: clamp(1.125rem, 5vw, 1.5rem); font-weight: 600; line-height: 1.15; text-align: center; white-space: nowrap; }
+  .mobileHeaderIdentity .scannerEventBadge { max-width: calc(100% - .5rem); }
   .eventCards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
-  .eventCard { grid-template-rows: 7rem auto; }
-  .eventCardContent { align-items: flex-start; flex-direction: column; }
+  .searchField { width: min(100%, 26rem); margin-inline: auto; }
+  .searchField:global(.rn-form-group) > label { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+  .ticketDetailRow { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
 }

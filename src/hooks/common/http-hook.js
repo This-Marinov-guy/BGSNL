@@ -49,6 +49,7 @@ export const useHttpClient = (withPageLoading = false) => {
         signal,
       });
       if (response.headers["x-bgsnl-session-changed"] === "1") clearCsrf();
+      if (response.headers["x-bgsnl-account-changed"] === "1") window.dispatchEvent(new Event("bgsnl:account-changed"));
 
       return response.data;
     } catch (err) {

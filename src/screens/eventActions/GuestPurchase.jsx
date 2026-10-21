@@ -129,7 +129,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(!initialEvent);
   const [selectedEvent, setSelectedEvent] = useState(initialEvent);
-  const [eventClosed, setEventClosed] = useState(false);
+  const [eventClosed, setEventClosed] = useState(initialEvent?.isSaleClosed === true || initialEvent?.availabilityUnavailable === true);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [{ schema, schemaFields }, setValidation] = useState(() =>

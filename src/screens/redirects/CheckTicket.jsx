@@ -1,23 +1,23 @@
 "use client";
-import { formatDisplayDateTime } from "@/util/functions/display-date.mjs";
-
 import RetryIcon from "@/elements/ui/icons/RetryIcon";
 import { LoadErrorBanner } from "@/elements/ui/loading/LoadState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import PropTypes from "prop-types";
-import { Dialog, Skeleton, Steps } from "@/compat/primereact";
-import HeaderTwo from "@/component/header/HeaderTwo";
+import { Dialog, Skeleton } from "@/compat/primereact";
 import StepContentTransition from "@/elements/ui/functional/StepContentTransition";
-import { FiExternalLink, FiShare2, IconlyDocument } from "@/elements/ui/icons/IconlyIcons";
-import InfoHint from "@/elements/ui/icons/InfoHint";
+import { FiExternalLink, FiShare2, IconlyDocument, IconlyRotate } from "@/elements/ui/icons/IconlyIcons";
 import { browserFetch } from "@/util/auth/browser-request.mjs";
+import { authorizedScannerEventId, parseScannerBootstrap } from "@/util/auth/scanner-bootstrap.mjs";
 import { clearScannerEventsCache, readScannerEventsCache, writeScannerEventsCache } from "@/util/auth/scanner-events-cache.mjs";
+import { clearRecentScannerEvent, rememberScannerEvent } from "@/util/auth/scanner-recent-event.mjs";
 import { requestErrorNotice } from "@/util/auth/request-error-notice.mjs";
 import { parseTicketScan } from "@/util/functions/ticket-scan.mjs";
+import { scannerTicketDetailRows } from "@/util/functions/scanner-ticket-details.mjs";
 import { formatRegionBadgeLabel, getRegionBadgeStyle } from "@/util/defines/REGION_BADGES";
 import styles from "./check-ticket.module.scss";
 import { estimateScanProgress } from "@/util/functions/scan-progress.mjs";
+import ScannerHeader, { ScannerEventBadge } from "./ScannerHeader";
 
 const mockGroupResult = () => ({
   outcome: "choose_quantity", name: "Mock Guest Trio", event: "Mock event · preview only",
@@ -45,7 +45,11 @@ const DetailsSkeleton = () => <div role="status">
   </div>
 </div>;
 
-export default function CheckTicket({ scannerUserId }) {
+export const EventCardsSkeleton = () => <div role="status"><span className="visually-hidden">Loading events…</span><div className={styles.eventCards} aria-hidden="true">
+  {Array.from({ length: 3 }, (_, index) => <div className={styles.eventCardSkeleton} key={index}><Skeleton width="100%" height="100%" borderRadius=".8rem" /><Skeleton className={styles.eventBadgeSkeleton} width="5rem" height="1.8rem" borderRadius="999px" /></div>)}
+</div></div>;
+
+export default function CheckTicket({ initialEvents, initialEventId = "", initialAccess, session }) {
   const params = useSearchParams();
   const mockPreview = process.env.NODE_ENV === "development" && params.get("preview") === "group";
   const video = useRef(null);
@@ -56,7 +60,7 @@ export default function CheckTicket({ scannerUserId }) {
   const currentTicket = useRef(null);
   const [camera, setCamera] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
-  const [cameraError, setCameraError] = useState("");
+  const [cameraError, setCameraError] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [scanSuccess, setScanSuccess] = useState(false);
   const [pending, setPending] = useState(false);
@@ -66,32 +70,39 @@ export default function CheckTicket({ scannerUserId }) {
   const [ticketDetails, setTicketDetails] = useState(null);
   const [detailsError, setDetailsError] = useState("");
   const [detailsAttempt, setDetailsAttempt] = useState(0);
-  const [autoConfirm, setAutoConfirm] = useState(true);
+  // Auto-confirm remains enabled while its scanner control is hidden.
   const autoConfirmRef = useRef(true);
   const expectedEventId = params.get("forEvent") || params.get("event") || undefined;
-  const [events, setEvents] = useState([]);
-  const [eventsLoading, setEventsLoading] = useState(!expectedEventId);
+  const previousExpectedEventId = useRef(expectedEventId);
+  const handledEventsAttempt = useRef(0);
+  const [access, setAccess] = useState(initialAccess);
+  const [events, setEvents] = useState(initialEvents);
+  const [eventsLoading, setEventsLoading] = useState(false);
   const [eventsError, setEventsError] = useState("");
   const [eventsAttempt, setEventsAttempt] = useState(0);
-  const [selectedEventId, setSelectedEventId] = useState(expectedEventId || "");
+  const [selectedEventId, setSelectedEventId] = useState(() =>
+    authorizedScannerEventId(expectedEventId, initialEvents) || initialEventId);
   const [search, setSearch] = useState("");
   const [shareOpen, setShareOpen] = useState(false);
   const [scannerUrl, setScannerUrl] = useState("");
   const [qrImage, setQrImage] = useState("");
   const [shareMessage, setShareMessage] = useState("");
   const activeEventId = selectedEventId;
+  const activeEvent = events.find(event => (event.id || event._id) === activeEventId);
   const normalizedSearch = search.replace(/\s+/g, "").toLocaleLowerCase();
   const filteredEvents = events.filter((event) => !normalizedSearch || [event.name, event.title, event.region]
     .some((value) => String(value || "").replace(/\s+/g, "").toLocaleLowerCase().includes(normalizedSearch)));
 
   useEffect(() => {
-    setSelectedEventId(expectedEventId || "");
-  }, [expectedEventId]);
+    if (previousExpectedEventId.current === expectedEventId) return;
+    previousExpectedEventId.current = expectedEventId;
+    setSelectedEventId(authorizedScannerEventId(expectedEventId, events));
+  }, [expectedEventId, events]);
 
   useEffect(() => {
     setCamera(Boolean(activeEventId) && !mockPreview);
     setCameraReady(false);
-    setCameraError("");
+    setCameraError(false);
   }, [activeEventId, mockPreview]);
 
   useEffect(() => {
@@ -105,14 +116,8 @@ export default function CheckTicket({ scannerUserId }) {
   }, [scannerUrl]);
 
   useEffect(() => {
-    if (activeEventId) return undefined;
-    const cachedEvents = readScannerEventsCache(scannerUserId);
-    if (cachedEvents) {
-      setEvents(cachedEvents);
-      setEventsLoading(false);
-      setEventsError("");
-      return undefined;
-    }
+    if (activeEventId || eventsAttempt === 0 || handledEventsAttempt.current === eventsAttempt) return undefined;
+    handledEventsAttempt.current = eventsAttempt;
     const controller = new AbortController();
     async function loadEvents() {
       setEvents([]);
@@ -122,12 +127,15 @@ export default function CheckTicket({ scannerUserId }) {
         const response = await browserFetch("/api/future-event/scanner-events", { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]) });
         const data = await response.json();
         if (!response.ok) throw Object.assign(new Error(data.message || "Events could not be loaded."), { status: response.status });
-        const nextEvents = (data.events || [])
+        const packet = parseScannerBootstrap(data, session.userId);
+        const nextEvents = packet.events
           .filter((event) => !["draft", "archived"].includes(String(event.status || "").trim().toLowerCase()))
           .sort((first, second) => new Date(second.correctedDate || second.date || 0) - new Date(first.correctedDate || first.date || 0));
-        writeScannerEventsCache(scannerUserId, nextEvents);
+        writeScannerEventsCache(session, packet.access, nextEvents);
+        setAccess(packet.access);
         setEvents(nextEvents);
       } catch (error) {
+        if ([401, 403].includes(error?.status)) clearScannerEventsCache();
         if (!controller.signal.aborted) setEventsError(scannerErrorMessage(error, "Events could not be loaded. Refresh to try again."));
       } finally {
         if (!controller.signal.aborted) setEventsLoading(false);
@@ -135,7 +143,7 @@ export default function CheckTicket({ scannerUserId }) {
     }
     void loadEvents();
     return () => controller.abort();
-  }, [activeEventId, eventsAttempt, scannerUserId]);
+  }, [activeEventId, eventsAttempt, session]);
 
   const reportError = useCallback((message) => {
     blocked.current = true;
@@ -248,7 +256,7 @@ export default function CheckTicket({ scannerUserId }) {
     let heldProgress = 0;
     const element = video.current;
     setCameraReady(false);
-    setCameraError("");
+    setCameraError(false);
     setScanProgress(0);
     const updateProgress = (progress) => {
       if (cancelled || progress === 0) return;
@@ -282,7 +290,7 @@ export default function CheckTicket({ scannerUserId }) {
       } catch {
         if (!cancelled) {
           setCamera(false);
-          setCameraError("Camera unavailable. Allow camera access in your browser, then try again.");
+          setCameraError(true);
         }
       }
     }
@@ -298,6 +306,13 @@ export default function CheckTicket({ scannerUserId }) {
     setQuantity(1);
     setShareOpen(false);
     setSelectedEventId(eventId);
+    if (eventId) rememberScannerEvent(session, eventId);
+    else clearRecentScannerEvent();
+    if (!eventId) {
+      const cached = readScannerEventsCache(session, access);
+      if (cached) { setEvents(cached); setEventsError(""); setEventsLoading(false); }
+      else { setEventsLoading(true); setEventsAttempt(value => value + 1); }
+    }
     // Keep refresh/share behavior aligned with the selection, without replaying
     // a ticket from the previous event's URL.
     const url = new URL(window.location.href);
@@ -331,53 +346,43 @@ export default function CheckTicket({ scannerUserId }) {
   };
   const titles = { present: "Checked in", already_present: "Already checked in", choose_quantity: "Choose how many to check in", confirm_required: "Awaiting confirmation", error: "Do not admit yet" };
   return <>
-    <HeaderTwo headertransparent="header--transparent" colorblack="color--black" logoname="logo.png" />
+    <ScannerHeader event={activeEvent} />
     <main className={`${styles.checkIn}${activeEventId ? ` ${styles.scanning}` : ""}`}>
       <header className={styles.heading}>
         <h1 className="page-breadcrumb__title archive">Ticket scanner</h1>
+        <ScannerEventBadge event={activeEvent} />
       </header>
-      <div className={`event-form-steps ${styles.stepper}`}>
-        <Steps aria-label="Ticket scanner steps" activeIndex={activeEventId ? 1 : 0} model={[{ label: "Choose event" }, { label: "Scan tickets", disabled: !activeEventId }]} onSelect={({ index }) => { if (index === 0) selectEvent(""); }} readOnly={pending} />
-      </div>
       <StepContentTransition step={activeEventId ? 1 : 0} direction={activeEventId ? "forward" : "backward"}>
       {!activeEventId ? <section className={styles.eventPicker} aria-busy={eventsLoading}>
           <div className={`rn-form-group ${styles.searchField}`}>
             <label htmlFor="scanner-event-search">Search events</label>
             <input className="bgsnl-form-control" id="scanner-event-search" type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Event or region" autoComplete="off" />
           </div>
-        {eventsLoading ? <div className={styles.eventCards} aria-hidden="true"><Skeleton height="7rem" /><Skeleton height="7rem" /><Skeleton height="7rem" /></div> : (
+        {eventsLoading ? <EventCardsSkeleton /> : !eventsError && (
           <div className={styles.eventCards} role="list">
-            {filteredEvents.map((event) => <button className={styles.eventCard} key={event.id || event._id} onClick={() => selectEvent(event.id || event._id)} role="listitem" type="button">
+            {filteredEvents.map((event) => <div role="listitem" key={event.id || event._id}><button className={styles.eventCard} onClick={() => selectEvent(event.id || event._id)} type="button" aria-label={`Scan tickets for ${event.name || event.title || "Untitled event"} · ${formatRegionBadgeLabel(event.region)}`}>
               {event.poster ? <img alt="" className={styles.eventPoster} loading="lazy" src={event.poster} /> : <span className={styles.eventPosterFallback} aria-hidden="true">No poster</span>}
-              <span className={styles.eventCardContent}><strong>{event.name || event.title || "Untitled event"}</strong><span className={styles.regionBadge} style={getRegionBadgeStyle(event.region)}>{formatRegionBadgeLabel(event.region)}</span></span>
-            </button>)}
+              <span className={styles.regionBadge} style={getRegionBadgeStyle(event.region)}>{formatRegionBadgeLabel(event.region)}</span>
+            </button></div>)}
           </div>
         )}
-        {eventsError && <LoadErrorBanner message={eventsError} onRetry={() => { clearScannerEventsCache(scannerUserId); setEventsAttempt(value => value + 1); }} />}
-        {!eventsLoading && !eventsError && !filteredEvents.length && <p className={styles.empty}>No events match this search.</p>}
+        {eventsError && <LoadErrorBanner message={eventsError} onRetry={() => setEventsAttempt(value => value + 1)} />}
+        {!eventsLoading && !eventsError && !filteredEvents.length && <p className={styles.empty}>{search ? "No events match this search. Try another event or region." : "No events are available for your region right now. Check again later."}</p>}
+        {!eventsLoading && !eventsError && <button className={styles.refreshEvents} type="button" onClick={() => { setEventsLoading(true); setEventsAttempt(value => value + 1); }}>Refresh events</button>}
       </section> : <section className={styles.scannerStep}>
         <div className={styles.actions}>
           <button className={styles.changeEvent} type="button" disabled={pending || mockPreview} onClick={() => selectEvent("")}>Change event</button>
           <button className={styles.shareButton} type="button" onClick={openShareModal}><FiShare2 aria-hidden /> Share scanner</button>
         </div>
-        <div className={styles.cameraWindow}>
+        <div className={styles.cameraWindow} data-camera-error={cameraError}>
           <video ref={video} className={styles.camera} muted playsInline aria-label="Ticket scanning camera" />
           {cameraReady && <div className={styles.cameraGuide} aria-hidden="true"><span /><span /><span /><span /></div>}
-          {cameraError ? <div className={styles.cameraMessage} role="alert">
-            <p>{cameraError}</p>
-            <button type="button" onClick={() => setCamera(true)}>Try camera again</button>
+          {cameraError ? <div className={styles.cameraMessage}>
+            <button className={styles.cameraRetry} type="button" aria-label="Camera unavailable. Retry camera access" onClick={() => { setCameraError(false); setCamera(true); }}><IconlyRotate size="2rem" aria-hidden="true" /></button>
           </div> : !cameraReady && <p className={styles.cameraHint} role="status">{mockPreview ? "Mock scan" : "Opening camera…"}</p>}
           {cameraReady && !cameraError && <p className={styles.cameraHint} data-signal={pending ? "close" : scanSuccess ? "success" : ["choose_quantity", "confirm_required"].includes(result?.outcome) || scanProgress > 0 ? "close" : "idle"} role="status">
             {pending ? "Checking…" : scanSuccess ? "Checked in" : ["choose_quantity", "confirm_required"].includes(result?.outcome) ? "Review below" : result?.outcome === "error" ? "Check failed" : result?.outcome === "already_present" ? "Already used" : scanProgress === 100 ? "QR read · 100%" : `Scan ${scanProgress}%`}
           </p>}
-        </div>
-        <div className={styles.confirmSettings}>
-          <label className={styles.switchLabel}>
-            <input type="checkbox" role="switch" checked={autoConfirm} disabled={pending} onChange={event => { autoConfirmRef.current = event.target.checked; setAutoConfirm(event.target.checked); }} />
-            <span className={styles.switchTrack} aria-hidden="true" />
-            Auto confirm
-          </label>
-          <InfoHint label="About automatic confirmation" text="When on, single tickets are marked present as soon as they scan. Group tickets always require a quantity choice. When off, review the attendee and confirm before marking them present. Changing this switch does not confirm a pending ticket." />
         </div>
         <section className={pending || result ? styles.result : styles.waitingResult} data-outcome={pending ? "pending" : result?.outcome} aria-live="polite" aria-atomic="true" aria-busy={pending}>
         {pending && <ResultSkeleton />}
@@ -388,13 +393,12 @@ export default function CheckTicket({ scannerUserId }) {
           {result.message && <p>{result.message}</p>}
           {(result.outcome === "choose_quantity" || (result.outcome === "present" && result.total > 1 && result.remaining > 0)) && <form onSubmit={event => { event.preventDefault(); void check(currentTicket.current, quantity); }}>
             <div className={styles.quantityActions}>
-              <button type="button" onClick={() => check(currentTicket.current, result.remaining)}>Check all ({result.remaining})</button>
-              <div className={`bgsnl-form-control ${styles.quantityStepper}`} role="group" aria-label="Quantity to check in">
-                <button type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity(value => Math.max(1, value - 1))}><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button>
-                <output aria-label="Selected quantity">{quantity}</output>
-                <button type="button" aria-label="Increase quantity" disabled={quantity >= result.remaining} onClick={() => setQuantity(value => Math.min(result.remaining, value + 1))}><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12M9 3v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button>
+              <div className={styles.quantitySelection} role="group" aria-label="Tickets to check in">
+                <button className={styles.quantityAdjust} type="button" aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity(value => Math.max(1, value - 1))}><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button>
+                <button className={styles.checkSelected} type="submit" aria-label={`Check in ${quantity} selected ${quantity === 1 ? "ticket" : "tickets"}`}><span>Check selected</span><span className={styles.selectedCount} aria-hidden="true">{quantity}</span></button>
+                <button className={styles.quantityAdjust} type="button" aria-label="Increase quantity" disabled={quantity >= result.remaining} onClick={() => setQuantity(value => Math.min(result.remaining, value + 1))}><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12M9 3v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button>
               </div>
-              <button type="submit">Check selected</button>
+              <button className={styles.checkAll} type="button" aria-label={`Check in all ${result.remaining} remaining ${result.remaining === 1 ? "ticket" : "tickets"}`} onClick={() => check(currentTicket.current, result.remaining)}><span>Check all</span><span className={styles.selectedCount} aria-hidden="true">{result.remaining}</span></button>
             </div>
           </form>}
           {result.outcome === "confirm_required" && <button type="button" onClick={() => check(currentTicket.current, 1)}>Confirm check-in</button>}
@@ -402,19 +406,13 @@ export default function CheckTicket({ scannerUserId }) {
           {result.outcome !== "error" && <>
             <button className={styles.extendButton} type="button" aria-expanded={extended} aria-controls="scanner-ticket-details" onClick={() => { setTicketDetails(null); setDetailsError(""); setExtended(value => !value); }}><IconlyDocument aria-hidden="true" />{extended ? "Compact" : "Extend"}</button>
             {extended && <div id="scanner-ticket-details" className={styles.ticketDetails} aria-busy={!ticketDetails && !detailsError}>
-              {detailsError ? <LoadErrorBanner message={detailsError} onRetry={() => { setDetailsError(""); setTicketDetails(null); setDetailsAttempt(value => value + 1); }} /> : !ticketDetails ? <DetailsSkeleton /> : ticketDetails.length === 0 ? <p>No additional details available.</p> : ticketDetails.map((guest, index) => <section key={guest.id} className={styles.ticketDetail}>
+              {detailsError ? <LoadErrorBanner message={detailsError} onRetry={() => { setDetailsError(""); setTicketDetails(null); setDetailsAttempt(value => value + 1); }} /> : !ticketDetails ? <DetailsSkeleton /> : ticketDetails.length === 0 ? <p>No additional details available.</p> : ticketDetails.map((guest, index) => {
+                const rows = scannerTicketDetailRows(guest);
+                return <section key={guest.id} className={styles.ticketDetail}>
                 <h3>Ticket {index + 1} · {guest.refunded ? "Refunded" : Number(guest.status) === 1 ? "Checked in" : "Not checked in"}</h3>
-                <dl>
-                  <dt>Name</dt><dd>{guest.name || "Not provided"}</dd>
-                  <dt>Email</dt><dd>{guest.email || "Not provided"}</dd>
-                  <dt>Phone</dt><dd>{guest.phone || "Not provided"}</dd>
-                  <dt>Type</dt><dd>{guest.type || "Not provided"}</dd>
-                  <dt>Purchased</dt><dd>{guest.timestamp && !Number.isNaN(new Date(guest.timestamp).getTime()) ? formatDisplayDateTime(guest.timestamp) : "Not provided"}</dd>
-                  <dt>Transaction ID</dt><dd>{guest.transactionId || "Not provided"}</dd>
-                  <dt>Add-ons</dt><dd>{guest.addOns?.map(item => item.title).filter(Boolean).join(", ") || "None"}</dd>
-                  {Object.entries(guest.preferences || {}).filter(([key, value]) => !["fixture", "pricingTier"].includes(key) && ["string", "number", "boolean"].includes(typeof value)).map(([key, value]) => <div className={styles.preferenceRow} key={key}><dt>{key}</dt><dd>{String(value)}</dd></div>)}
-                </dl>
-              </section>)}
+                {rows.length ? <dl>{rows.map(({ label, value }, rowIndex) => <div className={styles.ticketDetailRow} key={`${label}-${rowIndex}`}><dt>{label}</dt><dd>{value}</dd></div>)}</dl> : <p>No additional details recorded.</p>}
+              </section>;
+              })}
             </div>}
           </>}
         </>}
@@ -438,4 +436,9 @@ export default function CheckTicket({ scannerUserId }) {
   </>;
 }
 
-CheckTicket.propTypes = { scannerUserId: PropTypes.string.isRequired };
+CheckTicket.propTypes = {
+  initialEvents: PropTypes.array.isRequired,
+  initialEventId: PropTypes.string,
+  initialAccess: PropTypes.shape({ userId: PropTypes.string.isRequired, roles: PropTypes.array.isRequired, status: PropTypes.string.isRequired, region: PropTypes.string }).isRequired,
+  session: PropTypes.shape({ userId: PropTypes.string.isRequired, auth_time: PropTypes.number.isRequired, sessionVersion: PropTypes.number.isRequired }).isRequired,
+};

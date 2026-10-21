@@ -72,7 +72,7 @@ const apiGet = createPublicReader({
 /* ---------------------------------------------------------------- events -- */
 
 export async function getEvents() {
-  const data = await apiGet("event/events-list", { tags: ["public-events"] });
+  const data = await apiGet("event/events-list", { revalidate: 60, tags: ["public-events"] });
   return Array.isArray(data?.events) ? data.events : [];
 }
 
@@ -81,7 +81,7 @@ export async function getEvents() {
  * screen can swap between the server value and the store without branching.
  */
 export async function getEventsByRegion(regions) {
-  const data = await apiGet("event/events-list", { tags: ["public-events"] });
+  const data = await apiGet("event/events-list", { revalidate: 60, tags: ["public-events"] });
   if (!Array.isArray(data?.events)) return null;
   const events = data.events;
 
@@ -101,11 +101,22 @@ export async function getEventsByRegion(regions) {
 export const getEventDetails = cache(async (eventId, region) => {
   if (!eventId) return null;
   // Shorter budget: this one blocks metadata generation.
-  const data = await apiGet(`event/event-details/${encodeURIComponent(eventId)}${region ? `?region=${encodeURIComponent(region)}` : ""}`, {
-    timeout: 3000,
-    tags: ["public-events", `public-event:${eventId}`],
-  });
-  return data === undefined ? undefined : data?.event ?? null;
+  const query = region ? `?region=${encodeURIComponent(region)}` : "";
+  const [data, live] = await Promise.all([
+    apiGet(`event/event-details/${encodeURIComponent(eventId)}${query}`, {
+      timeout: 3000,
+      tags: ["public-events", `public-event:${eventId}`],
+    }),
+    apiGet(`event/get-purchase-status/${encodeURIComponent(eventId)}${query}`, {
+      revalidate: 0, timeout: 3000,
+    }),
+  ]);
+  if (data === undefined) return undefined;
+  if (live === null) return null;
+  if (!data?.event) return null;
+  if (live?.event) return { ...data.event, ...live.event };
+  // A failed live read must not show stale availability as purchasable.
+  return { ...data.event, availabilityUnavailable: true, isSaleClosed: true, ticketsRemaining: 0 };
 });
 
 /* -------------------------------------------------------------- articles -- */

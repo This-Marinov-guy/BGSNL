@@ -57,6 +57,7 @@ export default function SubscriptionPlanPicker({ user, alumniOnly = false }) {
         itemId: selected, origin_url: window.location.origin,
       });
       if (response?.url) window.location.assign(response.url);
+      else if (response?.updated) window.location.reload();
     } finally { setPending(false); }
   };
   const blocked = user?.isSubscribed && (user?.billingLocked || user?.subscription?.pendingUpdate || user?.subscription?.cancelAtPeriodEnd);

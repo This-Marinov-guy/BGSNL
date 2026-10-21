@@ -3,9 +3,11 @@ import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 const BASE_URL = "https://www.bulgariansociety.nl";
 
 const TOKEN_PATHS = ["/c$", "/c/", "/event-feedback/"];
+const SCANNER_PATHS = ["/user/dashboard/ticket-scanner"];
 
 const PRIVATE_PATHS = [
   ...TOKEN_PATHS,
+  ...SCANNER_PATHS,
   "/user",
   "/user/",
   "/login",
@@ -48,10 +50,10 @@ const USER_FETCH_AGENTS = ["ChatGPT-User", "Claude-User", "Perplexity-User"];
 export default function robots() {
   return {
     rules: [
-      // Token card and feedback pages must not be crawled. Other private routes remain
+      // Token pages and the scanner must not be crawled. Other private routes remain
       // crawlable so search engines can read their noindex headers.
       // Crawl blocking alone cannot remove an already indexed URL.
-      { userAgent: "*", allow: "/", disallow: TOKEN_PATHS },
+      { userAgent: "*", allow: "/", disallow: [...TOKEN_PATHS, ...SCANNER_PATHS] },
       {
         userAgent: DISCOVERY_AGENTS,
         allow: "/",

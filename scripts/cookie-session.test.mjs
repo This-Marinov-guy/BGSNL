@@ -256,6 +256,69 @@ test("account restoration returns the verified profile with a single upstream re
   assert.equal(data.celebrate, true);
   assert.equal(data.token, undefined);
 });
+test("billing portal return forces a fresh account read", async () => {
+  const h = await harness({ credential: token(), refresh: refreshToken,
+    upstream: async (url) => url.pathname.endsWith("session/refresh")
+      ? Response.json({ token: token(), refreshToken })
+      : Response.json({ user: { _id: "member_fixture", status: "active" } }) });
+  const response = await h.request("session/current?account=1&fresh=1");
+  assert.equal(response.status, 200);
+  assert.equal(h.calls[0].url.pathname, "/api/v1/security/session/refresh");
+  assert.equal(h.calls[1].url.search, "?withTickets=true&withChristmas=true&fresh=1");
+});
+test("a membership identity change refreshes the cookie claims before the next protected action", async () => {
+  const fresh = token({ userId: "alumni_current", roles: ["alumni"] });
+  const h = await harness({ credential: token(), refresh: refreshToken,
+    upstream: async (url) => url.pathname.endsWith("session/refresh")
+      ? Response.json({ token: fresh, refreshToken })
+      : Response.json({ user: { _id: "alumni_current", roles: ["alumni"], status: "active" } }) });
+  const data = await (await h.request("user/current")).json();
+  assert.equal(data.user._id, "alumni_current");
+  assert.equal(h.calls.length, 2);
+  assert.equal(h.calls[1].url.pathname, "/api/v1/security/session/refresh");
+  assert.equal(h.jar.get(names.session), fresh);
+});
+test("a verified region change refreshes claims and retries a read once", async () => {
+  const old = token({ region: "groningen" });
+  const fresh = token({ region: "rotterdam" });
+  let accountReads = 0;
+  const h = await harness({ credential: old, refresh: refreshToken,
+    upstream: async (url, options) => {
+      if (url.pathname.endsWith("session/refresh")) return Response.json({ token: fresh, refreshToken });
+      accountReads++;
+      if (accountReads === 1) return Response.json({ message: "Region changed" }, { status: 401,
+        headers: { "X-BGSNL-Session-Invalid": "1", "X-BGSNL-Region-Changed": "1" } });
+      assert.equal(options.headers.get("Authorization"), `Bearer ${fresh}`);
+      return Response.json({ user: { _id: "member_fixture", region: "rotterdam", roles: ["member"] } });
+    } });
+  const response = await h.request("user/current");
+  assert.equal(response.status, 200);
+  assert.equal(accountReads, 2);
+  assert.equal(h.calls.length, 3);
+  assert.equal(h.jar.get(names.session), fresh);
+});
+test("a changed region does not replay a mutation", async () => {
+  const h = await harness({ credential: token({ region: "groningen" }), refresh: refreshToken,
+    upstream: async () => Response.json({ message: "Region changed" }, { status: 401,
+      headers: { "X-BGSNL-Session-Invalid": "1", "X-BGSNL-Region-Changed": "1" } }) });
+  const response = await h.mutate("payment/subscription/change", {
+    headers: { "content-type": "application/json" }, body: JSON.stringify({ itemId: "price_test" }),
+  });
+  assert.equal(response.status, 401);
+  assert.equal(h.calls.filter((call) => call.url.pathname.endsWith("payment/subscription/change")).length, 1);
+});
+test("successful account mutations announce a refresh without caching private responses", async () => {
+  const h = await harness({ credential: token(), upstream: async () => Response.json({ updated: true }) });
+  const changed = await h.mutate("payment/subscription/change", {
+    headers: { "content-type": "application/json" }, body: JSON.stringify({ itemId: "price_test" }),
+  });
+  assert.equal(changed.headers.get("X-BGSNL-Account-Changed"), "1");
+  assert.equal(changed.headers.get("Cache-Control"), "private, no-store");
+  const other = await h.mutate("event/check-ticket-eligibility", {
+    headers: { "content-type": "application/json" }, body: "{}",
+  });
+  assert.equal(other.headers.get("X-BGSNL-Account-Changed"), null);
+});
 test("restoration renews a legacy cookie into the 14-day activity policy", async () => {
   const timestamp = Math.floor(Date.now() / 1000), auth = timestamp - 20 * 86400;
   const h = await harness({ credential: token({ auth_time: auth, session_exp: auth + 30 * 86400,

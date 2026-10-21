@@ -64,7 +64,7 @@ const formatEuro = (value) =>
  * membership. Availability refreshes in parallel without another account check.
  */
 const EventDetails = ({ initialEvent = null }) => {
-  const [eventClosed, setEventClosed] = useState(false);
+  const [eventClosed, setEventClosed] = useState(initialEvent?.isSaleClosed === true || initialEvent?.availabilityUnavailable === true);
   const [selectedEvent, setSelectedEvent] = useState(initialEvent);
 
   const user = useSelector(selectUser);
@@ -398,7 +398,9 @@ const EventDetails = ({ initialEvent = null }) => {
                 ) : null}
 
                 {selectedEvent.isSaleClosed ? (
-                  <p className="event-sale-status ">Ticket sales are closed.</p>
+                  <p className="event-sale-status ">{selectedEvent.availabilityUnavailable
+                    ? "Ticket availability is temporarily unavailable. Please try again shortly."
+                    : "Ticket sales are closed."}</p>
                 ) : (
                   <StickyButtonFooter
                     stickyContent={stickyMembershipSaving}

@@ -27,6 +27,7 @@ jobs:
         env:
           SITEMAP_REVALIDATE_URL: ${{ secrets.SITEMAP_REVALIDATE_URL || 'https://www.bulgariansociety.nl/api/revalidate' }}
           SITEMAP_REVALIDATE_TOKEN: ${{ secrets.SITEMAP_REVALIDATE_TOKEN }}
+          EVENT_ID: ${{ github.event.client_payload.eventId }}
         shell: bash
         run: |
           set -euo pipefail
@@ -38,6 +39,8 @@ jobs:
             --connect-timeout 10 --max-time 45 --retry 3 --retry-delay 5 --retry-all-errors \
             --request POST \
             --header "x-bgsnl-revalidate-key: $SITEMAP_REVALIDATE_TOKEN" \
+            --header 'content-type: application/json' \
+            --data "$(jq -n --arg eventId "$EVENT_ID" '{eventId: $eventId}')" \
             --output "$RUNNER_TEMP/sitemap-revalidate.json" \
             "$SITEMAP_REVALIDATE_URL"
           if ! jq --exit-status '.revalidated == true' "$RUNNER_TEMP/sitemap-revalidate.json" >/dev/null; then
