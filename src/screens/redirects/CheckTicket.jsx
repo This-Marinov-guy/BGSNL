@@ -402,7 +402,7 @@ export default function CheckTicket({ initialEvents, initialEventId = "", initia
             </div>
           </form>}
           {result.outcome === "confirm_required" && <button type="button" onClick={() => check(currentTicket.current, 1)}>Confirm check-in</button>}
-          {result.outcome === "error" && currentTicket.current && <button type="button" onClick={() => check(currentTicket.current)}><RetryIcon />Check ticket again</button>}
+          {/* {result.outcome === "error" && currentTicket.current && <button type="button" onClick={() => check(currentTicket.current)}><RetryIcon />Check ticket again</button>} */}
           {result.outcome !== "error" && <>
             <button className={styles.extendButton} type="button" aria-expanded={extended} aria-controls="scanner-ticket-details" onClick={() => { setTicketDetails(null); setDetailsError(""); setExtended(value => !value); }}><IconlyDocument aria-hidden="true" />{extended ? "Compact" : "Extend"}</button>
             {extended && <div id="scanner-ticket-details" className={styles.ticketDetails} aria-busy={!ticketDetails && !detailsError}>

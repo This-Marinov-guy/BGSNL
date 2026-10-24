@@ -10,14 +10,15 @@ Set the following server-only values in the production deployment manager. Do no
 | Koko mobile integration | API `KOKO_APP_PASS` | Separate random service key, at least 32 characters. |
 | Website revalidation | Website `SITEMAP_REVALIDATE_TOKEN` | Random server-only secret shared with the API and GitHub workflow. |
 | Direct event revalidation | API `SITEMAP_REVALIDATE_URL`, `SITEMAP_REVALIDATE_TOKEN` | Optional direct POST to the website after event changes. URL is `https://www.bulgariansociety.nl/api/revalidate`; token must equal the website value. |
-| Event archive schedule | Website `CRON_SECRET` | Separate random secret, at least 32 bytes. Vercel uses it to invoke the daily event-archive job. |
+| Manual event archive trigger | Website `CRON_SECRET` | Optional random secret, at least 32 bytes. Protects the website's archive endpoint for manual recovery. |
 | Event sitemap dispatch | API `GITHUB_SITEMAP_REPOSITORY`, `GITHUB_SITEMAP_DISPATCH_TOKEN` | Repository `owner/name` and a fine-grained token scoped to this repository with **Contents: write** only (required for GitHub repository dispatch). Required for event-triggered and past-cutoff refreshes; daily revalidation remains the fallback. |
 | GitHub Actions | `SITEMAP_REVALIDATE_URL`, `SITEMAP_REVALIDATE_TOKEN` | URL is `https://www.bulgariansociety.nl/api/revalidate`; token must equal the website value. |
 
-The production event archive cron runs daily at 03:15 UTC. It archives events
-whose effective start time (`correctedDate`, or `date`) was at least three days
-earlier. Local development and preview deployments do not receive this Vercel
-cron invocation.
+The API event archive worker runs daily at 03:15 UTC and catches up after an API
+restart. It archives events whose effective start time (`correctedDate`, or
+`date`) was at least three days earlier, deactivates their Stripe prices and
+product, and updates event statistics. The website's protected archive endpoint
+remains available for a manual retry when `CRON_SECRET` is configured.
 
 ## Release order
 

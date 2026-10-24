@@ -370,9 +370,9 @@ const EventModal = ({
                 </dd>
               </div>)}
           </dl>
-          {allTicketsFree ? null : ticketsToRefund > 0 ? <p>Paid tickets will be refunded in full.</p> :
+          {/* {allTicketsFree ? null : ticketsToRefund > 0 ? <p>Paid tickets will be refunded in full.</p> :
             ticketTotal > 0 ? <p>Free tickets will be voided. No refund is due.</p> :
-              <p>No tickets have been issued.</p>}
+              <p>No tickets have been issued.</p>} */}
           {confirmation ? <div className="event-cancellation-modal__confirmation">
             <p role="status">Enter the 8-digit code from that email. It expires after 10 minutes.</p>
             <label htmlFor="event-cancellation-code">Confirmation code</label>
@@ -425,7 +425,7 @@ const EventModal = ({
           salesStatus={isDraft ? "Not open" : eventSalesClosed(event) ? "Closed" : "Open"}
           onEdit={editEvent}
           actions={<>
-            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setEmailsVisible(true)}><FiMail aria-hidden="true" /><span>Emails</span></button>}
+            {/* {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setEmailsVisible(true)}><FiMail aria-hidden="true" /><span>Emails</span></button>} */}
             {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setFeedbackVisible(true)}><IconlyDocument aria-hidden="true" /><span>Feedback</span></button>}
             <button
               className="event-details-modal__action"

@@ -9,11 +9,5 @@
       "main": true,
       "master": true
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/archive-events",
-      "schedule": "15 3 * * *"
-    }
-  ]
+  }
 }
