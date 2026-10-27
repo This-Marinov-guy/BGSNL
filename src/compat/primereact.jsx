@@ -432,6 +432,13 @@ export const SelectInput = forwardRef(function SelectInput({
   }));
   const selected = String(value ?? localValue ?? options.find(option => !option.disabled)?.value ?? "");
   const selectedOption = options.find(option => option.value === selected);
+  // Keep prompt options for the closed control and native form validation.
+  // Optional fields can still be reset after a choice has been made.
+  const isPrompt = option => option.value === "" && /^(select|choose)\b/i.test(option.label.trim());
+  const menuOptions = options.filter(option => !isPrompt(option));
+  if (selected && !required && options.some(isPrompt)) {
+    menuOptions.push({ label: "Clear selection", value: "", disabled: false });
+  }
   const emit = (handler, originalEvent) => handler?.({
     originalEvent, target: nativeRef.current, currentTarget: nativeRef.current,
     type: originalEvent?.type, persist() {},
@@ -440,7 +447,7 @@ export const SelectInput = forwardRef(function SelectInput({
   });
 
   return <PrimeSelect.Root
-    value={selected} options={options} optionLabel="label" optionValue="value" optionDisabled="disabled"
+    value={selected} options={menuOptions} optionLabel="label" optionValue="value" optionDisabled="disabled"
     disabled={disabled} invalid={props["aria-invalid"] === true}
     className={joinClasses("bgsnl-select-input", className)} style={style}
     data-custom-validation-field data-field-name={name}

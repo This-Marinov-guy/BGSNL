@@ -422,10 +422,12 @@ const GuestPurchase = ({ initialEvent = null }) => {
                       <div className="row g-3">
                         <div className="col-12 col-md-6">
                           <div className="rn-form-group" data-field-name="name">
+                            <label htmlFor="purchase-guest-name">Name</label>
                             <Field
+                              id="purchase-guest-name"
                               type="text"
-                              placeholder="Name"
                               name="name"
+                              autoComplete="given-name"
                             />
                             <ErrorMessage
                               className="error"
@@ -436,10 +438,12 @@ const GuestPurchase = ({ initialEvent = null }) => {
                         </div>
                         <div className="col-12 col-md-6">
                           <div className="rn-form-group" data-field-name="surname">
+                            <label htmlFor="purchase-guest-surname">Surname</label>
                             <Field
+                              id="purchase-guest-surname"
                               type="text"
-                              placeholder="Surname"
                               name="surname"
+                              autoComplete="family-name"
                             ></Field>
                             <ErrorMessage
                               className="error"
@@ -450,10 +454,12 @@ const GuestPurchase = ({ initialEvent = null }) => {
                         </div>
                         <div className="col-12 col-md-6">
                           <div className="rn-form-group" data-field-name="email">
+                            <label htmlFor="purchase-guest-email">Email</label>
                             <Field
+                              id="purchase-guest-email"
                               type="email"
-                              placeholder="Email"
                               name="email"
+                              autoComplete="email"
                             />
                             
                             <ErrorMessage
@@ -468,8 +474,10 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             className="rn-form-group phone-input-container"
                             data-field-name="phone"
                           >
+                            <span className="purchase-phone-label" id="purchase-guest-phone-label">Phone number</span>
                             <PhoneInput
                               name="phone"
+                              ariaLabelledBy="purchase-guest-phone-label"
                               initialValue={values.phone || ""}
                               onChange={(value) =>
                                 setFieldValue("phone", value)

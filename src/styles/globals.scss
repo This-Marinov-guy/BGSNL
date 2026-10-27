@@ -1688,6 +1688,19 @@ form[data-validation-submitted="true"] .has-validation-error .event-ticket-media
   background: transparent !important;
 }
 
+.purchase-page form[data-validation-submitted="true"] .rn-form-group.has-validation-error > label {
+  color: #9e0d33 !important;
+  background-color: transparent !important;
+}
+
+.purchase-page form[data-validation-submitted="true"] .rn-form-group.has-validation-error > label .required-mark {
+  color: #9e0d33 !important;
+}
+
+.purchase-page form[data-validation-submitted="true"] .phone-input-container.has-validation-error > .purchase-phone-label {
+  color: #9e0d33;
+}
+
 /*
  * Global notifications rendered by react-hot-toast. Colours and icon come from
  * the library options in src/layouts/MainLayout.jsx; only what the options

@@ -16,6 +16,7 @@ const PhoneInput = ({
   placeholder,
   initialValue,
   name,
+  ariaLabelledBy,
 }) => {
   const normalizedInitialValue = String(initialValue ?? "").trim();
   const initialCountry = COUNTRIES_BY_PHONE_CODE_LENGTH.find((country) =>
@@ -65,7 +66,8 @@ const PhoneInput = ({
     <div
       className={"phone_code " + className}
       role="group"
-      aria-label="Phone number"
+      aria-label={ariaLabelledBy ? undefined : "Phone number"}
+      aria-labelledby={ariaLabelledBy}
       data-field-name={name}
       style={style}
     >
@@ -117,4 +119,5 @@ PhoneInput.propTypes = {
   placeholder: PropTypes.string,
   initialValue: PropTypes.string,
   name: PropTypes.string,
+  ariaLabelledBy: PropTypes.string,
 };

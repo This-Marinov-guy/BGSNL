@@ -1766,18 +1766,45 @@
 
     > .purchase-field-label {
       gap: 0.55rem;
-      align-items: center;
-      max-width: calc(100% - 1.75rem);
+      align-items: flex-start;
+      max-width: 100%;
     }
   }
 
-  .purchase-multiselect-legend {
+  .purchase-form .rn-form-group > label,
+  .purchase-form .phone-input-container > .purchase-phone-label {
+    position: static;
     display: flex;
+    width: fit-content;
+    max-width: 100%;
+    gap: 0.55rem;
+    margin: 0 0 0.55rem;
+    padding: 0;
+    background: transparent;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    transform: none;
+  }
+
+  .purchase-form .phone-input-container > .purchase-phone-label {
+    color: #232b27;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .purchase-extra-field > .purchase-field-label > span:first-child {
+    min-width: 0;
+  }
+
+  .purchase-extra-field > .purchase-field-label > .purchase-field-meta {
+    flex: 0 0 auto;
+  }
+
+  .purchase-multiselect-legend {
+    display: block;
     width: 100%;
     max-width: none;
-    gap: 1rem;
-    align-items: center;
-    justify-content: space-between;
     margin: 0 0 0.85rem;
     padding: 0;
     background: transparent;
@@ -1786,9 +1813,9 @@
 
   .purchase-multiselect-legend > .purchase-field-label {
     display: inline-flex;
-    flex: 0 1 auto;
+    max-width: 100%;
     gap: 0.55rem;
-    align-items: center;
+    align-items: flex-start;
     width: auto;
     margin: 0;
     padding: 0.3rem 0.55rem;
@@ -1796,9 +1823,15 @@
     font-family: "LeagueSpartan", "Roboto", sans-serif;
     font-size: 1rem;
     font-weight: 600;
-    line-height: 1;
+    line-height: 1.4;
     background: #add8e6;
     border-radius: 0.4rem;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .purchase-multiselect-legend > .purchase-field-label > span:first-child {
+    min-width: 0;
   }
 
   .purchase-field-meta {
@@ -1814,13 +1847,13 @@
   }
 
   .purchase-field-hint {
-    flex: 0 1 auto;
+    display: block;
     min-width: 0;
-    margin: 0;
+    margin: 0.45rem 0 0;
     color: #68736d;
     font-size: 1rem;
     font-weight: 400;
-    text-align: right;
+    text-align: left;
   }
 
   .purchase-choice-grid {
