@@ -3,10 +3,8 @@ import MultiStepLoader from "@/elements/ui/loaders/MultiStepLoader";
 
 const LOADING_STATES = [
   { text: "Preparing your event" },
-  { text: "Uploading some images, assembling the ticket" },
-  { text: "Final touches" },
-  { text: "Counting 3,2,1..." },
-  { text: "Almost ready, I promise" },
+  { text: "Saving images and event details" },
+  { text: "Event saved" },
 ];
 
 export default function EventSubmitProgress({ loading, step = 0, preview = false, closable = false, onClose }) {

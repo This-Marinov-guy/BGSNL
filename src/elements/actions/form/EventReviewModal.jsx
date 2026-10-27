@@ -38,15 +38,20 @@ export default function EventReviewModal({ values, extraImages = [], onCancel, o
   const [draftOpen, setDraftOpen] = useState(false);
   const [promotionOpen, setPromotionOpen] = useState(false);
   const busyRef = useRef(false);
+  const saveFailedNotice = {
+    severity: "error",
+    summary: updating ? "Event could not be updated" : "Event could not be published",
+    detail: updating ? "Your changes are still here. Please try again." : "Your draft is still saved. Please try again.",
+  };
   const runSubmit = async (reviewPromotionEmail = false) => {
     if (busyRef.current || disabled) return;
     busyRef.current = true;
     setBusy(true); setStage(0);
     try {
       const result = await onSubmit(setStage, reviewPromotionEmail);
-      if (!result) dispatch(showNotification({ severity: "error", summary: "Event could not be saved", detail: "Review your connection and try again. Your changes are still here." }));
+      if (!result) dispatch(showNotification(saveFailedNotice));
     } catch {
-      dispatch(showNotification({ severity: "error", summary: "Event could not be saved", detail: "Please try again. Your changes are still here." }));
+      dispatch(showNotification(saveFailedNotice));
     } finally {
       busyRef.current = false;
       setBusy(false);
