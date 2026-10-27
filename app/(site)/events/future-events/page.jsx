@@ -1,6 +1,6 @@
 import { FutureEvents } from "@/screens/information/FutureEvents";
 import { getEventsByRegion } from "@/util/api/server";
-import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
+import { PUBLIC_EVENT_REGIONS } from "@/util/defines/REGIONS_DESIGN";
 import { toMetadata } from "@/util/seo/site";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export const metadata = toMetadata({
 });
 
 export default async function Page() {
-  const initialEvents = await getEventsByRegion(REGIONS);
+  const initialEvents = await getEventsByRegion(PUBLIC_EVENT_REGIONS);
 
   return <FutureEvents initialEvents={initialEvents} />;
 }

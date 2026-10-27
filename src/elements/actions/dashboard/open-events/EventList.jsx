@@ -7,8 +7,8 @@ import { useLoadEvents } from "../../../../hooks/common/api-hooks";
 import { useHttpClient } from "@/hooks/common/http-hook";
 import { selectEventDrafts, selectEventsDashboard } from "../../../../redux/events";
 import { selectUser } from "../../../../redux/user";
-import { ALL_EVENT_REGIONS_ACCESS, ACCESS_4 } from "../../../../util/defines/common";
-import { ADMIN_EVENT_REGIONS, REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
+import { ALL_EVENT_REGIONS_ACCESS, ACCESS_4, NATIONAL_EVENT_MANAGEMENT_ACCESS } from "../../../../util/defines/common";
+import { ADMIN_EVENT_REGIONS, DEFAULT_REGION, REGIONS } from "../../../../util/defines/REGIONS_DESIGN";
 import { sessionClaims } from "../../../../util/functions/authorization";
 import { capitalizeFirstLetter } from "../../../../util/functions/capitalize";
 import { hasOverlap } from "../../../../util/functions/helpers";
@@ -51,7 +51,10 @@ const EventList = () => {
     const { roles = [], region = "" } = sessionClaims(user.session) ?? {};
     const isAuthorized = hasOverlap(roles, ALL_EVENT_REGIONS_ACCESS);
     const canAddEvents = hasOverlap(roles, ACCESS_4);
-    const dashboardRegions = isAuthorized ? ADMIN_EVENT_REGIONS : REGIONS;
+    const dashboardRegions = isAuthorized
+        ? ADMIN_EVENT_REGIONS.filter(value => value !== DEFAULT_REGION || hasOverlap(roles, NATIONAL_EVENT_MANAGEMENT_ACCESS))
+        : REGIONS;
+    const sectionLabel = value => value === DEFAULT_REGION ? "National" : capitalizeFirstLetter(value, true);
 
     const [searchParams, setSearchParams] = useFilterSearchParams();
     const {
@@ -85,7 +88,7 @@ const EventList = () => {
     const displayedSections = showDrafts
         ? [...new Set([...regionList, ...visibleDrafts.map(event => event.region || "")])].map((regionName) => ({
             key: regionName,
-            label: regionName ? capitalizeFirstLetter(regionName, true) : "Unassigned region",
+            label: regionName ? sectionLabel(regionName) : "Unassigned region",
             events: visibleDrafts.filter(event => (event.region || "") === regionName),
             draft: true,
         }))
@@ -99,7 +102,7 @@ const EventList = () => {
             }, new Map()).values()]
             : regionList.map((regionName) => ({
                 key: regionName,
-                label: capitalizeFirstLetter(regionName, true),
+                label: sectionLabel(regionName),
                 events: activeEvents.filter(event => event.region === regionName),
             }));
     const visibleCount = currentEvents.length;

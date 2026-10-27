@@ -11,7 +11,6 @@ import {
 import { Dialog } from "@/compat/primereact";
 import {
   FiCheck,
-  FiMail,
   IconlyArchive,
   IconlyDelete,
   IconlyCopy,
@@ -54,6 +53,7 @@ import EventFeedbackModal from "./EventFeedbackModal";
 import WarningBanner from "@/elements/ui/banners/WarningBanner";
 
 import { eventSalesClosed, eventStatusLabel } from "../../../../util/functions/event-status.mjs";
+import { DEFAULT_REGION, NATIONAL_EVENT_URL_REGION } from "../../../../util/defines/REGIONS_DESIGN";
 
 const EMPTY_VALUE = "Not set";
 
@@ -125,7 +125,8 @@ const EventModal = ({
 
   const isDraft = event.status === "draft";
   const eventTitle = event.title || "Untitled draft";
-  const eventRegion = capitalizeFirstLetter(event.region, true) || EMPTY_VALUE;
+  const isNationalEvent = event.region === DEFAULT_REGION;
+  const eventRegion = isNationalEvent ? "National" : capitalizeFirstLetter(event.region, true) || EMPTY_VALUE;
   const eventDate = event.correctedDate
     ? formatCorrectedDateTime(event.correctedDate)
     : formatOptionalDate(event.date);
@@ -149,7 +150,7 @@ const EventModal = ({
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-");
   const publicEventUrl = !isDraft && event.region
-    ? `/${encodeURIComponent(event.region)}/event-details/${encodeURIComponent(event.slug || event.id)}`
+    ? `/${encodeURIComponent(isNationalEvent ? NATIONAL_EVENT_URL_REGION : event.region)}/event-details/${encodeURIComponent(event.slug || event.id)}`
     : null;
 
   const galleryImages = useMemo(() => [
@@ -426,7 +427,7 @@ const EventModal = ({
           onEdit={editEvent}
           actions={<>
             {/* {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setEmailsVisible(true)}><FiMail aria-hidden="true" /><span>Emails</span></button>} */}
-            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setFeedbackVisible(true)}><IconlyDocument aria-hidden="true" /><span>Feedback</span></button>}
+            {!isDraft && !isNationalEvent && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) && <button className="event-details-modal__action" type="button" onClick={() => setFeedbackVisible(true)}><IconlyDocument aria-hidden="true" /><span>Feedback</span></button>}
             <button
               className="event-details-modal__action"
               onClick={() => editEvent()}
@@ -448,7 +449,7 @@ const EventModal = ({
                 <FiCheck aria-hidden="true" /><span>Complete</span>
               </button>
             )}
-            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
+            {!isDraft && !isNationalEvent && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
               <button
                 className="event-details-modal__action"
                 onClick={() => onModalViewChange("guest-list")}
@@ -459,7 +460,7 @@ const EventModal = ({
                 <span>Guests</span>
               </button>
             ) : null}
-            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
+            {!isDraft && !isNationalEvent && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
               <button
                 className="event-details-modal__action event-details-modal__action--primary"
                 onClick={() => setTicketGeneratorVisible(true)}
@@ -470,7 +471,7 @@ const EventModal = ({
                 <span>Tickets</span>
               </button>
             ) : null}
-            {canToggleSales && (
+            {canToggleSales && !isNationalEvent && (
               <button
                 type="button"
                 role="switch"
@@ -495,7 +496,7 @@ const EventModal = ({
               <IconlyArchive aria-hidden="true" />
               <span>Archive event</span>
             </button> : null}
-            {canCancel ? <button
+            {canCancel && !isNationalEvent ? <button
               className="event-details-modal__action event-details-modal__action--danger"
               onClick={openCancellation}
               type="button"

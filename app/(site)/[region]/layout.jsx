@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
+import { PUBLIC_EVENT_REGIONS } from "@/util/defines/REGIONS_DESIGN";
 
 /**
  * Replaces src/layouts/common/RegionLayout.jsx, which redirected to /404 with
@@ -13,13 +13,13 @@ import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return REGIONS.map((region) => ({ region }));
+  return PUBLIC_EVENT_REGIONS.map((region) => ({ region }));
 }
 
 export default async function RegionSegmentLayout({ children, params }) {
   const { region } = await params;
 
-  if (!REGIONS.includes(region)) {
+  if (!PUBLIC_EVENT_REGIONS.includes(region)) {
     notFound();
   }
 

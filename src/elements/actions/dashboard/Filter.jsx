@@ -2,7 +2,7 @@ import { SelectInput } from "@/compat/primereact";
 import React from 'react'
 import FilterPanel from "@/elements/ui/filters/FilterPanel";
 import PropTypes from 'prop-types'
-import { REGIONS } from '../../../util/defines/REGIONS_DESIGN'
+import { DEFAULT_REGION, REGIONS } from '../../../util/defines/REGIONS_DESIGN'
 import { capitalizeFirstLetter } from '../../../util/functions/capitalize'
 import { useFilterSearchParams } from "@/hooks/common/use-filter-search-params";
 
@@ -37,7 +37,7 @@ const Filter = ({ regions = REGIONS, allLabel = "All", showRegion = true, childr
                     <SelectInput value={searchParams.get("region") || ''} onChange={handleRegionChange}>
                         <option value="">{allLabel}</option>
                         {regions.map((val, index) => (
-                            <option value={val} key={index}>{capitalizeFirstLetter(val, true)}</option>
+                            <option value={val} key={index}>{val === DEFAULT_REGION ? "National" : capitalizeFirstLetter(val, true)}</option>
                         ))}
                     </SelectInput>
                 </label>}

@@ -36,7 +36,7 @@ import { showModal } from "../../redux/modal";
 import { selectIsAuth } from "../../redux/user";
 import { GOOGLE_CALENDAR_MODAL } from "../../util/defines/common";
 import { OTHER_EVENTS } from "../../util/defines/OTHER_EVENTS";
-import { REGIONS } from "../../util/defines/REGIONS_DESIGN";
+import { NATIONAL_EVENT_URL_REGION, REGIONS } from "../../util/defines/REGIONS_DESIGN";
 import { sortFutureEvents } from "../../util/functions/future-events-sort.mjs";
 import { visibleFutureEvents } from "../../util/functions/visible-future-events.mjs";
 import {
@@ -156,7 +156,7 @@ const FutureEventsContent = ({
             <div className="col-lg-12">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                 <div className="d-flex align-items-center justify-content-between">
-                  <h3 className="title">Future Events</h3>
+                  <h3 className="title">{region === NATIONAL_EVENT_URL_REGION ? "National events" : "Future Events"}</h3>
                   <Tooltip target=".google_calendar" />
                   <Lottie
                     className="pointer google_calendar"
@@ -170,9 +170,9 @@ const FutureEventsContent = ({
                   />
                 </div>
                 <p className="mt--10">
-                  What you can expect - our society events happening near you!
-                  Make sure to subscribe to our social media or calendars in
-                  order to be up to date with schedule and promotions
+                  {region === NATIONAL_EVENT_URL_REGION
+                    ? "BGSNL gatherings and events beyond our city chapters. Choose an event to see details and tickets."
+                    : "What you can expect - our society events happening near you! Make sure to subscribe to our social media or calendars in order to be up to date with schedule and promotions"}
                 </p>
               </div>
             </div>
@@ -218,7 +218,13 @@ FutureEventsContent.propTypes = {
   nullable: PropTypes.bool,
 };
 
-const FutureOtherEventsContent = () => {
+const FutureOtherEventsContent = ({ initialEvents }) => {
+  const storedEvents = useSelector(selectEvents);
+  const isAuth = useSelector(selectIsAuth);
+  const source = initialEvents && checkObjectOfArraysEmpty(storedEvents) ? initialEvents : storedEvents;
+  const nationalEvents = sortFutureEvents(visibleFutureEvents(source, [NATIONAL_EVENT_URL_REGION], isAuth));
+  if (!nationalEvents.length && !OTHER_EVENTS.length) return null;
+
   return (
     <div className="portfolio-area pt--40 pb--10 bg_color--5">
       <div className="rn-slick-dot">
@@ -227,24 +233,22 @@ const FutureOtherEventsContent = () => {
             <div className="col-lg-6">
               <div className="section-title service-style--3 text-left mb--15 mb_sm--0">
                 <h3 className="title">Special events</h3>
-                <p>Events that you might find interesting from our partners</p>
+                <p>National gatherings and events beyond our city chapters</p>
               </div>
             </div>
           </div>
           <div className="row mb--40">
             <div className="col-lg-12">
-              {OTHER_EVENTS && OTHER_EVENTS.length > 0 ? (
+              {nationalEvents.length > 0 && (
+                <FocusCards cards={nationalEvents} centerItems={false} />
+              )}
+              {OTHER_EVENTS.length > 0 && (
                 <FocusCards
                   cards={OTHER_EVENTS}
                   region="other"
                   isOtherEvent
                   centerItems={false}
                 />
-              ) : (
-                <p className="col-lg-6 mt--20 mb--20">
-                  Currently there are no upcoming other events. Follow us for
-                  updates!
-                </p>
               )}
             </div>
           </div>
@@ -253,6 +257,8 @@ const FutureOtherEventsContent = () => {
     </div>
   );
 };
+
+FutureOtherEventsContent.propTypes = { initialEvents: eventsByRegionPropType };
 
 const FutureEvents = ({ initialEvents }) => {
   const { region } = useParams();
@@ -267,8 +273,10 @@ const FutureEvents = ({ initialEvents }) => {
         logoname="logo.png"
       />
       <Breadcrumb
-        title="Future Events"
-        description="See what is coming up and plan your next gathering with the Bulgarian community near you."
+        title={region === NATIONAL_EVENT_URL_REGION ? "National events" : "Future Events"}
+        description={region === NATIONAL_EVENT_URL_REGION
+          ? "Discover BGSNL gatherings and events beyond our city chapters."
+          : "See what is coming up and plan your next gathering with the Bulgarian community near you."}
       />
 
       <div className="future-events-page-layout">
@@ -283,7 +291,7 @@ const FutureEvents = ({ initialEvents }) => {
           {/* Start Future Events Area */}
           {region ? (
             <>
-              {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
+              {region !== NATIONAL_EVENT_URL_REGION && <FutureOtherEventsContent initialEvents={initialEvents} />}
               <FutureEventsContent
                 carousel
                 nullable={false}
@@ -292,7 +300,7 @@ const FutureEvents = ({ initialEvents }) => {
             </>
           ) : (
             <>
-              {OTHER_EVENTS.length > 0 && <FutureOtherEventsContent />}
+              <FutureOtherEventsContent initialEvents={initialEvents} />
               <FutureEventsContent
                 carousel
                 displayAll

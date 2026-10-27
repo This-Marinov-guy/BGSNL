@@ -37,8 +37,8 @@ export default async function Page({ params }) {
   const eventSchema = buildEventSchema({ event, region, path });
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: "Home", path: "/" },
-    { name: humanizeRegion(event.region), path: `/${event.region}` },
-    { name: "Events", path: `/${event.region}/events/future-events` },
+    ...(event.region === "national" ? [] : [{ name: humanizeRegion(event.region), path: `/${event.region}` }]),
+    { name: event.region === "national" ? "Special events" : "Events", path: `/${event.region}/events/future-events` },
     { name: event?.newTitle || event?.title || "Event", path },
   ]);
 

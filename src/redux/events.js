@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ADMIN_EVENT_REGIONS, REGIONS } from "../util/defines/REGIONS_DESIGN";
+import { ADMIN_EVENT_REGIONS, PUBLIC_EVENT_REGIONS } from "../util/defines/REGIONS_DESIGN";
 
 const createRegionObject = (regions) => regions.reduce((acc, region) => {
     acc[region] = [];
     return acc;
 }, {});
 
-const createPublicEventsState = () => createRegionObject(REGIONS);
+const createPublicEventsState = () => createRegionObject(PUBLIC_EVENT_REGIONS);
 const createDashboardEventsState = () => createRegionObject(ADMIN_EVENT_REGIONS);
 
 export const eventsSlice = createSlice({

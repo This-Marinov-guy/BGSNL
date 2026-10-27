@@ -20,7 +20,6 @@ import Hero1 from "../component/hero/Hero1";
 import AboutUs from "../component/HomeLayout/homeOne/AboutUs";
 import BrandTwo from "../elements/BrandTwo";
 import NewsList from "../elements/ui/lists/NewsList";
-import { OTHER_EVENTS } from "../util/defines/OTHER_EVENTS";
 import { REGIONS } from "../util/defines/REGIONS_DESIGN";
 import {
   FutureEventsContent,
@@ -76,9 +75,9 @@ const Home = ({ initialEvents, initialNow }) => {
       {/* Start Upcoming Events Area */}
       {region ? (
         <>
-          {OTHER_EVENTS.length > 0 && (
+          {region !== "national" && (
             <ScrollReveal>
-              <FutureOtherEventsContent />
+              <FutureOtherEventsContent initialEvents={initialEvents} />
             </ScrollReveal>
           )}
           <ScrollReveal>
@@ -87,11 +86,9 @@ const Home = ({ initialEvents, initialNow }) => {
         </>
       ) : (
         <>
-          {OTHER_EVENTS.length > 0 && (
-            <ScrollReveal>
-              <FutureOtherEventsContent />
-            </ScrollReveal>
-          )}
+          <ScrollReveal>
+            <FutureOtherEventsContent initialEvents={initialEvents} />
+          </ScrollReveal>
           <ScrollReveal>
             <FutureEventsContent displayAll initialEvents={initialEvents} />
           </ScrollReveal>

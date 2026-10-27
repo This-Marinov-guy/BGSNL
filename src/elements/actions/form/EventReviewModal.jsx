@@ -87,7 +87,7 @@ export default function EventReviewModal({ values, extraImages = [], onCancel, o
       statusLabel="Preview"
       statusModifier="draft"
       dateLabel={dateTime(values.date)}
-      regionLabel={values.region?.replaceAll("_", " / ") || "Not set"}
+      regionLabel={values.region === "netherlands" ? "National" : values.region?.replaceAll("_", " / ") || "Not set"}
       salesStatus={values.isSaleClosed ? "Closed" : updating ? "Open" : "Opens after submission"}
       onEdit={onEditSection}
       actions={<>

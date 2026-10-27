@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
 import Home from "@/screens/Home";
 import { getEventsByRegion } from "@/util/api/server";
-import { REGIONS } from "@/util/defines/REGIONS_DESIGN";
+import { PUBLIC_EVENT_REGIONS } from "@/util/defines/REGIONS_DESIGN";
 import { humanizeRegion, toMetadata } from "@/util/seo/site";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +18,10 @@ export async function generateMetadata({ params }) {
   });
 }
 
-export default async function Page() {
-  const initialEvents = await getEventsByRegion(REGIONS);
+export default async function Page({ params }) {
+  const { region } = await params;
+  if (region === "national") redirect("/national/events/future-events");
+  const initialEvents = await getEventsByRegion(PUBLIC_EVENT_REGIONS);
 
   return <Home initialEvents={initialEvents} initialNow={Date.now()} />;
 }

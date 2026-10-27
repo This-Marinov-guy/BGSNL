@@ -20,6 +20,8 @@ export const REGIONS = [
 ];
 
 export const DEFAULT_REGION = "netherlands";
+export const NATIONAL_EVENT_URL_REGION = "national";
+export const PUBLIC_EVENT_REGIONS = [...REGIONS, NATIONAL_EVENT_URL_REGION];
 export const ADMIN_EVENT_REGIONS = [...REGIONS, DEFAULT_REGION];
 export const STATISTICS_REGIONS = [...ADMIN_EVENT_REGIONS, "unassigned"];
 

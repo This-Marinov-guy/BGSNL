@@ -30,7 +30,7 @@ export const FocusCards = ({ cards, region, isOtherEvent, centerItems = true }) 
 export const FocusCard = ({ card, region, isOtherEvent }) => {
   const eventRegion = card.region ?? region;
   const cityLabel =
-    eventRegion && eventRegion !== "other"
+    eventRegion && eventRegion !== "other" && eventRegion !== "national"
       ? capitalizeFirstLetter(eventRegion, true)
       : null;
   const link = isOtherEvent
@@ -95,6 +95,7 @@ const eventCardPropType = PropTypes.shape({
   memberOnly: PropTypes.bool,
   poster: PropTypes.string.isRequired,
   region: PropTypes.string,
+  slug: PropTypes.string,
   title: PropTypes.string.isRequired,
 });
 

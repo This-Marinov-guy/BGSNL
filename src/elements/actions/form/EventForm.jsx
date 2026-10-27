@@ -45,6 +45,7 @@ import { showNotification } from "../../../redux/notification";
 import { selectUser } from "../../../redux/user";
 import {
   ALL_EVENT_REGIONS_ACCESS,
+  NATIONAL_EVENT_MANAGEMENT_ACCESS,
   EVENT_ADDED,
   EVENT_DRAFT,
   EVENT_DRAFT_SAVED,
@@ -52,6 +53,7 @@ import {
 } from "../../../util/defines/common";
 import {
   ADMIN_EVENT_REGIONS,
+  DEFAULT_REGION,
   REGIONS,
 } from "../../../util/defines/REGIONS_DESIGN";
 import { sessionClaims } from "../../../util/functions/authorization";
@@ -531,9 +533,10 @@ const EventForm = (props) => {
   const userClaims = sessionClaims(user.session);
   const roles = userClaims?.roles ?? [];
   const canManageAllRegions = hasOverlap(roles, ALL_EVENT_REGIONS_ACCESS);
+  const canManageNationalEvents = hasOverlap(roles, NATIONAL_EVENT_MANAGEMENT_ACCESS);
   const accountRegion = REGIONS.includes(userClaims?.region) ? userClaims.region : "";
   const regionOptions = canManageAllRegions
-    ? ADMIN_EVENT_REGIONS
+    ? ADMIN_EVENT_REGIONS.filter((region) => region !== DEFAULT_REGION || canManageNationalEvents)
     : REGIONS.filter((region) => region === accountRegion);
 
   const edit = props.edit;
@@ -1217,7 +1220,7 @@ const EventForm = (props) => {
                   : EVENT_ADDED
             )
           );
-          if (!saveAsDraft && reviewPromotionEmail && hasEventPromotionImprovement(initialData, values)) {
+          if (!saveAsDraft && values.region !== DEFAULT_REGION && reviewPromotionEmail && hasEventPromotionImprovement(initialData, values)) {
             setCampaignEvent(responseData.event);
           } else navigate("/user/dashboard/events");
         }
@@ -1254,7 +1257,7 @@ const EventForm = (props) => {
           return;
         }
       }
-      if (hasEventPromotionImprovement(initialData, formik.values)) {
+      if (formik.values.region !== DEFAULT_REGION && hasEventPromotionImprovement(initialData, formik.values)) {
         setPromotionSave({ ...formik.values });
         return;
       }
@@ -1626,7 +1629,7 @@ const EventForm = (props) => {
                       {regionOptions.map((val, index) => {
                         return (
                           <option value={val} key={index}>
-                            {capitalizeFirstLetter(val, true)}
+                            {val === DEFAULT_REGION ? "National" : capitalizeFirstLetter(val, true)}
                           </option>
                         );
                       })}
@@ -1838,7 +1841,7 @@ const EventForm = (props) => {
             </fieldset>
           </Form>
           {reviewValues && <EventReviewModal
-            promotionChanges={eventPromotionChanges(initialData, reviewValues)}
+            promotionChanges={reviewValues.region === DEFAULT_REGION ? [] : eventPromotionChanges(initialData, reviewValues)}
             values={reviewValues}
             extraImages={extraImagesTouched ? extraImagesData.all ?? [] : savedImages}
             disabled={isBusy}
