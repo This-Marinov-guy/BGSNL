@@ -1747,8 +1747,8 @@
 
   .purchase-extra-fields {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
   }
 
   .purchase-extra-field {
@@ -1768,6 +1768,10 @@
       gap: 0.55rem;
       align-items: flex-start;
       max-width: 100%;
+    }
+
+    > .bgsnl-select-input {
+      width: 100%;
     }
   }
 
@@ -2421,7 +2425,6 @@
       gap: 0.3rem;
     }
 
-    .purchase-extra-fields,
     .purchase-choice-grid,
     .purchase-addon-grid {
       grid-template-columns: 1fr;

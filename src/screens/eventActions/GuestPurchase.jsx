@@ -420,7 +420,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                     </div>
                     <div className="col-12">
                       <div className="row g-3">
-                        <div className="col-12 col-md-6">
+                        <div className="col-12">
                           <div className="rn-form-group" data-field-name="name">
                             <label htmlFor="purchase-guest-name">Name</label>
                             <Field
@@ -436,7 +436,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-                        <div className="col-12 col-md-6">
+                        <div className="col-12">
                           <div className="rn-form-group" data-field-name="surname">
                             <label htmlFor="purchase-guest-surname">Surname</label>
                             <Field
@@ -452,7 +452,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-                        <div className="col-12 col-md-6">
+                        <div className="col-12">
                           <div className="rn-form-group" data-field-name="email">
                             <label htmlFor="purchase-guest-email">Email</label>
                             <Field
@@ -469,7 +469,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
                             />
                           </div>
                         </div>
-                        <div className="col-12 col-md-6">
+                        <div className="col-12">
                           <div
                             className="rn-form-group phone-input-container"
                             data-field-name="phone"
