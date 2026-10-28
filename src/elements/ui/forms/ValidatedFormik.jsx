@@ -391,11 +391,11 @@ const focusValidationTarget = (target) => {
   focusTarget.focus({ preventScroll: true });
 };
 
-const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedErrors, validationViewKey, showValidationToast }) => {
+const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedErrors, validationAttempt = 0, validationViewKey, showValidationToast }) => {
   const { errors, isValidating, setFieldError, submitCount, touched, values } = useFormikContext();
   const dispatch = useDispatch();
   const markerRef = useRef(null);
-  const handledSubmitRef = useRef({ count: 0, viewKey: null });
+  const handledSubmitRef = useRef({ count: 0, attempt: 0, viewKey: null });
   const errorsRef = useRef(errors);
   const previousValuesRef = useRef(values);
   const scrollFrameRef = useRef(null);
@@ -439,7 +439,7 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
   useEffect(() => {
     // Step navigation validates without submitting the entire form. Present
     // only touched errors so future steps do not show premature error states.
-    if (!highlightTouchedErrors || isValidating || submitCount > 0) return;
+    if (!highlightTouchedErrors || isValidating || submitCount > 0 || validationAttempt > 0) return;
     const form = findOwnedForm(markerRef.current, ownerId);
     if (!form) return;
     clearValidationState(form);
@@ -455,13 +455,13 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
         field.closest(".rn-form-group, .form-group")?.classList.add("has-validation-error");
       }
     }
-  }, [errors, highlightTouchedErrors, isValidating, ownerId, submitCount, touched, validationViewKey]);
+  }, [errors, highlightTouchedErrors, isValidating, ownerId, submitCount, touched, validationAttempt, validationViewKey]);
 
   useEffect(() => {
-    if (submitCount === 0) {
-      if (handledSubmitRef.current.count > 0) {
+    if (submitCount === 0 && validationAttempt === 0) {
+      if (handledSubmitRef.current.count > 0 || handledSubmitRef.current.attempt > 0) {
         clearValidationState(findOwnedForm(markerRef.current, ownerId));
-        handledSubmitRef.current = { count: 0, viewKey: null };
+        handledSubmitRef.current = { count: 0, attempt: 0, viewKey: null };
       }
       return undefined;
     }
@@ -469,6 +469,7 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
     if (
       isValidating ||
       (handledSubmitRef.current.count === submitCount &&
+        handledSubmitRef.current.attempt === validationAttempt &&
         handledSubmitRef.current.viewKey === validationViewKey)
     ) {
       return undefined;
@@ -477,8 +478,8 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
     const form = findOwnedForm(markerRef.current, ownerId);
     if (!form) return undefined;
 
-    const isNewSubmission = handledSubmitRef.current.count !== submitCount;
-    handledSubmitRef.current = { count: submitCount, viewKey: validationViewKey };
+    const isNewSubmission = handledSubmitRef.current.count !== submitCount || handledSubmitRef.current.attempt !== validationAttempt;
+    handledSubmitRef.current = { count: submitCount, attempt: validationAttempt, viewKey: validationViewKey };
     form.noValidate = true;
     form.dataset.validationSubmitted = "true";
     clearValidationState(form);
@@ -597,7 +598,7 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
       }
     };
     // Editing cancels a pending submit snapshot so an old error cannot return.
-  }, [dispatch, isValidating, ownerId, showValidationToast, submitCount, validationViewKey, values]);
+  }, [dispatch, isValidating, ownerId, showValidationToast, submitCount, validationAttempt, validationViewKey, values]);
 
   return <span ref={markerRef} hidden aria-hidden="true" />;
 };
@@ -605,6 +606,7 @@ const FormikValidationEffects = ({ ownerId, validationSchema, highlightTouchedEr
 FormikValidationEffects.propTypes = {
   highlightTouchedErrors: PropTypes.bool,
   showValidationToast: PropTypes.bool,
+  validationAttempt: PropTypes.number,
   ownerId: PropTypes.string.isRequired,
   validationViewKey: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   validationSchema: PropTypes.oneOfType([
@@ -613,7 +615,7 @@ FormikValidationEffects.propTypes = {
   ]),
 };
 
-const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = false, validationViewKey, showValidationToast = true, ...props }) => {
+const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = false, validationAttempt = 0, validationViewKey, showValidationToast = true, ...props }) => {
   const ownerId = useId();
 
   return (
@@ -634,6 +636,7 @@ const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = 
               ownerId={ownerId}
               validationSchema={validationSchema}
               highlightTouchedErrors={highlightTouchedErrors}
+              validationAttempt={validationAttempt}
               validationViewKey={validationViewKey}
               showValidationToast={showValidationToast}
             />
@@ -647,6 +650,7 @@ const ValidatedFormik = ({ children, validationSchema, highlightTouchedErrors = 
 
 ValidatedFormik.propTypes = {
   highlightTouchedErrors: PropTypes.bool,
+  validationAttempt: PropTypes.number,
   showValidationToast: PropTypes.bool,
   validationViewKey: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,

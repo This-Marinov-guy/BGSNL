@@ -1619,6 +1619,22 @@
   text-align: center;
 }
 
+.event-form-validation-summary {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.85rem;
+  background: #fff0ef;
+  color: #762c31;
+  font-size: 1rem;
+  line-height: 1.5;
+
+  strong { display: block; }
+  p { margin: 0.25rem 0 0.5rem; }
+  ul { margin: 0; padding-left: 1.35rem; }
+  li + li { margin-top: 0.25rem; }
+  li span { font-weight: 700; }
+}
+
 .event-draft-status {
   display: flex;
   align-items: center;

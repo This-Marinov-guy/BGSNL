@@ -68,7 +68,7 @@ import { DEFAULT_MAX_IMAGE_SIZE_BYTES } from "../../inputs/common/ImageInput";
 import ValidatedFormik from "../../ui/forms/ValidatedFormik";
 import Loader from "../../ui/loading/Loader";
 import StepContentTransition from "../../ui/functional/StepContentTransition";
-import { blockingEventStep, eventDraftProgress } from "../../../util/functions/event-step-validation.mjs";
+import { blockingEventStep, eventDraftProgress, eventErrorPaths, eventStepFields } from "../../../util/functions/event-step-validation.mjs";
 import EventTicketsMedia from "./EventTicketsMedia";
 import EventReviewModal from "./EventReviewModal";
 import EventUpsell from "./EventUpsell";
@@ -123,6 +123,15 @@ const eventValidationToast = (errors, blocked) => {
     life: Math.min(30000, 8000 + issues.length * 1000),
   };
 };
+
+const eventValidationIssues = (errors) => eventErrorPaths(errors).flatMap((path) => {
+  const message = getIn(errors, path);
+  if (typeof message !== "string" || !message.trim()) return [];
+  const step = eventStepFields.findIndex((fields) => fields.some((field) =>
+    path === field || path.startsWith(`${field}.`) || path.startsWith(`${field}[`)
+  ));
+  return [{ path, message: `${eventErrorContext(path)}${message}`, step: step < 0 ? EVENT_FORM_STEPS.length - 1 : step }];
+});
 
 const scheduleFirstInvalidEventField = (form, attempt = 0) => {
   if (!form || typeof window === "undefined") return;
@@ -506,6 +515,7 @@ const EventForm = (props) => {
   const [submitting, setSubmitting] = useState(false);
   const [movingStep, setMovingStep] = useState(false);
   const [savingAndExiting, setSavingAndExiting] = useState(false);
+  const [saveValidationAttempt, setSaveValidationAttempt] = useState(0);
   const saveAndExitRef = useRef(false);
   const [transitionDirection, setTransitionDirection] = useState("forward");
   const stepMoveRef = useRef(false);
@@ -606,34 +616,11 @@ const EventForm = (props) => {
   };
 
   const isImageCorrectRatio = (file, margin = 0.01) => {
-    return new Promise((resolve, reject) => {
-      if (!file) {
-        reject(new Error("No file provided"));
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const width = img.width;
-          const height = img.height;
-
-          if (Math.abs(width / height - 1500 / 485) < margin) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        };
-        img.onerror = () => {
-          reject(new Error("Failed to load image"));
-        };
-        img.src = e.target.result;
-      };
-      reader.onerror = () => {
-        reject(new Error("Failed to read file"));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return Promise.resolve(false);
+    return createImageBitmap(file).then((bitmap) => {
+      const matches = Math.abs(bitmap.width / bitmap.height - 1500 / 485) < margin;
+      bitmap.close();
+      return matches;
     });
   };
 
@@ -1252,11 +1239,12 @@ const EventForm = (props) => {
           setTransitionDirection(invalidStep > currentStep ? "forward" : "backward");
           setCurrentStep(invalidStep);
           setFurthestStep(step => Math.max(step, invalidStep));
+          setSaveValidationAttempt((attempt) => attempt + 1);
           dispatch(showNotification(eventValidationToast(errors, blocked)));
-          scheduleFirstInvalidEventField(formRef.current);
           return;
         }
       }
+      setSaveValidationAttempt(0);
       if (formik.values.region !== DEFAULT_REGION && hasEventPromotionImprovement(initialData, formik.values)) {
         setPromotionSave({ ...formik.values });
         return;
@@ -1344,6 +1332,7 @@ const EventForm = (props) => {
       <ValidatedFormik
         highlightTouchedErrors
         showValidationToast={false}
+        validationAttempt={saveValidationAttempt}
         validationViewKey={currentStep}
         className="container"
         validationSchema={schema}
@@ -1479,6 +1468,7 @@ const EventForm = (props) => {
       >
         {(formik) => {
           const { dirty, values, setFieldValue } = formik;
+          const saveIssues = saveValidationAttempt ? eventValidationIssues(formik.errors) : [];
           formikRef.current = formik;
           const draftAction = canSaveDraft ? (
             <DraftSaveButton
@@ -1558,6 +1548,17 @@ const EventForm = (props) => {
 
             <StepContentTransition step={currentStep} direction={transitionDirection}>
             <div className="event-form-step-panel">
+            {saveIssues.length > 0 && (
+              <div className="event-form-validation-summary" role="alert">
+                <strong>Save and exit needs {saveIssues.length === 1 ? "one correction" : `${saveIssues.length} corrections`}.</strong>
+                <p>We moved to the first field that needs attention. Fix these items, then save again:</p>
+                <ul>
+                  {saveIssues.map(({ path, message, step }) => (
+                    <li key={path}><span>{EVENT_FORM_STEPS[step].label}:</span> {message}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {draftStatus !== "error" && <div className={`event-draft-status is-${draftStatus}`} role="status">
               <span className="event-draft-status__dot" aria-hidden="true" />
               {draftStatus === "saving" && "Saving draft…"}
