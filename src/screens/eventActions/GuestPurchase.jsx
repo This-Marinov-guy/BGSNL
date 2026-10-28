@@ -52,6 +52,7 @@ import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
 import { showNotification } from "../../redux/notification";
 import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "../../util/analytics/events.mjs";
+import { NATIONAL_EVENT_URL_REGION } from "../../util/defines/REGIONS_DESIGN";
 import {
   clarityEvent,
   hasAppliedTicketDiscount,
@@ -221,6 +222,7 @@ const GuestPurchase = ({ initialEvent = null }) => {
   }
 
   const showMembershipOffer =
+    region !== NATIONAL_EVENT_URL_REGION &&
     !userIsLoggedIn && selectedEvent?.product?.member?.price != null;
   const guestPrice = Number(selectedEvent?.product?.guest?.price);
   const memberPrice = selectedEvent.isMemberFree

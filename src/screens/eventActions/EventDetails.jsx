@@ -38,6 +38,7 @@ import ImageFb from "../../elements/ui/media/ImageFb";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import { selectUser } from "../../redux/user";
 import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "../../util/analytics/events.mjs";
+import { NATIONAL_EVENT_URL_REGION } from "../../util/defines/REGIONS_DESIGN";
 import { getEventDateTimePresentation } from "../../util/functions/date";
 import {
   clarityEvent,
@@ -70,6 +71,7 @@ const EventDetails = ({ initialEvent = null }) => {
   const user = useSelector(selectUser);
 
   const { region, eventId } = useParams();
+  const isNationalEvent = region === NATIONAL_EVENT_URL_REGION;
   const eventRecordId = initialEvent?.id || selectedEvent?.id || eventId;
   const eventUrlId = selectedEvent?.slug || initialEvent?.slug || eventId;
 
@@ -151,6 +153,7 @@ const EventDetails = ({ initialEvent = null }) => {
   const accountBannerLoading =
     !selectedEvent.ticketLink && !user.authInitialized;
   const showMembershipOffer =
+    !isNationalEvent &&
     !selectedEvent.ticketLink && user.authInitialized && !userIsLoggedIn;
   const showAccountAttention =
     !selectedEvent.ticketLink &&
@@ -158,7 +161,7 @@ const EventDetails = ({ initialEvent = null }) => {
     ticketBenefitIssue;
   const useGuestEventLayout =
     accountBannerLoading || showMembershipOffer || showAccountAttention;
-  const factsInsideBookingCard = !useGuestEventLayout;
+  const factsInsideBookingCard = isNationalEvent || !useGuestEventLayout;
   const eventDate = getEventDateTimePresentation(
     selectedEvent.date,
     selectedEvent.correctedDate
@@ -279,7 +282,7 @@ const EventDetails = ({ initialEvent = null }) => {
       </Link>
     ) : null;
   const stickyAccountSaving =
-    showAccountAttention && memberSaving !== null ? (
+    !isNationalEvent && showAccountAttention && memberSaving !== null ? (
       <a
         className="event-sticky-account-saving type-caption"
         href="/user#settings"
