@@ -54,12 +54,15 @@ export const useHttpClient = (withPageLoading = false) => {
       return response.data;
     } catch (err) {
       if (axios.isCancel(err)) return undefined;
-      onFailure?.({ status: err.response?.status ?? null });
+      const handled = onFailure?.({
+        status: err.response?.status ?? null,
+        errors: err.response?.data?.errors,
+      });
       if (err.response?.status === 401 && err.response.headers?.["x-bgsnl-session-changed"] === "1") dispatch(clearSession());
       if (err.response?.status === 403) clearCsrf();
 
       const notice = requestErrorNotice(err);
-      if (withError && notice) dispatch(showNotification(notice));
+      if (withError && notice && !handled) dispatch(showNotification(notice));
     } finally {
       if (withLoading) dispatch(stopLoading());
       if (withPageLoading) dispatch(stopPageLoading());

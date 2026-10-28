@@ -1148,6 +1148,25 @@ const EventForm = (props) => {
     dispatch(showNotification({ severity: "error", summary: "Draft could not be saved", detail: "Your changes are still here. Please try again." }));
   };
 
+  const presentEventValidation = (fieldErrors) => {
+    const errors = eventErrorPaths(fieldErrors).reduce((result, path) => {
+      const message = getIn(fieldErrors, path) ?? fieldErrors[path];
+      return typeof message === "string" && message.trim()
+        ? setIn(result, path, message) : result;
+    }, {});
+    const blocked = blockingEventStep(errors, EVENT_FORM_STEPS.length, currentStep);
+    if (!blocked) return false;
+
+    formikRef.current?.setErrors(errors);
+    formikRef.current?.setTouched(setNestedObjectValues(errors, true), false);
+    setTransitionDirection(blocked.step > currentStep ? "forward" : "backward");
+    setCurrentStep(blocked.step);
+    setFurthestStep((step) => Math.max(step, blocked.step));
+    setSaveValidationAttempt((attempt) => attempt + 1);
+    dispatch(showNotification(eventValidationToast(errors, blocked)));
+    return true;
+  };
+
   const submitValues = async (
     values,
     saveAsDraft = false,
@@ -1177,7 +1196,13 @@ const EventForm = (props) => {
         payload,
         {},
         showRequestFeedback,
-        showRequestFeedback
+        showRequestFeedback,
+        {
+          onFailure: !quiet && !onProgress ? ({ status, errors }) =>
+            status === 422 && errors && typeof errors === "object"
+              ? presentEventValidation(errors)
+              : false : undefined,
+        }
       );
 
       if (responseData?.status && responseData.event) {
@@ -1233,14 +1258,7 @@ const EventForm = (props) => {
       if (!canSaveDraft) {
         const errors = await formik.validateForm();
         if (Object.keys(errors).length) {
-          await formik.setTouched(setNestedObjectValues(errors, true), false);
-          const blocked = blockingEventStep(errors, EVENT_FORM_STEPS.length, currentStep);
-          const invalidStep = blocked?.step ?? EVENT_FORM_STEPS.length - 1;
-          setTransitionDirection(invalidStep > currentStep ? "forward" : "backward");
-          setCurrentStep(invalidStep);
-          setFurthestStep(step => Math.max(step, invalidStep));
-          setSaveValidationAttempt((attempt) => attempt + 1);
-          dispatch(showNotification(eventValidationToast(errors, blocked)));
+          presentEventValidation(errors);
           return;
         }
       }

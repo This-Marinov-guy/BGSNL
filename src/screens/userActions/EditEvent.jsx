@@ -20,6 +20,7 @@ import HeaderTwo from "../../component/header/HeaderTwo";
 import EventForm from "../../elements/actions/form/EventForm";
 import EventEditSummary from "../../elements/actions/form/EventEditSummary";
 import { EVENT_DRAFT } from "../../util/defines/common";
+import { DEFAULT_REGION, NATIONAL_EVENT_URL_REGION } from "../../util/defines/REGIONS_DESIGN";
 import HeaderLoadingError from "../../elements/ui/errors/HeaderLoadingError";
 import { useHttpClient } from "../../hooks/common/http-hook";
 import {
@@ -75,7 +76,10 @@ const EditEvent = () => {
         <h3 className="center_text">{event.status === EVENT_DRAFT ? "Edit Draft" : "Edit Event"}</h3>
         <EventEditSummary key={event.id} event={event} />
       </div>
-      <EventForm key={`${event.id}:${searchParams.get("section") ?? ""}`} edit initialData={event} initialSection={searchParams.get("section")} completeDraft={event.status === EVENT_DRAFT && searchParams.get("complete") === "1"} />
+      <EventForm key={`${event.id}:${searchParams.get("section") ?? ""}`} edit
+        initialData={event.region === NATIONAL_EVENT_URL_REGION ? { ...event, region: DEFAULT_REGION } : event}
+        initialSection={searchParams.get("section")}
+        completeDraft={event.status === EVENT_DRAFT && searchParams.get("complete") === "1"} />
 
       {/* End Footer Style  */}
       {/* Start Back To Top */}
