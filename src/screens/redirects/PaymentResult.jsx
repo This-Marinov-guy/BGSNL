@@ -20,7 +20,7 @@ import { startPaymentSync } from "@/util/payments/background-sync.mjs";
 import { ANALYTICS_EVENTS, ANALYTICS_PROPERTIES } from "@/util/analytics/events.mjs";
 import { clarityEvent } from "@/util/functions/helpers";
 
-const money = (amount, currency = "eur") => amount == null ? "—" : new Intl.NumberFormat("en-NL", { style: "currency", currency }).format(amount / 100);
+const money = (amount, currency = "eur") => amount == null ? "—" : amount === 0 ? "Free" : new Intl.NumberFormat("en-NL", { style: "currency", currency }).format(amount / 100);
 const messages = {
   success: { title: "Payment received", text: "Thank you for being part of our community. Your payment has been confirmed." },
   cancelled: { title: "Checkout not completed", text: "You left checkout before it was completed. You can return to the same checkout when you’re ready." },
@@ -124,7 +124,7 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
             </div>
             <h1 id="payment-result-title">{title}</h1>
           </div>
-          <p className={styles.description}>{free ? result.kind === "subscription" ? "Your membership checkout is confirmed. No payment was due today." : "Your booking is confirmed. No payment was required." : content.text}</p>
+          <p className={styles.description}>{free ? result.kind === "subscription" ? "Your membership checkout is confirmed. No payment was due today." : "Your booking is confirmed." : content.text}</p>
           {successful && ["ticket", "free"].includes(result.kind) && <p>Your ticket confirmation will arrive by email. Check your spam folder too.</p>}
           {successful && result.kind === "subscription" && <div role="status" aria-live="polite" aria-atomic="true">
             <p key={preparing ? "preparing" : "ready"} className={styles.stateTransition}>{preparing ? waitExpired
@@ -189,7 +189,6 @@ export default function PaymentResult({ result, checkout, unavailable = false, d
             <p className={styles.note}>Your receipt may take a moment to become available.</p>
             <button type="button" className={styles.textButton} disabled={refreshing} onClick={() => refresh(() => router.refresh())}>{refreshing ? "Checking…" : "Check for receipt"}</button>
           </>}
-          {free && <p className={styles.note}>No payment was required.</p>}
         </aside>}
       </section>
       <p className={styles.support}>Need a hand? <Link href="/contact">Contact our team</Link> or use the Help button.</p>

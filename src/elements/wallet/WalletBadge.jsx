@@ -12,9 +12,9 @@ export default function WalletBadge({ provider, busy = false, disabled = false, 
   const label = `Add to ${apple ? "Apple" : "Google"} Wallet`;
   const button = <button type="button" className={styles.badge} aria-label={label}
     disabled={unavailable} aria-busy={busy} onClick={unavailable ? undefined : onClick}>
-    <Image src={apple ? "/assets/wallet-cards/buttons/add-to-apple-wallet.svg"
+    <Image src={apple ? "/assets/wallet-cards/buttons/add-to-apple-wallet.png"
       : "/assets/commercial/enUS_add_to_google_wallet_wallet-button.svg"}
-      alt={`Add to ${apple ? "Apple" : "Google"} Wallet`} width={apple ? 110.739 : 283} height={apple ? 35.016 : 50} unoptimized />
+      alt={`Add to ${apple ? "Apple" : "Google"} Wallet`} width={apple ? 111 : 283} height={apple ? 35 : 50} unoptimized />
   </button>;
   // While a request is in flight, preserve the button in its disabled state.
   // The progress feedback is announced through the loading toast instead.

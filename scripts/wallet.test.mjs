@@ -108,7 +108,7 @@ test("wallet proxy routes only allow intended methods", () => {
 });
 
 test("both official English badge files exist", () => {
-  for (const file of ["wallet-cards/buttons/add-to-apple-wallet.svg", "commercial/enUS_add_to_google_wallet_wallet-button.svg"]) {
-    assert.match(readFileSync(new URL(`../public/assets/${file}`, import.meta.url), "utf8"), /<svg/);
-  }
+  const apple = readFileSync(new URL("../public/assets/wallet-cards/buttons/add-to-apple-wallet.png", import.meta.url));
+  assert.equal(apple.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+  assert.match(readFileSync(new URL("../public/assets/commercial/enUS_add_to_google_wallet_wallet-button.svg", import.meta.url), "utf8"), /<svg/);
 });
