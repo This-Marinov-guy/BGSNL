@@ -131,11 +131,14 @@ export default function EventsAnalyticsList() {
             const value = averages[key];
             const nationalValue = nationalAverages[key];
             const display = value == null ? "—" : format(value);
+            const comparison = eventAverageComparison(value, nationalValue, isNational);
+            const toneClass = comparison?.startsWith("+") ? styles.averageComparisonUp
+              : comparison?.startsWith("-") ? styles.averageComparisonDown : "";
             return <article className={styles.metric} key={key}>
               <span>{label}</span>
               <strong>{loading ? <Skeleton width="6rem" height="2.5rem" /> : display}</strong>
               {!isNational && (loading ? <Skeleton width="8rem" height="1rem" /> : <div className={styles.averageComparisonRow}>
-                <small className={styles.averageComparison}>{eventAverageComparison(value, nationalValue, isNational)}</small>
+                <small className={`${styles.averageComparison} ${toneClass}`}>{comparison}</small>
                 {nationalValue != null && <InfoHint icon="info" label={`National baseline for ${label.toLowerCase()}`} text={`${detail} National baseline: ${format(nationalValue)}.`} />}
               </div>)}
             </article>;
