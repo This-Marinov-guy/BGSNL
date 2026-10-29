@@ -19,7 +19,7 @@ export function supportStreamFrames(onEvent) {
 }
 
 // Fetch-based SSE allows guest credentials in headers/body, never in URLs.
-export function watchSupportLive({ refresh, subscription, secret, isActive = () => true }) {
+export function watchSupportLive({ refresh, subscription, secret, isActive = () => true, stream = true }) {
   let stopped = false, connected = false, connection, reconnect;
   const loop = createLiveRefresh({
     load: refresh, onData() {}, onError() {},
@@ -27,7 +27,7 @@ export function watchSupportLive({ refresh, subscription, secret, isActive = () 
     interval: () => connected ? null : 10000,
   });
   async function connect() {
-    if (stopped || document.hidden || connection) return;
+    if (!stream || stopped || document.hidden || connection) return;
     const payload = subscription();
     if (!payload) return;
     const controller = new AbortController();

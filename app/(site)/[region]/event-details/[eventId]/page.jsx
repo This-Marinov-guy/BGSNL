@@ -11,7 +11,7 @@ import {
 import { humanizeRegion } from "@/util/seo/site";
 import { permanentRedirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic"; 
 
 export async function generateMetadata({ params }) {
   const { region, eventId } = await params;

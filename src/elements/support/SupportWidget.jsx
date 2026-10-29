@@ -93,7 +93,7 @@ export default function SupportWidget() {
         if (!controller.signal.aborted && [401, 403].includes(error.status)) setActivity({ scope: ownerScope, tickets: [] });
       }
     }
-    const stop = watchSupportLive({ refresh, subscription: () => {
+    const stop = watchSupportLive({ refresh, stream: false, subscription: () => {
       if (session) return {};
       const guests = guestReports().map(({ id, secret }) => ({ id, secret }));
       return guests.length ? { guests } : null;

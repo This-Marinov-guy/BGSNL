@@ -38,7 +38,9 @@ export default function SupportTicketAttentionProvider({ children }) {
         // Keep the last confirmed result until the stream or polling reconnects.
       }
     };
-    return watchSupportLive({ refresh, subscription: () => ({ staff: true }) });
+    // The global unread badge only needs periodic updates. A persistent SSE
+    // relay keeps a Vercel function running for the full 45-second connection.
+    return watchSupportLive({ refresh, subscription: () => ({ staff: true }), stream: false });
   }, [eligible, scope]);
 
   const current = !!eligible && attention.scope === scope;

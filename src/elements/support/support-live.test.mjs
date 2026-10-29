@@ -60,3 +60,29 @@ test("live watcher refreshes on invalidation, reconnects on resume, and cleans u
   globalThis.window.dispatchEvent(new Event("focus")); await flush(); assert.equal(loads, finalLoads);
   assert.equal(aborted, 3);
 });
+
+test("background support watcher refreshes without opening a long-lived stream", async t => {
+  const saved = { fetch: globalThis.fetch, document: globalThis.document, window: globalThis.window };
+  const document = new EventTarget(); document.hidden = false;
+  globalThis.document = document; globalThis.window = new EventTarget();
+  let loads = 0; let streamRequests = 0;
+  globalThis.fetch = async () => { streamRequests++; throw new Error("Unexpected stream"); };
+  const flush = async () => { for (let i = 0; i < 4; i++) await new Promise(resolve => setImmediate(resolve)); };
+  let stop;
+  t.after(() => { stop?.(); Object.assign(globalThis, saved); });
+
+  stop = watchSupportLive({ refresh: async () => { loads++; }, subscription: () => ({ staff: true }), stream: false });
+  await flush();
+  assert.equal(loads, 1);
+  assert.equal(streamRequests, 0);
+
+  document.hidden = true;
+  document.dispatchEvent(new Event("visibilitychange"));
+  await flush();
+  assert.equal(loads, 1);
+  document.hidden = false;
+  document.dispatchEvent(new Event("visibilitychange"));
+  await flush();
+  assert.equal(loads, 2);
+  assert.equal(streamRequests, 0);
+});
