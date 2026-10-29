@@ -130,5 +130,7 @@ export function useLiveGuestList(eventId, enabled, initialGuests = [], initialCo
     refresh.current?.invalidate();
   }, []);
 
-  return { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate, removeGuest };
+  const retry = useCallback(() => refresh.current?.invalidate(), []);
+
+  return { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate, removeGuest, retry };
 }

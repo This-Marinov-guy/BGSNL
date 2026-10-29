@@ -1372,6 +1372,8 @@ button.guest-list__presence {
 }
 
 .guest-list__sync-note { margin-top: 1rem; }
+.guest-list__load-error { display: grid; justify-items: start; gap: .75rem; }
+.guest-list__load-error p { margin: 0; }
 .guest-list__skeleton { display: grid; gap: .6rem; }
 
 .bgsnl-modal.guest-list-edit-modal,

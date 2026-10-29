@@ -172,10 +172,10 @@ const GuestListTable = ({ columns = {}, guests, search = "", extended = false, e
             <th role="columnheader" scope="col">
               <span className="guest-list__presence-heading">
                 Presence
-                <InfoHint
+                {editable && <InfoHint
                   label="About presence controls"
-                  text="Click Present or Missing to toggle this guest’s attendance. The change saves immediately and syncs to the spreadsheet in the background."
-                />
+                  text="Click Present or Missing to toggle this guest’s attendance. The change saves immediately and updates the live guest list."
+                />}
               </span>
             </th>
             <th role="columnheader" scope="col">Purchased</th>

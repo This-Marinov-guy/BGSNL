@@ -40,6 +40,7 @@ const GuestListModal = ({
   event,
   extended,
   maximized,
+  national,
   onExtendedChange,
   onHide,
   onMaximizeChange,
@@ -48,11 +49,11 @@ const GuestListModal = ({
   visible,
 }) => {
   const eventId = event.id || event._id;
-  const { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate, removeGuest } = useLiveGuestList(eventId, visible);
+  const { guests, columns, loading, syncError, live, pendingGuestIds, updatePresence, applyGuestUpdate, removeGuest, retry } = useLiveGuestList(eventId, visible);
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const canEdit = checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS);
-  const canRefund = checkAuthorization(user.session, ACCESS_3);
+  const canRefund = !national && checkAuthorization(user.session, ACCESS_3);
   const [editGuest, setEditGuest] = useState(null);
   const [editFields, setEditFields] = useState({ name: "", email: "", phone: "" });
   const [editBusy, setEditBusy] = useState(false);
@@ -342,16 +343,21 @@ const GuestListModal = ({
           </button>
           <GuestListSearch value={search} onChange={onSearchChange} />
         </div>
-        {loading ? <div className="guest-list__skeleton" aria-hidden="true"><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /></div> : (
-          <GuestListTable columns={columns} search={search} extended={extended} editable guests={guests}
+        {loading ? <div className="guest-list__skeleton" aria-hidden="true"><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /><Skeleton height="2.5rem" /></div> : syncError && !guests.length ? (
+          <div className="guest-list__load-error" role="alert">
+            <p>The guest list could not be loaded. Check your connection or access, then try again.</p>
+            <button className="event-details-modal__action" type="button" onClick={retry}>Retry</button>
+          </div>
+        ) : (
+          <GuestListTable columns={columns} search={search} extended={extended} editable={canEdit} guests={guests}
             onPresenceChange={updatePresence} onEdit={canEdit ? openEdit : undefined}
             onRefund={canRefund ? openRefund : undefined} canRefund={canRefund}
             onDelete={canRefund ? setDeleteGuest : undefined}
-            onSendTicket={canEdit ? guest => setDelivery({ kind: "ticket", guest }) : undefined}
+            onSendTicket={canEdit && !national ? guest => setDelivery({ kind: "ticket", guest }) : undefined}
             onSendReceipt={canRefund ? guest => setDelivery({ kind: "receipt", guest }) : undefined}
             pendingGuestIds={pendingGuestIds} />
         )}
-        <p className="guest-list__sync-note" role="status">{syncError ? "Connection interrupted. The list may be out of date; reconnecting automatically." : live ? "Live attendance updates. Changes sync quietly in the background." : "Syncing in the background. Reconnecting to live updates."}</p>
+        {!(syncError && !guests.length) && <p className="guest-list__sync-note" role="status">{syncError ? "Connection interrupted. The list may be out of date; reconnecting automatically." : live ? "Live attendance updates. Changes sync quietly in the background." : "Syncing in the background. Reconnecting to live updates."}</p>}
       </Dialog>
 
     </>
@@ -366,6 +372,7 @@ GuestListModal.propTypes = {
   }).isRequired,
   extended: PropTypes.bool.isRequired,
   maximized: PropTypes.bool.isRequired,
+  national: PropTypes.bool.isRequired,
   onExtendedChange: PropTypes.func.isRequired,
   onHide: PropTypes.func.isRequired,
   onMaximizeChange: PropTypes.func.isRequired,

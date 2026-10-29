@@ -397,6 +397,7 @@ const EventModal = ({
       <GuestListModal
         extended={extended}
         event={storedEvent}
+        national={isNationalEvent}
         maximized={guestListVisible && fullscreen}
         onExtendedChange={onExtendedChange}
         onHide={() => onModalViewChange("event")}
@@ -449,7 +450,7 @@ const EventModal = ({
                 <FiCheck aria-hidden="true" /><span>Complete</span>
               </button>
             )}
-            {!isDraft && !isNationalEvent && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
+            {!isDraft && checkAuthorization(user.session, EVENT_MANAGEMENT_ACCESS) ? (
               <button
                 className="event-details-modal__action"
                 onClick={() => onModalViewChange("guest-list")}
